@@ -1,14 +1,15 @@
-vPCHEngineCore 		= "AWEngine/Include/AWECore/AWCore.h"
-vPCHEngineEngine 	= "AWEngine/Include/AWEEngine/AWEngine.h"
-vPCHEngineFramework = "AWEngine/Include/AWEFramework/AWFramework.h"
+vPCHEngineBase 		= "Engine/Include/ZenBase/zenBase.h"
+vPCHEngineCore 		= "Engine/Include/ZenCore/zenCore.h"
+vPCHEngineEngine 	= "Engine/Include/ZenEngine/zenEngine.h"
 
 -------------------------------------------------------------------------------
 -- Engine Libraries 
 -------------------------------------------------------------------------------
-Orion_AddGameAndToolLib("libEngineCore", 		"Engine", 	{"AWEngine/AWECore"}, 		"CoreAll.h")
-Orion_AddGameAndToolLib("libEngineEngine", 		"Engine",	{"AWEngine/AWEEngine"}, 	"EngineAll.h")
-Orion_AddGameAndToolLib("libEngineFramework", 	"Engine",	{"AWEngine/AWEFramework"}, 	"FrameworkAll.h")
-Orion_AddGameAndToolLib("libEngine3rdParty",	"Engine",	{"AWEngine/External/pugixml/src"}, 	"")
+v3rdPartySrc = {"Engine/External/pugixml/src"}
+Orion_AddGameAndToolLib("libZenBase", 	"ZenEngine", 	{"Engine/libZenBase", "Engine/Include/ZenBase"}, 		"libZenBase.h")
+Orion_AddGameAndToolLib("libZenCore", 	"ZenEngine",	{"Engine/libZenCore", "Engine/Include/ZenCore"}, 		"libZenCore.h")
+Orion_AddGameAndToolLib("libZenEngine", "ZenEngine",	{"Engine/libZenEngine", "Engine/Include/ZenEngine"}, 	"libZenEngine.h")
+Orion_AddGameAndToolLib("libThirdParty","ZenEngine",	v3rdPartySrc,				"")
 
 -------------------------------------------------------------------------------
 -- Engine Samples
@@ -16,37 +17,11 @@ Orion_AddGameAndToolLib("libEngine3rdParty",	"Engine",	{"AWEngine/External/pugix
 
 -- SAMPLE CORE --
 --TODO change to api pch and not whole engine
-Orion_AddGameExe("SampleCoreType",			"Engine/Sample", {"AWEngine/AWESamples/Core/Type"},		"AWEngine/AWEFramework/FrameworkAll.h", {}) 
-Orion_AddGameExe("SampleCoreMem",			"Engine/Sample", {"AWEngine/AWESamples/Core/Mem"},		"AWEngine/AWEFramework/FrameworkAll.h", {}) 
-Orion_AddGameExe("SampleCoreLog",			"Engine/Sample", {"AWEngine/AWESamples/Core/Log"},		"AWEngine/AWEFramework/FrameworkAll.h", {}) 
-Orion_AddGameExe("SampleCoreMath",			"Engine/Sample", {"AWEngine/AWESamples/Core/Math"},		"AWEngine/AWEFramework/FrameworkAll.h", {}) 
-Orion_AddGameExe("SampleCoreSystem",		"Engine/Sample", {"AWEngine/AWESamples/Core/System"},	"AWEngine/AWEFramework/FrameworkAll.h", {}) 
+Orion_AddGameExe("SampleBaseType",		"Samples", 	{"Engine/Samples/Core/Type"},		"Engine/libZenEngine/libZenEngine.h", {}) 
+Orion_AddGameExe("SampleBaseMem",		"Samples", 	{"Engine/Samples/Core/Mem"},		"Engine/libZenEngine/libZenEngine.h", {}) 
+Orion_AddGameExe("SampleBaseLog",		"Samples", 	{"Engine/Samples/Core/Log"},		"Engine/libZenEngine/libZenEngine.h", {}) 
+Orion_AddGameExe("SampleBaseMath",		"Samples", 	{"Engine/Samples/Core/Math"},		"Engine/libZenEngine/libZenEngine.h", {}) 
+Orion_AddGameExe("SampleBaseSystem",	"Samples", 	{"Engine/Samples/Core/System"},		"Engine/libZenEngine/libZenEngine.h", {}) 
 
 -- SAMPLE GFX --
-Orion_AddGameExe("SampleGfxBasic",			"Engine/Sample", {"AWEngine/AWESamples/Gfx/Renderer"},	vPCHEngineFramework, {})
-
---[[
-Orion_AddGameLib("libEngineGameCore", 		"Engine", 	{"AWEngine/AWECore"}, 				"CoreAll.h")
-Orion_AddGameLib("libEngineGameEngine", 	"Engine",	{"AWEngine/AWEEngine"}, 			"EngineAll.h")
-Orion_AddGameLib("libEngineGameFramework", 	"Engine",	{"AWEngine/AWEFramework"}, 			"FrameworkAll.h")
-Orion_AddToolLib("libEngineToolCore", 		"Engine",	{"AWEngine/AWECore"}, 				"CoreAll.h")
-Orion_AddToolLib("libEngineToolEngine", 	"Engine",	{"AWEngine/AWEEngine"}, 			"EngineAll.h")
-Orion_AddToolLib("libEngineToolFramework", 	"Engine",	{"AWEngine/AWEFramework"}, 			"FrameworkAll.h")
-Orion_AddToolLib("libEngineTool3rdParty", 	"Engine",	{"AWEngine/External/pugixml/src"}, 	"")
-
--------------------------------------------------------------------------------
--- Engine Samples
--------------------------------------------------------------------------------
-
--- SAMPLE CORE --
---TODO change to api pch and not whole engine
-Orion_AddGameExe("SampleCoreType",			"Engine/Sample", {"AWEngine/AWESamples/Core/Type"},		"AWEngine/AWEFramework/FrameworkAll.h", {}) 
-Orion_AddGameExe("SampleCoreMem",			"Engine/Sample", {"AWEngine/AWESamples/Core/Mem"},		"AWEngine/AWEFramework/FrameworkAll.h", {}) 
-Orion_AddGameExe("SampleCoreLog",			"Engine/Sample", {"AWEngine/AWESamples/Core/Log"},		"AWEngine/AWEFramework/FrameworkAll.h", {}) 
-Orion_AddGameExe("SampleCoreMath",			"Engine/Sample", {"AWEngine/AWESamples/Core/Math"},		"AWEngine/AWEFramework/FrameworkAll.h", {}) 
-Orion_AddGameExe("SampleCoreSystem",		"Engine/Sample", {"AWEngine/AWESamples/Core/System"},	"AWEngine/AWEFramework/FrameworkAll.h", {}) 
-
--- SAMPLE GFX --
-Orion_AddGameExe("SampleGfxBasic",			"Engine/Sample", {"AWEngine/AWESamples/Gfx/Renderer"},	vPCHEngineFramework, {})
-
-]]
+Orion_AddGameExe("SampleGfxBasic",		"Samples",	{"Engine/Samples/Gfx/Renderer"},	vPCHEngineEngine, {})

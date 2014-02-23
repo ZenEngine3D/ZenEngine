@@ -1,0 +1,3 @@
+-Flow charts files were generated with 'Diagramly'
+-To open them, go to website : https://www.draw.io
+-Open one of the xml file, in their online flowchart editor

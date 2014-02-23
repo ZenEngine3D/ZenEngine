@@ -1,0 +1,1 @@
+Folder need at the moment, for proper init of AWEngineCore::FileManager

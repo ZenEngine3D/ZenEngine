@@ -1,6 +1,6 @@
 vSourceFiles			= {"**.h", "**.inl", "**.cpp"}
-vLibEngineGame 			= {"libEngineCore", "libEngineEngine", "libEngineFramework"  }
-vLibEngineTool 			= {"libEngineCore", "libEngineEngine", "libEngineFramework", "libEngine3rdParty" }
+vLibEngineGame 			= {"libZenBase", "libZenCore", "libZenEngine"  }
+vLibEngineTool 			= {"libZenBase", "libZenCore", "libZenEngine", "libThirdParty" }
 bLibEngineGameRender	= {"d3d11", "d3dcompiler", "dxguid"}	--TODO per platform config
 bLibEngineToolRender	= {"d3d11", "d3dcompiler", "dxguid"}
 
@@ -39,16 +39,27 @@ function Orion_ConfigureBuild()
 	configuration		({"PCGame32"})
 		architecture 	("x32")
 		defines			({"AW_ENGINEGAME=1"})
+		if kind() == "ConsoleApp" then
+			targetdir 	(vOutputRoot .. "/../[Bin]/Windows32")
+		end
 	configuration 		({"PCGame64"})
 		architecture 	("x64")		
 		defines			({"AW_ENGINEGAME=1"})
+		if kind() == "ConsoleApp" then
+			targetdir 	(vOutputRoot .. "/../[Bin]/Windows64")
+		end
 	configuration 		({"PCTool32"})
 		architecture 	("x32")
 		defines			({"AW_ENGINETOOL=1"})
+		if kind() == "ConsoleApp" then
+			targetdir 	(vOutputRoot .. "/../[Bin]/Windows32")
+		end
 	configuration 		({"PCTool64"})
 		architecture 	("x64")
 		defines			({"AW_ENGINETOOL=1"})
-		
+		if kind() == "ConsoleApp" then
+			targetdir 	(vOutputRoot .. "/../[Bin]/Windows64")
+		end
 	--for i, vPath in ipairs(aPathList) do		
 	--	excludes( vPath .. vFile )
 	--end			
@@ -106,7 +117,11 @@ end
 function Orion_AddProjectCommon(aProjectName, aPathList, aPchFile)			
 	os.mkdir			( vOutputRoot .. "/" .. aProjectName )
 	location 			( vOutputRoot .. "/" .. aProjectName )
-	includedirs 		( {vSourceRoot, vSourceRoot .. "/AWEngine/Include"} )
+	includedirs 		( {vSourceRoot, vSourceRoot .. "/Engine/Include"} )
+	vpaths 				( {["*"] = "../../../Engine/Include" } )
+	vpaths 				( {["*"] = "../../../Engine/libZenBase"} )
+	vpaths 				( {["*"] = "../../../Engine/libZenCore"} )
+	vpaths 				( {["*"] = "../../../Engine/libZenEngine"} )
 	language 			( "C++" )	
 	Orion_ConfigurePCH	( aProjectName, aPathList, aPchFile )
 	
