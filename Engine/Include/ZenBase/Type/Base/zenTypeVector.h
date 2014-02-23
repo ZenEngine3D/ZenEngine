@@ -1,52 +1,52 @@
 #pragma once
-#ifndef __LibCore_Api_Type_Vector_h__
-#define __LibCore_Api_Type_Vector_h__
+#ifndef __zenBase_Type_Vector_h__
+#define __zenBase_Type_Vector_h__
 
-namespace zen { namespace awtype {
+namespace zen { namespace zenType {
 	template<typename TType>
-	class awVector2
+	class zenVector2
 	{
-	AWClassDeclareNoParent(awVector2)
+	AWClassDeclareNoParent(zenVector2)
 	public:
-								awVector2();
-								awVector2(TType _Val);
-								awVector2(TType aX, TType aY );
-								awVector2(const awVector2& _vCopy);
-		inline awVector2&		operator=(const awVector2& _vCopy);
-		inline awVector2&		operator=(TType _Val);		
-		inline awVector2		operator*(TType _Val)const;
-		inline awVector2		operator+(const awVector2& _vAdd)const;
-		inline bool				operator==(const awVector2& _vCompare)const;
-		inline bool				operator!=(const awVector2& _vCompare)const;		
+								zenVector2();
+								zenVector2(TType _Val);
+								zenVector2(TType aX, TType aY );
+								zenVector2(const zenVector2& _vCopy);
+		inline zenVector2&		operator=(const zenVector2& _vCopy);
+		inline zenVector2&		operator=(TType _Val);		
+		inline zenVector2		operator*(TType _Val)const;
+		inline zenVector2		operator+(const zenVector2& _vAdd)const;
+		inline bool				operator==(const zenVector2& _vCompare)const;
+		inline bool				operator!=(const zenVector2& _vCompare)const;		
 		inline bool				IsNull();
-		inline const awVector2& SetNull();
+		inline const zenVector2& SetNull();
 		union
 		{
 			struct {TType x; TType y;};
 			struct {TType u; TType v;};
 			TType xy[2];
 		};
-		static const awVector2 Zero;
-		static const awVector2 One;
+		static const zenVector2 Zero;
+		static const zenVector2 One;
 	};
 
 	template<typename TType>
-	class awVector3
+	class zenVector3
 	{
-	AWClassDeclareNoParent(awVector3)
+	AWClassDeclareNoParent(zenVector3)
 	public:
-								awVector3();
-								awVector3(TType _val);
-								awVector3(TType aX, TType aY, TType aZ );
-								awVector3(const awVector3& _vCopy);
-		inline awVector3&		operator=(const awVector3& _vCopy);
-		inline awVector3&		operator=(TType _Val);
-		inline awVector3		operator*(TType _Val)const;
-		inline awVector3		operator+(const awVector3& _vAdd)const;
-		inline bool				operator==(const awVector3& _vCompare)const;
-		inline bool				operator!=(const awVector3& _vCompare)const;
+								zenVector3();
+								zenVector3(TType _val);
+								zenVector3(TType aX, TType aY, TType aZ );
+								zenVector3(const zenVector3& _vCopy);
+		inline zenVector3&		operator=(const zenVector3& _vCopy);
+		inline zenVector3&		operator=(TType _Val);
+		inline zenVector3		operator*(TType _Val)const;
+		inline zenVector3		operator+(const zenVector3& _vAdd)const;
+		inline bool				operator==(const zenVector3& _vCompare)const;
+		inline bool				operator!=(const zenVector3& _vCompare)const;
 		inline bool				IsNull();
-		inline const awVector3& SetNull();
+		inline const zenVector3& SetNull();
 		union
 		{
 			struct {TType x; TType y; TType z;};
@@ -54,27 +54,27 @@ namespace zen { namespace awtype {
 			struct {TType r; TType g; TType b;};
 			TType xyz[3];
 		};
-		static const awVector3 Zero;
-		static const awVector3 One;
+		static const zenVector3 Zero;
+		static const zenVector3 One;
 	};
 	
 	template<typename TType>
-	class awVector4
+	class zenVector4
 	{
-	AWClassDeclareNoParent(awVector4)
+	AWClassDeclareNoParent(zenVector4)
 	public:
-								awVector4();
-								awVector4(TType _Val);
-								awVector4(TType aX, TType aY, TType aZ, TType aW );
-								awVector4(const awVector4& _vCopy);
-		inline awVector4&		operator=(const awVector4& _vCopy);
-		inline awVector4&		operator=(TType _Val);
-		inline awVector4		operator*(TType _Val)const;
-		inline awVector4		operator+(const awVector4& _vAdd)const;
-		inline bool				operator==(const awVector4& _vCompare)const;
-		inline bool				operator!=(const awVector4& _vCompare)const;
+								zenVector4();
+								zenVector4(TType _Val);
+								zenVector4(TType aX, TType aY, TType aZ, TType aW );
+								zenVector4(const zenVector4& _vCopy);
+		inline zenVector4&		operator=(const zenVector4& _vCopy);
+		inline zenVector4&		operator=(TType _Val);
+		inline zenVector4		operator*(TType _Val)const;
+		inline zenVector4		operator+(const zenVector4& _vAdd)const;
+		inline bool				operator==(const zenVector4& _vCompare)const;
+		inline bool				operator!=(const zenVector4& _vCompare)const;
 		inline bool				IsNull();
-		inline const awVector4& SetNull();
+		inline const zenVector4& SetNull();
 		union
 		{
 			struct {TType x; TType y; TType z; TType w;};
@@ -82,26 +82,26 @@ namespace zen { namespace awtype {
 			struct {TType r; TType g; TType b; TType a;};
 			TType xyzw[4];
 		};
-		static const awVector4 Zero;
-		static const awVector4 One;
+		static const zenVector4 Zero;
+		static const zenVector4 One;
 	};
 
-	typedef awVector2<awS16>	awVec2S16;	AWAddSupportsMemCopy(awVec2S16);
-	typedef awVector2<awS32>	awVec2S32;	AWAddSupportsMemCopy(awVec2S32);
-	typedef awVector2<awU16>	awVec2U16;	AWAddSupportsMemCopy(awVec2U16);
-	typedef awVector2<awU32>	awVec2U32;	AWAddSupportsMemCopy(awVec2U32);
-	typedef awVector2<awF32>	awVec2F;	AWAddSupportsMemCopy(awVec2F);
-	typedef awVector3<awS16>	awVec3S16;	AWAddSupportsMemCopy(awVec3S16);
-	typedef awVector3<awS32>	awVec3S32;	AWAddSupportsMemCopy(awVec3S32);
-	typedef awVector3<awU16>	awVec3U16;	AWAddSupportsMemCopy(awVec3U16);
-	typedef awVector3<awU32>	awVec3U32;	AWAddSupportsMemCopy(awVec3U32);
-	typedef awVector3<awF32>	awVec3F;	AWAddSupportsMemCopy(awVec3F);
-	typedef awVector4<awS16>	awVec4S16;	AWAddSupportsMemCopy(awVec4S16);
-	typedef awVector4<awS32>	awVec4S32;	AWAddSupportsMemCopy(awVec4S32);
-	typedef awVector4<awU16>	awVec4U16;	AWAddSupportsMemCopy(awVec4U16);
-	typedef awVector4<awU32>	awVec4U32;	AWAddSupportsMemCopy(awVec4U32);
-	typedef awVector4<awF32>	awVec4F;	AWAddSupportsMemCopy(awVec4F);
-}} // namespace zen, awtype
+	typedef zenVector2<zenS16>	zenVec2S16;	AWAddSupportsMemCopy(zenVec2S16);
+	typedef zenVector2<zenS32>	zenVec2S32;	AWAddSupportsMemCopy(zenVec2S32);
+	typedef zenVector2<zenU16>	zenVec2U16;	AWAddSupportsMemCopy(zenVec2U16);
+	typedef zenVector2<zenU32>	zenVec2U32;	AWAddSupportsMemCopy(zenVec2U32);
+	typedef zenVector2<zenF32>	zenVec2F;	AWAddSupportsMemCopy(zenVec2F);
+	typedef zenVector3<zenS16>	zenVec3S16;	AWAddSupportsMemCopy(zenVec3S16);
+	typedef zenVector3<zenS32>	zenVec3S32;	AWAddSupportsMemCopy(zenVec3S32);
+	typedef zenVector3<zenU16>	zenVec3U16;	AWAddSupportsMemCopy(zenVec3U16);
+	typedef zenVector3<zenU32>	zenVec3U32;	AWAddSupportsMemCopy(zenVec3U32);
+	typedef zenVector3<zenF32>	zenVec3F;	AWAddSupportsMemCopy(zenVec3F);
+	typedef zenVector4<zenS16>	zenVec4S16;	AWAddSupportsMemCopy(zenVec4S16);
+	typedef zenVector4<zenS32>	zenVec4S32;	AWAddSupportsMemCopy(zenVec4S32);
+	typedef zenVector4<zenU16>	zenVec4U16;	AWAddSupportsMemCopy(zenVec4U16);
+	typedef zenVector4<zenU32>	zenVec4U32;	AWAddSupportsMemCopy(zenVec4U32);
+	typedef zenVector4<zenF32>	zenVec4F;	AWAddSupportsMemCopy(zenVec4F);
+}} // namespace zen, zenType
 
 #include "zenTypeVector.inl"
 

@@ -2,24 +2,25 @@
 #ifndef __LibFramework_Api_Type_Render2D_h__
 #define __LibFramework_Api_Type_Render2D_h__
 
-namespace zen { namespace awtype {
-	class AWRender2D
+// @todo :Keep this? refactor?
+namespace zen { namespace zenType {
+	class zenRender2D
 	{
-		AWClassDeclareNoParent(AWRender2D)
+		AWClassDeclareNoParent(zenRender2D)
 	public:
-		AWForceInline	AWRender2D(void);
-		AWForceInline	~AWRender2D(void);
+		AWForceInline	zenRender2D(void);
+		AWForceInline	~zenRender2D(void);
 
 		static void		SStatup(void);
 		static void		SShutdown(void);
-		static awU32	SFillQuad(awVec2DSimple* pxVB, awS32 x1, awS32 y1, awS32 x2, awS32 y2, awU32 z, awU32 uColour, const awRegionS32& xClipArea);
-		static awU32	SFillQuad(awVec2DFull*   pxVB, awS32 x1, awS32 y1, awS32 x2, awS32 y2, awS32 u1, awS32 v1, awS32 u2, awS32 v2, awU32 uColour, awU32 uMask, awU32 z, const awRegionS32& xClipArea);
+		static zenU32	SFillQuad(zenVec2DSimple* pxVB, zenS32 x1, zenS32 y1, zenS32 x2, zenS32 y2, zenU32 z, zenU32 uColour, const awRegionS32& xClipArea);
+		static zenU32	SFillQuad(zenVec2DFull*   pxVB, zenS32 x1, zenS32 y1, zenS32 x2, zenS32 y2, zenS32 u1, zenS32 v1, zenS32 u2, zenS32 v2, zenU32 uColour, zenU32 uMask, zenU32 z, const awRegionS32& xClipArea);
 
 		void			Startup(void);
 		void			Shutdown(void);
 
-		void			DrawQuads(const awVec2DSimple* pxQuads, awU32 uNumQuads, bool bSetStates = true);
-		void			DrawQuads(const awVec2DFull*   pxQuads, awU32 uNumQuads, bool bSetStates = true);
+		void			DrawQuads(const zenVec2DSimple* pxQuads, zenU32 uNumQuads, bool bSetStates = true);
+		void			DrawQuads(const zenVec2DFull*   pxQuads, zenU32 uNumQuads, bool bSetStates = true);
 
 //		void			SetTexture( Ares_ShaderResourceViewPtr& xTexture2D );
 //		void			SetSamplerState( Ares_SamplerStatePtr& xSamplerState );
@@ -49,8 +50,8 @@ namespace zen { namespace awtype {
 		awres::awGfxRasterizer		mxRasterizer;
 	private:
 		//copy constructor, = operator
-		AWRender2D( const AWRender2D& );
-		AWRender2D& operator = ( const AWRender2D& );
+		zenRender2D( const zenRender2D& );
+		zenRender2D& operator = ( const zenRender2D& );
 	};
 
 }}  //namespace zen, Type 

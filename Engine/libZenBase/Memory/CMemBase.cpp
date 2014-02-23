@@ -12,13 +12,13 @@ void* operator new[](size_t _uSize, CMem::Allocator* _pAllocator )
 	return _pAllocator->Malloc(_uSize, true, awDefaultAlign);
 }
 
-void* operator new(size_t _uSize, CMem::Allocator* _pAllocator, awUInt _uAlign )
+void* operator new(size_t _uSize, CMem::Allocator* _pAllocator, zenUInt _uAlign )
 {
 	_pAllocator = _pAllocator ? _pAllocator : &CMem::Allocator::GetDefault();
 	return _pAllocator->Malloc(_uSize, false, _uAlign);
 }
 
-void* operator new[](size_t _uSize, CMem::Allocator* _pAllocator, awUInt _uAlign )
+void* operator new[](size_t _uSize, CMem::Allocator* _pAllocator, zenUInt _uAlign )
 {
 	_pAllocator = _pAllocator ? _pAllocator : &CMem::Allocator::GetDefault();
 	return _pAllocator->Malloc(_uSize, true, _uAlign);
@@ -82,5 +82,5 @@ void DeleteArrayCatchException(void* _pAlloc, CMem::Allocator* _pAllocator )
 
 void operator delete(void* _pAlloc,	CMem::Allocator* _pAllocator )					{DeleteCatchException(_pAlloc, _pAllocator);}
 void operator delete[](void* _pAlloc, CMem::Allocator* _pAllocator )				{DeleteArrayCatchException(_pAlloc, _pAllocator);}
-void operator delete(void* _pAlloc, CMem::Allocator* _pAllocator, awUInt _uAlign )	{DeleteCatchException(_pAlloc, _pAllocator);}
-void operator delete[](void* _pAlloc, CMem::Allocator* _pAllocator, awUInt _uAlign)	{DeleteArrayCatchException(_pAlloc, _pAllocator);}
+void operator delete(void* _pAlloc, CMem::Allocator* _pAllocator, zenUInt _uAlign )	{DeleteCatchException(_pAlloc, _pAllocator);}
+void operator delete[](void* _pAlloc, CMem::Allocator* _pAllocator, zenUInt _uAlign)	{DeleteArrayCatchException(_pAlloc, _pAllocator);}

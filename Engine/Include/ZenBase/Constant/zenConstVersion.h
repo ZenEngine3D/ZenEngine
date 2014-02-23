@@ -1,6 +1,6 @@
 #pragma once
-#ifndef __LibCore_Type_Constant_Version_h__
-#define __LibCore_Type_Constant_Version_h__
+#ifndef __zenBase_Type_Constant_Version_h__
+#define __zenBase_Type_Constant_Version_h__
 
 namespace zen { namespace awconst {
 

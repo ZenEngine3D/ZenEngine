@@ -1,6 +1,6 @@
 #pragma once
-#ifndef __LibCore_Type_Defines_PC_h__
-#define __LibCore_Type_Defines_PC_h__
+#ifndef __zenBase_Type_Defines_PC_h__
+#define __zenBase_Type_Defines_PC_h__
 
 //=================================================================================================
 //! @file		CTypDefines_PC.h

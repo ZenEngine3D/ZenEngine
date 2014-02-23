@@ -13,7 +13,7 @@ AWClassDeclare(SerialGfxShaderParam_DX11, SerialShaderParam_Base)
 //-------------------------------------------------------------------------------------------------
 public:
 	virtual bool			Serialize( EExp::Serializer_Base& _Serializer );
-	awArrayStatic<awU8>			maParameterValues;			//!< Bytes data for all buffer values (see ShaderParamDef for each parameter start offset in array)
+	zenArrayStatic<zenU8>			maParameterValues;			//!< Bytes data for all buffer values (see ShaderParamDef for each parameter start offset in array)
 		
 //-------------------------------------------------------------------------------------------------
 // Export support section

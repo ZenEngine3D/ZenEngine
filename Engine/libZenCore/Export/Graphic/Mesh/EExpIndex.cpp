@@ -11,15 +11,15 @@ namespace EExp
 //-------------------------------------------------------------------------------------------------
 //! @param _Indices			- List of Indices
 //! @param _PrimType		- Type of primitive this list of indices represents (TriangleStrip, ...)
-//! @return 				- Unique awResourceID of created Resource
+//! @return 				- Unique zenResID of created Resource
 //=================================================================================================
-awResourceID CreateGfxIndexBuffer( const awArrayBase<awU16>& _Indices, awconst::ePrimitiveType _ePrimitiveType )
+zenResID CreateGfxIndexBuffer( const zenArrayBase<zenU16>& _Indices, awconst::ePrimitiveType _ePrimitiveType )
 {
 	static CMem::PoolAllocator sMemPool("Pool CreateIndexBuffer", sizeof(SerialIndex_Base::ExportInfo), 1, 5 );
 	SerialIndex_Base::ExportInfo* pExportInfo	= AWNew(&sMemPool) SerialIndex_Base::ExportInfo;
 	pExportInfo->maIndice16						= _Indices;
 	pExportInfo->mePrimitiveType				= _ePrimitiveType;
-	return EMgr::Export.CreateItem( awResourceID::kePlatformType_GFX, awconst::keResType_GfxIndex, pExportInfo );
+	return EMgr::Export.CreateItem( zenResID::kePlatformType_GFX, awconst::keResType_GfxIndex, pExportInfo );
 }
 
 //=================================================================================================
@@ -30,15 +30,15 @@ awResourceID CreateGfxIndexBuffer( const awArrayBase<awU16>& _Indices, awconst::
 //-------------------------------------------------------------------------------------------------
 //! @param _Indices			- List of Indices
 //! @param _PrimType		- Type of primitive this list of indices represents (TriangleStrip, ...)
-//! @return 				- Unique awResourceID of created Resource
+//! @return 				- Unique zenResID of created Resource
 //=================================================================================================
-awResourceID CreateGfxIndexBuffer( const awArrayBase<awU32>& _Indices, awconst::ePrimitiveType _ePrimitiveType )
+zenResID CreateGfxIndexBuffer( const zenArrayBase<zenU32>& _Indices, awconst::ePrimitiveType _ePrimitiveType )
 {
 	static CMem::PoolAllocator sMemPool("Pool CreateIndexBuffer", sizeof(SerialIndex_Base::ExportInfo), 1, 5 );
 	SerialIndex_Base::ExportInfo* pExportInfo	= AWNew(&sMemPool) SerialIndex_Base::ExportInfo;
 	pExportInfo->maIndice32						= _Indices;
 	pExportInfo->mePrimitiveType				= _ePrimitiveType;
-	return EMgr::Export.CreateItem( awResourceID::kePlatformType_GFX, awconst::keResType_GfxIndex, pExportInfo );
+	return EMgr::Export.CreateItem( zenResID::kePlatformType_GFX, awconst::keResType_GfxIndex, pExportInfo );
 }
 
 

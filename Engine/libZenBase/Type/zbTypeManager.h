@@ -1,6 +1,6 @@
 #pragma once
-#ifndef __LibCore_Type_Manager_h__
-#define __LibCore_Type_Manager_h__
+#ifndef __zenBase_Type_Manager_h__
+#define __zenBase_Type_Manager_h__
 
 namespace zbType
 {

@@ -14,7 +14,7 @@ public:
 	virtual void		Destroy();
 	virtual void		Update();	
 	virtual bool		IsDone()=0;	
-	void				CreateGfxWindow(const awVec2U16& _vDim, const awVec2U16& _vPos);
+	void				CreateGfxWindow(const zenVec2U16& _vDim, const zenVec2U16& _vPos);
 	void				SetWindow(const awres::awGfxWindow& _rGfxWindow);
 protected:
 	awres::awGfxWindow	mrMainGfxWindow;

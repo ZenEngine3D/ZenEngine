@@ -10,25 +10,25 @@ namespace EExp
 	public:
 						SerializerGetSize():muSerializeSize(0){}
 		virtual eStatus	GetStatus(){return keStatus_GetSize;}
-		awU32				GetSerializeSize(){return muSerializeSize;}
+		zenU32				GetSerializeSize(){return muSerializeSize;}
 		
 		// Implement Serializer_Base
-		virtual bool	Serialize(awU8&						auValue){muSerializeSize += sizeof(auValue); return true;}
-		virtual bool	Serialize(awU16&						auValue){muSerializeSize += sizeof(auValue); return true;}
-		virtual bool	Serialize(awU32&						auValue){muSerializeSize += sizeof(auValue); return true;}
-		virtual bool	Serialize(awU64&						auValue){muSerializeSize += sizeof(auValue); return true;}
-		virtual bool	Serialize(awS8&						aiValue){muSerializeSize += sizeof(aiValue); return true;}
-		virtual bool	Serialize(awS16&						aiValue){muSerializeSize += sizeof(aiValue); return true;}
-		virtual bool	Serialize(awS32&						aiValue){muSerializeSize += sizeof(aiValue); return true;}
-		virtual bool	Serialize(awS64&						aiValue){muSerializeSize += sizeof(aiValue); return true;}
-		virtual bool	Serialize(awArrayBase<awU8>&	aValues){muSerializeSize += sizeof(awU32)+aValues.Size(); return true;}
-		virtual bool	Serialize(awArrayBase<awU16>&	aValues){muSerializeSize += sizeof(awU32)+aValues.Size(); return true;}
-		virtual bool	Serialize(awArrayBase<awU32>&	aValues){muSerializeSize += sizeof(awU32)+aValues.Size(); return true;}
-		virtual bool	Serialize(awArrayBase<awU64>&	aValues){muSerializeSize += sizeof(awU32)+aValues.Size(); return true;}
-		virtual bool	Serialize(awArrayBase<awS8>&	aValues){muSerializeSize += sizeof(awU32)+aValues.Size(); return true;}
-		virtual bool	Serialize(awArrayBase<awS16>&	aValues){muSerializeSize += sizeof(awU32)+aValues.Size(); return true;}
-		virtual bool	Serialize(awArrayBase<awS32>&	aValues){muSerializeSize += sizeof(awU32)+aValues.Size(); return true;}
-		virtual bool	Serialize(awArrayBase<awS64>&	aValues){muSerializeSize += sizeof(awU32)+aValues.Size(); return true;}
+		virtual bool	Serialize(zenU8&						auValue){muSerializeSize += sizeof(auValue); return true;}
+		virtual bool	Serialize(zenU16&						auValue){muSerializeSize += sizeof(auValue); return true;}
+		virtual bool	Serialize(zenU32&						auValue){muSerializeSize += sizeof(auValue); return true;}
+		virtual bool	Serialize(zenU64&						auValue){muSerializeSize += sizeof(auValue); return true;}
+		virtual bool	Serialize(zenS8&						aiValue){muSerializeSize += sizeof(aiValue); return true;}
+		virtual bool	Serialize(zenS16&						aiValue){muSerializeSize += sizeof(aiValue); return true;}
+		virtual bool	Serialize(zenS32&						aiValue){muSerializeSize += sizeof(aiValue); return true;}
+		virtual bool	Serialize(zenS64&						aiValue){muSerializeSize += sizeof(aiValue); return true;}
+		virtual bool	Serialize(zenArrayBase<zenU8>&	aValues){muSerializeSize += sizeof(zenU32)+aValues.Size(); return true;}
+		virtual bool	Serialize(zenArrayBase<zenU16>&	aValues){muSerializeSize += sizeof(zenU32)+aValues.Size(); return true;}
+		virtual bool	Serialize(zenArrayBase<zenU32>&	aValues){muSerializeSize += sizeof(zenU32)+aValues.Size(); return true;}
+		virtual bool	Serialize(zenArrayBase<zenU64>&	aValues){muSerializeSize += sizeof(zenU32)+aValues.Size(); return true;}
+		virtual bool	Serialize(zenArrayBase<zenS8>&	aValues){muSerializeSize += sizeof(zenU32)+aValues.Size(); return true;}
+		virtual bool	Serialize(zenArrayBase<zenS16>&	aValues){muSerializeSize += sizeof(zenU32)+aValues.Size(); return true;}
+		virtual bool	Serialize(zenArrayBase<zenS32>&	aValues){muSerializeSize += sizeof(zenU32)+aValues.Size(); return true;}
+		virtual bool	Serialize(zenArrayBase<zenS64>&	aValues){muSerializeSize += sizeof(zenU32)+aValues.Size(); return true;}
 
 		virtual bool	ItemStarted(EExp::SerialItem& aItem)
 		{
@@ -37,7 +37,7 @@ namespace EExp
 		}
 		
 	protected:
-		awU32				muSerializeSize;
+		zenU32				muSerializeSize;
 	};
 	
 }

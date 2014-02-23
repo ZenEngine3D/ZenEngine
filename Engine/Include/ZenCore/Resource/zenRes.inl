@@ -11,7 +11,7 @@ awResource::awResource()
 {
 }
 
-const awResourceID& awResource::GetResID()const
+const zenResID& awResource::GetResID()const
 { 
 	return mResID; 
 }
@@ -77,9 +77,9 @@ bool awResourceRef::IsValid()const
 	return mpResource!=NULL; 
 }
 
-awResourceID awResourceRef::GetResID()const		
+zenResID awResourceRef::GetResID()const		
 { 
-	return mpResource ? mpResource->GetResID() : awResourceID(); 
+	return mpResource ? mpResource->GetResID() : zenResID(); 
 }
 
 bool awResourceRef::operator==(const awResourceRef& _rCmp)const	
@@ -92,9 +92,9 @@ bool awResourceRef::operator!=(const awResourceRef& _rCmp)const
 	return mpResource != _rCmp.mpResource;
 }
 
-awResourceRef::operator awResourceID()const
+awResourceRef::operator zenResID()const
 {
-	return mpResource ? mpResource->GetResID() : awResourceID(); 
+	return mpResource ? mpResource->GetResID() : zenResID(); 
 }
 
 //#################################################################################################
@@ -111,7 +111,7 @@ awResourceTypedRef<TType>::awResourceTypedRef(awResource* _pResource)
 {}
 
 template<awconst::eResType TType>
-awResourceTypedRef<TType>::awResourceTypedRef(awResourceID _ResourceID)		
+awResourceTypedRef<TType>::awResourceTypedRef(zenResID _ResourceID)		
 : awResourceRef(awFlagResType(TType), _ResourceID)
 {}
 
@@ -129,7 +129,7 @@ awResourceTyped2Ref<TType1,TType2>::awResourceTyped2Ref(awResource* _pResource)
 {}
 
 template<awconst::eResType TType1, awconst::eResType TType2>
-awResourceTyped2Ref<TType1,TType2>::awResourceTyped2Ref(awResourceID _ResourceID)	
+awResourceTyped2Ref<TType1,TType2>::awResourceTyped2Ref(zenResID _ResourceID)	
 : awResourceRef(awFlagResType(TType1,TType2), _ResourceID)
 {}
 
@@ -145,7 +145,7 @@ AWClassDeclare(_ClassName_, awres::awResourceTypedRef<_Type_>)						\
 public:																				\
 	inline	_ClassName_(){}															\
 	inline	_ClassName_(awres::awResource* _pResource):Super(_pResource){}			\
-	inline	_ClassName_(awResourceID _ResourceID):Super(_ResourceID){}
+	inline	_ClassName_(zenResID _ResourceID):Super(_ResourceID){}
 
 //#################################################################################################
 // Used for declaration of awResourceTyped2Ref classes
@@ -157,4 +157,4 @@ AWClassDeclare(_ClassName_, awres::awResourceTyped2Ref<_Type1_ AWComma _Type2_> 
 public:																				\
 	inline	_ClassName_(){}															\
 	inline	_ClassName_(awres::awResource* _pResource):Super(_pResource){}			\
-	inline	_ClassName_(awResourceID _ResourceID):Super(_ResourceID){}
+	inline	_ClassName_(zenResID _ResourceID):Super(_ResourceID){}

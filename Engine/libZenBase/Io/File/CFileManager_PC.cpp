@@ -21,7 +21,7 @@ bool ManagerFile_PC::Load()
 			bValid = (FileInfo.dwFileAttributes&FILE_ATTRIBUTE_DIRECTORY) != 0;
 			if( bValid )
 			{
-				mzRoot.SetCount( static_cast<awUInt>(wcslen(zWorkingDir) + 1) );
+				mzRoot.SetCount( static_cast<zenUInt>(wcslen(zWorkingDir) + 1) );
 				_snwprintf_s( mzRoot.First(), mzRoot.Count(), _TRUNCATE, zWorkingDir);
 				SetCurrentDirectory( mzRoot.First() );
 			}
@@ -56,7 +56,7 @@ bool ManagerFile_PC::Load()
 
 	filenameTest[3].Set(L"Packages");
 	filenameTest[3] += L"testFile.xml";
-	for(awUInt idx(0); idx<AWArrayCount(filenameTest); ++idx)
+	for(zenUInt idx(0); idx<AWArrayCount(filenameTest); ++idx)
 	{
 		wprintf(L"FILENAME %i\n", idx );
 		wprintf(L"NameFull  : %s\n", filenameTest[idx].GetNameFull() );
@@ -66,10 +66,10 @@ bool ManagerFile_PC::Load()
 		wprintf(L"PathParent: %s\n\n", filenameTest[idx].GetPathParent() );		
 	}
 
-	awArrayDynamic<awArrayStatic<wchar_t>> aFolderName;
+	zenArrayDynamic<zenArrayStatic<wchar_t>> aFolderName;
 	filenameTest[0].SplitFolder(aFolderName);
 	wprintf(L"SPLIT Filename: " );
-	for(awUInt idx(0); idx<aFolderName.Count(); ++idx)
+	for(zenUInt idx(0); idx<aFolderName.Count(); ++idx)
 		wprintf(L"%s ", aFolderName[idx].First() );
 
 	CreateDir( L"Packages" );
@@ -95,7 +95,7 @@ bool ManagerFile_PC::SearchNext( const FileInfo*& _pOutFile )
 	return false;
 }
 
-bool ManagerFile_PC::Search(awUInt _uWantedFlag, const wchar_t* _zDirName, const wchar_t* _zFilePatern, bool bRecursive)
+bool ManagerFile_PC::Search(zenUInt _uWantedFlag, const wchar_t* _zDirName, const wchar_t* _zFilePatern, bool bRecursive)
 {
 	AWAssert(_zDirName );
 	AWAssert(_zFilePatern );
@@ -107,22 +107,22 @@ bool ManagerFile_PC::Search(awUInt _uWantedFlag, const wchar_t* _zDirName, const
 	maSearchResult.Reserve(32);
 	
 	_zDirName	= (_zDirName[0] == L'') ? L"." : _zDirName;
-	awUInt len	= static_cast<awUInt>(wcslen(_zDirName));
-	awArrayDynamic<wchar_t> zPath;
+	zenUInt len	= static_cast<zenUInt>(wcslen(_zDirName));
+	zenArrayDynamic<wchar_t> zPath;
 	zPath.Reserve(1024);
 	zPath.Copy(_zDirName, len + 1);
-	zPath.SetCount(static_cast<awUInt>(zPath.Count() + 1));		
+	zPath.SetCount(static_cast<zenUInt>(zPath.Count() + 1));		
 	zPath[zPath.Count()-2] = L'/';
 	zPath[zPath.Count()-1] = L'';
 	
-	LoadDirectory(_uWantedFlag, zPath, _zFilePatern, static_cast<awUInt>(wcslen(_zFilePatern)), bRecursive);
+	LoadDirectory(_uWantedFlag, zPath, _zFilePatern, static_cast<zenUInt>(wcslen(_zFilePatern)), bRecursive);
 	return maSearchResult.Count() > 0;
 }
 
-void ManagerFile_PC::LoadDirectory( awUInt _uWantedFlag, awArrayDynamic<wchar_t>& _zDirName, const wchar_t* _zFilePatern, const awUInt _uFilePaternLen, bool bRecursive)
+void ManagerFile_PC::LoadDirectory( zenUInt _uWantedFlag, zenArrayDynamic<wchar_t>& _zDirName, const wchar_t* _zFilePatern, const zenUInt _uFilePaternLen, bool bRecursive)
 {
 	WIN32_FIND_DATA	sysFileInfo;
-	awUInt uPathSizeInitial(_zDirName.Count());	
+	zenUInt uPathSizeInitial(_zDirName.Count());	
 
 	//-------------------------------------------------------------------------
 	// Look inside each directory when resursice is enabled
@@ -143,8 +143,8 @@ void ManagerFile_PC::LoadDirectory( awUInt _uWantedFlag, awArrayDynamic<wchar_t>
 					!(sysFileInfo.cFileName[0] == L'.' && sysFileInfo.cFileName[1] == L'') &&
 					!(sysFileInfo.cFileName[0] == L'.' && sysFileInfo.cFileName[1] == L'.' && sysFileInfo.cFileName[2] == L'') )
 				{				
-					awUInt len = static_cast<awUInt>(wcslen(sysFileInfo.cFileName));
-					_zDirName.SetCount( static_cast<awUInt>(uPathSizeInitial + len + 1));
+					zenUInt len = static_cast<zenUInt>(wcslen(sysFileInfo.cFileName));
+					_zDirName.SetCount( static_cast<zenUInt>(uPathSizeInitial + len + 1));
 					wcsncpy_s( &_zDirName[uPathSizeInitial-1], len+1, sysFileInfo.cFileName, _TRUNCATE );
 					_zDirName[uPathSizeInitial+len-1]	= L'/';
 					_zDirName[uPathSizeInitial+len]		= L'';
@@ -169,7 +169,7 @@ void ManagerFile_PC::LoadDirectory( awUInt _uWantedFlag, awArrayDynamic<wchar_t>
 		do
 		{
 			bool bValid;
-			awUInt uFileFlag(0);			
+			zenUInt uFileFlag(0);			
 			uFileFlag	|= (sysFileInfo.dwFileAttributes&FILE_ATTRIBUTE_DIRECTORY)!=0	? keFileFlag_Dir		: keFileFlag_File;
 			uFileFlag	|= (sysFileInfo.dwFileAttributes&FILE_ATTRIBUTE_READONLY)!=0	? keFileFlag_ReadOnly	: keFileFlag_Writeable;
 			uFileFlag	|= (sysFileInfo.dwFileAttributes&FILE_ATTRIBUTE_HIDDEN)!=0		? keFileFlag_Hidden		: 0;
@@ -182,8 +182,8 @@ void ManagerFile_PC::LoadDirectory( awUInt _uWantedFlag, awArrayDynamic<wchar_t>
 			if( bValid )
 			{
 				SYSTEMTIME	Time;
-				awUInt		len(static_cast<awUInt>(wcslen(sysFileInfo.cFileName)));
-				awUInt		idx(maSearchResult.Count());
+				zenUInt		len(static_cast<zenUInt>(wcslen(sysFileInfo.cFileName)));
+				zenUInt		idx(maSearchResult.Count());
 				
 				maSearchResult.SetCount(idx+1);
 				FileInfo& fileInfo	= maSearchResult[idx];
@@ -224,9 +224,9 @@ bool ManagerFile_PC::CreateDir( const Filename& _Filename )
 {
 	bool bOk(true);
 	Filename nameDir;
-	awArrayDynamic<awArrayStatic<wchar_t>> aFolderNames;
+	zenArrayDynamic<zenArrayStatic<wchar_t>> aFolderNames;
 	_Filename.SplitFolder(aFolderNames);
-	for(awUInt idx(0), count(aFolderNames.Count()); idx<count && bOk; ++idx)
+	for(zenUInt idx(0), count(aFolderNames.Count()); idx<count && bOk; ++idx)
 	{
 		nameDir += aFolderNames[idx].First();
 		if( !CreateDirectory( nameDir.GetNameFull(), NULL ) )

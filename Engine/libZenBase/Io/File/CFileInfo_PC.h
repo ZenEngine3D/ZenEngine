@@ -10,11 +10,11 @@ namespace CFil
 	public:
 							FileInfo_PC();
 
-		void				Close(awS64& iFilePos, awS64& iFileSize, bool& bValidHandle);
-		void				Seek(awS64& iNewFilePos, const awS64 iFilePos);
-		void				Skip(awS64& iFilePos, const awS32 iNumOfBytes);
-		void				Read(awS64& iFilePos, void* pxDest, const awU32 uNumBytes);
-		void				Write(awS64& iFilePos, awS64& iFileSize, const void* pxSource, const awU32 uNumBytes);
+		void				Close(zenS64& iFilePos, zenS64& iFileSize, bool& bValidHandle);
+		void				Seek(zenS64& iNewFilePos, const zenS64 iFilePos);
+		void				Skip(zenS64& iFilePos, const zenS32 iNumOfBytes);
+		void				Read(zenS64& iFilePos, void* pxDest, const zenU32 uNumBytes);
+		void				Write(zenS64& iFilePos, zenS64& iFileSize, const void* pxSource, const zenU32 uNumBytes);
 		void				Flush();
 	protected:
 		

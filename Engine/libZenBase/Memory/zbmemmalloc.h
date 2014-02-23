@@ -17,8 +17,8 @@ namespace CMem
 	public:
 								MallocAllocator(const char* _zName);
 		virtual void*			Malloc(size_t _uSize, bool _bIsArray, zenU32 _uAlign);
-		virtual	void			Free(void* _pAlloc, Header* _pInfoAlloc);
-		virtual zenDebugString		GetDescription(){return "Malloc";};
+		virtual	void			Free(void* _pAlloc, AllocHeader* _pInfoAlloc);
+		virtual zenDebugString	GetDescription(){return "Malloc";};
 	};
 }  
 

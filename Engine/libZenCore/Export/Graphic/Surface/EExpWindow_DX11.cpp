@@ -30,14 +30,14 @@ namespace EExp
 	//! @todo		Make it cross platform
 	//-------------------------------------------------------------------------------------------------
 	//! @param _WindowHandle	- Parent Window
-	//! @return 				- Unique awResourceID of created Resource
+	//! @return 				- Unique zenResID of created Resource
 	//=================================================================================================
-	awResourceID CreateGfxWindow( HWND _WindowHandle )
+	zenResID CreateGfxWindow( HWND _WindowHandle )
 	{
 		static CMem::PoolAllocator sMemPool("Pool Views", sizeof(SerialGfxWindow_DX11::ExportInfo), 1, 5 );
 		SerialGfxWindow_DX11::ExportInfo* pExportInfo	= AWNew(&sMemPool) SerialGfxWindow_DX11::ExportInfo;
 		pExportInfo->mhWindow							= _WindowHandle;
-		return EMgr::Export.CreateItem( awResourceID::kePlatformType_GFX, awconst::keResType_GfxWindow, pExportInfo );
+		return EMgr::Export.CreateItem( zenResID::kePlatformType_GFX, awconst::keResType_GfxWindow, pExportInfo );
 	}
 
 }

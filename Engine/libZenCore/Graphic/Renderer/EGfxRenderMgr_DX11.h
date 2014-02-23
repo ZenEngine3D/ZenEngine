@@ -33,7 +33,7 @@ public:
 	DXGI_FORMAT				AWFormatToNative( awconst::eTextureFormat _eTexFormat )const { return meFormatConversion[_eTexFormat]; }
 	void					UnbindTextures();
 protected:
-	awU16					muPerStageTextureCount[EExp::keShaderStage__Count];
+	zenU16					muPerStageTextureCount[EExp::keShaderStage__Count];
 	DXGI_FORMAT				meFormatConversion[awconst::keTexFormat__Count];
 	D3D_DRIVER_TYPE         mDX11DriverType;
 	D3D_FEATURE_LEVEL       mDX11FeatureLevel;

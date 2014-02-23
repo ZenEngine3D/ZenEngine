@@ -2,15 +2,15 @@
 #ifndef __LibFramework_Api_Type_Render2D_inl__
 #define __LibFramework_Api_Type_Render2D_inl__
 
-namespace zen { namespace awtype {
+namespace zen { namespace zenType {
 
-	AWRender2D::AWRender2D(void)
+	zenRender2D::zenRender2D(void)
 		: mbInit(false)
 	{
 
 	}
 
-	AWRender2D::~AWRender2D(void)
+	zenRender2D::~zenRender2D(void)
 	{
 		if(mbInit)
 		{

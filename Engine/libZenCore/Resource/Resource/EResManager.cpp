@@ -11,7 +11,7 @@ namespace ERes
 //! @param		_pExportInfo
 //! @return 	
 //=================================================================================================
-awResourceID CreateExportItemRuntime(EExp::ExportInfoBase* _pExportInfo)
+zenResID CreateExportItemRuntime(EExp::ExportInfoBase* _pExportInfo)
 {
 	AWAssert(_pExportInfo);
 	awres::awResourceRef rResource;
@@ -51,9 +51,9 @@ bool ManagerResource::Load()
 	mdResources.Init(1024);	
 	zenMem::Set(maResourcesDefault, sizeof(maResourcesDefault), 0);
 	
-	awconst::eResPlatform aPlatformTypes[awResourceID::kePlatformType__Count];
-	aPlatformTypes[awResourceID::kePlatformType_OS]		= awconst::kAWCurrentPlatformOS;
-	aPlatformTypes[awResourceID::kePlatformType_GFX]	= awconst::kAWCurrentPlatformGfx;
+	awconst::eResPlatform aPlatformTypes[zenResID::kePlatformType__Count];
+	aPlatformTypes[zenResID::kePlatformType_OS]		= awconst::kAWCurrentPlatformOS;
+	aPlatformTypes[zenResID::kePlatformType_GFX]	= awconst::kAWCurrentPlatformGfx;
 	EMgr::Export.SetExportInfos( aPlatformTypes, awconst::keResSource_Runtime, CreateExportItemRuntime );
 	return true;
 }
@@ -69,13 +69,13 @@ bool ManagerResource::Unload()
 }
 
 //=================================================================================================
-//! @brief		Find and return the resource with a particular awResourceID
+//! @brief		Find and return the resource with a particular zenResID
 //! @details	
-//! @param		_ResID				- awResourceID to look for
+//! @param		_ResID				- zenResID to look for
 //! @param		_bSupportDefault	- If returning default resource of this type, when not found
 //! @return 	Reference to resource
 //=================================================================================================
-awres::awResourceRef ManagerResource::GetResource(const awResourceID& _ResID, bool _bSupportDefault)
+awres::awResourceRef ManagerResource::GetResource(const zenResID& _ResID, bool _bSupportDefault)
 {
 	//AWAssert(_ResID.IsValid());cd
 	awres::awResource* pResource;
@@ -85,18 +85,18 @@ awres::awResourceRef ManagerResource::GetResource(const awResourceID& _ResID, bo
 }
 
 //=================================================================================================
-//! @brief		Find and return the resource with a particular awResourceID
+//! @brief		Find and return the resource with a particular zenResID
 //! @details	This version try to look in both Loaded and Dynamic created resource.
 //!				Useful for resource that can be dynamic and doesn't use an index for the name
-//! @param		_ResID				- awResourceID to look for
+//! @param		_ResID				- zenResID to look for
 //! @param		_bSupportDefault	- If returning default resource of this type, when not found
 //! @return 	Reference to resource
 //=================================================================================================
-awres::awResourceRef ManagerResource::GetResourceAnySource(const awResourceID& _ResID, bool _bSupportDefault)
+awres::awResourceRef ManagerResource::GetResourceAnySource(const zenResID& _ResID, bool _bSupportDefault)
 {
 	//AWAssert(_ResID.IsValid());
 	awres::awResource* pResource;
-	awResourceID anySourceResID(_ResID);
+	zenResID anySourceResID(_ResID);
 	anySourceResID.SetSource(awconst::keResSource_Loaded);
 	if( mdResources.Get(_ResID.HashID(), pResource) )	
 	{

@@ -10,11 +10,11 @@ namespace ERes
 	{
 	AWClassDeclare(ManagerResource, zbType::Manager)
 	public:		
-		awres::awResourceRef	GetResource				(const awResourceID& _ResID, bool _bSupportDefault=TRUE);
-		awres::awResourceRef	GetResourceAnySource	(const awResourceID& _ResID, bool _bSupportDefault=TRUE);		
+		awres::awResourceRef	GetResource				(const zenResID& _ResID, bool _bSupportDefault=TRUE);
+		awres::awResourceRef	GetResourceAnySource	(const zenResID& _ResID, bool _bSupportDefault=TRUE);		
 		awres::awResourceRef	Add						(awres::awResource* _pResource);
 	protected:
-		Hashmap<awres::awResource*>::Key64	mdResources;											//!< All resource currently loaded
+		zenMap<awres::awResource*>::Key64	mdResources;											//!< All resource currently loaded
 		awres::awResource*					maResourcesDefault[awconst::keResType__Invalid+1];	//!< Default resource used when resource at a key entry isn't loaded
 
 	//---------------------------------------------------------

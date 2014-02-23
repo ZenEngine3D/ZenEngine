@@ -20,9 +20,9 @@ namespace zen { namespace zenMath
     inline V4		XYZW            ( const float* _pValues );
     inline V4		XYZW            ( float _fX, float _fY, float _fZ, float _fW);
 	/*
-	inline V4		XYZW            ( awU32 _uValue         );
-	inline V4		XYZW            ( const awU32* _uValues );
-	inline V4		XYZW            ( awU32 _uX, awU32 _uY, awU32 _uZ, awU32 _uW);
+	inline V4		XYZW            ( zenU32 _uValue         );
+	inline V4		XYZW            ( const zenU32* _uValues );
+	inline V4		XYZW            ( zenU32 _uX, zenU32 _uY, zenU32 _uZ, zenU32 _uW);
 	*/
     inline V4		SpreadX         ( V4 _Vect );
     inline V4		SpreadY         ( V4 _Vect );

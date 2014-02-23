@@ -14,7 +14,7 @@ namespace EExp
 		virtual bool						Serialize( EExp::Serializer_Base& _Serializer );
 		struct SerialUseOnly
 		{
-			awArrayStatic<awResourceID>	maMeshStripID;			//!< List of Mesh strips used this Mesh
+			zenArrayStatic<zenResID>	maMeshStripID;			//!< List of Mesh strips used this Mesh
 			//! @todo generate strip per vb for depth rendering
 		};
 		SerialUseOnly					mSerial;

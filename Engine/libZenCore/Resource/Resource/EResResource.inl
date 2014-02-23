@@ -32,7 +32,7 @@ ResourceRef<TResourceClass, TReferenceClass>::ResourceRef(awres::awResource* _pR
 }
 
 template<class TResourceClass, class TReferenceClass>
-ResourceRef<TResourceClass, TReferenceClass>::ResourceRef(awResourceID _ResourceID)
+ResourceRef<TResourceClass, TReferenceClass>::ResourceRef(zenResID _ResourceID)
 : Super(_ResourceID)
 {
 }

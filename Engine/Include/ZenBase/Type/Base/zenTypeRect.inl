@@ -1,11 +1,7 @@
-#pragma once
-#ifndef __LibCore_Api_Type_inl__
-#define __LibCore_Api_Type_inl__
-
-namespace zen { namespace awtype {
+namespace zen { namespace zenType {
 
 template<>
-AWForceInline awRect<awS8>::awRect(void)
+AWForceInline zenRect<zenS8>::zenRect(void)
 : mX(0)
 , mY(0)
 , mW(0)
@@ -14,7 +10,7 @@ AWForceInline awRect<awS8>::awRect(void)
 }
 
 template<>
-AWForceInline awRect<awU8>::awRect(void)
+AWForceInline zenRect<zenU8>::zenRect(void)
 : mX(0)
 , mY(0)
 , mW(0)
@@ -23,7 +19,7 @@ AWForceInline awRect<awU8>::awRect(void)
 }
 
 template<>
-AWForceInline awRect<awS16>::awRect(void)
+AWForceInline zenRect<zenS16>::zenRect(void)
 : mX(0)
 , mY(0)
 , mW(0)
@@ -32,7 +28,7 @@ AWForceInline awRect<awS16>::awRect(void)
 }
 
 template<>
-AWForceInline awRect<awU16>::awRect(void)
+AWForceInline zenRect<zenU16>::zenRect(void)
 : mX(0)
 , mY(0)
 , mW(0)
@@ -41,7 +37,7 @@ AWForceInline awRect<awU16>::awRect(void)
 }
 
 template<>
-AWForceInline awRect<awS32>::awRect(void)
+AWForceInline zenRect<zenS32>::zenRect(void)
 : mX(0)
 , mY(0)
 , mW(0)
@@ -50,7 +46,7 @@ AWForceInline awRect<awS32>::awRect(void)
 }
 
 template<>
-AWForceInline awRect<awU32>::awRect(void)
+AWForceInline zenRect<zenU32>::zenRect(void)
 : mX(0)
 , mY(0)
 , mW(0)
@@ -59,7 +55,7 @@ AWForceInline awRect<awU32>::awRect(void)
 }
 
 template<>
-AWForceInline awRect<awS64>::awRect(void)
+AWForceInline zenRect<zenS64>::zenRect(void)
 : mX(0)
 , mY(0)
 , mW(0)
@@ -68,7 +64,7 @@ AWForceInline awRect<awS64>::awRect(void)
 }
 
 template<>
-AWForceInline awRect<awU64>::awRect(void)
+AWForceInline zenRect<zenU64>::zenRect(void)
 : mX(0)
 , mY(0)
 , mW(0)
@@ -77,7 +73,7 @@ AWForceInline awRect<awU64>::awRect(void)
 }
 
 template<>
-AWForceInline awRect<awF32>::awRect(void)
+AWForceInline zenRect<zenF32>::zenRect(void)
 : mX(0.0f)
 , mY(0.0f)
 , mW(0.0f)
@@ -86,7 +82,7 @@ AWForceInline awRect<awF32>::awRect(void)
 }
 
 template<>
-AWForceInline awRect<awF64>::awRect(void)
+AWForceInline zenRect<zenF64>::zenRect(void)
 : mX(0.0f)
 , mY(0.0f)
 , mW(0.0f)
@@ -95,7 +91,7 @@ AWForceInline awRect<awF64>::awRect(void)
 }
 
 template<class _Type_>
-AWForceInline awRect<_Type_>::awRect(const _Type_& inX, const _Type_& inY, const _Type_& inW, const _Type_& inH)
+AWForceInline zenRect<_Type_>::zenRect(const _Type_& inX, const _Type_& inY, const _Type_& inW, const _Type_& inH)
 : mX(inX)
 , mY(inY)
 , mW(inW)
@@ -104,137 +100,137 @@ AWForceInline awRect<_Type_>::awRect(const _Type_& inX, const _Type_& inY, const
 }
 
 template<>
-AWForceInline bool awRect<awS8>::IsNull(void)
+AWForceInline bool zenRect<zenS8>::IsNull(void)
 {
 	return mX==0 && mY==0 && mW==0 && mH==0;
 }
 
 template<>
-AWForceInline const awRect<awS8>& awRect<awS8>::SetNull(void)
+AWForceInline const zenRect<zenS8>& zenRect<zenS8>::SetNull(void)
 {
 	mX = mY = mW = mH = 0;
 	return *this;
 }
 
 template<>
-AWForceInline bool awRect<awU8>::IsNull(void)
+AWForceInline bool zenRect<zenU8>::IsNull(void)
 {
 	return mX==0 && mY==0 && mW==0 && mH==0;
 }
 
 template<>
-AWForceInline const awRect<awU8>& awRect<awU8>::SetNull(void)
+AWForceInline const zenRect<zenU8>& zenRect<zenU8>::SetNull(void)
 {
 	mX = mY = mW = mH = 0;
 	return *this;
 }
 
 template<>
-AWForceInline bool awRect<awS16>::IsNull(void)
+AWForceInline bool zenRect<zenS16>::IsNull(void)
 {
 	return mX==0 && mY==0 && mW==0 && mH==0;
 }
 
 template<>
-AWForceInline const awRect<awS16>& awRect<awS16>::SetNull(void)
+AWForceInline const zenRect<zenS16>& zenRect<zenS16>::SetNull(void)
 {
 	mX = mY = mW = mH = 0;
 	return *this;
 }
 
 template<>
-AWForceInline bool awRect<awU16>::IsNull(void)
+AWForceInline bool zenRect<zenU16>::IsNull(void)
 {
 	return mX==0 && mY==0 && mW==0 && mH==0;
 }
 
 template<>
-AWForceInline const awRect<awU16>& awRect<awU16>::SetNull(void)
+AWForceInline const zenRect<zenU16>& zenRect<zenU16>::SetNull(void)
 {
 	mX = mY = mW = mH = 0;
 	return *this;
 }
 
 template<>
-AWForceInline bool awRect<awS32>::IsNull(void)
+AWForceInline bool zenRect<zenS32>::IsNull(void)
 {
 	return mX==0 && mY==0 && mW==0 && mH==0;
 }
 
 template<>
-AWForceInline const awRect<awS32>& awRect<awS32>::SetNull(void)
+AWForceInline const zenRect<zenS32>& zenRect<zenS32>::SetNull(void)
 {
 	mX = mY = mW = mH = 0;
 	return *this;
 }
 
 template<>
-AWForceInline bool awRect<awU32>::IsNull(void)
+AWForceInline bool zenRect<zenU32>::IsNull(void)
 {
 	return mX==0 && mY==0 && mW==0 && mH==0;
 }
 
 template<>
-AWForceInline const awRect<awU32>& awRect<awU32>::SetNull(void)
+AWForceInline const zenRect<zenU32>& zenRect<zenU32>::SetNull(void)
 {
 	mX = mY = mW = mH = 0;
 	return *this;
 }
 
 template<>
-AWForceInline bool awRect<awS64>::IsNull(void)
+AWForceInline bool zenRect<zenS64>::IsNull(void)
 {
 	return mX==0 && mY==0 && mW==0 && mH==0;
 }
 
 template<>
-AWForceInline const awRect<awS64>& awRect<awS64>::SetNull(void)
+AWForceInline const zenRect<zenS64>& zenRect<zenS64>::SetNull(void)
 {
 	mX = mY = mW = mH = 0;
 	return *this;
 }
 
 template<>
-AWForceInline bool awRect<awU64>::IsNull(void)
+AWForceInline bool zenRect<zenU64>::IsNull(void)
 {
 	return mX==0 && mY==0 && mW==0 && mH==0;
 }
 
 template<>
-AWForceInline const awRect<awU64>& awRect<awU64>::SetNull(void)
+AWForceInline const zenRect<zenU64>& zenRect<zenU64>::SetNull(void)
 {
 	mX = mY = mW = mH = 0;
 	return *this;
 }
 
 template<>
-AWForceInline bool awRect<awF32>::IsNull(void)
+AWForceInline bool zenRect<zenF32>::IsNull(void)
 {
 	return mX==0.0f && mY==0.0f && mW==0.0f && mH==0.0f;
 }
 
 template<>
-AWForceInline const awRect<awF32>& awRect<awF32>::SetNull(void)
+AWForceInline const zenRect<zenF32>& zenRect<zenF32>::SetNull(void)
 {
 	mX = mY = mW = mH = 0.0f;
 	return *this;
 }
 
 template<>
-AWForceInline bool awRect<awF64>::IsNull(void)
+AWForceInline bool zenRect<zenF64>::IsNull(void)
 {
 	return mX==0.0 && mY==0.0 && mW==0.0 && mH==0.0;
 }
 
 template<>
-AWForceInline const awRect<awF64>& awRect<awF64>::SetNull(void)
+AWForceInline const zenRect<zenF64>& zenRect<zenF64>::SetNull(void)
 {
 	mX = mY = mW = mH = 0.0;
 	return *this;
 }
 
 template<class _Type_>
-AWForceInline awRect<_Type_>::awRect(const awRect& xOther)
+AWForceInline zenRect<_Type_>::zenRect(const zenRect& xOther)
 	: mX(xOther.mX)
 	, mY(xOther.mY)
 	, mW(xOther.mW)
@@ -242,6 +238,5 @@ AWForceInline awRect<_Type_>::awRect(const awRect& xOther)
 {
 }
 
-}}//namespace zen { namespace awtype {
+}}//namespace zen { namespace zenType {
 
-#endif //__LibCore_Api_Type_inl__

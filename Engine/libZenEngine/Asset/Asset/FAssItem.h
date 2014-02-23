@@ -21,30 +21,30 @@ public:
 	virtual									~AssetItem();
 	virtual bool							Load(const pugi::xml_node& _NodeAsset);
 	virtual bool							Save(pugi::xml_document& _Doc);
-	inline awHash64							GetID()const{return mhID;}
-	inline const awArrayStatic<awString>&		GetGroupAndName()const{return maGroup;}
-	inline awHash32							GetGroupID()const{return mhGroupID;}
-	inline const awString&					GetName()const{return *maGroup.Last();}
-	inline const awString&					GetDescription()const{return mzDescription;}
+	inline zenHash64							GetID()const{return mhID;}
+	inline const zenArrayStatic<zenString>&		GetGroupAndName()const{return maGroup;}
+	inline zenHash32							GetGroupID()const{return mhGroupID;}
+	inline const zenString&					GetName()const{return *maGroup.Last();}
+	inline const zenString&					GetDescription()const{return mzDescription;}
 	inline const char*						GetTypeDesc()const {return GetTypeDesc(GetType());}
-	inline awArrayStatic<FAss::ValuePointer>&	GetPropertyValues(){return maPropertyValue;}
-	FAss::ValuePointer						GetPropertyValue(awHash32 _hPropertyName)const;
+	inline zenArrayStatic<FAss::ValuePointer>&	GetPropertyValues(){return maPropertyValue;}
+	FAss::ValuePointer						GetPropertyValue(zenHash32 _hPropertyName)const;
 	void									ResetPropertyValues();
 
 	virtual FAss::AssetItem::enumType		GetType()const=0;									//!< Child class return the Asset type they represent
 	virtual FAss::PropertyArray&			GetPropertyDef()const=0;							//!< Child class return the list of property definition they are made of
-	virtual awUInt							GetPropertyDefIndex(awHash32 _hPropertyName)const=0;	//!< Child class return index of PropertyDef with same name (using dictionary)
+	virtual zenUInt							GetPropertyDefIndex(zenHash32 _hPropertyName)const=0;	//!< Child class return index of PropertyDef with same name (using dictionary)
 protected:
 											AssetItem();
 	void									FreePropertyValues();
 	void									RebuiltDescription();
-	void									InitPropertyDefIndex(Hashmap<awUInt>::Key32& _dPropertyMap)const;
+	void									InitPropertyDefIndex(zenMap<zenUInt>::Key32& _dPropertyMap)const;
 	class Package*							mpPackage;					//!< Parent package this asset is kept inside
-	awHash64									mhID;						//!< Unique ID for this Asset instance
-	awHash32									mhGroupID;					//!< Group ID of this asset
-	awString									mzDescription;				//!< Asset description, built from propertydef/values
-	awArrayStatic<awString>						maGroup;					//!< Asset belongs to a group hierarchy for easier finding of asset, like package (last element is asset name)
-	awArrayStatic<FAss::ValuePointer>			maPropertyValue;			//!< Asset properties values
+	zenHash64									mhID;						//!< Unique ID for this Asset instance
+	zenHash32									mhGroupID;					//!< Group ID of this asset
+	zenString									mzDescription;				//!< Asset description, built from propertydef/values
+	zenArrayStatic<zenString>						maGroup;					//!< Asset belongs to a group hierarchy for easier finding of asset, like package (last element is asset name)
+	zenArrayStatic<FAss::ValuePointer>			maPropertyValue;			//!< Asset properties values
 	friend class Package;
 
 //-----------------------------------------------------------------------------
@@ -53,7 +53,7 @@ protected:
 public:
 	static AssetItem*						CreateItem	(enumType _eAssetType, Package& _Owner);
 	static const char*						GetTypeDesc	(AssetItem::enumType _ePropertyType);
-	static AssetItem::enumType				GetType		(awHash32 _hPropertyName);	
+	static AssetItem::enumType				GetType		(zenHash32 _hPropertyName);	
 };
 	
 extern const char* kzXmlName_Node_Package;

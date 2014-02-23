@@ -17,16 +17,16 @@ namespace EExp
 		if( pExportInfo->meFormatInput != pExportInfo->meFormatOutput )
 		{
 			//! @todo image conversion
-			awUInt uMipCount = mSerial.maMipData.SetCount( pExportInfo->maMipData.Count() );
-			for( awUInt mipIdx=0; mipIdx<uMipCount; ++mipIdx)
+			zenUInt uMipCount = mSerial.maMipData.SetCount( pExportInfo->maMipData.Count() );
+			for( zenUInt mipIdx=0; mipIdx<uMipCount; ++mipIdx)
 			{
 				//..
 			}					
 		}
 		else
 		{
-			awUInt uMipCount = mSerial.maMipData.SetCount( pExportInfo->maMipData.Count() );
-			for(awUInt mipIdx(0); mipIdx<uMipCount; ++mipIdx)
+			zenUInt uMipCount = mSerial.maMipData.SetCount( pExportInfo->maMipData.Count() );
+			for(zenUInt mipIdx(0); mipIdx<uMipCount; ++mipIdx)
 			{
 				mSerial.maMipData[mipIdx].maData	= pExportInfo->maMipData[mipIdx].maData;
 				mSerial.maMipData[mipIdx].mvDim		= pExportInfo->maMipData[mipIdx].mvDim;

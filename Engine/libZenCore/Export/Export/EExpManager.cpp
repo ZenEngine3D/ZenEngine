@@ -5,7 +5,7 @@ namespace EMgr { EExp::ManagerExport Export; }
 namespace EExp
 {
 
-awU32	ManagerExport::saNextID[awconst::keResType__Count];
+zenU32	ManagerExport::saNextID[awconst::keResType__Count];
 
 //=================================================================================================
 //! @brief		Constructor
@@ -25,13 +25,13 @@ ManagerExport::ManagerExport()
 //=================================================================================================
 bool ManagerExport::Load()
 {	
-	// Default callback for Getting new awResourceID value, to use simple incrementing index (good for runtime resources)
+	// Default callback for Getting new zenResID value, to use simple incrementing index (good for runtime resources)
 	memset(saNextID, 0, sizeof(saNextID) );		
-	for( awUInt idxPlatform(0); idxPlatform<awconst::keResPlatform__Count; ++idxPlatform)
-		for( awUInt idxType(0); idxType<awconst::keResType__Count; ++idxType)
+	for( zenUInt idxPlatform(0); idxPlatform<awconst::keResPlatform__Count; ++idxPlatform)
+		for( zenUInt idxType(0); idxType<awconst::keResType__Count; ++idxType)
 			mpCallbackGetItemID[idxPlatform][idxType] = CallbackGetItemID;	
 	
-	// Configure specific callback for awResourceID value 
+	// Configure specific callback for zenResID value 
 #if AW_EXPORT_OR_RESOURCE_DX11	
 	mpCallbackGetItemID[awconst::keResPlatform_DX11][awconst::keResType_GfxView]					= EExp::SerialGfxView_Base::CallbackGetItemID;
 	mpCallbackGetItemID[awconst::keResPlatform_DX11][awconst::keResType_GfxMesh]					= EExp::SerialMesh_Base::CallbackGetItemID;
@@ -52,13 +52,13 @@ bool ManagerExport::Load()
 
 void ManagerExport::SetExportInfos(awconst::eResPlatform _aPlatforms[awconst::keResPlatform__Count], awconst::eResSource _eExportSource, CBCreateItem _pExportCBCreateItem )
 {
-	for(awUInt platIdx(0); platIdx<awconst::keResPlatform__Count; ++platIdx)
+	for(zenUInt platIdx(0); platIdx<awconst::keResPlatform__Count; ++platIdx)
 		maPlatforms[platIdx] = _aPlatforms[platIdx];
 	meSource				= _eExportSource;
 	mpCallbackCreateItem	= _pExportCBCreateItem;
 }
 
-awResourceID ManagerExport::CreateItem( awResourceID::ePlatformType _ePlatformType, awconst::eResType _eResourceType, ExportInfoBase* _pExportInfoBase )
+zenResID ManagerExport::CreateItem( zenResID::ePlatformType _ePlatformType, awconst::eResType _eResourceType, ExportInfoBase* _pExportInfoBase )
 { 
 	AWAssert(_ePlatformType<awconst::keResPlatform__Count);
 	AWAssert(_eResourceType<awconst::keResType__Count);
@@ -70,29 +70,29 @@ awResourceID ManagerExport::CreateItem( awResourceID::ePlatformType _ePlatformTy
 }
 
 //=================================================================================================
-//! @brief		Request an new awResourceID for a particular resource type
-//! @details	Use internal table, keeping track of each resource type awResourceID creation 
+//! @brief		Request an new zenResID for a particular resource type
+//! @details	Use internal table, keeping track of each resource type zenResID creation 
 //!				callback method.
 //-------------------------------------------------------------------------------------------------
-//! @return		New awResourceID
+//! @return		New zenResID
 //=================================================================================================
-awResourceID ManagerExport::GetNewResourceID(awconst::eResPlatform _ePlatform, awconst::eResType _eType, awconst::eResSource _eSource, const ExportInfoBase* _pExportInfo, bool& _bExistOut)
+zenResID ManagerExport::GetNewResourceID(awconst::eResPlatform _ePlatform, awconst::eResType _eType, awconst::eResSource _eSource, const ExportInfoBase* _pExportInfo, bool& _bExistOut)
 {
 	return mpCallbackGetItemID[_ePlatform][_eType](_ePlatform, _eType, _eSource, _pExportInfo, _bExistOut);
 }
 
 //=================================================================================================
-//! @brief		Default awResourceID naming scheme
+//! @brief		Default zenResID naming scheme
 //! @details	Keep track of a counter, and increment it for each time an ID is requested. 
 //!				Useful for dynamically created resources
 //-------------------------------------------------------------------------------------------------
-//! @return		New awResourceID
+//! @return		New zenResID
 //=================================================================================================
-awResourceID ManagerExport::CallbackGetItemID(awconst::eResPlatform _ePlatform, awconst::eResType _eType, awconst::eResSource _eSource, const ExportInfoBase* _pExportInfo, bool& _bExistOut)
+zenResID ManagerExport::CallbackGetItemID(awconst::eResPlatform _ePlatform, awconst::eResType _eType, awconst::eResSource _eSource, const ExportInfoBase* _pExportInfo, bool& _bExistOut)
 {
 	_bExistOut	= false;
-	awU32 uNextID = saNextID[_eType]++;
-	return awResourceID( uNextID, _ePlatform, _eType, _eSource );
+	zenU32 uNextID = saNextID[_eType]++;
+	return zenResID( uNextID, _ePlatform, _eType, _eSource );
 }
 
 //=================================================================================================
@@ -145,10 +145,10 @@ void ManagerExport::ExportDone(ExportItem* _pExportItem)
 //! @details	
 //-------------------------------------------------------------------------------------------------
 //! @param _ParentShaderID	- ResourceId of the parent shader to generate the input signature for
-//! @return 				- Unique awResourceID of created Resource
+//! @return 				- Unique zenResID of created Resource
 //=================================================================================================
 /*
-awResourceID CreateExportItemOffline(awconst::eResType _eResType, EExp::ExportInfoBase* _pExportInfo)
+zenResID CreateExportItemOffline(awconst::eResType _eResType, EExp::ExportInfoBase* _pExportInfo)
 {
 	switch( EMgr::Export.GetExportGfx() )
 	{

@@ -13,15 +13,15 @@ namespace EExp
 		, mSamplerID()
 		{}
 
-		TextureBinding(awHash32 _hTextureName, awResourceID _TextureID, awResourceID _SamplerID)
+		TextureBinding(zenHash32 _hTextureName, zenResID _TextureID, zenResID _SamplerID)
 		: mhTextureName(_hTextureName)
 		, mTextureID(_TextureID)	
 		, mSamplerID(_SamplerID)
 		{}
 
-	 	awHash32		mhTextureName;
-		awResourceID	mTextureID;
-		awResourceID	mSamplerID;
+	 	zenHash32		mhTextureName;
+		zenResID	mTextureID;
+		zenResID	mSamplerID;
 	};
 	*/
 	
@@ -31,17 +31,17 @@ namespace EExp
 	public:
 		struct ExportInfo : public EExp::ExportInfoBase
 		{			
-			awResourceID							mVertexBufferID;
-			awResourceID							mIndexBufferID;
-			awResourceID							mShaderBindingID;			
-			awArrayStatic<awres::awShaderTexture>	maTexture;				//!< List of textures assigned to shader
-			awArrayStatic<awResourceID>				maShaderParamID;		//!< List of Shader Param Instance (1 per ParamDef entry)
-			awU32									muIndexFirst;
-			awU32									muIndexCount;
+			zenResID							mVertexBufferID;
+			zenResID							mIndexBufferID;
+			zenResID							mShaderBindingID;			
+			zenArrayStatic<awres::awShaderTexture>	maTexture;				//!< List of textures assigned to shader
+			zenArrayStatic<zenResID>				maShaderParamID;		//!< List of Shader Param Instance (1 per ParamDef entry)
+			zenU32									muIndexFirst;
+			zenU32									muIndexCount;
 		};
 	};
 	
-	awResourceID CreateGfxMeshStrip(awResourceID _VertexBufferID, awResourceID _IndexBufferID, awResourceID _ShaderBindingID, awU32 _uIndexFirst=0, awU32 _uIndexCount=0xFFFFFFFF, const awArrayBase<awResourceID>& _aShaderParamID=awArrayStatic<awResourceID>(), const awArrayBase<awres::awShaderTexture>& _aTexture=awArrayStatic<awres::awShaderTexture>());
+	zenResID CreateGfxMeshStrip(zenResID _VertexBufferID, zenResID _IndexBufferID, zenResID _ShaderBindingID, zenU32 _uIndexFirst=0, zenU32 _uIndexCount=0xFFFFFFFF, const zenArrayBase<zenResID>& _aShaderParamID=zenArrayStatic<zenResID>(), const zenArrayBase<awres::awShaderTexture>& _aTexture=zenArrayStatic<awres::awShaderTexture>());
 }
 
 #include "EExpMeshStripDX11.h"

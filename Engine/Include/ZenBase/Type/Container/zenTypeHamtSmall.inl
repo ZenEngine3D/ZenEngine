@@ -1,4 +1,4 @@
-namespace zen { namespace awtype {
+namespace zen { namespace zenType {
 
 //=================================================================================================
 // NODE SUBCLASS
@@ -8,7 +8,7 @@ namespace zen { namespace awtype {
 //! @brief Get count of valid Slots in this node
 //-------------------------------------------------------------------------------------------------
 template<class TKey, class TValue, class TIndex, int TIndexBits>
-awUInt awHamt<TKey, TValue, TIndex, TIndexBits>::Node::GetSlotCount() const 
+zenUInt zenHamt<TKey, TValue, TIndex, TIndexBits>::Node::GetSlotCount() const 
 {	
 	return zenMath::BitsCount( mIndexUsed ); 
 }
@@ -17,7 +17,7 @@ awUInt awHamt<TKey, TValue, TIndex, TIndexBits>::Node::GetSlotCount() const
 //! @brief Check if a Node Slot is a leaf (contains value) or point to child node
 //-------------------------------------------------------------------------------------------------
 template<class TKey, class TValue, class TIndex, int TIndexBits>
-bool awHamt<TKey, TValue, TIndex, TIndexBits>::Node::IsLeafSlot( awUInt _uSlotID ) const 
+bool zenHamt<TKey, TValue, TIndex, TIndexBits>::Node::IsLeafSlot( zenUInt _uSlotID ) const 
 { 
 	return (mSlotLeaf & (TIndex(1)<<_uSlotID)) != 0; 
 }
@@ -26,7 +26,7 @@ bool awHamt<TKey, TValue, TIndex, TIndexBits>::Node::IsLeafSlot( awUInt _uSlotID
 //! @brief Check if Node Index is being used in this Node 
 //-------------------------------------------------------------------------------------------------
 template<class TKey, class TValue, class TIndex, int TIndexBits>
-bool awHamt<TKey, TValue, TIndex, TIndexBits>::Node::IsUsedIndex( awUInt _uNodeIndex ) const 
+bool zenHamt<TKey, TValue, TIndex, TIndexBits>::Node::IsUsedIndex( zenUInt _uNodeIndex ) const 
 { 
 	return (mIndexUsed & (TIndex(1)<<_uNodeIndex)) != 0; 
 }
@@ -35,7 +35,7 @@ bool awHamt<TKey, TValue, TIndex, TIndexBits>::Node::IsUsedIndex( awUInt _uNodeI
 //! @brief Get in which slot a Node Index is stored
 //-------------------------------------------------------------------------------------------------
 template<class TKey, class TValue, class TIndex, int TIndexBits>
-awUInt awHamt<TKey, TValue, TIndex, TIndexBits>::Node::GetSlotID( awUInt _uNodeIndex ) const 
+zenUInt zenHamt<TKey, TValue, TIndex, TIndexBits>::Node::GetSlotID( zenUInt _uNodeIndex ) const 
 { 
 	// SlotID is amount of Active Index up to this NodeIndex
 	return zenMath::BitsCount( static_cast<TIndex>(mIndexUsed & ((TIndex(1)<<_uNodeIndex)-1)) ); 
@@ -45,7 +45,7 @@ awUInt awHamt<TKey, TValue, TIndex, TIndexBits>::Node::GetSlotID( awUInt _uNodeI
 //! @brief Return first used slotID (-1 if none)
 //-------------------------------------------------------------------------------------------------
 template<class TKey, class TValue, class TIndex, int TIndexBits>
-int awHamt<TKey, TValue, TIndex, TIndexBits>::Node::GetFirstUsedSlotID()const 
+int zenHamt<TKey, TValue, TIndex, TIndexBits>::Node::GetFirstUsedSlotID()const 
 { 
 	return mIndexUsed ? 0 : -1; 
 }
@@ -54,7 +54,7 @@ int awHamt<TKey, TValue, TIndex, TIndexBits>::Node::GetFirstUsedSlotID()const
 //! @brief Return last used slotID (-1 if none)
 //-------------------------------------------------------------------------------------------------
 template<class TKey, class TValue, class TIndex, int TIndexBits>
-int awHamt<TKey, TValue, TIndex, TIndexBits>::Node::GetLastUsedSlotID()const 
+int zenHamt<TKey, TValue, TIndex, TIndexBits>::Node::GetLastUsedSlotID()const 
 { 
 	static_cast<int>(zenMath::BitsCount( mIndexUsed ))-1; 
 }
@@ -63,50 +63,50 @@ int awHamt<TKey, TValue, TIndex, TIndexBits>::Node::GetLastUsedSlotID()const
 // ITERATOR SUBCLASS
 //=================================================================================================
 template<class TKey, class TValue, class TIndex, int TIndexBits>
-awHamt<TKey, TValue, TIndex, TIndexBits>::Iterator::Iterator() 
+zenHamt<TKey, TValue, TIndex, TIndexBits>::Iterator::Iterator() 
 : msDepth(-1)				
 {}
 
 template<class TKey, class TValue, class TIndex, int TIndexBits>
-awHamt<TKey, TValue, TIndex, TIndexBits>::Iterator::Iterator(const Iterator& _Copy)			
+zenHamt<TKey, TValue, TIndex, TIndexBits>::Iterator::Iterator(const Iterator& _Copy)			
 { 
 	zenMem::Copy( this, &_Copy, sizeof(Iterator) ); 
 }
 
 template<class TKey, class TValue, class TIndex, int TIndexBits>
-awHamt<TKey, TValue, TIndex, TIndexBits>::Iterator::Iterator(const awHamt& _Parent )		
+zenHamt<TKey, TValue, TIndex, TIndexBits>::Iterator::Iterator(const zenHamt& _Parent )		
 { 
 	_Parent.GetFirst(*this); 
 }
 
 template<class TKey, class TValue, class TIndex, int TIndexBits>
-void awHamt<TKey, TValue, TIndex, TIndexBits>::Iterator::operator=(const Iterator& _Copy)	
+void zenHamt<TKey, TValue, TIndex, TIndexBits>::Iterator::operator=(const Iterator& _Copy)	
 { 
 	zenMem::Copy( this, &_Copy, sizeof(Iterator) );	
 }
 
 template<class TKey, class TValue, class TIndex, int TIndexBits>
-bool awHamt<TKey, TValue, TIndex, TIndexBits>::Iterator::IsValid()							
+bool zenHamt<TKey, TValue, TIndex, TIndexBits>::Iterator::IsValid()							
 { 
 	return msDepth >= 0; 
 }
 
 template<class TKey, class TValue, class TIndex, int TIndexBits>
-TKey awHamt<TKey, TValue, TIndex, TIndexBits>::Iterator::GetKey()							
+TKey zenHamt<TKey, TValue, TIndex, TIndexBits>::Iterator::GetKey()							
 { 
 	AWAssert( IsValid() ); 
 	return mpNodeTree[msDepth]->mpSlots[mpSlotID[msDepth]].Key; 
 }
 
 template<class TKey, class TValue, class TIndex, int TIndexBits>
-TValue& awHamt<TKey, TValue, TIndex, TIndexBits>::Iterator::GetValue()						
+TValue& zenHamt<TKey, TValue, TIndex, TIndexBits>::Iterator::GetValue()						
 { 
 	AWAssert( IsValid() ); 
 	return mpNodeTree[msDepth]->mpSlots[mpSlotID[msDepth]].Value(); 
 }
 
 template<class TKey, class TValue, class TIndex, int TIndexBits>
-void awHamt<TKey, TValue, TIndex, TIndexBits>::Iterator::operator++()
+void zenHamt<TKey, TValue, TIndex, TIndexBits>::Iterator::operator++()
 {
 	AWAssert( IsValid() );									
 	// Go to next SlotID
@@ -131,7 +131,7 @@ void awHamt<TKey, TValue, TIndex, TIndexBits>::Iterator::operator++()
 }
 
 template<class TKey, class TValue, class TIndex, int TIndexBits>
-void awHamt<TKey, TValue, TIndex, TIndexBits>::Iterator::operator--()
+void zenHamt<TKey, TValue, TIndex, TIndexBits>::Iterator::operator--()
 {
 	AWAssert( IsValid() );
 	// Go to previous SlotID
@@ -164,7 +164,7 @@ void awHamt<TKey, TValue, TIndex, TIndexBits>::Iterator::operator--()
 //! @details	Constructor
 //==================================================================================================
 template<class TKey, class TValue, class TIndex, int TIndexBits>
-awHamt< TKey, TValue, TIndex, TIndexBits>::awHamt()
+zenHamt< TKey, TValue, TIndex, TIndexBits>::zenHamt()
 : mpRootNode(NULL)
 , muCount(0)
 { 
@@ -178,7 +178,7 @@ awHamt< TKey, TValue, TIndex, TIndexBits>::awHamt()
 //! @param		_pAllocator		- Which allocator to use for memory allocations
 //==================================================================================================
 template<class TKey, class TValue, class TIndex, int TIndexBits>
-awHamt< TKey, TValue, TIndex, TIndexBits>::awHamt( awUInt _uReservePool, CMem::Allocator* _pAllocator=NULL )
+zenHamt< TKey, TValue, TIndex, TIndexBits>::zenHamt( zenUInt _uReservePool, CMem::Allocator* _pAllocator=NULL )
 : mpRootNode(NULL)
 , muCount(0)
 {
@@ -190,7 +190,7 @@ awHamt< TKey, TValue, TIndex, TIndexBits>::awHamt( awUInt _uReservePool, CMem::A
 //! @details	Destructor
 //==================================================================================================
 template<class TKey, class TValue, class TIndex, int TIndexBits>
-awHamt< TKey, TValue, TIndex, TIndexBits>::~awHamt()
+zenHamt< TKey, TValue, TIndex, TIndexBits>::~zenHamt()
 {
 	if( mpRootNode )
 	{
@@ -204,20 +204,20 @@ awHamt< TKey, TValue, TIndex, TIndexBits>::~awHamt()
 //! @return		True if already initialized
 //==================================================================================================
 template<class TKey, class TValue, class TIndex, int TIndexBits>
-bool awHamt< TKey, TValue, TIndex, TIndexBits>::IsInit()const
+bool zenHamt< TKey, TValue, TIndex, TIndexBits>::IsInit()const
 {
 	return mpRootNode!=NULL;
 }
 
 //==================================================================================================
-//! @brief		Remove every entry from the awHamt.
+//! @brief		Remove every entry from the zenHamt.
 //! @details	The root node will be recreated empty	
 //==================================================================================================
 template<class TKey, class TValue, class TIndex, int TIndexBits>
-void awHamt< TKey, TValue, TIndex, TIndexBits>::Clear()
+void zenHamt< TKey, TValue, TIndex, TIndexBits>::Clear()
 {
 	ClearNode(mpRootNode);
-	for(awUInt uPoolIndex=0; uPoolIndex<kuPoolCount; ++uPoolIndex)
+	for(zenUInt uPoolIndex=0; uPoolIndex<kuPoolCount; ++uPoolIndex)
 		mPools[uPoolIndex].Clear();
 	mpRootNode	= CreateEmptyNode(0);
 	muCount		= 0;
@@ -230,14 +230,14 @@ void awHamt< TKey, TValue, TIndex, TIndexBits>::Clear()
 //! @param		_pAllocator		- Memory source used to initialize each Pool Allocator
 //==================================================================================================
 template<class TKey, class TValue, class TIndex, int TIndexBits>
-void awHamt< TKey, TValue, TIndex, TIndexBits>::Init( awUInt _uReservePool, CMem::Allocator* _pAllocator=NULL )
+void zenHamt< TKey, TValue, TIndex, TIndexBits>::Init( zenUInt _uReservePool, CMem::Allocator* _pAllocator=NULL )
 {	
-	AWAssertMsg(!IsInit(),"awHamt already initialized");			
-	awS32 iPoolItemLeft(static_cast<awS32>(_uReservePool)-1);
-	awS32 iPoolItemMin	= zenMath::Max<awS32>((iPoolItemLeft / 3) / kuSlotCount, 1);	//< @Note: A 1/3 of PoolItemCount get split evenly between each Pool. Remaining assigned with 1/2 less every time. Need metric to adjust for optimal value
-	iPoolItemLeft		= zenMath::Max<awS32>(iPoolItemLeft-iPoolItemMin*kuSlotCount, 0);
+	AWAssertMsg(!IsInit(),"zenHamt already initialized");			
+	zenS32 iPoolItemLeft(static_cast<zenS32>(_uReservePool)-1);
+	zenS32 iPoolItemMin	= zenMath::Max<zenS32>((iPoolItemLeft / 3) / kuSlotCount, 1);	//< @Note: A 1/3 of PoolItemCount get split evenly between each Pool. Remaining assigned with 1/2 less every time. Need metric to adjust for optimal value
+	iPoolItemLeft		= zenMath::Max<zenS32>(iPoolItemLeft-iPoolItemMin*kuSlotCount, 0);
 	mPools[0].Init("HamtSmallPool", sizeof(Node), 1, 1, _pAllocator );
-	for(awUInt uPoolIndex=1; uPoolIndex<=kuSlotCount; ++uPoolIndex)
+	for(zenUInt uPoolIndex=1; uPoolIndex<=kuSlotCount; ++uPoolIndex)
 	{
 		iPoolItemLeft = iPoolItemLeft / 2;
 		mPools[uPoolIndex].Init("HamtSmallPool", sizeof(Node) + sizeof(Node::Slot)*uPoolIndex, iPoolItemLeft+iPoolItemMin, iPoolItemMin, _pAllocator );
@@ -252,10 +252,10 @@ void awHamt< TKey, TValue, TIndex, TIndexBits>::Init( awUInt _uReservePool, CMem
 //! @return 			- True if we found the item
 //==================================================================================================
 template<class TKey, class TValue, class TIndex, int TIndexBits>
-bool awHamt< TKey, TValue, TIndex, TIndexBits>::Exist(const TKey _Key)const
+bool zenHamt< TKey, TValue, TIndex, TIndexBits>::Exist(const TKey _Key)const
 {
 	const Node**	ppParentNode;
-	awU32				uSlotID(0), uNodeIndex(0), uDepth(0);
+	zenU32				uSlotID(0), uNodeIndex(0), uDepth(0);
 	return GetNode( _Key, ppParentNode, uNodeIndex, uSlotID, uDepth );
 }
 		
@@ -265,7 +265,7 @@ bool awHamt< TKey, TValue, TIndex, TIndexBits>::Exist(const TKey _Key)const
 //! @param		_Value		- Value used for default
 //==================================================================================================
 template<class TKey, class TValue, class TIndex, int TIndexBits>
-void awHamt< TKey, TValue, TIndex, TIndexBits>::SetDefaultValue( const TValue& _Value )
+void zenHamt< TKey, TValue, TIndex, TIndexBits>::SetDefaultValue( const TValue& _Value )
 {
 	mDefault = _Value;
 }
@@ -276,7 +276,7 @@ void awHamt< TKey, TValue, TIndex, TIndexBits>::SetDefaultValue( const TValue& _
 //! @param		_Value		- Value to set all elements to
 //==================================================================================================
 template<class TKey, class TValue, class TIndex, int TIndexBits>
-void awHamt< TKey, TValue, TIndex, TIndexBits>::SetAll( const TValue& _Value )
+void zenHamt< TKey, TValue, TIndex, TIndexBits>::SetAll( const TValue& _Value )
 {
 	Iterator it;
 	for(GetFirst(it); it.IsValid(); ++it)
@@ -290,10 +290,10 @@ void awHamt< TKey, TValue, TIndex, TIndexBits>::SetAll( const TValue& _Value )
 //! @param		_Value	- Value to assign this key entry
 //==================================================================================================
 template<class TKey, class TValue, class TIndex, int TIndexBits>
-void awHamt< TKey, TValue, TIndex, TIndexBits>::Set(const TKey _Key, const TValue& _Value)
+void zenHamt< TKey, TValue, TIndex, TIndexBits>::Set(const TKey _Key, const TValue& _Value)
 {
 	Node**	ppParentNode;
-	awU32		uSlotID(0), uNodeIndex(0), uDepth(0);
+	zenU32		uSlotID(0), uNodeIndex(0), uDepth(0);
 	bool bFound = GetNode( _Key, ppParentNode, uNodeIndex, uSlotID, uDepth );
 	muCount		+= bFound ? 0 : 1;
 	SetSlotValue( _Key, _Value, ppParentNode, uNodeIndex, uSlotID, uDepth );
@@ -308,10 +308,10 @@ void awHamt< TKey, TValue, TIndex, TIndexBits>::Set(const TKey _Key, const TValu
 //! @param						- True if there was previously a value that we just replaced 
 //==================================================================================================
 template<class TKey, class TValue, class TIndex, int TIndexBits>
-bool awHamt< TKey, TValue, TIndex, TIndexBits>::SetReplace(const TKey _Key, const TValue& _Value, TValue& _OldValueOut)
+bool zenHamt< TKey, TValue, TIndex, TIndexBits>::SetReplace(const TKey _Key, const TValue& _Value, TValue& _OldValueOut)
 {
 	Node**	ppParentNode;
-	awU32		uSlotID(0), uNodeIndex(0), uDepth(0);
+	zenU32		uSlotID(0), uNodeIndex(0), uDepth(0);
 	bool bFound = GetNode( _Key, ppParentNode, uNodeIndex, uSlotID, uDepth );
 	muCount		+= bFound ? 0 : 1;
 	if( bFound )
@@ -327,11 +327,11 @@ bool awHamt< TKey, TValue, TIndex, TIndexBits>::SetReplace(const TKey _Key, cons
 //! @return				- Value associated with the Key
 //==================================================================================================
 template<class TKey, class TValue, class TIndex, int TIndexBits>
-const TValue& awHamt< TKey, TValue, TIndex, TIndexBits>::Get( const TKey _Key ) const
+const TValue& zenHamt< TKey, TValue, TIndex, TIndexBits>::Get( const TKey _Key ) const
 {
-	AWAssertMsg(IsInit(),"awHamt isn't initialized");
+	AWAssertMsg(IsInit(),"zenHamt isn't initialized");
 	const Node**	ppParentNode;
-	awU32		uSlotID, uNodeIndex, uDepth;
+	zenU32		uSlotID, uNodeIndex, uDepth;
 	bool	bFound = GetNode( _Key, ppParentNode, uNodeIndex, uSlotID, uDepth );
 	if( !bFound )	return mDefault;									//Not found, return default value
 	else			return (*ppParentNode)->mpSlots[uSlotID].Value();	//Return found entry
@@ -345,11 +345,11 @@ const TValue& awHamt< TKey, TValue, TIndex, TIndexBits>::Get( const TKey _Key ) 
 //! @return					- True if value found
 //==================================================================================================
 template<class TKey, class TValue, class TIndex, int TIndexBits>
-bool awHamt< TKey, TValue, TIndex, TIndexBits>::Get(const TKey _Key, TValue& _ValueOut) const
+bool zenHamt< TKey, TValue, TIndex, TIndexBits>::Get(const TKey _Key, TValue& _ValueOut) const
 {
-	AWAssertMsg(IsInit(),"awHamt isn't initialized");
+	AWAssertMsg(IsInit(),"zenHamt isn't initialized");
 	const Node**	ppParentNode;
-	awU32		uSlotID, uNodeIndex, uDepth;
+	zenU32		uSlotID, uNodeIndex, uDepth;
 	bool	bFound	= GetNode( _Key, ppParentNode, uNodeIndex, uSlotID, uDepth );
 	_ValueOut		= bFound ? (*ppParentNode)->mpSlots[uSlotID].Value() : mDefault;
 	return bFound;
@@ -363,11 +363,11 @@ bool awHamt< TKey, TValue, TIndex, TIndexBits>::Get(const TKey _Key, TValue& _Va
 //! @return					- True if value found
 //==================================================================================================
 template<class TKey, class TValue, class TIndex, int TIndexBits>
-bool awHamt< TKey, TValue, TIndex, TIndexBits>::Get(const TKey _Key, TValue* _pValueOut) const
+bool zenHamt< TKey, TValue, TIndex, TIndexBits>::Get(const TKey _Key, TValue* _pValueOut) const
 {
-	AWAssertMsg(IsInit(),"awHamt isn't initialized");
+	AWAssertMsg(IsInit(),"zenHamt isn't initialized");
 	const Node**	ppParentNode;
-	awU32		uSlotID, uNodeIndex, uDepth;
+	zenU32		uSlotID, uNodeIndex, uDepth;
 	bool	bFound	= GetNode( _Key, ppParentNode, uNodeIndex, uSlotID, uDepth );
 	_pValueOut		= bFound ? &(*ppParentNode)->mpSlots[uSlotID].Value() : NULL;
 	return bFound;
@@ -380,7 +380,7 @@ bool awHamt< TKey, TValue, TIndex, TIndexBits>::Get(const TKey _Key, TValue* _pV
 //! @return		Value stored at that key entry 
 //==================================================================================================
 template<class TKey, class TValue, class TIndex, int TIndexBits>
-const TValue& awHamt< TKey, TValue, TIndex, TIndexBits>::operator[](const TKey _Key)const
+const TValue& zenHamt< TKey, TValue, TIndex, TIndexBits>::operator[](const TKey _Key)const
 {		
 	return Get(_Key);
 }
@@ -392,10 +392,10 @@ const TValue& awHamt< TKey, TValue, TIndex, TIndexBits>::operator[](const TKey _
 //! @return		Value stored at that key entry
 //==================================================================================================
 template<class TKey, class TValue, class TIndex, int TIndexBits>
-TValue& awHamt< TKey, TValue, TIndex, TIndexBits>::GetAdd(const TKey _Key)
+TValue& zenHamt< TKey, TValue, TIndex, TIndexBits>::GetAdd(const TKey _Key)
 {			
 	Node**	ppParentNode;
-	awU32		uSlotID, uNodeIndex, uDepth;
+	zenU32		uSlotID, uNodeIndex, uDepth;
 	bool	bFound = GetNode( _Key, ppParentNode, uNodeIndex, uSlotID, uDepth );
 	muCount		+= bFound ? 0 : 1;
 	if( !bFound )	return *SetSlotValue( _Key, mDefault, ppParentNode, uNodeIndex, uSlotID, uDepth );	//Not found, create new entry with default value
@@ -409,13 +409,13 @@ TValue& awHamt< TKey, TValue, TIndex, TIndexBits>::GetAdd(const TKey _Key)
 //! @return		Data stored at that key entry
 //==================================================================================================
 template<class TKey, class TValue, class TIndex, int TIndexBits>
-bool awHamt< TKey, TValue, TIndex, TIndexBits>::Unset(const TKey _Key)
+bool zenHamt< TKey, TValue, TIndex, TIndexBits>::Unset(const TKey _Key)
 {		
-	AWAssertMsg(IsInit(),"awHamt isn't initialized");
+	AWAssertMsg(IsInit(),"zenHamt isn't initialized");
 	Node**		ppNodeTree[kuTreeMaxDepth];
-	awUInt		uSlotID[kuTreeMaxDepth];
-	awUInt		uNodeIndex[kuTreeMaxDepth];
-	awUInt		uDepth(0);			
+	zenUInt		uSlotID[kuTreeMaxDepth];
+	zenUInt		uNodeIndex[kuTreeMaxDepth];
+	zenUInt		uDepth(0);			
 	Node*		pNode = mpRootNode;
 	//-------------------------------------------------------
 	// Find hierarchy all the way down to Key entry
@@ -439,7 +439,7 @@ bool awHamt< TKey, TValue, TIndex, TIndexBits>::Unset(const TKey _Key)
 	pNode		= bFound ? pNode : NULL;
 	while( pNode )
 	{
-		awUInt uNewSlotCount = pNode->GetSlotCount()-1;
+		zenUInt uNewSlotCount = pNode->GetSlotCount()-1;
 		// No slot left in child node, after we remove the entry, update parent to refer to it
 		if( uNewSlotCount == 0 && uDepth>0 )
 		{
@@ -452,9 +452,9 @@ bool awHamt< TKey, TValue, TIndex, TIndexBits>::Unset(const TKey _Key)
 			Node* pNewNode			= CreateEmptyNode( uNewSlotCount );					
 			pNewNode->mIndexUsed	= pNode->mIndexUsed & ~(TIndex(1)<<uNodeIndex[uDepth]);
 			//Copy previous elements to new node
-			for(awUInt i=0; i<uNewSlotCount; ++i)
+			for(zenUInt i=0; i<uNewSlotCount; ++i)
 			{
-				awU32 uOldSlotID			= (i >= uSlotID[uDepth]) ? i+1 : i;
+				zenU32 uOldSlotID			= (i >= uSlotID[uDepth]) ? i+1 : i;
 				pNewNode->mpSlots[i]	= pNode->mpSlots[uOldSlotID];
 				pNewNode->mSlotLeaf		|= TIndex(pNode->IsLeafSlot(uOldSlotID)) << i;
 			}
@@ -472,7 +472,7 @@ bool awHamt< TKey, TValue, TIndex, TIndexBits>::Unset(const TKey _Key)
 //! @param[out]	_It - Iterator pointing to 1st element
 //==================================================================================================
 template<class TKey, class TValue, class TIndex, int TIndexBits>
-void awHamt< TKey, TValue, TIndex, TIndexBits>::GetFirst(Iterator& _It) const
+void zenHamt< TKey, TValue, TIndex, TIndexBits>::GetFirst(Iterator& _It) const
 {
 	if( mpRootNode->GetSlotCount() == 0 )
 	{
@@ -497,7 +497,7 @@ void awHamt< TKey, TValue, TIndex, TIndexBits>::GetFirst(Iterator& _It) const
 //! @param[out]	_It - Iterator pointing to last element
 //==================================================================================================
 template<class TKey, class TValue, class TIndex, int TIndexBits>
-void awHamt< TKey, TValue, TIndex, TIndexBits>::GetLast(Iterator& _It) const
+void zenHamt< TKey, TValue, TIndex, TIndexBits>::GetLast(Iterator& _It) const
 {	
 	if( mpRootNode->GetSlotCount() == 0 )
 	{
@@ -523,12 +523,12 @@ void awHamt< TKey, TValue, TIndex, TIndexBits>::GetLast(Iterator& _It) const
 //! @param		_Last	- Last Key entry to print
 //==================================================================================================
 template<class TKey, class TValue, class TIndex, int TIndexBits>
-void awHamt< TKey, TValue, TIndex, TIndexBits>::DebugPrint(const TKey _First, TKey _Last) const
+void zenHamt< TKey, TValue, TIndex, TIndexBits>::DebugPrint(const TKey _First, TKey _Last) const
 {
 #if AW_DEBUGINFOON
 #define	kuSpacePerLevel	14
 	char		zSpaces[kuTreeMaxDepth*kuSpacePerLevel+1];
-	awS8			iSlotIDPrev[ kuTreeMaxDepth ];
+	zenS8			iSlotIDPrev[ kuTreeMaxDepth ];
 	memset(zSpaces, ' ', sizeof(zSpaces));
 	memset(iSlotIDPrev, -1, sizeof(iSlotIDPrev) );
 	Iterator it;
@@ -536,8 +536,8 @@ void awHamt< TKey, TValue, TIndex, TIndexBits>::DebugPrint(const TKey _First, TK
 	{
 		if( it.GetKey() >= _First )
 		{
-			awS8 sSharedParentDepth(0);
-			awS8 sCurrentDepth(0);
+			zenS8 sSharedParentDepth(0);
+			zenS8 sCurrentDepth(0);
 			while( iSlotIDPrev[sSharedParentDepth] == it.mpSlotID[sSharedParentDepth] )
 				++sSharedParentDepth;
 			zenMem::Copy(iSlotIDPrev, it.mpSlotID, sizeof(iSlotIDPrev) );
@@ -559,7 +559,7 @@ void awHamt< TKey, TValue, TIndex, TIndexBits>::DebugPrint(const TKey _First, TK
 //! @details	Return the amount of memory used by this structure		
 //==================================================================================================
 template<class TKey, class TValue, class TIndex, int TIndexBits>
-size_t awHamt< TKey, TValue, TIndex, TIndexBits>::GetMemoryFootprint()
+size_t zenHamt< TKey, TValue, TIndex, TIndexBits>::GetMemoryFootprint()
 {
 	size_t uSizeTotal(0);
 	for(int i=0; i<kuPoolCount; ++i)
@@ -573,7 +573,7 @@ size_t awHamt< TKey, TValue, TIndex, TIndexBits>::GetMemoryFootprint()
 //! @param		_Copy	- Hamt to copy
 //==================================================================================================
 template<class TKey, class TValue, class TIndex, int TIndexBits>
-const awHamt< TKey, TValue, TIndex, TIndexBits>& awHamt< TKey, TValue, TIndex, TIndexBits>::operator=(const awHamt& _Copy)
+const zenHamt< TKey, TValue, TIndex, TIndexBits>& zenHamt< TKey, TValue, TIndex, TIndexBits>::operator=(const zenHamt& _Copy)
 {				
 	if( IsInit() )
 	{
@@ -581,13 +581,13 @@ const awHamt< TKey, TValue, TIndex, TIndexBits>& awHamt< TKey, TValue, TIndex, T
 		Clear();
 		AWDelNull(mpRootNode);
 		// Size pools to have just enough space for all allocated items per pool
-		for(awUInt poolIdx=0; poolIdx<kuPoolCount; ++poolIdx)
+		for(zenUInt poolIdx=0; poolIdx<kuPoolCount; ++poolIdx)
 			mPools[poolIdx].MemoryIncrease( _Copy.mPools[poolIdx].GetTotalAllocCount() );
 	}
 	else
 	{
 		// Size pools to have just enough space for all allocated items per pool
-		for(awUInt poolIdx=0; poolIdx<=kuSlotCount; ++poolIdx)
+		for(zenUInt poolIdx=0; poolIdx<=kuSlotCount; ++poolIdx)
 			mPools[poolIdx].Init("HamtSmallPool", _Copy.mPools[poolIdx].GetItemSize(), _Copy.mPools[poolIdx].GetTotalAllocCount(), _Copy.mPools[poolIdx].GetIncreaseCount(), _Copy.mPools[poolIdx].GetAllocator() );
 	}
 			
@@ -605,7 +605,7 @@ const awHamt< TKey, TValue, TIndex, TIndexBits>& awHamt< TKey, TValue, TIndex, T
 //! @param	_aValue	- Array to receive hashmap values 
 //==================================================================================================
 template<class TKey, class TValue, class TIndex, int TIndexBits>
-void awHamt< TKey, TValue, TIndex, TIndexBits>::Export( awArrayBase<TKey>& _aKey, awArrayBase<TValue>& _aValue ) const
+void zenHamt< TKey, TValue, TIndex, TIndexBits>::Export( zenArrayBase<TKey>& _aKey, zenArrayBase<TValue>& _aValue ) const
 {
 	_aKey.SetCount(muCount);
 	_aValue.SetCount(muCount);
@@ -626,7 +626,7 @@ void awHamt< TKey, TValue, TIndex, TIndexBits>::Export( awArrayBase<TKey>& _aKey
 //! @param	_aValue	- Array to retrieve hashmap values 
 //==================================================================================================
 template<class TKey, class TValue, class TIndex, int TIndexBits>
-void awHamt< TKey, TValue, TIndex, TIndexBits>::Import( const awArrayBase<TKey>& _aKey, const awArrayBase<TValue>& _aValue ) 
+void zenHamt< TKey, TValue, TIndex, TIndexBits>::Import( const zenArrayBase<TKey>& _aKey, const zenArrayBase<TValue>& _aValue ) 
 {			
 	AWAssertMsg( _aKey.Count() == _aValue.Count(), "Importing mismatching keys/values pair");
 	const TValue* pValCur(_aValue.First());			
@@ -645,7 +645,7 @@ void awHamt< TKey, TValue, TIndex, TIndexBits>::Import( const awArrayBase<TKey>&
 //! @return		- Item count
 //==================================================================================================
 template<class TKey, class TValue, class TIndex, int TIndexBits>
-awUInt awHamt< TKey, TValue, TIndex, TIndexBits>::Count() const
+zenUInt zenHamt< TKey, TValue, TIndex, TIndexBits>::Count() const
 {
 	return muCount;
 }
@@ -657,13 +657,13 @@ awUInt awHamt< TKey, TValue, TIndex, TIndexBits>::Count() const
 //! @return		Created node copy
 //==================================================================================================
 template<class TKey, class TValue, class TIndex, int TIndexBits>
-typename awHamt<TKey, TValue, TIndex, TIndexBits>::Node* awHamt<TKey, TValue, TIndex, TIndexBits>::CreateNodeCopy(typename const awHamt::Node* _pNodeCopy )
+typename zenHamt<TKey, TValue, TIndex, TIndexBits>::Node* zenHamt<TKey, TValue, TIndex, TIndexBits>::CreateNodeCopy(typename const zenHamt::Node* _pNodeCopy )
 {
-	awUInt uSlotCount		= _pNodeCopy->GetSlotCount();
+	zenUInt uSlotCount		= _pNodeCopy->GetSlotCount();
 	Node* pNewNode			= CreateEmptyNode( uSlotCount );
 	pNewNode->mIndexUsed	= _pNodeCopy->mIndexUsed;
 	pNewNode->mSlotLeaf		= _pNodeCopy->mSlotLeaf;
-	for(awUInt uSlotIdx=0; uSlotIdx<uSlotCount; ++uSlotIdx)
+	for(zenUInt uSlotIdx=0; uSlotIdx<uSlotCount; ++uSlotIdx)
 	{
 		if( _pNodeCopy->IsLeafSlot(uSlotIdx) )	pNewNode->mpSlots[uSlotIdx]				= _pNodeCopy->mpSlots[uSlotIdx];
 		else									pNewNode->mpSlots[uSlotIdx].pChildNode	= CreateNodeCopy( _pNodeCopy->mpSlots[uSlotIdx].pChildNode );				
@@ -679,7 +679,7 @@ typename awHamt<TKey, TValue, TIndex, TIndexBits>::Node* awHamt<TKey, TValue, TI
 //! @return		The NodeIndex of this key, at depth 'auDepth'
 //==================================================================================================
 template<class TKey, class TValue, class TIndex, int TIndexBits>
-awUInt awHamt< TKey, TValue, TIndex, TIndexBits>::GetNodeIndex( const TKey _uKey, awUInt _uDepth ) const
+zenUInt zenHamt< TKey, TValue, TIndex, TIndexBits>::GetNodeIndex( const TKey _uKey, zenUInt _uDepth ) const
 {
 	int iShift	= (kuKeyBits-TIndexBits)-(_uDepth*TIndexBits);
 	iShift		= iShift > 0 ? iShift : 0;
@@ -694,12 +694,12 @@ awUInt awHamt< TKey, TValue, TIndex, TIndexBits>::GetNodeIndex( const TKey _uKey
 //! @return		Created node
 //==================================================================================================
 template<class TKey, class TValue, class TIndex, int TIndexBits>
-typename awHamt<TKey, TValue, TIndex, TIndexBits>::Node* awHamt< TKey, TValue, TIndex, TIndexBits>::CreateEmptyNode(awU32 _uSlotCount)
+typename zenHamt<TKey, TValue, TIndex, TIndexBits>::Node* zenHamt< TKey, TValue, TIndex, TIndexBits>::CreateEmptyNode(zenU32 _uSlotCount)
 {
 	Node* pNewNode			= AWNew(&mPools[_uSlotCount])Node;
 	pNewNode->mIndexUsed	= 0;
 	pNewNode->mSlotLeaf		= 0;
-	pNewNode->mpSlots		= (Node::Slot*)(((awPointer)pNewNode)+sizeof(Node));				
+	pNewNode->mpSlots		= (Node::Slot*)(((zenPointer)pNewNode)+sizeof(Node));				
 
 	//temp
 	memset(pNewNode->mpSlots, 0, _uSlotCount*sizeof(Node::Slot));
@@ -718,9 +718,9 @@ typename awHamt<TKey, TValue, TIndex, TIndexBits>::Node* awHamt< TKey, TValue, T
 //! @return						- True if the slot contain the key entry
 //==================================================================================================
 template<class TKey, class TValue, class TIndex, int TIndexBits>
-bool awHamt< TKey, TValue, TIndex, TIndexBits>::GetNode(TKey _Key, const Node**& _pParentSlot, awU32& _uNodeIndex, awU32& _uSlotID, awU32& _uDepth) const
+bool zenHamt< TKey, TValue, TIndex, TIndexBits>::GetNode(TKey _Key, const Node**& _pParentSlot, zenU32& _uNodeIndex, zenU32& _uSlotID, zenU32& _uDepth) const
 {
-	AWAssertMsg(mpRootNode!=NULL,"awHamt isn't initialized");
+	AWAssertMsg(mpRootNode!=NULL,"zenHamt isn't initialized");
 	const Node* pNode	= mpRootNode;
 	_pParentSlot		= (const Node**)&mpRootNode;
 	_uDepth				= 0;
@@ -748,7 +748,7 @@ bool awHamt< TKey, TValue, TIndex, TIndexBits>::GetNode(TKey _Key, const Node**&
 //! @return						- True if the slot contain the key entry
 //==================================================================================================
 template<class TKey, class TValue, class TIndex, int TIndexBits>
-bool awHamt< TKey, TValue, TIndex, TIndexBits>::GetNode(TKey _Key, Node**& _pParentSlot, awU32& _uNodeIndex, awU32& _uSlotID, awU32& _uDepth)
+bool zenHamt< TKey, TValue, TIndex, TIndexBits>::GetNode(TKey _Key, Node**& _pParentSlot, zenU32& _uNodeIndex, zenU32& _uSlotID, zenU32& _uDepth)
 {
 	Node* pNode		= mpRootNode;
 	_pParentSlot	= &mpRootNode;		
@@ -771,10 +771,10 @@ bool awHamt< TKey, TValue, TIndex, TIndexBits>::GetNode(TKey _Key, Node**& _pPar
 //! @param[in]	_pNode- Node from which child nodes should be removed.
 //==================================================================================================
 template<class TKey, class TValue, class TIndex, int TIndexBits>
-void awHamt< TKey, TValue, TIndex, TIndexBits>::ClearNode( Node* _pNode )
+void zenHamt< TKey, TValue, TIndex, TIndexBits>::ClearNode( Node* _pNode )
 {
-	awUInt uSlotCount = _pNode->GetSlotCount();
-	for(awUInt slot=0; slot<uSlotCount; ++slot)
+	zenUInt uSlotCount = _pNode->GetSlotCount();
+	for(zenUInt slot=0; slot<uSlotCount; ++slot)
 		if( !_pNode->IsLeafSlot(slot) )
 			ClearNode( _pNode->mpSlots[slot].pChildNode );
 
@@ -787,7 +787,7 @@ void awHamt< TKey, TValue, TIndex, TIndexBits>::ClearNode( Node* _pNode )
 //! @param		_Key	- Key entry where to store the value	
 //==================================================================================================
 template<class TKey, class TValue, class TIndex, int TIndexBits>
-TValue* awHamt< TKey, TValue, TIndex, TIndexBits>::SetSlotValue(TKey _Key, const TValue& _Value, Node** _ppParentNode, awUInt _uNodeIndex, awUInt _uSlotID, awUInt _uDepth)
+TValue* zenHamt< TKey, TValue, TIndex, TIndexBits>::SetSlotValue(TKey _Key, const TValue& _Value, Node** _ppParentNode, zenUInt _uNodeIndex, zenUInt _uSlotID, zenUInt _uDepth)
 {			
 	Node*	pNode(*_ppParentNode);
 	Node*	pNewNode(NULL);
@@ -797,7 +797,7 @@ TValue* awHamt< TKey, TValue, TIndex, TIndexBits>::SetSlotValue(TKey _Key, const
 	// Slot available in Node, resize array and add element
 	if( pNode->IsUsedIndex(_uNodeIndex) == false )
 	{
-		awU32 uSlotCount					= pNode->GetSlotCount();
+		zenU32 uSlotCount					= pNode->GetSlotCount();
 		pNewNode							= CreateEmptyNode( uSlotCount + 1 );
 		pNewNode->mIndexUsed				= pNode->mIndexUsed | (TIndex(1)<<_uNodeIndex);				
 		_uSlotID							= pNewNode->GetSlotID(_uNodeIndex);		//Must be updated with new array size
@@ -806,9 +806,9 @@ TValue* awHamt< TKey, TValue, TIndex, TIndexBits>::SetSlotValue(TKey _Key, const
 		pNewNode->mpSlots[_uSlotID].Value()	= _Value;				
 		pValue								= &pNewNode->mpSlots[_uSlotID].Value();
 		//Copy previous elements to new node
-		for(awU32 i=0; i<uSlotCount; ++i)
+		for(zenU32 i=0; i<uSlotCount; ++i)
 		{
-			awU32 uNewSlotID					= (i >= _uSlotID) ? i+1 : i;
+			zenU32 uNewSlotID					= (i >= _uSlotID) ? i+1 : i;
 			pNewNode->mpSlots[uNewSlotID]	= pNode->mpSlots[i];
 			pNewNode->mSlotLeaf				|= TIndex(pNode->IsLeafSlot(i)) << uNewSlotID;
 		}
@@ -831,8 +831,8 @@ TValue* awHamt< TKey, TValue, TIndex, TIndexBits>::SetSlotValue(TKey _Key, const
 				
 		pNode->mpSlots[_uSlotID].Key = 1;//temp
 
-		awUInt uNodeIndexOld	= GetNodeIndex(prevSlot.Key, ++_uDepth);
-		awUInt uNodeIndexNew	= GetNodeIndex(_Key, _uDepth);
+		zenUInt uNodeIndexOld	= GetNodeIndex(prevSlot.Key, ++_uDepth);
+		zenUInt uNodeIndexNew	= GetNodeIndex(_Key, _uDepth);
 
 		// While Node index of 2 node match, create child node
 		while( uNodeIndexOld == uNodeIndexNew )

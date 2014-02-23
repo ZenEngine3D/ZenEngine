@@ -9,11 +9,11 @@ struct ExportInfoBase
 {
 								ExportInfoBase();
 								~ExportInfoBase();
-	awResourceID			mExportResID;		//!< Export Resource ID (temporarily ID assigned until exported)
+	zenResID			mExportResID;		//!< Export Resource ID (temporarily ID assigned until exported)
 	void*						mpExportInfoExt;	//!< Use to extended export info, particular to one platform instead of all
-	awU8							mbSuccessStart	: 1;
-	awU8							mbSuccessWork	: 1;
-	awU8							mbSuccessEnd	: 1;
+	zenU8							mbSuccessStart	: 1;
+	zenU8							mbSuccessWork	: 1;
+	zenU8							mbSuccessEnd	: 1;
 	bool						IsSuccess(){return mbSuccessStart && mbSuccessWork && mbSuccessEnd; }
 };
 
@@ -30,7 +30,7 @@ protected:
 	virtual bool				ExportEnd();									//!< @brief Called from Thread:Main, for some post export task 
 	inline	void				ExportSkipWork();								//!< @brief Call in ExportStart to avoid launching a job for this
 
-	//static awResourceID	ValidateItemID(awconst::eResPlatform _ePlatform, awconst::eResType _eType, awconst::eResSource _eSource, awResourceID::NameHash _hName, bool& _bExistOut);
+	//static zenResID	ValidateItemID(awconst::eResPlatform _ePlatform, awconst::eResType _eType, awconst::eResSource _eSource, zenResID::NameHash _hName, bool& _bExistOut);
 
 	friend class ExportTask;
 	friend class ManagerExport;
@@ -42,9 +42,9 @@ inline void ExportItem::ExportSkipWork()
 	mpExportInfo->mbSuccessWork = TRUE; 
 }
 
-inline awResourceID ValidateItemID(awconst::eResPlatform _ePlatform, awconst::eResType _eType, awconst::eResSource _eSource, awResourceID::NameHash _hName, bool& _bExistOut)
+inline zenResID ValidateItemID(awconst::eResPlatform _ePlatform, awconst::eResType _eType, awconst::eResSource _eSource, zenResID::NameHash _hName, bool& _bExistOut)
 {
-	awResourceID newResID(_hName, _ePlatform, _eType, _eSource);
+	zenResID newResID(_hName, _ePlatform, _eType, _eSource);
 	EExp::SerialItem* pItem	= EMgr::SerialItems.GetItemBaseAnySource( newResID );
 	_bExistOut				= pItem != NULL;
 	return _bExistOut ? pItem->mResID : newResID;

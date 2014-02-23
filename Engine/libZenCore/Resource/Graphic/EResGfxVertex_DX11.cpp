@@ -8,7 +8,7 @@ namespace ERes
 	
 	GfxVertex_DX11::~GfxVertex_DX11()
 	{
-		for(awUInt streamIdx=0; streamIdx<mInstanceInfo.maStreamBuffer.Count(); ++streamIdx)
+		for(zenUInt streamIdx=0; streamIdx<mInstanceInfo.maStreamBuffer.Count(); ++streamIdx)
 			mInstanceInfo.maStreamBuffer[streamIdx]->Release();
 	}
 
@@ -34,10 +34,10 @@ namespace ERes
 		//if( mInstanceInfo.eCreationFlags & SerialVertex_Base::keFlag_Static ) eUsage = D3D11_USAGE_IMMUTABLE;
 
 		// Vertex Streams buffer init
-		awUInt uStreamCount = mInstanceInfo.maStreamBuffer.SetCount( mInstanceInfo.mSerial.maStream.Count() );
+		zenUInt uStreamCount = mInstanceInfo.maStreamBuffer.SetCount( mInstanceInfo.mSerial.maStream.Count() );
 		mInstanceInfo.maStreamInfo.SetCount( mInstanceInfo.mSerial.maStream.Count() );
 		mInstanceInfo.maStreamStride.SetCount( mInstanceInfo.mSerial.maStream.Count() );
-		for(awUInt streamIdx=0; streamIdx<uStreamCount; ++streamIdx)
+		for(zenUInt streamIdx=0; streamIdx<uStreamCount; ++streamIdx)
 		{
 			const EExp::SerialGfxVertex_DX11::Stream& stream			= mInstanceInfo.mSerial.maStream[streamIdx];			
 			mInstanceInfo.maStreamStride[streamIdx]						= stream.muStride;
@@ -66,14 +66,14 @@ namespace ERes
 		}	
 		
 		// Vertex element Definitions
-		awUInt uElemDefCount = mInstanceInfo.maElementDef.Copy( (D3D11_INPUT_ELEMENT_DESC*)mInstanceInfo.mSerial.maElementDef.First(), mInstanceInfo.mSerial.maElementDef.Size() / sizeof(D3D11_INPUT_ELEMENT_DESC) );
-		for(awUInt elemIdx=0; elemIdx<uElemDefCount; ++elemIdx)
-			mInstanceInfo.maElementDef[elemIdx].SemanticName = zSemanticNames[(awUInt)mInstanceInfo.maElementDef[elemIdx].SemanticName];	//Convert Semantic Name index to string		
+		zenUInt uElemDefCount = mInstanceInfo.maElementDef.Copy( (D3D11_INPUT_ELEMENT_DESC*)mInstanceInfo.mSerial.maElementDef.First(), mInstanceInfo.mSerial.maElementDef.Size() / sizeof(D3D11_INPUT_ELEMENT_DESC) );
+		for(zenUInt elemIdx=0; elemIdx<uElemDefCount; ++elemIdx)
+			mInstanceInfo.maElementDef[elemIdx].SemanticName = zSemanticNames[(zenUInt)mInstanceInfo.maElementDef[elemIdx].SemanticName];	//Convert Semantic Name index to string		
 		
 		return true;
 	}
 
-	awU8* GfxVertex_DX11::Lock()
+	zenU8* GfxVertex_DX11::Lock()
 	{
 		//! @todo some lock test here
 		//! @todo Stream index parameter
@@ -86,7 +86,7 @@ namespace ERes
 			{
 				int i=0;
 			}
-			return (awU8*)mapRes.pData;
+			return (zenU8*)mapRes.pData;
 		}
 		return NULL;
 	}

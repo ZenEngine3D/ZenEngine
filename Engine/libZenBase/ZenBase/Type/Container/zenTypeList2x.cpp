@@ -1,11 +1,11 @@
 #include "libZenBase.h"
 
-namespace zen { namespace awtype {
+namespace zen { namespace zenType {
 
 //==================================================================================================
 //--------------------------------------------------------------------------------------------------
 //==================================================================================================
-awList2xNode::awList2xNode()
+zenList2xNode::zenList2xNode()
 : mpLstNext(NULL)
 , mpLstPrev(NULL)
 {
@@ -14,7 +14,7 @@ awList2xNode::awList2xNode()
 //==================================================================================================
 //--------------------------------------------------------------------------------------------------
 //==================================================================================================
-awList2xNode::~awList2xNode( void )
+zenList2xNode::~zenList2xNode( void )
 {
 	LstRemove();
 }
@@ -22,7 +22,7 @@ awList2xNode::~awList2xNode( void )
 //==================================================================================================
 //--------------------------------------------------------------------------------------------------
 //==================================================================================================
-awList2x::awList2x( void )
+zenList2x::zenList2x( void )
 {
 	moRoot.mpLstNext	= &moRoot;
 	moRoot.mpLstPrev	= &moRoot;
@@ -31,7 +31,7 @@ awList2x::awList2x( void )
 //==================================================================================================
 //--------------------------------------------------------------------------------------------------
 //==================================================================================================
-awList2x::~awList2x( void )
+zenList2x::~zenList2x( void )
 {
 	Clear();
 }
@@ -41,7 +41,7 @@ awList2x::~awList2x( void )
 //--------------------------------------------------------------------------------------------------
 //! @param[in]	_bDelete - If true, will also delete each item.
 //==================================================================================================
-void awList2x::Clear( bool _bDelete )
+void zenList2x::Clear( bool _bDelete )
 {
 	if( _bDelete )
 	{
@@ -61,7 +61,7 @@ void awList2x::Clear( bool _bDelete )
 //! @param[in]	_pAdd - Item to Add.
 //! @param[in]	_pItem - Item position to insert before.
 //==================================================================================================
-void awList2x::InsertBefore( awList2xNode* AWRestrict _pAdd, awList2xNode* AWRestrict _pItem )
+void zenList2x::InsertBefore( zenList2xNode* AWRestrict _pAdd, zenList2xNode* AWRestrict _pItem )
 {       
 	AWAssert(_pAdd && _pItem && _pAdd != _pItem);
 	_pAdd->LstRemove();	
@@ -78,7 +78,7 @@ void awList2x::InsertBefore( awList2xNode* AWRestrict _pAdd, awList2xNode* AWRes
 //! @param[in]	_pAdd - Item to Add.
 //! @param[in]	_pItem - Item position to insert after.
 //==================================================================================================
-void awList2x::InsertAfter( awList2xNode* AWRestrict _pAdd, awList2xNode* AWRestrict _pItem )
+void zenList2x::InsertAfter( zenList2xNode* AWRestrict _pAdd, zenList2xNode* AWRestrict _pItem )
 {
 	AWAssert(_pAdd && _pItem && _pAdd != _pItem);
 	_pAdd->LstRemove();	
@@ -93,7 +93,7 @@ void awList2x::InsertAfter( awList2xNode* AWRestrict _pAdd, awList2xNode* AWRest
 //!-----------------------------------------------------------------------------
 //! @return		Next item. Equal to GetInvalid() if last item of the list.
 //==================================================================================================
-awList2xNode*	awList2xNode::LstNext()
+zenList2xNode*	zenList2xNode::LstNext()
 {
 	return mpLstNext;
 }
@@ -103,7 +103,7 @@ awList2xNode*	awList2xNode::LstNext()
 //!-----------------------------------------------------------------------------
 //! @return		Previous item. Equal to GetInvalid() if first item of the list.
 //==================================================================================================
-awList2xNode* awList2xNode::LstPrev()
+zenList2xNode* zenList2xNode::LstPrev()
 {
 	return mpLstPrev;
 }
@@ -111,7 +111,7 @@ awList2xNode* awList2xNode::LstPrev()
 //==================================================================================================
 //! @brief		Remove the item from its parent list.
 //==================================================================================================
-void awList2xNode::LstRemove()
+void zenList2xNode::LstRemove()
 {
 	if( mpLstPrev )
 	{
@@ -125,7 +125,7 @@ void awList2xNode::LstRemove()
 //==================================================================================================
 //! @brief		Remove the item from its parent list.
 //==================================================================================================
-void awList2xNode::LstReset()
+void zenList2xNode::LstReset()
 {
 	mpLstNext	= NULL;
 	mpLstPrev	= NULL;
@@ -136,7 +136,7 @@ void awList2xNode::LstReset()
 //--------------------------------------------------------------------------------------------------
 //! @return		First item of the list (check if == GetInvalid() for empty list).
 //==================================================================================================
-awList2xNode*	awList2x::GetHead() const
+zenList2xNode*	zenList2x::GetHead() const
 {
 	return moRoot.mpLstNext;
 }
@@ -146,7 +146,7 @@ awList2xNode*	awList2x::GetHead() const
 //--------------------------------------------------------------------------------------------------
 //! @return		Last item of the list (check if == GetInvalid() for empty list).
 //==================================================================================================
-awList2xNode*	awList2x::GetTail() const
+zenList2xNode*	zenList2x::GetTail() const
 {
 	return moRoot.mpLstPrev;
 }
@@ -157,7 +157,7 @@ awList2xNode*	awList2x::GetTail() const
 //--------------------------------------------------------------------------------------------------
 //! @return Value of the invalid item in this list.
 //==================================================================================================
-const awList2xNode* awList2x::GetInvalid() const
+const zenList2xNode* zenList2x::GetInvalid() const
 {
 	return &moRoot;
 }
@@ -167,7 +167,7 @@ const awList2xNode* awList2x::GetInvalid() const
 //--------------------------------------------------------------------------------------------------
 //! @return		True when list is empty
 //==================================================================================================
-bool awList2x::IsEmpty()const
+bool zenList2x::IsEmpty()const
 {
 	return GetHead() == GetInvalid();
 }
@@ -178,7 +178,7 @@ bool awList2x::IsEmpty()const
 //--------------------------------------------------------------------------------------------------
 //! @param[in]	_pAdd - Item to add at the start of the list.
 //==================================================================================================
-void awList2x::AddHead( awList2xNode* _pAdd	)
+void zenList2x::AddHead( zenList2xNode* _pAdd	)
 {
 	InsertBefore(_pAdd, GetHead());
 };
@@ -189,7 +189,7 @@ void awList2x::AddHead( awList2xNode* _pAdd	)
 //--------------------------------------------------------------------------------------------------
 //! @param[in]	_pAdd - Item to add at the end of the list.
 //==================================================================================================
-void awList2x::AddTail( awList2xNode* _pAdd	)
+void zenList2x::AddTail( zenList2xNode* _pAdd	)
 {
 	InsertAfter(_pAdd, GetTail());
 };
@@ -200,10 +200,10 @@ void awList2x::AddTail( awList2xNode* _pAdd	)
 //--------------------------------------------------------------------------------------------------
 //! @return		- First item in the list
 //==================================================================================================
-awList2xNode*	awList2x::PopHead( void )
+zenList2xNode*	zenList2x::PopHead( void )
 {
 	AWAssert(!IsEmpty());
-	awList2xNode* pItem = moRoot.mpLstNext;
+	zenList2xNode* pItem = moRoot.mpLstNext;
 	pItem->LstRemove();
 	return pItem;
 }
@@ -214,10 +214,10 @@ awList2xNode*	awList2x::PopHead( void )
 //--------------------------------------------------------------------------------------------------
 //! @return		- Last item in the list
 //==================================================================================================
-awList2xNode*	awList2x::PopTail( void )
+zenList2xNode*	zenList2x::PopTail( void )
 {
 	AWAssert(!IsEmpty());
-	awList2xNode* pItem = moRoot.mpLstPrev;
+	zenList2xNode* pItem = moRoot.mpLstPrev;
 	pItem->LstRemove();
 	return pItem;
 }

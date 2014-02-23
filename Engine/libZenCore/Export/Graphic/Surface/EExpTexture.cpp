@@ -37,9 +37,9 @@ const TextureBlockInfo& GetTextureBlockInfo( awconst::eTextureFormat _eFormat )
 //! @param _uCreationFlags	- Mask of TextureFlags used for texture creation
 //! @param _vDim			- Width/Height of input image
 //! @param _aRawData		- Image data in r/rgb/rgba format
-//! @return 				- Unique awResourceID of created Resource
+//! @return 				- Unique zenResID of created Resource
 //=================================================================================================
-awResourceID CreateGfxTexture2D(awconst::eTextureFormat _eFormat, awFlagResTexCreate _CreationFlags, awVec2U16 _vDim, const awArrayBase<awU8>& _aRawData)
+zenResID CreateGfxTexture2D(awconst::eTextureFormat _eFormat, awFlagResTexCreate _CreationFlags, zenVec2U16 _vDim, const zenArrayBase<zenU8>& _aRawData)
 {
 	static CMem::PoolAllocator sMemPool("Pool CreateTexture2D", sizeof(SerialTexture2D_Base::ExportInfo), 1, 5 );
 	SerialTexture2D_Base::ExportInfo* pExportInfo	= AWNew(&sMemPool) SerialTexture2D_Base::ExportInfo;
@@ -52,7 +52,7 @@ awResourceID CreateGfxTexture2D(awconst::eTextureFormat _eFormat, awFlagResTexCr
 	pExportInfo->meFormatOutput						= _eFormat;
 	pExportInfo->mCreationFlags						= _CreationFlags;
 	pExportInfo->mbGenerateMip						= FALSE;
-	return EMgr::Export.CreateItem( awResourceID::kePlatformType_GFX, awconst::keResType_GfxTexture2D, pExportInfo );
+	return EMgr::Export.CreateItem( zenResID::kePlatformType_GFX, awconst::keResType_GfxTexture2D, pExportInfo );
 }
 
 }

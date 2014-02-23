@@ -10,7 +10,7 @@ namespace EExp
 	AWClassDeclareNoParent(VertexElemInfo)
 	public:
 							VertexElemInfo(){};
-							VertexElemInfo(eShaderElementType _eType, awU8 _ElementCount, eShaderSemantic _eSemantic, awU8 _Offset )
+							VertexElemInfo(eShaderElementType _eType, zenU8 _ElementCount, eShaderSemantic _eSemantic, zenU8 _Offset )
 							: meType(_eType)
 							, meSemantic(_eSemantic)
 							, muVectorSize(_ElementCount)
@@ -19,17 +19,17 @@ namespace EExp
 
 		eShaderElementType	meType;
 		eShaderSemantic		meSemantic;
-		awU8					muVectorSize;
-		awU8					muOffset;		
+		zenU8					muVectorSize;
+		zenU8					muOffset;		
 	};
 
 	class VertexStreamInfo
 	{
 	AWClassDeclareNoParent(VertexStreamInfo)
 	public:
-		awArrayStatic<awU8>				maData;
-		awArrayStatic<VertexElemInfo>	maElements;
-		awU8							muStride;
+		zenArrayStatic<zenU8>				maData;
+		zenArrayStatic<VertexElemInfo>	maElements;
+		zenU8							muStride;
 		VertexStreamInfo& operator=(const VertexStreamInfo& _Copy)
 		{
 			maData		= _Copy.maData;
@@ -55,12 +55,12 @@ namespace EExp
 		
 		struct ExportInfo : public EExp::ExportInfoBase
 		{			
-			awArrayStatic<awres::awGfxVertex::Stream>	maStreams;
-			awU32										muCreationFlags;
+			zenArrayStatic<awres::awGfxVertex::Stream>	maStreams;
+			zenU32										muCreationFlags;
 		};
 	};
 	
-	awResourceID CreateGfxVertex(const awArrayBase<awres::awGfxVertex::Stream>& _aStreams, awU32 _uCreationFlags);
+	zenResID CreateGfxVertex(const zenArrayBase<awres::awGfxVertex::Stream>& _aStreams, zenU32 _uCreationFlags);
 }
 
 #include "EExpVertexDX11.h"

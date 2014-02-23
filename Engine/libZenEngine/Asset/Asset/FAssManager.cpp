@@ -45,7 +45,7 @@ void ManagerAsset::PackageAdd( Package* _pPackage )
 	// Process adding package
 }
 
-void ManagerAsset::PackageRename( awHash32 _hOldID, awHash32 _hNewID)
+void ManagerAsset::PackageRename( zenHash32 _hOldID, zenHash32 _hNewID)
 {
 	Package* pPackage = mdPackage[_hOldID];
 	if( pPackage )
@@ -55,7 +55,7 @@ void ManagerAsset::PackageRename( awHash32 _hOldID, awHash32 _hNewID)
 	}	
 }
 
-void ManagerAsset::PackageRemove( awHash32 _hPackageID )	
+void ManagerAsset::PackageRemove( zenHash32 _hPackageID )	
 {
 	//! @todo : Process removal
 	AWAssert(0);
@@ -66,12 +66,12 @@ void ManagerAsset::PackageRemove( awHash32 _hPackageID )
 	}	
 }
 
-Package* ManagerAsset::PackageGet( awHash32 _hPackageID )
+Package* ManagerAsset::PackageGet( zenHash32 _hPackageID )
 {
 	return mdPackage[_hPackageID];
 }
 
-AssetItem* ManagerAsset::AssetGet( awHash64 _hAssetID )
+AssetItem* ManagerAsset::AssetGet( zenHash64 _hAssetID )
 {
 	return mdAsset[_hAssetID];
 }
@@ -82,7 +82,7 @@ void ManagerAsset::PackageLoad()
 	PackageLoad( "" );
 }
 
-void ManagerAsset::PackageLoad(const awString& _zDir)
+void ManagerAsset::PackageLoad(const zenString& _zDir)
 {
 	//---------------------------------------------------------------
 	// Load all package file from currently loading directory

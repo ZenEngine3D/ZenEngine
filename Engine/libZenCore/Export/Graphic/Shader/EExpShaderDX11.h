@@ -11,7 +11,7 @@ namespace EExp
 	public:
 		struct SerialUseOnly
 		{
-			awArrayStatic<awU8>	maCompiledShader;			
+			zenArrayStatic<zenU8>	maCompiledShader;			
 		};
 		SerialUseOnly	mSerialCommon;
 	protected:
@@ -48,7 +48,7 @@ namespace EExp
 
 		struct SerialUseOnly
 		{
-			awResourceID			mShaderInputSignatureID;
+			zenResID			mShaderInputSignatureID;
 		};
 		SerialUseOnly				mSerial;
 

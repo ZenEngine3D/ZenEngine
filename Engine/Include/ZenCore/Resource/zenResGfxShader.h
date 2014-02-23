@@ -1,6 +1,6 @@
 #pragma once
-#ifndef __LibEngine_Api_ResourceGfxShader_h__
-#define __LibEngine_Api_ResourceGfxShader_h__
+#ifndef __zenCore_ResourceGfxShader_h__
+#define __zenCore_ResourceGfxShader_h__
 
 namespace zen { namespace awres {	
 
@@ -20,13 +20,13 @@ namespace zen { namespace awres {
 	AWClassResourceRefDeclare(awGfxShaderVertex, awconst::keResType_GfxShaderVertex) 
 	public:
 		static awGfxShaderVertex Create( const char* _zFilename, const char* _zEntryname );
-		static awGfxShaderVertex Create( const char* _zFilename, const char* _zEntryname, const awArrayBase<awShaderDefine>& _aDefines);
+		static awGfxShaderVertex Create( const char* _zFilename, const char* _zEntryname, const zenArrayBase<awShaderDefine>& _aDefines);
 	};
 
 	AWClassResourceRefDeclare(awGfxShaderPixel, awconst::keResType_GfxShaderPixel) 
 	public:
 		static awGfxShaderPixel Create( const char* _zFilename, const char* _zEntryname );
-		static awGfxShaderPixel Create( const char* _zFilename, const char* _zEntryname, const awArrayBase<awShaderDefine>& _aDefines);
+		static awGfxShaderPixel Create( const char* _zFilename, const char* _zEntryname, const zenArrayBase<awShaderDefine>& _aDefines);
 	};
 
 }} // namespace zen, awres

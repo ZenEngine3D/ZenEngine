@@ -35,7 +35,7 @@ namespace FAss
 	AWClassDeclare(_PropertyDef_, TPropertyDefBase)																	\
 	public:																											\
 		virtual PropertyDefBase::Value* Allocate()const{return AWNew(&sPoolAlloc)Value(*this);}						\
-		virtual void ValueToString(const PropertyDefBase::Value& _Value, char* _zBuffer, awUInt _uSizebuffer)const;	\
+		virtual void ValueToString(const PropertyDefBase::Value& _Value, char* _zBuffer, zenUInt _uSizebuffer)const;	\
 	protected:																										\
 		static CMem::PoolAllocator	sPoolAlloc;													
 
@@ -63,7 +63,7 @@ public:
 	{	
 	AWClassDeclareNoParent(Value)
 	public:		
-		inline void	ValueToString(char* _zBuffer, awUInt _uSizebuffer)const 
+		inline void	ValueToString(char* _zBuffer, zenUInt _uSizebuffer)const 
 		{ 
 			mParentDef.ValueToString( *this, _zBuffer, _uSizebuffer); 
 		}
@@ -95,13 +95,13 @@ public:
 	virtual Value*			Allocate()const=0;
 	
 	virtual bool			ValueFromXml	(PropertyDefBase::Value& _Value, const pugi::xml_node& _Property)const=0;	
-	virtual void			ValueToString	(const PropertyDefBase::Value& _Value, char* _zBuffer, awUInt _uSizebuffer)const=0;
+	virtual void			ValueToString	(const PropertyDefBase::Value& _Value, char* _zBuffer, zenUInt _uSizebuffer)const=0;
 	virtual void			ValueToXml		(const PropertyDefBase::Value& _Value, pugi::xml_node& _ParamNode)const;	
 
 	inline const char*		GetTypeDesc		()const {return GetTypeDesc(GetType());}
 
 	const char*				mzName;
-	awHash32			mhName;
+	zenHash32			mhName;
 	const char*				mzDisplayName;
 	const char*				mzDescription;
 	bool					mbShowInAssetDesc;
@@ -113,7 +113,7 @@ public:
 // Static methods
 //-----------------------------------------------------------------------------
 	static const char*					GetTypeDesc	(PropertyDefBase::enumType _ePropertyType);
-	static PropertyDefBase::enumType	GetType(awHash32 _hPropertyName);
+	static PropertyDefBase::enumType	GetType(zenHash32 _hPropertyName);
 // 	static pugi::xml_node				ValueToXml	(const PropertyDefBase::Value& _Value, pugi::xml_node& _NodeParent )const;
 // 	static bool							ValueFromXml(PropertyDefBase::Value& _Value, pugi::xml_node& _NodeParameter )const;
 };
@@ -153,11 +153,11 @@ public:
 	virtual bool		ValueFromXml(PropertyDefBase::Value& _Value, const pugi::xml_node& _NodeProperty)const;
 };
 
-class PropertyDefInt : public TPropertyDefBase<PropertyDefBase::keType_Int, awS32>
+class PropertyDefInt : public TPropertyDefBase<PropertyDefBase::keType_Int, zenS32>
 {
 AWPropertyDefDeclare(PropertyDefInt)
 public:
-						PropertyDefInt(const char* _zName, const char* _zDisplayName, const char* _zDescription, bool _bShowInAssetDesc, int _iDefault, int _iMin=0, int _iMax=100, awUInt _iIncrement=1.f)
+						PropertyDefInt(const char* _zName, const char* _zDisplayName, const char* _zDescription, bool _bShowInAssetDesc, int _iDefault, int _iMin=0, int _iMax=100, zenUInt _iIncrement=1.f)
 						: TPropertyDefBase(_zName, _zDisplayName, _zDescription, _bShowInAssetDesc, _iDefault )
 						, miMin(_iMin)
 						, miMax(_iMax)
@@ -185,37 +185,37 @@ public:
 	float				mfIncrement;	//!< Increment value used when using ticker component 
 };
 
-class PropertyDefEnum : public TPropertyDefBase<PropertyDefBase::keType_Enum, awHash32>
+class PropertyDefEnum : public TPropertyDefBase<PropertyDefBase::keType_Enum, zenHash32>
 {
 AWPropertyDefDeclare(PropertyDefEnum)
 public:
 	struct Entry 
 	{ 
 		Entry(){}
-		Entry(awU32 _uValue, const char* _zName, const char* _zDescription)
+		Entry(zenU32 _uValue, const char* _zName, const char* _zDescription)
 		: uValue(_uValue)
 		, hKey(_zName)
 		, zName(_zName)
 		, zDescription(_zDescription)
 		{
 		}
-		awU32 uValue; 
-	 awHash32 hKey; 
+		zenU32 uValue; 
+	 zenHash32 hKey; 
 		const char* zName;
 		const char* zDescription; 
 	};
 
-						PropertyDefEnum(const char* _zName, const char* _zDisplayName, const char* _zDescription, bool _bShowInAssetDesc, awHash32 _hDefaultKey, const Entry* _pEntries, awUInt _uEntryCount)
+						PropertyDefEnum(const char* _zName, const char* _zDisplayName, const char* _zDescription, bool _bShowInAssetDesc, zenHash32 _hDefaultKey, const Entry* _pEntries, zenUInt _uEntryCount)
 						: TPropertyDefBase( _zName, _zDisplayName, _zDescription, _bShowInAssetDesc, _hDefaultKey )
 						, maEntry(_pEntries, _uEntryCount)
 						{
 							AWAssert(_uEntryCount > 0);
 						}
 	virtual bool		ValueFromXml	(PropertyDefBase::Value& _Value, const pugi::xml_node& _Property)const;
-	awArrayStatic<Entry>	maEntry;
+	zenArrayStatic<Entry>	maEntry;
 };
 
-class PropertyDefFile : public TPropertyDefBase<PropertyDefBase::keType_File, awString>
+class PropertyDefFile : public TPropertyDefBase<PropertyDefBase::keType_File, zenString>
 {
 AWPropertyDefDeclare(PropertyDefFile)
 public:
@@ -227,11 +227,11 @@ public:
 	const char*			mzFileExt;	// List of supported files extensions to display in file dialog
 };
 
-class PropertyDefFloat2 : public TPropertyDefBase<PropertyDefBase::keType_Float2, awVec2F>
+class PropertyDefFloat2 : public TPropertyDefBase<PropertyDefBase::keType_Float2, zenVec2F>
 {
 AWPropertyDefDeclare(PropertyDefFloat2)
 public:
-						PropertyDefFloat2(const char* _zName, const char* _zDisplayName, const char* _zDescription, bool _bShowInAssetDesc, awVec2F _vfDefault, awVec2F _vfMin=0.f, awVec2F _vfMax=100.f, awVec2F _vfIncrement=1.f)
+						PropertyDefFloat2(const char* _zName, const char* _zDisplayName, const char* _zDescription, bool _bShowInAssetDesc, zenVec2F _vfDefault, zenVec2F _vfMin=0.f, zenVec2F _vfMax=100.f, zenVec2F _vfIncrement=1.f)
 						: TPropertyDefBase(_zName, _zDisplayName, _zDescription, _bShowInAssetDesc, _vfDefault )
 						, mvfMin(_vfMin)
 						, mvfMax(_vfMax)
@@ -239,9 +239,9 @@ public:
 						{}
 	virtual bool		ValueFromXml	(PropertyDefBase::Value& _Value, const pugi::xml_node& _Property)const;
 	virtual void		ValueToXml		(const PropertyDefBase::Value& _Value, pugi::xml_node& _ParamNode)const;
-	awVec2F			mvfMin;			//!< Minimum acceptable value
-	awVec2F			mvfMax;			//!< Maximum acceptable value
-	awVec2F			mvfIncrement;	//!< Increment value used when using ticker component 
+	zenVec2F			mvfMin;			//!< Minimum acceptable value
+	zenVec2F			mvfMax;			//!< Maximum acceptable value
+	zenVec2F			mvfIncrement;	//!< Increment value used when using ticker component 
 };
 
 
@@ -250,14 +250,14 @@ class PropertyDefInt2 : public PropertyDefBase
 {
 AWClassDeclare(PropertyDefInt2, PropertyDefBase)
 public:
-				PropertyDefInt2(const char* _zName, const char* _zDisplayName, const char* _zDescription, bool _bShowInAssetDesc, awVec2S32 _mviDefault, int _iMin=0, int _iMax=100)
+				PropertyDefInt2(const char* _zName, const char* _zDisplayName, const char* _zDescription, bool _bShowInAssetDesc, zenVec2S32 _mviDefault, int _iMin=0, int _iMax=100)
 				: PropertyDefBase(keType_Int2, _zName, _zDisplayName, _zDescription, _bShowInAssetDesc )
 				, mviDefault(_mviDefault)
 				, miMin(_iMin)
 				, miMax(_iMax)
 				{}
 
-	awVec2S32	mviDefault;		//!< Default value assigned when none present
+	zenVec2S32	mviDefault;		//!< Default value assigned when none present
 	int			miMin;			//!< Minimum acceptable value
 	int			miMax;			//!< Maximum acceptable value
 };
@@ -266,14 +266,14 @@ class PropertyDefInt3 : public PropertyDefBase
 {
 AWClassDeclare(PropertyDefInt3, PropertyDefBase)
 public:
-				PropertyDefInt3(const char* _zName, const char* _zDisplayName, const char* _zDescription, bool _bShowInAssetDesc, awVec3S32 _mviDefault, int _iMin=0, int _iMax=100)
+				PropertyDefInt3(const char* _zName, const char* _zDisplayName, const char* _zDescription, bool _bShowInAssetDesc, zenVec3S32 _mviDefault, int _iMin=0, int _iMax=100)
 				: PropertyDefBase(keType_Int3, _zName, _zDisplayName, _zDescription, _bShowInAssetDesc )
 				, mviDefault(_mviDefault)
 				, miMin(_iMin)
 				, miMax(_iMax)
 				{}
 
-	awVec3S32	mviDefault;		//!< Default value assigned when none present
+	zenVec3S32	mviDefault;		//!< Default value assigned when none present
 	int			miMin;			//!< Minimum acceptable value
 	int			miMax;			//!< Maximum acceptable value
 };
@@ -282,14 +282,14 @@ class PropertyDefInt4 : public PropertyDefBase
 {
 AWClassDeclare(PropertyDefInt4, PropertyDefBase)
 public:
-				PropertyDefInt4(const char* _zName, const char* _zDisplayName, const char* _zDescription, bool _bShowInAssetDesc, awVec4S32 _mviDefault, int _iMin=0, int _iMax=100)
+				PropertyDefInt4(const char* _zName, const char* _zDisplayName, const char* _zDescription, bool _bShowInAssetDesc, zenVec4S32 _mviDefault, int _iMin=0, int _iMax=100)
 				: PropertyDefBase(keType_Int4, _zName, _zDisplayName, _zDescription, _bShowInAssetDesc )
 				, mviDefault(_mviDefault)
 				, miMin(_iMin)
 				, miMax(_iMax)
 				{}
 
-	awVec4S32	mviDefault;		//!< Default value assigned when none present
+	zenVec4S32	mviDefault;		//!< Default value assigned when none present
 	int			miMin;			//!< Minimum acceptable value
 	int			miMax;			//!< Maximum acceptable value
 };
@@ -298,7 +298,7 @@ class PropertyDefFloat3 : public PropertyDefBase
 {
 AWClassDeclare(PropertyDefFloat3, PropertyDefBase)
 public:
-				PropertyDefFloat3(const char* _zName, const char* _zDisplayName, const char* _zDescription, bool _bShowInAssetDesc, awVec3F _vfDefault, float _fMin=0.f, float _fMax=100.f, float _fIncrement=1.f)
+				PropertyDefFloat3(const char* _zName, const char* _zDisplayName, const char* _zDescription, bool _bShowInAssetDesc, zenVec3F _vfDefault, float _fMin=0.f, float _fMax=100.f, float _fIncrement=1.f)
 				: PropertyDefBase(keType_Float3, _zName, _zDisplayName, _zDescription, _bShowInAssetDesc )
 				, mvfDefault(_vfDefault)
 				, mfMin(_fMin)
@@ -306,7 +306,7 @@ public:
 				, mfIncrement(_fIncrement)
 				{}
 
-	awVec3F	mvfDefault;		//!< Default value assigned when none present
+	zenVec3F	mvfDefault;		//!< Default value assigned when none present
 	float		mfMin;			//!< Minimum acceptable value
 	float		mfMax;			//!< Maximum acceptable value
 	float		mfIncrement;	//!< Increment value used when using ticker component 
@@ -316,7 +316,7 @@ class PropertyDefFloat4 : public PropertyDefBase
 {
 AWClassDeclare(PropertyDefFloat4, PropertyDefBase)
 public:
-				PropertyDefFloat4(const char* _zName, const char* _zDisplayName, const char* _zDescription, bool _bShowInAssetDesc, awVec4F _vfDefault, float _fMin=0.f, float _fMax=100.f, float _fIncrement=1.f)
+				PropertyDefFloat4(const char* _zName, const char* _zDisplayName, const char* _zDescription, bool _bShowInAssetDesc, zenVec4F _vfDefault, float _fMin=0.f, float _fMax=100.f, float _fIncrement=1.f)
 				: PropertyDefBase(keType_Float4, _zName, _zDisplayName, _zDescription, _bShowInAssetDesc )
 				, mvfDefault(_vfDefault)
 				, mfMin(_fMin)
@@ -324,7 +324,7 @@ public:
 				, mfIncrement(_fIncrement)
 				{}
 
-	awVec4F	mvfDefault;		//!< Default value assigned when none present
+	zenVec4F	mvfDefault;		//!< Default value assigned when none present
 	float		mfMin;			//!< Minimum acceptable value
 	float		mfMax;			//!< Maximum acceptable value
 	float		mfIncrement;	//!< Increment value used when using ticker component 
@@ -355,7 +355,7 @@ protected:
 	#undef	AWAssetTypeExpand
 };
 
-typedef const awArrayStatic<const PropertyDefBase*> PropertyArray;
+typedef const zenArrayStatic<const PropertyDefBase*> PropertyArray;
 }
 
 #endif

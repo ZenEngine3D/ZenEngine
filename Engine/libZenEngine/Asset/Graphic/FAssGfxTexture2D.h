@@ -10,9 +10,9 @@ namespace FAss
 	public:
 		virtual FAss::AssetItem::enumType	GetType()const{return keType_Texture2D;}
 		virtual FAss::PropertyArray&		GetPropertyDef() const;		
-		virtual awUInt						GetPropertyDefIndex(awHash32 _hPropertyName)const;	
+		virtual zenUInt						GetPropertyDefIndex(zenHash32 _hPropertyName)const;	
 	protected:
-		mutable awArrayStatic<awU32>			maIcon; //!< Store icon data
+		mutable zenArrayStatic<zenU32>			maIcon; //!< Store icon data
 	};	
 }
 

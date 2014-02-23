@@ -5,33 +5,33 @@ namespace zen { namespace awres {
 //=================================================================================================
 // CREATES
 //=================================================================================================
-awGfxTexture2D awGfxTexture2D::Create(awconst::eTextureFormat _eFormat, awVec2U16 _vDim, awFlagResTexCreate _CreationFlags)
+awGfxTexture2D awGfxTexture2D::Create(awconst::eTextureFormat _eFormat, zenVec2U16 _vDim, awFlagResTexCreate _CreationFlags)
 {
-	static awArrayStatic<awU8> aEmpty(awUInt(0));
+	static zenArrayStatic<zenU8> aEmpty(zenUInt(0));
 	return EExp::CreateGfxTexture2D(_eFormat, _CreationFlags, _vDim, aEmpty);
 }
 
-awGfxTexture2D awGfxTexture2D::Create(awconst::eTextureFormat _eFormat, awVec2U16 _vDim, const awArrayBase<awU8>& _aRawData, awFlagResTexCreate _CreationFlags)
+awGfxTexture2D awGfxTexture2D::Create(awconst::eTextureFormat _eFormat, zenVec2U16 _vDim, const zenArrayBase<zenU8>& _aRawData, awFlagResTexCreate _CreationFlags)
 {
 	return EExp::CreateGfxTexture2D(_eFormat, _CreationFlags, _vDim, _aRawData);
 }
 
-awGfxRenderTarget awGfxRenderTarget::Create(awconst::eTextureFormat _eFormat, awVec2U16 _vDim, bool _bSrgb)
+awGfxRenderTarget awGfxRenderTarget::Create(awconst::eTextureFormat _eFormat, zenVec2U16 _vDim, bool _bSrgb)
 {
 	return EExp::CreateGfxRenderTarget(_eFormat, _vDim, _bSrgb);
 }
 
-awGfxVertex awGfxVertex::Create(const awArrayBase<awGfxVertex::Stream>& _aStreams, awU32 _uCreationFlags)
+awGfxVertex awGfxVertex::Create(const zenArrayBase<awGfxVertex::Stream>& _aStreams, zenU32 _uCreationFlags)
 {
 	return EExp::CreateGfxVertex(_aStreams, _uCreationFlags);
 }
 
-awGfxIndex awGfxIndex::Create(const awArrayBase<awU16>& _Indices, awconst::ePrimitiveType _ePrimitiveType)
+awGfxIndex awGfxIndex::Create(const zenArrayBase<zenU16>& _Indices, awconst::ePrimitiveType _ePrimitiveType)
 {
 	return EExp::CreateGfxIndexBuffer(_Indices, _ePrimitiveType);
 }
 
-awGfxIndex awGfxIndex::Create(const awArrayBase<awU32>& _Indices, awconst::ePrimitiveType _ePrimitiveType)
+awGfxIndex awGfxIndex::Create(const zenArrayBase<zenU32>& _Indices, awconst::ePrimitiveType _ePrimitiveType)
 {
 	return EExp::CreateGfxIndexBuffer(_Indices, _ePrimitiveType);
 }
@@ -39,7 +39,7 @@ awGfxIndex awGfxIndex::Create(const awArrayBase<awU32>& _Indices, awconst::ePrim
 //=================================================================================================
 // GFX VERTEX
 //=================================================================================================
-awU8* awGfxVertex::Lock()
+zenU8* awGfxVertex::Lock()
 {
 	AWAssertMsg(mpResource, "No valid resource assigned");
 	ERes::GfxVertex* pVertex = static_cast<ERes::GfxVertex*>(mpResource);
@@ -56,7 +56,7 @@ void awGfxVertex::Unlock()
 //=================================================================================================
 // GFX INDEX
 //=================================================================================================
-awU8* awGfxIndex::Lock()
+zenU8* awGfxIndex::Lock()
 {
 	AWAssertMsg(mpResource, "No valid resource assigned");
 	ERes::GfxIndex* pIndex = static_cast<ERes::GfxIndex*>(mpResource);
@@ -73,7 +73,7 @@ void awGfxIndex::Unlock()
 //=================================================================================================
 // GFX TEXTURE2D
 //=================================================================================================
-const awVec2U16& awGfxTexture2D::GetDim()
+const zenVec2U16& awGfxTexture2D::GetDim()
 {
 	AWAssertMsg(mpResource, "No valid resource assigned");
 	ERes::GfxTexture2D* pTexture = static_cast<ERes::GfxTexture2D*>(mpResource);
@@ -90,21 +90,21 @@ bool awGfxRenderTarget::IsDepth()
 	return pRenderTarget->IsDepth();
 }
 
-const awVec2U16& awGfxRenderTarget::GetDim()
+const zenVec2U16& awGfxRenderTarget::GetDim()
 {
 	AWAssertMsg(mpResource, "No valid resource assigned");
 	ERes::GfxRenderTarget* pRenderTarget = static_cast<ERes::GfxRenderTarget*>(mpResource);
 	return pRenderTarget->GetDim();
 }
 
-void awGfxRenderTarget::Clear(const awVec4F& _vRGBA)
+void awGfxRenderTarget::Clear(const zenVec4F& _vRGBA)
 {
 	AWAssertMsg(mpResource, "No valid resource assigned");
 	ERes::GfxRenderTarget* pRenderTarget = static_cast<ERes::GfxRenderTarget*>(mpResource);
 	pRenderTarget->Clear(_vRGBA);
 }
 
-void awGfxRenderTarget::Clear(float _fDepth, awU8 _uStencil, bool _bClearDepth, bool _bClearStencil)
+void awGfxRenderTarget::Clear(float _fDepth, zenU8 _uStencil, bool _bClearDepth, bool _bClearStencil)
 {
 	AWAssertMsg(mpResource, "No valid resource assigned");
 	ERes::GfxRenderTarget* pRenderTarget = static_cast<ERes::GfxRenderTarget*>(mpResource);

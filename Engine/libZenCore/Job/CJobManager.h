@@ -11,13 +11,13 @@ AWClassDeclare(ManagerJob_Base, zbType::Manager);
 public:
 	void		Add(JobItem* _pJob);
 	void		Update();
-	awList2x&	GetTaskReady();
+	zenList2x&	GetTaskReady();
 
 protected:
 	void		Remove(JobItem* _pJob);
-	awList2x	mlstTasksPending;
-	awList2x	mlstTasksReady;
-	awList2x	mlstTasksRunning;
+	zenList2x	mlstTasksPending;
+	zenList2x	mlstTasksReady;
+	zenList2x	mlstTasksRunning;
 };
 
 }  

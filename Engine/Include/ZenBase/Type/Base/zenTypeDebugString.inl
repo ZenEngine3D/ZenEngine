@@ -1,37 +1,24 @@
-namespace zen { namespace awtype {
+namespace zen { namespace zenType {
 
-#if AW_DEBUGINFOON
-static const char* szNullString = "";
-#endif
-
-awDebugString::awDebugString()
-#if AW_DEBUGINFOON
-: mzDebugString(szNullString)
-#endif
+zenDebugString::zenDebugString()
 {		
+	AWDbgCode(mzDebugString="";)
 }
 
-awDebugString::awDebugString(const char* _zString)
-#if AW_DEBUGINFOON
-: mzDebugString(_zString)
-#endif
-{		
+zenDebugString::zenDebugString(const char* _zString)
+{	
+	AWDbgCode(mzDebugString=_zString;)
 }
 
-awDebugString::operator const char*()
+zenDebugString::operator const char*()
 {
-#if AW_DEBUGINFOON
-	return mzDebugString;
-#else
+	AWDbgCode(return mzDebugString;)
 	return "";
-#endif
 }
 
-void awDebugString::operator=(const awDebugString& _Copy)
+void zenDebugString::operator=(const zenDebugString& _Copy)
 {
-#if AW_DEBUGINFOON
-	mzDebugString = _Copy.mzDebugString;
-#endif
+	AWDbgCode(mzDebugString = _Copy.mzDebugString;)
 }
 
 } } //namespace zen, Type

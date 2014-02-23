@@ -16,7 +16,7 @@ namespace sample
 	class SomeSampleClass
 	{
 	public:
-		awU32 print ()
+		zenU32 print ()
 		{
 			std::cout << "\n" << std::endl;
 			for (int i = 0; i < 1000; ++i)

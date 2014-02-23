@@ -4,7 +4,7 @@
 namespace FAss
 {
 
-awArrayStatic<awU32>	GfxMesh::saIcon;
+zenArrayStatic<zenU32>	GfxMesh::saIcon;
 
 //=================================================================================================
 //! @brief		
@@ -20,11 +20,11 @@ awArrayStatic<awU32>	GfxMesh::saIcon;
 //-------------------------------------------------------------------------------------------------
 //! @return		List of properties this asset needs
 //=================================================================================================
-const awArrayStatic<const FAss::PropertyDefBase*>& GfxMesh::GetPropertyDef() const
+const zenArrayStatic<const FAss::PropertyDefBase*>& GfxMesh::GetPropertyDef() const
 {
 	static const FAss::PropertyDefFile		Property01("Source", "", "3D Model", true,	"", "");
 	static const FAss::PropertyDefBase*		aPropertyAll[] = { &Property01 };
-	static awArrayStatic<const FAss::PropertyDefBase*> saPropertyDef(aPropertyAll, AWArrayCount(aPropertyAll));
+	static zenArrayStatic<const FAss::PropertyDefBase*> saPropertyDef(aPropertyAll, AWArrayCount(aPropertyAll));
 	return saPropertyDef;		
 }
 
@@ -35,9 +35,9 @@ const awArrayStatic<const FAss::PropertyDefBase*>& GfxMesh::GetPropertyDef() con
 //! @param hPropertyName	- Name of property to look for
 //! @return					- Index of found item (0xFFFFFFFF if not found)
 //=================================================================================================
-awUInt GfxMesh::GetPropertyDefIndex(awHash32 _hPropertyName)const	
+zenUInt GfxMesh::GetPropertyDefIndex(zenHash32 _hPropertyName)const	
 {
-	static Hashmap<awUInt>::Key32 sdPropertyIndex;
+	static zenMap<zenUInt>::Key32 sdPropertyIndex;
 	if( !sdPropertyIndex.IsInit() )
 		InitPropertyDefIndex(sdPropertyIndex);
 

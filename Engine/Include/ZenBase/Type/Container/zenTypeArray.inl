@@ -1,7 +1,7 @@
-namespace zen { namespace awtype {
+namespace zen { namespace zenType {
 
 template<class TType>
-awArrayBase<TType>::awArrayBase(CMem::Allocator* _pAllocator=NULL)
+zenArrayBase<TType>::zenArrayBase(CMem::Allocator* _pAllocator=NULL)
 : mpAllocator(_pAllocator)
 , mpData(NULL)
 , muCount(0)
@@ -9,74 +9,74 @@ awArrayBase<TType>::awArrayBase(CMem::Allocator* _pAllocator=NULL)
 }
 
 template<class TType>
-void awArrayBase<TType>::Sort()
+void zenArrayBase<TType>::Sort()
 {
 	CAlg::Quicksort<TType>(mpData, &mpData[muCount-1]);	
 }
 
 template<class TType>
-void awArrayBase<TType>::Clear()
+void zenArrayBase<TType>::Clear()
 {
 	SetCount(0);
 }
 
 template<class TType>
-TType* awArrayBase<TType>::First()
+TType* zenArrayBase<TType>::First()
 {
 	return mpData;
 }
 
 template<class TType>
-const TType* awArrayBase<TType>::First()const
+const TType* zenArrayBase<TType>::First()const
 {
 	return mpData;
 }
 
 template<class TType>
-TType* awArrayBase<TType>::Last()
+TType* zenArrayBase<TType>::Last()
 {
 	return muCount ? (mpData + muCount - 1) : NULL;
 }
 
 template<class TType>
-const TType* awArrayBase<TType>::Last()const	
+const TType* zenArrayBase<TType>::Last()const	
 {
 	return muCount ? (mpData + muCount - 1) : NULL;
 }
 
 template<class TType>
-awUInt awArrayBase<TType>::Count()const
+zenUInt zenArrayBase<TType>::Count()const
 {
 	return muCount;
 }
 
 template<class TType>
-awUInt awArrayBase<TType>::Size()const
+zenUInt zenArrayBase<TType>::Size()const
 {
 	return muCount*sizeof(TType);
 }	
 
 template<class TType>
-awUInt awArrayBase<TType>::SizeElement()const			
+zenUInt zenArrayBase<TType>::SizeElement()const			
 {
 	return sizeof(TType);
 }
 
 template<class TType>
-void awArrayBase<TType>::SetAll(const TType& _Value) 
+void zenArrayBase<TType>::SetAll(const TType& _Value) 
 {
 	SetRange(_Value);
 }
 
 template<class TType>
-TType& awArrayBase<TType>::operator[](awUInt _uIndex)
+TType& zenArrayBase<TType>::operator[](zenUInt _uIndex)
 {
 	AWAssert(_uIndex<muCount);
 	return mpData[_uIndex];
 }
 
 template<class TType>
-const TType& awArrayBase<TType>::operator[](awUInt _uIndex)const
+const TType& zenArrayBase<TType>::operator[](zenUInt _uIndex)const
 {
 	AWAssert(_uIndex<muCount);
 	return mpData[_uIndex];
@@ -90,7 +90,7 @@ const TType& awArrayBase<TType>::operator[](awUInt _uIndex)const
 //! @return			- Index of element (or -1 if not found)
 //==================================================================================================
 template<class TType>
-int awArrayBase<TType>::Find(const TType& _Value)
+int zenArrayBase<TType>::Find(const TType& _Value)
 {
 	TType* pItemCur	= mpData;
 	TType* pItemEnd	= mpData+muCount;
@@ -110,7 +110,7 @@ int awArrayBase<TType>::Find(const TType& _Value)
 //! @return			- This object
 //==================================================================================================
 template<class TType>
-awArrayBase<TType>& awArrayBase<TType>::operator=( const awArrayBase<TType>& _aCopy )
+zenArrayBase<TType>& zenArrayBase<TType>::operator=( const zenArrayBase<TType>& _aCopy )
 {
 	Copy(_aCopy.First(), _aCopy.Count() );
 	return *this;
@@ -127,7 +127,7 @@ awArrayBase<TType>& awArrayBase<TType>::operator=( const awArrayBase<TType>& _aC
 //! @return			- Number of element after copy
 //==================================================================================================
 template<class TType>
-awUInt awArrayBase<TType>::Copy(const TType* _pCopy, awUInt _uCount)
+zenUInt zenArrayBase<TType>::Copy(const TType* _pCopy, zenUInt _uCount)
 {	
 	Clear();
 	SetCount(_uCount);
@@ -154,7 +154,7 @@ awUInt awArrayBase<TType>::Copy(const TType* _pCopy, awUInt _uCount)
 //! @return						- Number of element after copy
 //==================================================================================================
 template<class TType> template<class TTypeImport>
-awUInt awArrayBase<TType>::Copy(const TTypeImport* _ImportArray, awUInt _uCount )
+zenUInt zenArrayBase<TType>::Copy(const TTypeImport* _ImportArray, zenUInt _uCount )
 {
 	Clear();
 	SetCount(_uCount);
@@ -175,7 +175,7 @@ awUInt awArrayBase<TType>::Copy(const TTypeImport* _ImportArray, awUInt _uCount 
 //! @return						- Number of element after copy
 //==================================================================================================
 template<class TType> template<class TTypeImport>
-awUInt awArrayBase<TType>::Copy( const awArrayBase<TTypeImport>& _ImportArray )
+zenUInt zenArrayBase<TType>::Copy( const zenArrayBase<TTypeImport>& _ImportArray )
 {
 	Clear();
 	SetCount(_ImportArray.Count());
@@ -197,7 +197,7 @@ awUInt awArrayBase<TType>::Copy( const awArrayBase<TTypeImport>& _ImportArray )
 //! @return			- 
 //==================================================================================================
 template<class TType>
-void awArrayBase<TType>::SetRange(const TType& _Value, awUInt _uFirst=0, awUInt _uLast=0xFFFFFFFF)
+void zenArrayBase<TType>::SetRange(const TType& _Value, zenUInt _uFirst=0, zenUInt _uLast=0xFFFFFFFF)
 {
 	TType*				pDataDest	= mpData;
 	TType*				pDataEnd	= &mpData[_uLast>muCount ? muCount : _uLast];

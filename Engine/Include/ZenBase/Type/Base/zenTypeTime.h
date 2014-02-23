@@ -1,25 +1,25 @@
 #pragma once
-#ifndef __LibCore_Type_Time_h__
-#define __LibCore_Type_Time_h__
+#ifndef __zenBase_Type_Time_h__
+#define __zenBase_Type_Time_h__
 
-namespace zen { namespace awtype {
+namespace zen { namespace zenType {
 
 //=================================================================================================
 //! Used to store informations about the OS current date/time
 //=================================================================================================
-struct awDateTime
+struct zenDateTime
 {   
-    awU16 muYear;
-    awU16 muDayOfYear;
-    awU8  muDayOfMonth;
-    awU8  muDayOfWeek;    
-    awU8  muMonth;
-    awU8  muHour;        
-    awU8  muMinute;
-    awU8  muSecond;
+    zenU16 muYear;
+    zenU16 muDayOfYear;
+    zenU8  muDayOfMonth;
+    zenU8  muDayOfWeek;    
+    zenU8  muMonth;
+    zenU8  muHour;        
+    zenU8  muMinute;
+    zenU8  muSecond;
 };
 
-typedef time_t awTimeStamp;
+typedef time_t zenTimeStamp;
 
 }}  //namespace zen, Type 
 

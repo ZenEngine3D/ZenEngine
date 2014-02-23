@@ -39,7 +39,7 @@ void awEngineInstance::Update()
 	CMgr::Job.Update();
 }
 
-void awEngineInstance::CreateGfxWindow(const awVec2U16& _vDim, const awVec2U16& _vPos)
+void awEngineInstance::CreateGfxWindow(const zenVec2U16& _vDim, const zenVec2U16& _vPos)
 {
 	AWAssert(gpActiveEngine);
 	gpMainWindow	= AWNewDefault FWnd::Window(L"MainWindow", _vDim);

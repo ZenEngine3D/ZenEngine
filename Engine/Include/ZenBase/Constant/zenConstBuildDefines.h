@@ -56,7 +56,7 @@
 #endif
 #define AW_ASSERTON (AW_ASSERT_BREAKON || AWASSERT_MSG_ON)
 
-#if AW_BUILD_DEBUG || AW_ASSERTON
+#if AW_DEBUGINFOON || AW_ASSERTON
 	#define AWDbgCode( _Code_ )			_Code_
 #else
 	#define AWDbgCode( _Code_ )
