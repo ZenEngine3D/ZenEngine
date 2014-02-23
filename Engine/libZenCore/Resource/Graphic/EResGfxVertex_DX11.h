@@ -9,16 +9,16 @@ class GfxVertex_DX11 : public Resource
 {
 	struct StreamInfo
 	{
-		awU8		muElementStartIndex;							//!< Index of first stream element, in maElementDef
-		awU8		muElementCount;									//!< stream elements count, in maElementDef
+		zenU8		muElementStartIndex;							//!< Index of first stream element, in maElementDef
+		zenU8		muElementCount;									//!< stream elements count, in maElementDef
 	};
 	//! @todo remove instance separation?
 	struct InstanceInfo : public EExp::SerialGfxVertex_DX11
 	{
-		awArrayStatic<ID3D11Buffer*>			maStreamBuffer;	//!< D3D11 Buffer object
-		awArrayStatic<UINT>						maStreamStride;	//!< Stride between 2 vertices of a buffer
-		awArrayStatic<StreamInfo>				maStreamInfo;	//!< Element infos of stream
-		awArrayStatic<D3D11_INPUT_ELEMENT_DESC>	maElementDef;	//!< D3D11 infos on each vertice element contained in all buffer (pos, uv, etc...)
+		zenArrayStatic<ID3D11Buffer*>			maStreamBuffer;	//!< D3D11 Buffer object
+		zenArrayStatic<UINT>						maStreamStride;	//!< Stride between 2 vertices of a buffer
+		zenArrayStatic<StreamInfo>				maStreamInfo;	//!< Element infos of stream
+		zenArrayStatic<D3D11_INPUT_ELEMENT_DESC>	maElementDef;	//!< D3D11 infos on each vertice element contained in all buffer (pos, uv, etc...)
 	};
 AWResourceDeclare(GfxVertex_DX11, InstanceInfo, awconst::keResType_GfxVertex)
 public:
@@ -29,7 +29,7 @@ public:
 //-----------------------------------------------------------------------------
 // Common to all Vertex buffer
 public:	
-	awU8*										Lock();
+	zenU8*										Lock();
 	void										Unlock();
 //-----------------------------------------------------------------------------
 };

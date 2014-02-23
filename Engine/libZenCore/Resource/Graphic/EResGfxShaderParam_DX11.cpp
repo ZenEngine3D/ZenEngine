@@ -82,7 +82,7 @@ void GfxShaderParam_DX11::SetValue(const awres::awShaderParameter& _Value)
 	}	
 }
 
-void GfxShaderParam_DX11::SetValue(const awHash32& _hParamName, const float& _fValue)
+void GfxShaderParam_DX11::SetValue(const zenHash32& _hParamName, const float& _fValue)
 {
 	AWAssert( mInstanceInfo.mpParentShaderParamDef.IsValid() )
 	EExp::ShaderParamItemInfo ItemInfo;
@@ -95,7 +95,7 @@ void GfxShaderParam_DX11::SetValue(const awHash32& _hParamName, const float& _fV
 	}	
 }
 
-void GfxShaderParam_DX11::SetValue(const awHash32& _hParamName, const awVec2F& _vValue)
+void GfxShaderParam_DX11::SetValue(const zenHash32& _hParamName, const zenVec2F& _vValue)
 {
 	AWAssert( mInstanceInfo.mpParentShaderParamDef.IsValid() )
 	EExp::ShaderParamItemInfo ItemInfo;
@@ -109,7 +109,7 @@ void GfxShaderParam_DX11::SetValue(const awHash32& _hParamName, const awVec2F& _
 	}	
 }
 
-void GfxShaderParam_DX11::SetValue(const awHash32& _hParamName, const awVec3F& _vValue)
+void GfxShaderParam_DX11::SetValue(const zenHash32& _hParamName, const zenVec3F& _vValue)
 {
 	AWAssert( mInstanceInfo.mpParentShaderParamDef.IsValid() )
 	EExp::ShaderParamItemInfo ItemInfo;
@@ -124,7 +124,7 @@ void GfxShaderParam_DX11::SetValue(const awHash32& _hParamName, const awVec3F& _
 	}	
 }
 
-void GfxShaderParam_DX11::SetValue(const awHash32& _hParamName, const awVec4F& _vValue)
+void GfxShaderParam_DX11::SetValue(const zenHash32& _hParamName, const zenVec4F& _vValue)
 {
 	AWAssert( mInstanceInfo.mpParentShaderParamDef.IsValid() )			
 	EExp::ShaderParamItemInfo ItemInfo;
@@ -140,7 +140,7 @@ void GfxShaderParam_DX11::SetValue(const awHash32& _hParamName, const awVec4F& _
 	}	
 }
 
-void GfxShaderParam_DX11::SetValue(const awHash32& _hParamName, const zenMath::Matrix& _matValue)
+void GfxShaderParam_DX11::SetValue(const zenHash32& _hParamName, const zenMath::Matrix& _matValue)
 {
 	AWAssert( mInstanceInfo.mpParentShaderParamDef.IsValid() )			
 	EExp::ShaderParamItemInfo ItemInfo;

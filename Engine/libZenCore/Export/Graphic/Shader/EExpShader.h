@@ -10,26 +10,26 @@ namespace EExp
 	public:
 		struct ExportInfo : public EExp::ExportInfoBase
 		{				
-			awString								mzFilename;
-			awString								mzEntryname;
-			awArrayStatic<awres::awShaderDefine>	maDefines;
+			zenString								mzFilename;
+			zenString								mzEntryname;
+			zenArrayStatic<awres::awShaderDefine>	maDefines;
 			EExp::eShaderStage						meShaderStage;
 		};
 
-		struct BindInfo{ awU8 uSlot;	awU8 uCount;	};
+		struct BindInfo{ zenU8 uSlot;	zenU8 uCount;	};
 		eShaderStage								meShaderStage;			//!< Type of shader (vertex, pixel, ...)
-		awArrayStatic<awResourceID>					maParamDefID;			//!< List of Parameter info used with this shader
-		awArrayStatic<awHash32>						maTextureSamplerName;	//!< List of name used for Texture and associated Sampler 
-		awArrayStatic<BindInfo>						maTextureSamplerSlot;	//!< Texture or sampler slot used for each item in mTextureSamplerName
-		awU8										muTextureSlotCount;		//!< Texture slot used in shader
+		zenArrayStatic<zenResID>					maParamDefID;			//!< List of Parameter info used with this shader
+		zenArrayStatic<zenHash32>						maTextureSamplerName;	//!< List of name used for Texture and associated Sampler 
+		zenArrayStatic<BindInfo>						maTextureSamplerSlot;	//!< Texture or sampler slot used for each item in mTextureSamplerName
+		zenU8										muTextureSlotCount;		//!< Texture slot used in shader
 
-		static awResourceID CallbackGetItemID(awconst::eResPlatform _ePlatform, awconst::eResType _eType, awconst::eResSource _eSource, const EExp::ExportInfoBase* _pExportInfo, bool& _bExistOut);
+		static zenResID CallbackGetItemID(awconst::eResPlatform _ePlatform, awconst::eResType _eType, awconst::eResSource _eSource, const EExp::ExportInfoBase* _pExportInfo, bool& _bExistOut);
 	};
 	
-	awResourceID CreateGfxShaderVertex	( const char* _zFilename, const char* _zEntryname );
-	awResourceID CreateGfxShaderPixel	( const char* _zFilename, const char* _zEntryname );
-	awResourceID CreateGfxShaderVertex	( const char* _zFilename, const char* _zEntryname, const awArrayBase<awres::awShaderDefine>& _aDefines );
-	awResourceID CreateGfxShaderPixel	( const char* _zFilename, const char* _zEntryname, const awArrayBase<awres::awShaderDefine>& _aDefines );
+	zenResID CreateGfxShaderVertex	( const char* _zFilename, const char* _zEntryname );
+	zenResID CreateGfxShaderPixel	( const char* _zFilename, const char* _zEntryname );
+	zenResID CreateGfxShaderVertex	( const char* _zFilename, const char* _zEntryname, const zenArrayBase<awres::awShaderDefine>& _aDefines );
+	zenResID CreateGfxShaderPixel	( const char* _zFilename, const char* _zEntryname, const zenArrayBase<awres::awShaderDefine>& _aDefines );
 }
 
 #include "EExpShaderDX11.h"

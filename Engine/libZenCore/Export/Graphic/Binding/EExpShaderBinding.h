@@ -10,14 +10,14 @@ namespace EExp
 	public:
 		struct ExportInfo : public EExp::ExportInfoBase
 		{						
-			awArrayStatic<awResourceID>	maShaderID;				//!< List of shaders to tie together (vertex, pixel, ...)			
-			Hashmap<awU32>::Key64				mdStagePerParamDef;		//!< ParamDef needed for this binding, with stage mask they applied to (automatically computed at export)
+			zenArrayStatic<zenResID>	maShaderID;				//!< List of shaders to tie together (vertex, pixel, ...)			
+			zenMap<zenU32>::Key64				mdStagePerParamDef;		//!< ParamDef needed for this binding, with stage mask they applied to (automatically computed at export)
 		};
 		virtual bool		ExportStart();
-		static awResourceID	CallbackGetItemID(awconst::eResPlatform _ePlatform, awconst::eResType _eType, awconst::eResSource _eSource, const EExp::ExportInfoBase* _pExportInfo, bool& _bExistOut);
+		static zenResID	CallbackGetItemID(awconst::eResPlatform _ePlatform, awconst::eResType _eType, awconst::eResSource _eSource, const EExp::ExportInfoBase* _pExportInfo, bool& _bExistOut);
 	};
 
-	awResourceID CreateGfxShaderBinding(const awArrayBase<awResourceID>& _aShaderID);
+	zenResID CreateGfxShaderBinding(const zenArrayBase<zenResID>& _aShaderID);
 	
 }
 

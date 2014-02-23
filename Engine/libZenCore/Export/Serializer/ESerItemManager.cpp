@@ -57,7 +57,7 @@ void ManagerSerialItem::SetItem(EExp::SerialItem* _pItem)
 //-------------------------------------------------------------------------------------------------
 //! @return 	
 //=================================================================================================
-SerialItem* ManagerSerialItem::GetItemBase(const awResourceID _ResID)
+SerialItem* ManagerSerialItem::GetItemBase(const zenResID _ResID)
 {
 	EExp::SerialItem* pSerialItem(NULL);
 	mdSerialItems.Get( _ResID.HashID(), pSerialItem );
@@ -65,20 +65,20 @@ SerialItem* ManagerSerialItem::GetItemBase(const awResourceID _ResID)
 } 
 
 //=================================================================================================
-//! @brief		Find and return the SerialItem with a particular awResourceID
+//! @brief		Find and return the SerialItem with a particular zenResID
 //! @details	This version try to look in all possible SerialItem Sources, not limited to  
-//!				the one provided in the awResourceID parameter.
-//!				Some generated awResourceID can be created on the fly or already loaded, useful
+//!				the one provided in the zenResID parameter.
+//!				Some generated zenResID can be created on the fly or already loaded, useful
 //!				for those cases where we create a resource that depends on another one
 //-------------------------------------------------------------------------------------------------
-//! @param		_ResID				- awResourceID to look for
-//! @return 	awPointer to SerialItem
+//! @param		_ResID				- zenResID to look for
+//! @return 	zenPointer to SerialItem
 //=================================================================================================
-SerialItem* ManagerSerialItem::GetItemBaseAnySource(const awResourceID _ResID)
+SerialItem* ManagerSerialItem::GetItemBaseAnySource(const zenResID _ResID)
 {
 	AWAssert(_ResID.IsValid());
 	EExp::SerialItem* pSerialItem(NULL);
-	awResourceID anySourceResID(_ResID);
+	zenResID anySourceResID(_ResID);
 
 	anySourceResID.SetSource(awconst::keResSource_Loaded);
 	if( mdSerialItems.Get(_ResID.HashID(), pSerialItem) )	
@@ -99,10 +99,10 @@ SerialItem* ManagerSerialItem::GetItemBaseAnySource(const awResourceID _ResID)
 //! @brief		Tell us if the resource exist and is valid
 //! @details	Useful at export, to ensure all resource reference are valid
 //-------------------------------------------------------------------------------------------------
-//! @param		_ResID				- awResourceID to look for
+//! @param		_ResID				- zenResID to look for
 //! @return 	true if valid
 //=================================================================================================
-bool ManagerSerialItem::IsValid(const awResourceID _ResID)
+bool ManagerSerialItem::IsValid(const zenResID _ResID)
 {
 	return mdSerialItems.Exist(_ResID.HashID());
 }
@@ -111,13 +111,13 @@ bool ManagerSerialItem::IsValid(const awResourceID _ResID)
 //! @brief		Tell us if the resources exist and are valid
 //! @details	Useful at export, to ensure all resource reference are valid
 //-------------------------------------------------------------------------------------------------
-//! @param		_ResID				- awResourceID to look for
+//! @param		_ResID				- zenResID to look for
 //! @return 	true if valid
 //=================================================================================================
-bool ManagerSerialItem::IsValid(const awArrayBase<awResourceID>& _aResID)
+bool ManagerSerialItem::IsValid(const zenArrayBase<zenResID>& _aResID)
 {
-	const awResourceID* pResIdCur	= _aResID.First();
-	const awResourceID* pResIDEnd	= _aResID.Last()+1;
+	const zenResID* pResIdCur	= _aResID.First();
+	const zenResID* pResIDEnd	= _aResID.Last()+1;
 	while( pResIdCur < pResIDEnd )
 	{
 		if( !mdSerialItems.Exist(pResIdCur->HashID()) )

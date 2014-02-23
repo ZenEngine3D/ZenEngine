@@ -1,21 +1,21 @@
 #pragma once
-#ifndef __LibEngine_Api_ResourceRef_h__
-#define __LibEngine_Api_ResourceRef_h__
+#ifndef __zenCore_ResourceRef_h__
+#define __zenCore_ResourceRef_h__
 
 namespace zen { namespace awres {	
 
 	//=============================================================================================
 	//! @class	Base class for all resources that can be created and used
 	//=============================================================================================
-	class awResource : public awRefCounted<false>
+	class awResource : public zenRefCounted<false>
 	{
-	AWClassDeclare(awResource, awRefCounted<false>)
+	AWClassDeclare(awResource, zenRefCounted<false>)
 	public:									
-		inline const awResourceID&	GetResID()const;	//!< @brief return resource ID of resource
-		inline bool					IsValid()const;		//!< @brief true if the object is a valid resource
+		inline const zenResID&	GetResID()const;	//!< @brief return resource ID of resource
+		inline bool				IsValid()const;		//!< @brief true if the object is a valid resource
 	protected:
-		inline						awResource();
-		awResourceID				mResID;
+		inline					awResource();
+		zenResID				mResID;
 	};
 
 	//=============================================================================================
@@ -30,17 +30,17 @@ namespace zen { namespace awres {
 		inline				awResourceRef(awResource* _pResource);
 		inline				awResourceRef(awFlagResType _SupportedTypes);		
 		inline				awResourceRef(awFlagResType _SupportedTypes, awResource* _pResource);
-							awResourceRef(awFlagResType _SupportedTypes, awResourceID _ResourceID);
+							awResourceRef(awFlagResType _SupportedTypes, zenResID _ResourceID);
 		
 		inline const		awResourceRef&	operator=(awResource* _pResource);
 		inline const		awResourceRef&	operator=(const awResourceRef& _ResourceRef);
-		 const				awResourceRef&	operator=(const awResourceID& _ResourceID);
+		 const				awResourceRef&	operator=(const zenResID& _ResourceID);
 	
 		inline bool			IsValid()const;
-		inline awResourceID	GetResID()const;
+		inline zenResID		GetResID()const;
 		inline bool			operator==(const awResourceRef& _rCmp)const;
 		inline bool			operator!=(const awResourceRef& _rCmp)const;
-		inline				operator awResourceID()const;
+		inline				operator zenResID()const;
 		
 	protected:
 		inline void			SetResource(awResource* _pResource);
@@ -59,7 +59,7 @@ namespace zen { namespace awres {
 	public:
 		inline				awResourceTypedRef();
 		inline				awResourceTypedRef(awResource* _pResource);
-		inline				awResourceTypedRef(awResourceID _ResourceID);
+		inline				awResourceTypedRef(zenResID _ResourceID);
 	};
 
 	//=============================================================================================
@@ -73,7 +73,7 @@ namespace zen { namespace awres {
 	public:
 		inline				awResourceTyped2Ref();		
 		inline				awResourceTyped2Ref(awResource* _pResource);
-		inline				awResourceTyped2Ref(awResourceID _ResourceID);
+		inline				awResourceTyped2Ref(zenResID _ResourceID);
 	};
 
 }} // namespace zen, awres

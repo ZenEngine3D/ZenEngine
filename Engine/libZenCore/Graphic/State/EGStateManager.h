@@ -32,7 +32,7 @@ struct ConfigBlend
 	eBlend	meBlendRGB;
 	eBlend	meBlendAlpha;
 	float	mfAlphaRef;
-	awUInt	muWriteMask;
+	zenUInt	muWriteMask;
 
 	inline bool operator==(const ConfigBlend& _Compare)
 	{
@@ -70,7 +70,7 @@ struct ConfigDepthStencil
 	eCompare	meDepthTest;
 	eCompare	meStencilTest;
 	eStencilOp	meStencilOp;
-	awS8			muStencilRef;
+	zenS8			muStencilRef;
 	bool		mbDepthWrite;
 
 	inline bool operator==(const ConfigDepthStencil& _Compare)

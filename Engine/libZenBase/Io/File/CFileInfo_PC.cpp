@@ -9,7 +9,7 @@ FileInfo_PC::FileInfo_PC()
 
 }
 
-void FileInfo_PC::Close(awS64& iFilePos, awS64& iFileSize, bool& bValidHandle)
+void FileInfo_PC::Close(zenS64& iFilePos, zenS64& iFileSize, bool& bValidHandle)
 {
 	if( mhFileHandle != INVALID_HANDLE_VALUE )
 	{
@@ -22,7 +22,7 @@ void FileInfo_PC::Close(awS64& iFilePos, awS64& iFileSize, bool& bValidHandle)
 	}
 }
 
-void FileInfo_PC::Seek(awS64& iNewFilePos, const awS64 iFilePos)
+void FileInfo_PC::Seek(zenS64& iNewFilePos, const zenS64 iFilePos)
 {
 	if( mhFileHandle != INVALID_HANDLE_VALUE )
 	{
@@ -39,7 +39,7 @@ void FileInfo_PC::Seek(awS64& iNewFilePos, const awS64 iFilePos)
 	}
 }
 
-void FileInfo_PC::Skip(awS64& iFilePos, const awS32 iNumOfBytes)
+void FileInfo_PC::Skip(zenS64& iFilePos, const zenS32 iNumOfBytes)
 {
 	if( mhFileHandle != INVALID_HANDLE_VALUE )
 	{
@@ -55,7 +55,7 @@ void FileInfo_PC::Skip(awS64& iFilePos, const awS32 iNumOfBytes)
 	}
 }
 
-void FileInfo_PC::Read(awS64& iFilePos, void* pxDest, const awU32 uNumBytes)
+void FileInfo_PC::Read(zenS64& iFilePos, void* pxDest, const zenU32 uNumBytes)
 {
 	if( mhFileHandle != INVALID_HANDLE_VALUE )
 	{
@@ -72,7 +72,7 @@ void FileInfo_PC::Read(awS64& iFilePos, void* pxDest, const awU32 uNumBytes)
 	}
 }
 
-void FileInfo_PC::Write(awS64& iFilePos, awS64& iFileSize, const void* pxSource, const awU32 uNumBytes)
+void FileInfo_PC::Write(zenS64& iFilePos, zenS64& iFileSize, const void* pxSource, const zenU32 uNumBytes)
 {
 	if( mhFileHandle != INVALID_HANDLE_VALUE )
 	{

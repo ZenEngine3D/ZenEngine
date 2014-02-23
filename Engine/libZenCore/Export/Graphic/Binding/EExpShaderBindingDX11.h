@@ -18,7 +18,7 @@ namespace EExp
 			: muCollapsedSlots(0)
 			, muCollapsedCounts(0)
 			{
-				AWStaticAssertMsg( sizeof(awU64) >= sizeof(awU8)*EExp::keShaderStage__Count, "More stage that can fit in a awU64" );
+				AWStaticAssertMsg( sizeof(zenU64) >= sizeof(zenU8)*EExp::keShaderStage__Count, "More stage that can fit in a zenU64" );
 			}
 
 			virtual bool Serialize( EExp::Serializer_Base& _Serializer )
@@ -27,23 +27,23 @@ namespace EExp
 				return true;
 			}
 			 
-			union { awU8 muSlot[EExp::keShaderStage__Count]; awU64 muCollapsedSlots; };
-			union {	awU8 muCount[EExp::keShaderStage__Count]; awU64 muCollapsedCounts; };
+			union { zenU8 muSlot[EExp::keShaderStage__Count]; zenU64 muCollapsedSlots; };
+			union {	zenU8 muCount[EExp::keShaderStage__Count]; zenU64 muCollapsedCounts; };
 		};
 
 		virtual bool						Serialize				( EExp::Serializer_Base& _Serializer );
 	
 		struct SerialUseOnly
 		{
-			awArrayStatic<awResourceID>	maShaderID;			//!< Shader used in each shader stage
-			awArrayStatic<awResourceID>	maParamDefID;		//!< Shader parameter def used by all bound shader stage
+			zenArrayStatic<zenResID>	maShaderID;			//!< Shader used in each shader stage
+			zenArrayStatic<zenResID>	maParamDefID;		//!< Shader parameter def used by all bound shader stage
 		};
 		SerialUseOnly					mSerial;			//!< Only use for exporting/loading resource
-		awArrayStatic<awU32>			maStagePerParamDef;	//!< Array of Bitfield of valid shader stage per ShaderParam (match mSerial.maParamDef)
-		awArrayStatic<awHash32>			maTextureName;		//!< List of all texture names used in this binding
-		awArrayStatic<TextureSlot>		maTextureBind;		//!< Info on texture slots used (1 per TextureName)
-		awArrayStatic<awHash32>			maParameterName;	//!< List of all parameter names used in this binding
-		awArrayStatic<awU32>			maParameterMask;	//!< List of ShaderParam parameter are used in (1 entry per maParameterName)		
+		zenArrayStatic<zenU32>			maStagePerParamDef;	//!< Array of Bitfield of valid shader stage per ShaderParam (match mSerial.maParamDef)
+		zenArrayStatic<zenHash32>			maTextureName;		//!< List of all texture names used in this binding
+		zenArrayStatic<TextureSlot>		maTextureBind;		//!< Info on texture slots used (1 per TextureName)
+		zenArrayStatic<zenHash32>			maParameterName;	//!< List of all parameter names used in this binding
+		zenArrayStatic<zenU32>			maParameterMask;	//!< List of ShaderParam parameter are used in (1 entry per maParameterName)		
 
 	//-------------------------------------------------------------------------------------------------
 	// Export support section

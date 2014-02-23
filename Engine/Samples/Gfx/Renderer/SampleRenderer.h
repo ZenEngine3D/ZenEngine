@@ -12,8 +12,8 @@ namespace sample
 
 struct SimpleVertex
 {
-	awVec3F Pos;
-	awVec2F Tex;
+	zenVec3F Pos;
+	zenVec2F Tex;
 };
 
 class SampleRendererInstance : public awsys::awEngineInstance

@@ -1,11 +1,11 @@
 #include "libZenBase.h"
 
-namespace zen { namespace awtype {
+namespace zen { namespace zenType {
 
 //==================================================================================================
 //--------------------------------------------------------------------------------------------------
 //==================================================================================================
-awList1x::awList1x( void )
+zenList1x::zenList1x( void )
 {
 	moFirst.mpLstNext = NULL;
 }
@@ -13,7 +13,7 @@ awList1x::awList1x( void )
 //==================================================================================================
 //--------------------------------------------------------------------------------------------------
 //==================================================================================================
-awList1x::~awList1x( void )
+zenList1x::~zenList1x( void )
 {
 	Clear();
 }
@@ -23,13 +23,13 @@ awList1x::~awList1x( void )
 //--------------------------------------------------------------------------------------------------
 //! @param[in]	_bDelete - If true, will also delete each item.
 //==================================================================================================
-void awList1x::Clear( bool _bDelete )
+void zenList1x::Clear( bool _bDelete )
 {
 	if( _bDelete )
 	{
 		while( !IsEmpty() )
 		{
-			awList1xNode* pItemDel	= moFirst.LstNext();
+			zenList1xNode* pItemDel	= moFirst.LstNext();
 			moFirst.mpLstNext		= pItemDel->LstNext();
 			delete pItemDel;
 		}
@@ -38,7 +38,7 @@ void awList1x::Clear( bool _bDelete )
 	{
 		while( !IsEmpty() )
 		{
-			awList1xNode* pItemDel	= moFirst.LstNext();
+			zenList1xNode* pItemDel	= moFirst.LstNext();
 			moFirst.mpLstNext		= pItemDel->LstNext();
 		}
 	}
@@ -50,7 +50,7 @@ void awList1x::Clear( bool _bDelete )
 //! @param[in]	_pAdd - Item to Add.
 //! @param[in]	_pItem - Item position to insert after.
 //==================================================================================================
-void awList1x::InsertAfter( awList1xNode* AWRestrict _pAdd, awList1xNode* AWRestrict _pItem )
+void zenList1x::InsertAfter( zenList1xNode* AWRestrict _pAdd, zenList1xNode* AWRestrict _pItem )
 {
 	AWAssert(_pAdd && _pItem && _pAdd != _pItem);
 	AWAssertMsg(_pAdd->mpLstNext == NULL, "Remove item from its list before adding it to a new one");
@@ -63,7 +63,7 @@ void awList1x::InsertAfter( awList1xNode* AWRestrict _pAdd, awList1xNode* AWRest
 //!-----------------------------------------------------------------------------
 //! @return		Next item. Equal to GetInvalid() if last item of the list.
 //==================================================================================================
-awList1xNode*	awList1xNode::LstNext()
+zenList1xNode*	zenList1xNode::LstNext()
 {
 	return mpLstNext;
 }
@@ -73,7 +73,7 @@ awList1xNode*	awList1xNode::LstNext()
 //--------------------------------------------------------------------------------------------------
 //! @return		First item of the list (check if == GetInvalid() for empty list).
 //==================================================================================================
-awList1xNode*	awList1x::GetHead() const
+zenList1xNode*	zenList1x::GetHead() const
 {
 	return moFirst.mpLstNext;
 }
@@ -84,7 +84,7 @@ awList1xNode*	awList1x::GetHead() const
 //--------------------------------------------------------------------------------------------------
 //! @return Value of the invalid item in this list.
 //==================================================================================================
-const awList1xNode* awList1x::GetInvalid() const
+const zenList1xNode* zenList1x::GetInvalid() const
 {
 	return NULL;
 }
@@ -94,7 +94,7 @@ const awList1xNode* awList1x::GetInvalid() const
 //--------------------------------------------------------------------------------------------------
 //! @return		True when list is empty
 //==================================================================================================
-bool awList1x::IsEmpty() const
+bool zenList1x::IsEmpty() const
 {
 	return GetHead() == GetInvalid();
 }
@@ -104,9 +104,9 @@ bool awList1x::IsEmpty() const
 //--------------------------------------------------------------------------------------------------
 //! @return		Item removed
 //==================================================================================================
-awList1xNode*	awList1x::PopHead()
+zenList1xNode*	zenList1x::PopHead()
 {
-	awList1xNode* pItem	= moFirst.mpLstNext;
+	zenList1xNode* pItem	= moFirst.mpLstNext;
 	moFirst.mpLstNext	= moFirst.mpLstNext ? moFirst.mpLstNext->mpLstNext : &moFirst;
 	return pItem;
 }
@@ -116,10 +116,10 @@ awList1xNode*	awList1x::PopHead()
 //--------------------------------------------------------------------------------------------------
 //! @return		True if item found and then removed
 //==================================================================================================
-bool awList1x::Remove( awList1xNode* _pRemove )
+bool zenList1x::Remove( zenList1xNode* _pRemove )
 {
-	awList1xNode* pItemCur	= &moFirst;
-	awList1xNode* pItemPrev	= NULL;
+	zenList1xNode* pItemCur	= &moFirst;
+	zenList1xNode* pItemPrev	= NULL;
 	while( pItemCur )
 	{
 		pItemPrev	= pItemCur;
@@ -140,7 +140,7 @@ bool awList1x::Remove( awList1xNode* _pRemove )
 //--------------------------------------------------------------------------------------------------
 //! @param[in]	_pAdd - Item to add at the start of the list.
 //==================================================================================================
-void awList1x::AddHead( awList1xNode* _pAdd	)
+void zenList1x::AddHead( zenList1xNode* _pAdd	)
 {
 	_pAdd->mpLstNext	= moFirst.LstNext();
 	moFirst.mpLstNext	= _pAdd;

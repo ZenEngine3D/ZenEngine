@@ -90,7 +90,7 @@ void ManagerRender::FrameEnd()
 
 void ManagerRender::Render(ERes::GfxMeshRef _rMesh)
 {
-	for(awUInt stripIdx(0), stripCount(_rMesh->Get().maGfxMeshStripRef.Count()); stripIdx<stripCount; ++stripIdx )
+	for(zenUInt stripIdx(0), stripCount(_rMesh->Get().maGfxMeshStripRef.Count()); stripIdx<stripCount; ++stripIdx )
 		Render( _rMesh->Get().maGfxMeshStripRef[stripIdx] );
 }
 
@@ -109,13 +109,13 @@ void ManagerRender::Render(ERes::GfxMeshStripRef _rMeshStrip)
 	const ERes::GfxShaderBindingRef		rShaderBind		= _rMeshStrip->Get().mrShaderBinding;
 	const ERes::GfxShaderVertexRef		rShaderVertex	= rShaderBind->Get().maGfxShaderRef[EExp::keShaderStage_Vertex];
 	const ERes::GfxShaderPixelRef		rShaderPixel	= rShaderBind->Get().maGfxShaderRef[EExp::keShaderStage_Pixel];
-	awUInt uBufferCount									= _rMeshStrip->Get().maShaderParamRef.Count();
+	zenUInt uBufferCount									= _rMeshStrip->Get().maShaderParamRef.Count();
 	mDX11pContextImmediate->VSSetShader( rShaderVertex->Get().mpVertexShader, NULL, 0 );				
 	mDX11pContextImmediate->PSSetShader( rShaderPixel->Get().mpPixelShader, NULL, 0 );					
-	for(awUInt bufferIdx=0; bufferIdx<uBufferCount; ++bufferIdx)
+	for(zenUInt bufferIdx=0; bufferIdx<uBufferCount; ++bufferIdx)
 	{
-		awU32 uShaderMask = rShaderBind->Get().maStagePerParamDef[bufferIdx];
-		for(awUInt stageIdx=0; stageIdx<EExp::keShaderStage__Count; ++stageIdx)
+		zenU32 uShaderMask = rShaderBind->Get().maStagePerParamDef[bufferIdx];
+		for(zenUInt stageIdx=0; stageIdx<EExp::keShaderStage__Count; ++stageIdx)
 			if( uShaderMask & (1<<stageIdx) )
 				_rMeshStrip->Get().maShaderParamRef[bufferIdx]->Bind(static_cast<EExp::eShaderStage>(stageIdx));
 	}
@@ -127,16 +127,16 @@ void ManagerRender::Render(ERes::GfxMeshStripRef _rMeshStrip)
 	ID3D11SamplerState*			aStageSamplerState[EExp::keShaderStage__Count][EExp::kuDX11_TexturePerStageMax];
 	bool						abSamplerChanged[EExp::keShaderStage__Count];
 	bool						abTextureChanged[EExp::keShaderStage__Count];
-	awU16							auPerStageTextureCount[EExp::keShaderStage__Count];
-	awUInt						stageCount(_rMeshStrip->Get().maTextureRef.Count());
+	zenU16							auPerStageTextureCount[EExp::keShaderStage__Count];
+	zenUInt						stageCount(_rMeshStrip->Get().maTextureRef.Count());
 	
-	for(awUInt stageIdx(0); stageIdx<stageCount; ++stageIdx)
+	for(zenUInt stageIdx(0); stageIdx<stageCount; ++stageIdx)
 	{		
-		awUInt textureCount					= _rMeshStrip->Get().maTextureRef[stageIdx].Count();
+		zenUInt textureCount					= _rMeshStrip->Get().maTextureRef[stageIdx].Count();
 		auPerStageTextureCount[stageIdx]	= 0;
 		abSamplerChanged[stageIdx]			= false;
 		abTextureChanged[stageIdx]			= false;
-		for( awUInt textureIdx(0); textureIdx<textureCount; ++textureIdx )
+		for( zenUInt textureIdx(0); textureIdx<textureCount; ++textureIdx )
 		{
 			ERes::GfxTexture2DRef rTexture					= _rMeshStrip->Get().maTextureRef[stageIdx][textureIdx];
 			ERes::GfxSamplerRef rSampler					= _rMeshStrip->Get().maGfxSamplerRef[stageIdx][textureIdx];
@@ -154,7 +154,7 @@ void ManagerRender::Render(ERes::GfxMeshStripRef _rMeshStrip)
 	}
 
 	// Assign vertex shader textures
-	awU16 uTextureCount									= zenMath::Max<awU16>( muPerStageTextureCount[EExp::keShaderStage_Vertex], auPerStageTextureCount[EExp::keShaderStage_Vertex]);	
+	zenU16 uTextureCount									= zenMath::Max<zenU16>( muPerStageTextureCount[EExp::keShaderStage_Vertex], auPerStageTextureCount[EExp::keShaderStage_Vertex]);	
 	muPerStageTextureCount[EExp::keShaderStage_Vertex]	= auPerStageTextureCount[EExp::keShaderStage_Vertex];
 	if( abTextureChanged[EExp::keShaderStage_Vertex] )	
 		DX11GetDeviceContext()->VSSetShaderResources( 0, uTextureCount, aStageTextureViews[EExp::keShaderStage_Vertex] );
@@ -162,7 +162,7 @@ void ManagerRender::Render(ERes::GfxMeshStripRef _rMeshStrip)
 		DX11GetDeviceContext()->VSSetSamplers( 0, uTextureCount, aStageSamplerState[EExp::keShaderStage_Vertex] );	
 	
 	// Assign pixel shader texture
-	uTextureCount										= zenMath::Max<awU16>( muPerStageTextureCount[EExp::keShaderStage_Pixel], auPerStageTextureCount[EExp::keShaderStage_Pixel]);	
+	uTextureCount										= zenMath::Max<zenU16>( muPerStageTextureCount[EExp::keShaderStage_Pixel], auPerStageTextureCount[EExp::keShaderStage_Pixel]);	
 	muPerStageTextureCount[EExp::keShaderStage_Pixel]	= auPerStageTextureCount[EExp::keShaderStage_Pixel];
 	if( abTextureChanged[EExp::keShaderStage_Pixel] )	
 		DX11GetDeviceContext()->PSSetShaderResources( 0, uTextureCount, aStageTextureViews[EExp::keShaderStage_Pixel] );
@@ -180,8 +180,8 @@ void ManagerRender::UnbindTextures()
 	ID3D11ShaderResourceView* StageTextureViews[EExp::kuDX11_TexturePerStageMax];
 	memset(StageTextureViews, 0, sizeof(StageTextureViews) );
 
-	for(awUInt stageIdx(0); stageIdx<EExp::keShaderStage__Count; ++stageIdx)
-		for(awUInt texIdx(0); texIdx<EExp::kuDX11_TexturePerStageMax; ++texIdx)
+	for(zenUInt stageIdx(0); stageIdx<EExp::keShaderStage__Count; ++stageIdx)
+		for(zenUInt texIdx(0); texIdx<EExp::kuDX11_TexturePerStageMax; ++texIdx)
 			maCurrentTexture[stageIdx][texIdx] = NULL;
 	
 	if( muPerStageTextureCount[EExp::keShaderStage_Vertex] )

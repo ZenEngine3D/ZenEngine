@@ -1,11 +1,11 @@
 #pragma once
-#ifndef __LibCore_Api_Type_HamtSmall_h__
-#define __LibCore_Api_Type_HamtSmall_h__
+#ifndef __zenBase_Type_HamtSmall_h__
+#define __zenBase_Type_HamtSmall_h__
 
-namespace zen { namespace awtype {
+namespace zen { namespace zenType {
 
 	//=================================================================================================
-	//! @class		awHamt
+	//! @class		zenHamt
 	//-------------------------------------------------------------------------------------------------
 	//! @brief		Classes for managing a Hash Array Map Trie.
 	//! @details	Inspired by article here : http://altdevblogaday.com/2011/03/22/ideal-hash-tries-an-implementation-in-c/ \n
@@ -23,9 +23,9 @@ namespace zen { namespace awtype {
 	//! @tparam TIndexBits	Each node level refer to subsection of TIndexBits bits of the Key entry. More bits means more slot per node, and less tree depth. 
 	//=================================================================================================
 	template<class TKey, class TValue, class TIndex, int TIndexBits>
-	class awHamt
+	class zenHamt
 	{
-	AWClassDeclareNoParent(awHamt)
+	AWClassDeclareNoParent(zenHamt)
 	protected:
 		//=================================================================================================
 		//! @brief		Internal Hamt constants
@@ -47,13 +47,13 @@ namespace zen { namespace awtype {
 		//=================================================================================================
 		struct Node
 		{
-			struct Slot	{	TKey Key; union { Node* pChildNode; awU8 aValue[sizeof(TValue)]; }; 
+			struct Slot	{	TKey Key; union { Node* pChildNode; zenU8 aValue[sizeof(TValue)]; }; 
 							inline TValue& Value(){return *(TValue*)aValue;} };
 
-			awUInt				GetSlotCount() const;						//! @brief Get count of valid Slots in this node
-			bool				IsLeafSlot( awUInt _uSlotID ) const;		//! @brief Check if a Node Slot is a leaf (contains value) or point to child node
-			bool				IsUsedIndex( awUInt _uNodeIndex ) const;	//! @brief Check if Node Index is being used in this Node 
-			awUInt				GetSlotID( awUInt _uNodeIndex ) const;		//! @brief Get in which slot a Node Index is stored
+			zenUInt				GetSlotCount() const;						//! @brief Get count of valid Slots in this node
+			bool				IsLeafSlot( zenUInt _uSlotID ) const;		//! @brief Check if a Node Slot is a leaf (contains value) or point to child node
+			bool				IsUsedIndex( zenUInt _uNodeIndex ) const;	//! @brief Check if Node Index is being used in this Node 
+			zenUInt				GetSlotID( zenUInt _uNodeIndex ) const;		//! @brief Get in which slot a Node Index is stored
 			int					GetFirstUsedSlotID()const;					//! @brief Return first used slotID (-1 if none)			
 			int					GetLastUsedSlotID()const;					//! @brief Return last used slotID (-1 if none)
 
@@ -73,7 +73,7 @@ namespace zen { namespace awtype {
 		public:
 								Iterator();
 								Iterator(const Iterator& _Copy);
-								Iterator(const awHamt& _Parent );
+								Iterator(const zenHamt& _Parent );
 
 			
 			bool				IsValid();
@@ -83,24 +83,24 @@ namespace zen { namespace awtype {
 			void				operator--();
 			void				operator=(const Iterator& _Copy);
 		protected:
-			Node*				mpNodeTree[kuTreeMaxDepth];	//!< awPointer to current node parsed in each tree depth 
-			awS8				mpSlotID[kuTreeMaxDepth];	//!< Current slot in each node being parsed
-			awS8				msDepth;					//!< Current leaf depth level
-			friend class		awHamt;
+			Node*				mpNodeTree[kuTreeMaxDepth];	//!< zenPointer to current node parsed in each tree depth 
+			zenS8				mpSlotID[kuTreeMaxDepth];	//!< Current slot in each node being parsed
+			zenS8				msDepth;					//!< Current leaf depth level
+			friend class		zenHamt;
 		};
 		
 		//=================================================================================================
 		// Main Class
 		//=================================================================================================
-								awHamt();
-								awHamt( awUInt _uReservePool, CMem::Allocator* _pAllocator=NULL );
-								~awHamt();
+								zenHamt();
+								zenHamt( zenUInt _uReservePool, CMem::Allocator* _pAllocator=NULL );
+								~zenHamt();
 
 		
-		void					Init( awUInt _uReservePool, CMem::Allocator* _pAllocator=NULL );				//!< @brief Initialize the HashTable
+		void					Init( zenUInt _uReservePool, CMem::Allocator* _pAllocator=NULL );				//!< @brief Initialize the HashTable
 		inline bool				Exist(const TKey _Key)const;															    
 		inline bool				IsInit()const;																			    
-		inline awUInt			Count() const;																	//!< @brief Number of element (leaf node) stored in hashmap		
+		inline zenUInt			Count() const;																	//!< @brief Number of element (leaf node) stored in hashmap		
 																														    
 		void					Clear();																				    
 		void					SetDefaultValue( const TValue& _Value );										//!< @brief Set value return when no value found
@@ -115,9 +115,9 @@ namespace zen { namespace awtype {
 		void					SetAll( const TValue& _Value );													//!< @brief Set all value in table, to specified value
 		void					Set(const TKey _Key, const TValue& _Value);										//!< @brief Assign value at a certain key entry
 		bool					SetReplace(const TKey _Key, const TValue& _Value, TValue& _OldValueOut);		//!< @brief Assign value at a certain key entry		
-		void					Export( awArrayBase<TKey>& _aKey, awArrayBase<TValue>& _aValue ) const;			//!< @brief Copy the content key/value of this hamt to carrays
-		void					Import( const awArrayBase<TKey>& _aKey, const awArrayBase<TValue>& _aValue );	//!< @brief Copy the content key/value from arrays to this hamt
-		const awHamt&			operator=(const awHamt& _Copy);													//!< @brief Copy the content of another Hamt
+		void					Export( zenArrayBase<TKey>& _aKey, zenArrayBase<TValue>& _aValue ) const;			//!< @brief Copy the content key/value of this hamt to carrays
+		void					Import( const zenArrayBase<TKey>& _aKey, const zenArrayBase<TValue>& _aValue );	//!< @brief Copy the content key/value from arrays to this hamt
+		const zenHamt&			operator=(const zenHamt& _Copy);													//!< @brief Copy the content of another Hamt
 																														    																														    
 		void					GetFirst(Iterator& _It) const;													//!< @brief Initialize iteator to first element of the hamt
 		void					GetLast(Iterator& _It) const;													//!< @brief Initialize iterator to last element of the hamt
@@ -128,15 +128,15 @@ namespace zen { namespace awtype {
 	protected:
 		
 		Node*					CreateNodeCopy( const Node* _pNodeCopy );										//!< @brief	Create a copy of a node
-		awUInt					GetNodeIndex( const TKey _uKey, awUInt _uDepth ) const;							//!< @brief	Return the key NodeIndex at a certain tree depth
-		Node*					CreateEmptyNode(awU32 _uSlotCount);												//!< @brief	Return a new empty node with requested number of slots
+		zenUInt					GetNodeIndex( const TKey _uKey, zenUInt _uDepth ) const;							//!< @brief	Return the key NodeIndex at a certain tree depth
+		Node*					CreateEmptyNode(zenU32 _uSlotCount);												//!< @brief	Return a new empty node with requested number of slots
 		void					ClearNode( Node* _pNode );														//!< @brief	Remove every child node of this node
-		TValue*					SetSlotValue(TKey _Key, const TValue& _Value, Node** _ppParentNode, awUInt _uNodeIndex, awUInt _uSlotID, awUInt _uDepth);	//!< @brief		Get the slot in a node associated to a Key. 
-		bool					GetNode(TKey _Key, const Node**& _pParentSlot, awU32& _uNodeIndex, awU32& _uSlotID, awU32& _uDepth) const;	//!< @brief Find the Node(and relevant infos) associated to a Key entry
-		bool					GetNode(TKey _Key, Node**& _pParentSlot, awU32& _uNodeIndex, awU32& _uSlotID, awU32& _uDepth);	//!< @brief	Find the Node(and relevant infos) associated to a Key entry		
+		TValue*					SetSlotValue(TKey _Key, const TValue& _Value, Node** _ppParentNode, zenUInt _uNodeIndex, zenUInt _uSlotID, zenUInt _uDepth);	//!< @brief		Get the slot in a node associated to a Key. 
+		bool					GetNode(TKey _Key, const Node**& _pParentSlot, zenU32& _uNodeIndex, zenU32& _uSlotID, zenU32& _uDepth) const;	//!< @brief Find the Node(and relevant infos) associated to a Key entry
+		bool					GetNode(TKey _Key, Node**& _pParentSlot, zenU32& _uNodeIndex, zenU32& _uSlotID, zenU32& _uDepth);	//!< @brief	Find the Node(and relevant infos) associated to a Key entry		
 				
 		Node*					mpRootNode;				//!< First accessible node
-		awU32					muCount;				//!< Keep track of element count in the table, for debug purposes
+		zenU32					muCount;				//!< Keep track of element count in the table, for debug purposes
 		TValue					mDefault;				//!< Default value to assign when accessing a non-existing entry
 		CMem::PoolAllocator		mPools[kuPoolCount];	//!< PreAllocated memory pools, to contain our nodes	
 		friend class Iterator;
@@ -144,32 +144,32 @@ namespace zen { namespace awtype {
 
 
 	//=================================================================================================
-	//! @class		Hashmap
+	//! @class		zenMap
 	//-------------------------------------------------------------------------------------------------
-	//! @brief				PreConfigured Hamt for use as a Hashmap
+	//! @brief				PreConfigured Hamt for use as a zenMap
 	//! @tparam _Data_		Datatype of Values stored
 	//! @tparam _Null_		Value to return when a Key entry isn't found
 	//=================================================================================================
 	template<class _Value_>
-	struct Hashmap
+	struct zenMap
 	{
-		typedef awHamt<awU16, _Value_, awU16, 4> Key16;		//!< Hashmap with 16bits Keys with node of 16 entries each (maximum tree depth of 4)
-		typedef awHamt<awHash32, _Value_, awU32, 5> Key32;	//!< Size optimized hamt, 32bits Keys with node of 32 entries each (maximum tree depth of 7)
-		typedef awHamt<awHash64, _Value_, awU64, 6> Key64;	//!< Size optimized hamt, 64bits Keys with node of 64 entries each (maximum tree depth of 11)
+		typedef zenHamt<zenU16, _Value_, zenU16, 4>		Key16;	//!< zenMap with 16bits Keys with node of 16 entries each (maximum tree depth of 4)
+		typedef zenHamt<zenHash32, _Value_, zenU32, 5>	Key32;	//!< Size optimized hamt, 32bits Keys with node of 32 entries each (maximum tree depth of 7)
+		typedef zenHamt<zenHash64, _Value_, zenU64, 6>	Key64;	//!< Size optimized hamt, 64bits Keys with node of 64 entries each (maximum tree depth of 11)
 	};
 
 	//=================================================================================================
 	//! @class		SparseArray
 	//-------------------------------------------------------------------------------------------------
-	//! @brief				PreConfigured Hamt for use as a Hashmap
+	//! @brief				PreConfigured Hamt for use as a zenMap
 	//! @tparam _Data_		Datatype of Values stored
 	//! @tparam _Null_		Value to return when a Key entry isn't found
 	//=================================================================================================
 	template<class _Value_>
-	struct SparseArray
+	struct zenArraySparse
 	{
-		typedef awHamt<awU16, _Value_, awU16, 4 >Key16;		//!< Size optimized hamt, 16bits Keys with node of 16 entries each (maximum tree depth of 4)
-		typedef awHamt<awU32, _Value_, awU32, 5> Key32;		//!< Size optimized hamt, 32bits Keys with node of 32 entries each (maximum tree depth of 7)
+		typedef zenHamt<zenU16, _Value_, zenU16, 4 >Key16;		//!< Size optimized hamt, 16bits Keys with node of 16 entries each (maximum tree depth of 4)
+		typedef zenHamt<zenU32, _Value_, zenU32, 5> Key32;		//!< Size optimized hamt, 32bits Keys with node of 32 entries each (maximum tree depth of 7)
 	};
 
 } } //namespace zen, Type

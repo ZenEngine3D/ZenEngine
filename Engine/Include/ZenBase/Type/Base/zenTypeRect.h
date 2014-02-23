@@ -1,20 +1,20 @@
 #pragma once
-#ifndef __LibCore_Api_Type_Rect_h__
-#define __LibCore_Api_Type_Rect_h__
+#ifndef __zenBase_Type_Rect_h__
+#define __zenBase_Type_Rect_h__
 
-namespace zen { namespace awtype {
+namespace zen { namespace zenType {
 
 template<class _Type_>
-class awRect
+class zenRect
 {
-AWClassDeclareNoParent(awRect)
+AWClassDeclareNoParent(zenRect)
 public:
-	AWForceInline awRect(void); //need to specialize for different types (right now there is a default implementation for awS8, awU8, awS16, awU16, awS32, awU32, awS64, awU64, awF32, awF64)
-	AWForceInline awRect(const _Type_& inX, const _Type_& inY, const _Type_& inW, const _Type_& inH);
-	AWForceInline awRect(const awRect& xOther);
+	AWForceInline zenRect(void); //need to specialize for different types (right now there is a default implementation for zenS8, zenU8, zenS16, zenU16, zenS32, zenU32, zenS64, zenU64, zenF32, zenF64)
+	AWForceInline zenRect(const _Type_& inX, const _Type_& inY, const _Type_& inW, const _Type_& inH);
+	AWForceInline zenRect(const zenRect& xOther);
 
 	AWForceInline bool IsNull(void);
-	AWForceInline const awRect& SetNull(void);
+	AWForceInline const zenRect& SetNull(void);
 
 	union
 	{
@@ -25,19 +25,19 @@ public:
 	};
 };
 
-typedef awRect<awS8> 	awRectS8;	AWAddSupportsMemCopy(awRectS8);
-typedef awRect<awU8> 	awRectU8;	AWAddSupportsMemCopy(awRectU8);
-typedef awRect<awS16>	awRectS16;	AWAddSupportsMemCopy(awRectS16);
-typedef awRect<awU16>	awRectU16;	AWAddSupportsMemCopy(awRectU16);
-typedef awRect<awS32>	awRectS32;	AWAddSupportsMemCopy(awRectS32);
-typedef awRect<awU32>	awRectU32;	AWAddSupportsMemCopy(awRectU32);
-typedef awRect<awS64>	awRectS64;	AWAddSupportsMemCopy(awRectS64);
-typedef awRect<awU64>	awRectU64;	AWAddSupportsMemCopy(awRectU64);
-typedef awRect<awF32>	awRectF32;	AWAddSupportsMemCopy(awRectF32);
-typedef awRect<awF64>	awRectF64;	AWAddSupportsMemCopy(awRectF64);
+typedef zenRect<zenS8> 	zenRectS8;	AWAddSupportsMemCopy(zenRectS8);
+typedef zenRect<zenU8> 	zenRectU8;	AWAddSupportsMemCopy(zenRectU8);
+typedef zenRect<zenS16>	zenRectS16;	AWAddSupportsMemCopy(zenRectS16);
+typedef zenRect<zenU16>	zenRectU16;	AWAddSupportsMemCopy(zenRectU16);
+typedef zenRect<zenS32>	zenRectS32;	AWAddSupportsMemCopy(zenRectS32);
+typedef zenRect<zenU32>	zenRectU32;	AWAddSupportsMemCopy(zenRectU32);
+typedef zenRect<zenS64>	zenRectS64;	AWAddSupportsMemCopy(zenRectS64);
+typedef zenRect<zenU64>	zenRectU64;	AWAddSupportsMemCopy(zenRectU64);
+typedef zenRect<zenF32>	zenRectF32;	AWAddSupportsMemCopy(zenRectF32);
+typedef zenRect<zenF64>	zenRectF64;	AWAddSupportsMemCopy(zenRectF64);
 
-} }//namespace zen { namespace awtype {
+} }//namespace zen { namespace zenType {
 
 #include "zenTypeRect.inl"
 
-#endif //__LibCore_Api_Type_Rect_h__
+#endif //__zenBase_Type_Rect_h__

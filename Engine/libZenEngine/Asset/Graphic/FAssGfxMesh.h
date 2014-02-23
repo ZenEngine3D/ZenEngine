@@ -10,9 +10,9 @@ namespace FAss
 	public:
 		virtual FAss::AssetItem::enumType	GetType()const{return keType_Mesh;}
 		virtual FAss::PropertyArray&		GetPropertyDef() const;
-		virtual awUInt						GetPropertyDefIndex(awHash32 _hPropertyName)const;
+		virtual zenUInt						GetPropertyDefIndex(zenHash32 _hPropertyName)const;
 	protected:
-		static awArrayStatic<awU32>				saIcon;		//!< All mesh share the same icon
+		static zenArrayStatic<zenU32>				saIcon;		//!< All mesh share the same icon
 	};
 	
 

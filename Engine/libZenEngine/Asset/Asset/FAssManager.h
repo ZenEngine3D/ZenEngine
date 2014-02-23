@@ -12,17 +12,17 @@ public:
 												ManagerAsset	();
 	void										PackageLoad		();
 	void										PackageAdd		( Package* _pPackage );
-	void										PackageRename	( awHash32 _hOldID, awHash32 _hNewID);
-	void										PackageRemove	( awHash32 _hPackageID );	
-	Package*									PackageGet		( awHash32 _hPackageID );
-	const Hashmap<Package*>::Key32&				PackageGet		()const{return mdPackage;}
+	void										PackageRename	( zenHash32 _hOldID, zenHash32 _hNewID);
+	void										PackageRemove	( zenHash32 _hPackageID );	
+	Package*									PackageGet		( zenHash32 _hPackageID );
+	const zenMap<Package*>::Key32&				PackageGet		()const{return mdPackage;}
 
-	AssetItem*									AssetGet		( awHash64 _hAssetID );
-	const Hashmap<AssetItem*>::Key64&			AssetGet		()const{return mdAsset;}
+	AssetItem*									AssetGet		( zenHash64 _hAssetID );
+	const zenMap<AssetItem*>::Key64&			AssetGet		()const{return mdAsset;}
 protected:
-	void										PackageLoad		(const awString& _zDir);
-	Hashmap<Package*>::Key32					mdPackage;					//!< All existing package
-	Hashmap<AssetItem*>::Key64					mdAsset;					//!< All existing assets
+	void										PackageLoad		(const zenString& _zDir);
+	zenMap<Package*>::Key32					mdPackage;					//!< All existing package
+	zenMap<AssetItem*>::Key64					mdAsset;					//!< All existing assets
 
 //---------------------------------------------------------
 // ManagerBase Section

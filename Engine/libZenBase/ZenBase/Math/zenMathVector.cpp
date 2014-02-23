@@ -2,8 +2,8 @@
 
 namespace zen { namespace zenMath 
 {
-	const awU32 uFFFFFFFF = 0xFFFFFFFF;
-	const awU32 u00000000 = 0;
+	const zenU32 uFFFFFFFF = 0xFFFFFFFF;
+	const zenU32 u00000000 = 0;
     const V4 v4Zero		= Vector(0.0f);
     const V4 v4One      = Vector(1.0f);
 	const V4 v4OneNeg	= Vector(-1.f);

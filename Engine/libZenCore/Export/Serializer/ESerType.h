@@ -8,13 +8,13 @@ namespace EExp
 	//! @class		Used to keep array of serializable items
 	//=================================================================================================
 	template<class _Type_>
-	class StaticArraySerial : public awArrayStatic<_Type_>, public ISerialize
+	class StaticArraySerial : public zenArrayStatic<_Type_>, public ISerialize
 	{
 	AWClassDeclare(StaticArraySerial, ISerialize)
 	public:
-		StaticArraySerial()										: awArrayStatic<_Type_>(){}
-		StaticArraySerial(const awArrayStatic<_Type_>& aCopy)	: awArrayStatic<_Type_>( aCopy ){}
-		StaticArraySerial(awU32 auCount)						: awArrayStatic<_Type_>(auCount){}
+		StaticArraySerial()										: zenArrayStatic<_Type_>(){}
+		StaticArraySerial(const zenArrayStatic<_Type_>& aCopy)	: zenArrayStatic<_Type_>( aCopy ){}
+		StaticArraySerial(zenU32 auCount)						: zenArrayStatic<_Type_>(auCount){}
 		virtual bool Serialize( Serializer_Base& aSerializer )
 		{		
 			bool bSuccess = aSerializer.Serialize(muCount);	

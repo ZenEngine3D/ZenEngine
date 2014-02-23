@@ -1,6 +1,6 @@
 #pragma once
-#ifndef __LibEngine_Api_Const_Resource_DX11_h__
-#define __LibEngine_Api_Const_Resource_DX11_h__
+#ifndef __zenCore_Const_Resource_DX11_h__
+#define __zenCore_Const_Resource_DX11_h__
 
 namespace zen { namespace awconst {
 

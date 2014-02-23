@@ -26,34 +26,34 @@ namespace EExp
 		virtual bool	ItemSerialize(SerialItem& aItem);
 		virtual eStatus	GetStatus()=0;
 
-		virtual bool	Serialize(awU8&						_uValue)=0;
-		virtual bool	Serialize(awU16&						_uValue)=0;
-		virtual bool	Serialize(awU32&						_uValue)=0;
-		virtual bool	Serialize(awU64&						_uValue)=0;
-		virtual bool	Serialize(awS8&						_iValue)=0;
-		virtual bool	Serialize(awS16&						_iValue)=0;
-		virtual bool	Serialize(awS32&						_iValue)=0;
-		virtual bool	Serialize(awS64&						_iValue)=0;
-		virtual bool	Serialize(awArrayBase<awU8>&	_Values)=0;
-		virtual bool	Serialize(awArrayBase<awU16>&	_Values)=0;
-		virtual bool	Serialize(awArrayBase<awU32>&	_Values)=0;
-		virtual bool	Serialize(awArrayBase<awU64>&	_Values)=0;
-		virtual bool	Serialize(awArrayBase<awS8>&	_Values)=0;
-		virtual bool	Serialize(awArrayBase<awS16>&	_Values)=0;
-		virtual bool	Serialize(awArrayBase<awS32>&	_Values)=0;
-		virtual bool	Serialize(awArrayBase<awS64>&	_Values)=0;		
+		virtual bool	Serialize(zenU8&						_uValue)=0;
+		virtual bool	Serialize(zenU16&						_uValue)=0;
+		virtual bool	Serialize(zenU32&						_uValue)=0;
+		virtual bool	Serialize(zenU64&						_uValue)=0;
+		virtual bool	Serialize(zenS8&						_iValue)=0;
+		virtual bool	Serialize(zenS16&						_iValue)=0;
+		virtual bool	Serialize(zenS32&						_iValue)=0;
+		virtual bool	Serialize(zenS64&						_iValue)=0;
+		virtual bool	Serialize(zenArrayBase<zenU8>&	_Values)=0;
+		virtual bool	Serialize(zenArrayBase<zenU16>&	_Values)=0;
+		virtual bool	Serialize(zenArrayBase<zenU32>&	_Values)=0;
+		virtual bool	Serialize(zenArrayBase<zenU64>&	_Values)=0;
+		virtual bool	Serialize(zenArrayBase<zenS8>&	_Values)=0;
+		virtual bool	Serialize(zenArrayBase<zenS16>&	_Values)=0;
+		virtual bool	Serialize(zenArrayBase<zenS32>&	_Values)=0;
+		virtual bool	Serialize(zenArrayBase<zenS64>&	_Values)=0;		
 
-				bool	Serialize(awHash32&			_Value);
-				bool	Serialize(awHash64&			_Value);
+				bool	Serialize(zenHash32&			_Value);
+				bool	Serialize(zenHash64&			_Value);
 				bool	Serialize(ISerialize&				_Value);
-				bool	Serialize(awResourceID&		_Value);
+				bool	Serialize(zenResID&		_Value);
 
 	protected:
 		virtual bool	ItemStarted(SerialItem&				_Item);
 		virtual bool	ItemEnded(SerialItem&				_Item);	
 		virtual bool	ItemSkip(SerialItem&				_Item);	
-		awU32				muItemProcessed;
-		awU32				muItemFailed;
+		zenU32				muItemProcessed;
+		zenU32				muItemFailed;
 	};
 	
 	//=================================================================================================
@@ -67,7 +67,7 @@ namespace EExp
 		virtual bool	ItemStarted(SerialItem& aItem);
 	
 	protected:
-		awU32		muItemSize;
+		zenU32		muItemSize;
 	};
 	
 	//=================================================================================================
@@ -80,7 +80,7 @@ namespace EExp
 		virtual eStatus	GetStatus(){return keStatus_Importing;}
 	protected:
 
-		virtual void	SetNextItem(awUInt auOffset)=0;
+		virtual void	SetNextItem(zenUInt auOffset)=0;
 		virtual void	SkipToNextItem()=0;
 	};
 }

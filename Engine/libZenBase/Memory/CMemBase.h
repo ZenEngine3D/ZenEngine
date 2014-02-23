@@ -8,7 +8,7 @@
 #define		AWDelArray(_Pointer_)		{ delete[]	_Pointer_; }
 #define		AWDelNull(_Pointer_)		{ delete	_Pointer_; _Pointer_=NULL; }
 #define		AWDelNullArray(_Pointer_)	{ delete[]	_Pointer_; _Pointer_=NULL; }
-#define		awDefaultAlign				sizeof(awPointer)
+#define		awDefaultAlign				sizeof(zenPointer)
 
 #define		AWNew(_Allocator_)			new(_Allocator_)
 #define		AWNewDefault				new(static_cast<CMem::Allocator*>(NULL))
@@ -20,20 +20,20 @@ void* operator new[](size_t _uSize,		CMem::Allocator* _pAllocator );
 void operator delete(void* _pAlloc,		CMem::Allocator* _pAllocator );
 void operator delete[](void* _pAlloc,	CMem::Allocator* _pAllocator );
 
-void* operator new(size_t _uSize,		CMem::Allocator* _pAllocator, awUInt _uAlign );
-void* operator new[](size_t _uSize,		CMem::Allocator* _pAllocator, awUInt _uAlign );
-void operator delete(void* _pAlloc,		CMem::Allocator* _pAllocator, awUInt _uAlign );
-void operator delete[](void* _pAlloc,	CMem::Allocator* _pAllocator, awUInt _uAlign );
+void* operator new(size_t _uSize,		CMem::Allocator* _pAllocator, zenUInt _uAlign );
+void* operator new[](size_t _uSize,		CMem::Allocator* _pAllocator, zenUInt _uAlign );
+void operator delete(void* _pAlloc,		CMem::Allocator* _pAllocator, zenUInt _uAlign );
+void operator delete[](void* _pAlloc,	CMem::Allocator* _pAllocator, zenUInt _uAlign );
 
 void operator delete(void* _pAlloc);
 void operator delete[](void* _pAlloc);
 
-inline void* AWMalloc(size_t _uSize_, awU32 uAlign=awDefaultAlign)
+inline void* AWMalloc(size_t _uSize_, zenU32 uAlign=awDefaultAlign)
 {
 	return CMem::Allocator::GetDefault().Malloc(_uSize_, false, uAlign);
 }
 
-inline void* AWMalloc(CMem::Allocator* _pAllocator, size_t _uSize_, awU32 uAlign=awDefaultAlign)
+inline void* AWMalloc(CMem::Allocator* _pAllocator, size_t _uSize_, zenU32 uAlign=awDefaultAlign)
 {
 	_pAllocator = _pAllocator ? _pAllocator : &CMem::Allocator::GetDefault();
 	return _pAllocator->Malloc(_uSize_, false, uAlign);

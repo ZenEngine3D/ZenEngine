@@ -1,25 +1,25 @@
 #pragma once
-#ifndef __LibCore_Api_Type_RefCount_h__
-#define __LibCore_Api_Type_RefCount_h__
+#ifndef __zenBase_Type_RefCount_h__
+#define __zenBase_Type_RefCount_h__
 
-namespace zen { namespace awtype {
+namespace zen { namespace zenType {
 	
 	template<bool TAutoDelete>
-	class awRefCounted
+	class zenRefCounted
 	{
-	AWClassDeclareNoParent(awRefCounted)
+	AWClassDeclareNoParent(zenRefCounted)
 	public:
-					awRefCounted();
-	virtual			~awRefCounted();
+					zenRefCounted();
+	virtual			~zenRefCounted();
 	inline void		ReferenceAdd();
 	inline void		ReferenceRem();
 	int				ReferenceGet();
 	protected:
-		awInt		miRefCount;		
+		zenInt		miRefCount;		
 	};
 
 	
-}} // namespace zen, awtype
+}} // namespace zen, zenType
 
 #include "zenTypeRefCount.inl"
 

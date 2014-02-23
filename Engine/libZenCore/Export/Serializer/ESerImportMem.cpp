@@ -4,7 +4,7 @@
 namespace EExp
 {		
 
-SerializerImportMem::SerializerImportMem(awU8* apBuffer, awUInt auBufferSize)
+SerializerImportMem::SerializerImportMem(zenU8* apBuffer, zenUInt auBufferSize)
 :	mpMemoryStart(apBuffer)
 ,	mpMemoryCur(apBuffer)
 ,	mpMemoryEnd(apBuffer+auBufferSize)
@@ -28,95 +28,95 @@ bool SerializerImportMem::ItemSkip(EExp::SerialItem& aItem)
 	return true;
 }
 
-bool SerializerImportMem::Serialize(awU8& auValue)
+bool SerializerImportMem::Serialize(zenU8& auValue)
 {
 	if( mpMemoryCur + sizeof(auValue) >= mpMemoryEnd )
 		return false;
 			
-	auValue		= *(awU8*)mpMemoryCur;
+	auValue		= *(zenU8*)mpMemoryCur;
 	mpMemoryCur += sizeof(auValue);
 	return true;
 }
 
-bool SerializerImportMem::Serialize(awU16& auValue)
+bool SerializerImportMem::Serialize(zenU16& auValue)
 {
 	if( mpMemoryCur + sizeof(auValue) >= mpMemoryEnd )
 		return false;
 
-	auValue		= *(awU16*)mpMemoryCur;
+	auValue		= *(zenU16*)mpMemoryCur;
 	mpMemoryCur += sizeof(auValue);
 	return true;
 }
 
-bool SerializerImportMem::Serialize(awU32& auValue)
+bool SerializerImportMem::Serialize(zenU32& auValue)
 {
 	if( mpMemoryCur + sizeof(auValue) >= mpMemoryEnd )
 		return false;
 
-	auValue		= *(awU32*)mpMemoryCur;
+	auValue		= *(zenU32*)mpMemoryCur;
 	mpMemoryCur += sizeof(auValue);
 	return true;
 }
 
-bool SerializerImportMem::Serialize(awU64& auValue)
+bool SerializerImportMem::Serialize(zenU64& auValue)
 {
 	if( mpMemoryCur + sizeof(auValue) >= mpMemoryEnd )
 		return false;
 
-	auValue		= *(awU64*)mpMemoryCur;
+	auValue		= *(zenU64*)mpMemoryCur;
 	mpMemoryCur += sizeof(auValue);
 	return true;
 }
 
-bool SerializerImportMem::Serialize(awS8& aiValue)
+bool SerializerImportMem::Serialize(zenS8& aiValue)
 {
 	if( mpMemoryCur + sizeof(aiValue) >= mpMemoryEnd )
 		return false;
 
-	aiValue		= *(awS8*)mpMemoryCur;
+	aiValue		= *(zenS8*)mpMemoryCur;
 	mpMemoryCur += sizeof(aiValue);
 	return true;
 }
 
-bool SerializerImportMem::Serialize(awS16& aiValue)
+bool SerializerImportMem::Serialize(zenS16& aiValue)
 {
 	if( mpMemoryCur + sizeof(aiValue) >= mpMemoryEnd )
 		return false;
 
-	aiValue		= *(awS16*)mpMemoryCur;
+	aiValue		= *(zenS16*)mpMemoryCur;
 	mpMemoryCur += sizeof(aiValue);
 	return true;
 }
 
-bool SerializerImportMem::Serialize(awS32& aiValue)
+bool SerializerImportMem::Serialize(zenS32& aiValue)
 {
 	if( mpMemoryCur + sizeof(aiValue) >= mpMemoryEnd )
 		return false;
 
-	aiValue		= *(awS32*)mpMemoryCur;
+	aiValue		= *(zenS32*)mpMemoryCur;
 	mpMemoryCur += sizeof(aiValue);
 	return true;
 }
 
-bool SerializerImportMem::Serialize(awS64& aiValue)
+bool SerializerImportMem::Serialize(zenS64& aiValue)
 {
 	if( mpMemoryCur + sizeof(aiValue) >= mpMemoryEnd )
 		return false;
 
-	aiValue		= *(awS64*)mpMemoryCur;
+	aiValue		= *(zenS64*)mpMemoryCur;
 	mpMemoryCur += sizeof(aiValue);
 	return true;
 }
 
-bool SerializerImportMem::Serialize(awArrayBase<awU8>& _aValues)
+bool SerializerImportMem::Serialize(zenArrayBase<zenU8>& _aValues)
 {
-	awU32 uSize;
+	zenU32 uSize;
 	if( Serialize(uSize) )
 	{
 		if( mpMemoryCur + uSize >= mpMemoryEnd )
 			return false;
 
-		_aValues.SetCount(uSize/sizeof(awU8));
+		_aValues.SetCount(uSize/sizeof(zenU8));
 		zenMem::Copy(_aValues.First(), mpMemoryCur, uSize );
 		mpMemoryCur		+= uSize;
 		return true;
@@ -124,37 +124,37 @@ bool SerializerImportMem::Serialize(awArrayBase<awU8>& _aValues)
 	return false;	
 }
 
-bool SerializerImportMem::Serialize(awArrayBase<awU16>& _aValues)
+bool SerializerImportMem::Serialize(zenArrayBase<zenU16>& _aValues)
 {
 	return true;
 }
 
-bool SerializerImportMem::Serialize(awArrayBase<awU32>& _aValues)
+bool SerializerImportMem::Serialize(zenArrayBase<zenU32>& _aValues)
 {
 	return true;
 }
 
-bool SerializerImportMem::Serialize(awArrayBase<awU64>& _aValues)
+bool SerializerImportMem::Serialize(zenArrayBase<zenU64>& _aValues)
 {
 	return true;
 }
 
-bool SerializerImportMem::Serialize(awArrayBase<awS8>& _aValues)
+bool SerializerImportMem::Serialize(zenArrayBase<zenS8>& _aValues)
 {
 	return true;
 }
 
-bool SerializerImportMem::Serialize(awArrayBase<awS16>& _aValues)
+bool SerializerImportMem::Serialize(zenArrayBase<zenS16>& _aValues)
 {
 	return true;
 }
 
-bool SerializerImportMem::Serialize(awArrayBase<awS32>& _aValues)
+bool SerializerImportMem::Serialize(zenArrayBase<zenS32>& _aValues)
 {
 	return true;
 }
 
-bool SerializerImportMem::Serialize(awArrayBase<awS64>& _aValues)
+bool SerializerImportMem::Serialize(zenArrayBase<zenS64>& _aValues)
 {
 	return true;
 }

@@ -16,9 +16,9 @@ GfxShader_DX11::GfxShader_DX11( EExp::SerialShader_DX11& _SerialItem, InstanceIn
 bool GfxShader_DX11::ResourceInit()
 {
 	mBaseInstance.mdTextureSamplerSlot.Init(8);
-	awUInt uCount = mBaseSerialItem.maParamDefID.Count();
+	zenUInt uCount = mBaseSerialItem.maParamDefID.Count();
 	mBaseInstance.maGfxShaderParamDefRef.SetCount( uCount );
-	for(awUInt idx=0; idx<uCount; ++idx)
+	for(zenUInt idx=0; idx<uCount; ++idx)
 		mBaseInstance.maGfxShaderParamDefRef[idx] = mBaseSerialItem.maParamDefID[idx];
 
 	mBaseInstance.mdTextureSamplerSlot.Import(mBaseSerialItem.maTextureSamplerName, mBaseSerialItem.maTextureSamplerSlot);
@@ -27,7 +27,7 @@ bool GfxShader_DX11::ResourceInit()
 
 GfxShaderParamDefRef GfxShader_DX11::GetShaderParamDef(EExp::eShaderParamFreq _eShaderParam) const
 {
-	return mBaseInstance.maGfxShaderParamDefRef.Count() > static_cast<awUInt>(_eShaderParam) ? mBaseInstance.maGfxShaderParamDefRef[_eShaderParam] : NULL;
+	return mBaseInstance.maGfxShaderParamDefRef.Count() > static_cast<zenUInt>(_eShaderParam) ? mBaseInstance.maGfxShaderParamDefRef[_eShaderParam] : NULL;
 }
 
 GfxShaderVertex_DX11::GfxShaderVertex_DX11()

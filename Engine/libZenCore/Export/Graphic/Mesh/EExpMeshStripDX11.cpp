@@ -34,13 +34,13 @@ namespace EExp
 			//---------------------------------------------------------------------
 			// Assign all ParameterInstance provided
 			mSerial.maShaderParamID	= pShaderBinding->mSerial.maParamDefID;
-			awUInt paramDefCount		= mSerial.maShaderParamID.Count();
-			for(awUInt paramInstIdx(0), paramInstCount(pExportInfo->maShaderParamID.Count()); paramInstIdx<paramInstCount; ++paramInstIdx )
+			zenUInt paramDefCount		= mSerial.maShaderParamID.Count();
+			for(zenUInt paramInstIdx(0), paramInstCount(pExportInfo->maShaderParamID.Count()); paramInstIdx<paramInstCount; ++paramInstIdx )
 			{
 				EExp::SerialGfxShaderParam_DX11* pParamInst = EMgr::SerialItems.GetItem<EExp::SerialGfxShaderParam_DX11>(pExportInfo->maShaderParamID[paramInstIdx]);
 				if( pParamInst )
 				{
-					for(awUInt paramDefIdx(0); paramDefIdx<paramDefCount; ++paramDefIdx)
+					for(zenUInt paramDefIdx(0); paramDefIdx<paramDefCount; ++paramDefIdx)
 					{					
 						if( mSerial.maShaderParamID[paramDefIdx] == pParamInst->mSerial.mParentParamDefID )
 							mSerial.maShaderParamID[paramDefIdx] = pParamInst->mResID;
@@ -48,8 +48,8 @@ namespace EExp
 				}
 			}
 			// Create new empty ParameterInstance for the one not provided for needed ParameterDef
-			awArrayStatic<const EExp::ParameterBase*> aEmptyParamValues;
-			for(awUInt paramDefIdx(0); paramDefIdx<paramDefCount; ++paramDefIdx)
+			zenArrayStatic<const EExp::ParameterBase*> aEmptyParamValues;
+			for(zenUInt paramDefIdx(0); paramDefIdx<paramDefCount; ++paramDefIdx)
 			{					
 				if( mSerial.maShaderParamID[paramDefIdx].Type() == awconst::keResType_GfxShaderParamDef )
 					mSerial.maShaderParamID[paramDefIdx] = EExp::CreateGfxShaderParam( mSerial.maShaderParamID[paramDefIdx], aEmptyParamValues);					
@@ -61,26 +61,26 @@ namespace EExp
 			// Assign default invalid value to all needed texture slot
 			mSerial.maTextureID.SetCount( EExp::keShaderStage__Count );
 			mSerial.maSamplerID.SetCount( EExp::keShaderStage__Count );
-			for( awUInt stageIdx(0); stageIdx<EExp::keShaderStage__Count; ++stageIdx)
+			for( zenUInt stageIdx(0); stageIdx<EExp::keShaderStage__Count; ++stageIdx)
 			{
-				awUInt textureCount = pShaderBinding->maTextureBind.Count();
+				zenUInt textureCount = pShaderBinding->maTextureBind.Count();
 				mSerial.maTextureID[stageIdx].SetCount( textureCount );
 				mSerial.maSamplerID[stageIdx].SetCount( textureCount );
-				for( awUInt textureIdx(0); textureIdx<textureCount; ++textureIdx )
+				for( zenUInt textureIdx(0); textureIdx<textureCount; ++textureIdx )
 				{
-					mSerial.maTextureID[stageIdx][textureIdx] = awResourceID();
-					mSerial.maSamplerID[stageIdx][textureIdx] = awResourceID();
+					mSerial.maTextureID[stageIdx][textureIdx] = zenResID();
+					mSerial.maSamplerID[stageIdx][textureIdx] = zenResID();
 				}
 			}
 				
 			// Now assign provided texture value
-			Hashmap<EExp::SerialGfxShaderBinding_DX11::TextureSlot>::Key32 dTextureBindInfo(16);
+			zenMap<EExp::SerialGfxShaderBinding_DX11::TextureSlot>::Key32 dTextureBindInfo(16);
 			dTextureBindInfo.Import( pShaderBinding->maTextureName, pShaderBinding->maTextureBind );
 			dTextureBindInfo.SetDefaultValue(EExp::SerialGfxShaderBinding_DX11::TextureSlot());
-			for( awUInt textureIdx(0), textureCount(pExportInfo->maTexture.Count()); textureIdx<textureCount; ++textureIdx)
+			for( zenUInt textureIdx(0), textureCount(pExportInfo->maTexture.Count()); textureIdx<textureCount; ++textureIdx)
 			{
 				const EExp::SerialGfxShaderBinding_DX11::TextureSlot& slotInfo = dTextureBindInfo[ pExportInfo->maTexture[textureIdx].mhTextureName ];
-				for(awUInt stageIdx(0); stageIdx<EExp::keShaderStage__Count; ++stageIdx )
+				for(zenUInt stageIdx(0); stageIdx<EExp::keShaderStage__Count; ++stageIdx )
 				{
 					if( slotInfo.muCount[stageIdx] > 0 )
 					{

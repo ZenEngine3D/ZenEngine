@@ -8,7 +8,7 @@ namespace ERes
 	{
 		mInstanceInfo.mpTargetColorView	= NULL;
 		mInstanceInfo.mpTargetDepthView	= NULL;
-		mInstanceInfo.mrTargetTexture	= awResourceID();		
+		mInstanceInfo.mrTargetTexture	= zenResID();		
 	}
 
 	GfxRenderTarget_DX11::~GfxRenderTarget_DX11()
@@ -65,7 +65,7 @@ namespace ERes
 	//! @param _vDim -			Dimensions of the rendertarget
 	//=================================================================================================
 	//SF TODO Cleanup this recource creation process 
-	GfxRenderTargetRef GfxRenderTarget_DX11::CreateFromBackuffer(IDXGISwapChain* _pSwapchain, awconst::eTextureFormat _eFormat, const awVec2U16& _vDim)
+	GfxRenderTargetRef GfxRenderTarget_DX11::CreateFromBackuffer(IDXGISwapChain* _pSwapchain, awconst::eTextureFormat _eFormat, const zenVec2U16& _vDim)
 	{
 		ID3D11Texture2D*		pColorTexture(NULL);
 		ID3D11RenderTargetView*	pColorView;
@@ -120,13 +120,13 @@ namespace ERes
 		mpSwapchainBackbuffer = NULL;
 	}
 
-	void GfxRenderTarget_DX11::Clear(const awVec4F& _vRGBA)
+	void GfxRenderTarget_DX11::Clear(const zenVec4F& _vRGBA)
 	{
 		AWAssertMsg( !IsDepth(), "Trying to clear a depth rendertarget as color.");		
 		EMgr::GfxRender.DX11GetDeviceContext()->ClearRenderTargetView( mInstanceInfo.mpTargetColorView, _vRGBA.xyzw );	
 	}
 
-	void GfxRenderTarget_DX11::Clear(float _fDepth, awU8 _uStencil, bool _bClearDepth, bool _bClearStencil)
+	void GfxRenderTarget_DX11::Clear(float _fDepth, zenU8 _uStencil, bool _bClearDepth, bool _bClearStencil)
 	{
 		AWAssertMsg( IsDepth(), "Trying to clear a color rendertarget as depth.");
 		UINT ClearFlags  = _bClearDepth		? D3D11_CLEAR_DEPTH		: 0;

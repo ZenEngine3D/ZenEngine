@@ -7,7 +7,7 @@ namespace ERes
 	//=============================================================================================
 	//! @class	Base class for all resources that can be created and used
 	//=============================================================================================
-	class Resource: public awres::awResource, public awList2xNode
+	class Resource: public awres::awResource, public zenList2xNode
 	{
 	AWClassDeclare(Resource, awres::awResource)
 	public:									
@@ -17,9 +17,9 @@ namespace ERes
 		bool								ResourceCreateRuntime(); //!< @todo Get rid of this
 	protected:			
 											Resource();
-		static awList2x						spResourceActive[awconst::keResType__Count];	//!< List of all actives resources created, per type
-		static awList2x						spActiveToDelete[3];							//!< List of resources to delete (with 1 frame delay to make sure GPU are done with them)
-		static awUInt						suDeleteIndex;									//!< Current active ToDelete list
+		static zenList2x						spResourceActive[awconst::keResType__Count];	//!< List of all actives resources created, per type
+		static zenList2x						spActiveToDelete[3];							//!< List of resources to delete (with 1 frame delay to make sure GPU are done with them)
+		static zenUInt						suDeleteIndex;									//!< Current active ToDelete list
 	};
 	
 
@@ -45,7 +45,7 @@ namespace ERes
 	public:	
 		inline								ResourceRef();
 		inline								ResourceRef(awres::awResource* _pResource);
-		inline								ResourceRef(awResourceID _ResourceID);
+		inline								ResourceRef(zenResID _ResourceID);
 		inline								ResourceRef(const TReferenceClass& _Copy);
 		inline TResourceClass*				operator->();		//!< Return a pointer to resource
 		inline const TResourceClass*		operator->()const;	//!< Return a const pointiner to resource

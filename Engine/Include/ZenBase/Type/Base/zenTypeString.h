@@ -1,35 +1,35 @@
 #pragma once
-#ifndef __LibCore_Api_Type_String_h__
-#define __LibCore_Api_Type_String_h__
+#ifndef __zenBase_Type_String_h__
+#define __zenBase_Type_String_h__
 
 #include <zenBase/Memory/zenMemUtils.h>
 
-namespace zen { namespace awtype {
+namespace zen { namespace zenType {
 
 //=================================================================================================
-//! @class		awString
+//! @class		zenString
 //-------------------------------------------------------------------------------------------------
 //! @brief		Very primitive implementation at the moment, will grow with need
 //! @todo		Support datasharing with same strings, format, etc...
 //=================================================================================================
-class awString
+class zenString
 {
-AWClassDeclareNoParent(awString)
+AWClassDeclareNoParent(zenString)
 public:
-	inline 				awString();
-	inline 				awString(const awString& _zString);
-	inline 				awString(const char* _zString);
+	inline 				zenString();
+	inline 				zenString(const zenString& _zString);
+	inline 				zenString(const char* _zString);
 
-	inline awString&	operator=(const awString& _zString);
-	inline awString&	operator=(const char* _zString);
-	inline awString&	operator+=(const awString& _zString);
-	inline awString&	operator+=(const char* _zString);
+	inline zenString&	operator=(const zenString& _zString);
+	inline zenString&	operator=(const char* _zString);
+	inline zenString&	operator+=(const zenString& _zString);
+	inline zenString&	operator+=(const char* _zString);
 	inline 				operator const char*() const;
 	
-	inline const char*	Last(awUInt index=0)const;
+	inline const char*	Last(zenUInt index=0)const;
 
 protected:
-	awArrayDynamic<char>	maChar;
+	zenArrayDynamic<char>	maChar;
 };
 
 }}  //namespace zen, Type 

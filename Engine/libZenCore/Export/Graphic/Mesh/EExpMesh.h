@@ -10,13 +10,13 @@ namespace EExp
 	public:
 		struct ExportInfo : public EExp::ExportInfoBase
 		{			
-			awArrayStatic<awResourceID>		maMeshStripID;			//!< List of Mesh strips used this Mesh
+			zenArrayStatic<zenResID>		maMeshStripID;			//!< List of Mesh strips used this Mesh
 		};
 
-		static awResourceID CallbackGetItemID(awconst::eResPlatform _ePlatform, awconst::eResType _eType, awconst::eResSource _eSource, const EExp::ExportInfoBase* _pExportInfo, bool& _bExistOut);
+		static zenResID CallbackGetItemID(awconst::eResPlatform _ePlatform, awconst::eResType _eType, awconst::eResSource _eSource, const EExp::ExportInfoBase* _pExportInfo, bool& _bExistOut);
 	};
 	
-	awResourceID CreateGfxMesh(const awArrayBase<awResourceID>& _aMeshStripID);
+	zenResID CreateGfxMesh(const zenArrayBase<zenResID>& _aMeshStripID);
 }
 
 #include "EExpMeshDX11.h"

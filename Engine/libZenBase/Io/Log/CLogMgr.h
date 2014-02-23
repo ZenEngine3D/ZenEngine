@@ -68,7 +68,7 @@ public:
 protected:
 	virtual	bool			Load			();
 	virtual	bool			Unload			();	
-	awU32						muOutputMask[keLogOut__Count];	//!< List if supported error type for each output
+	zenU32						muOutputMask[keLogOut__Count];	//!< List if supported error type for each output
 	static	const char*		ssLogTypeDesc[keLog__Count+1];	//!< Description of each error type
 };
 

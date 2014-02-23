@@ -40,10 +40,10 @@ namespace zen { namespace zenMath
 
 	inline float Fract(float _fValue){ float fIntPart; return modf(_fValue, &fIntPart); }
 
-	inline bool IsPower2(awU32 x){ return ( (x > 0) && ((x & (x - 1)) == 0) ); }
-	inline bool IsPower2(awU64 x){ return ( (x > 0) && ((x & (x - 1)) == 0) ); }
-	inline bool IsPower2(awS32 x){ return ( (x > 0) && ((x & (x - 1)) == 0) ); }
-	inline bool IsPower2(awS64 x){ return ( (x > 0) && ((x & (x - 1)) == 0) ); }
+	inline bool IsPower2(zenU32 x){ return ( (x > 0) && ((x & (x - 1)) == 0) ); }
+	inline bool IsPower2(zenU64 x){ return ( (x > 0) && ((x & (x - 1)) == 0) ); }
+	inline bool IsPower2(zenS32 x){ return ( (x > 0) && ((x & (x - 1)) == 0) ); }
+	inline bool IsPower2(zenS64 x){ return ( (x > 0) && ((x & (x - 1)) == 0) ); }
 
 	const float kfPI		= 3.141592653589793f;
 	const float kfPI2x		= 6.283185307179586f;

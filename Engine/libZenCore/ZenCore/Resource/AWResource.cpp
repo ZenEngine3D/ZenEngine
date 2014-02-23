@@ -2,7 +2,7 @@
 
 namespace zen { namespace awres {	
 
-awResourceRef::awResourceRef(awFlagResType _SupportedTypes, awResourceID _ResourceID)
+awResourceRef::awResourceRef(awFlagResType _SupportedTypes, zenResID _ResourceID)
 : mpResource(NULL)
 {
 	AWDbgCode( mSupportedTypeMask = _SupportedTypes; )
@@ -10,7 +10,7 @@ awResourceRef::awResourceRef(awFlagResType _SupportedTypes, awResourceID _Resour
 	SetResource( rResourceRef.mpResource );
 }
 
-const awResourceRef& awResourceRef::operator=(const awResourceID& _ResourceID)
+const awResourceRef& awResourceRef::operator=(const zenResID& _ResourceID)
 {
 	awResourceRef rResourceRef = _ResourceID.IsValid() ? EMgr::Resources.GetResource(_ResourceID) : NULL;
 	SetResource( rResourceRef.mpResource );

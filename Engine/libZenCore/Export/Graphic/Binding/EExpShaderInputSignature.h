@@ -11,11 +11,11 @@ AWClassDeclare(SerialInputSignature_Base, EExp::ExportItem)
 public:
 	struct ExportInfo : public EExp::ExportInfoBase
 	{				
-		awResourceID mParentShaderID;
+		zenResID mParentShaderID;
 	};
 };
 
-awResourceID CreateGfxInputSignature( const awResourceID& _ParentShaderID );
+zenResID CreateGfxInputSignature( const zenResID& _ParentShaderID );
 
 }
 

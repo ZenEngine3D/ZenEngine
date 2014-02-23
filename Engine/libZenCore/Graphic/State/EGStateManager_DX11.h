@@ -14,7 +14,7 @@ AWClassDeclare(ManagerState_DX11, ManagerState_Base)
 public:
 							ManagerState_DX11	();
 	void					SetDepthStencil		(const ConfigDepthStencil& aDepthStencil);
-	void					SetBlend			(const ConfigBlend& aBlend, awUInt aRenderTarget);
+	void					SetBlend			(const ConfigBlend& aBlend, zenUInt aRenderTarget);
 	void					SetView				(ERes::GfxViewRef _rView);
 	void					PipelineReset		();
 	void					PipelineUpdate		();
@@ -41,18 +41,18 @@ protected:
 	bool						mbUsingMRTs;
 	ConfigDepthStencil			mConfigDepthStencil;
 	ConfigBlend					mConfigBlend[kuMaxRenderTarget];
-	awU8							mBlendWriteMaskToDX11[16];	
+	zenU8							mBlendWriteMaskToDX11[16];	
 	BlendingToDX11				mBlendToDX11[ConfigBlend::keBlend__Count];
 	D3D11_COMPARISON_FUNC		mDepthTestToDX11[ConfigDepthStencil::keDepth__Count];
 	
 	ID3D11BlendState*			mpStateBlend;
 	ID3D11DepthStencilState*	mpStateDepthStencil;
 
-	awUInt						muStackCurrent;			//!< Implement a stock Push/Pop
-	awUInt						mbUpdatedView			: 1; //!< Track render target change
-	awUInt						mbUpdatedBlend			: 1; //!< Track Blending state update of RenderTargets
-	awUInt						mbUpdatedDepthStencil	: 1; //!< Track Depth/Stencil state update
-	//	awU32							muUpdateSampler;		//!< Track Texture Sampler state update
+	zenUInt						muStackCurrent;			//!< Implement a stock Push/Pop
+	zenUInt						mbUpdatedView			: 1; //!< Track render target change
+	zenUInt						mbUpdatedBlend			: 1; //!< Track Blending state update of RenderTargets
+	zenUInt						mbUpdatedDepthStencil	: 1; //!< Track Depth/Stencil state update
+	//	zenU32							muUpdateSampler;		//!< Track Texture Sampler state update
 	//---------------------------------------------------------
 	// ManagerBase Section
 	//---------------------------------------------------------

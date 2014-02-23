@@ -39,8 +39,8 @@ namespace sample
 		CMgr::Log.Log(CLog::keLog_Game, " MALLOC");
 		CMgr::Log.Log(CLog::keLog_Game, awconst::kzLineA40);
 
-		awU32 size1 = sizeof(int);
-		awU32 size2 = sizeof(TestAlloc);
+		zenU32 size1 = sizeof(int);
+		zenU32 size2 = sizeof(TestAlloc);
 
 		TestAlloc* pTest1		= AWNewDefault TestAlloc(1);
 		TestAlloc* pTest2		= AWNewDefault TestAlloc(2);

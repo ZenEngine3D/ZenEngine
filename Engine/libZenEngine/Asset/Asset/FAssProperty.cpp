@@ -8,18 +8,18 @@ namespace FAss
 AWAssetTypes
 #undef	AWAssetTypeExpand
 
-static awStringHash32 sTypeDescription[]={
-	#define AWAssetTypeExpand(_TypeName_)	awStringHash32(#_TypeName_),
+static zenStringHash32 sTypeDescription[]={
+	#define AWAssetTypeExpand(_TypeName_)	zenStringHash32(#_TypeName_),
 	AWAssetTypes	
 	#undef AWAssetTypeExpand
 };
 
 //=================================================================================================
-//! @brief		awString representation of all PropertyDef type enum
+//! @brief		zenString representation of all PropertyDef type enum
 //! @details	Constructed automatically from 'AWAssetTypes' define
 //-------------------------------------------------------------------------------------------------
 //! @param		_ePropertyType	- Property we want name from
-//! @return						- awString representation of the enum value
+//! @return						- zenString representation of the enum value
 //=================================================================================================
 const char* PropertyDefBase::GetTypeDesc(PropertyDefBase::enumType _ePropertyType)
 {	
@@ -33,9 +33,9 @@ const char* PropertyDefBase::GetTypeDesc(PropertyDefBase::enumType _ePropertyTyp
 //-------------------------------------------------------------------------------------------------
 //! @param		_hPropertyName	- Property name we want enum value from
 //=================================================================================================
-PropertyDefBase::enumType PropertyDefBase::GetType(awHash32 _hPropertyName)
+PropertyDefBase::enumType PropertyDefBase::GetType(zenHash32 _hPropertyName)
 {
-	awUInt uIndex = awStringHash32::Find(_hPropertyName, sTypeDescription, AWArrayCount(sTypeDescription));
+	zenUInt uIndex = zenStringHash32::Find(_hPropertyName, sTypeDescription, AWArrayCount(sTypeDescription));
 	return uIndex < keType__Count ? static_cast<PropertyDefBase::enumType>(uIndex) : keType__Invalid;
 }
 
@@ -63,7 +63,7 @@ pugi::xml_node PropertyDefBase::Value::ValueToXml(pugi::xml_node& _NodeParent)co
 bool PropertyDefBase::Value::ValueFromXml(const pugi::xml_node& _NodeProperty)
 {
 	const char* zPropType(_NodeProperty.attribute(kzXmlName_PropAtr_Type).as_string());
-	PropertyDefBase::enumType ePropType(PropertyDefBase::GetType(awHash32(zPropType)));
+	PropertyDefBase::enumType ePropType(PropertyDefBase::GetType(zenHash32(zPropType)));
 	if( mParentDef.GetType() == ePropType )
 		return mParentDef.ValueFromXml( *this, _NodeProperty );
 
@@ -93,7 +93,7 @@ void PropertyDefBase::ValueToXml(const PropertyDefBase::Value& _Value, pugi::xml
 //! @param		_zBuffer	- Buffer to store string in (instead of allocation a string every time)
 //! @param		_uSizebuffer- Buffer size
 //=================================================================================================
-void PropertyDefBool::ValueToString(const PropertyDefBase::Value& _Value, char* _zBuffer, awUInt _uSizebuffer) const 
+void PropertyDefBool::ValueToString(const PropertyDefBase::Value& _Value, char* _zBuffer, zenUInt _uSizebuffer) const 
 { 
 	AWAssert(_Value.mParentDef.GetType() == GetType());
 	const Value& value = static_cast<const Value&>(_Value);
@@ -127,7 +127,7 @@ bool PropertyDefBool::ValueFromXml(PropertyDefBase::Value& _Value, const pugi::x
 //! @param		_zBuffer	- Buffer to store string in (instead of allocation a string every time)
 //! @param		_uSizebuffer- Buffer size
 //=================================================================================================
-void PropertyDefInt::ValueToString(const PropertyDefBase::Value& _Value, char* _zBuffer, awUInt _uSizebuffer) const 
+void PropertyDefInt::ValueToString(const PropertyDefBase::Value& _Value, char* _zBuffer, zenUInt _uSizebuffer) const 
 { 
 	AWAssert(_Value.mParentDef.GetType() == GetType());
 	const Value& value = static_cast<const Value&>(_Value);
@@ -161,7 +161,7 @@ bool PropertyDefInt::ValueFromXml(PropertyDefBase::Value& _Value, const pugi::xm
 //! @param		_zBuffer	- Buffer to store string in (instead of allocation a string every time)
 //! @param		_uSizebuffer- Buffer size
 //=================================================================================================
-void PropertyDefFloat::ValueToString(const PropertyDefBase::Value& _Value, char* _zBuffer, awUInt _uSizebuffer) const 
+void PropertyDefFloat::ValueToString(const PropertyDefBase::Value& _Value, char* _zBuffer, zenUInt _uSizebuffer) const 
 { 
 	AWAssert(_Value.mParentDef.GetType() == GetType());
 	const Value& value = static_cast<const Value&>(_Value);
@@ -195,12 +195,12 @@ bool PropertyDefFloat::ValueFromXml(PropertyDefBase::Value& _Value, const pugi::
 //! @param		_zBuffer	- Buffer to store string in (instead of allocation a string every time)
 //! @param		_uSizebuffer- Buffer size
 //=================================================================================================
-void PropertyDefEnum::ValueToString(const PropertyDefBase::Value& _Value, char* _zBuffer, awUInt _uSizebuffer) const 
+void PropertyDefEnum::ValueToString(const PropertyDefBase::Value& _Value, char* _zBuffer, zenUInt _uSizebuffer) const 
 { 
 	AWAssert(_Value.mParentDef.GetType() == GetType());
 	const Value& value = static_cast<const Value&>(_Value);
-	awUInt foundIdx(maEntry.Count()-1);
-	for(awUInt idx(0); idx<foundIdx; ++idx)
+	zenUInt foundIdx(maEntry.Count()-1);
+	for(zenUInt idx(0); idx<foundIdx; ++idx)
 		if( maEntry[idx].hKey == value.mValue )
 			foundIdx = idx;
 	sprintf(_zBuffer, "%s", maEntry[foundIdx].zName);
@@ -219,7 +219,7 @@ bool PropertyDefEnum::ValueFromXml(PropertyDefBase::Value& _Value, const pugi::x
 	pugi::xml_attribute attrValue	= _NodeProperty.attribute("Value");
 	if( attrValue )
 	{		
-		value.mValue = awHash32(attrValue.as_string());
+		value.mValue = zenHash32(attrValue.as_string());
 		return true;
 	}
 	return false;
@@ -233,7 +233,7 @@ bool PropertyDefEnum::ValueFromXml(PropertyDefBase::Value& _Value, const pugi::x
 //! @param		_zBuffer	- Buffer to store string in (instead of allocation a string every time)
 //! @param		_uSizebuffer- Buffer size
 //=================================================================================================
-void PropertyDefFile::ValueToString(const PropertyDefBase::Value& _Value, char* _zBuffer, awUInt _uSizebuffer) const 
+void PropertyDefFile::ValueToString(const PropertyDefBase::Value& _Value, char* _zBuffer, zenUInt _uSizebuffer) const 
 { 
 	AWAssert(_Value.mParentDef.GetType() == GetType());
 	const Value& value = static_cast<const Value&>(_Value);
@@ -267,7 +267,7 @@ bool PropertyDefFile::ValueFromXml(PropertyDefBase::Value& _Value, const pugi::x
 //! @param		_zBuffer	- Buffer to store string in (instead of allocation a string every time)
 //! @param		_uSizebuffer- Buffer size
 //=================================================================================================
-void PropertyDefFloat2::ValueToString(const PropertyDefBase::Value& _Value, char* _zBuffer, awUInt _uSizebuffer) const 
+void PropertyDefFloat2::ValueToString(const PropertyDefBase::Value& _Value, char* _zBuffer, zenUInt _uSizebuffer) const 
 { 
 	AWAssert(_Value.mParentDef.GetType() == GetType());
 	const Value& value = static_cast<const Value&>(_Value);

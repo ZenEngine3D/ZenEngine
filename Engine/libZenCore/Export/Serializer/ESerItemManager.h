@@ -11,12 +11,12 @@ public:
 										ManagerSerialItem();			
 	void								SetItem(EExp::SerialItem* _pItem);
 	
-	SerialItem*							GetItemBase(const awResourceID _ResID);
-	EExp::SerialItem*					GetItemBaseAnySource(const awResourceID _ResID);
-	bool								IsValid(const awResourceID _ResID);
-	bool								IsValid(const awArrayBase<awResourceID>& _aResID);
+	SerialItem*							GetItemBase(const zenResID _ResID);
+	EExp::SerialItem*					GetItemBaseAnySource(const zenResID _ResID);
+	bool								IsValid(const zenResID _ResID);
+	bool								IsValid(const zenArrayBase<zenResID>& _aResID);
 	template<class TType>
-	TType* GetItem(const awResourceID _ResID)
+	TType* GetItem(const zenResID _ResID)
 	{
 		//! @todo Add type check back, using mask
 		SerialItem* pSerialItem = GetItemBase(_ResID);
@@ -24,7 +24,7 @@ public:
 	} 
 
 	template<class TType>
-	TType* GetItemAnySource(const awResourceID _ResID)
+	TType* GetItemAnySource(const zenResID _ResID)
 	{
 		//! @todo Add type check back, using mask
 		SerialItem* pSerialItem = GetItemBaseAnySource(_ResID);
@@ -33,7 +33,7 @@ public:
 
 	
 protected:
-	Hashmap<EExp::SerialItem*>::Key64	mdSerialItems;		//!< Loaded and created serial items
+	zenMap<EExp::SerialItem*>::Key64	mdSerialItems;		//!< Loaded and created serial items
 	
 //---------------------------------------------------------
 // ManagerBase Section

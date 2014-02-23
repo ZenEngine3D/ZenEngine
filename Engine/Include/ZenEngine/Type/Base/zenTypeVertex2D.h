@@ -2,7 +2,7 @@
 #ifndef __LibFramework_Api_Type_Vertex2D_h__
 #define __LibFramework_Api_Type_Vertex2D_h__
 
-namespace zen { namespace awtype {
+namespace zen { namespace zenType {
 
 template<class _TypeV_, class _TypeC_>
 class awVertex2DSimple
@@ -33,8 +33,8 @@ public:
 };
 
 
-typedef awVertex2DSimple<awS32, awU32>					awVec2DSimple;	AWAddSupportsMemCopy(awVec2DSimple);
-typedef awVertex2DFull  <awS32, awU32, awU32, awS32>	awVec2DFull;	AWAddSupportsMemCopy(awVec2DFull);
+typedef awVertex2DSimple<zenS32, zenU32>					zenVec2DSimple;	AWAddSupportsMemCopy(zenVec2DSimple);
+typedef awVertex2DFull  <zenS32, zenU32, zenU32, zenS32>	zenVec2DFull;	AWAddSupportsMemCopy(zenVec2DFull);
 
 }}  //namespace zen, Type 
 

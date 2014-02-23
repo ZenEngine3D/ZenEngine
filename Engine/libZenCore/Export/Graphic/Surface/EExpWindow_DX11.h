@@ -17,7 +17,7 @@ namespace EExp
 		HWND						mhWindow;
 	};
 
-	awResourceID CreateGfxWindow( HWND _WindowHandle );
+	zenResID CreateGfxWindow( HWND _WindowHandle );
 }
 
 

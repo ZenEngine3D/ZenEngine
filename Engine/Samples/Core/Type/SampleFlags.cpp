@@ -21,8 +21,8 @@ namespace sample
 			keSample_Val5,
 			keSample__Count
 		};
-		typedef awFlag<enumSample, keSample__Count>	FlagSample;
-		typedef awFlag<enumSample, 10, awU8>				FlagSampleWrong;
+		typedef zenFlag<enumSample, keSample__Count>	FlagSample;
+		typedef zenFlag<enumSample, 10, zenU8>				FlagSampleWrong;
 		
 		//Test to make sure storage is enough for max value
 		//FlagSampleWrong testWrongEnum; 

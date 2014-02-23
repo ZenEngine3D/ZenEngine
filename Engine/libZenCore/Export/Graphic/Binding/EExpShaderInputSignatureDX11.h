@@ -12,9 +12,9 @@ namespace EExp
 		//-------------------------------------------------------------------------------------------------
 	public:		
 		virtual bool				Serialize		( EExp::Serializer_Base& _Serializer );
-		//static awResourceID	ExtractID		( const Array<awU8>& _aShaderCode );
+		//static zenResID	ExtractID		( const Array<zenU8>& _aShaderCode );
 
-		awArrayStatic<awU8>				maDummyShaderCode;	
+		zenArrayStatic<zenU8>				maDummyShaderCode;	
 
 		//-------------------------------------------------------------------------------------------------
 		// Export support section
@@ -22,9 +22,9 @@ namespace EExp
 	public:
 		struct ExportInfoExt
 		{				
-			awArrayStatic<awU8>	maCompiledShader;
+			zenArrayStatic<zenU8>	maCompiledShader;
 		};
-		static awResourceID	CallbackGetItemID(awconst::eResPlatform _ePlatform, awconst::eResType _eType, awconst::eResSource _eSource, const EExp::ExportInfoBase* _pExportInfo, bool& _bExistOut);
+		static zenResID	CallbackGetItemID(awconst::eResPlatform _ePlatform, awconst::eResType _eType, awconst::eResSource _eSource, const EExp::ExportInfoBase* _pExportInfo, bool& _bExistOut);
 	protected:
 		virtual bool				ExportStart();	
 		virtual bool				ExportWork(bool _bIsTHRTask);	

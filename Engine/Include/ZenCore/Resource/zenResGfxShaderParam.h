@@ -1,6 +1,6 @@
 #pragma once
-#ifndef __LibEngine_Api_ResourceGfxShaderParam_h__
-#define __LibEngine_Api_ResourceGfxShaderParam_h__
+#ifndef __zenCore_ResourceGfxShaderParam_h__
+#define __zenCore_ResourceGfxShaderParam_h__
 
 namespace zen { namespace awres {	
 
@@ -13,9 +13,9 @@ namespace zen { namespace awres {
 	public:
 		inline		awShaderDefine();
 		inline		awShaderDefine(const char* _zName, const char* _zValue);
-		inline		awShaderDefine(const awString& _zName, const awString& _zValue);
-		awString	mzName;
-		awString	mzValue;
+		inline		awShaderDefine(const zenString& _zName, const zenString& _zValue);
+		zenString	mzName;
+		zenString	mzValue;
 	};
 
 	//=============================================================================================
@@ -26,11 +26,11 @@ namespace zen { namespace awres {
 	AWClassDeclareNoParent(awShaderTexture)
 	public:
 		inline awShaderTexture();
-		inline awShaderTexture(awHash32 _hTextureName, awResourceID _TextureID, awResourceID _SamplerID);
+		inline awShaderTexture(zenHash32 _hTextureName, zenResID _TextureID, zenResID _SamplerID);
 
-		awHash32		mhTextureName;
-		awResourceID	mTextureID;
-		awResourceID	mSamplerID;
+		zenHash32		mhTextureName;
+		zenResID	mTextureID;
+		zenResID	mSamplerID;
 	};
 
 	//=============================================================================================
@@ -42,15 +42,15 @@ namespace zen { namespace awres {
 	{
 	AWClassDeclareNoParent(awShaderParameter)
 	public:
-		awHash32	mhName;						//!< Parameter name
-		awU32		meType			: 4;		//!< eShaderElementType
-		awU32		muVectorSize	: 4;		//!< Number of elements in vector
-		awU32		muArrayCount	: 10;		//!< Number of elements in array
-		awU32		muSizeTotal		: 16;		//!< Total size of the child class
+		zenHash32	mhName;						//!< Parameter name
+		zenU32		meType			: 4;		//!< eShaderElementType
+		zenU32		muVectorSize	: 4;		//!< Number of elements in vector
+		zenU32		muArrayCount	: 10;		//!< Number of elements in array
+		zenU32		muSizeTotal		: 16;		//!< Total size of the child class
 		inline const void* GetData()const {return this + 1;}
 
 	protected:
-		inline			awShaderParameter(awHash32 _hName, awconst::eShaderElementType _eType, awU16 _uVectorSize, awU16 _uArrayCount, awU16 _uSizeTotal);
+		inline			awShaderParameter(zenHash32 _hName, awconst::eShaderElementType _eType, zenU16 _uVectorSize, zenU16 _uArrayCount, zenU16 _uSizeTotal);
 	};
 
 	template <class TType, awconst::eShaderElementType TShaderType>
@@ -58,7 +58,7 @@ namespace zen { namespace awres {
 	{
 	AWClassDeclare(awShaderParamVector1, awShaderParameter)
 	public:
-		inline		awShaderParamVector1( awHash32 _hName, TType _Value);
+		inline		awShaderParamVector1( zenHash32 _hName, TType _Value);
 		TType		mValue;
 	};
 
@@ -67,9 +67,9 @@ namespace zen { namespace awres {
 	{
 	AWClassDeclare(awShaderParamVector2, awShaderParameter)
 	public:
-		inline		awShaderParamVector2( awHash32 _hName, TType _Value1, TType _Value2); 
-		inline		awShaderParamVector2( awHash32 _hName, const TType _Values[2]);
-		inline		awShaderParamVector2( awHash32 _hName, const awVector2<TType>& _vValue);
+		inline		awShaderParamVector2( zenHash32 _hName, TType _Value1, TType _Value2); 
+		inline		awShaderParamVector2( zenHash32 _hName, const TType _Values[2]);
+		inline		awShaderParamVector2( zenHash32 _hName, const zenVector2<TType>& _vValue);
 		TType		mValue[2];
 	};
 
@@ -78,9 +78,9 @@ namespace zen { namespace awres {
 	{
 	AWClassDeclare(awShaderParamVector3, awShaderParameter)
 	public:
-		inline		awShaderParamVector3( awHash32 _hName, TType _Value1, TType _Value2, TType _Value3); 
-		inline		awShaderParamVector3( awHash32 _hName, const TType _Values[3]);
-		inline		awShaderParamVector3( awHash32 _hName, const awVector3<TType>& _vValue);
+		inline		awShaderParamVector3( zenHash32 _hName, TType _Value1, TType _Value2, TType _Value3); 
+		inline		awShaderParamVector3( zenHash32 _hName, const TType _Values[3]);
+		inline		awShaderParamVector3( zenHash32 _hName, const zenVector3<TType>& _vValue);
 		TType		mValue[3];
 	};
 
@@ -89,9 +89,9 @@ namespace zen { namespace awres {
 	{
 	AWClassDeclare(awShaderParamVector4, awShaderParameter)
 	public:
-		inline		awShaderParamVector4( awHash32 _hName, TType _Value1, TType _Value2, TType _Value3, TType _Value4);
-		inline		awShaderParamVector4( awHash32 _hName, const TType _Values[4]);
-		inline		awShaderParamVector4( awHash32 _hName, const awVector4<TType>& _vValues);
+		inline		awShaderParamVector4( zenHash32 _hName, TType _Value1, TType _Value2, TType _Value3, TType _Value4);
+		inline		awShaderParamVector4( zenHash32 _hName, const TType _Values[4]);
+		inline		awShaderParamVector4( zenHash32 _hName, const zenVector4<TType>& _vValues);
 		TType		mValue[4];
 	};
 

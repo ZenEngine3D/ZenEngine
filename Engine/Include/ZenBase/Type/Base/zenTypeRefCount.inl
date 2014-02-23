@@ -1,23 +1,23 @@
 
-namespace zen { namespace awtype {
+namespace zen { namespace zenType {
 
 template<bool TAutoDelete>
-awRefCounted<TAutoDelete>::awRefCounted()
+zenRefCounted<TAutoDelete>::zenRefCounted()
 : miRefCount(0)
 {}
 
 template<bool TAutoDelete>
-awRefCounted<TAutoDelete>::~awRefCounted()
+zenRefCounted<TAutoDelete>::~zenRefCounted()
 {}
 
 template<bool TAutoDelete>
-void awRefCounted<TAutoDelete>::ReferenceAdd()
+void zenRefCounted<TAutoDelete>::ReferenceAdd()
 {
 	++miRefCount;
 }
 
 template<bool TAutoDelete>
-void awRefCounted<TAutoDelete>::ReferenceRem()
+void zenRefCounted<TAutoDelete>::ReferenceRem()
 {
 	--miRefCount; 
 	if(miRefCount<=0 && TAutoDelete) 
@@ -25,10 +25,10 @@ void awRefCounted<TAutoDelete>::ReferenceRem()
 }
 
 template<bool TAutoDelete>
-int awRefCounted<TAutoDelete>::ReferenceGet()
+int zenRefCounted<TAutoDelete>::ReferenceGet()
 {
 	return miRefCount;
 }
 
-}} // namespace zen, awtype
+}} // namespace zen, zenType
 

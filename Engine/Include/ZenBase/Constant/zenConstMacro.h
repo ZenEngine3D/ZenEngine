@@ -1,6 +1,6 @@
 #pragma once
-#ifndef __LibCore_Type_Defines_h__
-#define __LibCore_Type_Defines_h__
+#ifndef __zenBase_Type_Defines_h__
+#define __zenBase_Type_Defines_h__
 
 //=================================================================================================
 //! @file		CTypDefines.h
@@ -31,8 +31,8 @@
 #include "zenConstMacro.inl"
 
 #define AWArrayCount(_Array_)						(sizeof(_Array_)/sizeof((_Array_)[0]))
-#define AWMemberOffset(_Class_, _MemberName_)		( (awUInt) &(((_Class_*)0)->_MemberName_) )
-#define AWMemberOffsetAfter(_Class_, _MemberName_)	( (awUInt) &(((_Class_*)0)->_MemberName_) + sizeof((((_Class_*)0)->_MemberName_)) )
+#define AWMemberOffset(_Class_, _MemberName_)		( (zenUInt) &(((_Class_*)0)->_MemberName_) )
+#define AWMemberOffsetAfter(_Class_, _MemberName_)	( (zenUInt) &(((_Class_*)0)->_MemberName_) + sizeof((((_Class_*)0)->_MemberName_)) )
 
 #define AWClassDeclareNoParent(_Class_)				public: void AWClassDeclareCheck(){ AWStaticAssertMsg( sizeof(*this) == sizeof(_Class_), "Wrong Class name in ClassDeclare macro" );}
 #define AWClassDeclare(_Class_, _ClassParent_)		AWClassDeclareNoParent(_Class_)			\

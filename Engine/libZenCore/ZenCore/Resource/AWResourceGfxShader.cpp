@@ -14,12 +14,12 @@ awGfxShaderPixel awGfxShaderPixel::Create( const char* _zFilename, const char* _
 	return EExp::CreateGfxShaderPixel(_zFilename, _zEntryname);
 }
 
-awGfxShaderVertex awGfxShaderVertex::Create( const char* _zFilename, const char* _zEntryname, const awArrayBase<awShaderDefine>& _aDefines)
+awGfxShaderVertex awGfxShaderVertex::Create( const char* _zFilename, const char* _zEntryname, const zenArrayBase<awShaderDefine>& _aDefines)
 {
 	return EExp::CreateGfxShaderVertex(_zFilename, _zEntryname, _aDefines);
 }
 
-awGfxShaderPixel awGfxShaderPixel::Create( const char* _zFilename, const char* _zEntryname, const awArrayBase<awShaderDefine>& _aDefines)
+awGfxShaderPixel awGfxShaderPixel::Create( const char* _zFilename, const char* _zEntryname, const zenArrayBase<awShaderDefine>& _aDefines)
 {
 	return EExp::CreateGfxShaderPixel(_zFilename, _zEntryname, _aDefines);
 }

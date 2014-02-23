@@ -14,7 +14,7 @@ namespace ERes
 			GfxViewRef				mrBackbufferView;
 			awconst::eTextureFormat	meBackbufferColorFormat;
 			awconst::eTextureFormat	meBackbufferDepthFormat;
-			awVec2U16				mvSize;			
+			zenVec2U16				mvSize;			
 		};
 		AWResourceDeclare(GfxWindow_DX11, InstanceInfo, awconst::keResType_GfxWindow)
 	
@@ -23,7 +23,7 @@ namespace ERes
 	//------------------------------------------------------------------
 	public:
 		inline ERes::GfxViewRef		GetBackbuffer(){ return mInstanceInfo.mrBackbufferView; }
-		void						Resize(const awVec2U16& _vSize);		
+		void						Resize(const zenVec2U16& _vSize);		
 
 	//------------------------------------------------------------------
 	// Platform Implementation
@@ -32,7 +32,7 @@ namespace ERes
 		virtual						~GfxWindow_DX11();
 		virtual bool				ResourceInit();	
 		void						PerformResize();
-		awVec2U16					mvPendingResize;
+		zenVec2U16					mvPendingResize;
 	};
 }
 

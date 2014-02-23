@@ -8,7 +8,7 @@ MallocAllocator::MallocAllocator(const char* _zName)
 {
 }
 
-void* MallocAllocator::Malloc(size_t _uSize, bool _bIsArray, awU32 _uAlign)
+void* MallocAllocator::Malloc(size_t _uSize, bool _bIsArray, zenU32 _uAlign)
 {	
 	size_t uSizeNeeded	= GetAllocSize(_uSize, 0, _uAlign);
 	void* pAllocation	= malloc( uSizeNeeded );
@@ -20,7 +20,7 @@ void MallocAllocator::Free(void* _pAlloc, Header* _pInfoAlloc)
 {
 	AWAssert(_pAlloc && _pInfoAlloc);
 	RemAlloc(_pInfoAlloc);
-	free( (void*)((awPointer)_pAlloc - _pInfoAlloc->muOffset) );
+	free( (void*)((zenPointer)_pAlloc - _pInfoAlloc->muOffset) );
 }
 
 }  

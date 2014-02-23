@@ -29,9 +29,9 @@ namespace CMem
 		//=================================================================================================
 		class Header
 	#if AW_MEMORYDEBUG
-		: public awList2xNode
+		: public zenList2xNode
 		{
-		AWClassDeclare(Header, awList2xNode);
+		AWClassDeclare(Header, zenList2xNode);
 	#else
 		{
 		AWClassDeclareNoParent(Header);
@@ -39,37 +39,37 @@ namespace CMem
 		public:			
 			Allocator*			mpAllocator;
 			size_t				muWantedSize;
-			awHash32			mhStamp;
-			awU32				muOffset : 31;
-			awU32				mbIsArray: 1;
-			inline bool			IsValid(){return mhStamp==awHash32("ValidAlloc");}
+			zenHash32			mhStamp;
+			zenU32				muOffset : 31;
+			zenU32				mbIsArray: 1;
+			inline bool			IsValid(){return mhStamp==zenHash32("ValidAlloc");}
 			bool				IsArray();
-			void				Set(Allocator* _pAllocator, awU32 _uAllocOffset, size_t _uAllocSize, bool _bIsArray);
+			void				Set(Allocator* _pAllocator, zenU32 _uAllocOffset, size_t _uAllocSize, bool _bIsArray);
 		};			
-								Allocator			(awDebugString _zName);		
+								Allocator			(zenDebugString _zName);		
 		virtual					~Allocator			();
 		virtual void			DebugPrint			();
 		size_t					GetTotalAllocSize	()const {return muTotalAllocSize;}
-		awUInt					GetTotalAllocCount	()const {return muTotalAllocCount;}
+		zenUInt					GetTotalAllocCount	()const {return muTotalAllocCount;}
 		static Header*			GetHeader			(void* _pAlloc, bool _bIsArray);		
 		static Allocator&		GetDefault			();		
 		static Allocator*		Default;			//!< Engine default allocator to use @todo Allow alloc to use NULL instead of frocing them to use directly this
 	protected:
-		size_t					GetAllocSize		(size_t _uWantedSize, size_t _uExtraSize, awU32 _uAlign);
-		void*					AddAlloc			(size_t _uWantedSize, size_t _uExtraSize, awU32 _uAlign, void* _pAllocation, const bool _bIsArray);
+		size_t					GetAllocSize		(size_t _uWantedSize, size_t _uExtraSize, zenU32 _uAlign);
+		void*					AddAlloc			(size_t _uWantedSize, size_t _uExtraSize, zenU32 _uAlign, void* _pAllocation, const bool _bIsArray);
 		void					RemAlloc			(Header* _pAlloc);
 		size_t					muTotalAllocSize;
-		awUInt					muTotalAllocCount;
-		awHash32					mh32ValidStamp;				
+		zenUInt					muTotalAllocCount;
+		zenHash32					mh32ValidStamp;				
 	#if AW_MEMORYDEBUG
-		awList2x					mlstAllocations;	//!< List of every allocation currently held by this allocator
+		zenList2x					mlstAllocations;	//!< List of every allocation currently held by this allocator
 	#endif
-		awDebugString				mzAllocatorName;	//!< Name of the allocator, for debug purpose
+		zenDebugString				mzAllocatorName;	//!< Name of the allocator, for debug purpose
 	// Methods to implement
 	public:
-		virtual void*			Malloc(size_t _uSize, bool _bIsArray, awU32 _uAlign)=0;
+		virtual void*			Malloc(size_t _uSize, bool _bIsArray, zenU32 _uAlign)=0;
 		virtual	void			Free(void* _pAlloc, Header* _pInfoAlloc)=0;
-		virtual awDebugString		GetDescription()=0;
+		virtual zenDebugString		GetDescription()=0;
 	};
 
 	//=================================================================================================

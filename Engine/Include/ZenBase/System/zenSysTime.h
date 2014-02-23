@@ -4,9 +4,9 @@
 
 namespace zen { namespace zenSys 
 {
-    const awDateTime&	GetDateTime();
-	awTimeStamp			GetTimeStamp();
-	awU64				GetTimeUSec();
+    const zenDateTime&	GetDateTime();
+	zenTimeStamp			GetTimeStamp();
+	zenU64				GetTimeUSec();
     double				GetElapsedUSec();	
 	double				GetElapsedMSec();
 	double				GetElapsedSec();

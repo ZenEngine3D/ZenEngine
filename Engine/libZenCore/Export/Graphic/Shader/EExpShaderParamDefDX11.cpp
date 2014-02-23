@@ -8,18 +8,18 @@
 namespace EExp
 {
 
-awResourceID SerialGfxShaderParamDef_DX11::CallbackGetItemID(awconst::eResPlatform _ePlatform, awconst::eResType _eType, awconst::eResSource _eSource, const EExp::ExportInfoBase* _pExportInfo, bool& _bExistOut)
+zenResID SerialGfxShaderParamDef_DX11::CallbackGetItemID(awconst::eResPlatform _ePlatform, awconst::eResType _eType, awconst::eResSource _eSource, const EExp::ExportInfoBase* _pExportInfo, bool& _bExistOut)
 {
 	AWAssert(_ePlatform==awconst::keResPlatform_DX11 && _eType==awconst::keResType_GfxShaderParamDef);
 	AWAssert( _pExportInfo );
 	const ExportInfo*			pExportInfo		= static_cast<const ExportInfo*>(_pExportInfo);
 	const SerialShader_DX11*	pParentShader	= EMgr::SerialItems.GetItem<SerialShader_DX11>( pExportInfo->mParentShaderID );	
-	if( pParentShader && pParentShader->maParamDefID.Count() > (awUInt)pExportInfo->meBufferIndex )
+	if( pParentShader && pParentShader->maParamDefID.Count() > (zenUInt)pExportInfo->meBufferIndex )
 	{
-		awResourceID pPreProcessId = pParentShader->maParamDefID[pExportInfo->meBufferIndex]; //Re-use already processed ID (from shader creation)
+		zenResID pPreProcessId = pParentShader->maParamDefID[pExportInfo->meBufferIndex]; //Re-use already processed ID (from shader creation)
 		return EExp::ValidateItemID(_ePlatform, _eType, _eSource, pPreProcessId.Name(), _bExistOut);
 	}
-	return awResourceID();		
+	return zenResID();		
 }
 
 //=================================================================================================
@@ -67,7 +67,7 @@ bool SerialGfxShaderParamDef_DX11::ExportWork(bool _bIsTHRTask)
 	{
 		// Find the right Constant Buffer
 		pGfxShaderReflection->GetDesc( &shaderDesc );
-		for( awUInt uResIdx=0; !pConstBuffer && uResIdx<shaderDesc.BoundResources; ++uResIdx )
+		for( zenUInt uResIdx=0; !pConstBuffer && uResIdx<shaderDesc.BoundResources; ++uResIdx )
 		{
 			HRESULT hr = pGfxShaderReflection->GetResourceBindingDesc(	uResIdx, &ResourceDesc );
 			if( SUCCEEDED(hr) && ResourceDesc.Type ==  D3D_SIT_CBUFFER &&  pExportInfo->meBufferIndex == ResourceDesc.BindPoint )
@@ -118,7 +118,7 @@ bool SerialGfxShaderParamDef_DX11::ExportWork(bool _bIsTHRTask)
 				// Copy default value
 				if(VarDesc.DefaultValue)	zenMem::Copy(&maParameterDefaults[VarDesc.StartOffset], VarDesc.DefaultValue, VarDesc.Size); 
 				else						zenMem::Set(&maParameterDefaults[VarDesc.StartOffset], 0, VarDesc.Size); 
-				mdParameters.GetAdd( awHash32(VarDesc.Name) ) = Param;
+				mdParameters.GetAdd( zenHash32(VarDesc.Name) ) = Param;
 			}
 			
 		}

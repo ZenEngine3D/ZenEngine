@@ -35,7 +35,7 @@ namespace ERes
 			mInstanceInfo.mpIndiceBuffer->Release();
 	}
 
-	awU8* GfxIndex_DX11::Lock()
+	zenU8* GfxIndex_DX11::Lock()
 	{
 		//! @todo some lock test here
 		//! @todo Stream index parameter
@@ -44,7 +44,7 @@ namespace ERes
 		{
 			D3D11_MAPPED_SUBRESOURCE mapRes;
 			EMgr::GfxRender.DX11GetDeviceContext()->Map(Get().mpIndiceBuffer, 0, D3D11_MAP_WRITE_DISCARD, NULL, &mapRes);
-			return (awU8*)mapRes.pData;
+			return (zenU8*)mapRes.pData;
 		}
 		return NULL;
 	}

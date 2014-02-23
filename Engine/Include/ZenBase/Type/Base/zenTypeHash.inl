@@ -1,11 +1,11 @@
 #include <string.h>
 
-namespace zen { namespace awtype {
+namespace zen { namespace zenType {
 
 //=================================================================================================
 // HASH32
 //=================================================================================================
-awHash32& awHash32::Append(const char* _zString)
+zenHash32& zenHash32::Append(const char* _zString)
 {		
 	while( *_zString )
 	{
@@ -15,7 +15,7 @@ awHash32& awHash32::Append(const char* _zString)
 	return *this;
 }
 
-awHash32& awHash32::Append(const wchar_t* _zString)
+zenHash32& zenHash32::Append(const wchar_t* _zString)
 {		
 	while( *_zString )
 	{
@@ -29,10 +29,10 @@ awHash32& awHash32::Append(const wchar_t* _zString)
 	return *this;
 }
 
-awHash32& awHash32::Append(const void* _pData, awUInt _uSize)
+zenHash32& zenHash32::Append(const void* _pData, zenUInt _uSize)
 {	
-	const awU8* pDataCur = static_cast<const awU8*>(_pData);	
-	const awU8* pDataEnd = pDataCur + _uSize;
+	const zenU8* pDataCur = static_cast<const zenU8*>(_pData);	
+	const zenU8* pDataEnd = pDataCur + _uSize;
 	while( pDataCur < pDataEnd )
 	{
 		muHash ^= *pDataCur++;
@@ -41,9 +41,9 @@ awHash32& awHash32::Append(const void* _pData, awUInt _uSize)
 	return *this;
 }
 		
-awHash32& awHash32::Append( awHash32 _hHashToAdd)
+zenHash32& zenHash32::Append( zenHash32 _hHashToAdd)
 {	
-	awU8* pData = reinterpret_cast<awU8*>(&_hHashToAdd);
+	zenU8* pData = reinterpret_cast<zenU8*>(&_hHashToAdd);
 	muHash ^= pData[0];	muHash *= FNV32_Prime;
 	muHash ^= pData[1];	muHash *= FNV32_Prime;
 	muHash ^= pData[2];	muHash *= FNV32_Prime;
@@ -51,62 +51,62 @@ awHash32& awHash32::Append( awHash32 _hHashToAdd)
 	return *this;
 }
 
-bool awHash32::operator==(const awHash32& _hCmpr)	
+bool zenHash32::operator==(const zenHash32& _hCmpr)	
 { 
 	return muHash == _hCmpr.muHash; 
 }
 
-bool awHash32::operator!=(const awHash32& _hCmpr)	
+bool zenHash32::operator!=(const zenHash32& _hCmpr)	
 { 
 	return muHash != _hCmpr.muHash; 
 }
 
-awHash32& awHash32::operator=(const awHash32& _hCopy)	
+zenHash32& zenHash32::operator=(const zenHash32& _hCopy)	
 { 
 	muHash = _hCopy.muHash; return *this; 
 }
 
-awHash32& awHash32::operator=(const awU32& _uCopy)		
+zenHash32& zenHash32::operator=(const zenU32& _uCopy)		
 { 
 	muHash = _uCopy; return *this; 
 }
 
-awHash32::operator const awU32&()const				
+zenHash32::operator const zenU32&()const				
 { 
 	return muHash; 
 }
 
-awHash32::awHash32()						
+zenHash32::zenHash32()						
 : muHash(FNV32_Seed){}
 
-awHash32::awHash32(const awHash32& _hCopy)	
+zenHash32::zenHash32(const zenHash32& _hCopy)	
 : muHash(_hCopy.muHash){}
 
-awHash32::awHash32(const awU32& _uCopy)				
+zenHash32::zenHash32(const zenU32& _uCopy)				
 : muHash(_uCopy){}
 
-awHash32::awHash32(const awS32& _iCopy)				
+zenHash32::zenHash32(const zenS32& _iCopy)				
 : muHash(_iCopy){}
 
-awHash32::awHash32(ConstCharWrapper _zStr)		
+zenHash32::zenHash32(ConstCharWrapper _zStr)		
 : muHash(FNV32_Seed)
 { 
 	Append(_zStr.mzStr); 
 }
 
-awHash32::awHash32(char* _zStr)					
+zenHash32::zenHash32(char* _zStr)					
 : muHash(FNV32_Seed)
 { 
 	Append(_zStr); 
 }
 
-awHash32::awHash32(const wchar_t* _zStr)			
+zenHash32::zenHash32(const wchar_t* _zStr)			
 : muHash(FNV32_Seed)
 { 
 	Append(_zStr); 
 }
 
-awHash32::awHash32(const void* _pData, awUInt _uSize)
+zenHash32::zenHash32(const void* _pData, zenUInt _uSize)
 : muHash(FNV32_Seed)
 { 
 	Append(_pData, _uSize); 
@@ -115,7 +115,7 @@ awHash32::awHash32(const void* _pData, awUInt _uSize)
 //=================================================================================================
 // HASH64
 //=================================================================================================		
-awHash64& awHash64::Append(const char* _zString)
+zenHash64& zenHash64::Append(const char* _zString)
 {		
 	while( *_zString )
 	{
@@ -125,7 +125,7 @@ awHash64& awHash64::Append(const char* _zString)
 	return *this;
 }
 
-awHash64& awHash64::Append(const wchar_t* _zString)
+zenHash64& zenHash64::Append(const wchar_t* _zString)
 {		
 	while( *_zString )
 	{
@@ -139,9 +139,9 @@ awHash64& awHash64::Append(const wchar_t* _zString)
 	return *this;
 }
 
-awHash64& awHash64::Append(const awU8* _pData, awUInt _uSize )
+zenHash64& zenHash64::Append(const zenU8* _pData, zenUInt _uSize )
 {		
-	const awU8* pDataEnd = _pData+_uSize;
+	const zenU8* pDataEnd = _pData+_uSize;
 	while( _pData < pDataEnd )
 	{
 		muHash ^= *_pData++;
@@ -150,9 +150,9 @@ awHash64& awHash64::Append(const awU8* _pData, awUInt _uSize )
 	return *this;
 }
 
-awHash64& awHash64::Append(awHash64 _hHashToAdd)
+zenHash64& zenHash64::Append(zenHash64 _hHashToAdd)
 {	
-	awU8* pData = reinterpret_cast<awU8*>(&_hHashToAdd);
+	zenU8* pData = reinterpret_cast<zenU8*>(&_hHashToAdd);
 	muHash ^= pData[0];	muHash *= FNV64_Prime;
 	muHash ^= pData[1];	muHash *= FNV64_Prime;
 	muHash ^= pData[2];	muHash *= FNV64_Prime;
@@ -164,66 +164,66 @@ awHash64& awHash64::Append(awHash64 _hHashToAdd)
 	return *this;
 }
 
-bool awHash64::operator==(const awHash64& _hCmpr)	
+bool zenHash64::operator==(const zenHash64& _hCmpr)	
 { 
 	return muHash == _hCmpr.muHash; 
 }
 
-bool awHash64::operator!=(const awHash64& _hCmpr)	
+bool zenHash64::operator!=(const zenHash64& _hCmpr)	
 { 
 	return muHash != _hCmpr.muHash; 
 }
 
-awHash64& awHash64::operator=(const awHash64& _hCopy)	
+zenHash64& zenHash64::operator=(const zenHash64& _hCopy)	
 { 
 	muHash = _hCopy.muHash; return *this; 
 }
 
-awHash64& awHash64::operator=(const awU64& _uCopy)		
+zenHash64& zenHash64::operator=(const zenU64& _uCopy)		
 { 
 	muHash = _uCopy; return *this; 
 }
 
-awHash64::operator const awU64&()const				
+zenHash64::operator const zenU64&()const				
 { 
 	return muHash; 
 }
 
-awHash64::awHash64()								
+zenHash64::zenHash64()								
 : muHash(FNV64_Seed)
 {}
 
-awHash64::awHash64(const awHash64& _hCopy)			
+zenHash64::zenHash64(const zenHash64& _hCopy)			
 : muHash(_hCopy.muHash)
 {}
 
-awHash64::awHash64(const awU64& _uCopy)				
+zenHash64::zenHash64(const zenU64& _uCopy)				
 : muHash(_uCopy)
 {}
 
-awHash64::awHash64(const awS64& _iCopy)				
+zenHash64::zenHash64(const zenS64& _iCopy)				
 : muHash(_iCopy)
 {}
 
-awHash64::awHash64(ConstCharWrapper _zStr)		
+zenHash64::zenHash64(ConstCharWrapper _zStr)		
 : muHash(FNV64_Seed)
 { 
 	Append(_zStr.mzStr);	
 }
 
-awHash64::awHash64(char* _zStr)					
+zenHash64::zenHash64(char* _zStr)					
 : muHash(FNV64_Seed)
 { 
 	Append(_zStr);			
 }
 
-awHash64::awHash64(wchar_t* _zStr)				
+zenHash64::zenHash64(wchar_t* _zStr)				
 : muHash(FNV64_Seed)
 { 
 	Append(_zStr);			
 }
 
-awHash64::awHash64(const awU8* _pData, awUInt _uSize)	
+zenHash64::zenHash64(const zenU8* _pData, zenUInt _uSize)	
 : muHash(FNV64_Seed)
 { 
 	Append(_pData, _uSize); 
@@ -233,16 +233,16 @@ awHash64::awHash64(const awU8* _pData, awUInt _uSize)
 // STRING HASH
 //=================================================================================================		
 template<class THashType>
-awStringHash<THashType>::awStringHash(const char* _zString)
+zenStringHash<THashType>::zenStringHash(const char* _zString)
 : mzName(_zString)
 , mhName(_zString)
 {
 }
 
 template<class THashType>
-awUInt awStringHash<THashType>::Find( THashType _HashName, const awStringHash* _pFirst, awUInt _uCount )
+zenUInt zenStringHash<THashType>::Find( THashType _HashName, const zenStringHash* _pFirst, zenUInt _uCount )
 {
-	for(awUInt idx(0); idx<_uCount; ++idx )
+	for(zenUInt idx(0); idx<_uCount; ++idx )
 		if( _pFirst[idx].mhName == _HashName )
 			return idx;
 	return _uCount;

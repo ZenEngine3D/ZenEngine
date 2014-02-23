@@ -1,6 +1,6 @@
 #pragma once
-#ifndef __LibCore_Api_Type_Hash_h__
-#define __LibCore_Api_Type_Hash_h__
+#ifndef __zenBase_Type_Hash_h__
+#define __zenBase_Type_Hash_h__
 
 //=================================================================================================
 //! @file		CTypHash.h
@@ -8,18 +8,18 @@
 //! @details	Used over the OS time keeping
 // http://altdevblogaday.com/2011/10/27/quasi-compile-time-string-hashing/
 //=================================================================================================
-namespace zen { namespace awtype 
+namespace zen { namespace zenType 
 {
 	#define FNV32_Seed					2166136261u
 	#define FNV32_Prime					16777619u
 	#define FNV32_Prefix(_N)			((
 	#define FNV32_Postfix(_N)			^ _zStr[_N-1]) * FNV32_Prime)
-	#define FNV32_HASH_CONSTRUCTOR(_N)	AWForceInline awHash32(const char (&_zStr)[_N+1]) :  muHash( AWRepeat(_N, FNV32_Prefix, AWEmpty1) FNV32_Seed AWRepeat(_N, AWEmpty1, FNV32_Postfix) ){}
+	#define FNV32_HASH_CONSTRUCTOR(_N)	AWForceInline zenHash32(const char (&_zStr)[_N+1]) :  muHash( AWRepeat(_N, FNV32_Prefix, AWEmpty1) FNV32_Seed AWRepeat(_N, AWEmpty1, FNV32_Postfix) ){}
 	#define FNV64_Seed					14695981039346656037ul
 	#define FNV64_Prime					1099511628211ul
 	#define FNV64_Prefix(_N)			((
 	#define FNV64_Postfix(_N)			^ _zStr[_N-1]) * FNV64_Prime)
-	#define FNV64_HASH_CONSTRUCTOR(_N)	AWForceInline awHash64(const char (&_zStr)[_N+1]) :  muHash( AWRepeat(_N, FNV64_Prefix, AWEmpty1) FNV64_Seed AWRepeat(_N, AWEmpty1, FNV64_Postfix) ){}
+	#define FNV64_HASH_CONSTRUCTOR(_N)	AWForceInline zenHash64(const char (&_zStr)[_N+1]) :  muHash( AWRepeat(_N, FNV64_Prefix, AWEmpty1) FNV64_Seed AWRepeat(_N, AWEmpty1, FNV64_Postfix) ){}
 
 	//=================================================================================================	
 	//! @brief Structure used to trick compiler in using HashFNV32() for string pointer, 
@@ -28,15 +28,13 @@ namespace zen { namespace awtype
 	struct ConstCharWrapper
 	{ 
 		inline ConstCharWrapper(const char* _zStr) 
-		: mzStr(_zStr) 
-		{	
-		} 
+		: mzStr(_zStr){} 
 		const char* mzStr;
 	};		
 
 
 	//=================================================================================================
-	//! @brief		Transform a string to a awU32 value
+	//! @brief		Transform a string to a zenU32 value
 	//! @details	Use FNV-1a algorithm
 	//!				Any string under 64 character will be evaluated at compile time
 	//!				reducing runtime hashing cost to 0
@@ -48,37 +46,37 @@ namespace zen { namespace awtype
 	//!				More infos here : http://altdevblogaday.com/2011/10/27/quasi-compile-time-string-hashing/
 	//!				And here for hashing : http://isthe.com/chongo/tech/comp/fnv/
 	//=================================================================================================	
-	class awHash32
+	class zenHash32
 	{
 	public:		
 		//=================================================================================================	
 		// Append new value to hash
 		//=================================================================================================	
-		AWForceInline awHash32&		Append(const char* _zString);
-		AWForceInline awHash32&		Append(const wchar_t* _zString);
-		AWForceInline awHash32&		Append(const void* _pData, awUInt _uSize);
-		AWForceInline awHash32&		Append( awHash32 _hHashToAdd);
+		AWForceInline zenHash32&	Append(const char* _zString);
+		AWForceInline zenHash32&	Append(const wchar_t* _zString);
+		AWForceInline zenHash32&	Append(const void* _pData, zenUInt _uSize);
+		AWForceInline zenHash32&	Append( zenHash32 _hHashToAdd);
 
 		//=================================================================================================	
 		// Comparators and assignation
 		//=================================================================================================	
-		inline bool					operator==(const awHash32& _hCmpr);
-		inline bool					operator!=(const awHash32& _hCmpr);
-		inline awHash32&			operator=(const awHash32& _hCopy);
-		inline awHash32&			operator=(const awU32& _uCopy);
-		inline operator const		awU32&()const;
+		inline bool					operator==(const zenHash32& _hCmpr);
+		inline bool					operator!=(const zenHash32& _hCmpr);
+		inline zenHash32&			operator=(const zenHash32& _hCopy);
+		inline zenHash32&			operator=(const zenU32& _uCopy);
+		inline operator const		zenU32&()const;
 
 		//=================================================================================================	
 		// Constructors
 		//=================================================================================================	
-		AWForceInline				awHash32();
-		AWForceInline				awHash32(const awHash32& _hCopy);
-		AWForceInline				awHash32(const awU32& _uCopy);
-		AWForceInline				awHash32(const awS32& _iCopy);
-		AWForceInline				awHash32(ConstCharWrapper _zStr);
-		AWForceInline				awHash32(char* _zStr);
-		AWForceInline				awHash32(const wchar_t* _zStr);
-		AWForceInline				awHash32(const void* _pData, awUInt _uSize);
+		AWForceInline				zenHash32();
+		AWForceInline				zenHash32(const zenHash32& _hCopy);
+		AWForceInline				zenHash32(const zenU32& _uCopy);
+		AWForceInline				zenHash32(const zenS32& _iCopy);
+		AWForceInline				zenHash32(ConstCharWrapper _zStr);
+		AWForceInline				zenHash32(char* _zStr);
+		AWForceInline				zenHash32(const wchar_t* _zStr);
+		AWForceInline				zenHash32(const void* _pData, zenUInt _uSize);
 
 									FNV32_HASH_CONSTRUCTOR(1)	FNV32_HASH_CONSTRUCTOR(2)	FNV32_HASH_CONSTRUCTOR(3)	FNV32_HASH_CONSTRUCTOR(4)	
 		FNV32_HASH_CONSTRUCTOR(5)	FNV32_HASH_CONSTRUCTOR(6)	FNV32_HASH_CONSTRUCTOR(7)	FNV32_HASH_CONSTRUCTOR(8)	FNV32_HASH_CONSTRUCTOR(9)		
@@ -95,12 +93,12 @@ namespace zen { namespace awtype
 		FNV32_HASH_CONSTRUCTOR(60)	FNV32_HASH_CONSTRUCTOR(61)	FNV32_HASH_CONSTRUCTOR(62)	FNV32_HASH_CONSTRUCTOR(63)		
 
 	protected:
-		awU32 muHash;
+		zenU32 muHash;
 	};
 	
 
 	//=================================================================================================
-	//! @brief		Transform a string to a awU64 value
+	//! @brief		Transform a string to a zenU64 value
 	//! @details	Use FNV-1a algorithm
 	//!				Any string under 64 character will be evaluated at compile time
 	//!				reducing runtime hashing cost to 0
@@ -111,37 +109,37 @@ namespace zen { namespace awtype
 	//!
 	//!				More infos here : http://altdevblogaday.com/2011/10/27/quasi-compile-time-string-hashing/
 	//=================================================================================================	
-	class awHash64
+	class zenHash64
 	{
 	public:
 		//=================================================================================================	
 		// Append new value to hash
 		//=================================================================================================	
-		AWForceInline awHash64&		Append(const char* _zString);
-		AWForceInline awHash64&		Append(const wchar_t* _zString);
-		AWForceInline awHash64&		Append(const awU8* _pData, awUInt _uSize );
-		AWForceInline awHash64&		Append(awHash64 _hHashToAdd);
+		AWForceInline zenHash64&	Append(const char* _zString);
+		AWForceInline zenHash64&	Append(const wchar_t* _zString);
+		AWForceInline zenHash64&	Append(const zenU8* _pData, zenUInt _uSize );
+		AWForceInline zenHash64&	Append(zenHash64 _hHashToAdd);
 
 		//=================================================================================================	
 		// Comparators and assignation
 		//=================================================================================================	
-		inline bool					operator==(const awHash64& _hCmpr);
-		inline bool					operator!=(const awHash64& _hCmpr);
-		inline awHash64&			operator=(const awHash64& _hCopy);
-		inline awHash64&			operator=(const awU64& _uCopy);
-		inline						operator const awU64&()const;
+		inline bool					operator==(const zenHash64& _hCmpr);
+		inline bool					operator!=(const zenHash64& _hCmpr);
+		inline zenHash64&			operator=(const zenHash64& _hCopy);
+		inline zenHash64&			operator=(const zenU64& _uCopy);
+		inline						operator const zenU64&()const;
 
 		//=================================================================================================	
 		// Constructors
 		//=================================================================================================	
-		AWForceInline				awHash64();
-		AWForceInline				awHash64(const awHash64& _hCopy);
-		AWForceInline				awHash64(const awU64& _uCopy);
-		AWForceInline				awHash64(const awS64& _iCopy);
-		AWForceInline				awHash64(ConstCharWrapper _zStr);
-		AWForceInline				awHash64(char* _zStr);
-		AWForceInline				awHash64(wchar_t* _zStr);
-		AWForceInline				awHash64(const awU8* _pData, awUInt _uSize);
+		AWForceInline				zenHash64();
+		AWForceInline				zenHash64(const zenHash64& _hCopy);
+		AWForceInline				zenHash64(const zenU64& _uCopy);
+		AWForceInline				zenHash64(const zenS64& _iCopy);
+		AWForceInline				zenHash64(ConstCharWrapper _zStr);
+		AWForceInline				zenHash64(char* _zStr);
+		AWForceInline				zenHash64(wchar_t* _zStr);
+		AWForceInline				zenHash64(const zenU8* _pData, zenUInt _uSize);
 
 									FNV64_HASH_CONSTRUCTOR(1)	FNV64_HASH_CONSTRUCTOR(2)	FNV64_HASH_CONSTRUCTOR(3)	FNV64_HASH_CONSTRUCTOR(4)	
 		FNV64_HASH_CONSTRUCTOR(5)	FNV64_HASH_CONSTRUCTOR(6)	FNV64_HASH_CONSTRUCTOR(7)	FNV64_HASH_CONSTRUCTOR(8)	FNV64_HASH_CONSTRUCTOR(9)		
@@ -157,21 +155,21 @@ namespace zen { namespace awtype
 		FNV64_HASH_CONSTRUCTOR(55)	FNV64_HASH_CONSTRUCTOR(56)	FNV64_HASH_CONSTRUCTOR(57)	FNV64_HASH_CONSTRUCTOR(58)	FNV64_HASH_CONSTRUCTOR(59)
 		FNV64_HASH_CONSTRUCTOR(60)	FNV64_HASH_CONSTRUCTOR(61)	FNV64_HASH_CONSTRUCTOR(62)	FNV64_HASH_CONSTRUCTOR(63)		
 	protected:
-		awU64 muHash;
+		zenU64 muHash;
 	};
 
 	template<class THashType>
-	struct awStringHash
+	struct zenStringHash
 	{ 
-		inline awStringHash(const char* _zString);
+		inline zenStringHash(const char* _zString);
 		//! @todo: Remove this function
-		static awUInt Find( THashType _HashName, const awStringHash* _pFirst, awUInt _uCount );
+		static zenUInt Find( THashType _HashName, const zenStringHash* _pFirst, zenUInt _uCount );
 		const char* mzName; 
 		THashType	mhName; 
 	};
 
-	typedef awStringHash<awHash32> awStringHash32;
-	typedef awStringHash<awHash64> awStringHash64;	
+	typedef zenStringHash<zenHash32> zenStringHash32;
+	typedef zenStringHash<zenHash64> zenStringHash64;	
 
 }} //namespace zen, Type 
 

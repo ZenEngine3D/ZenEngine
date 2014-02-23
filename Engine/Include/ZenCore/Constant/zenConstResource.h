@@ -1,6 +1,6 @@
 #pragma once
-#ifndef __LibEngine_Api_Const_Resource_h__
-#define __LibEngine_Api_Const_Resource_h__
+#ifndef __zenCore_Const_Resource_h__
+#define __zenCore_Const_Resource_h__
 
 namespace zen { 
 	namespace awconst 
@@ -207,11 +207,11 @@ namespace zen {
 		};
 	}
 
-	namespace awtype
+	namespace zenType
 	{
-		typedef awFlag<awconst::eResType,awconst::keResType__Count, awU64>	awFlagResType;
-		typedef awFlag<awconst::eResType,awconst::keResPlatform__Count>		awFlagResPlatform;
-		typedef awFlag<awconst::eTextureCreate,awconst::keTexCreate__Count>	awFlagResTexCreate;
+		typedef zenFlag<awconst::eResType,awconst::keResType__Count, zenU64>	awFlagResType;
+		typedef zenFlag<awconst::eResType,awconst::keResPlatform__Count>		awFlagResPlatform;
+		typedef zenFlag<awconst::eTextureCreate,awconst::keTexCreate__Count>	awFlagResTexCreate;
 	}
 
 	namespace awconst

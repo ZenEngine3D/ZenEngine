@@ -49,7 +49,7 @@ namespace ERes
 		}
 
 		bool bValidInitData(false);
-		for(awUInt mipIdx(0); mipIdx<bufferDesc.MipLevels; ++mipIdx)
+		for(zenUInt mipIdx(0); mipIdx<bufferDesc.MipLevels; ++mipIdx)
 		{
 			AWAssert(mipIdx < AWArrayCount(aInitData));			
 			if( mInstanceInfo.mSerial.maMipData[mipIdx].maData.Count() > 0 )

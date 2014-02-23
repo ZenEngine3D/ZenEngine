@@ -1,25 +1,23 @@
 #pragma once
-#ifndef __LibCore_Api_Type_DebugString_h__
-#define __LibCore_Api_Type_DebugString_h__
+#ifndef __zenBase_Type_DebugString_h__
+#define __zenBase_Type_DebugString_h__
 
-namespace zen { namespace awtype {
+namespace zen { namespace zenType {
 
 //=================================================================================================
 //! @brief		Used to store string in Debug version only
 //! @details	Stripped in release version
 //=================================================================================================
-class awDebugString
+class zenDebugString
 {
 public:
-	inline			awDebugString();
-	inline			awDebugString(const char* _zString);
+	inline			zenDebugString();
+	inline			zenDebugString(const char* _zString);
 	inline			operator const char*();
-	inline void		operator=(const awDebugString& _Copy);
+	inline void		operator=(const zenDebugString& _Copy);
 
 protected:	
-#if AW_DEBUGINFOON
-	const char*		mzDebugString;
-#endif
+	AWDbgCode(const char* mzDebugString;)
 };
   
 
