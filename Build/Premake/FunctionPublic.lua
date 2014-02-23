@@ -25,7 +25,7 @@ function Orion_AddToolLib(aLibName, aPrjGroup, aPathList, aPchFile)
 	group					( aPrjGroup )
 	project					( aLibName )
 	removeplatforms 		( vPlatformGame )
-	kind 					( "StaticLib" )	
+	kind 					( "StaticLib" )
 	Orion_AddProjectCommon	( aLibName, aPathList, aPchFile )
 end
 
@@ -38,8 +38,8 @@ end
 -- ============================================================================
 function Orion_AddGameAndToolLib(aLibName, aPrjGroup, aPathList, aPchFile)	
 	group					( aPrjGroup )
-	project					( aLibName )	
-	kind 					( "StaticLib" )	
+	project					( aLibName )
+	kind 					( "StaticLib" )
 	Orion_AddProjectCommon	( aLibName, aPathList, aPchFile )
 end
 
@@ -53,7 +53,7 @@ end
 -- ============================================================================
 function Orion_AddGameExe(aExeName, aPrjGroup, aPathList, aPchFile, aLibs)
 	group					( aPrjGroup )
-	project					( aExeName )	
+	project					( aExeName )
 	removeplatforms 		( vPlatformTool )
 	kind 					( "ConsoleApp" )
 	links					( {vLibEngineGame, bLibEngineGameRender, aLibs} )
