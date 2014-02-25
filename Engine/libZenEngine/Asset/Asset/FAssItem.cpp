@@ -49,8 +49,8 @@ AssetItem* AssetItem::CreateItem( enumType _eAssetType, Package& _Owner )
 	AssetItem* pNewItem(NULL);
 	switch( _eAssetType )
 	{
-	case keType_Texture2D:	pNewItem = AWNewDefault FAss::GfxTexture2D();	break;
-	case keType_Mesh:		pNewItem = AWNewDefault FAss::GfxMesh();		break;
+	case keType_Texture2D:	pNewItem = zenNewDefault FAss::GfxTexture2D();	break;
+	case keType_Mesh:		pNewItem = zenNewDefault FAss::GfxMesh();		break;
 	default:				AWAssertMsg(0, "Unsupported Asset Type");
 	}
 
@@ -114,7 +114,7 @@ void AssetItem::FreePropertyValues()
 {
 	for(zenUInt valIdx(0), valCount(maPropertyValue.Count()); valIdx<valCount; ++valIdx)
 	{
-		AWDel(maPropertyValue[valIdx].GetBase());
+		zenDel(maPropertyValue[valIdx].GetBase());
 	}
 	maPropertyValue.SetCount(0);
 }

@@ -42,7 +42,7 @@ void awEngineInstance::Update()
 void awEngineInstance::CreateGfxWindow(const zenVec2U16& _vDim, const zenVec2U16& _vPos)
 {
 	AWAssert(gpActiveEngine);
-	gpMainWindow	= AWNewDefault FWnd::Window(L"MainWindow", _vDim);
+	gpMainWindow	= zenNewDefault FWnd::Window(L"MainWindow", _vDim);
 	gpMainWindow->Initialize();
 	mrMainGfxWindow = awres::awGfxWindow::Create( gpMainWindow->GetHandle() );
 }

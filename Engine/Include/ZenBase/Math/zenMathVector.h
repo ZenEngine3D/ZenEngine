@@ -1,6 +1,6 @@
 #pragma once
-#ifndef __LibCore_Api_Math_Vector4_h__
-#define __LibCore_Api_Math_Vector4_h__
+#ifndef __LibZenBase_Api_Math_Vector4_h__
+#define __LibZenBase_Api_Math_Vector4_h__
 
 #include <xmmintrin.h>
 

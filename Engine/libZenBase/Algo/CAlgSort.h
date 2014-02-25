@@ -1,6 +1,6 @@
 #pragma once
-#ifndef __LibCore_Algo_Sort_h__
-#define __LibCore_Algo_Sort_h__
+#ifndef __LibZenBase_Algo_Sort_h__
+#define __LibZenBase_Algo_Sort_h__
 
 namespace CAlg
 {

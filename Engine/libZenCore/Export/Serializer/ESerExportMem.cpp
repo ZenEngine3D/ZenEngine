@@ -4,9 +4,8 @@
 namespace EExp
 {		
 
-SerializerExportMem::SerializerExportMem(zenUInt auAllocSize, CMem::Allocator* apAllocator)
-:	mpAllocator(apAllocator)
-,	muAllocSize(auAllocSize)
+SerializerExportMem::SerializerExportMem(zenUInt auAllocSize)
+: muAllocSize(auAllocSize)
 {
 }
 
@@ -15,7 +14,7 @@ SerializerExportMem::~SerializerExportMem()
 	while( !mlstAllocs.IsEmpty() )
 	{
 		void* pAdr = mlstAllocs.PopHead();
-		AWDelNullArray(pAdr);
+		zenDelNullArray(pAdr);
 	}
 }
 
@@ -28,7 +27,7 @@ bool SerializerExportMem::ItemStarted(EExp::SerialItem& aItem)
 		{
 			Alloc* pAlloc;
 			zenU32	uAllocSize		= zenMath::Max(muAllocSize, aItem.muSize);
-			pAlloc					= (Alloc*) AWNew(mpAllocator) zenU8[ uAllocSize + sizeof(Alloc)] ;
+			pAlloc					= (Alloc*) zenNewDefault zenU8[ uAllocSize + sizeof(Alloc)] ;
 			pAlloc->pMemoryStart	= (zenU8*)pAlloc + sizeof(Alloc);
 			pAlloc->pMemoryCur		= pAlloc->pMemoryStart;
 			pAlloc->pMemoryEnd		= pAlloc->pMemoryStart + uAllocSize;

@@ -8,7 +8,7 @@ namespace zen { namespace zenMem
 	void* Set	(void* _pDestination, int _pValue, size_t _uSize);
 }} // namespace zen { namespace zenMem
 
-#define memcpy zenMem::Copy	// Making sure program uses our version of memcpy
-#define memset zenMem::Set	// Making sure program uses our version of memset
+//#define memcpy // Making sure program uses our version of memcpy
+//#define memset // Making sure program uses our version of memset
 
 #endif

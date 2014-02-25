@@ -94,8 +94,8 @@ void ManagerState_DX11::PipelineUpdate()
 		ID3D11DepthStencilView* pDepthView(NULL);
 		D3D11_VIEWPORT vp;
 		
-		memset(apColorViews, 0, sizeof(apColorViews));
-		memset(&vp, 0, sizeof(vp));		
+		zenMem::Set(apColorViews, 0, sizeof(apColorViews));
+		zenMem::Set(&vp, 0, sizeof(vp));		
 		if( mrView.IsValid() )
 		{
 			// Setup rendertarget
@@ -127,7 +127,7 @@ void ManagerState_DX11::PipelineUpdate()
 	/*if( muUpdateBlend )
 	{
 		D3D11_BLEND_DESC BlendState;
-		memset(&BlendState, 0, sizeof(D3D11_BLEND_DESC));
+		zenMem::Set(&BlendState, 0, sizeof(D3D11_BLEND_DESC));
 		for(int i=0; i<kuMaxRenderTarget; ++i)
 		{
 			ConfigBlend& Config								= mConfigBlend[i];
@@ -159,7 +159,7 @@ void ManagerState_DX11::PipelineUpdate()
 	if( mbUpdatedDepthStencil )
 	{
 		D3D11_DEPTH_STENCIL_DESC DepthStencil;
-		memset(&DepthStencil, 0, sizeof(D3D11_DEPTH_STENCIL_DESC));
+		zenMem::Set(&DepthStencil, 0, sizeof(D3D11_DEPTH_STENCIL_DESC));
 		// Depth test parameters
 		DepthStencil.DepthEnable	= mConfigDepthStencil.meDepthTest != ConfigDepthStencil::keDepth_Always;
 		DepthStencil.DepthWriteMask	= mConfigDepthStencil.mbDepthWrite ? D3D11_DEPTH_WRITE_MASK_ALL : D3D11_DEPTH_WRITE_MASK_ZERO;

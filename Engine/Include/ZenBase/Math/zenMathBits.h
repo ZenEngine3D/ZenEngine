@@ -1,6 +1,6 @@
 #pragma once
-#ifndef __LibCore_Api_Math_Bits_h__
-#define __LibCore_Api_Math_Bits_h__
+#ifndef __LibZenBase_Api_Math_Bits_h__
+#define __LibZenBase_Api_Math_Bits_h__
 
 namespace zen { namespace zenMath 
 {

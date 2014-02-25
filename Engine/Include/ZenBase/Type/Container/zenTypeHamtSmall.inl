@@ -178,12 +178,12 @@ zenHamt< TKey, TValue, TIndex, TIndexBits>::zenHamt()
 //! @param		_pAllocator		- Which allocator to use for memory allocations
 //==================================================================================================
 template<class TKey, class TValue, class TIndex, int TIndexBits>
-zenHamt< TKey, TValue, TIndex, TIndexBits>::zenHamt( zenUInt _uReservePool, CMem::Allocator* _pAllocator=NULL )
+zenHamt< TKey, TValue, TIndex, TIndexBits>::zenHamt( zenUInt _uReservePool )
 : mpRootNode(NULL)
 , muCount(0)
 {
 	AWStaticAssertMsg( sizeof(TIndex)*8 >= kuSlotCount,"Size of Index not big enough to contain '1<<TIndexBits' Index, check template definition" ); 
-	Init(_uReservePool, _pAllocator);
+	Init(_uReservePool);
 }
 
 //==================================================================================================
@@ -195,7 +195,7 @@ zenHamt< TKey, TValue, TIndex, TIndexBits>::~zenHamt()
 	if( mpRootNode )
 	{
 		Clear();
-		AWDelNull(mpRootNode);
+		zenDelNull(mpRootNode);
 	}			
 }
 
@@ -230,17 +230,17 @@ void zenHamt< TKey, TValue, TIndex, TIndexBits>::Clear()
 //! @param		_pAllocator		- Memory source used to initialize each Pool Allocator
 //==================================================================================================
 template<class TKey, class TValue, class TIndex, int TIndexBits>
-void zenHamt< TKey, TValue, TIndex, TIndexBits>::Init( zenUInt _uReservePool, CMem::Allocator* _pAllocator=NULL )
+void zenHamt< TKey, TValue, TIndex, TIndexBits>::Init( zenUInt _uReservePool )
 {	
 	AWAssertMsg(!IsInit(),"zenHamt already initialized");			
 	zenS32 iPoolItemLeft(static_cast<zenS32>(_uReservePool)-1);
 	zenS32 iPoolItemMin	= zenMath::Max<zenS32>((iPoolItemLeft / 3) / kuSlotCount, 1);	//< @Note: A 1/3 of PoolItemCount get split evenly between each Pool. Remaining assigned with 1/2 less every time. Need metric to adjust for optimal value
 	iPoolItemLeft		= zenMath::Max<zenS32>(iPoolItemLeft-iPoolItemMin*kuSlotCount, 0);
-	mPools[0].Init("HamtSmallPool", sizeof(Node), 1, 1, _pAllocator );
+	mPools[0].Init("HamtSmallPool", sizeof(Node), 1, 1 );
 	for(zenUInt uPoolIndex=1; uPoolIndex<=kuSlotCount; ++uPoolIndex)
 	{
 		iPoolItemLeft = iPoolItemLeft / 2;
-		mPools[uPoolIndex].Init("HamtSmallPool", sizeof(Node) + sizeof(Node::Slot)*uPoolIndex, iPoolItemLeft+iPoolItemMin, iPoolItemMin, _pAllocator );
+		mPools[uPoolIndex].Init("HamtSmallPool", sizeof(Node) + sizeof(Node::Slot)*uPoolIndex, iPoolItemLeft+iPoolItemMin, iPoolItemMin );
 	}
 	mpRootNode = CreateEmptyNode(0);
 }
@@ -443,7 +443,7 @@ bool zenHamt< TKey, TValue, TIndex, TIndexBits>::Unset(const TKey _Key)
 		// No slot left in child node, after we remove the entry, update parent to refer to it
 		if( uNewSlotCount == 0 && uDepth>0 )
 		{
-			AWDelNull(pNode);
+			zenDelNull(pNode);
 			pNode = *ppNodeTree[--uDepth];
 		}
 		// Child node with 1 less slot, 
@@ -459,7 +459,7 @@ bool zenHamt< TKey, TValue, TIndex, TIndexBits>::Unset(const TKey _Key)
 				pNewNode->mSlotLeaf		|= TIndex(pNode->IsLeafSlot(uOldSlotID)) << i;
 			}
 			*ppNodeTree[uDepth] = pNewNode;
-			AWDelNull(pNode);
+			zenDelNull(pNode);
 			pNode = NULL; //Parent doesn't need updating
 		}
 	}
@@ -529,8 +529,8 @@ void zenHamt< TKey, TValue, TIndex, TIndexBits>::DebugPrint(const TKey _First, T
 #define	kuSpacePerLevel	14
 	char		zSpaces[kuTreeMaxDepth*kuSpacePerLevel+1];
 	zenS8			iSlotIDPrev[ kuTreeMaxDepth ];
-	memset(zSpaces, ' ', sizeof(zSpaces));
-	memset(iSlotIDPrev, -1, sizeof(iSlotIDPrev) );
+	zenMem::Set(zSpaces, ' ', sizeof(zSpaces));
+	zenMem::Set(iSlotIDPrev, -1, sizeof(iSlotIDPrev) );
 	Iterator it;
 	for(GetFirst(it); it.IsValid() && it.GetKey() <= _Last;++it)
 	{
@@ -579,7 +579,7 @@ const zenHamt< TKey, TValue, TIndex, TIndexBits>& zenHamt< TKey, TValue, TIndex,
 	{
 		// Clear previous content
 		Clear();
-		AWDelNull(mpRootNode);
+		zenDelNull(mpRootNode);
 		// Size pools to have just enough space for all allocated items per pool
 		for(zenUInt poolIdx=0; poolIdx<kuPoolCount; ++poolIdx)
 			mPools[poolIdx].MemoryIncrease( _Copy.mPools[poolIdx].GetTotalAllocCount() );
@@ -696,13 +696,11 @@ zenUInt zenHamt< TKey, TValue, TIndex, TIndexBits>::GetNodeIndex( const TKey _uK
 template<class TKey, class TValue, class TIndex, int TIndexBits>
 typename zenHamt<TKey, TValue, TIndex, TIndexBits>::Node* zenHamt< TKey, TValue, TIndex, TIndexBits>::CreateEmptyNode(zenU32 _uSlotCount)
 {
-	Node* pNewNode			= AWNew(&mPools[_uSlotCount])Node;
+	Node* pNewNode			= zenNew(&mPools[_uSlotCount])Node;
 	pNewNode->mIndexUsed	= 0;
 	pNewNode->mSlotLeaf		= 0;
 	pNewNode->mpSlots		= (Node::Slot*)(((zenPointer)pNewNode)+sizeof(Node));				
-
-	//temp
-	memset(pNewNode->mpSlots, 0, _uSlotCount*sizeof(Node::Slot));
+	zenMem::Set(pNewNode->mpSlots, 0, _uSlotCount*sizeof(Node::Slot));
 	return pNewNode;
 }
 
@@ -778,7 +776,7 @@ void zenHamt< TKey, TValue, TIndex, TIndexBits>::ClearNode( Node* _pNode )
 		if( !_pNode->IsLeafSlot(slot) )
 			ClearNode( _pNode->mpSlots[slot].pChildNode );
 
-	AWDelNull( _pNode );
+	zenDelNull( _pNode );
 }
 
 //==================================================================================================
@@ -812,7 +810,7 @@ TValue* zenHamt< TKey, TValue, TIndex, TIndexBits>::SetSlotValue(TKey _Key, cons
 			pNewNode->mpSlots[uNewSlotID]	= pNode->mpSlots[i];
 			pNewNode->mSlotLeaf				|= TIndex(pNode->IsLeafSlot(i)) << uNewSlotID;
 		}
-		AWDelNull(pNode);
+		zenDelNull(pNode);
 		*_ppParentNode	= pNewNode;				
 	}
 	//------------------------------------------------------------------

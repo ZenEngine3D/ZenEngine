@@ -9,7 +9,7 @@
 public:																																\
 	inline const _ClassInstance_&	Get()const									{	return mInstanceInfo;};							\
 	inline _ClassInstance_&	Get()												{	return mInstanceInfo;};							\
-	static _Class_*					Create(EExp::ExportInfoBase& _ExportInfo)	{	_Class_* pNewRes = AWNewDefault _Class_();		\
+	static _Class_*					Create(EExp::ExportInfoBase& _ExportInfo)	{	_Class_* pNewRes = zenNewDefault _Class_();		\
 																					return pNewRes->ResourceCreate(pNewRes->mInstanceInfo, _ExportInfo) ? pNewRes : NULL; }\
 	static awconst::eResType		GetResourceType()							{	return _ResourceType_; }						\
 protected:																															\

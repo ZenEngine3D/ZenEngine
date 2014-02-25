@@ -91,11 +91,11 @@ void ManagerAsset::PackageLoad(const zenString& _zDir)
 	CMgr::File.Search( CFil::keFileFlag_File, L"Packages", L"*.xml",  true);
 	while( CMgr::File.SearchNext(pFileInfo) )
 	{
-		Package* pNewPackage = AWNewDefault Package;
+		Package* pNewPackage = zenNewDefault Package;
 		if( pNewPackage->Load(pFileInfo->GetFilename(), mdAsset) )	
 			PackageAdd(pNewPackage);
 		else
-			AWDelNull(pNewPackage);
+			zenDelNull(pNewPackage);
 	}
 }
 

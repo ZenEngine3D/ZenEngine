@@ -1,6 +1,6 @@
 #pragma once
-#ifndef __LibCore_Api_h__
-#define __LibCore_Api_h__
+#ifndef __LibZenBase_Api_h__
+#define __LibZenBase_Api_h__
 
 namespace zen{ namespace zenType{} };
 using namespace zen;

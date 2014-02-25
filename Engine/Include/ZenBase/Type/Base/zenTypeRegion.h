@@ -1,6 +1,6 @@
 #pragma once
-#ifndef __LibCore_CMathRegion_h__
-#define __LibCore_CMathRegion_h__
+#ifndef __LibZenBase_CMathRegion_h__
+#define __LibZenBase_CMathRegion_h__
 
 namespace zen { namespace zenType {
 
@@ -50,4 +50,4 @@ typedef zenRegion<zenF64>	awRegionF64;	AWAddSupportsMemCopy(awRegionF64);
 #include "zenTypeRegion.inl"
 
 
-#endif //__LibCore_CMathRegion_h__
+#endif //__LibZenBase_CMathRegion_h__

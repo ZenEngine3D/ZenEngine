@@ -4,7 +4,7 @@
 
 //=================================================================================================
 //! @file		FrameworkAssetAll.h
-//! @brief		Header file to include all sub-header files of Asset library
+//! @brief		AllocHeader file to include all sub-header files of Asset library
 //! @details	Included by platforms that can load offline asset for edition and export
 //-------------------------------------------------------------------------------------------------
 //!	@addtogroup LibAsset

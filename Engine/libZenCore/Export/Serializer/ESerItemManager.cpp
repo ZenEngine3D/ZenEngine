@@ -47,7 +47,7 @@ void ManagerSerialItem::SetItem(EExp::SerialItem* _pItem)
 	{
 		// Item already existed, need to delete it
 		//! @todo Actually take into account resource still using this item, this will crash if not taken care of
-		AWDelNull(pOldSerialItem);
+		zenDelNull(pOldSerialItem);
 	}
 } 
 

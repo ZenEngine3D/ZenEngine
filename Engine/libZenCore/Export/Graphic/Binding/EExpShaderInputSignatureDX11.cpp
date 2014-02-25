@@ -62,7 +62,7 @@ bool SerialGfxInputSignature_DX11::ExportStart()
 	EExp::SerialShader_DX11* pShaderParent	= EMgr::SerialItems.GetItem<EExp::SerialShader_DX11>( pExportInfo->mParentShaderID);
 	if( pShaderParent )
 	{
-		ExportInfoExt* pExportInfoExt		= AWNewDefault ExportInfoExt;
+		ExportInfoExt* pExportInfoExt		= zenNewDefault ExportInfoExt;
 		pExportInfoExt->maCompiledShader	= pShaderParent->mSerialCommon.maCompiledShader;
 		pExportInfo->mpExportInfoExt		= pExportInfoExt;		
 		return true;

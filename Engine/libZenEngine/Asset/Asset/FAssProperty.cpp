@@ -4,7 +4,7 @@
 namespace FAss
 {
 
-#define AWAssetTypeExpand(_TypeName_) CMem::PoolAllocator PropertyDef##_TypeName_##::sPoolAlloc( "PropertyDef"AWString(_TypeName_)"Pool", sizeof(PropertyDef##_TypeName_##::Value), 100, 100);
+#define AWAssetTypeExpand(_TypeName_) zbMem::PoolAllocator PropertyDef##_TypeName_##::sPoolAlloc( "PropertyDef"AWString(_TypeName_)"Pool", sizeof(PropertyDef##_TypeName_##::Value), 100, 100);
 AWAssetTypes
 #undef	AWAssetTypeExpand
 

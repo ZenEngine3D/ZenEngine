@@ -20,7 +20,7 @@ bool ManagerRender::Load()
 	//-------------------------------------------------------------------------
 	// Configure Texture Format mapping
 	//-------------------------------------------------------------------------
-	memset(meFormatConversion, DXGI_FORMAT_UNKNOWN, sizeof(meFormatConversion) );	
+	zenMem::Set(meFormatConversion, DXGI_FORMAT_UNKNOWN, sizeof(meFormatConversion) );	
 	meFormatConversion[awconst::keTexFormat_R8]			= DXGI_FORMAT_R8_UNORM;	
 	meFormatConversion[awconst::keTexFormat_RGB8]		= DXGI_FORMAT_UNKNOWN;
 	meFormatConversion[awconst::keTexFormat_RGBA8]		= DXGI_FORMAT_R8G8B8A8_UNORM;
@@ -63,7 +63,7 @@ bool ManagerRender::Load()
 	if( FAILED( hr ) )
 		return FALSE;
 	
-	memset(muPerStageTextureCount, 0, sizeof(muPerStageTextureCount));
+	zenMem::Set(muPerStageTextureCount, 0, sizeof(muPerStageTextureCount));
 	return TRUE;
 }
 
@@ -178,7 +178,7 @@ void ManagerRender::Render(ERes::GfxMeshStripRef _rMeshStrip)
 void ManagerRender::UnbindTextures()
 {
 	ID3D11ShaderResourceView* StageTextureViews[EExp::kuDX11_TexturePerStageMax];
-	memset(StageTextureViews, 0, sizeof(StageTextureViews) );
+	zenMem::Set(StageTextureViews, 0, sizeof(StageTextureViews) );
 
 	for(zenUInt stageIdx(0); stageIdx<EExp::keShaderStage__Count; ++stageIdx)
 		for(zenUInt texIdx(0); texIdx<EExp::kuDX11_TexturePerStageMax; ++texIdx)
@@ -189,7 +189,7 @@ void ManagerRender::UnbindTextures()
 	if( muPerStageTextureCount[EExp::keShaderStage_Pixel] )
 		DX11GetDeviceContext()->PSSetShaderResources( 0, muPerStageTextureCount[EExp::keShaderStage_Pixel], StageTextureViews );
 
-	memset(muPerStageTextureCount, 0, sizeof(muPerStageTextureCount) );
+	zenMem::Set(muPerStageTextureCount, 0, sizeof(muPerStageTextureCount) );
 }
 
 }

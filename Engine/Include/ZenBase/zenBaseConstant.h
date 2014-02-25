@@ -1,6 +1,6 @@
 #pragma once
-#ifndef __LibCore_Api_Constant_h__
-#define __LibCore_Api_Constant_h__
+#ifndef __LibZenBase_Api_Constant_h__
+#define __LibZenBase_Api_Constant_h__
 
 #include "Constant/zenConstBuildDefines.h"
 #include "Constant/zenConstMacro.h"

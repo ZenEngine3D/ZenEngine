@@ -1,6 +1,6 @@
 #pragma once
-#ifndef __LibCore_Api_Math_Matrix_h__
-#define __LibCore_Api_Math_Matrix_h__
+#ifndef __LibZenBase_Api_Math_Matrix_h__
+#define __LibZenBase_Api_Math_Matrix_h__
 
 namespace zen { namespace zenMath 
 {

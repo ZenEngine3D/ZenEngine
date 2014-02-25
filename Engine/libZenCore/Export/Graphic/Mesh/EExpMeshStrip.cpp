@@ -16,8 +16,8 @@ namespace EExp
 	//=================================================================================================
 	zenResID CreateGfxMeshStrip(zenResID _VertexBufferID, zenResID _IndexBufferID, zenResID _ShaderBindingID, zenU32 _uIndexFirst, zenU32 _uIndexCount, const zenArrayBase<zenResID>& _aShaderParamID, const zenArrayBase<awres::awShaderTexture>& _aTexture)
 	{
-		static CMem::PoolAllocator sMemPool("Pool CreateMeshStrip", sizeof(SerialMeshStrip_Base::ExportInfo), 1, 5 );
-		SerialMeshStrip_Base::ExportInfo* pExportInfo	= AWNew(&sMemPool) SerialMeshStrip_Base::ExportInfo;
+		static zbMem::PoolAllocator sMemPool("Pool CreateMeshStrip", sizeof(SerialMeshStrip_Base::ExportInfo), 1, 5 );
+		SerialMeshStrip_Base::ExportInfo* pExportInfo	= zenNew(&sMemPool) SerialMeshStrip_Base::ExportInfo;
 		pExportInfo->mVertexBufferID					= _VertexBufferID;	
 		pExportInfo->mIndexBufferID						= _IndexBufferID;
 		pExportInfo->mShaderBindingID					= _ShaderBindingID;

@@ -1,6 +1,6 @@
 #pragma once
-#ifndef __LibCore_Task_Task_h__
-#define __LibCore_Task_Task_h__
+#ifndef __LibZenBase_Task_Task_h__
+#define __LibZenBase_Task_Task_h__
 
 namespace CJob
 {

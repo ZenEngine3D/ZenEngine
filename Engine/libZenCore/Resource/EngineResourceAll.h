@@ -4,7 +4,7 @@
 
 //=================================================================================================
 //! @file		EngineResourceAll.h
-//! @brief		Header file to include all sub-header files of Resource library
+//! @brief		AllocHeader file to include all sub-header files of Resource library
 //! @details	Contains information on packaged data exported by LibExport and
 //!				loaded by currently active platform
 //-------------------------------------------------------------------------------------------------

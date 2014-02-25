@@ -34,8 +34,8 @@ namespace EExp
 	//=================================================================================================
 	zenResID CreateGfxWindow( HWND _WindowHandle )
 	{
-		static CMem::PoolAllocator sMemPool("Pool Views", sizeof(SerialGfxWindow_DX11::ExportInfo), 1, 5 );
-		SerialGfxWindow_DX11::ExportInfo* pExportInfo	= AWNew(&sMemPool) SerialGfxWindow_DX11::ExportInfo;
+		static zbMem::PoolAllocator sMemPool("Pool Views", sizeof(SerialGfxWindow_DX11::ExportInfo), 1, 5 );
+		SerialGfxWindow_DX11::ExportInfo* pExportInfo	= zenNew(&sMemPool) SerialGfxWindow_DX11::ExportInfo;
 		pExportInfo->mhWindow							= _WindowHandle;
 		return EMgr::Export.CreateItem( zenResID::kePlatformType_GFX, awconst::keResType_GfxWindow, pExportInfo );
 	}

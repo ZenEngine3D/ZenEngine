@@ -37,7 +37,7 @@ zenResID CreateExportItemRuntime(EExp::ExportInfoBase* _pExportInfo)
 	case awconst::keResType_GfxDepthStencil:			rResource = GfxDepthStencil::Create(*_pExportInfo);				break;
 	case awconst::keResType_GfxRasterizer:				rResource = GfxRasterizer::Create(*_pExportInfo);				break;
 	}
-	AWDelNull(_pExportInfo);
+	zenDelNull(_pExportInfo);
 	return rResource.GetResID();
 }
 

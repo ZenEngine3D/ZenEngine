@@ -14,8 +14,8 @@ namespace EExp
 zenResID CreateGfxShaderParam(zenResID _ParentParamDefID, const zenArrayBase<const EExp::ParameterBase*>& _aParamValues)
 {
 	AWAssert( _ParentParamDefID.Type() == awconst::keResType_GfxShaderParamDef );	
-	static CMem::PoolAllocator sMemPool("Pool CreateShaderParam", sizeof(SerialShaderParam_Base::ExportInfo), 1, 5 );
-	SerialShaderParam_Base::ExportInfo*	pExportInfo = AWNew(&sMemPool) SerialShaderParam_Base::ExportInfo;
+	static zbMem::PoolAllocator sMemPool("Pool CreateShaderParam", sizeof(SerialShaderParam_Base::ExportInfo), 1, 5 );
+	SerialShaderParam_Base::ExportInfo*	pExportInfo = zenNew(&sMemPool) SerialShaderParam_Base::ExportInfo;
 	pExportInfo->maParamValues						= _aParamValues;
 	pExportInfo->mParentParamDefID					= _ParentParamDefID;
 	return EMgr::Export.CreateItem( zenResID::kePlatformType_GFX, awconst::keResType_GfxShaderParam, pExportInfo );

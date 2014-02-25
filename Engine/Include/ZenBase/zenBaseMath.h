@@ -1,6 +1,6 @@
 #pragma once
-#ifndef __LibCore_Api_Math_h__
-#define __LibCore_Api_Math_h__ 
+#ifndef __LibZenBase_Api_Math_h__
+#define __LibZenBase_Api_Math_h__ 
 
 #include "Math/zenMathBase.h"
 #include "Math/zenMathVector.h"

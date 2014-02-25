@@ -1,25 +1,25 @@
 namespace zen { namespace zenType {
 
 template<class TType>
-zenArrayStatic<TType>::zenArrayStatic(CMem::Allocator* _pAllocator=NULL)
-: zenArrayBase(_pAllocator)
+zenArrayStatic<TType>::zenArrayStatic()
+: zenArrayBase()
 {
 }
 
 template<class TType>
-zenArrayStatic<TType>::zenArrayStatic(zenUInt _uCount, CMem::Allocator* _pAllocator=NULL)
-: zenArrayBase(_pAllocator)
+zenArrayStatic<TType>::zenArrayStatic(zenUInt _uCount)
+: zenArrayBase()
 {
 	muCount	= _uCount;
-	mpData	= AWNew(mpAllocator) TType[muCount];			
+	mpData	= zenNewDefault TType[muCount];			
 }
 
 template<class TType>
-zenArrayStatic<TType>::zenArrayStatic(const TType* _pCopy, zenUInt _uCount, zenUInt _uExtraCount=0, CMem::Allocator* _pAllocator=NULL)
-: zenArrayBase(_pAllocator)
+zenArrayStatic<TType>::zenArrayStatic(const TType* _pCopy, zenUInt _uCount, zenUInt _uExtraCount=0)
+: zenArrayBase()
 {		
 	muCount			= _uCount+_uExtraCount;
-	mpData			= AWNew(mpAllocator) TType[muCount];			
+	mpData			= zenNewDefault TType[muCount];			
 	if( AWSupportsMemCopy<TType>::value )	
 	{
 		memcpy(mpData, _pCopy, sizeof(TType)*_uCount);
@@ -37,8 +37,7 @@ template<class TType>
 zenArrayStatic<TType>::zenArrayStatic(const zenArrayStatic& _Copy, zenUInt _uExtraCount=0)
 {					
 	muCount					= _Copy.Count()+_uExtraCount;
-	mpAllocator				= _Copy.mpAllocator;
-	mpData					= AWNew(mpAllocator) TType[muCount];		
+	mpData					= zenNew(mpAllocator) TType[muCount];		
 	const TType* pItemSrc	= _Copy.First();
 	if( AWSupportsMemCopy<TType>::value )
 	{
@@ -56,14 +55,14 @@ zenArrayStatic<TType>::zenArrayStatic(const zenArrayStatic& _Copy, zenUInt _uExt
 template<class TType>
 zenArrayStatic<TType>::~zenArrayStatic()
 {
-	AWDelNullArray(mpData);
+	zenDelNullArray(mpData);
 }
 		
 template<class TType>
 zenUInt zenArrayStatic<TType>::SetCount(zenUInt _uCount)
 {
-	AWDelNullArray(mpData);			
-	if( _uCount )	mpData = AWNew(mpAllocator) TType[_uCount];			
+	zenDelNullArray(mpData);			
+	if( _uCount )	mpData = zenNewDefault TType[_uCount];			
 	else			mpData = NULL;
 	muCount	= _uCount;
 	return muCount;
@@ -72,8 +71,8 @@ zenUInt zenArrayStatic<TType>::SetCount(zenUInt _uCount)
 template<class TType>	
 zenUInt zenArrayStatic<TType>::SetCountNoConstructor(zenUInt _uCount)
 {
-	AWDelNullArray(mpData);			
-	if( _uCount )	mpData	= (TType*) AWNew(mpAllocator) zenU8[sizeof(TType)*_uCount];
+	zenDelNullArray(mpData);			
+	if( _uCount )	mpData	= (TType*) zenNewDefault zenU8[sizeof(TType)*_uCount];
 	else			mpData	= NULL;
 	muCount	= _uCount;
 	return muCount;

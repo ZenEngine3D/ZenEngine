@@ -13,8 +13,8 @@ namespace EExp
 //=================================================================================================
 zenResID CreateGfxVertex(const zenArrayBase<awres::awGfxVertex::Stream>& _aStreams, zenU32 _uCreationFlags)
 {	
-	static CMem::PoolAllocator sMemPool("Pool CreateVertexBuffer", sizeof(SerialVertex_Base::ExportInfo), 1, 5 );
-	SerialVertex_Base::ExportInfo* pExportInfo	= AWNew(&sMemPool) SerialVertex_Base::ExportInfo;
+	static zbMem::PoolAllocator sMemPool("Pool CreateVertexBuffer", sizeof(SerialVertex_Base::ExportInfo), 1, 5 );
+	SerialVertex_Base::ExportInfo* pExportInfo	= zenNew(&sMemPool) SerialVertex_Base::ExportInfo;
 	pExportInfo->maStreams						= _aStreams;
 	pExportInfo->muCreationFlags				= _uCreationFlags;
 	return EMgr::Export.CreateItem( zenResID::kePlatformType_GFX, awconst::keResType_GfxVertex, pExportInfo );
