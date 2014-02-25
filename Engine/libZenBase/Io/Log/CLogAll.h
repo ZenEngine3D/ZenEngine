@@ -1,6 +1,6 @@
 #pragma once
-#ifndef __LibCore_Log_All_h__
-#define __LibCore_Log_All_h__ 
+#ifndef __LibZenBase_Log_All_h__
+#define __LibZenBase_Log_All_h__ 
 
 //=================================================================================================
 //! @file		CLogAll.h

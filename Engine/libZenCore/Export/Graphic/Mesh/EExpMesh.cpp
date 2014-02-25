@@ -24,8 +24,8 @@ namespace EExp
 	//=================================================================================================
 	zenResID CreateGfxMesh(const zenArrayBase<zenResID>& _aMeshStripID)
 	{
-		static CMem::PoolAllocator sMemPool("Pool CreateMesh", sizeof(SerialMesh_Base::ExportInfo), 1, 5 );
-		SerialMesh_Base::ExportInfo* pExportInfo	= AWNew(&sMemPool) SerialMesh_Base::ExportInfo;
+		static zbMem::PoolAllocator sMemPool("Pool CreateMesh", sizeof(SerialMesh_Base::ExportInfo), 1, 5 );
+		SerialMesh_Base::ExportInfo* pExportInfo	= zenNew(&sMemPool) SerialMesh_Base::ExportInfo;
 		pExportInfo->maMeshStripID					= _aMeshStripID;	
 		return EMgr::Export.CreateItem( zenResID::kePlatformType_GFX, awconst::keResType_GfxMesh, pExportInfo );
 	}

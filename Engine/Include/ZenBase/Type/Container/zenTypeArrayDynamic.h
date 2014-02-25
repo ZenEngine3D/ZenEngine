@@ -13,9 +13,9 @@ namespace zen { namespace zenType {
 	{
 	AWClassDeclare(zenArrayDynamic, zenArrayBase<TType>)
 	public:
-									zenArrayDynamic(CMem::Allocator* _pAllocator=NULL);		
-									zenArrayDynamic(zenU32 _uCount, CMem::Allocator* _pAllocator=NULL);
-									zenArrayDynamic(const TType* _pCopy, zenUInt _uCount, zenUInt _uExtraCount=0, CMem::Allocator* _pAllocator=NULL);
+									zenArrayDynamic();
+									zenArrayDynamic(zenU32 _uCount);
+									zenArrayDynamic(const TType* _pCopy, zenUInt _uCount, zenUInt _uExtraCount=0);
 									zenArrayDynamic(const zenArrayDynamic& _Copy, zenUInt _uExtraCount=0);
 		virtual						~zenArrayDynamic();
 		virtual zenUInt				SetCount(zenUInt _uCount);

@@ -26,7 +26,7 @@ ManagerExport::ManagerExport()
 bool ManagerExport::Load()
 {	
 	// Default callback for Getting new zenResID value, to use simple incrementing index (good for runtime resources)
-	memset(saNextID, 0, sizeof(saNextID) );		
+	zenMem::Set(saNextID, 0, sizeof(saNextID) );		
 	for( zenUInt idxPlatform(0); idxPlatform<awconst::keResPlatform__Count; ++idxPlatform)
 		for( zenUInt idxType(0); idxType<awconst::keResType__Count; ++idxType)
 			mpCallbackGetItemID[idxPlatform][idxType] = CallbackGetItemID;	
@@ -157,7 +157,7 @@ zenResID CreateExportItemOffline(awconst::eResType _eResType, EExp::ExportInfoBa
 		{
 			switch(_eResType)
 			{
-			case awconst::keResType_GfxIndexTemp: return AWNewDefaultEExp::SerialGfxIndex_DX11;
+			case awconst::keResType_GfxIndexTemp: return zenNewDefaultEExp::SerialGfxIndex_DX11;
 			}
 		}break;
 	#endif

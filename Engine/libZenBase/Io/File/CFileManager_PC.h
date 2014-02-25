@@ -1,6 +1,6 @@
 #pragma once
-#ifndef __LibCore_File_FileManager_PC_h__
-#define __LibCore_File_FileManager_PC_h__
+#ifndef __LibZenBase_File_FileManager_PC_h__
+#define __LibZenBase_File_FileManager_PC_h__
 
 namespace CFil
 {

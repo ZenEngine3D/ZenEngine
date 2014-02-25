@@ -27,7 +27,7 @@ void Package::Unload()
 		madAssetPerType[typIdx].GetFirst(it);
 		while( it.IsValid() )
 		{
-			AWDel(it.GetValue());
+			zenDel(it.GetValue());
 			++it;
 		}			
 		madAssetPerType[typIdx].Clear();

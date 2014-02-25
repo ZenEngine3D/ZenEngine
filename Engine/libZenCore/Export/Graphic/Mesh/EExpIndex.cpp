@@ -15,8 +15,8 @@ namespace EExp
 //=================================================================================================
 zenResID CreateGfxIndexBuffer( const zenArrayBase<zenU16>& _Indices, awconst::ePrimitiveType _ePrimitiveType )
 {
-	static CMem::PoolAllocator sMemPool("Pool CreateIndexBuffer", sizeof(SerialIndex_Base::ExportInfo), 1, 5 );
-	SerialIndex_Base::ExportInfo* pExportInfo	= AWNew(&sMemPool) SerialIndex_Base::ExportInfo;
+	static zbMem::PoolAllocator sMemPool("Pool CreateIndexBuffer", sizeof(SerialIndex_Base::ExportInfo), 1, 5 );
+	SerialIndex_Base::ExportInfo* pExportInfo	= zenNew(&sMemPool) SerialIndex_Base::ExportInfo;
 	pExportInfo->maIndice16						= _Indices;
 	pExportInfo->mePrimitiveType				= _ePrimitiveType;
 	return EMgr::Export.CreateItem( zenResID::kePlatformType_GFX, awconst::keResType_GfxIndex, pExportInfo );
@@ -34,8 +34,8 @@ zenResID CreateGfxIndexBuffer( const zenArrayBase<zenU16>& _Indices, awconst::eP
 //=================================================================================================
 zenResID CreateGfxIndexBuffer( const zenArrayBase<zenU32>& _Indices, awconst::ePrimitiveType _ePrimitiveType )
 {
-	static CMem::PoolAllocator sMemPool("Pool CreateIndexBuffer", sizeof(SerialIndex_Base::ExportInfo), 1, 5 );
-	SerialIndex_Base::ExportInfo* pExportInfo	= AWNew(&sMemPool) SerialIndex_Base::ExportInfo;
+	static zbMem::PoolAllocator sMemPool("Pool CreateIndexBuffer", sizeof(SerialIndex_Base::ExportInfo), 1, 5 );
+	SerialIndex_Base::ExportInfo* pExportInfo	= zenNew(&sMemPool) SerialIndex_Base::ExportInfo;
 	pExportInfo->maIndice32						= _Indices;
 	pExportInfo->mePrimitiveType				= _ePrimitiveType;
 	return EMgr::Export.CreateItem( zenResID::kePlatformType_GFX, awconst::keResType_GfxIndex, pExportInfo );

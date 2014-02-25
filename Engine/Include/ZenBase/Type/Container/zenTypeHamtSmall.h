@@ -2,6 +2,8 @@
 #ifndef __zenBase_Type_HamtSmall_h__
 #define __zenBase_Type_HamtSmall_h__
 
+#include <Engine/libZenBase/Memory/zbMemPool.h>	//! @todo remove this and move pool to api
+
 namespace zen { namespace zenType {
 
 	//=================================================================================================
@@ -93,11 +95,11 @@ namespace zen { namespace zenType {
 		// Main Class
 		//=================================================================================================
 								zenHamt();
-								zenHamt( zenUInt _uReservePool, CMem::Allocator* _pAllocator=NULL );
+								zenHamt( zenUInt _uReservePool);
 								~zenHamt();
 
 		
-		void					Init( zenUInt _uReservePool, CMem::Allocator* _pAllocator=NULL );				//!< @brief Initialize the HashTable
+		void					Init( zenUInt _uReservePool);													//!< @brief Initialize the HashTable
 		inline bool				Exist(const TKey _Key)const;															    
 		inline bool				IsInit()const;																			    
 		inline zenUInt			Count() const;																	//!< @brief Number of element (leaf node) stored in hashmap		
@@ -138,7 +140,7 @@ namespace zen { namespace zenType {
 		Node*					mpRootNode;				//!< First accessible node
 		zenU32					muCount;				//!< Keep track of element count in the table, for debug purposes
 		TValue					mDefault;				//!< Default value to assign when accessing a non-existing entry
-		CMem::PoolAllocator		mPools[kuPoolCount];	//!< PreAllocated memory pools, to contain our nodes	
+		zbMem::PoolAllocator	mPools[kuPoolCount];	//!< PreAllocated memory pools, to contain our nodes	
 		friend class Iterator;
 	};
 

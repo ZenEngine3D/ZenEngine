@@ -3,7 +3,7 @@
 #define __zenBase_Type_Array_h__
 
 // Forward declare
-namespace CMem { class Allocator; }
+namespace zbMem { class Allocator; }
 
 // Array class
 namespace zen { namespace zenType {
@@ -23,7 +23,7 @@ public:
 // Declarations
 //==================================================================================================	
 public:
-	zenArrayBase(CMem::Allocator* _pAllocator=NULL);
+										zenArrayBase();
 	void								Sort();											//!< @brief Sort every element in array
 	int									Find(const TType& _Value);	
 	void								SetAll(const TType& _Value);					//!< @brief Set every array element to specific value
@@ -46,7 +46,6 @@ public:
 	void								SetRange(const TType& _Value, zenUInt _uFirst=0, zenUInt _uLast=0xFFFFFFFF);	//!< @brief Set a range of array elements, to a specific value
 
 protected:
-	CMem::Allocator*					mpAllocator;									//!< Memory allocated used to allocate elements
 	TType*								mpData;											//!< Data array
 	zenUInt								muCount;										//!< Current number of elements
 };

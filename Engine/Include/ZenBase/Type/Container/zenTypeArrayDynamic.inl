@@ -2,16 +2,16 @@
 namespace zen { namespace zenType {
 
 template<class TType, GrowthPolicyFunction TGrowthPolicy>
-zenArrayDynamic<TType, TGrowthPolicy>::zenArrayDynamic(CMem::Allocator* _pAllocator=NULL)		
-: zenArrayBase(_pAllocator)
+zenArrayDynamic<TType, TGrowthPolicy>::zenArrayDynamic()
+: zenArrayBase()
 , muCountReserved(0)
 , muCountReservedMin(0)
 {
 }
 
 template<class TType, GrowthPolicyFunction TGrowthPolicy>
-zenArrayDynamic<TType, TGrowthPolicy>::zenArrayDynamic(zenU32 _uCount, CMem::Allocator* _pAllocator=NULL)
-: zenArrayBase(_pAllocator)
+zenArrayDynamic<TType, TGrowthPolicy>::zenArrayDynamic(zenU32 _uCount)
+: zenArrayBase()
 , muCountReserved(0)
 , muCountReservedMin(0)
 {
@@ -20,8 +20,8 @@ zenArrayDynamic<TType, TGrowthPolicy>::zenArrayDynamic(zenU32 _uCount, CMem::All
 }	
 
 template<class TType, GrowthPolicyFunction TGrowthPolicy>
-zenArrayDynamic<TType, TGrowthPolicy>::zenArrayDynamic(const TType* _pCopy, zenUInt _uCount, zenUInt _uExtraCount=0, CMem::Allocator* _pAllocator=NULL)
-: zenArrayBase(_pAllocator)
+zenArrayDynamic<TType, TGrowthPolicy>::zenArrayDynamic(const TType* _pCopy, zenUInt _uCount, zenUInt _uExtraCount=0)
+: zenArrayBase()
 , muCountReserved(0)
 , muCountReservedMin(0)
 {		
@@ -42,7 +42,7 @@ zenArrayDynamic<TType, TGrowthPolicy>::zenArrayDynamic(const TType* _pCopy, zenU
 
 template<class TType, GrowthPolicyFunction TGrowthPolicy>
 zenArrayDynamic<TType, TGrowthPolicy>::zenArrayDynamic(const zenArrayDynamic& _Copy, zenUInt _uExtraCount=0)
-: zenArrayBase(_Copy.mpAllocator)
+: zenArrayBase()
 , muCountReserved(0)
 , muCountReservedMin(0)
 {			
@@ -65,7 +65,7 @@ zenArrayDynamic<TType, TGrowthPolicy>::zenArrayDynamic(const zenArrayDynamic& _C
 template<class TType, GrowthPolicyFunction TGrowthPolicy>
 zenArrayDynamic<TType, TGrowthPolicy>::~zenArrayDynamic()
 {
-	AWDelNullArray(mpData);
+	zenDelNullArray(mpData);
 }
 		
 template<class TType, GrowthPolicyFunction TGrowthPolicy>
@@ -150,11 +150,11 @@ void zenArrayDynamic<TType, TGrowthPolicy>::Grow( zenUInt _auCountNeeded )
 {
 	zenUInt uNewCount	= TGrowthPolicy(muCountReserved, _auCountNeeded, sizeof(TType) );
 	AWAssertMsg(uNewCount>=_auCountNeeded, "Growth function returned less item count than needed");
-	TType* pNewData = AWNew(mpAllocator) TType[uNewCount];
+	TType* pNewData = zenNewDefault TType[uNewCount];
 	if( mpData )
 	{
 		zenMem::Copy(pNewData, mpData, muCount*sizeof(TType) );
-		AWDelNullArray(mpData);
+		zenDelNullArray(mpData);
 	}			
 	mpData			= pNewData;
 	muCountReserved	= uNewCount;			
@@ -168,9 +168,9 @@ void zenArrayDynamic<TType, TGrowthPolicy>::GrowNoConstructor( zenUInt _auCountN
 {
 	zenUInt uNewCount	= TGrowthPolicy(muCountReserved, _auCountNeeded, sizeof(TType) );
 	AWAssertMsg(uNewCount>=_auCountNeeded, "Growth function returned less item count than needed");
-	TType* pNewData = reinterpret_cast<TType*>( AWNew(mpAllocator) zenU8[sizeof(TType)*uNewCount] );
+	TType* pNewData = reinterpret_cast<TType*>( zenNewDefault zenU8[sizeof(TType)*uNewCount] );
 	zenMem::Copy(pNewData, mpData, muCount*sizeof(TType) );
-	AWDelNullArray(mpData);
+	zenDelNullArray(mpData);
 	mpData			= pNewData;
 	muCountReserved	= uNewCount;			
 }
@@ -185,9 +185,9 @@ void zenArrayDynamic<TType, TGrowthPolicy>::Shrink( )
 	zenUInt uWantedCount = TGrowthPolicy(muCountReserved, muCount, sizeof(TType) );
 	if( uWantedCount < muCountReserved && uWantedCount > muCountReservedMin)
 	{
-		TType* pNewData = AWNew(mpAllocator) TType[uWantedCount];
+		TType* pNewData = zenNewDefault TType[uWantedCount];
 		zenMem::Copy(pNewData, mpData, muCount*sizeof(TType) );
-		AWDelNullArray(mpData);
+		zenDelNullArray(mpData);
 		mpData			= pNewData;
 		muCountReserved	= uWantedCount;
 	}

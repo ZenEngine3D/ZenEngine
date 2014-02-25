@@ -4,7 +4,7 @@
 
 //=================================================================================================
 //! @file		LibExpAll.h
-//! @brief		Header file to include all sub-header files of Exporter library
+//! @brief		AllocHeader file to include all sub-header files of Exporter library
 //! @details	Included by platforms that can build and export data for
 //!				itself and other console
 //-------------------------------------------------------------------------------------------------

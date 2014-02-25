@@ -1,6 +1,6 @@
 #pragma once
-#ifndef __LibCore_Api_Constant_BuildDefines_h__
-#define __LibCore_Api_Constant_BuildDefines_h__
+#ifndef __LibZenBase_Api_Constant_BuildDefines_h__
+#define __LibZenBase_Api_Constant_BuildDefines_h__
 
 //=================================================================================================
 //! @file		APIConstBuildDefines.h
@@ -71,16 +71,16 @@
 #define AWFilenameB(PREFIX, SUFFIX, EXT)		PREFIX##_##SUFFIX##EXT										//Used to generate platform based filename by others macros
 #define AWFilename(PREFIX, SUFFIX, EXT)			AWFilenameB(PREFIX, SUFFIX, EXT )							//Used to generate platform based filename by others macros
 
-#define AWHeaderFile(HEADERNAME, DEFINE)		AWStringDefine( AWFilename(HEADERNAME, DEFINE, .h) )		//!< Header filename for current Platform type
-#define AWInlineFile(HEADERNAME, DEFINE)		AWStringDefine( AWFilename(HEADERNAME, DEFINE, .inl) )		//!< Header filename for current Platform type
+#define AWHeaderFile(HEADERNAME, DEFINE)		AWStringDefine( AWFilename(HEADERNAME, DEFINE, .h) )		//!< AllocHeader filename for current Platform type
+#define AWInlineFile(HEADERNAME, DEFINE)		AWStringDefine( AWFilename(HEADERNAME, DEFINE, .inl) )		//!< AllocHeader filename for current Platform type
 
-#define AWHeaderPlatform(HEADERNAME)			AWHeaderFile(HEADERNAME,	AW_PLATFORM)					//!< Header filename for current Platform type
+#define AWHeaderPlatform(HEADERNAME)			AWHeaderFile(HEADERNAME,	AW_PLATFORM)					//!< AllocHeader filename for current Platform type
 #define AWInlinePlatform(HEADERNAME)			AWInlineFile(HEADERNAME,	AW_PLATFORM)					//!< Inline filename for current Platform type
-#define AWClassPlatform(CLASSNAME)				AWDefineStich3(CLASSNAME, _, AW_PLATFORM)					//!< Header filename for current Platform type
+#define AWClassPlatform(CLASSNAME)				AWDefineStich3(CLASSNAME, _, AW_PLATFORM)					//!< AllocHeader filename for current Platform type
 
-#define AWHeaderRenderer(HEADERNAME)			AWHeaderFile(HEADERNAME, AW_RENDERER)						//!< Header filename for current Renderer type
+#define AWHeaderRenderer(HEADERNAME)			AWHeaderFile(HEADERNAME, AW_RENDERER)						//!< AllocHeader filename for current Renderer type
 #define AWInlineRenderer(HEADERNAME)			AWInlineFile(HEADERNAME, AW_RENDERER)						//!< Inline filename for current Renderer type
-#define AWClassRenderer(CLASSNAME)				AWDefineStich3(CLASSNAME, _, AW_RENDERER)					//!< Header filename for current Platform type
+#define AWClassRenderer(CLASSNAME)				AWDefineStich3(CLASSNAME, _, AW_RENDERER)					//!< AllocHeader filename for current Platform type
 
 #include AWHeaderPlatform(zenConstBuildDefines)
 #include AWHeaderRenderer(zenConstBuildDefines)

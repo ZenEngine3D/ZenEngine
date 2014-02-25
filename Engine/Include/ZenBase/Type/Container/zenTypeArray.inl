@@ -1,9 +1,8 @@
 namespace zen { namespace zenType {
 
 template<class TType>
-zenArrayBase<TType>::zenArrayBase(CMem::Allocator* _pAllocator=NULL)
-: mpAllocator(_pAllocator)
-, mpData(NULL)
+zenArrayBase<TType>::zenArrayBase()
+: mpData(NULL)
 , muCount(0)
 {
 }

@@ -13,7 +13,7 @@ namespace EExp
 	
 	ExportInfoBase::~ExportInfoBase()
 	{
-		AWDelNull(mpExportInfoExt);
+		zenDelNull(mpExportInfoExt);
 	}
 
 	ExportItem::ExportItem()

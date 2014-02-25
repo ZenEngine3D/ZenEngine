@@ -1,9 +1,9 @@
 #pragma once
-#ifndef __LibCore_Memory_All_h__
-#define __LibCore_Memory_All_h__ 
+#ifndef __LibZenBase_Memory_All_h__
+#define __LibZenBase_Memory_All_h__ 
 
 //=================================================================================================
-//! @file		CMemAll.h
+//! @file		libZenBaseMemory.h
 //! @brief		All header files includes for @b LibCore subsection @b Memory.
 //! @n@n		See @ref LibCore-Mem module for more infos.
 //-------------------------------------------------------------------------------------------------
@@ -12,9 +12,9 @@
 //! @section 	LibCore-Mem-Brief More details
 //!				This is a component of the @link LibCore Core @endlink library.
 //=================================================================================================
-#include <Engine/libZenBase/Memory/CMemBase.h>
-#include <Engine/libZenBase/Memory/CMemAllocator.h>
-#include <Engine/libZenBase/Memory/CMemMalloc.h>
-#include <Engine/libZenBase/Memory/CMemPool.h>
+#include <Engine/libZenBase/Memory/zbMemAllocator.h>
+#include <Engine/libZenBase/Memory/zbMemBase.h>
+#include <Engine/libZenBase/Memory/zbMemMalloc.h>
+#include <Engine/libZenBase/Memory/zbMemPool.h>
 
 #endif

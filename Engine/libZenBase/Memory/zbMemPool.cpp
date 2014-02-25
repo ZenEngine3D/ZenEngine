@@ -1,21 +1,19 @@
 #include "libZenBase.h"
 
-namespace CMem
+namespace zbMem
 {
 
 PoolAllocator::PoolAllocator()
-: Allocator( zenDebugString("Uninitialized Pool"))
-, mpAllocator(NULL)
+: zenMem::Allocator( zenDebugString("Uninitialized Pool"))
 {
 }
 
-PoolAllocator::PoolAllocator( zenDebugString _zName, size_t _uItemSize, zenU32 _uItemCount, zenU32 _uItemIncrease, Allocator* _pAllocator, zenU32 _uAlign )
-: Allocator(_zName)
+PoolAllocator::PoolAllocator( const zenDebugString& _zName, size_t _uItemSize, zenU32 _uItemCount, zenU32 _uItemIncrease, zenU32 _uAlign )
+: zenMem::Allocator(_zName)
 , mPoolReservedCount(0)
 , mPoolItemSize(_uItemSize)
 , mPoolItemIncrease(_uItemIncrease)
 , mPoolItemAlign(_uAlign)
-, mpAllocator(_pAllocator)
 {
 	MemoryIncrease(_uItemCount);
 }
@@ -50,21 +48,14 @@ void PoolAllocator::SetIncreaseCount(zenU32 _uIncreaseCount)
 	mPoolItemIncrease = _uIncreaseCount;
 }
 
-Allocator* PoolAllocator::GetAllocator()const
+void PoolAllocator::Init(const zenDebugString& _zName, size_t _uItemSize, zenU32 _uItemCount, zenU32 _uItemIncrease, zenU32 _uAlign )
 {
-	return mpAllocator;
-}
-
-void PoolAllocator::Init(zenDebugString _zName, size_t _uItemSize, zenU32 _uItemCount, zenU32 _uItemIncrease, Allocator* _pAllocator, zenU32 _uAlign )
-{
-	AWAssertMsg(!mpAllocator, "Memory allocator already initialized.");
 	AWAssertMsg(_uItemSize%_uAlign==0, "Pool item size must be a multiple of alignment specified.");
 	mzAllocatorName		= _zName;
 	mPoolReservedCount	= 0;
 	mPoolItemSize		= _uItemSize;
 	mPoolItemIncrease	= _uItemIncrease;
 	mPoolItemAlign		= _uAlign;
-	mpAllocator			= _pAllocator;
 	mPoolItemCountInit	= _uItemCount;
 	MemoryIncrease(_uItemCount);
 }
@@ -83,11 +74,11 @@ void* PoolAllocator::Malloc(size_t _uSize, bool _bIsArray, zenU32 _uAlign)
 	return AddAlloc(mPoolItemSize, 0, mPoolItemAlign, (void*)pItem, false);
 }
 
-void PoolAllocator::Free(void* _pAlloc, Header* _pInfoAlloc)
+void PoolAllocator::Free(void* _pAlloc, void* _pInfoAlloc)
 {
 	AWAssert(_pAlloc && _pInfoAlloc);
-
-	RemAlloc(_pInfoAlloc);
+	AllocHeader* pInfoAlloc = static_cast<AllocHeader*>(_pInfoAlloc);
+	RemAlloc(pInfoAlloc);
 	zenList1xNode* pPoolItemFree = (zenList1xNode*)_pInfoAlloc;
 	mlstFreeItems.AddHead(pPoolItemFree);	
 }
@@ -96,7 +87,7 @@ void PoolAllocator::MemoryIncrease(zenU32 _uItemCount)
 {
 	size_t			uPoolItemSize	= GetAllocSize(mPoolItemSize, 0, mPoolItemAlign);
 	size_t			uTotalSize		= sizeof(zenList1xNode)+_uItemCount*uPoolItemSize;	
-	zenList1xNode*	pNewAlloc		= (zenList1xNode*)AWMalloc(mpAllocator, uTotalSize);
+	zenList1xNode*	pNewAlloc		= (zenList1xNode*)zenMalloc(uTotalSize);
 	zenList1xNode*	pPoolFreeItem	= (zenList1xNode*)(((zenPointer)pNewAlloc)+sizeof(zenList1xNode));
 	void*			pMemEnd			= (void*)((zenPointer)pNewAlloc + uTotalSize);
 	mPoolReservedCount				+= _uItemCount;
@@ -119,7 +110,7 @@ void PoolAllocator::Clear()
 	while( mlstAlloc.GetHead() != mlstAlloc.GetInvalid() )
 	{
 		zenList1xNode* pDel = mlstAlloc.PopHead();
-		AWDel(pDel);	
+		zenDel(pDel);	
 	}
 }
 

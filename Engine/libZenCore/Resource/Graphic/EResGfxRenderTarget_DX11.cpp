@@ -75,7 +75,7 @@ namespace ERes
 			if( SUCCEEDED(EMgr::GfxRender.DX11GetDevice()->CreateRenderTargetView( pColorTexture, NULL, &pColorView )) )
 			{
 				bool bUnused;
-				pBackbufferTarget									= AWNewDefault GfxRenderTarget_DX11;
+				pBackbufferTarget									= zenNewDefault GfxRenderTarget_DX11;
 				pBackbufferTarget->mResID							= EMgr::Export.GetNewResourceID( awconst::kAWCurrentPlatformGfx, awconst::keResType_GfxRenderTarget, awconst::keResSource_Runtime, NULL, bUnused );
 				pBackbufferTarget->mInstanceInfo.mResID				= pBackbufferTarget->mResID;
 				pBackbufferTarget->mInstanceInfo.mpTargetColorView	= pColorView;

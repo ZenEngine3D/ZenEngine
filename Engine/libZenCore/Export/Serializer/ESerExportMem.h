@@ -8,9 +8,9 @@ class SerializerExportMem : public ISerializerExporter
 {
 AWClassDeclare(SerializerExportMem, ISerializerExporter)
 public:
-						SerializerExportMem(zenUInt auAllocSize, CMem::Allocator* apAllocator=NULL);
-	virtual				~SerializerExportMem();
-			bool		Save(const char* azFilename);//! @todo: abstract this
+					SerializerExportMem(zenUInt auAllocSize);
+	virtual			~SerializerExportMem();
+	bool			Save(const char* azFilename);//! @todo: abstract this
 protected:
 	struct Alloc : public zenList1xNode
 	{
@@ -19,12 +19,11 @@ protected:
 		zenU8*	pMemoryEnd;
 	};						
 
-	void*				GetMemory	(zenUInt auSize);
-	void				AddMemory	(zenUInt auSize);
+	void*			GetMemory	(zenUInt auSize);
+	void			AddMemory	(zenUInt auSize);
 	
-	zenList1x	mlstAllocs;
-	zenUInt				muAllocSize;
-	CMem::Allocator*	mpAllocator;
+	zenList1x		mlstAllocs;
+	zenUInt			muAllocSize;
 
 //-------------------------------------------------------------------
 // Serializer_Base Interface

@@ -42,10 +42,10 @@ namespace sample
 		zenU32 size1 = sizeof(int);
 		zenU32 size2 = sizeof(TestAlloc);
 
-		TestAlloc* pTest1		= AWNewDefault TestAlloc(1);
-		TestAlloc* pTest2		= AWNewDefault TestAlloc(2);
-		TestAlloc* pTest3		= AWNew(CMem::Allocator::Default) TestAlloc(3);
-		TestAlloc* pArrayTest	= AWNewDefault TestAlloc[5];
+		TestAlloc* pTest1		= zenNewDefault TestAlloc(1);
+		TestAlloc* pTest2		= zenNewDefault TestAlloc(2);
+		TestAlloc* pTest3		= zenNew(&zbMem::GetDefault()) TestAlloc(3);
+		TestAlloc* pArrayTest	= zenNewDefault TestAlloc[5];
 
 		//Test buffer overrun detection
 		//pTest1[1].mValue = 5;
@@ -54,17 +54,17 @@ namespace sample
 		delete pTest1;
 		delete[] pArrayTest;
 
-		CMem::PoolAllocator PoolAlloc( "TestPool", sizeof(TestAlloc), 2, 1); 
-		pTest1 = AWNew(&PoolAlloc) TestAlloc(0x01);
-		pTest2 = AWNew(&PoolAlloc) TestAlloc(0x02);
-		pTest3 = AWNew(&PoolAlloc) TestAlloc(0x03);
+		zbMem::PoolAllocator PoolAlloc( "TestPool", sizeof(TestAlloc), 2, 1); 
+		pTest1 = zenNew(&PoolAlloc) TestAlloc(0x01);
+		pTest2 = zenNew(&PoolAlloc) TestAlloc(0x02);
+		pTest3 = zenNew(&PoolAlloc) TestAlloc(0x03);
 		delete pTest3;
 		delete pTest2;
 		delete pTest1;
 
-		pTest1 = AWNew(&PoolAlloc) TestAlloc(0x11);
-		pTest2 = AWNew(&PoolAlloc) TestAlloc(0x12);
-		pTest3 = AWNew(&PoolAlloc) TestAlloc(0x13);
+		pTest1 = zenNew(&PoolAlloc) TestAlloc(0x11);
+		pTest2 = zenNew(&PoolAlloc) TestAlloc(0x12);
+		pTest3 = zenNew(&PoolAlloc) TestAlloc(0x13);
 		delete pTest3;
 		delete pTest2;
 		delete pTest1;

@@ -9,9 +9,9 @@ class zenArrayStatic : public zenArrayBase<TType>
 {
 AWClassDeclare(zenArrayStatic, zenArrayBase<TType>)	
 public:
-					zenArrayStatic(CMem::Allocator* _pAllocator=NULL);
-					zenArrayStatic(zenUInt _uCount, CMem::Allocator* _pAllocator=NULL);
-					zenArrayStatic(const TType* _pCopy, zenUInt _uCount, zenUInt _uExtraCount=0, CMem::Allocator* _pAllocator=NULL);
+					zenArrayStatic();
+					zenArrayStatic(zenUInt _uCount);
+					zenArrayStatic(const TType* _pCopy, zenUInt _uCount, zenUInt _uExtraCount=0);
 					zenArrayStatic(const zenArrayStatic& _Copy, zenUInt _uExtraCount=0);
 	virtual			~zenArrayStatic();
 				

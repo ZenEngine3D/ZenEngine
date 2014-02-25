@@ -1,6 +1,6 @@
 #pragma once
-#ifndef __LibCore_Api_Const_Constants_h__
-#define __LibCore_Api_Const_Constants_h__
+#ifndef __LibZenBase_Api_Const_Constants_h__
+#define __LibZenBase_Api_Const_Constants_h__
 
 namespace zen { namespace awconst {
 

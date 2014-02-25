@@ -1,6 +1,6 @@
 #pragma once
-#ifndef __LibCore_System_All_h__
-#define __LibCore_System_All_h__ 
+#ifndef __LibZenBase_System_All_h__
+#define __LibZenBase_System_All_h__ 
 
 //=================================================================================================
 //! @file		CSysAll.h

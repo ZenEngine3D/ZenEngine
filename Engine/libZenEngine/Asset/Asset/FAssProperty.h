@@ -34,10 +34,10 @@ namespace FAss
 #define AWPropertyDefDeclare(_PropertyDef_)																			\
 	AWClassDeclare(_PropertyDef_, TPropertyDefBase)																	\
 	public:																											\
-		virtual PropertyDefBase::Value* Allocate()const{return AWNew(&sPoolAlloc)Value(*this);}						\
+		virtual PropertyDefBase::Value* Allocate()const{return zenNew(&sPoolAlloc)Value(*this);}						\
 		virtual void ValueToString(const PropertyDefBase::Value& _Value, char* _zBuffer, zenUInt _uSizebuffer)const;	\
 	protected:																										\
-		static CMem::PoolAllocator	sPoolAlloc;													
+		static zbMem::PoolAllocator	sPoolAlloc;													
 
 
 class PropertyDefBase

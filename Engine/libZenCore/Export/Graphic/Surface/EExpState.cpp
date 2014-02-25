@@ -4,8 +4,8 @@ namespace EExp
 {	
 	zenResID CreateGfxSampler( awconst::eTextureFiltering _eFilterMin, awconst::eTextureFiltering _eFilterMag, awconst::eTextureWrap _eWrapU, awconst::eTextureWrap _eWrapV, float _fLodBias, const zenVec4F& _vBorderColor )
 	{
-		static CMem::PoolAllocator sMemPool("Pool CreateSampler", sizeof(SerialSampler_Base::ExportInfo), 1, 5 );
-		SerialSampler_Base::ExportInfo*	pExportInfo	= AWNew(&sMemPool) SerialSampler_Base::ExportInfo;
+		static zbMem::PoolAllocator sMemPool("Pool CreateSampler", sizeof(SerialSampler_Base::ExportInfo), 1, 5 );
+		SerialSampler_Base::ExportInfo*	pExportInfo	= zenNew(&sMemPool) SerialSampler_Base::ExportInfo;
 		pExportInfo->meFilterMin		= _eFilterMin;
 		pExportInfo->meFilterMag		= _eFilterMag;
 		pExportInfo->meWrapU			= _eWrapU;
@@ -17,8 +17,8 @@ namespace EExp
 
 	zenResID CreateGfxBlend( zenType::awBlendDesc::awRTBlendDesc* _pxBlendDesc, zenU8 _uRenderTargets, bool _bAlphaToCoverageEnable, bool _bIndependentBlendEnable )
 	{
-		static CMem::PoolAllocator sMemPool("Pool CreateBlend", sizeof(SerialBlend_Base::ExportInfo), 1, 5 );
-		SerialBlend_Base::ExportInfo*	pExportInfo	= AWNew(&sMemPool) SerialBlend_Base::ExportInfo;
+		static zbMem::PoolAllocator sMemPool("Pool CreateBlend", sizeof(SerialBlend_Base::ExportInfo), 1, 5 );
+		SerialBlend_Base::ExportInfo*	pExportInfo	= zenNew(&sMemPool) SerialBlend_Base::ExportInfo;
 		pExportInfo->mxBlendDesc.mbAlphaToCoverageEnable		= _bAlphaToCoverageEnable;
 		pExportInfo->mxBlendDesc.mbIndependentBlendEnable		= _bIndependentBlendEnable;
 		if(_pxBlendDesc)
@@ -33,8 +33,8 @@ namespace EExp
 
 	zenResID CreateGfxDepthStencil( bool _bDepthEnable, bool _bDepthWrite, bool _bStencilEnable, zenU8 _uStencilReadMask, zenU8 _uStencilWriteMask, awconst::eComparisonFunc _eDepthFunc, zenType::awDepthStencilDesc::DepthStencilOp _xFrontFace, zenType::awDepthStencilDesc::DepthStencilOp _xBackFace )
 	{
-		static CMem::PoolAllocator sMemPool("Pool CreateDepthStencil", sizeof(SerialDepthStencil_Base::ExportInfo), 1, 5 );
-		SerialDepthStencil_Base::ExportInfo*	pExportInfo	= AWNew(&sMemPool) SerialDepthStencil_Base::ExportInfo;
+		static zbMem::PoolAllocator sMemPool("Pool CreateDepthStencil", sizeof(SerialDepthStencil_Base::ExportInfo), 1, 5 );
+		SerialDepthStencil_Base::ExportInfo*	pExportInfo	= zenNew(&sMemPool) SerialDepthStencil_Base::ExportInfo;
 		pExportInfo->mxDepthStencilDesc.mbDepthEnable		= _bDepthEnable;
 		pExportInfo->mxDepthStencilDesc.mbDepthWrite		= _bDepthWrite;
 		pExportInfo->mxDepthStencilDesc.mbStencilEnable		= _bStencilEnable;
@@ -49,8 +49,8 @@ namespace EExp
 
 	zenResID CreateGfxRasterizer( bool _bFrontCounterClockwise, bool _bDepthClipEnable, bool _bScissorEnable, bool _bMultisampleEnable, bool _bAntialiasedLineEnable, bool _bWireFrame, awconst::eCullMode _eCullMode, zenS32 _iDepthBias, zenF32 _fDepthBiasClamp, zenF32 _fSlopeScaledDepthBias )
 	{
-		static CMem::PoolAllocator sMemPool("Pool CreateRasterizer", sizeof(SerialRasterizer_Base::ExportInfo), 1, 5 );
-		SerialRasterizer_Base::ExportInfo*	pExportInfo	= AWNew(&sMemPool) SerialRasterizer_Base::ExportInfo;
+		static zbMem::PoolAllocator sMemPool("Pool CreateRasterizer", sizeof(SerialRasterizer_Base::ExportInfo), 1, 5 );
+		SerialRasterizer_Base::ExportInfo*	pExportInfo	= zenNew(&sMemPool) SerialRasterizer_Base::ExportInfo;
 
 		pExportInfo->mbFrontCounterClockwise	= _bFrontCounterClockwise;
 		pExportInfo->mbDepthClipEnable			= _bDepthClipEnable;

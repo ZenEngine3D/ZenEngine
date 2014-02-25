@@ -1,8 +1,8 @@
 #pragma once
-#ifndef __LibCore_Memory_Malloc_h__
-#define __LibCore_Memory_Malloc_h__
+#ifndef __LibZenBase_Memory_Malloc_h__
+#define __LibZenBase_Memory_Malloc_h__
 
-namespace CMem
+namespace zbMem
 {
 	//=================================================================================================
 	//! @class		MallocAllocator
@@ -11,13 +11,13 @@ namespace CMem
 	//! @details	Used as a temporary stand-in until more elaborate memory 
 	//!				get implemented
 	//=================================================================================================
-	class MallocAllocator : public Allocator
+	class MallocAllocator : public zenMem::Allocator
 	{
-	AWClassDeclare(MallocAllocator, Allocator);
+	AWClassDeclare(MallocAllocator, zenMem::Allocator);
 	public:
 								MallocAllocator(const char* _zName);
 		virtual void*			Malloc(size_t _uSize, bool _bIsArray, zenU32 _uAlign);
-		virtual	void			Free(void* _pAlloc, AllocHeader* _pInfoAlloc);
+		virtual	void			Free(void* _pAlloc, void* _pInfoAlloc);
 		virtual zenDebugString	GetDescription(){return "Malloc";};
 	};
 }  

@@ -4,7 +4,7 @@
 
 //=================================================================================================
 //! @file		LibGraphicAll.h
-//! @brief		Header file to include all sub-header files of Graphics library
+//! @brief		AllocHeader file to include all sub-header files of Graphics library
 //! @details	
 //-------------------------------------------------------------------------------------------------
 //!	@addtogroup LibGraphic			

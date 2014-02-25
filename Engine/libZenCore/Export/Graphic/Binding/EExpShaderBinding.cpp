@@ -34,8 +34,8 @@ namespace EExp
 	//=================================================================================================
 	zenResID CreateGfxShaderBinding(const zenArrayBase<zenResID>& _aShaderID/*, const Array<zenResID>& _aShaderParamID, const Array<EExp::TextureBinding>& _aTexture*/)
 	{	
-		static CMem::PoolAllocator sMemPool("Pool CreateShaderBinding", sizeof(SerialShaderBinding_Base::ExportInfo), 1, 5 );
-		SerialShaderBinding_Base::ExportInfo* pExportInfo	= AWNew(&sMemPool) SerialShaderBinding_Base::ExportInfo;
+		static zbMem::PoolAllocator sMemPool("Pool CreateShaderBinding", sizeof(SerialShaderBinding_Base::ExportInfo), 1, 5 );
+		SerialShaderBinding_Base::ExportInfo* pExportInfo	= zenNew(&sMemPool) SerialShaderBinding_Base::ExportInfo;
 		pExportInfo->maShaderID								= _aShaderID;
 		return EMgr::Export.CreateItem( zenResID::kePlatformType_GFX, awconst::keResType_GfxShaderBinding, pExportInfo );
 	}

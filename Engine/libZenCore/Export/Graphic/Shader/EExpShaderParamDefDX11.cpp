@@ -37,7 +37,7 @@ bool SerialGfxShaderParamDef_DX11::ExportStart()
 	SerialShader_DX11*	pShaderItem	= EMgr::SerialItems.GetItem<SerialShader_DX11>(pExportInfo->mParentShaderID);
 	if( pShaderItem )
 	{
-		ExportInfoExt* pExportInfoExt		= AWNewDefault ExportInfoExt;
+		ExportInfoExt* pExportInfoExt		= zenNewDefault ExportInfoExt;
 		pExportInfoExt->maCompiledShader	= pShaderItem->mSerialCommon.maCompiledShader;
 		pExportInfo->mpExportInfoExt		= pExportInfoExt;
 		return true;

@@ -1,6 +1,6 @@
 #pragma once
-#ifndef __LibCore_CLogManager_h__
-#define __LibCore_CLogManager_h__
+#ifndef __LibZenBase_CLogManager_h__
+#define __LibZenBase_CLogManager_h__
 
 #include <stdio.h>
 #include <stdarg.h>

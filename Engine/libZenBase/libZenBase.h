@@ -1,10 +1,10 @@
 #pragma once
-#ifndef __LibCore_Base_h__
-#define __LibCore_Base_h__ 
+#ifndef __LibZenBase_Base_h__
+#define __LibZenBase_Base_h__ 
 
 //=================================================================================================
 //! @file		libZenBaseBase.h
-//! @brief		Header file to include all sub-header files of Core library
+//! @brief		AllocHeader file to include all sub-header files of Core library
 //! @details	
 //-------------------------------------------------------------------------------------------------
 //!	@addtogroup LibCore			
@@ -30,9 +30,10 @@
 //=================================================================================================
 #include <ZenBase/ZenBase.h>
 #include <Engine/libZenBase/libZenBaseType.h>
+#include <Engine/libZenBase/libZenBaseMemory.h>
 #include <Engine/libZenBase/libZenBaseSystem.h>
 #include <Engine/libZenBase/libZenBaseIo.h>
-#include <Engine/libZenBase/Memory/CMemAll.h>
+
 #include <Engine/libZenBase/Algo/CAlgSort.h>
 
 #endif
