@@ -54,7 +54,7 @@ namespace sample
 		delete pTest1;
 		delete[] pArrayTest;
 
-		zbMem::PoolAllocator PoolAlloc( "TestPool", sizeof(TestAlloc), 2, 1); 
+		zenMem::AllocatorPool PoolAlloc( "TestPool", sizeof(TestAlloc), 2, 1); 
 		pTest1 = zenNew(&PoolAlloc) TestAlloc(0x01);
 		pTest2 = zenNew(&PoolAlloc) TestAlloc(0x02);
 		pTest3 = zenNew(&PoolAlloc) TestAlloc(0x03);

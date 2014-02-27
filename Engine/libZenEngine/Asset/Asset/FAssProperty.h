@@ -37,7 +37,7 @@ namespace FAss
 		virtual PropertyDefBase::Value* Allocate()const{return zenNew(&sPoolAlloc)Value(*this);}						\
 		virtual void ValueToString(const PropertyDefBase::Value& _Value, char* _zBuffer, zenUInt _uSizebuffer)const;	\
 	protected:																										\
-		static zbMem::PoolAllocator	sPoolAlloc;													
+		static zenMem::AllocatorPool	sPoolAlloc;													
 
 
 class PropertyDefBase

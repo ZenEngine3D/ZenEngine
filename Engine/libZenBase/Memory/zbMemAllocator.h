@@ -15,7 +15,6 @@ namespace zbMem
 	//!					-# Memory : User requested memory
 	//!					-# Footer : Padding added at the end to detect buffer overrun
 	//! @todo		Reduce memory footprint by packing together infos and removing debug only infos 
-	//! @todo		Might not need to keep track of every allocation (keep it only as memtracking define)
 	//=================================================================================================
 	class AllocHeader
 #if AW_MEMORYDEBUG

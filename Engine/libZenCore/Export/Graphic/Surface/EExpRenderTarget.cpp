@@ -22,7 +22,7 @@ namespace EExp
 	//=================================================================================================
 	zenResID CreateGfxRenderTarget(awconst::eTextureFormat _eFormat, zenVec2U16 _vDim, bool _bSrgb)
 	{		
-		static zbMem::PoolAllocator sMemPool("Pool RenderTarget", sizeof(SerialRenderTarget_Base::ExportInfo), 1, 5 );
+		static zenMem::AllocatorPool sMemPool("Pool RenderTarget", sizeof(SerialRenderTarget_Base::ExportInfo), 1, 5 );
 		SerialRenderTarget_Base::ExportInfo* pExportInfo	= zenNew(&sMemPool) SerialRenderTarget_Base::ExportInfo;		
 		pExportInfo->meFormat								= _eFormat;
 		pExportInfo->mvDim									= _vDim;

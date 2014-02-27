@@ -40,7 +40,7 @@ namespace zen { namespace zenMem
 		virtual zenDebugString	GetDescription()=0;
 	};
 
-	/*
+	
 	//=================================================================================================
 	//! @class		ScopedAllocator
 	//-------------------------------------------------------------------------------------------------
@@ -49,22 +49,24 @@ namespace zen { namespace zenMem
 	//! @details	one specified. At object destruction, restore the value it was 
 	//! @details	initially set at		
 	//=================================================================================================
+	/*
 	class ScopedAllocator
 	{	
 	AWClassDeclareNoParent(ScopedAllocator);
 	public:
-		Override(AllocatorBase* _pAllocator)
- 		: mpAllocatorPrevious(AllocatorBase::GetDefault())
+		Override(Allocator* _pAllocator)
+ 		: mpAllocatorPrevious(Allocator::GetDefault())
 		{
-			AllocatorBase::Default = _pAllocator;
+			Allocator::Default = _pAllocator;
 		}
 		~Override()
 		{
-			AllocatorBase::Default = mpAllocatorPrevious;
+			Allocator::Default = mpAllocatorPrevious;
 		}	
 	protected:
-		AllocatorBase* mpAllocatorPrevious;
-	};*/
+		Allocator* mpAllocatorPrevious;
+	};
+	*/
 
 }} //namespace zen { namespace mem  
 

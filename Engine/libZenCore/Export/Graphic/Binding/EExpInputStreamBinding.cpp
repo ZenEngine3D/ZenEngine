@@ -12,7 +12,7 @@ namespace EExp
 	//=================================================================================================
 	zenResID CreateGfxInputStream(zenResID _VertexBufferID, zenResID _ShaderInputSignatureID)
 	{
-		static zbMem::PoolAllocator sMemPool("Pool CreateInputStream", sizeof(SerialInputStream_Base::ExportInfo), 1, 5 );
+		static zenMem::AllocatorPool sMemPool("Pool CreateInputStream", sizeof(SerialInputStream_Base::ExportInfo), 1, 5 );
 		SerialInputStream_Base::ExportInfo* pExportInfo	= zenNew(&sMemPool) SerialInputStream_Base::ExportInfo;
 		pExportInfo->mVertexBufferID							= _VertexBufferID;
 		pExportInfo->mShaderInputSignatureID					= _ShaderInputSignatureID;

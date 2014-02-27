@@ -14,7 +14,7 @@ namespace EExp
 zenResID CreateGfxShaderParam(zenResID _ParentParamDefID, const zenArrayBase<const EExp::ParameterBase*>& _aParamValues)
 {
 	AWAssert( _ParentParamDefID.Type() == awconst::keResType_GfxShaderParamDef );	
-	static zbMem::PoolAllocator sMemPool("Pool CreateShaderParam", sizeof(SerialShaderParam_Base::ExportInfo), 1, 5 );
+	static zenMem::AllocatorPool sMemPool("Pool CreateShaderParam", sizeof(SerialShaderParam_Base::ExportInfo), 1, 5 );
 	SerialShaderParam_Base::ExportInfo*	pExportInfo = zenNew(&sMemPool) SerialShaderParam_Base::ExportInfo;
 	pExportInfo->maParamValues						= _aParamValues;
 	pExportInfo->mParentParamDefID					= _ParentParamDefID;

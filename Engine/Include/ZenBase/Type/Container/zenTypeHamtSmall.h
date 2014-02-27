@@ -2,8 +2,6 @@
 #ifndef __zenBase_Type_HamtSmall_h__
 #define __zenBase_Type_HamtSmall_h__
 
-#include <Engine/libZenBase/Memory/zbMemPool.h>	//! @todo remove this and move pool to api
-
 namespace zen { namespace zenType {
 
 	//=================================================================================================
@@ -140,7 +138,7 @@ namespace zen { namespace zenType {
 		Node*					mpRootNode;				//!< First accessible node
 		zenU32					muCount;				//!< Keep track of element count in the table, for debug purposes
 		TValue					mDefault;				//!< Default value to assign when accessing a non-existing entry
-		zbMem::PoolAllocator	mPools[kuPoolCount];	//!< PreAllocated memory pools, to contain our nodes	
+		zenMem::AllocatorPool	mPools[kuPoolCount];	//!< PreAllocated memory pools, to contain our nodes	
 		friend class Iterator;
 	};
 
