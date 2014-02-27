@@ -1,28 +1,28 @@
 #pragma once
-#ifndef __LibZenBase_Memory_Pool_h__
-#define __LibZenBase_Memory_Pool_h__
+#ifndef __zenBase_Memory_Pool_h__
+#define __zenBase_Memory_Pool_h__
 
-namespace zbMem
+namespace zen { namespace zenMem
 {
 //=================================================================================================
-//! @class		PoolAllocator
+//! @class		AllocatorPool
 //-------------------------------------------------------------------------------------------------
 //! @brief		Memory pool allocator, return quickly fixed size allocations
 //! @details	Very fast allocator without fragmentation
 //! @todo		ReAdd support for using particular allocator when allocating more memory
 //=================================================================================================
-class PoolAllocator : public zenMem::Allocator
+class AllocatorPool : public zenMem::Allocator
 {
-AWClassDeclare(PoolAllocator, zenMem::Allocator);
+AWClassDeclare(AllocatorPool, zenMem::Allocator);
 public:								
 	virtual void*			Malloc				(size_t _uSize, bool _bIsArray, zenU32 _uAlign=zenDefaultAlign);
 	virtual	void			Free				(void* _pAlloc, void* _pInfoAlloc);
 	virtual zenDebugString	GetDescription()	{return zenDebugString("Pool");}
 
 public:
-							PoolAllocator		();
-							PoolAllocator		(const zenDebugString& _zName, size_t _uItemSize, zenU32 _uItemCount, zenU32 _uItemIncrease, zenU32 _uAlign=zenDefaultAlign );
-	virtual					~PoolAllocator		();
+							AllocatorPool		();
+							AllocatorPool		(const zenDebugString& _zName, size_t _uItemSize, zenU32 _uItemCount, zenU32 _uItemIncrease, zenU32 _uAlign=zenDefaultAlign );
+	virtual					~AllocatorPool		();
 			void			Init				(const zenDebugString& _zName, size_t _uItemSize, zenU32 _uItemCount, zenU32 _uItemIncrease, zenU32 _uAlign=zenDefaultAlign );
 			void			MemoryIncrease		(zenU32 _uItemCount);
 			void			ReInit				();
@@ -42,8 +42,8 @@ protected:
 	zenList1x				mlstFreeItems;		//!< List of the free pre-allocated items	
 	zenList1x				mlstAlloc;			//!< List of allocations done from mpAllocator to reserve space in the pool
 };
-}  
 
-//#include "CMemPool.inl"
+} } //namespace zen { namespace zenMem
+
 
 #endif

@@ -2,8 +2,6 @@
 #ifndef __zenBase_Type_String_h__
 #define __zenBase_Type_String_h__
 
-#include <zenBase/Memory/zenMemUtils.h>
-
 namespace zen { namespace zenType {
 
 //=================================================================================================

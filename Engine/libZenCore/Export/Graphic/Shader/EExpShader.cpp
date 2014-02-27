@@ -42,7 +42,7 @@ namespace EExp
 	//=================================================================================================
 	zenResID CreateGfxShaderVertex( const char* _zFilename, const char* _zEntryname, const zenArrayBase<awres::awShaderDefine>& _aDefines  )
 	{
-		static zbMem::PoolAllocator sMemPool("Pool CreateShaderVertex", sizeof(SerialShader_Base::ExportInfo), 1, 5 );
+		static zenMem::AllocatorPool sMemPool("Pool CreateShaderVertex", sizeof(SerialShader_Base::ExportInfo), 1, 5 );
 		SerialShader_Base::ExportInfo* pExportInfo	= zenNew(&sMemPool) SerialShader_Base::ExportInfo;
 		pExportInfo->mzFilename						= _zFilename;
 		pExportInfo->mzEntryname					= _zEntryname;
@@ -62,7 +62,7 @@ namespace EExp
 	//=================================================================================================
 	zenResID CreateGfxShaderPixel( const char* _zFilename, const char* _zEntryname, const zenArrayBase<awres::awShaderDefine>& _aDefines )
 	{
-		static zbMem::PoolAllocator sMemPool("Pool CreateShaderPixel", sizeof(SerialShader_Base::ExportInfo), 1, 5 );
+		static zenMem::AllocatorPool sMemPool("Pool CreateShaderPixel", sizeof(SerialShader_Base::ExportInfo), 1, 5 );
 		SerialShader_Base::ExportInfo* pExportInfo	= zenNew(&sMemPool) SerialShader_Base::ExportInfo;
 		pExportInfo->mzFilename						= _zFilename;
 		pExportInfo->mzEntryname					= _zEntryname;

@@ -13,7 +13,7 @@ namespace EExp
 //=================================================================================================
 zenResID CreateGfxShaderParamDef( zenResID _ParentShaderID, EExp::eShaderParamFreq _eBufferIndex )
 {
-	static zbMem::PoolAllocator sMemPool("Pool CreateShaderParamDef", sizeof(SerialShaderParamDef_Base::ExportInfo), 1, 5 );
+	static zenMem::AllocatorPool sMemPool("Pool CreateShaderParamDef", sizeof(SerialShaderParamDef_Base::ExportInfo), 1, 5 );
 	SerialShaderParamDef_Base::ExportInfo* pExportInfo	= zenNew(&sMemPool) SerialShaderParamDef_Base::ExportInfo;	
 	pExportInfo->mParentShaderID						= _ParentShaderID;
 	pExportInfo->meBufferIndex							= _eBufferIndex;		

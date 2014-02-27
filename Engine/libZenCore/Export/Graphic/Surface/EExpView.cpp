@@ -69,7 +69,7 @@ namespace EExp
 	//=================================================================================================
 	zenResID CreateGfxView( const zenResID& _TargetColorID, const zenResID& _TargetDepthID, const zenVec2U16& _vDim, const zenVec2U16& _vOrigin )
 	{
-		static zbMem::PoolAllocator sMemPool("Pool Views", sizeof(SerialGfxView_Base::ExportInfo), 1, 5 );
+		static zenMem::AllocatorPool sMemPool("Pool Views", sizeof(SerialGfxView_Base::ExportInfo), 1, 5 );
 		SerialGfxView_Base::ExportInfo* pExportInfo	= zenNew(&sMemPool) SerialGfxView_Base::ExportInfo;
 		pExportInfo->maTargetColorID.Copy(&_TargetColorID, 1);		
 		pExportInfo->mTargetDepthID					= _TargetDepthID;
@@ -90,7 +90,7 @@ namespace EExp
 	//=================================================================================================
 	zenResID CreateGfxView( const zenArrayBase<zenResID>& _aTargetColorID, const zenResID& _TargetDepthID, const zenVec2U16& _vDim, const zenVec2U16& _vOrigin )
 	{
-		static zbMem::PoolAllocator sMemPool("Pool Views", sizeof(SerialGfxView_Base::ExportInfo), 1, 5 );
+		static zenMem::AllocatorPool sMemPool("Pool Views", sizeof(SerialGfxView_Base::ExportInfo), 1, 5 );
 		SerialGfxView_Base::ExportInfo* pExportInfo	= zenNew(&sMemPool) SerialGfxView_Base::ExportInfo;
 		pExportInfo->maTargetColorID				= _aTargetColorID;
 		pExportInfo->mTargetDepthID					= _TargetDepthID;

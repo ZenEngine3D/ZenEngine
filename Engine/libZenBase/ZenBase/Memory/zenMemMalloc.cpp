@@ -1,14 +1,14 @@
 #include "libZenBase.h"
 
-namespace zbMem
+namespace zen { namespace zenMem
 {
 
-MallocAllocator::MallocAllocator(const char* _zName)
+AllocatorMalloc::AllocatorMalloc(const char* _zName)
 : zenMem::Allocator(_zName)
 {
 }
 
-void* MallocAllocator::Malloc(size_t _uSize, bool _bIsArray, zenU32 _uAlign)
+void* AllocatorMalloc::Malloc(size_t _uSize, bool _bIsArray, zenU32 _uAlign)
 {	
 	size_t uSizeNeeded	= GetAllocSize(_uSize, 0, _uAlign);
 	void* pAllocation	= malloc( uSizeNeeded );
@@ -16,12 +16,12 @@ void* MallocAllocator::Malloc(size_t _uSize, bool _bIsArray, zenU32 _uAlign)
 
 }
 
-void MallocAllocator::Free(void* _pAlloc, void* _pInfoAlloc)
+void AllocatorMalloc::Free(void* _pAlloc, void* _pInfoAlloc)
 {
 	AWAssert(_pAlloc && _pInfoAlloc);
-	AllocHeader* pInfoAlloc = static_cast<AllocHeader*>(_pInfoAlloc);
+	zbMem::AllocHeader* pInfoAlloc = static_cast<zbMem::AllocHeader*>(_pInfoAlloc);
 	RemAlloc(pInfoAlloc);
 	free( (void*)((zenPointer)_pAlloc - pInfoAlloc->muOffset) );
 }
 
-}  
+}} //namespace zen { namespace zenMem

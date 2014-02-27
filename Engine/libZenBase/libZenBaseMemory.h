@@ -13,8 +13,5 @@
 //!				This is a component of the @link LibCore Core @endlink library.
 //=================================================================================================
 #include <Engine/libZenBase/Memory/zbMemAllocator.h>
-#include <Engine/libZenBase/Memory/zbMemBase.h>
-#include <Engine/libZenBase/Memory/zbMemMalloc.h>
-#include <Engine/libZenBase/Memory/zbMemPool.h>
 
 #endif

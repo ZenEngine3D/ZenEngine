@@ -22,7 +22,7 @@ AllocHeader* GetHeader( void* _pAlloc, bool _bIsArray )
 
 zenMem::Allocator& GetDefault()
 {
-	static zbMem::MallocAllocator	sMalloc("DefaultMalloc");
+	static zenMem::AllocatorMalloc sMalloc("DefaultMalloc");
 	if( GDefault == NULL )
 		GDefault = &sMalloc; //! @todo: replace this with scope override
 	//static zbMem::Override			sDefaultMemAlloc( &sMalloc );
