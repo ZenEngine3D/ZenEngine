@@ -6,7 +6,7 @@ namespace EExp
 {	
 	class SerialGfxSampler_DX11 : public SerialSampler_Base
 	{
-	AWClassDeclare(SerialGfxSampler_DX11, SerialSampler_Base)
+	ZENClassDeclare(SerialGfxSampler_DX11, SerialSampler_Base)
 //-------------------------------------------------------------------------------------------------
 // Serialization and Asset creation support
 //-------------------------------------------------------------------------------------------------
@@ -29,7 +29,7 @@ namespace EExp
 
 	class SerialGfxBlend_DX11 : public SerialBlend_Base
 	{
-		AWClassDeclare(SerialGfxBlend_DX11, SerialBlend_Base)
+		ZENClassDeclare(SerialGfxBlend_DX11, SerialBlend_Base)
 			//-------------------------------------------------------------------------------------------------
 			// Serialization and Asset creation support
 			//-------------------------------------------------------------------------------------------------
@@ -52,7 +52,7 @@ namespace EExp
 
 	class SerialGfxDepthStencil_DX11 : public SerialDepthStencil_Base
 	{
-		AWClassDeclare(SerialGfxDepthStencil_DX11, SerialDepthStencil_Base)
+		ZENClassDeclare(SerialGfxDepthStencil_DX11, SerialDepthStencil_Base)
 			//-------------------------------------------------------------------------------------------------
 			// Serialization and Asset creation support
 			//-------------------------------------------------------------------------------------------------
@@ -75,7 +75,7 @@ namespace EExp
 
 	class SerialGfxRasterizer_DX11 : public SerialRasterizer_Base
 	{
-		AWClassDeclare(SerialGfxRasterizer_DX11, SerialRasterizer_Base)
+		ZENClassDeclare(SerialGfxRasterizer_DX11, SerialRasterizer_Base)
 			//-------------------------------------------------------------------------------------------------
 			// Serialization and Asset creation support
 			//-------------------------------------------------------------------------------------------------

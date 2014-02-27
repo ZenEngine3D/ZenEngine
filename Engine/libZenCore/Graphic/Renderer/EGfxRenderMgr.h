@@ -15,7 +15,7 @@ namespace EGfx
 //=================================================================================================	
 class ManagerRender_Base : public zbType::Manager
 {
-AWClassDeclare(ManagerRender_Base, zbType::Manager)
+ZENClassDeclare(ManagerRender_Base, zbType::Manager)
 public:	
 								ManagerRender_Base();
 
@@ -36,7 +36,7 @@ protected:
 
 }
 
-#include AWHeaderRenderer( EGfxRenderMgr )
+#include ZENHeaderRenderer( EGfxRenderMgr )
 
 namespace EMgr { extern EGfx::ManagerRender GfxRender; }
 

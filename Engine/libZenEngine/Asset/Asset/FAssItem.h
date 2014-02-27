@@ -16,7 +16,7 @@ enum enumType
 	keType__Invalid
 };
 
-AWClassDeclareNoParent(AssetItem)
+ZENClassDeclareNoParent(AssetItem)
 public:
 	virtual									~AssetItem();
 	virtual bool							Load(const pugi::xml_node& _NodeAsset);

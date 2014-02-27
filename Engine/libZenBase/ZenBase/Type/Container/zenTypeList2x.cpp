@@ -63,7 +63,7 @@ void zenList2x::Clear( bool _bDelete )
 //==================================================================================================
 void zenList2x::InsertBefore( zenList2xNode* AWRestrict _pAdd, zenList2xNode* AWRestrict _pItem )
 {       
-	AWAssert(_pAdd && _pItem && _pAdd != _pItem);
+	ZENAssert(_pAdd && _pItem && _pAdd != _pItem);
 	_pAdd->LstRemove();	
 	_pAdd->mpLstNext				= _pItem;	
 	_pAdd->mpLstPrev				= _pItem->mpLstPrev;	
@@ -80,7 +80,7 @@ void zenList2x::InsertBefore( zenList2xNode* AWRestrict _pAdd, zenList2xNode* AW
 //==================================================================================================
 void zenList2x::InsertAfter( zenList2xNode* AWRestrict _pAdd, zenList2xNode* AWRestrict _pItem )
 {
-	AWAssert(_pAdd && _pItem && _pAdd != _pItem);
+	ZENAssert(_pAdd && _pItem && _pAdd != _pItem);
 	_pAdd->LstRemove();	
 	_pAdd->mpLstPrev				= _pItem;
 	_pAdd->mpLstNext				= _pItem->mpLstNext;	
@@ -202,7 +202,7 @@ void zenList2x::AddTail( zenList2xNode* _pAdd	)
 //==================================================================================================
 zenList2xNode*	zenList2x::PopHead( void )
 {
-	AWAssert(!IsEmpty());
+	ZENAssert(!IsEmpty());
 	zenList2xNode* pItem = moRoot.mpLstNext;
 	pItem->LstRemove();
 	return pItem;
@@ -216,7 +216,7 @@ zenList2xNode*	zenList2x::PopHead( void )
 //==================================================================================================
 zenList2xNode*	zenList2x::PopTail( void )
 {
-	AWAssert(!IsEmpty());
+	ZENAssert(!IsEmpty());
 	zenList2xNode* pItem = moRoot.mpLstPrev;
 	pItem->LstRemove();
 	return pItem;

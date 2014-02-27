@@ -34,7 +34,7 @@ namespace ERes
 			zenArrayStatic<GfxShaderParamDefRef>	maGfxShaderParamDefRef;	//! <List of Constant buffer (per frequency) associated with this shader
 			MapBindInfo							mdTextureSamplerSlot;	//! <Dictionary of texture/sampler name used by shader, with associated texture slot		
 		};
-	AWClassDeclare(GfxShader_DX11, Resource)
+	ZENClassDeclare(GfxShader_DX11, Resource)
 	public:
 											GfxShader_DX11(EExp::SerialShader_DX11& _SerialItem, InstanceInfoBase& _CommonInstance);
 		virtual bool						ResourceInit();

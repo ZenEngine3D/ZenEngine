@@ -10,7 +10,7 @@ namespace FWnd
 	//=================================================================================================	
 	class Window
 	{
-	AWClassDeclareNoParent(Window)
+	ZENClassDeclareNoParent(Window)
 	enum eThreadStatus{keThread_Starting, keThread_Error, keThread_Running, keThread_Ended};
 	public:	
 								Window(const WCHAR* _zWindowName, zenVec2U16 _ClientSize);

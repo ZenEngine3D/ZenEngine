@@ -6,7 +6,7 @@ namespace zen { namespace zenType {
 	template<typename TType>
 	class zenVector2
 	{
-	AWClassDeclareNoParent(zenVector2)
+	ZENClassDeclareNoParent(zenVector2)
 	public:
 								zenVector2();
 								zenVector2(TType _Val);
@@ -33,7 +33,7 @@ namespace zen { namespace zenType {
 	template<typename TType>
 	class zenVector3
 	{
-	AWClassDeclareNoParent(zenVector3)
+	ZENClassDeclareNoParent(zenVector3)
 	public:
 								zenVector3();
 								zenVector3(TType _val);
@@ -61,7 +61,7 @@ namespace zen { namespace zenType {
 	template<typename TType>
 	class zenVector4
 	{
-	AWClassDeclareNoParent(zenVector4)
+	ZENClassDeclareNoParent(zenVector4)
 	public:
 								zenVector4();
 								zenVector4(TType _Val);
@@ -86,21 +86,21 @@ namespace zen { namespace zenType {
 		static const zenVector4 One;
 	};
 
-	typedef zenVector2<zenS16>	zenVec2S16;	AWAddSupportsMemCopy(zenVec2S16);
-	typedef zenVector2<zenS32>	zenVec2S32;	AWAddSupportsMemCopy(zenVec2S32);
-	typedef zenVector2<zenU16>	zenVec2U16;	AWAddSupportsMemCopy(zenVec2U16);
-	typedef zenVector2<zenU32>	zenVec2U32;	AWAddSupportsMemCopy(zenVec2U32);
-	typedef zenVector2<zenF32>	zenVec2F;	AWAddSupportsMemCopy(zenVec2F);
-	typedef zenVector3<zenS16>	zenVec3S16;	AWAddSupportsMemCopy(zenVec3S16);
-	typedef zenVector3<zenS32>	zenVec3S32;	AWAddSupportsMemCopy(zenVec3S32);
-	typedef zenVector3<zenU16>	zenVec3U16;	AWAddSupportsMemCopy(zenVec3U16);
-	typedef zenVector3<zenU32>	zenVec3U32;	AWAddSupportsMemCopy(zenVec3U32);
-	typedef zenVector3<zenF32>	zenVec3F;	AWAddSupportsMemCopy(zenVec3F);
-	typedef zenVector4<zenS16>	zenVec4S16;	AWAddSupportsMemCopy(zenVec4S16);
-	typedef zenVector4<zenS32>	zenVec4S32;	AWAddSupportsMemCopy(zenVec4S32);
-	typedef zenVector4<zenU16>	zenVec4U16;	AWAddSupportsMemCopy(zenVec4U16);
-	typedef zenVector4<zenU32>	zenVec4U32;	AWAddSupportsMemCopy(zenVec4U32);
-	typedef zenVector4<zenF32>	zenVec4F;	AWAddSupportsMemCopy(zenVec4F);
+	typedef zenVector2<zenS16>	zenVec2S16;	ZENSupportMemcopy(zenVec2S16);
+	typedef zenVector2<zenS32>	zenVec2S32;	ZENSupportMemcopy(zenVec2S32);
+	typedef zenVector2<zenU16>	zenVec2U16;	ZENSupportMemcopy(zenVec2U16);
+	typedef zenVector2<zenU32>	zenVec2U32;	ZENSupportMemcopy(zenVec2U32);
+	typedef zenVector2<zenF32>	zenVec2F;	ZENSupportMemcopy(zenVec2F);
+	typedef zenVector3<zenS16>	zenVec3S16;	ZENSupportMemcopy(zenVec3S16);
+	typedef zenVector3<zenS32>	zenVec3S32;	ZENSupportMemcopy(zenVec3S32);
+	typedef zenVector3<zenU16>	zenVec3U16;	ZENSupportMemcopy(zenVec3U16);
+	typedef zenVector3<zenU32>	zenVec3U32;	ZENSupportMemcopy(zenVec3U32);
+	typedef zenVector3<zenF32>	zenVec3F;	ZENSupportMemcopy(zenVec3F);
+	typedef zenVector4<zenS16>	zenVec4S16;	ZENSupportMemcopy(zenVec4S16);
+	typedef zenVector4<zenS32>	zenVec4S32;	ZENSupportMemcopy(zenVec4S32);
+	typedef zenVector4<zenU16>	zenVec4U16;	ZENSupportMemcopy(zenVec4U16);
+	typedef zenVector4<zenU32>	zenVec4U32;	ZENSupportMemcopy(zenVec4U32);
+	typedef zenVector4<zenF32>	zenVec4F;	ZENSupportMemcopy(zenVec4F);
 }} // namespace zen, zenType
 
 #include "zenTypeVector.inl"

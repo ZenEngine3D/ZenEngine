@@ -7,7 +7,7 @@ namespace EExp
 
 class SerialGfxIndex_DX11 : public SerialIndex_Base
 {
-AWClassDeclare(SerialGfxIndex_DX11, SerialIndex_Base)
+ZENClassDeclare(SerialGfxIndex_DX11, SerialIndex_Base)
 //-------------------------------------------------------------------------------------------------
 // Serialization and Asset creation support
 //-------------------------------------------------------------------------------------------------

@@ -7,7 +7,7 @@ namespace zen { namespace zenType {
 template<class TType>
 class zenArrayStatic : public zenArrayBase<TType>
 {
-AWClassDeclare(zenArrayStatic, zenArrayBase<TType>)	
+ZENClassDeclare(zenArrayStatic, zenArrayBase<TType>)	
 public:
 					zenArrayStatic();
 					zenArrayStatic(zenUInt _uCount);

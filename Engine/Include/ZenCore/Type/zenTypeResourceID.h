@@ -7,7 +7,7 @@ namespace zen { namespace zenType {
 	//! @todo Move this to state files
 	class awBlendDesc
 	{
-	AWClassDeclareNoParent(awBlendDesc)
+	ZENClassDeclareNoParent(awBlendDesc)
 	public:
 		struct awRTBlendDesc
 		{
@@ -45,7 +45,7 @@ namespace zen { namespace zenType {
 
 	class awDepthStencilDesc
 	{
-	AWClassDeclareNoParent(awDepthStencilDesc)
+	ZENClassDeclareNoParent(awDepthStencilDesc)
 	public:
 		struct DepthStencilOp
 		{
@@ -84,7 +84,7 @@ namespace zen { namespace zenType {
 
 	class zenResID
 	{
-	AWClassDeclareNoParent(zenResID)
+	ZENClassDeclareNoParent(zenResID)
 	public:
 		typedef zenHash32	NameHash;
 
@@ -127,8 +127,8 @@ namespace zen { namespace zenType {
 			zenU64 muHashID;
 		};
 	};
-	AWAddSupportsMemCopy(zenResID);
-	AWAddSupportsMemCopy(awBlendDesc);
+	ZENSupportMemcopy(zenResID);
+	ZENSupportMemcopy(awBlendDesc);
 
 }}  //namespace zen, Type 
 

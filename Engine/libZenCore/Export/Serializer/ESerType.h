@@ -10,7 +10,7 @@ namespace EExp
 	template<class _Type_>
 	class StaticArraySerial : public zenArrayStatic<_Type_>, public ISerialize
 	{
-	AWClassDeclare(StaticArraySerial, ISerialize)
+	ZENClassDeclare(StaticArraySerial, ISerialize)
 	public:
 		StaticArraySerial()										: zenArrayStatic<_Type_>(){}
 		StaticArraySerial(const zenArrayStatic<_Type_>& aCopy)	: zenArrayStatic<_Type_>( aCopy ){}

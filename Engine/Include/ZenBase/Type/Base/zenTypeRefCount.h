@@ -7,7 +7,7 @@ namespace zen { namespace zenType {
 	template<bool TAutoDelete>
 	class zenRefCounted
 	{
-	AWClassDeclareNoParent(zenRefCounted)
+	ZENClassDeclareNoParent(zenRefCounted)
 	public:
 							zenRefCounted();
 		virtual				~zenRefCounted();
@@ -21,7 +21,7 @@ namespace zen { namespace zenType {
 	template<class TRefCountedType>
 	class zenSharedPtr
 	{
-	AWClassDeclareNoParent(zenSharedPtr)
+	ZENClassDeclareNoParent(zenSharedPtr)
 	public:
 		inline 							zenSharedPtr();
 		inline 							zenSharedPtr(TRefCountedType* _pReference);

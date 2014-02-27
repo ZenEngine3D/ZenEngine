@@ -70,14 +70,14 @@ void zenArrayBase<TType>::SetAll(const TType& _Value)
 template<class TType>
 TType& zenArrayBase<TType>::operator[](zenUInt _uIndex)
 {
-	AWAssert(_uIndex<muCount);
+	ZENAssert(_uIndex<muCount);
 	return mpData[_uIndex];
 }
 
 template<class TType>
 const TType& zenArrayBase<TType>::operator[](zenUInt _uIndex)const
 {
-	AWAssert(_uIndex<muCount);
+	ZENAssert(_uIndex<muCount);
 	return mpData[_uIndex];
 }
 
@@ -130,7 +130,7 @@ zenUInt zenArrayBase<TType>::Copy(const TType* _pCopy, zenUInt _uCount)
 {	
 	Clear();
 	SetCount(_uCount);
-	if( AWSupportsMemCopy<TType>::value )
+	if( ZenSupportsMemCopy<TType>::value )
 	{
 		zenMem::Copy(mpData, _pCopy, sizeof(TType)*_uCount);
 	}	

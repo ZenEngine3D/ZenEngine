@@ -52,8 +52,8 @@ void zenList1x::Clear( bool _bDelete )
 //==================================================================================================
 void zenList1x::InsertAfter( zenList1xNode* AWRestrict _pAdd, zenList1xNode* AWRestrict _pItem )
 {
-	AWAssert(_pAdd && _pItem && _pAdd != _pItem);
-	AWAssertMsg(_pAdd->mpLstNext == NULL, "Remove item from its list before adding it to a new one");
+	ZENAssert(_pAdd && _pItem && _pAdd != _pItem);
+	ZENAssertMsg(_pAdd->mpLstNext == NULL, "Remove item from its list before adding it to a new one");
 	_pAdd->mpLstNext	= _pItem->mpLstNext;	
 	_pItem->mpLstNext	= _pAdd;
 }

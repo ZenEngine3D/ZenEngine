@@ -6,7 +6,7 @@ namespace CFil
 {
 	class ManagerFile_PC : public ManagerFile_Base
 	{
-	AWClassDeclare(ManagerFile_PC, ManagerFile_Base);
+	ZENClassDeclare(ManagerFile_PC, ManagerFile_Base);
 	public:		
 	//-------------------------------------------------------------------------
 	// Common Interface to all ManagerFile

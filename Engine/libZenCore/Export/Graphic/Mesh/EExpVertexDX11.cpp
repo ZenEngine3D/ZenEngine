@@ -12,7 +12,7 @@ bool SerialGfxVertex_DX11::ExportWork(bool _bIsTHRTask)
 		{DXGI_FORMAT_R32_SINT,	DXGI_FORMAT_R32G32_SINT,	DXGI_FORMAT_R32G32B32_SINT,		DXGI_FORMAT_R32G32B32A32_SINT},
 		{DXGI_FORMAT_R32_UINT,	DXGI_FORMAT_R32G32_UINT,	DXGI_FORMAT_R32G32B32_UINT,		DXGI_FORMAT_R32G32B32A32_UINT}};	
 	
-	AWStaticAssert( AWArrayCount(uSemanticIndex)==awconst::keShaderSemantic__Count );
+	ZENStaticAssert( ZENArrayCount(uSemanticIndex)==awconst::keShaderSemantic__Count );
 	
 	zenU8 uElementTotal(0);
 	zenU8 uElementCur(0);
@@ -35,7 +35,7 @@ bool SerialGfxVertex_DX11::ExportWork(bool _bIsTHRTask)
 		for(zenUInt elem=0; elem<StreamOut.muElementCount; ++elem)
 		{
 			const awres::awGfxVertex::Element& ElemInfo	= StreamIn.maElements[elem];			
-			AWAssert(ElemInfo.muVectorSize > 0);
+			ZENAssert(ElemInfo.muVectorSize > 0);
 			pElemDX11->SemanticName						= (const char*)ElemInfo.meSemantic;	// Will be converted to string pointer in Resource
 			pElemDX11->SemanticIndex					= uSemanticIndex[ElemInfo.meSemantic]++;
 			pElemDX11->Format							= eFormats[ElemInfo.meType][ElemInfo.muVectorSize-1];

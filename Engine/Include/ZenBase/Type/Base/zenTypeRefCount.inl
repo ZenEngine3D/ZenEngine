@@ -84,14 +84,14 @@ bool zenSharedPtr<TRefCountedType>::IsValid()
 template<class TRefCountedType>
 TRefCountedType* zenSharedPtr<TRefCountedType>::operator->()
 {
-	AWAssert(mpReference);
+	ZENAssert(mpReference);
 	return mpReference;
 }
 
 template<class TRefCountedType>
 const TRefCountedType* zenSharedPtr<TRefCountedType>::operator->()const
 {
-	AWAssert(mpReference);
+	ZENAssert(mpReference);
 	return mpReference;
 }
 

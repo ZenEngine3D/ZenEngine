@@ -6,7 +6,7 @@ namespace EExp
 {
 	class SerialGfxWindow_DX11 : public EExp::ExportItem
 	{
-	AWClassDeclare(SerialGfxWindow_DX11, EExp::ExportItem)
+	ZENClassDeclare(SerialGfxWindow_DX11, EExp::ExportItem)
 	public:		
 		struct ExportInfo : public EExp::ExportInfoBase
 		{				

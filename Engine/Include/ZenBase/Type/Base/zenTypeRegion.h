@@ -7,7 +7,7 @@ namespace zen { namespace zenType {
 template<class _Type_>
 class zenRegion
 {
-AWClassDeclareNoParent(zenRegion)
+ZENClassDeclareNoParent(zenRegion)
 public:
 	AWForceInline zenRegion(void); //need to specialize for different types (right now there is a default implementation for zenS8, zenU8, zenS16, zenU16, zenS32, zenU32, zenS64, zenU64, zenF32, zenF64)
 	AWForceInline zenRegion(const _Type_ inX1, const _Type_ inY1, const _Type_ inX2, const _Type_ inY2);
@@ -34,16 +34,16 @@ public:
 	};
 };
 
-typedef zenRegion<zenS8> 	awRegionS8;		AWAddSupportsMemCopy(awRegionS8);
-typedef zenRegion<zenU8> 	awRegionU8;		AWAddSupportsMemCopy(awRegionU8);
-typedef zenRegion<zenS16>	awRegionS16;	AWAddSupportsMemCopy(awRegionS16);
-typedef zenRegion<zenU16>	awRegionU16;	AWAddSupportsMemCopy(awRegionU16);
-typedef zenRegion<zenS32>	awRegionS32;	AWAddSupportsMemCopy(awRegionS32);
-typedef zenRegion<zenU32>	awRegionU32;	AWAddSupportsMemCopy(awRegionU32);
-typedef zenRegion<zenS64>	awRegionS64;	AWAddSupportsMemCopy(awRegionS64);
-typedef zenRegion<zenU64>	awRegionU64;	AWAddSupportsMemCopy(awRegionU64);
-typedef zenRegion<zenF32>	awRegionF32;	AWAddSupportsMemCopy(awRegionF32);
-typedef zenRegion<zenF64>	awRegionF64;	AWAddSupportsMemCopy(awRegionF64);
+typedef zenRegion<zenS8> 	awRegionS8;		ZENSupportMemcopy(awRegionS8);
+typedef zenRegion<zenU8> 	awRegionU8;		ZENSupportMemcopy(awRegionU8);
+typedef zenRegion<zenS16>	awRegionS16;	ZENSupportMemcopy(awRegionS16);
+typedef zenRegion<zenU16>	awRegionU16;	ZENSupportMemcopy(awRegionU16);
+typedef zenRegion<zenS32>	awRegionS32;	ZENSupportMemcopy(awRegionS32);
+typedef zenRegion<zenU32>	awRegionU32;	ZENSupportMemcopy(awRegionU32);
+typedef zenRegion<zenS64>	awRegionS64;	ZENSupportMemcopy(awRegionS64);
+typedef zenRegion<zenU64>	awRegionU64;	ZENSupportMemcopy(awRegionU64);
+typedef zenRegion<zenF32>	awRegionF32;	ZENSupportMemcopy(awRegionF32);
+typedef zenRegion<zenF64>	awRegionF64;	ZENSupportMemcopy(awRegionF64);
 
 } }//namespace zen { namespace zenType {
 

@@ -2,23 +2,23 @@ namespace zen { namespace zenType {
 
 zenDebugString::zenDebugString()
 {		
-	AWDbgCode(mzDebugString="";)
+	ZENDbgCode(mzDebugString="";)
 }
 
 zenDebugString::zenDebugString(const char* _zString)
 {	
-	AWDbgCode(mzDebugString=_zString;)
+	ZENDbgCode(mzDebugString=_zString;)
 }
 
 zenDebugString::operator const char*()
 {
-	AWDbgCode(return mzDebugString;)
+	ZENDbgCode(return mzDebugString;)
 	return "";
 }
 
 void zenDebugString::operator=(const zenDebugString& _Copy)
 {
-	AWDbgCode(mzDebugString = _Copy.mzDebugString;)
+	ZENDbgCode(mzDebugString = _Copy.mzDebugString;)
 }
 
 } } //namespace zen, Type

@@ -42,8 +42,8 @@ SimpleVertex CubeVertices[] =
 };
 
 const awres::awGfxVertex::Element CubeVerticeInfos[]={	
-	awres::awGfxVertex::Element(awconst::keShaderElemType_Float, 3, awconst::keShaderSemantic_Position,	AWMemberOffset(SimpleVertex, Pos) ),
-	awres::awGfxVertex::Element(awconst::keShaderElemType_Float, 2, awconst::keShaderSemantic_UV,		AWMemberOffset(SimpleVertex, Tex) ) 
+	awres::awGfxVertex::Element(awconst::keShaderElemType_Float, 3, awconst::keShaderSemantic_Position,	ZENMemberOffset(SimpleVertex, Pos) ),
+	awres::awGfxVertex::Element(awconst::keShaderElemType_Float, 2, awconst::keShaderSemantic_UV,		ZENMemberOffset(SimpleVertex, Tex) ) 
 };
 
 zenU16 CubeIndices[] =
@@ -72,7 +72,7 @@ bool SampleRendererInstance::Init()
 	zenArrayStatic<awres::awGfxVertex::Stream> aVerticeStreams(1);		
 	aVerticeStreams[0].muStride = sizeof(SimpleVertex);
 	aVerticeStreams[0].maData.Copy( (zenU8*)CubeVertices, sizeof(CubeVertices) );
-	aVerticeStreams[0].maElements.Copy(CubeVerticeInfos, AWArrayCount(CubeVerticeInfos) );
+	aVerticeStreams[0].maElements.Copy(CubeVerticeInfos, ZENArrayCount(CubeVerticeInfos) );
 
 	zenArrayStatic<zenU8>		aTexRGBA;
 	zenVec2U16				vTexSize(256,256);
@@ -96,7 +96,7 @@ bool SampleRendererInstance::Init()
 		&awres::awShaderFloat4(zenHash32("vMeshColor"),	zenVec4F(.7f,.7f,.7f,1)),
 		&awres::awShaderFloat4(zenHash32("vColor"),		zenVec4F(1,1,1,1)),
 	};
-	zenArrayStatic<const awres::awShaderParameter*>	aParamAll( ParamAll, AWArrayCount(ParamAll));
+	zenArrayStatic<const awres::awShaderParameter*>	aParamAll( ParamAll, ZENArrayCount(ParamAll));
 
 	//---------------------------------------------------------------------
 	// Create rendering resources		
@@ -124,7 +124,7 @@ bool SampleRendererInstance::Init()
 
 
 	rCubeVertex			= awres::awGfxVertex::Create(aVerticeStreams, 0);
-	rCubeIndex			= awres::awGfxIndex::Create( zenArrayStatic<zenU16>(CubeIndices, AWArrayCount(CubeIndices), TRUE), awconst::kePrimType_TriangleList );
+	rCubeIndex			= awres::awGfxIndex::Create( zenArrayStatic<zenU16>(CubeIndices, ZENArrayCount(CubeIndices), TRUE), awconst::kePrimType_TriangleList );
 	rShaderVS			= awres::awGfxShaderVertex::Create( "Shader/Tutorial07.fx", "VS");
 	rShaderPS			= awres::awGfxShaderPixel::Create( "Shader/Tutorial07.fx", "PS", test );		
 	rTexture			= awres::awGfxTexture2D::Create(awconst::keTexFormat_RGBA8, vTexSize, aTexRGBA );
@@ -136,7 +136,7 @@ bool SampleRendererInstance::Init()
 
 	// Some bindings of render resource together
 	const awres::awGfxShader pShaders[]			= {rShaderVS, rShaderPS};
-	rTestShaderBind		= awres::awGfxShaderBinding::Create( pShaders, AWArrayCount(pShaders) );
+	rTestShaderBind		= awres::awGfxShaderBinding::Create( pShaders, ZENArrayCount(pShaders) );
 	rCube1MeshStrip		= awres::awGfxMeshStrip::Create( rCubeVertex, rCubeIndex, rTestShaderBind );
 	rCube2MeshStrip		= awres::awGfxMeshStrip::Create( rCubeVertex, rCubeIndex, rTestShaderBind );
 	rCube3MeshStrip		= awres::awGfxMeshStrip::Create( rCubeVertex, rCubeIndex, rTestShaderBind );
@@ -144,12 +144,12 @@ bool SampleRendererInstance::Init()
 	awres::awGfxMeshStrip rCube4MeshStripA		= awres::awGfxMeshStrip::Create( rCubeVertex, rCubeIndex, rTestShaderBind, 0, 12 );
 	awres::awGfxMeshStrip rCube4MeshStripB		= awres::awGfxMeshStrip::Create( rCubeVertex, rCubeIndex, rTestShaderBind, 12, 0xFFFFFFFF );
 	const awres::awGfxMeshStrip aMesh4Strip[]	= {rCube4MeshStripA, rCube4MeshStripB};
-	rCube4Mesh									= awres::awGfxMesh::Create( aMesh4Strip, AWArrayCount(aMesh4Strip) );
+	rCube4Mesh									= awres::awGfxMesh::Create( aMesh4Strip, ZENArrayCount(aMesh4Strip) );
 
 	//-------------------------------------------------
 	// Init some shader values
 	//---------------------------------------------------------------------
-	for(int i=0; i<AWArrayCount(matWorld); ++i)
+	for(int i=0; i<ZENArrayCount(matWorld); ++i)
 		matWorld[i].SetIdentity();
 
 	zenMath::V4 vEye	= zenMath::XYZW( 0.0f, 0.0f, -2.0f, 0.0f );
@@ -196,7 +196,7 @@ bool SampleRendererInstance::Init()
 	// Testing Lock
 	//---------------------------------------------------------------------
 	SimpleVertex* pVertexSrc	= CubeVertices;
-	SimpleVertex* pVertexSrcEnd	= &CubeVertices[AWArrayCount(CubeVertices)];
+	SimpleVertex* pVertexSrcEnd	= &CubeVertices[ZENArrayCount(CubeVertices)];
 	SimpleVertex* pVertex		= (SimpleVertex*)rCubeVertex.Lock();		
 	while( pVertexSrc < pVertexSrcEnd )
 	{
@@ -295,7 +295,7 @@ void SampleRendererInstance::Update()
 		zenArrayStatic<awres::awGfxVertex::Stream> aVerticeStreams(1);		
 		aVerticeStreams[0].muStride = sizeof(SimpleVertex);
 		aVerticeStreams[0].maData.Copy( (zenU8*)CubeVertices, sizeof(CubeVertices) );
-		aVerticeStreams[0].maElements.Copy(CubeVerticeInfos, AWArrayCount(CubeVerticeInfos) );
+		aVerticeStreams[0].maElements.Copy(CubeVerticeInfos, ZENArrayCount(CubeVerticeInfos) );
 
 		zenArrayStatic<zenU8>		aTexRGBA;
 		zenVec2U16				vTexSize(256,256);
@@ -318,7 +318,7 @@ void SampleRendererInstance::Update()
 			&awres::awShaderFloat4(zenHash32("vMeshColor"),	zenVec4F(.7f,.7f,.7f,1)),
 			&awres::awShaderFloat4(zenHash32("vColor"),		zenVec4F(1,1,1,1)),
 		};
-		zenArrayStatic<const awres::awShaderParameter*>	aParamAll( ParamAll, AWArrayCount(ParamAll));
+		zenArrayStatic<const awres::awShaderParameter*>	aParamAll( ParamAll, ZENArrayCount(ParamAll));
 
 		//---------------------------------------------------------------------
 		// Create rendering resources		
@@ -327,7 +327,7 @@ void SampleRendererInstance::Update()
 		test[0] = awres::awShaderDefine("DEFINETEST", "1");
 
 		awres::awGfxVertex			rCubeVertex			= awres::awGfxVertex::Create(aVerticeStreams, 0);
-		awres::awGfxIndex			rCubeIndex			= awres::awGfxIndex::Create( zenArrayStatic<zenU16>(CubeIndices, AWArrayCount(CubeIndices), TRUE), awconst::kePrimType_TriangleList );
+		awres::awGfxIndex			rCubeIndex			= awres::awGfxIndex::Create( zenArrayStatic<zenU16>(CubeIndices, ZENArrayCount(CubeIndices), TRUE), awconst::kePrimType_TriangleList );
 		awres::awGfxShaderVertex	rShaderVS			= awres::awGfxShaderVertex::Create( "Shader/Tutorial07.fx", "VS");
 		awres::awGfxShaderPixel		rShaderPS			= awres::awGfxShaderPixel::Create( "Shader/Tutorial07.fx", "PS", test );		
 		awres::awGfxTexture2D		rTexture			= awres::awGfxTexture2D::Create(awconst::keTexFormat_RGBA8, vTexSize, aTexRGBA );
@@ -339,7 +339,7 @@ void SampleRendererInstance::Update()
 
 		// Some bindings of render resource together
 		const awres::awGfxShader	pShaders[]			= {rShaderVS, rShaderPS};
-		awres::awGfxShaderBinding	rTestShaderBind		= awres::awGfxShaderBinding::Create( pShaders, AWArrayCount(pShaders) );
+		awres::awGfxShaderBinding	rTestShaderBind		= awres::awGfxShaderBinding::Create( pShaders, ZENArrayCount(pShaders) );
 		awres::awGfxMeshStrip		rCube1MeshStrip		= awres::awGfxMeshStrip::Create( rCubeVertex, rCubeIndex, rTestShaderBind );
 		awres::awGfxMeshStrip		rCube2MeshStrip		= awres::awGfxMeshStrip::Create( rCubeVertex, rCubeIndex, rTestShaderBind );
 		awres::awGfxMeshStrip		rCube3MeshStrip		= awres::awGfxMeshStrip::Create( rCubeVertex, rCubeIndex, rTestShaderBind );
@@ -347,12 +347,12 @@ void SampleRendererInstance::Update()
 		awres::awGfxMeshStrip		rCube4MeshStripA	= awres::awGfxMeshStrip::Create( rCubeVertex, rCubeIndex, rTestShaderBind, 0, 12 );
 		awres::awGfxMeshStrip		rCube4MeshStripB	= awres::awGfxMeshStrip::Create( rCubeVertex, rCubeIndex, rTestShaderBind, 12, 0xFFFFFFFF );
 		const awres::awGfxMeshStrip aMesh4Strip[]		= {rCube4MeshStripA, rCube4MeshStripB};
-		awres::awGfxMesh rCube4Mesh						= awres::awGfxMesh::Create( aMesh4Strip, AWArrayCount(aMesh4Strip) );
+		awres::awGfxMesh rCube4Mesh						= awres::awGfxMesh::Create( aMesh4Strip, ZENArrayCount(aMesh4Strip) );
 
 		//-------------------------------------------------
 		// Init some shader values
 		//---------------------------------------------------------------------
-		for(int i=0; i<AWArrayCount(matWorld); ++i)
+		for(int i=0; i<ZENArrayCount(matWorld); ++i)
 			matWorld[i].SetIdentity();
 
 		zenMath::V4 vEye	= zenMath::XYZW( 0.0f, 0.0f, -2.0f, 0.0f );
@@ -399,7 +399,7 @@ void SampleRendererInstance::Update()
 		// Testing Lock
 		//---------------------------------------------------------------------
 		SimpleVertex* pVertexSrc	= CubeVertices;
-		SimpleVertex* pVertexSrcEnd	= &CubeVertices[AWArrayCount(CubeVertices)];
+		SimpleVertex* pVertexSrcEnd	= &CubeVertices[ZENArrayCount(CubeVertices)];
 		SimpleVertex* pVertex		= (SimpleVertex*)rCubeVertex.Lock();		
 		while( pVertexSrc < pVertexSrcEnd )
 		{

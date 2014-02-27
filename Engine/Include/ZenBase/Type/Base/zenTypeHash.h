@@ -14,12 +14,12 @@ namespace zen { namespace zenType
 	#define FNV32_Prime					16777619u
 	#define FNV32_Prefix(_N)			((
 	#define FNV32_Postfix(_N)			^ _zStr[_N-1]) * FNV32_Prime)
-	#define FNV32_HASH_CONSTRUCTOR(_N)	AWForceInline zenHash32(const char (&_zStr)[_N+1]) :  muHash( AWRepeat(_N, FNV32_Prefix, AWEmpty1) FNV32_Seed AWRepeat(_N, AWEmpty1, FNV32_Postfix) ){}
+	#define FNV32_HASH_CONSTRUCTOR(_N)	AWForceInline zenHash32(const char (&_zStr)[_N+1]) :  muHash( ZENRepeat(_N, FNV32_Prefix, ZENEmpty1) FNV32_Seed ZENRepeat(_N, ZENEmpty1, FNV32_Postfix) ){}
 	#define FNV64_Seed					14695981039346656037ul
 	#define FNV64_Prime					1099511628211ul
 	#define FNV64_Prefix(_N)			((
 	#define FNV64_Postfix(_N)			^ _zStr[_N-1]) * FNV64_Prime)
-	#define FNV64_HASH_CONSTRUCTOR(_N)	AWForceInline zenHash64(const char (&_zStr)[_N+1]) :  muHash( AWRepeat(_N, FNV64_Prefix, AWEmpty1) FNV64_Seed AWRepeat(_N, AWEmpty1, FNV64_Postfix) ){}
+	#define FNV64_HASH_CONSTRUCTOR(_N)	AWForceInline zenHash64(const char (&_zStr)[_N+1]) :  muHash( ZENRepeat(_N, FNV64_Prefix, ZENEmpty1) FNV64_Seed ZENRepeat(_N, ZENEmpty1, FNV64_Postfix) ){}
 
 	//=================================================================================================	
 	//! @brief Structure used to trick compiler in using HashFNV32() for string pointer, 

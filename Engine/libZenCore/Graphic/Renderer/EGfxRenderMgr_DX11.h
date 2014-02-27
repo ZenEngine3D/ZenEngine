@@ -11,7 +11,7 @@ namespace EGfx
 //=================================================================================================	
 class ManagerRender : public ManagerRender_Base
 {
-AWClassDeclare(ManagerRender, ManagerRender_Base)
+ZENClassDeclare(ManagerRender, ManagerRender_Base)
 //---------------------------------------------------------
 // Common to all ManagerRender
 //---------------------------------------------------------

@@ -27,7 +27,7 @@ namespace EExp
 
 }
 
-#include AWHeaderPlatform(EExpGraphicBase)
+#include ZENHeaderPlatform(EExpGraphicBase)
 
 #include <Engine/libZenCore/Export/Graphic/Surface/EExpTexture.h>
 #include <Engine/libZenCore/Export/Graphic/Surface/EExpState.h>

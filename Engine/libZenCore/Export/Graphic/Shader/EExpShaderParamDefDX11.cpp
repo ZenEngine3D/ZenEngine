@@ -10,8 +10,8 @@ namespace EExp
 
 zenResID SerialGfxShaderParamDef_DX11::CallbackGetItemID(awconst::eResPlatform _ePlatform, awconst::eResType _eType, awconst::eResSource _eSource, const EExp::ExportInfoBase* _pExportInfo, bool& _bExistOut)
 {
-	AWAssert(_ePlatform==awconst::keResPlatform_DX11 && _eType==awconst::keResType_GfxShaderParamDef);
-	AWAssert( _pExportInfo );
+	ZENAssert(_ePlatform==awconst::keResPlatform_DX11 && _eType==awconst::keResType_GfxShaderParamDef);
+	ZENAssert( _pExportInfo );
 	const ExportInfo*			pExportInfo		= static_cast<const ExportInfo*>(_pExportInfo);
 	const SerialShader_DX11*	pParentShader	= EMgr::SerialItems.GetItem<SerialShader_DX11>( pExportInfo->mParentShaderID );	
 	if( pParentShader && pParentShader->maParamDefID.Count() > (zenUInt)pExportInfo->meBufferIndex )

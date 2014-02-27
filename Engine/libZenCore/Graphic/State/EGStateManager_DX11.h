@@ -7,7 +7,7 @@ namespace EGfx
 
 class ManagerState_DX11 : public ManagerState_Base
 {
-AWClassDeclare(ManagerState_DX11, ManagerState_Base)
+ZENClassDeclare(ManagerState_DX11, ManagerState_Base)
 	//---------------------------------------------------------
 	// Common to all ManagerState
 	//---------------------------------------------------------

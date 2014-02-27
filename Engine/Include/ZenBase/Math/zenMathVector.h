@@ -73,6 +73,6 @@ namespace zen { namespace zenMath
 	extern const V4 v4MaskW;
 }  } // namespace zen, zenMath
 
-#include AWInlinePlatform( zenMathVector )
+#include ZENInlinePlatform( zenMathVector )
 
 #endif

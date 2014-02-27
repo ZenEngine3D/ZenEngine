@@ -74,8 +74,8 @@ namespace ERes
 	void GfxWindow_DX11::PerformResize()
 	{
 		ERes::GfxWindowRef rWindowCur = EMgr::GfxRender.GetWindowCurrent();
-		AWAssert(mInstanceInfo.mDX11pSwapChain);
-		AWAssertMsg(rWindowCur != this, "This method should only be called in ManagerBase::FrameStart()");
+		ZENAssert(mInstanceInfo.mDX11pSwapChain);
+		ZENAssertMsg(rWindowCur != this, "This method should only be called in ManagerBase::FrameStart()");
 
 		if( !mvPendingResize.IsNull() && mvPendingResize != mInstanceInfo.mvSize )
 		{

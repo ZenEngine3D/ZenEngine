@@ -4,13 +4,13 @@
 
 #define FLAG_ParamPrefix(_N_)	, TEnumFlag v##_N_
 #define FLAG_ValuePrefix(_N_)	| (TStorage(1)<<v##_N_)
-#define FLAG_CONSTRUCTOR(_N_)	AWForceInline zenFlag( TEnumFlag v0 AWRepeat( _N_, FLAG_ParamPrefix, AWEmpty1) )		\
-								: muFlags( (TStorage(1)<<v0)  AWRepeat( _N_, FLAG_ValuePrefix, AWEmpty1) )			\
+#define FLAG_CONSTRUCTOR(_N_)	AWForceInline zenFlag( TEnumFlag v0 ZENRepeat( _N_, FLAG_ParamPrefix, ZENEmpty1) )		\
+								: muFlags( (TStorage(1)<<v0)  ZENRepeat( _N_, FLAG_ValuePrefix, ZENEmpty1) )			\
 								{ CheckValid(muFlags); }
-#define FLAG_ANY(_N_)			AWForceInline bool Any( TEnumFlag v0 AWRepeat( _N_, FLAG_ParamPrefix, AWEmpty1) )	\
-								{ return Any( (TStorage(1)<<v0) AWRepeat( _N_, FLAG_ValuePrefix, AWEmpty1)); }
-#define FLAG_ALL(_N_)			AWForceInline bool All( TEnumFlag v0 AWRepeat( _N_, FLAG_ParamPrefix, AWEmpty1) )	\
-								{ return All( (TStorage(1)<<v0) AWRepeat( _N_, FLAG_ValuePrefix, AWEmpty1)); }
+#define FLAG_ANY(_N_)			AWForceInline bool Any( TEnumFlag v0 ZENRepeat( _N_, FLAG_ParamPrefix, ZENEmpty1) )	\
+								{ return Any( (TStorage(1)<<v0) ZENRepeat( _N_, FLAG_ValuePrefix, ZENEmpty1)); }
+#define FLAG_ALL(_N_)			AWForceInline bool All( TEnumFlag v0 ZENRepeat( _N_, FLAG_ParamPrefix, ZENEmpty1) )	\
+								{ return All( (TStorage(1)<<v0) ZENRepeat( _N_, FLAG_ValuePrefix, ZENEmpty1)); }
 
 namespace zen { namespace zenType {
 

@@ -6,7 +6,7 @@ static awEngineInstance*	gpActiveEngine(NULL);
 static FWnd::Window*		gpMainWindow;			//! @todo wrap this inside EngineInstance
 void LaunchEngine(awEngineInstance* _pEngineInstance, int argc, const char* const* argv)
 {
-	AWAssert(!gpActiveEngine);
+	ZENAssert(!gpActiveEngine);
 	gpActiveEngine = _pEngineInstance;
 	if( gpActiveEngine->Init() )
 	{
@@ -41,7 +41,7 @@ void awEngineInstance::Update()
 
 void awEngineInstance::CreateGfxWindow(const zenVec2U16& _vDim, const zenVec2U16& _vPos)
 {
-	AWAssert(gpActiveEngine);
+	ZENAssert(gpActiveEngine);
 	gpMainWindow	= zenNewDefault FWnd::Window(L"MainWindow", _vDim);
 	gpMainWindow->Initialize();
 	mrMainGfxWindow = awres::awGfxWindow::Create( gpMainWindow->GetHandle() );

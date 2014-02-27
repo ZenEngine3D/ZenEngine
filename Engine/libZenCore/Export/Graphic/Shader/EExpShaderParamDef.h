@@ -7,7 +7,7 @@ namespace EExp
 
 class ShaderParamItemInfo
 {
-AWClassDeclareNoParent(ShaderParamItemInfo)
+ZENClassDeclareNoParent(ShaderParamItemInfo)
 public:	
 	zenU32	muOffset;				//!< Offset of value in constant buffer or register index (maximum 64k offset)
 	zenU32	muSize			: 13;	//!< Parameter entire memory size (maximum 8192 bytes)
@@ -22,7 +22,7 @@ typedef zenMap<ShaderParamItemInfo>::Key32 ShaderParamItemInfoMap;
 
 class SerialShaderParamDef_Base : public EExp::ExportItem
 {
-AWClassDeclare(SerialShaderParamDef_Base, EExp::ExportItem)
+ZENClassDeclare(SerialShaderParamDef_Base, EExp::ExportItem)
 public:
 	struct ExportInfo : public EExp::ExportInfoBase
 	{				

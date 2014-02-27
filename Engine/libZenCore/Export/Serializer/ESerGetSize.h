@@ -6,7 +6,7 @@ namespace EExp
 {		
 	class SerializerGetSize : public Serializer_Base
 	{
-	AWClassDeclare(SerializerGetSize, Serializer_Base)
+	ZENClassDeclare(SerializerGetSize, Serializer_Base)
 	public:
 						SerializerGetSize():muSerializeSize(0){}
 		virtual eStatus	GetStatus(){return keStatus_GetSize;}

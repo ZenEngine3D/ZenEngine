@@ -9,7 +9,7 @@ namespace ERes
 	//=============================================================================================
 	class Resource: public awres::awResource, public zenList2xNode
 	{
-	AWClassDeclare(Resource, awres::awResource)
+	ZENClassDeclare(Resource, awres::awResource)
 	public:									
 		virtual								~Resource();
 		virtual bool						ResourceInit();
@@ -29,7 +29,7 @@ namespace ERes
 	//=============================================================================================
 	class UnsupportedResource : public Resource
 	{
-	AWClassDeclare(UnsupportedResource, Resource);
+	ZENClassDeclare(UnsupportedResource, Resource);
 	public:
 											UnsupportedResource();
 	};
@@ -41,7 +41,7 @@ namespace ERes
 	template<class TResourceClass, class TReferenceClass>
 	class ResourceRef : public TReferenceClass
 	{
-	AWClassDeclare(ResourceRef, TReferenceClass)
+	ZENClassDeclare(ResourceRef, TReferenceClass)
 	public:	
 		inline								ResourceRef();
 		inline								ResourceRef(awres::awResource* _pResource);
@@ -53,8 +53,8 @@ namespace ERes
 }
 
 #include "EResResource.inl"
-#include AWHeaderRenderer( EResResource )	// Each renderer resources typedef to generic name used in-engine
-#include AWHeaderPlatform( EResResource )	// Each platform resources typedef to generic name used in-engine
+#include ZENHeaderRenderer( EResResource )	// Each renderer resources typedef to generic name used in-engine
+#include ZENHeaderPlatform( EResResource )	// Each platform resources typedef to generic name used in-engine
 
 namespace ERes
 {	

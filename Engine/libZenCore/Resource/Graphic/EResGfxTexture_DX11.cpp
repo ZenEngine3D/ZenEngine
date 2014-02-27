@@ -43,7 +43,7 @@ namespace ERes
 		}
 		else
 		{
-			AWAssertMsg(!bIsDepth, "Only RenderTarget can be of type 'Depth'.");
+			ZENAssertMsg(!bIsDepth, "Only RenderTarget can be of type 'Depth'.");
 			bufferDesc.Usage					= D3D11_USAGE_IMMUTABLE;
 			bufferDesc.BindFlags				= D3D11_BIND_SHADER_RESOURCE;
 		}
@@ -51,7 +51,7 @@ namespace ERes
 		bool bValidInitData(false);
 		for(zenUInt mipIdx(0); mipIdx<bufferDesc.MipLevels; ++mipIdx)
 		{
-			AWAssert(mipIdx < AWArrayCount(aInitData));			
+			ZENAssert(mipIdx < ZENArrayCount(aInitData));			
 			if( mInstanceInfo.mSerial.maMipData[mipIdx].maData.Count() > 0 )
 			{
 				bValidInitData					= true;

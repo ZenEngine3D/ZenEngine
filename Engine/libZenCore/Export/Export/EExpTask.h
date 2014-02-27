@@ -6,7 +6,7 @@ namespace EExp
 {	
 	class ExportTask : public CJob::JobItem
 	{
-	AWClassDeclare(ExportTask, CJob::JobItem)
+	ZENClassDeclare(ExportTask, CJob::JobItem)
 	public:			
 									ExportTask(EExp::ExportItem* _pExportItem, EExp::ExportInfoBase* _pExportInfo);		
 		virtual bool				Start();

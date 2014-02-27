@@ -6,7 +6,7 @@ namespace EExp
 {	
 class ManagerSerialItem : public zbType::Manager
 {
-AWClassDeclare(ManagerSerialItem, zbType::Manager)
+ZENClassDeclare(ManagerSerialItem, zbType::Manager)
 public:
 										ManagerSerialItem();			
 	void								SetItem(EExp::SerialItem* _pItem);

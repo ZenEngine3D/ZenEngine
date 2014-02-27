@@ -7,7 +7,7 @@ namespace EExp
 
 class ManagerExport : public zbType::Manager
 {
-AWClassDeclare(ManagerExport, zbType::Manager)
+ZENClassDeclare(ManagerExport, zbType::Manager)
 public:
 	typedef zenResID	(*CBCreateItem)(ExportInfoBase*);
 	typedef zenResID	(*CBGetItemID)(awconst::eResPlatform _ePlatform, awconst::eResType _eType, awconst::eResSource _eSource, const ExportInfoBase* _pExportInfo, bool& _bExistOut);

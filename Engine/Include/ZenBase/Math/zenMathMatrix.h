@@ -6,7 +6,7 @@ namespace zen { namespace zenMath
 {
 	class Matrix
 	{
-	AWClassDeclareNoParent(Matrix);
+	ZENClassDeclareNoParent(Matrix);
 	public:
 							Matrix		(){};
 							Matrix		(const Matrix& _Copy);

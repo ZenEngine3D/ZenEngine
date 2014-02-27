@@ -6,7 +6,7 @@ namespace zen { namespace zenType {
 
 class zenList2xNode
 {
-AWClassDeclareNoParent(zenList2xNode)
+ZENClassDeclareNoParent(zenList2xNode)
 public:
 							zenList2xNode	();
 							~zenList2xNode	();
@@ -29,7 +29,7 @@ protected:
 //=================================================================================================
 class zenList2xItem : public zenList2xNode
 {
-AWClassDeclare(zenList2xItem, zenList2xNode)
+ZENClassDeclare(zenList2xItem, zenList2xNode)
 public:
 							zenList2xItem	( void* apObject, bool abAutoDelete=false );
 	virtual					~zenList2xItem	( void );
@@ -49,7 +49,7 @@ protected:
 //=================================================================================================
 class zenList2x
 {
-AWClassDeclareNoParent(zenList2x)
+ZENClassDeclareNoParent(zenList2x)
 public:
 							zenList2x	( 											);
 							~zenList2x	( 											);

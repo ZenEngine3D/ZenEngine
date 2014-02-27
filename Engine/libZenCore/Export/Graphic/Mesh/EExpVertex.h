@@ -7,7 +7,7 @@ namespace EExp
 	/*
 	class VertexElemInfo
 	{
-	AWClassDeclareNoParent(VertexElemInfo)
+	ZENClassDeclareNoParent(VertexElemInfo)
 	public:
 							VertexElemInfo(){};
 							VertexElemInfo(eShaderElementType _eType, zenU8 _ElementCount, eShaderSemantic _eSemantic, zenU8 _Offset )
@@ -25,7 +25,7 @@ namespace EExp
 
 	class VertexStreamInfo
 	{
-	AWClassDeclareNoParent(VertexStreamInfo)
+	ZENClassDeclareNoParent(VertexStreamInfo)
 	public:
 		zenArrayStatic<zenU8>				maData;
 		zenArrayStatic<VertexElemInfo>	maElements;
@@ -42,7 +42,7 @@ namespace EExp
 
 	class SerialVertex_Base : public EExp::ExportItem
 	{
-	AWClassDeclare(SerialVertex_Base,EExp::ExportItem)
+	ZENClassDeclare(SerialVertex_Base,EExp::ExportItem)
 	public:
 		//! @todo replace awu32 flag by generic flag class
 		enum eCreationFlags

@@ -16,13 +16,15 @@ namespace zen { namespace zenMem
 {
 	class Allocator
 	{
-	AWClassDeclareNoParent(Allocator);
+	ZENClassDeclareNoParent(Allocator);
 	public:
 								Allocator			(zenDebugString _zName);		
 		virtual					~Allocator			();
 		size_t					GetTotalAllocSize	()const {return muTotalAllocSize;}
 		zenUInt					GetTotalAllocCount	()const {return muTotalAllocCount;}
 		inline zenHash32		GetValidityStamp	()const {return mh32ValidStamp;}
+		static Allocator&		GetDefault			();
+	
 	protected:
 		size_t					GetAllocSize		(size_t _uWantedSize, size_t _uExtraSize, zenU32 _uAlign);
 		void*					AddAlloc			(size_t _uWantedSize, size_t _uExtraSize, zenU32 _uAlign, void* _pAllocation, const bool _bIsArray);
@@ -49,24 +51,15 @@ namespace zen { namespace zenMem
 	//! @details	one specified. At object destruction, restore the value it was 
 	//! @details	initially set at		
 	//=================================================================================================
-	/*
-	class ScopedAllocator
+	class ScopedAllocator : public zenList2xNode
 	{	
-	AWClassDeclareNoParent(ScopedAllocator);
+	ZENClassDeclareNoParent(ScopedAllocator);
 	public:
-		Override(Allocator* _pAllocator)
- 		: mpAllocatorPrevious(Allocator::GetDefault())
-		{
-			Allocator::Default = _pAllocator;
-		}
-		~Override()
-		{
-			Allocator::Default = mpAllocatorPrevious;
-		}	
+					ScopedAllocator(Allocator* _pAllocator);
+					~ScopedAllocator();
 	protected:
-		Allocator* mpAllocatorPrevious;
+		Allocator*	mpAllocator;
 	};
-	*/
 
 }} //namespace zen { namespace mem  
 
@@ -88,8 +81,8 @@ void* zenMalloc(size_t _uSize_, zenU32 uAlign=zenDefaultAlign);
 void* zenMalloc(zenMem::Allocator* _pAllocator, size_t _uSize_, zenU32 uAlign=zenDefaultAlign);
 
 //! @todo remove new library and implement my own
-//#define		malloc			AWStaticAssert(0, "Use zenMalloc")
-//#define		new				AWAssertMsg(0, "Use zenNew")
-//#define		delete			AWAssertMsg(0, "User zenDel")
+//#define		malloc			ZENStaticAssert(0, "Use zenMalloc")
+//#define		new				ZENAssertMsg(0, "Use zenNew")
+//#define		delete			ZENAssertMsg(0, "User zenDel")
 
 #endif

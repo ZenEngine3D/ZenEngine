@@ -4,8 +4,8 @@ namespace EExp
 {
 	zenResID SerialShader_Base::CallbackGetItemID(awconst::eResPlatform _ePlatform, awconst::eResType _eType, awconst::eResSource _eSource, const EExp::ExportInfoBase* _pExportInfo, bool& _bExistOut)
 	{
-		AWAssert( awconst::kFlagResShaders.Any(_eType) );
-		AWAssert( _pExportInfo );
+		ZENAssert( awconst::kFlagResShaders.Any(_eType) );
+		ZENAssert( _pExportInfo );
 		const ExportInfo* pExportInfo		= static_cast<const ExportInfo*>(_pExportInfo);
 		const awres::awShaderDefine* pEntry	= pExportInfo->maDefines.First();
 

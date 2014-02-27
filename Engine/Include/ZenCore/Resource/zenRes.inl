@@ -27,13 +27,13 @@ bool awResource::IsValid()const
 awResourceRef::awResourceRef()
 : mpResource(NULL)
 { 
-	AWDbgCode( mSupportedTypeMask.Invert(); )	//Set default value to support all resource type
+	ZENDbgCode( mSupportedTypeMask.Invert(); )	//Set default value to support all resource type
 }
 
 awResourceRef::awResourceRef(awResource* _pResource)
 : mpResource(NULL)
 { 
-	AWDbgCode( mSupportedTypeMask.Invert(); );	//Set default value to support all resource type
+	ZENDbgCode( mSupportedTypeMask.Invert(); );	//Set default value to support all resource type
 	SetResource(_pResource); 
 }
 
@@ -41,7 +41,7 @@ void awResourceRef::SetResource(awResource* _pResource)
 {
 	if( mpResource )
 		mpResource->ReferenceRem();
-	AWAssert(!_pResource || mSupportedTypeMask.Any(_pResource->GetResID().Type()) );
+	ZENAssert(!_pResource || mSupportedTypeMask.Any(_pResource->GetResID().Type()) );
 	mpResource = _pResource;
 	if( mpResource )
 		mpResource->ReferenceAdd();
@@ -50,13 +50,13 @@ void awResourceRef::SetResource(awResource* _pResource)
 awResourceRef::awResourceRef(awFlagResType _SupportedTypes)
 : mpResource(NULL)
 {
-	AWDbgCode( mSupportedTypeMask = _SupportedTypes; )
+	ZENDbgCode( mSupportedTypeMask = _SupportedTypes; )
 }
 
 awResourceRef::awResourceRef(awFlagResType _SupportedTypes, awResource* _pResource)
 : mpResource(NULL)
 {
-	AWDbgCode( mSupportedTypeMask = _SupportedTypes; )
+	ZENDbgCode( mSupportedTypeMask = _SupportedTypes; )
 	SetResource( _pResource );
 }
 
@@ -141,7 +141,7 @@ awResourceTyped2Ref<TType1,TType2>::awResourceTyped2Ref(zenResID _ResourceID)
 #define AWClassResourceRefDeclare(_ClassName_, _Type_)								\
 class _ClassName_ : public awres::awResourceTypedRef<_Type_>						\
 {																					\
-AWClassDeclare(_ClassName_, awres::awResourceTypedRef<_Type_>)						\
+ZENClassDeclare(_ClassName_, awres::awResourceTypedRef<_Type_>)						\
 public:																				\
 	inline	_ClassName_(){}															\
 	inline	_ClassName_(awres::awResource* _pResource):Super(_pResource){}			\
@@ -153,7 +153,7 @@ public:																				\
 #define AWClassResourceRef2Declare(_ClassName_, _Type1_, _Type2_)					\
 class _ClassName_ : public awres::awResourceTyped2Ref<_Type1_ , _Type2_>			\
 {																					\
-AWClassDeclare(_ClassName_, awres::awResourceTyped2Ref<_Type1_ AWComma _Type2_> )	\
+ZENClassDeclare(_ClassName_, awres::awResourceTyped2Ref<_Type1_ ZENComma _Type2_> )	\
 public:																				\
 	inline	_ClassName_(){}															\
 	inline	_ClassName_(awres::awResource* _pResource):Super(_pResource){}			\

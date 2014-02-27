@@ -6,7 +6,7 @@ namespace EExp
 {
 	class SerialRenderTarget_Base : public EExp::ExportItem
 	{
-	AWClassDeclare(SerialRenderTarget_Base, EExp::ExportItem)
+	ZENClassDeclare(SerialRenderTarget_Base, EExp::ExportItem)
 	public:
 		struct ExportInfo : public EExp::ExportInfoBase
 		{				

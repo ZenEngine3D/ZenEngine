@@ -43,8 +43,8 @@ namespace EExp
 
 	zenResID SerialGfxView_Base::CallbackGetItemID(awconst::eResPlatform _ePlatform, awconst::eResType _eType, awconst::eResSource _eSource, const EExp::ExportInfoBase* _pExportInfo, bool& _bExistOut)
 	{
-		AWAssert(_eType==awconst::keResType_GfxView);
-		AWAssert( _pExportInfo );
+		ZENAssert(_eType==awconst::keResType_GfxView);
+		ZENAssert( _pExportInfo );
 		const ExportInfo* pExportInfo = static_cast<const ExportInfo*>(_pExportInfo);
 
 		zenResID::NameHash hName;

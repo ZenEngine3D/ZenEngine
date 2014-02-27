@@ -22,6 +22,6 @@ namespace zen { namespace zenMath
 
 }  } // namespace zen, zenMath
 
-//#include AWInlinePlatform( CMathBits )
+//#include ZENInlinePlatform( CMathBits )
 
 #endif

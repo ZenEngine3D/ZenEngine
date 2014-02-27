@@ -6,7 +6,7 @@ namespace EExp
 {
 	class SerialMesh_Base : public EExp::ExportItem
 	{
-	AWClassDeclare(SerialMesh_Base,EExp::ExportItem)
+	ZENClassDeclare(SerialMesh_Base,EExp::ExportItem)
 	public:
 		struct ExportInfo : public EExp::ExportInfoBase
 		{			

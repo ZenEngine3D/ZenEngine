@@ -7,7 +7,7 @@ namespace EExp
 	//! @todo Move ShaderParamDef here instead of ShaderBinding?
 	class SerialShader_DX11 : public SerialShader_Base
 	{
-	AWClassDeclare(SerialShader_DX11, SerialShader_Base)
+	ZENClassDeclare(SerialShader_DX11, SerialShader_Base)
 	public:
 		struct SerialUseOnly
 		{
@@ -22,7 +22,7 @@ namespace EExp
 
 	class SerialGfxShaderPixel_DX11 : public SerialShader_DX11
 	{
-	AWClassDeclare(SerialGfxShaderPixel_DX11, SerialShader_DX11)
+	ZENClassDeclare(SerialGfxShaderPixel_DX11, SerialShader_DX11)
 	//-------------------------------------------------------------------------------------------------
 	// Serialization and Asset creation support
 	//-------------------------------------------------------------------------------------------------
@@ -39,7 +39,7 @@ namespace EExp
 
 	class SerialGfxShaderVertex_DX11 : public SerialShader_DX11
 	{
-	AWClassDeclare(SerialGfxShaderVertex_DX11, SerialShader_DX11)
+	ZENClassDeclare(SerialGfxShaderVertex_DX11, SerialShader_DX11)
 	//-------------------------------------------------------------------------------------------------
 	// Serialization and Asset creation support
 	//-------------------------------------------------------------------------------------------------

@@ -5,7 +5,7 @@ namespace EExp
 	ExportTask::ExportTask(ExportItem* _pExportItem, EExp::ExportInfoBase* _pExportInfo)
 	: mpExportItem(_pExportItem)
 	{
-		AWAssert(mpExportItem);
+		ZENAssert(mpExportItem);
 		mpExportItem->mpExportInfo	= _pExportInfo;
 	}
 

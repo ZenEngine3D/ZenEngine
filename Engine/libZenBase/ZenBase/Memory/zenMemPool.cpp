@@ -50,7 +50,7 @@ void AllocatorPool::SetIncreaseCount(zenU32 _uIncreaseCount)
 
 void AllocatorPool::Init(const zenDebugString& _zName, size_t _uItemSize, zenU32 _uItemCount, zenU32 _uItemIncrease, zenU32 _uAlign )
 {
-	AWAssertMsg(_uItemSize%_uAlign==0, "Pool item size must be a multiple of alignment specified.");
+	ZENAssertMsg(_uItemSize%_uAlign==0, "Pool item size must be a multiple of alignment specified.");
 	mzAllocatorName		= _zName;
 	mPoolReservedCount	= 0;
 	mPoolItemSize		= _uItemSize;
@@ -62,11 +62,11 @@ void AllocatorPool::Init(const zenDebugString& _zName, size_t _uItemSize, zenU32
 
 void* AllocatorPool::Malloc(size_t _uSize, bool _bIsArray, zenU32 _uAlign)
 {
-	AWAssertMsg(_uSize<=mPoolItemSize, "Pool configured for allocation of size %i, trying to allocate %i bytes", mPoolItemSize, _uSize );
-	AWAssertMsg(_uAlign<=mPoolItemAlign, "Pool configured for alignment of %iBytes, requesting alignment of %i bytes", mPoolItemAlign, _uAlign );
+	ZENAssertMsg(_uSize<=mPoolItemSize, "Pool configured for allocation of size %i, trying to allocate %i bytes", mPoolItemSize, _uSize );
+	ZENAssertMsg(_uAlign<=mPoolItemAlign, "Pool configured for alignment of %iBytes, requesting alignment of %i bytes", mPoolItemAlign, _uAlign );
 	if( mlstFreeItems.IsEmpty() )
 	{
-		AWAssertMsg(mPoolItemIncrease, ("Pool ran out of memory and wasn't configured to auto increase size"));
+		ZENAssertMsg(mPoolItemIncrease, ("Pool ran out of memory and wasn't configured to auto increase size"));
 		MemoryIncrease(mPoolReservedCount ? mPoolItemIncrease : mPoolItemCountInit);
 	}
 	
@@ -76,7 +76,7 @@ void* AllocatorPool::Malloc(size_t _uSize, bool _bIsArray, zenU32 _uAlign)
 
 void AllocatorPool::Free(void* _pAlloc, void* _pInfoAlloc)
 {
-	AWAssert(_pAlloc && _pInfoAlloc);
+	ZENAssert(_pAlloc && _pInfoAlloc);
 	zbMem::AllocHeader* pInfoAlloc = static_cast<zbMem::AllocHeader*>(_pInfoAlloc);
 	RemAlloc(pInfoAlloc);
 	zenList1xNode* pPoolItemFree = (zenList1xNode*)_pInfoAlloc;
@@ -104,7 +104,7 @@ void AllocatorPool::MemoryIncrease(zenU32 _uItemCount)
 //==================================================================================================
 void AllocatorPool::Clear()
 {	
-	AWAssertMsg(GetTotalAllocCount()==0, "Trying to clear a MemPool while there's still some items allocated." );
+	ZENAssertMsg(GetTotalAllocCount()==0, "Trying to clear a MemPool while there's still some items allocated." );
 	mPoolReservedCount	= 0;
 	mlstFreeItems		= zenList1x();	
 	while( mlstAlloc.GetHead() != mlstAlloc.GetInvalid() )

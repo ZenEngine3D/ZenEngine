@@ -44,7 +44,7 @@ bool SerialGfxIndex_DX11::ExportWork(bool _bIsTHRTask)
 		muPrimitiveCount	= muIndiceCount-2;
 		break;
 	default:
-		AWAssertMsg(0, "Unhandled Primitive type");				
+		ZENAssertMsg(0, "Unhandled Primitive type");				
 		return FALSE;
 	}
 	

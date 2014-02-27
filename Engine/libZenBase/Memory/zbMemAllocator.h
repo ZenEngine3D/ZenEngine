@@ -20,10 +20,10 @@ namespace zbMem
 #if AW_MEMORYDEBUG
 	: public zenList2xNode
 	{
-	AWClassDeclare(AllocHeader, zenList2xNode);
+	ZENClassDeclare(AllocHeader, zenList2xNode);
 #else
 	{
-	AWClassDeclareNoParent(AllocHeader);
+	ZENClassDeclareNoParent(AllocHeader);
 #endif
 	public:			
 		zenMem::Allocator*		mpAllocator;
@@ -36,9 +36,7 @@ namespace zbMem
 		void					Set(zenMem::Allocator* _pAllocator, zenU32 _uAllocOffset, size_t _uAllocSize, bool _bIsArray);
 	};			
 
-
-	AllocHeader*		GetHeader(void* _pAlloc, bool _bIsArray);		
-	zenMem::Allocator&	GetDefault();		
+	AllocHeader*		GetHeader(void* _pAlloc, bool _bIsArray);					
 }  
 
 #endif

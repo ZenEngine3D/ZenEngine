@@ -6,7 +6,7 @@ namespace EExp
 {	
 	class SerialGfxInputStream_DX11 : public SerialInputStream_Base
 	{
-	AWClassDeclare(SerialGfxInputStream_DX11, SerialInputStream_Base)
+	ZENClassDeclare(SerialGfxInputStream_DX11, SerialInputStream_Base)
 	//-------------------------------------------------------------------------------------------------
 	// Serialization and Asset creation support
 	//-------------------------------------------------------------------------------------------------

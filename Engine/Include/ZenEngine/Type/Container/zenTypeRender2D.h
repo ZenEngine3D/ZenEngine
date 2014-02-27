@@ -6,7 +6,7 @@
 namespace zen { namespace zenType {
 	class zenRender2D
 	{
-		AWClassDeclareNoParent(zenRender2D)
+		ZENClassDeclareNoParent(zenRender2D)
 	public:
 		AWForceInline	zenRender2D(void);
 		AWForceInline	~zenRender2D(void);

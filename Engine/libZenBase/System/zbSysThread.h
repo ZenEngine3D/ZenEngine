@@ -11,7 +11,7 @@ namespace CSys
 template< class T >
 class AWThread
 {
-	AWClassDeclareNoParent(AWThread);
+	ZENClassDeclareNoParent(AWThread);
 
 protected:
 	//pointer to an object's method
@@ -56,6 +56,6 @@ private:
 
 }
 
-#include AWHeaderPlatform( zbSysThread )
+#include ZENHeaderPlatform( zbSysThread )
 
 #endif

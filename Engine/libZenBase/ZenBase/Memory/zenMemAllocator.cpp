@@ -5,6 +5,31 @@
 
 namespace zen { namespace zenMem
 {
+
+Allocator*		gpAllocatorDefault = NULL;
+zenList2x		gAllocatorOverideList;
+AllocatorMalloc	gAllocatorMalloc("DefaultMalloc");
+ScopedAllocator	gAllocatorOveride(&gAllocatorMalloc);
+
+ScopedAllocator::ScopedAllocator(Allocator* _pAllocator)
+: mpAllocator(_pAllocator)
+{
+	ZENAssert(mpAllocator);
+	gpAllocatorDefault = mpAllocator;
+	gAllocatorOverideList.AddTail(this);
+}
+ScopedAllocator::~ScopedAllocator()
+{
+	LstRemove();
+	ZENAssert(!gAllocatorOverideList.IsEmpty());	//! Should be impossible with global 'GAllocatorOveride'
+	gpAllocatorDefault = static_cast<ScopedAllocator*>(gAllocatorOverideList.GetTail())->mpAllocator;
+}		
+
+Allocator& Allocator::GetDefault()
+{
+	return *gpAllocatorDefault;
+}
+
 Allocator::Allocator(zenDebugString _zName)
 : mh32ValidStamp( kh32AllocatorStamp )
 , mzAllocatorName(_zName)	
@@ -15,7 +40,7 @@ Allocator::Allocator(zenDebugString _zName)
 
 Allocator::~Allocator()
 {
-	AWAssertMsg( muTotalAllocCount==0, "Trying to delete _ memory manager that still has elements allocated");
+	ZENAssertMsg( muTotalAllocCount==0, "Trying to delete _ memory manager that still has elements allocated");
 }
 /*
 void Allocator::DebugPrint()
@@ -58,7 +83,7 @@ void Allocator::DebugPrint()
 */
 size_t Allocator::GetAllocSize(size_t _uWantedSize, size_t _uExtraSize, zenU32 _uAlign )
 {
-	AWAssertMsg( zenMath::IsPower2(_uAlign) && _uAlign>=sizeof(void*), "Alignement must be a power of 2 and greater equal than pointer data size" );	
+	ZENAssertMsg( zenMath::IsPower2(_uAlign) && _uAlign>=sizeof(void*), "Alignement must be a power of 2 and greater equal than pointer data size" );	
 	return _uWantedSize + _uExtraSize + _uAlign + sizeof(zbMem::AllocHeader) + sizeof(kh64AllocationStamp);
 }
 
@@ -94,36 +119,36 @@ void Allocator::RemAlloc(void* _pAlloc)
 
 void* zenMalloc(size_t _uSize_, zenU32 uAlign)
 {
-	return zbMem::GetDefault().Malloc(_uSize_, false, uAlign);
+	return zenMem::Allocator::GetDefault().Malloc(_uSize_, false, uAlign);
 }
 
 void* zenMalloc(zenMem::Allocator* _pAllocator, size_t _uSize_, zenU32 uAlign)
 {
-	_pAllocator = _pAllocator ? _pAllocator : &zbMem::GetDefault();
+	_pAllocator = _pAllocator ? _pAllocator : &zenMem::Allocator::GetDefault();
 	return _pAllocator->Malloc(_uSize_, false, uAlign);
 }
 
 void* operator new(size_t _uSize, zenMem::Allocator* _pAllocator)
 {
-	_pAllocator = _pAllocator ? _pAllocator : &zbMem::GetDefault();
+	_pAllocator = _pAllocator ? _pAllocator : &zenMem::Allocator::GetDefault();
 	return _pAllocator->Malloc(_uSize, false, zenDefaultAlign);
 }
 
 void* operator new[](size_t _uSize, zenMem::Allocator* _pAllocator )
 {
-	_pAllocator = _pAllocator ? _pAllocator : &zbMem::GetDefault();
+	_pAllocator = _pAllocator ? _pAllocator : &zenMem::Allocator::GetDefault();
 	return _pAllocator->Malloc(_uSize, true, zenDefaultAlign);
 }
 
 void* operator new(size_t _uSize, zenMem::Allocator* _pAllocator, zenUInt _uAlign )
 {
-	_pAllocator = _pAllocator ? _pAllocator : &zbMem::GetDefault();
+	_pAllocator = _pAllocator ? _pAllocator : &zenMem::Allocator::GetDefault();
 	return _pAllocator->Malloc(_uSize, false, _uAlign);
 }
 
 void* operator new[](size_t _uSize, zenMem::Allocator* _pAllocator, zenUInt _uAlign )
 {
-	_pAllocator = _pAllocator ? _pAllocator : &zbMem::GetDefault();
+	_pAllocator = _pAllocator ? _pAllocator : &zenMem::Allocator::GetDefault();
 	return _pAllocator->Malloc(_uSize, true, _uAlign);
 }
 

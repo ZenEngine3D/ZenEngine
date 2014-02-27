@@ -12,6 +12,6 @@ namespace CSys
 	bool IsSystemActive();	
 }  
 
-#include AWHeaderPlatform( zbSysInit )
+#include ZENHeaderPlatform( zbSysInit )
 
 #endif

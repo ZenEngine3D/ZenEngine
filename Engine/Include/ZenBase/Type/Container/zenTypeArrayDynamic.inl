@@ -27,7 +27,7 @@ zenArrayDynamic<TType, TGrowthPolicy>::zenArrayDynamic(const TType* _pCopy, zenU
 {		
 	Grow(_uCount+_uExtraCount);
 	muCount	= _uCount;
-	if( AWSupportsMemCopy<TType>::value )
+	if( ZenSupportsMemCopy<TType>::value )
 	{
 		zenMem::Copy(mpData, _pCopy, sizeof(TType)*_uCount);
 	}
@@ -49,7 +49,7 @@ zenArrayDynamic<TType, TGrowthPolicy>::zenArrayDynamic(const zenArrayDynamic& _C
 	Grow(_Copy.Count()+_uExtraCount);
 	muCount					= _Copy.Count();
 	const TType* pItemSrc	= _Copy.First();
-	if( AWSupportsMemCopy<TType>::value )
+	if( ZenSupportsMemCopy<TType>::value )
 	{
 		zenMem::Copy(mpData, pItemSrc, sizeof(TType)*_Copy.Count());
 	}
@@ -124,7 +124,7 @@ void zenArrayDynamic<TType, TGrowthPolicy>::Reserve(zenUInt _uCount)
 template<class TType, GrowthPolicyFunction TGrowthPolicy>
 TType zenArrayDynamic<TType, TGrowthPolicy>::Pop()
 {
-	AWAssert( muCount > 0);
+	ZENAssert( muCount > 0);
 	TType value = mpData[--muCount];
 	Shrink();			
 	return value;
@@ -149,7 +149,7 @@ template<class TType, GrowthPolicyFunction TGrowthPolicy>
 void zenArrayDynamic<TType, TGrowthPolicy>::Grow( zenUInt _auCountNeeded )
 {
 	zenUInt uNewCount	= TGrowthPolicy(muCountReserved, _auCountNeeded, sizeof(TType) );
-	AWAssertMsg(uNewCount>=_auCountNeeded, "Growth function returned less item count than needed");
+	ZENAssertMsg(uNewCount>=_auCountNeeded, "Growth function returned less item count than needed");
 	TType* pNewData = zenNewDefault TType[uNewCount];
 	if( mpData )
 	{
@@ -167,7 +167,7 @@ template<class TType, GrowthPolicyFunction TGrowthPolicy>
 void zenArrayDynamic<TType, TGrowthPolicy>::GrowNoConstructor( zenUInt _auCountNeeded )
 {
 	zenUInt uNewCount	= TGrowthPolicy(muCountReserved, _auCountNeeded, sizeof(TType) );
-	AWAssertMsg(uNewCount>=_auCountNeeded, "Growth function returned less item count than needed");
+	ZENAssertMsg(uNewCount>=_auCountNeeded, "Growth function returned less item count than needed");
 	TType* pNewData = reinterpret_cast<TType*>( zenNewDefault zenU8[sizeof(TType)*uNewCount] );
 	zenMem::Copy(pNewData, mpData, muCount*sizeof(TType) );
 	zenDelNullArray(mpData);

@@ -6,7 +6,7 @@ namespace EExp
 {		
 class SerializerExportMem : public ISerializerExporter
 {
-AWClassDeclare(SerializerExportMem, ISerializerExporter)
+ZENClassDeclare(SerializerExportMem, ISerializerExporter)
 public:
 					SerializerExportMem(zenUInt auAllocSize);
 	virtual			~SerializerExportMem();

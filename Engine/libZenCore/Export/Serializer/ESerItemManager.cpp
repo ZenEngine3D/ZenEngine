@@ -76,7 +76,7 @@ SerialItem* ManagerSerialItem::GetItemBase(const zenResID _ResID)
 //=================================================================================================
 SerialItem* ManagerSerialItem::GetItemBaseAnySource(const zenResID _ResID)
 {
-	AWAssert(_ResID.IsValid());
+	ZENAssert(_ResID.IsValid());
 	EExp::SerialItem* pSerialItem(NULL);
 	zenResID anySourceResID(_ResID);
 

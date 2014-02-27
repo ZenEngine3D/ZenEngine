@@ -20,16 +20,16 @@ typedef int				zenInt;		//!< Basic int
 typedef unsigned int	zenUInt;	//!< Basic unsigned int
 typedef uintptr_t		zenPointer;	
 
-AWAddSupportsMemCopy(zenS8);
-AWAddSupportsMemCopy(zenS16);
-AWAddSupportsMemCopy(zenS32);
-AWAddSupportsMemCopy(zenS64);
-AWAddSupportsMemCopy(zenU8);
-AWAddSupportsMemCopy(zenU16);
-AWAddSupportsMemCopy(zenU32);
-AWAddSupportsMemCopy(zenU64);
-AWAddSupportsMemCopy(zenF32);
-AWAddSupportsMemCopy(zenF64);
+ZENSupportMemcopy(zenS8);
+ZENSupportMemcopy(zenS16);
+ZENSupportMemcopy(zenS32);
+ZENSupportMemcopy(zenS64);
+ZENSupportMemcopy(zenU8);
+ZENSupportMemcopy(zenU16);
+ZENSupportMemcopy(zenU32);
+ZENSupportMemcopy(zenU64);
+ZENSupportMemcopy(zenF32);
+ZENSupportMemcopy(zenF64);
 
 }} //namespace zen, zenType
 

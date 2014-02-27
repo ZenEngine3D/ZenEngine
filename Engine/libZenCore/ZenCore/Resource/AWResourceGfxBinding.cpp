@@ -96,21 +96,21 @@ awGfxShaderBinding awGfxShaderBinding::Create(const awres::awGfxShader* _pShader
 //! @todo Convert all mpResouce cast to using Ref Object
 awGfxView awGfxWindow::GetBackbuffer()
 {
-	AWAssertMsg(mpResource, "No valid resource assigned");
+	ZENAssertMsg(mpResource, "No valid resource assigned");
 	ERes::GfxWindow* pWindow = static_cast<ERes::GfxWindow*>(mpResource);
 	return pWindow->GetBackbuffer();
 }
 
 void awGfxWindow::Resize(const zenVec2U16& _vSize)
 {
-	AWAssertMsg(mpResource, "No valid resource assigned");
+	ZENAssertMsg(mpResource, "No valid resource assigned");
 	ERes::GfxWindow* pWindow = static_cast<ERes::GfxWindow*>(mpResource);
 	return pWindow->Resize(_vSize);
 }
 
 void awGfxWindow::FrameBegin()
 {
-	AWAssertMsg(mpResource, "No valid resource assigned");
+	ZENAssertMsg(mpResource, "No valid resource assigned");
 	ERes::GfxWindowRef& rWindow = *static_cast<ERes::GfxWindowRef*>(this);
 	EMgr::GfxRender.FrameBegin(rWindow);
 	EMgr::GfxState.PipelineReset();
@@ -118,7 +118,7 @@ void awGfxWindow::FrameBegin()
 
 void awGfxWindow::FrameEnd()
 {
-	AWAssertMsg(mpResource, "No valid resource assigned");
+	ZENAssertMsg(mpResource, "No valid resource assigned");
 	ERes::GfxWindowRef& rWindow = *static_cast<ERes::GfxWindowRef*>(this);
 	EMgr::GfxRender.FrameEnd();
 }
@@ -128,14 +128,14 @@ void awGfxWindow::FrameEnd()
 //=================================================================================================
 void awGfxView::Clear( bool _bClearColor, const zenVec4F& _vRGBA, bool _bClearDepth, float _fDepth, bool _bClearStencil, zenU8 _uStencil )
 {
-	AWAssertMsg(mpResource, "No valid resource assigned");
+	ZENAssertMsg(mpResource, "No valid resource assigned");
 	ERes::GfxView* pView = static_cast<ERes::GfxView*>(mpResource);
 	pView->Clear(_bClearColor, _vRGBA, _bClearDepth, _fDepth, _bClearStencil, _uStencil);
 }
 
 void awGfxView::ActivateView()
 {
-	AWAssertMsg(mpResource, "No valid resource assigned");
+	ZENAssertMsg(mpResource, "No valid resource assigned");
 	ERes::GfxViewRef& rView = *static_cast<ERes::GfxViewRef*>(this);
 	EMgr::GfxState.SetView( rView );
 }
@@ -143,7 +143,7 @@ void awGfxView::ActivateView()
 zenVec2U16 awGfxView::GetDim()const
 {
 	const ERes::GfxViewRef& rView = *static_cast<const ERes::GfxViewRef*>(this);
-	AWAssertMsg(rView.IsValid(), "No valid resource assigned");
+	ZENAssertMsg(rView.IsValid(), "No valid resource assigned");
 	return rView->Get().mvDim;
 }
 
@@ -152,76 +152,76 @@ zenVec2U16 awGfxView::GetDim()const
 //=================================================================================================
 void awGfxMesh::RenderMesh()
 {
-	AWAssertMsg(mpResource, "No valid resource assigned");
+	ZENAssertMsg(mpResource, "No valid resource assigned");
 	ERes::GfxMeshRef& rMesh = *static_cast<ERes::GfxMeshRef*>(this);
 	EMgr::GfxRender.Render( rMesh );
 }
 
 void awGfxMesh::SetValue(const awShaderParameter& _Value)
 {
-	AWAssertMsg(mpResource, "No valid resource assigned");
+	ZENAssertMsg(mpResource, "No valid resource assigned");
 	ERes::GfxMesh* rMesh = static_cast<ERes::GfxMesh*>(mpResource);
 	rMesh->SetValue(_Value);
 }
 void awGfxMesh::SetValue(const zenArrayBase<const awShaderParameter*>& _aValues)	
 {
-	AWAssertMsg(mpResource, "No valid resource assigned");
+	ZENAssertMsg(mpResource, "No valid resource assigned");
 	ERes::GfxMesh* pMesh = static_cast<ERes::GfxMesh*>(mpResource);
 	pMesh->SetValue(_aValues);
 }
 
 void awGfxMesh::SetValue(const zenHash32& _hParamName, const float& _fValue)
 {
-	AWAssertMsg(mpResource, "No valid resource assigned");
+	ZENAssertMsg(mpResource, "No valid resource assigned");
 	ERes::GfxMesh* pMesh = static_cast<ERes::GfxMesh*>(mpResource);
 	pMesh->SetValue(_hParamName, _fValue);
 }
 
 void awGfxMesh::SetValue(const zenHash32& _hParamName, const zenVec2F& _vValue)
 {
-	AWAssertMsg(mpResource, "No valid resource assigned");
+	ZENAssertMsg(mpResource, "No valid resource assigned");
 	ERes::GfxMesh* pMesh = static_cast<ERes::GfxMesh*>(mpResource);
 	pMesh->SetValue(_hParamName, _vValue);
 }
 
 void awGfxMesh::SetValue(const zenHash32& _hParamName, const zenVec3F& _vValue)
 {
-	AWAssertMsg(mpResource, "No valid resource assigned");
+	ZENAssertMsg(mpResource, "No valid resource assigned");
 	ERes::GfxMesh* pMesh = static_cast<ERes::GfxMesh*>(mpResource);
 	pMesh->SetValue(_hParamName, _vValue);
 }
 
 void awGfxMesh::SetValue(const zenHash32& _hParamName, const zenVec4F& _vValue)
 {
-	AWAssertMsg(mpResource, "No valid resource assigned");
+	ZENAssertMsg(mpResource, "No valid resource assigned");
 	ERes::GfxMesh* pMesh = static_cast<ERes::GfxMesh*>(mpResource);
 	pMesh->SetValue(_hParamName, _vValue);
 }
 
 void awGfxMesh::SetValue(const zenHash32& _hParamName, const zenMath::Matrix& _matValue)
 {
-	AWAssertMsg(mpResource, "No valid resource assigned");
+	ZENAssertMsg(mpResource, "No valid resource assigned");
 	ERes::GfxMesh* pMesh = static_cast<ERes::GfxMesh*>(mpResource);
 	pMesh->SetValue(_hParamName, _matValue);
 }
 
 void awGfxMesh::SetValue(const zenHash32& _hTextureName, awGfxTexture2D _rTexture )
 {
-	AWAssertMsg(mpResource, "No valid resource assigned");
+	ZENAssertMsg(mpResource, "No valid resource assigned");
 	ERes::GfxMesh* pMesh = static_cast<ERes::GfxMesh*>(mpResource);
 	pMesh->SetValue(_hTextureName, _rTexture);
 }
 
 void awGfxMesh::SetValue(const zenHash32& _hTextureName, awGfxSampler _rSampler )
 {
-	AWAssertMsg(mpResource, "No valid resource assigned");
+	ZENAssertMsg(mpResource, "No valid resource assigned");
 	ERes::GfxMesh* pMesh = static_cast<ERes::GfxMesh*>(mpResource);
 	pMesh->SetValue(_hTextureName, _rSampler);
 }
 
 void awGfxMesh::SetValue(const zenHash32& _hTextureName, awGfxTexture2D _rTexture, awGfxSampler _rSampler )
 {
-	AWAssertMsg(mpResource, "No valid resource assigned");
+	ZENAssertMsg(mpResource, "No valid resource assigned");
 	ERes::GfxMesh* pMesh = static_cast<ERes::GfxMesh*>(mpResource);
 	pMesh->SetValue(_hTextureName, _rTexture, _rSampler);
 }
@@ -231,76 +231,76 @@ void awGfxMesh::SetValue(const zenHash32& _hTextureName, awGfxTexture2D _rTextur
 //=================================================================================================
 void awGfxMeshStrip::RenderMeshStrip()
 {
-	AWAssertMsg(mpResource, "No valid resource assigned");
+	ZENAssertMsg(mpResource, "No valid resource assigned");
 	ERes::GfxMeshStripRef& rMeshStrip = *static_cast<ERes::GfxMeshStripRef*>(this);
 	EMgr::GfxRender.Render( rMeshStrip );
 }
 
 void awGfxMeshStrip::SetValue(const awShaderParameter& _Value)
 {
-	AWAssertMsg(mpResource, "No valid resource assigned");
+	ZENAssertMsg(mpResource, "No valid resource assigned");
 	ERes::GfxMeshStrip* rMesh = static_cast<ERes::GfxMeshStrip*>(mpResource);
 	rMesh->SetValue(_Value);
 }
 void awGfxMeshStrip::SetValue(const zenArrayBase<const awShaderParameter*>& _aValues)	
 {
-	AWAssertMsg(mpResource, "No valid resource assigned");
+	ZENAssertMsg(mpResource, "No valid resource assigned");
 	ERes::GfxMeshStrip* pMesh = static_cast<ERes::GfxMeshStrip*>(mpResource);
 	pMesh->SetValue(_aValues);
 }
 
 void awGfxMeshStrip::SetValue(const zenHash32& _hParamName, const float& _fValue)
 {
-	AWAssertMsg(mpResource, "No valid resource assigned");
+	ZENAssertMsg(mpResource, "No valid resource assigned");
 	ERes::GfxMeshStrip* pMesh = static_cast<ERes::GfxMeshStrip*>(mpResource);
 	pMesh->SetValue(_hParamName, _fValue);
 }
 
 void awGfxMeshStrip::SetValue(const zenHash32& _hParamName, const zenVec2F& _vValue)
 {
-	AWAssertMsg(mpResource, "No valid resource assigned");
+	ZENAssertMsg(mpResource, "No valid resource assigned");
 	ERes::GfxMeshStrip* pMesh = static_cast<ERes::GfxMeshStrip*>(mpResource);
 	pMesh->SetValue(_hParamName, _vValue);
 }
 
 void awGfxMeshStrip::SetValue(const zenHash32& _hParamName, const zenVec3F& _vValue)
 {
-	AWAssertMsg(mpResource, "No valid resource assigned");
+	ZENAssertMsg(mpResource, "No valid resource assigned");
 	ERes::GfxMeshStrip* pMesh = static_cast<ERes::GfxMeshStrip*>(mpResource);
 	pMesh->SetValue(_hParamName, _vValue);
 }
 
 void awGfxMeshStrip::SetValue(const zenHash32& _hParamName, const zenVec4F& _vValue)
 {
-	AWAssertMsg(mpResource, "No valid resource assigned");
+	ZENAssertMsg(mpResource, "No valid resource assigned");
 	ERes::GfxMeshStrip* pMesh = static_cast<ERes::GfxMeshStrip*>(mpResource);
 	pMesh->SetValue(_hParamName, _vValue);
 }
 
 void awGfxMeshStrip::SetValue(const zenHash32& _hParamName, const zenMath::Matrix& _matValue)
 {
-	AWAssertMsg(mpResource, "No valid resource assigned");
+	ZENAssertMsg(mpResource, "No valid resource assigned");
 	ERes::GfxMeshStrip* pMesh = static_cast<ERes::GfxMeshStrip*>(mpResource);
 	pMesh->SetValue(_hParamName, _matValue);
 }
 
 void awGfxMeshStrip::SetValue(const zenHash32& _hTextureName, awGfxTexture2D _rTexture )
 {
-	AWAssertMsg(mpResource, "No valid resource assigned");
+	ZENAssertMsg(mpResource, "No valid resource assigned");
 	ERes::GfxMeshStrip* pMesh = static_cast<ERes::GfxMeshStrip*>(mpResource);
 	pMesh->SetValue(_hTextureName, _rTexture);
 }
 
 void awGfxMeshStrip::SetValue(const zenHash32& _hTextureName, awGfxSampler _rSampler )
 {
-	AWAssertMsg(mpResource, "No valid resource assigned");
+	ZENAssertMsg(mpResource, "No valid resource assigned");
 	ERes::GfxMeshStrip* pMesh = static_cast<ERes::GfxMeshStrip*>(mpResource);
 	pMesh->SetValue(_hTextureName, _rSampler);
 }
 
 void awGfxMeshStrip::SetValue(const zenHash32& _hTextureName, awGfxTexture2D _rTexture, awGfxSampler _rSampler )
 {
-	AWAssertMsg(mpResource, "No valid resource assigned");
+	ZENAssertMsg(mpResource, "No valid resource assigned");
 	ERes::GfxMeshStrip* pMesh = static_cast<ERes::GfxMeshStrip*>(mpResource);
 	pMesh->SetValue(_hTextureName, _rTexture, _rSampler);
 }

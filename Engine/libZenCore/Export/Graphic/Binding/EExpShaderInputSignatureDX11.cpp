@@ -14,8 +14,8 @@ bool SerialGfxInputSignature_DX11::Serialize( EExp::Serializer_Base& _Serializer
 
 zenResID SerialGfxInputSignature_DX11::CallbackGetItemID(awconst::eResPlatform _ePlatform, awconst::eResType _eType, awconst::eResSource _eSource, const EExp::ExportInfoBase* _pExportInfo, bool& _bExistOut)
 {
-	AWAssert(_ePlatform==awconst::keResPlatform_DX11 && _eType==awconst::keResType_GfxInputSignature);
-	AWAssert( _pExportInfo );
+	ZENAssert(_ePlatform==awconst::keResPlatform_DX11 && _eType==awconst::keResType_GfxInputSignature);
+	ZENAssert( _pExportInfo );
 	const ExportInfo* pExportInfo = static_cast<const ExportInfo*>(_pExportInfo);
 	
 	zenResID::NameHash hName;

@@ -17,7 +17,7 @@ public:
 	inline void		operator=(const zenDebugString& _Copy);
 
 protected:	
-	AWDbgCode(const char* mzDebugString;)
+	ZENDbgCode(const char* mzDebugString;)
 };
   
 

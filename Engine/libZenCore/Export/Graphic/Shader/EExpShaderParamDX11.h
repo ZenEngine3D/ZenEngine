@@ -7,7 +7,7 @@ namespace EExp
 
 class SerialGfxShaderParam_DX11 : public SerialShaderParam_Base
 {
-AWClassDeclare(SerialGfxShaderParam_DX11, SerialShaderParam_Base)
+ZENClassDeclare(SerialGfxShaderParam_DX11, SerialShaderParam_Base)
 //-------------------------------------------------------------------------------------------------	
 // Serialization and Asset creation support	
 //-------------------------------------------------------------------------------------------------

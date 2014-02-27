@@ -5,7 +5,7 @@ namespace zen { namespace awres {
 awResourceRef::awResourceRef(awFlagResType _SupportedTypes, zenResID _ResourceID)
 : mpResource(NULL)
 {
-	AWDbgCode( mSupportedTypeMask = _SupportedTypes; )
+	ZENDbgCode( mSupportedTypeMask = _SupportedTypes; )
 	awResourceRef rResourceRef = EMgr::Resources.GetResource(_ResourceID); 
 	SetResource( rResourceRef.mpResource );
 }

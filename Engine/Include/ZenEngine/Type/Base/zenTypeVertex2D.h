@@ -7,7 +7,7 @@ namespace zen { namespace zenType {
 template<class _TypeV_, class _TypeC_>
 class awVertex2DSimple
 {
-AWClassDeclareNoParent(awVertex2DSimple)
+ZENClassDeclareNoParent(awVertex2DSimple)
 public:
 	AWForceInline awVertex2DSimple(const _TypeV_& inX, const _TypeV_& inY, const _TypeV_& inZ, const _TypeC_& inColour);
 	AWForceInline awVertex2DSimple(void);
@@ -33,8 +33,8 @@ public:
 };
 
 
-typedef awVertex2DSimple<zenS32, zenU32>					zenVec2DSimple;	AWAddSupportsMemCopy(zenVec2DSimple);
-typedef awVertex2DFull  <zenS32, zenU32, zenU32, zenS32>	zenVec2DFull;	AWAddSupportsMemCopy(zenVec2DFull);
+typedef awVertex2DSimple<zenS32, zenU32>					zenVec2DSimple;	ZENSupportMemcopy(zenVec2DSimple);
+typedef awVertex2DFull  <zenS32, zenU32, zenU32, zenS32>	zenVec2DFull;	ZENSupportMemcopy(zenVec2DFull);
 
 }}  //namespace zen, Type 
 

@@ -223,7 +223,7 @@ namespace zen {
 
 }  //namespace zen
 
-#include AWHeaderPlatform(zenConstResource)
-#include AWHeaderRenderer(zenConstResource)
+#include ZENHeaderPlatform(zenConstResource)
+#include ZENHeaderRenderer(zenConstResource)
 
 #endif

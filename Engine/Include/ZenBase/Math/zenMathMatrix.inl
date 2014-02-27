@@ -123,8 +123,8 @@ namespace zen { namespace zenMath
 	//=================================================================================================
 	inline void MatrixLookToLH( Matrix& _matViewOut, V4 _vEyePos, V4 _vEyeDir, V4 _vUpDir )
 	{		
-		AWAssert( !IsNearZero(_vEyeDir) );
-		AWAssert( !IsNearZero(_vUpDir) );
+		ZENAssert( !IsNearZero(_vEyeDir) );
+		ZENAssert( !IsNearZero(_vUpDir) );
 				
 		//@todo optimize by just masking value		
 		_vEyePos				= Mul(_vEyePos, v4XYZ1);	//Discard w
@@ -196,9 +196,9 @@ namespace zen { namespace zenMath
 	//=================================================================================================
 	inline void MatrixProjectionLH( Matrix& _matProjectionOut, float _fFovDegreeWidth, float _fAspectRatio, float _fNearZ, float _fFarZ )
 	{
-		AWAssert( _fFovDegreeWidth > awconst::kfSmallNumber )
-		AWAssert( _fAspectRatio > awconst::kfSmallNumber )
-		AWAssert( _fNearZ > awconst::kfSmallNumber && _fFarZ > _fNearZ )
+		ZENAssert( _fFovDegreeWidth > awconst::kfSmallNumber )
+		ZENAssert( _fAspectRatio > awconst::kfSmallNumber )
+		ZENAssert( _fNearZ > awconst::kfSmallNumber && _fFarZ > _fNearZ )
 		
 		float ScaleX			= 1.f / tanf(_fFovDegreeWidth/180.0f*zenMath::kfPI);		
 		_matProjectionOut.mvRows[0]	= XYZW( ScaleX,		0,						0,									0);
