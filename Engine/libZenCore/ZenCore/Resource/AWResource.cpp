@@ -1,6 +1,6 @@
 #include "libZenCore.h"
 
-namespace zen { namespace awres {	
+namespace zen { namespace zenRes {	
 
 awResourceRef::awResourceRef(awFlagResType _SupportedTypes, zenResID _ResourceID)
 : mpResource(NULL)
@@ -17,6 +17,6 @@ const awResourceRef& awResourceRef::operator=(const zenResID& _ResourceID)
 	return *this;
 }
 
-}} // namespace zen, awres
+}} // namespace zen, zenRes
 
 

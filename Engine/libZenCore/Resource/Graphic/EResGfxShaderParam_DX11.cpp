@@ -71,7 +71,7 @@ void GfxShaderParam_DX11::SetValue(const EExp::ParameterBase& _Value)
 	}	
 }
 
-void GfxShaderParam_DX11::SetValue(const awres::awShaderParameter& _Value)
+void GfxShaderParam_DX11::SetValue(const zenRes::awShaderParameter& _Value)
 {
 	ZENAssert( mInstanceInfo.mpParentShaderParamDef.IsValid() )
 	EExp::ShaderParamItemInfo ItemInfo;

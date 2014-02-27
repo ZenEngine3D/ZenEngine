@@ -55,12 +55,12 @@ namespace EExp
 		
 		struct ExportInfo : public EExp::ExportInfoBase
 		{			
-			zenArrayStatic<awres::awGfxVertex::Stream>	maStreams;
+			zenArrayStatic<zenRes::GfxVertex::Stream>	maStreams;
 			zenU32										muCreationFlags;
 		};
 	};
 	
-	zenResID CreateGfxVertex(const zenArrayBase<awres::awGfxVertex::Stream>& _aStreams, zenU32 _uCreationFlags);
+	zenResID CreateGfxVertex(const zenArrayBase<zenRes::GfxVertex::Stream>& _aStreams, zenU32 _uCreationFlags);
 }
 
 #include "EExpVertexDX11.h"

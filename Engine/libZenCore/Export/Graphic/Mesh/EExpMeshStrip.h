@@ -34,14 +34,14 @@ namespace EExp
 			zenResID							mVertexBufferID;
 			zenResID							mIndexBufferID;
 			zenResID							mShaderBindingID;			
-			zenArrayStatic<awres::awShaderTexture>	maTexture;				//!< List of textures assigned to shader
+			zenArrayStatic<zenRes::awShaderTexture>	maTexture;				//!< List of textures assigned to shader
 			zenArrayStatic<zenResID>				maShaderParamID;		//!< List of Shader Param Instance (1 per ParamDef entry)
 			zenU32									muIndexFirst;
 			zenU32									muIndexCount;
 		};
 	};
 	
-	zenResID CreateGfxMeshStrip(zenResID _VertexBufferID, zenResID _IndexBufferID, zenResID _ShaderBindingID, zenU32 _uIndexFirst=0, zenU32 _uIndexCount=0xFFFFFFFF, const zenArrayBase<zenResID>& _aShaderParamID=zenArrayStatic<zenResID>(), const zenArrayBase<awres::awShaderTexture>& _aTexture=zenArrayStatic<awres::awShaderTexture>());
+	zenResID CreateGfxMeshStrip(zenResID _VertexBufferID, zenResID _IndexBufferID, zenResID _ShaderBindingID, zenU32 _uIndexFirst=0, zenU32 _uIndexCount=0xFFFFFFFF, const zenArrayBase<zenResID>& _aShaderParamID=zenArrayStatic<zenResID>(), const zenArrayBase<zenRes::awShaderTexture>& _aTexture=zenArrayStatic<zenRes::awShaderTexture>());
 }
 
 #include "EExpMeshStripDX11.h"

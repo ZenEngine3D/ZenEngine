@@ -37,17 +37,17 @@ namespace zen { namespace zenType {
 		}AWShader2D_Combinations;
 
 		bool						mbInit;
-		awres::awGfxVertex			rCubeVertex;
-		awres::awGfxIndex			rCubeIndex;
-		awres::awGfxShaderVertex	rShaderVS;
-		awres::awGfxShaderPixel		rShaderPS;
-		awres::awGfxTexture2D		mxTexture;
-		awres::awGfxSampler			mxSampler;
-		awres::awGfxShaderBinding	mxShaderBindings[AW_2DMaxShaders];
-		awres::awGfxMeshStrip		mxMeshStrips[AW_2DMaxShaders];
-		awres::awGfxDepthStencil	mxDepthStencil[AW_2DMaxShaders];
-		awres::awGfxBlend			mxBlend[AW_2DMaxShaders];
-		awres::awGfxRasterizer		mxRasterizer;
+		zenRes::GfxVertex			rCubeVertex;
+		zenRes::GfxIndex			rCubeIndex;
+		zenRes::GfxShaderVertex	rShaderVS;
+		zenRes::GfxShaderPixel		rShaderPS;
+		zenRes::GfxTexture2D		mxTexture;
+		zenRes::GfxSampler			mxSampler;
+		zenRes::GfxShaderBinding	mxShaderBindings[AW_2DMaxShaders];
+		zenRes::GfxMeshStrip		mxMeshStrips[AW_2DMaxShaders];
+		zenRes::GfxDepthStencil	mxDepthStencil[AW_2DMaxShaders];
+		zenRes::GfxBlend			mxBlend[AW_2DMaxShaders];
+		zenRes::GfxRasterizer		mxRasterizer;
 	private:
 		//copy constructor, = operator
 		zenRender2D( const zenRender2D& );

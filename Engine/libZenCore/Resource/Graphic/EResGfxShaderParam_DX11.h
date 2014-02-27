@@ -27,7 +27,7 @@ public:
 // Common to all ShaderParam
 public:	
 	void						Bind(EExp::eShaderStage _eShaderStage)const;	
-	void						SetValue(const awres::awShaderParameter& _Value);	
+	void						SetValue(const zenRes::awShaderParameter& _Value);	
 	void						SetValue(const EExp::ParameterBase& _Value);	
 	void						SetValue(const zenHash32& _hParamName, const float& _fValue);
 	void						SetValue(const zenHash32& _hParamName, const zenVec2F& _vValue);

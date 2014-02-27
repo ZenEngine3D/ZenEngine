@@ -14,7 +14,7 @@ namespace ERes
 zenResID CreateExportItemRuntime(EExp::ExportInfoBase* _pExportInfo)
 {
 	ZENAssert(_pExportInfo);
-	awres::awResourceRef rResource;
+	zenRes::awResourceRef rResource;
 	switch( _pExportInfo->mExportResID.Type() )
 	{
 	case awconst::keResType_GfxShaderPixel:				rResource = GfxShaderPixel::Create(*_pExportInfo);			break;
@@ -75,13 +75,13 @@ bool ManagerResource::Unload()
 //! @param		_bSupportDefault	- If returning default resource of this type, when not found
 //! @return 	Reference to resource
 //=================================================================================================
-awres::awResourceRef ManagerResource::GetResource(const zenResID& _ResID, bool _bSupportDefault)
+zenRes::awResourceRef ManagerResource::GetResource(const zenResID& _ResID, bool _bSupportDefault)
 {
 	//ZENAssert(_ResID.IsValid());cd
-	awres::awResource* pResource;
+	zenRes::awResource* pResource;
 	if( mdResources.Get(_ResID.HashID(), pResource) )	return pResource;
 	else if(_bSupportDefault )							return maResourcesDefault[_ResID.Type()];
-	else												return (awres::awResource*)NULL;
+	else												return (zenRes::awResource*)NULL;
 }
 
 //=================================================================================================
@@ -92,10 +92,10 @@ awres::awResourceRef ManagerResource::GetResource(const zenResID& _ResID, bool _
 //! @param		_bSupportDefault	- If returning default resource of this type, when not found
 //! @return 	Reference to resource
 //=================================================================================================
-awres::awResourceRef ManagerResource::GetResourceAnySource(const zenResID& _ResID, bool _bSupportDefault)
+zenRes::awResourceRef ManagerResource::GetResourceAnySource(const zenResID& _ResID, bool _bSupportDefault)
 {
 	//ZENAssert(_ResID.IsValid());
-	awres::awResource* pResource;
+	zenRes::awResource* pResource;
 	zenResID anySourceResID(_ResID);
 	anySourceResID.SetSource(awconst::keResSource_Loaded);
 	if( mdResources.Get(_ResID.HashID(), pResource) )	
@@ -107,7 +107,7 @@ awres::awResourceRef ManagerResource::GetResourceAnySource(const zenResID& _ResI
 		anySourceResID.SetSource(awconst::keResSource_Runtime);	
 		if( mdResources.Get(_ResID.HashID(), pResource) )	return pResource;
 		else if(_bSupportDefault )							return maResourcesDefault[_ResID.Type()];
-		else												return (awres::awResource*)NULL;
+		else												return (zenRes::awResource*)NULL;
 	}
 }
 
@@ -117,13 +117,13 @@ awres::awResourceRef ManagerResource::GetResourceAnySource(const zenResID& _ResI
 //! @param		_pResource - Resource asset
 //! @return 	Reference to resource
 //=================================================================================================
-awres::awResourceRef ManagerResource::Add(awres::awResource* _pResource)
+zenRes::awResourceRef ManagerResource::Add(zenRes::awResource* _pResource)
 {
 	if( _pResource && _pResource->IsValid() )	
 	{
 		mdResources.Set(_pResource->GetResID().HashID(), _pResource);
 		return _pResource;
 	}
-	return (awres::awResource*)NULL;
+	return (zenRes::awResource*)NULL;
 }
 }

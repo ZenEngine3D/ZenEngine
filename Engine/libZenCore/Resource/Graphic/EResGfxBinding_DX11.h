@@ -61,8 +61,8 @@ namespace ERes
 		//------------------------------------------------------------------------------------------------
 		// Common to all MeshStrip
 		//------------------------------------------------------------------------------------------------
-		void			SetValue(const zenArrayBase<const awres::awShaderParameter*>& _aValues);	
-		void			SetValue(const awres::awShaderParameter& _Value);
+		void			SetValue(const zenArrayBase<const zenRes::awShaderParameter*>& _aValues);	
+		void			SetValue(const zenRes::awShaderParameter& _Value);
 		void			SetValue(const zenHash32& _hParamName, const float& _fValue);
 		void			SetValue(const zenHash32& _hParamName, const zenVec2F& _vValue);
 		void			SetValue(const zenHash32& _hParamName, const zenVec3F& _vValue);
@@ -90,8 +90,8 @@ namespace ERes
 		//------------------------------------------------------------------------------------------------
 		// Common to all Mesh
 		//------------------------------------------------------------------------------------------------
-		void			SetValue(const zenArrayBase<const awres::awShaderParameter*>& _aValues);	
-		void			SetValue(const awres::awShaderParameter& _Value);		
+		void			SetValue(const zenArrayBase<const zenRes::awShaderParameter*>& _aValues);	
+		void			SetValue(const zenRes::awShaderParameter& _Value);		
 		void			SetValue(const zenHash32& _hParamName, const float& _fValue);
 		void			SetValue(const zenHash32& _hParamName, const zenVec2F& _vValue);
 		void			SetValue(const zenHash32& _hParamName, const zenVec3F& _vValue);

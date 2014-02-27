@@ -2,34 +2,34 @@
 #ifndef __zenCore_ResourceGfxShader_h__
 #define __zenCore_ResourceGfxShader_h__
 
-namespace zen { namespace awres {	
+namespace zen { namespace zenRes {	
 
 	//! @todo remove this from api ?
-	AWClassResourceRefDeclare(awGfxInputSignature, awconst::keResType_GfxInputSignature) };
-	AWClassResourceRefDeclare(awGfxShaderParamDef, awconst::keResType_GfxShaderParamDef) };
+	AWClassResourceRefDeclare(GfxInputSignature, awconst::keResType_GfxInputSignature) };
+	AWClassResourceRefDeclare(GfxShaderParamDef, awconst::keResType_GfxShaderParamDef) };
 
-	AWClassResourceRefDeclare(awGfxShaderParam, awconst::keResType_GfxShaderParam)
+	AWClassResourceRefDeclare(GfxShaderParam, awconst::keResType_GfxShaderParam)
 	public:
 	};
 	
-	AWClassResourceRef2Declare(awGfxShader, awconst::keResType_GfxShaderVertex, awconst::keResType_GfxShaderPixel) 
+	AWClassResourceRef2Declare(GfxShader, awconst::keResType_GfxShaderVertex, awconst::keResType_GfxShaderPixel) 
 	public:	
 	};
 
 	//! @todo Expose shader compiling to runtime?
-	AWClassResourceRefDeclare(awGfxShaderVertex, awconst::keResType_GfxShaderVertex) 
+	AWClassResourceRefDeclare(GfxShaderVertex, awconst::keResType_GfxShaderVertex) 
 	public:
-		static awGfxShaderVertex Create( const char* _zFilename, const char* _zEntryname );
-		static awGfxShaderVertex Create( const char* _zFilename, const char* _zEntryname, const zenArrayBase<awShaderDefine>& _aDefines);
+		static GfxShaderVertex Create( const char* _zFilename, const char* _zEntryname );
+		static GfxShaderVertex Create( const char* _zFilename, const char* _zEntryname, const zenArrayBase<awShaderDefine>& _aDefines);
 	};
 
-	AWClassResourceRefDeclare(awGfxShaderPixel, awconst::keResType_GfxShaderPixel) 
+	AWClassResourceRefDeclare(GfxShaderPixel, awconst::keResType_GfxShaderPixel) 
 	public:
-		static awGfxShaderPixel Create( const char* _zFilename, const char* _zEntryname );
-		static awGfxShaderPixel Create( const char* _zFilename, const char* _zEntryname, const zenArrayBase<awShaderDefine>& _aDefines);
+		static GfxShaderPixel Create( const char* _zFilename, const char* _zEntryname );
+		static GfxShaderPixel Create( const char* _zFilename, const char* _zEntryname, const zenArrayBase<awShaderDefine>& _aDefines);
 	};
 
-}} // namespace zen, awres
+}} // namespace zen, zenRes
 
 #endif
 

@@ -44,12 +44,12 @@ void awEngineInstance::CreateGfxWindow(const zenVec2U16& _vDim, const zenVec2U16
 	ZENAssert(gpActiveEngine);
 	gpMainWindow	= zenNewDefault FWnd::Window(L"MainWindow", _vDim);
 	gpMainWindow->Initialize();
-	mrMainGfxWindow = awres::awGfxWindow::Create( gpMainWindow->GetHandle() );
+	mrMainGfxWindow = zenRes::GfxWindow::Create( gpMainWindow->GetHandle() );
 }
 
-void awEngineInstance::SetWindow(const awres::awGfxWindow& _rGfxWindow)
+void awEngineInstance::SetWindow(const zenRes::GfxWindow& _rGfxWindow)
 {
 	mrMainGfxWindow = _rGfxWindow;
 }
 
-}} // namespace zen, awres
+}} // namespace zen, zenRes

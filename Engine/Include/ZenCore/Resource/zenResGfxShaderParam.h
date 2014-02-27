@@ -2,7 +2,7 @@
 #ifndef __zenCore_ResourceGfxShaderParam_h__
 #define __zenCore_ResourceGfxShaderParam_h__
 
-namespace zen { namespace awres {	
+namespace zen { namespace zenRes {	
 
 	//=============================================================================================
 	//! @class	Used for shader compiling preprocessor
@@ -100,7 +100,7 @@ namespace zen { namespace awres {
 	typedef awShaderParamVector3<float, awconst::keShaderElemType_Float> awShaderFloat3;
 	typedef awShaderParamVector4<float, awconst::keShaderElemType_Float> awShaderFloat4;
 
-}} // namespace zen, awres
+}} // namespace zen, zenRes
 
 #include "zenResGfxShaderParam.inl"
 

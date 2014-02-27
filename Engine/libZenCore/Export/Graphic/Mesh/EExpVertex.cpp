@@ -11,7 +11,7 @@ namespace EExp
 //! @param _uCreationFlags	- Type of buffer (SerialVertex_Base::eCreationFlags)
 //! @return 				- Unique zenResID of created Resource
 //=================================================================================================
-zenResID CreateGfxVertex(const zenArrayBase<awres::awGfxVertex::Stream>& _aStreams, zenU32 _uCreationFlags)
+zenResID CreateGfxVertex(const zenArrayBase<zenRes::GfxVertex::Stream>& _aStreams, zenU32 _uCreationFlags)
 {	
 	static zenMem::AllocatorPool sMemPool("Pool CreateVertexBuffer", sizeof(SerialVertex_Base::ExportInfo), 1, 5 );
 	SerialVertex_Base::ExportInfo* pExportInfo	= zenNew(&sMemPool) SerialVertex_Base::ExportInfo;
