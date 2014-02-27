@@ -25,7 +25,7 @@ bool SerialGfxVertex_DX11::ExportWork(bool _bIsTHRTask)
 	D3D11_INPUT_ELEMENT_DESC* pElemDX11	= (D3D11_INPUT_ELEMENT_DESC*)mSerial.maElementDef.First();
 	for( zenUInt stream=0; stream<mSerial.maStream.Count(); ++stream )
 	{
-		const awres::awGfxVertex::Stream& StreamIn		= pExportInfo->maStreams[stream];
+		const zenRes::GfxVertex::Stream& StreamIn		= pExportInfo->maStreams[stream];
 		EExp::SerialGfxVertex_DX11::Stream& StreamOut	= mSerial.maStream[stream];
 		StreamOut.maData								= StreamIn.maData;
 		StreamOut.muStride								= StreamIn.muStride;
@@ -34,7 +34,7 @@ bool SerialGfxVertex_DX11::ExportWork(bool _bIsTHRTask)
 		uElementCur										+= StreamIn.maElements.Count();
 		for(zenUInt elem=0; elem<StreamOut.muElementCount; ++elem)
 		{
-			const awres::awGfxVertex::Element& ElemInfo	= StreamIn.maElements[elem];			
+			const zenRes::GfxVertex::Element& ElemInfo	= StreamIn.maElements[elem];			
 			ZENAssert(ElemInfo.muVectorSize > 0);
 			pElemDX11->SemanticName						= (const char*)ElemInfo.meSemantic;	// Will be converted to string pointer in Resource
 			pElemDX11->SemanticIndex					= uSemanticIndex[ElemInfo.meSemantic]++;

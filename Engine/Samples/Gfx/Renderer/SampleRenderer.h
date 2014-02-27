@@ -29,21 +29,21 @@ protected:
 	zenMath::Matrix				matView;
 	zenMath::Matrix				matProjection;
 	zenMath::Matrix				matProjectionRT;
-	awres::awGfxVertex			rCubeVertex;	
-	awres::awGfxIndex			rCubeIndex;	
-	awres::awGfxShaderVertex	rShaderVS;	
-	awres::awGfxShaderPixel		rShaderPS;	
-	awres::awGfxTexture2D		rTexture;	
-	awres::awGfxSampler			rSampler;	
-	awres::awGfxSampler			rSampler2;	
-	awres::awGfxRenderTarget	rRenderColor;
-	awres::awGfxRenderTarget	rRenderDepth;
-	awres::awGfxView			rView;
-	awres::awGfxShaderBinding	rTestShaderBind;
-	awres::awGfxMeshStrip		rCube1MeshStrip;
-	awres::awGfxMeshStrip		rCube2MeshStrip;
-	awres::awGfxMeshStrip		rCube3MeshStrip;
-	awres::awGfxMesh			rCube4Mesh;
+	zenRes::GfxVertex			rCubeVertex;	
+	zenRes::GfxIndex			rCubeIndex;	
+	zenRes::GfxShaderVertex	rShaderVS;	
+	zenRes::GfxShaderPixel		rShaderPS;	
+	zenRes::GfxTexture2D		rTexture;	
+	zenRes::GfxSampler			rSampler;	
+	zenRes::GfxSampler			rSampler2;	
+	zenRes::GfxRenderTarget	rRenderColor;
+	zenRes::GfxRenderTarget	rRenderDepth;
+	zenRes::GfxView			rView;
+	zenRes::GfxShaderBinding	rTestShaderBind;
+	zenRes::GfxMeshStrip		rCube1MeshStrip;
+	zenRes::GfxMeshStrip		rCube2MeshStrip;
+	zenRes::GfxMeshStrip		rCube3MeshStrip;
+	zenRes::GfxMesh			rCube4Mesh;
 };
 
 }

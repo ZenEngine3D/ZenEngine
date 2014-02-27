@@ -7,9 +7,9 @@ namespace ERes
 	//=============================================================================================
 	//! @class	Base class for all resources that can be created and used
 	//=============================================================================================
-	class Resource: public awres::awResource, public zenList2xNode
+	class Resource: public zenRes::awResource, public zenList2xNode
 	{
-	ZENClassDeclare(Resource, awres::awResource)
+	ZENClassDeclare(Resource, zenRes::awResource)
 	public:									
 		virtual								~Resource();
 		virtual bool						ResourceInit();
@@ -44,7 +44,7 @@ namespace ERes
 	ZENClassDeclare(ResourceRef, TReferenceClass)
 	public:	
 		inline								ResourceRef();
-		inline								ResourceRef(awres::awResource* _pResource);
+		inline								ResourceRef(zenRes::awResource* _pResource);
 		inline								ResourceRef(zenResID _ResourceID);
 		inline								ResourceRef(const TReferenceClass& _Copy);
 		inline TResourceClass*				operator->();		//!< Return a pointer to resource
@@ -58,23 +58,23 @@ namespace ERes
 
 namespace ERes
 {	
-	typedef ResourceRef<GfxIndex,			awres::awGfxIndex>			GfxIndexRef;
-	typedef ResourceRef<GfxVertex,			awres::awGfxVertex>			GfxVertexRef;
-	typedef ResourceRef<GfxInputStream,		awres::awGfxInputStream>	GfxInputStreamRef;
-	typedef ResourceRef<GfxInputSignature,	awres::awGfxInputSignature>	GfxInputSignatureRef;
-	typedef ResourceRef<GfxShaderBinding,	awres::awGfxShaderBinding>	GfxShaderBindingRef;
-	typedef ResourceRef<GfxMesh,			awres::awGfxMesh>			GfxMeshRef;
-	typedef ResourceRef<GfxMeshStrip,		awres::awGfxMeshStrip>		GfxMeshStripRef;
-	typedef ResourceRef<GfxTexture2D,		awres::awGfxTexture2D>		GfxTexture2DRef;
-	typedef ResourceRef<GfxRenderTarget,	awres::awGfxRenderTarget>	GfxRenderTargetRef;
-	typedef ResourceRef<GfxView,			awres::awGfxView>			GfxViewRef;
-	typedef ResourceRef<GfxSampler,			awres::awGfxSampler>		GfxSamplerRef;
-	typedef ResourceRef<GfxWindow,			awres::awGfxWindow>			GfxWindowRef;
-	typedef ResourceRef<GfxShaderParamDef,	awres::awGfxShaderParamDef>	GfxShaderParamDefRef;
-	typedef ResourceRef<GfxShader,			awres::awGfxShader>			GfxShaderRef;
-	typedef ResourceRef<GfxShaderVertex,	awres::awGfxShaderVertex>	GfxShaderVertexRef;
-	typedef ResourceRef<GfxShaderPixel,		awres::awGfxShaderPixel>	GfxShaderPixelRef;
-	typedef ResourceRef<GfxShaderParam,		awres::awGfxShaderParam>	GfxShaderParamRef;
+	typedef ResourceRef<GfxIndex,			zenRes::GfxIndex>			GfxIndexRef;
+	typedef ResourceRef<GfxVertex,			zenRes::GfxVertex>			GfxVertexRef;
+	typedef ResourceRef<GfxInputStream,		zenRes::GfxInputStream>	GfxInputStreamRef;
+	typedef ResourceRef<GfxInputSignature,	zenRes::GfxInputSignature>	GfxInputSignatureRef;
+	typedef ResourceRef<GfxShaderBinding,	zenRes::GfxShaderBinding>	GfxShaderBindingRef;
+	typedef ResourceRef<GfxMesh,			zenRes::GfxMesh>			GfxMeshRef;
+	typedef ResourceRef<GfxMeshStrip,		zenRes::GfxMeshStrip>		GfxMeshStripRef;
+	typedef ResourceRef<GfxTexture2D,		zenRes::GfxTexture2D>		GfxTexture2DRef;
+	typedef ResourceRef<GfxRenderTarget,	zenRes::GfxRenderTarget>	GfxRenderTargetRef;
+	typedef ResourceRef<GfxView,			zenRes::GfxView>			GfxViewRef;
+	typedef ResourceRef<GfxSampler,			zenRes::GfxSampler>		GfxSamplerRef;
+	typedef ResourceRef<GfxWindow,			zenRes::GfxWindow>			GfxWindowRef;
+	typedef ResourceRef<GfxShaderParamDef,	zenRes::GfxShaderParamDef>	GfxShaderParamDefRef;
+	typedef ResourceRef<GfxShader,			zenRes::GfxShader>			GfxShaderRef;
+	typedef ResourceRef<GfxShaderVertex,	zenRes::GfxShaderVertex>	GfxShaderVertexRef;
+	typedef ResourceRef<GfxShaderPixel,		zenRes::GfxShaderPixel>	GfxShaderPixelRef;
+	typedef ResourceRef<GfxShaderParam,		zenRes::GfxShaderParam>	GfxShaderParamRef;
 }
 
 #endif

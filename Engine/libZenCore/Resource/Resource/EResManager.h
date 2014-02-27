@@ -10,12 +10,12 @@ namespace ERes
 	{
 	ZENClassDeclare(ManagerResource, zbType::Manager)
 	public:		
-		awres::awResourceRef	GetResource				(const zenResID& _ResID, bool _bSupportDefault=TRUE);
-		awres::awResourceRef	GetResourceAnySource	(const zenResID& _ResID, bool _bSupportDefault=TRUE);		
-		awres::awResourceRef	Add						(awres::awResource* _pResource);
+		zenRes::awResourceRef	GetResource				(const zenResID& _ResID, bool _bSupportDefault=TRUE);
+		zenRes::awResourceRef	GetResourceAnySource	(const zenResID& _ResID, bool _bSupportDefault=TRUE);		
+		zenRes::awResourceRef	Add						(zenRes::awResource* _pResource);
 	protected:
-		zenMap<awres::awResource*>::Key64	mdResources;											//!< All resource currently loaded
-		awres::awResource*					maResourcesDefault[awconst::keResType__Invalid+1];	//!< Default resource used when resource at a key entry isn't loaded
+		zenMap<zenRes::awResource*>::Key64	mdResources;											//!< All resource currently loaded
+		zenRes::awResource*					maResourcesDefault[awconst::keResType__Invalid+1];	//!< Default resource used when resource at a key entry isn't loaded
 
 	//---------------------------------------------------------
 	// ManagerBase Section

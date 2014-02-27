@@ -7,7 +7,7 @@ namespace EExp
 		ZENAssert( awconst::kFlagResShaders.Any(_eType) );
 		ZENAssert( _pExportInfo );
 		const ExportInfo* pExportInfo		= static_cast<const ExportInfo*>(_pExportInfo);
-		const awres::awShaderDefine* pEntry	= pExportInfo->maDefines.First();
+		const zenRes::awShaderDefine* pEntry	= pExportInfo->maDefines.First();
 
 		zenResID::NameHash hName;
 		hName.Append( pExportInfo->mzFilename );
@@ -21,7 +21,7 @@ namespace EExp
 		return EExp::ValidateItemID(_ePlatform, _eType, _eSource, hName, _bExistOut);
 	}
 
-	static zenArrayStatic<awres::awShaderDefine> saEmptyDefines(zenUInt(0));
+	static zenArrayStatic<zenRes::awShaderDefine> saEmptyDefines(zenUInt(0));
 	zenResID CreateGfxShaderVertex( const char* _zFilename, const char* _zEntryname  )
 	{
 		return CreateGfxShaderVertex( _zFilename, _zEntryname, saEmptyDefines );		
@@ -40,7 +40,7 @@ namespace EExp
 	//! @param _zEntryname	- Name of entry function
 	//! @return 			- Resource created
 	//=================================================================================================
-	zenResID CreateGfxShaderVertex( const char* _zFilename, const char* _zEntryname, const zenArrayBase<awres::awShaderDefine>& _aDefines  )
+	zenResID CreateGfxShaderVertex( const char* _zFilename, const char* _zEntryname, const zenArrayBase<zenRes::awShaderDefine>& _aDefines  )
 	{
 		static zenMem::AllocatorPool sMemPool("Pool CreateShaderVertex", sizeof(SerialShader_Base::ExportInfo), 1, 5 );
 		SerialShader_Base::ExportInfo* pExportInfo	= zenNew(&sMemPool) SerialShader_Base::ExportInfo;
@@ -60,7 +60,7 @@ namespace EExp
 	//! @param _zEntryname	- Name of entry function
 	//! @return 			- Resource created
 	//=================================================================================================
-	zenResID CreateGfxShaderPixel( const char* _zFilename, const char* _zEntryname, const zenArrayBase<awres::awShaderDefine>& _aDefines )
+	zenResID CreateGfxShaderPixel( const char* _zFilename, const char* _zEntryname, const zenArrayBase<zenRes::awShaderDefine>& _aDefines )
 	{
 		static zenMem::AllocatorPool sMemPool("Pool CreateShaderPixel", sizeof(SerialShader_Base::ExportInfo), 1, 5 );
 		SerialShader_Base::ExportInfo* pExportInfo	= zenNew(&sMemPool) SerialShader_Base::ExportInfo;

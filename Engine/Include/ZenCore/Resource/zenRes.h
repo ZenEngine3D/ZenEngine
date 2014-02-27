@@ -2,7 +2,7 @@
 #ifndef __zenCore_ResourceRef_h__
 #define __zenCore_ResourceRef_h__
 
-namespace zen { namespace awres {	
+namespace zen { namespace zenRes {	
 
 	//=============================================================================================
 	//! @class	Base class for all resources that can be created and used
@@ -76,7 +76,7 @@ namespace zen { namespace awres {
 		inline				awResourceTyped2Ref(zenResID _ResourceID);
 	};
 
-}} // namespace zen, awres
+}} // namespace zen, zenRes
 
 #include "zenRes.inl"
 

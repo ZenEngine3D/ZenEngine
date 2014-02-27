@@ -14,7 +14,7 @@ namespace EExp
 	//! @param _uIndexCount		- Number of Index to use in IndexBuffer
 	//! @return 				- Created MeshStrip
 	//=================================================================================================
-	zenResID CreateGfxMeshStrip(zenResID _VertexBufferID, zenResID _IndexBufferID, zenResID _ShaderBindingID, zenU32 _uIndexFirst, zenU32 _uIndexCount, const zenArrayBase<zenResID>& _aShaderParamID, const zenArrayBase<awres::awShaderTexture>& _aTexture)
+	zenResID CreateGfxMeshStrip(zenResID _VertexBufferID, zenResID _IndexBufferID, zenResID _ShaderBindingID, zenU32 _uIndexFirst, zenU32 _uIndexCount, const zenArrayBase<zenResID>& _aShaderParamID, const zenArrayBase<zenRes::awShaderTexture>& _aTexture)
 	{
 		static zenMem::AllocatorPool sMemPool("Pool CreateMeshStrip", sizeof(SerialMeshStrip_Base::ExportInfo), 1, 5 );
 		SerialMeshStrip_Base::ExportInfo* pExportInfo	= zenNew(&sMemPool) SerialMeshStrip_Base::ExportInfo;

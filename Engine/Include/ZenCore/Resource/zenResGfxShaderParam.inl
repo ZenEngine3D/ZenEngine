@@ -1,4 +1,4 @@
-namespace zen { namespace awres {	
+namespace zen { namespace zenRes {	
 	
 awShaderParameter::awShaderParameter(zenHash32 _hName, awconst::eShaderElementType _eType, zenU16 _uVectorSize, zenU16 _uArrayCount, zenU16 _uSizeTotal)
 : mhName(_hName)
@@ -123,7 +123,7 @@ awShaderDefine::awShaderDefine(const zenString& _zName, const zenString& _zValue
 {
 }
 
-}} // namespace zen, awres
+}} // namespace zen, zenRes
 
 
 

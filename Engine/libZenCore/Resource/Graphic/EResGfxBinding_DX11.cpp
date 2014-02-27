@@ -72,7 +72,7 @@ bool GfxMeshStrip_DX11::ResourceInit()
 }
 
 
-void GfxMeshStrip_DX11::SetValue(const awres::awShaderParameter& _Value)
+void GfxMeshStrip_DX11::SetValue(const zenRes::awShaderParameter& _Value)
 {
 	zenUInt idxStage	= 0;
 	zenU32 paramMask	= mInstanceInfo.mrShaderBinding->Get().mdCBuferPerParam[_Value.mhName];	
@@ -86,12 +86,12 @@ void GfxMeshStrip_DX11::SetValue(const awres::awShaderParameter& _Value)
 	}
 }
 
-void GfxMeshStrip_DX11::SetValue(const zenArrayBase<const awres::awShaderParameter*>& _aValues)
+void GfxMeshStrip_DX11::SetValue(const zenArrayBase<const zenRes::awShaderParameter*>& _aValues)
 {
 	for(zenUInt valIdx(0), valCount(_aValues.Count()); valIdx<valCount; ++valIdx)
 	{
 		zenUInt idxStage							= 0;
-		const awres::awShaderParameter* pValue	= _aValues[valIdx];
+		const zenRes::awShaderParameter* pValue	= _aValues[valIdx];
 		zenU32 paramMask							= mInstanceInfo.mrShaderBinding->Get().mdCBuferPerParam[pValue->mhName];
 		while( paramMask != 0 )
 		{
@@ -232,12 +232,12 @@ bool GfxMesh_DX11::ResourceInit()
 	return true;
 }
 
-void GfxMesh_DX11::SetValue(const zenArrayBase<const awres::awShaderParameter*>& _aValues)
+void GfxMesh_DX11::SetValue(const zenArrayBase<const zenRes::awShaderParameter*>& _aValues)
 {
 	for(zenUInt stripIdx(0), stripCount(mInstanceInfo.maGfxMeshStripRef.Count()); stripIdx<stripCount; ++stripIdx)
 		mInstanceInfo.maGfxMeshStripRef[stripIdx]->SetValue(_aValues);
 }
-void GfxMesh_DX11::SetValue(const awres::awShaderParameter& _Value)
+void GfxMesh_DX11::SetValue(const zenRes::awShaderParameter& _Value)
 {
 	for(zenUInt stripIdx(0), stripCount(mInstanceInfo.maGfxMeshStripRef.Count()); stripIdx<stripCount; ++stripIdx)
 		mInstanceInfo.maGfxMeshStripRef[stripIdx]->SetValue(_Value);

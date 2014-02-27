@@ -12,7 +12,7 @@ namespace EExp
 		{				
 			zenString								mzFilename;
 			zenString								mzEntryname;
-			zenArrayStatic<awres::awShaderDefine>	maDefines;
+			zenArrayStatic<zenRes::awShaderDefine>	maDefines;
 			EExp::eShaderStage						meShaderStage;
 		};
 
@@ -28,8 +28,8 @@ namespace EExp
 	
 	zenResID CreateGfxShaderVertex	( const char* _zFilename, const char* _zEntryname );
 	zenResID CreateGfxShaderPixel	( const char* _zFilename, const char* _zEntryname );
-	zenResID CreateGfxShaderVertex	( const char* _zFilename, const char* _zEntryname, const zenArrayBase<awres::awShaderDefine>& _aDefines );
-	zenResID CreateGfxShaderPixel	( const char* _zFilename, const char* _zEntryname, const zenArrayBase<awres::awShaderDefine>& _aDefines );
+	zenResID CreateGfxShaderVertex	( const char* _zFilename, const char* _zEntryname, const zenArrayBase<zenRes::awShaderDefine>& _aDefines );
+	zenResID CreateGfxShaderPixel	( const char* _zFilename, const char* _zEntryname, const zenArrayBase<zenRes::awShaderDefine>& _aDefines );
 }
 
 #include "EExpShaderDX11.h"

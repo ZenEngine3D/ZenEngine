@@ -1,4 +1,4 @@
-namespace zen { namespace awres {	
+namespace zen { namespace zenRes {	
 
 //#################################################################################################
 // RESOURCE
@@ -133,28 +133,28 @@ awResourceTyped2Ref<TType1,TType2>::awResourceTyped2Ref(zenResID _ResourceID)
 : awResourceRef(awFlagResType(TType1,TType2), _ResourceID)
 {}
 
-}} // namespace zen, awres
+}} // namespace zen, zenRes
 
 //#################################################################################################
 // Used for declaration of awResourceTypedRef classes
 //#################################################################################################
 #define AWClassResourceRefDeclare(_ClassName_, _Type_)								\
-class _ClassName_ : public awres::awResourceTypedRef<_Type_>						\
+class _ClassName_ : public zenRes::awResourceTypedRef<_Type_>						\
 {																					\
-ZENClassDeclare(_ClassName_, awres::awResourceTypedRef<_Type_>)						\
+ZENClassDeclare(_ClassName_, zenRes::awResourceTypedRef<_Type_>)						\
 public:																				\
 	inline	_ClassName_(){}															\
-	inline	_ClassName_(awres::awResource* _pResource):Super(_pResource){}			\
+	inline	_ClassName_(zenRes::awResource* _pResource):Super(_pResource){}			\
 	inline	_ClassName_(zenResID _ResourceID):Super(_ResourceID){}
 
 //#################################################################################################
 // Used for declaration of awResourceTyped2Ref classes
 //#################################################################################################
 #define AWClassResourceRef2Declare(_ClassName_, _Type1_, _Type2_)					\
-class _ClassName_ : public awres::awResourceTyped2Ref<_Type1_ , _Type2_>			\
+class _ClassName_ : public zenRes::awResourceTyped2Ref<_Type1_ , _Type2_>			\
 {																					\
-ZENClassDeclare(_ClassName_, awres::awResourceTyped2Ref<_Type1_ ZENComma _Type2_> )	\
+ZENClassDeclare(_ClassName_, zenRes::awResourceTyped2Ref<_Type1_ ZENComma _Type2_> )	\
 public:																				\
 	inline	_ClassName_(){}															\
-	inline	_ClassName_(awres::awResource* _pResource):Super(_pResource){}			\
+	inline	_ClassName_(zenRes::awResource* _pResource):Super(_pResource){}			\
 	inline	_ClassName_(zenResID _ResourceID):Super(_ResourceID){}

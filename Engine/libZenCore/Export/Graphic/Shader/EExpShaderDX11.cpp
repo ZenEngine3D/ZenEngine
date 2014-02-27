@@ -77,8 +77,8 @@ bool SerialShader_DX11::ExportWorkCompile()
 	if( uDefineCount )
 	{
 		D3D10_SHADER_MACRO*		pDefineCur	= pDefines;
-		awres::awShaderDefine*	pEntry		= pExportInfo->maDefines.First();
-		awres::awShaderDefine*	pEntryEnd	= pEntry + uDefineCount;
+		zenRes::awShaderDefine*	pEntry		= pExportInfo->maDefines.First();
+		zenRes::awShaderDefine*	pEntryEnd	= pEntry + uDefineCount;
 		while( pEntry < pEntryEnd )
 		{
 			pDefineCur->Name		= pEntry->mzName;

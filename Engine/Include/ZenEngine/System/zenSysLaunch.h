@@ -15,14 +15,14 @@ public:
 	virtual void		Update();	
 	virtual bool		IsDone()=0;	
 	void				CreateGfxWindow(const zenVec2U16& _vDim, const zenVec2U16& _vPos);
-	void				SetWindow(const awres::awGfxWindow& _rGfxWindow);
+	void				SetWindow(const zenRes::GfxWindow& _rGfxWindow);
 protected:
-	awres::awGfxWindow	mrMainGfxWindow;
+	zenRes::GfxWindow	mrMainGfxWindow;
 };
 
 void					LaunchEngine(awEngineInstance* _pEngineInstance, int argc, const char* const * argv);
 awEngineInstance*		GetEngineInstance();
 
-}} // namespace zen, awres
+}} // namespace zen, zenRes
 
 #endif

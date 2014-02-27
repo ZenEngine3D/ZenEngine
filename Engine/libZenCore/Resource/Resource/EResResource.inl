@@ -26,7 +26,7 @@ ResourceRef<TResourceClass, TReferenceClass>::ResourceRef()
 }
 
 template<class TResourceClass, class TReferenceClass>
-ResourceRef<TResourceClass, TReferenceClass>::ResourceRef(awres::awResource* _pResource)
+ResourceRef<TResourceClass, TReferenceClass>::ResourceRef(zenRes::awResource* _pResource)
 : Super(_pResource)
 {
 }
