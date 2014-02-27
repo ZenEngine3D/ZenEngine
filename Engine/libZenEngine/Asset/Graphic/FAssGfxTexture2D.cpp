@@ -21,7 +21,7 @@ namespace FAss
 																FAss::PropertyDefEnum::Entry(5, "Value5", "Enum Value 5")};
 		
 		static const FAss::PropertyDefBool		Property00("TestBool",		"", "Test Bool Field",		true,	false);		
-		static const FAss::PropertyDefEnum		Property01("TestEnum",		"", "Test Enum Field",		true, zenHash32("Value0"), enumEntries, AWArrayCount(enumEntries));
+		static const FAss::PropertyDefEnum		Property01("TestEnum",		"", "Test Enum Field",		true, zenHash32("Value0"), enumEntries, ZENArrayCount(enumEntries));
 		static const FAss::PropertyDefFile		Property02(kuValue_Source,	"", "Texture file",			true,	"C:\\temp\\test.txt", "Images|*.bmp;*.png;*.jpeg;*.jpg|BMP(*.bmp)|*.bmp|PNG(*.png)|*.png|JPEG(*.jpg;*.jpeg)|*.jpg;*.jpeg");
 		static const FAss::PropertyDefInt		Property03("TestIntA",		"", "Test Int Field",		true,	0, -10, 10,1);		
 // 		static const AAss::PropertyDefInt2		Property03("TestInt2",		"", "Test Int2 Field",		true,	zenVec2S32(0,1), -10, 10);
@@ -36,7 +36,7 @@ namespace FAss
 		static const FAss::PropertyDefBase*		aPropertyAll[] = {	&Property00, &Property01, &Property02, &Property03, /*&Property04, 
 																	&Property05,*/ &Property06, &Property07/*, &Property08, &Property09,
 																	&Property10*/};
-		static zenArrayStatic<const FAss::PropertyDefBase*> saPropertyDef( aPropertyAll, AWArrayCount(aPropertyAll) );
+		static zenArrayStatic<const FAss::PropertyDefBase*> saPropertyDef( aPropertyAll, ZENArrayCount(aPropertyAll) );
 		return saPropertyDef;		
 	}
 

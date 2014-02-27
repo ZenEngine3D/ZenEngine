@@ -55,7 +55,7 @@ bool Resource::ResourceCreateRuntime()
 
 UnsupportedResource::UnsupportedResource()
 {
-	AWAssertMsg(0,"Trying to use an unsuported resource type.");
+	ZENAssertMsg(0,"Trying to use an unsuported resource type.");
 }	
 
 }

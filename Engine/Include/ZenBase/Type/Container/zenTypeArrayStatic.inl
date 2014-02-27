@@ -20,7 +20,7 @@ zenArrayStatic<TType>::zenArrayStatic(const TType* _pCopy, zenUInt _uCount, zenU
 {		
 	muCount			= _uCount+_uExtraCount;
 	mpData			= zenNewDefault TType[muCount];			
-	if( AWSupportsMemCopy<TType>::value )	
+	if( ZenSupportsMemCopy<TType>::value )	
 	{
 		memcpy(mpData, _pCopy, sizeof(TType)*_uCount);
 	}
@@ -39,7 +39,7 @@ zenArrayStatic<TType>::zenArrayStatic(const zenArrayStatic& _Copy, zenUInt _uExt
 	muCount					= _Copy.Count()+_uExtraCount;
 	mpData					= zenNew(mpAllocator) TType[muCount];		
 	const TType* pItemSrc	= _Copy.First();
-	if( AWSupportsMemCopy<TType>::value )
+	if( ZenSupportsMemCopy<TType>::value )
 	{
 		memcpy(mpData, pItemSrc, sizeof(TType)*muCount);
 	}

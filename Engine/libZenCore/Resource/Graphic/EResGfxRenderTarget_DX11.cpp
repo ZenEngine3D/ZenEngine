@@ -94,8 +94,8 @@ namespace ERes
 
 	GfxTexture2DRef GfxRenderTarget_DX11::GetTexture2D()
 	{
-		AWAssertMsg( mInstanceInfo.mpTargetColorView, "Only color RenderTarget can be used as texture" );
-		AWAssertMsg( mInstanceInfo.mrTargetTexture.IsValid(), "Access to backbuffer texture is unsupported.")
+		ZENAssertMsg( mInstanceInfo.mpTargetColorView, "Only color RenderTarget can be used as texture" );
+		ZENAssertMsg( mInstanceInfo.mrTargetTexture.IsValid(), "Access to backbuffer texture is unsupported.")
 		if( mbNeedResolve )
 		{
 			//Multisample resolve here
@@ -113,7 +113,7 @@ namespace ERes
 	//==================================================================================================
 	void GfxRenderTarget_DX11::ReleaseBackbuffer()
 	{
-		AWAssert( mInstanceInfo.mpTargetColorView && !mInstanceInfo.mrTargetTexture.IsValid() );	//Should only be called by GfxWindow_DX11::PerformResize
+		ZENAssert( mInstanceInfo.mpTargetColorView && !mInstanceInfo.mrTargetTexture.IsValid() );	//Should only be called by GfxWindow_DX11::PerformResize
 		mInstanceInfo.mpTargetColorView->Release();
 		mInstanceInfo.mpTargetColorView = NULL;
 		mpSwapchainBackbuffer->Release();
@@ -122,13 +122,13 @@ namespace ERes
 
 	void GfxRenderTarget_DX11::Clear(const zenVec4F& _vRGBA)
 	{
-		AWAssertMsg( !IsDepth(), "Trying to clear a depth rendertarget as color.");		
+		ZENAssertMsg( !IsDepth(), "Trying to clear a depth rendertarget as color.");		
 		EMgr::GfxRender.DX11GetDeviceContext()->ClearRenderTargetView( mInstanceInfo.mpTargetColorView, _vRGBA.xyzw );	
 	}
 
 	void GfxRenderTarget_DX11::Clear(float _fDepth, zenU8 _uStencil, bool _bClearDepth, bool _bClearStencil)
 	{
-		AWAssertMsg( IsDepth(), "Trying to clear a color rendertarget as depth.");
+		ZENAssertMsg( IsDepth(), "Trying to clear a color rendertarget as depth.");
 		UINT ClearFlags  = _bClearDepth		? D3D11_CLEAR_DEPTH		: 0;
 		ClearFlags		|= _bClearStencil	? D3D11_CLEAR_STENCIL	: 0; 
 		EMgr::GfxRender.DX11GetDeviceContext()->ClearDepthStencilView( mInstanceInfo.mpTargetDepthView, ClearFlags, _fDepth, _uStencil );

@@ -8,7 +8,7 @@ namespace EExp
 	
 	class ISerialize
 	{
-	AWClassDeclareNoParent(ISerialize)
+	ZENClassDeclareNoParent(ISerialize)
 	public:
 		virtual				~ISerialize(){}
 		virtual bool		Serialize( Serializer_Base& aSerializer )=0;
@@ -16,7 +16,7 @@ namespace EExp
 
 	class SerialItem : public EExp::ISerialize
 	{
-	AWClassDeclare(SerialItem, EExp::ISerialize)
+	ZENClassDeclare(SerialItem, EExp::ISerialize)
 	public:
 		struct Version
 		{	

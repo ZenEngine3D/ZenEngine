@@ -19,7 +19,7 @@ namespace CFil
 
 	class Filename
 	{
-	AWClassDeclareNoParent(Filename);
+	ZENClassDeclareNoParent(Filename);
 	public:
 										Filename();
 										Filename(const wchar_t* _zFilename);
@@ -46,20 +46,20 @@ namespace CFil
 
 	class File
 	{
-		AWClassDeclareNoParent(File);
+		ZENClassDeclareNoParent(File);
 	public:
 		Filename mzFilename;
 		Filename mzFilenameStage;
 	};
 }
 
-#include AWHeaderPlatform( CFileInfo )
+#include ZENHeaderPlatform( CFileInfo )
 
 namespace CFil
 {
-	class FileInfo : public AWClassPlatform(FileInfo)
+	class FileInfo : public ZENClassPlatform(FileInfo)
 	{
-	AWClassDeclare(FileInfo, AWClassPlatform(FileInfo));
+	ZENClassDeclare(FileInfo, ZENClassPlatform(FileInfo));
 	public:
 		struct FileTime
 		{
@@ -96,22 +96,22 @@ namespace CFil
 		bool					mbValidHandle;
 		
 		friend class			ManagerFile;
-		friend class			AWClassPlatform(ManagerFile);
+		friend class			ZENClassPlatform(ManagerFile);
 	};
 
 	class ManagerFile_Base : public zbType::Manager
 	{
-	AWClassDeclare(ManagerFile_Base, zbType::Manager);
+	ZENClassDeclare(ManagerFile_Base, zbType::Manager);
 	};
 }  
 
-#include AWHeaderPlatform( CFileManager )
+#include ZENHeaderPlatform( CFileManager )
 
 namespace CFil
 {
-	class ManagerFile : public AWClassPlatform(ManagerFile)
+	class ManagerFile : public ZENClassPlatform(ManagerFile)
 	{
-	AWClassDeclare(ManagerFile, AWClassPlatform(ManagerFile));
+	ZENClassDeclare(ManagerFile, ZENClassPlatform(ManagerFile));
 	public:
 
 		bool IsExistFile( const Filename& _filename )

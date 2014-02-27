@@ -62,7 +62,7 @@ bool GfxMeshStrip_DX11::ResourceInit()
 	mInstanceInfo.maGfxSamplerRef.SetCount( EExp::keShaderStage__Count );	
 	for(zenUInt stageIdx(0), stageCount(mInstanceInfo.mSerial.maTextureID.Count()); stageIdx<stageCount; ++stageIdx )
 	{	
-		AWAssert( mInstanceInfo.mSerial.maTextureID[stageIdx].Count() == mInstanceInfo.mSerial.maSamplerID[stageIdx].Count() );
+		ZENAssert( mInstanceInfo.mSerial.maTextureID[stageIdx].Count() == mInstanceInfo.mSerial.maSamplerID[stageIdx].Count() );
 		mInstanceInfo.maTextureRef[stageIdx].Copy<zenResID>( mInstanceInfo.mSerial.maTextureID[stageIdx] );
 		mInstanceInfo.maGfxSamplerRef[stageIdx].Copy<zenResID>( mInstanceInfo.mSerial.maSamplerID[stageIdx] );
 	}
@@ -181,7 +181,7 @@ void GfxMeshStrip_DX11::SetValue(const zenHash32& _hTextureName, GfxTexture2DRef
 	{
 		for(zenUInt stageIdx(0); stageIdx<EExp::keShaderStage__Count; ++stageIdx)
 		{
-			AWWarningMsg( SlotInfos.muCount[stageIdx] <= 1, "Trying to set a single Texture to texture array.");
+			ZENWarningMsg( SlotInfos.muCount[stageIdx] <= 1, "Trying to set a single Texture to texture array.");
 			if( SlotInfos.muCount[stageIdx] > 0 )
 				mInstanceInfo.maTextureRef[stageIdx][SlotInfos.muSlot[stageIdx]] = _rTexture;
 		}
@@ -195,7 +195,7 @@ void GfxMeshStrip_DX11::SetValue(const zenHash32& _hTextureName, GfxSamplerRef _
 	{
 		for(zenUInt stageIdx(0); stageIdx<EExp::keShaderStage__Count; ++stageIdx)
 		{
-			AWWarningMsg( SlotInfos.muCount[stageIdx] <= 1, "Trying to set a single Texture to texture array.");
+			ZENWarningMsg( SlotInfos.muCount[stageIdx] <= 1, "Trying to set a single Texture to texture array.");
 			if( SlotInfos.muCount[stageIdx] > 0 )
 				mInstanceInfo.maGfxSamplerRef[stageIdx][SlotInfos.muSlot[stageIdx]] = _rSampler;				
 		}
@@ -209,7 +209,7 @@ void GfxMeshStrip_DX11::SetValue(const zenHash32& _hTextureName, GfxTexture2DRef
 	{
 		for(zenUInt stageIdx(0); stageIdx<EExp::keShaderStage__Count; ++stageIdx)
 		{
-			AWWarningMsg( SlotInfos.muCount[stageIdx] <= 1, "Trying to set a single Texture to texture array.");
+			ZENWarningMsg( SlotInfos.muCount[stageIdx] <= 1, "Trying to set a single Texture to texture array.");
 			if( SlotInfos.muCount[stageIdx] > 0 )
 			{
 				mInstanceInfo.maTextureRef[stageIdx][SlotInfos.muSlot[stageIdx]] = _rTexture;

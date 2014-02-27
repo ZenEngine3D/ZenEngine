@@ -27,7 +27,7 @@ namespace EExp
 	
 	class SerialMeshStrip_Base : public EExp::ExportItem
 	{
-	AWClassDeclare(SerialMeshStrip_Base,EExp::ExportItem)
+	ZENClassDeclare(SerialMeshStrip_Base,EExp::ExportItem)
 	public:
 		struct ExportInfo : public EExp::ExportInfoBase
 		{			

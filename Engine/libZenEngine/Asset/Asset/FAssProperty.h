@@ -32,7 +32,7 @@ namespace FAss
 // Common class declaration of all asset value definition
 //=================================================================================================
 #define AWPropertyDefDeclare(_PropertyDef_)																			\
-	AWClassDeclare(_PropertyDef_, TPropertyDefBase)																	\
+	ZENClassDeclare(_PropertyDef_, TPropertyDefBase)																	\
 	public:																											\
 		virtual PropertyDefBase::Value* Allocate()const{return zenNew(&sPoolAlloc)Value(*this);}						\
 		virtual void ValueToString(const PropertyDefBase::Value& _Value, char* _zBuffer, zenUInt _uSizebuffer)const;	\
@@ -42,7 +42,7 @@ namespace FAss
 
 class PropertyDefBase
 {
-AWClassDeclareNoParent(PropertyDefBase)
+ZENClassDeclareNoParent(PropertyDefBase)
 public:
 //-----------------------------------------------------------------------------
 // Enum of resource types
@@ -61,7 +61,7 @@ public:
 //-----------------------------------------------------------------------------
 	class Value
 	{	
-	AWClassDeclareNoParent(Value)
+	ZENClassDeclareNoParent(Value)
 	public:		
 		inline void	ValueToString(char* _zBuffer, zenUInt _uSizebuffer)const 
 		{ 
@@ -121,11 +121,11 @@ public:
 template<PropertyDefBase::enumType TEType, class TValue>
 class TPropertyDefBase : public PropertyDefBase
 {
-AWClassDeclare(TPropertyDefBase, PropertyDefBase)
+ZENClassDeclare(TPropertyDefBase, PropertyDefBase)
 public:
 						class Value : public PropertyDefBase::Value
 						{
-						AWClassDeclare(Value, PropertyDefBase::Value)
+						ZENClassDeclare(Value, PropertyDefBase::Value)
 						public:
 							Value(const TPropertyDefBase& _ParentDef):PropertyDefBase::Value(_ParentDef), mValue(_ParentDef.mDefault){}
 							TValue mValue;
@@ -248,7 +248,7 @@ public:
 /*
 class PropertyDefInt2 : public PropertyDefBase
 {
-AWClassDeclare(PropertyDefInt2, PropertyDefBase)
+ZENClassDeclare(PropertyDefInt2, PropertyDefBase)
 public:
 				PropertyDefInt2(const char* _zName, const char* _zDisplayName, const char* _zDescription, bool _bShowInAssetDesc, zenVec2S32 _mviDefault, int _iMin=0, int _iMax=100)
 				: PropertyDefBase(keType_Int2, _zName, _zDisplayName, _zDescription, _bShowInAssetDesc )
@@ -264,7 +264,7 @@ public:
 
 class PropertyDefInt3 : public PropertyDefBase
 {
-AWClassDeclare(PropertyDefInt3, PropertyDefBase)
+ZENClassDeclare(PropertyDefInt3, PropertyDefBase)
 public:
 				PropertyDefInt3(const char* _zName, const char* _zDisplayName, const char* _zDescription, bool _bShowInAssetDesc, zenVec3S32 _mviDefault, int _iMin=0, int _iMax=100)
 				: PropertyDefBase(keType_Int3, _zName, _zDisplayName, _zDescription, _bShowInAssetDesc )
@@ -280,7 +280,7 @@ public:
 
 class PropertyDefInt4 : public PropertyDefBase
 {
-AWClassDeclare(PropertyDefInt4, PropertyDefBase)
+ZENClassDeclare(PropertyDefInt4, PropertyDefBase)
 public:
 				PropertyDefInt4(const char* _zName, const char* _zDisplayName, const char* _zDescription, bool _bShowInAssetDesc, zenVec4S32 _mviDefault, int _iMin=0, int _iMax=100)
 				: PropertyDefBase(keType_Int4, _zName, _zDisplayName, _zDescription, _bShowInAssetDesc )
@@ -296,7 +296,7 @@ public:
 
 class PropertyDefFloat3 : public PropertyDefBase
 {
-AWClassDeclare(PropertyDefFloat3, PropertyDefBase)
+ZENClassDeclare(PropertyDefFloat3, PropertyDefBase)
 public:
 				PropertyDefFloat3(const char* _zName, const char* _zDisplayName, const char* _zDescription, bool _bShowInAssetDesc, zenVec3F _vfDefault, float _fMin=0.f, float _fMax=100.f, float _fIncrement=1.f)
 				: PropertyDefBase(keType_Float3, _zName, _zDisplayName, _zDescription, _bShowInAssetDesc )
@@ -314,7 +314,7 @@ public:
 
 class PropertyDefFloat4 : public PropertyDefBase
 {
-AWClassDeclare(PropertyDefFloat4, PropertyDefBase)
+ZENClassDeclare(PropertyDefFloat4, PropertyDefBase)
 public:
 				PropertyDefFloat4(const char* _zName, const char* _zDisplayName, const char* _zDescription, bool _bShowInAssetDesc, zenVec4F _vfDefault, float _fMin=0.f, float _fMax=100.f, float _fIncrement=1.f)
 				: PropertyDefBase(keType_Float4, _zName, _zDisplayName, _zDescription, _bShowInAssetDesc )

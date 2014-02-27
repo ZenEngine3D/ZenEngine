@@ -6,7 +6,7 @@ namespace EExp
 {
 	class SerialShaderBinding_Base : public EExp::ExportItem
 	{
-	AWClassDeclare(SerialShaderBinding_Base,EExp::ExportItem)
+	ZENClassDeclare(SerialShaderBinding_Base,EExp::ExportItem)
 	public:
 		struct ExportInfo : public EExp::ExportInfoBase
 		{						

@@ -58,7 +58,7 @@ bool ManagerState_DX11::Unload()
 
 void ManagerState_DX11::SetBlend(const ConfigBlend& _Blend, zenUInt _uRenderTarget)
 {
-	AWAssert(_uRenderTarget<kuMaxRenderTarget);
+	ZENAssert(_uRenderTarget<kuMaxRenderTarget);
 	if( mConfigBlend[_uRenderTarget] != _Blend )
 	{
 		mbUpdatedBlend					= true;
@@ -132,9 +132,9 @@ void ManagerState_DX11::PipelineUpdate()
 		{
 			ConfigBlend& Config								= mConfigBlend[i];
 			D3D11_RENDER_TARGET_BLEND_DESC&	RenderTarget	= BlendState.RenderTarget[i];
-			AWAssertMsg( Config.muWriteMask < 16, "Invalid WriteMask specified");
-			AWAssertMsg( Config.meBlendRGB < ConfigBlend::keBlend__Count && Config.meBlendAlpha < ConfigBlend::keBlend__Count, "Invalid Blending mode specified");
-			AWAssertMsg( mBlendToDX11[Config.meBlendRGB].Op != 0xFF && mBlendToDX11[Config.meBlendAlpha].Op != 0xFF, "Blending mode not supported on this platform renderer." );
+			ZENAssertMsg( Config.muWriteMask < 16, "Invalid WriteMask specified");
+			ZENAssertMsg( Config.meBlendRGB < ConfigBlend::keBlend__Count && Config.meBlendAlpha < ConfigBlend::keBlend__Count, "Invalid Blending mode specified");
+			ZENAssertMsg( mBlendToDX11[Config.meBlendRGB].Op != 0xFF && mBlendToDX11[Config.meBlendAlpha].Op != 0xFF, "Blending mode not supported on this platform renderer." );
 			RenderTarget.BlendEnable			= Config.meBlendRGB != ConfigBlend::keBlend_None && Config.meBlendAlpha != ConfigBlend::keBlend_None;
 			RenderTarget.RenderTargetWriteMask	= mBlendWriteMaskToDX11[Config.muWriteMask];
 			RenderTarget.SrcBlend				= mBlendToDX11[Config.meBlendRGB].Src;

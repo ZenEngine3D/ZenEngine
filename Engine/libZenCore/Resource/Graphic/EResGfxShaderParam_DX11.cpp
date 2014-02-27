@@ -62,7 +62,7 @@ void GfxShaderParam_DX11::Bind(EExp::eShaderStage _eShaderStage)const
 
 void GfxShaderParam_DX11::SetValue(const EExp::ParameterBase& _Value)
 {
-	AWAssert( mInstanceInfo.mpParentShaderParamDef.IsValid() )
+	ZENAssert( mInstanceInfo.mpParentShaderParamDef.IsValid() )
 	EExp::ShaderParamItemInfo ItemInfo;
 	if( mInstanceInfo.mpParentShaderParamDef->Get().mdParameters.Get(_Value.mhName, ItemInfo) )
 	{
@@ -73,7 +73,7 @@ void GfxShaderParam_DX11::SetValue(const EExp::ParameterBase& _Value)
 
 void GfxShaderParam_DX11::SetValue(const awres::awShaderParameter& _Value)
 {
-	AWAssert( mInstanceInfo.mpParentShaderParamDef.IsValid() )
+	ZENAssert( mInstanceInfo.mpParentShaderParamDef.IsValid() )
 	EExp::ShaderParamItemInfo ItemInfo;
 	if( mInstanceInfo.mpParentShaderParamDef->Get().mdParameters.Get(_Value.mhName, ItemInfo) )
 	{
@@ -84,12 +84,12 @@ void GfxShaderParam_DX11::SetValue(const awres::awShaderParameter& _Value)
 
 void GfxShaderParam_DX11::SetValue(const zenHash32& _hParamName, const float& _fValue)
 {
-	AWAssert( mInstanceInfo.mpParentShaderParamDef.IsValid() )
+	ZENAssert( mInstanceInfo.mpParentShaderParamDef.IsValid() )
 	EExp::ShaderParamItemInfo ItemInfo;
 	if( mInstanceInfo.mpParentShaderParamDef->Get().mdParameters.Get(_hParamName, ItemInfo) )
 	{	
 		mbUpdated		= TRUE;
-		AWAssertMsg( ItemInfo.muSize >= sizeof(float), "Shader variable declared smaller than 1xFloat" );
+		ZENAssertMsg( ItemInfo.muSize >= sizeof(float), "Shader variable declared smaller than 1xFloat" );
 		float* pValues	= reinterpret_cast<float*>(&mInstanceInfo.maParameterValues[ItemInfo.muOffset]);
 		pValues[0]		= _fValue;		
 	}	
@@ -97,12 +97,12 @@ void GfxShaderParam_DX11::SetValue(const zenHash32& _hParamName, const float& _f
 
 void GfxShaderParam_DX11::SetValue(const zenHash32& _hParamName, const zenVec2F& _vValue)
 {
-	AWAssert( mInstanceInfo.mpParentShaderParamDef.IsValid() )
+	ZENAssert( mInstanceInfo.mpParentShaderParamDef.IsValid() )
 	EExp::ShaderParamItemInfo ItemInfo;
 	if( mInstanceInfo.mpParentShaderParamDef->Get().mdParameters.Get(_hParamName, ItemInfo) )
 	{			
 		mbUpdated		= TRUE;
-		AWAssertMsg( ItemInfo.muSize >= sizeof(float)*2, "Shader variable declared smaller than 2xFloats" );
+		ZENAssertMsg( ItemInfo.muSize >= sizeof(float)*2, "Shader variable declared smaller than 2xFloats" );
 		float* pValues	= reinterpret_cast<float*>(&mInstanceInfo.maParameterValues[ItemInfo.muOffset]);
 		pValues[0]		= _vValue.x;
 		pValues[1]		= _vValue.y;
@@ -111,12 +111,12 @@ void GfxShaderParam_DX11::SetValue(const zenHash32& _hParamName, const zenVec2F&
 
 void GfxShaderParam_DX11::SetValue(const zenHash32& _hParamName, const zenVec3F& _vValue)
 {
-	AWAssert( mInstanceInfo.mpParentShaderParamDef.IsValid() )
+	ZENAssert( mInstanceInfo.mpParentShaderParamDef.IsValid() )
 	EExp::ShaderParamItemInfo ItemInfo;
 	if( mInstanceInfo.mpParentShaderParamDef->Get().mdParameters.Get(_hParamName, ItemInfo) )
 	{			
 		mbUpdated		= TRUE;
-		AWAssertMsg( ItemInfo.muSize >= sizeof(float)*3, "Shader variable declared smaller than 3xFloats" );
+		ZENAssertMsg( ItemInfo.muSize >= sizeof(float)*3, "Shader variable declared smaller than 3xFloats" );
 		float* pValues	= reinterpret_cast<float*>(&mInstanceInfo.maParameterValues[ItemInfo.muOffset]);
 		pValues[0]		= _vValue.x;
 		pValues[1]		= _vValue.y;
@@ -126,12 +126,12 @@ void GfxShaderParam_DX11::SetValue(const zenHash32& _hParamName, const zenVec3F&
 
 void GfxShaderParam_DX11::SetValue(const zenHash32& _hParamName, const zenVec4F& _vValue)
 {
-	AWAssert( mInstanceInfo.mpParentShaderParamDef.IsValid() )			
+	ZENAssert( mInstanceInfo.mpParentShaderParamDef.IsValid() )			
 	EExp::ShaderParamItemInfo ItemInfo;
 	if( mInstanceInfo.mpParentShaderParamDef->Get().mdParameters.Get(_hParamName, ItemInfo) )
 	{			
 		mbUpdated		= TRUE;
-		AWAssertMsg( ItemInfo.muSize >= sizeof(float)*4, "Shader variable declared smaller than 4xFloats" );
+		ZENAssertMsg( ItemInfo.muSize >= sizeof(float)*4, "Shader variable declared smaller than 4xFloats" );
 		float* pValues	= reinterpret_cast<float*>(&mInstanceInfo.maParameterValues[ItemInfo.muOffset]);
 		pValues[0]		= _vValue.x;
 		pValues[1]		= _vValue.y;
@@ -142,12 +142,12 @@ void GfxShaderParam_DX11::SetValue(const zenHash32& _hParamName, const zenVec4F&
 
 void GfxShaderParam_DX11::SetValue(const zenHash32& _hParamName, const zenMath::Matrix& _matValue)
 {
-	AWAssert( mInstanceInfo.mpParentShaderParamDef.IsValid() )			
+	ZENAssert( mInstanceInfo.mpParentShaderParamDef.IsValid() )			
 	EExp::ShaderParamItemInfo ItemInfo;
 	if( mInstanceInfo.mpParentShaderParamDef->Get().mdParameters.Get(_hParamName, ItemInfo) )
 	{			
 		mbUpdated		= TRUE;
-		AWAssertMsg( ItemInfo.muSize >= sizeof(float)*16, "Shader variable declared smaller than 16xFloats" );
+		ZENAssertMsg( ItemInfo.muSize >= sizeof(float)*16, "Shader variable declared smaller than 16xFloats" );
 		zenMem::Copy( &mInstanceInfo.maParameterValues[ItemInfo.muOffset], &_matValue.mvRows[0], sizeof(float)*16 );
 	}	
 }

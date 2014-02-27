@@ -44,7 +44,7 @@ namespace sample
 
 		TestAlloc* pTest1		= zenNewDefault TestAlloc(1);
 		TestAlloc* pTest2		= zenNewDefault TestAlloc(2);
-		TestAlloc* pTest3		= zenNew(&zbMem::GetDefault()) TestAlloc(3);
+		TestAlloc* pTest3		= zenNew(&zenMem::Allocator::GetDefault()) TestAlloc(3);
 		TestAlloc* pArrayTest	= zenNewDefault TestAlloc[5];
 
 		//Test buffer overrun detection

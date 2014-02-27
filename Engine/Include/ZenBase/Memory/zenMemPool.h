@@ -13,7 +13,7 @@ namespace zen { namespace zenMem
 //=================================================================================================
 class AllocatorPool : public zenMem::Allocator
 {
-AWClassDeclare(AllocatorPool, zenMem::Allocator);
+ZENClassDeclare(AllocatorPool, zenMem::Allocator);
 public:								
 	virtual void*			Malloc				(size_t _uSize, bool _bIsArray, zenU32 _uAlign=zenDefaultAlign);
 	virtual	void			Free				(void* _pAlloc, void* _pInfoAlloc);

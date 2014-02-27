@@ -9,7 +9,7 @@ namespace zen { namespace awres {
 	//=============================================================================================
 	class awResource : public zenRefCounted<false>
 	{
-	AWClassDeclare(awResource, zenRefCounted<false>)
+	ZENClassDeclare(awResource, zenRefCounted<false>)
 	public:									
 		inline const zenResID&	GetResID()const;	//!< @brief return resource ID of resource
 		inline bool				IsValid()const;		//!< @brief true if the object is a valid resource
@@ -24,7 +24,7 @@ namespace zen { namespace awres {
 	//=============================================================================================	
 	class awResourceRef
 	{
-	AWClassDeclareNoParent(awResourceRef)
+	ZENClassDeclareNoParent(awResourceRef)
 	public:
 		inline				awResourceRef();
 		inline				awResourceRef(awResource* _pResource);
@@ -45,7 +45,7 @@ namespace zen { namespace awres {
 	protected:
 		inline void			SetResource(awResource* _pResource);
 		awResource*			mpResource;
-		AWDbgCode( awFlagResType mSupportedTypeMask; )
+		ZENDbgCode( awFlagResType mSupportedTypeMask; )
 	};
 
 	//=============================================================================================
@@ -55,7 +55,7 @@ namespace zen { namespace awres {
 	template<awconst::eResType TType>
 	class awResourceTypedRef : public awResourceRef
 	{
-	AWClassDeclare(awResourceTypedRef, awResourceRef)
+	ZENClassDeclare(awResourceTypedRef, awResourceRef)
 	public:
 		inline				awResourceTypedRef();
 		inline				awResourceTypedRef(awResource* _pResource);
@@ -69,7 +69,7 @@ namespace zen { namespace awres {
 	template<awconst::eResType TType1, awconst::eResType TType2>
 	class awResourceTyped2Ref : public awResourceRef
 	{
-	AWClassDeclare(awResourceTyped2Ref, awResourceRef)
+	ZENClassDeclare(awResourceTyped2Ref, awResourceRef)
 	public:
 		inline				awResourceTyped2Ref();		
 		inline				awResourceTyped2Ref(awResource* _pResource);

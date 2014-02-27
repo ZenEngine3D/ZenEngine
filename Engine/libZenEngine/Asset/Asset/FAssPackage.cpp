@@ -131,7 +131,7 @@ void LoadGroupAndName(const char* _zName, const char* _zGroup, zenArrayStatic<ze
 		for(zenUInt idx(0); idx<uGroupCount; ++idx)
 		{
 			char temp[128];
-			zenUInt len = zenMath::Min<zenUInt>(AWArrayCount(temp), uGroupEnd[idx]-pos+1 );
+			zenUInt len = zenMath::Min<zenUInt>(ZENArrayCount(temp), uGroupEnd[idx]-pos+1 );
 			memcpy(temp, &_zGroup[pos], len);
 			temp[len-1]		= 0;
 			_aOutGroup[idx]	= temp;

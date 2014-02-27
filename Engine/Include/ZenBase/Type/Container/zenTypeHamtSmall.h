@@ -25,7 +25,7 @@ namespace zen { namespace zenType {
 	template<class TKey, class TValue, class TIndex, int TIndexBits>
 	class zenHamt
 	{
-	AWClassDeclareNoParent(zenHamt)
+	ZENClassDeclareNoParent(zenHamt)
 	protected:
 		//=================================================================================================
 		//! @brief		Internal Hamt constants

@@ -18,23 +18,23 @@ void SampleAssert()
 	CMgr::Log.Log(CLog::keLog_Game, " Assert test");
 	CMgr::Log.Log(CLog::keLog_Game, awconst::kzLineA40);
 	
-	AWWarning(bTestWarning);
-	AWWarningMsg(bTestWarningMsg, "Warning with message" );
+	ZENWarning(bTestWarning);
+	ZENWarningMsg(bTestWarningMsg, "Warning with message" );
 	for(int i=0; i<3; ++i)
 	{
-		AWWarningOnce(bTestWarningOnce);
-		AWWarningMsgOnce(bTestWarningOnceMsg, "Warning Once with message");
+		ZENWarningOnce(bTestWarningOnce);
+		ZENWarningMsgOnce(bTestWarningOnceMsg, "Warning Once with message");
 	}
 
-	AWAssert(bTestAssert);
-	AWAssertMsg(bTestAssertMsg, "Assert with message" );
+	ZENAssert(bTestAssert);
+	ZENAssertMsg(bTestAssertMsg, "Assert with message" );
 	for(int i=0; i<3; ++i)
 	{
-		AWAssertOnce(bTestAssertOnce);
-		AWAssertMsgOnce(bTestAssertOnceMsg, "Assert Once with message");
+		ZENAssertOnce(bTestAssertOnce);
+		ZENAssertMsgOnce(bTestAssertOnceMsg, "Assert Once with message");
 	}
 
-	AWCriticalMsg(bTestCriticalMsg, "Critical, termine program");
+	ZENCriticalMsg(bTestCriticalMsg, "Critical, termine program");
 }
 
 }

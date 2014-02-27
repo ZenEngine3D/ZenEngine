@@ -29,7 +29,7 @@ namespace CLog
 
 	void ManagerLog::SetActive( eLogOutput _eOutput, eLogType _eType, bool _bActive )
 	{ 
-		AWAssertMsg( _eOutput < keLogOut__Count, "Invalid output");
+		ZENAssertMsg( _eOutput < keLogOut__Count, "Invalid output");
 		zenU32 uMask = (1<<_eType);
 		muOutputMask[_eOutput] &= ~uMask;
 		muOutputMask[_eOutput] |= (zenU32)_bActive>0 ? uMask : 0;
@@ -37,13 +37,13 @@ namespace CLog
 
 	void ManagerLog::Clear( eLogOutput _eOutput )
 	{
-		AWAssertMsg( _eOutput < keLogOut__Count, "Invalid output");
+		ZENAssertMsg( _eOutput < keLogOut__Count, "Invalid output");
 		muOutputMask[_eOutput] = 0;
 	}
 
 	bool ManagerLog::IsActive( eLogOutput _eOutput, eLogType _eType )
 	{
-		AWAssertMsg( _eOutput < keLogOut__Count, "Invalid output");
+		ZENAssertMsg( _eOutput < keLogOut__Count, "Invalid output");
 		return (muOutputMask[_eOutput] & (1<<_eType)) != 0;
 	}
 

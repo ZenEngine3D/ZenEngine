@@ -41,14 +41,14 @@ awGfxIndex awGfxIndex::Create(const zenArrayBase<zenU32>& _Indices, awconst::ePr
 //=================================================================================================
 zenU8* awGfxVertex::Lock()
 {
-	AWAssertMsg(mpResource, "No valid resource assigned");
+	ZENAssertMsg(mpResource, "No valid resource assigned");
 	ERes::GfxVertex* pVertex = static_cast<ERes::GfxVertex*>(mpResource);
 	return pVertex->Lock();
 }
 	
 void awGfxVertex::Unlock()
 {
-	AWAssertMsg(mpResource, "No valid resource assigned");
+	ZENAssertMsg(mpResource, "No valid resource assigned");
 	ERes::GfxVertex* pVertex = static_cast<ERes::GfxVertex*>(mpResource);
 	return pVertex->Unlock();
 }
@@ -58,14 +58,14 @@ void awGfxVertex::Unlock()
 //=================================================================================================
 zenU8* awGfxIndex::Lock()
 {
-	AWAssertMsg(mpResource, "No valid resource assigned");
+	ZENAssertMsg(mpResource, "No valid resource assigned");
 	ERes::GfxIndex* pIndex = static_cast<ERes::GfxIndex*>(mpResource);
 	return pIndex->Lock();
 }
 
 void awGfxIndex::Unlock()
 {
-	AWAssertMsg(mpResource, "No valid resource assigned");
+	ZENAssertMsg(mpResource, "No valid resource assigned");
 	ERes::GfxIndex* pIndex = static_cast<ERes::GfxIndex*>(mpResource);
 	return pIndex->Unlock();
 }
@@ -75,7 +75,7 @@ void awGfxIndex::Unlock()
 //=================================================================================================
 const zenVec2U16& awGfxTexture2D::GetDim()
 {
-	AWAssertMsg(mpResource, "No valid resource assigned");
+	ZENAssertMsg(mpResource, "No valid resource assigned");
 	ERes::GfxTexture2D* pTexture = static_cast<ERes::GfxTexture2D*>(mpResource);
 	return pTexture->GetDim();
 }
@@ -85,35 +85,35 @@ const zenVec2U16& awGfxTexture2D::GetDim()
 //=================================================================================================
 bool awGfxRenderTarget::IsDepth()
 {
-	AWAssertMsg(mpResource, "No valid resource assigned");
+	ZENAssertMsg(mpResource, "No valid resource assigned");
 	ERes::GfxRenderTarget* pRenderTarget = static_cast<ERes::GfxRenderTarget*>(mpResource);
 	return pRenderTarget->IsDepth();
 }
 
 const zenVec2U16& awGfxRenderTarget::GetDim()
 {
-	AWAssertMsg(mpResource, "No valid resource assigned");
+	ZENAssertMsg(mpResource, "No valid resource assigned");
 	ERes::GfxRenderTarget* pRenderTarget = static_cast<ERes::GfxRenderTarget*>(mpResource);
 	return pRenderTarget->GetDim();
 }
 
 void awGfxRenderTarget::Clear(const zenVec4F& _vRGBA)
 {
-	AWAssertMsg(mpResource, "No valid resource assigned");
+	ZENAssertMsg(mpResource, "No valid resource assigned");
 	ERes::GfxRenderTarget* pRenderTarget = static_cast<ERes::GfxRenderTarget*>(mpResource);
 	pRenderTarget->Clear(_vRGBA);
 }
 
 void awGfxRenderTarget::Clear(float _fDepth, zenU8 _uStencil, bool _bClearDepth, bool _bClearStencil)
 {
-	AWAssertMsg(mpResource, "No valid resource assigned");
+	ZENAssertMsg(mpResource, "No valid resource assigned");
 	ERes::GfxRenderTarget* pRenderTarget = static_cast<ERes::GfxRenderTarget*>(mpResource);
 	pRenderTarget->Clear(_fDepth, _uStencil, _bClearDepth, _bClearStencil);
 }
 
 awGfxTexture2D awGfxRenderTarget::GetTexture2D()
 {
-	AWAssertMsg(mpResource, "No valid resource assigned");
+	ZENAssertMsg(mpResource, "No valid resource assigned");
 	ERes::GfxRenderTarget* pRenderTarget = static_cast<ERes::GfxRenderTarget*>(mpResource);
 	return pRenderTarget->GetTexture2D();
 }

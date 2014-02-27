@@ -24,7 +24,7 @@ const zenArrayStatic<const FAss::PropertyDefBase*>& GfxMesh::GetPropertyDef() co
 {
 	static const FAss::PropertyDefFile		Property01("Source", "", "3D Model", true,	"", "");
 	static const FAss::PropertyDefBase*		aPropertyAll[] = { &Property01 };
-	static zenArrayStatic<const FAss::PropertyDefBase*> saPropertyDef(aPropertyAll, AWArrayCount(aPropertyAll));
+	static zenArrayStatic<const FAss::PropertyDefBase*> saPropertyDef(aPropertyAll, ZENArrayCount(aPropertyAll));
 	return saPropertyDef;		
 }
 

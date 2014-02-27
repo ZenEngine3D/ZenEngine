@@ -72,8 +72,8 @@ bool SerialShader_DX11::ExportWorkCompile()
 	//-------------------------------------------------------------------------
 	D3D10_SHADER_MACRO pDefines[128];
 	zenUInt uDefineCount = pExportInfo->maDefines.Count();
-	AWAssertMsg(uDefineCount < AWArrayCount(pDefines)-2, "Too many defines included, increase capacity");
-	uDefineCount		= zenMath::Min(uDefineCount, zenUInt(AWArrayCount(pDefines)-2));
+	ZENAssertMsg(uDefineCount < ZENArrayCount(pDefines)-2, "Too many defines included, increase capacity");
+	uDefineCount		= zenMath::Min(uDefineCount, zenUInt(ZENArrayCount(pDefines)-2));
 	if( uDefineCount )
 	{
 		D3D10_SHADER_MACRO*		pDefineCur	= pDefines;
@@ -160,14 +160,14 @@ bool SerialShader_DX11::ExportWorkExtractResources()
 			{				
 				if( resourceDesc.Type ==  D3D_SIT_TEXTURE )
 				{
-					AWAssert( uTextureCount < EExp::kuDX11_TexturePerStageMax );
+					ZENAssert( uTextureCount < EExp::kuDX11_TexturePerStageMax );
 					ProcessTexture( *pGfxShaderReflection, resourceDesc, aTextureBind[uTextureCount], aTextureName[uTextureCount] );
 					muTextureSlotCount = zenMath::Max(UINT(muTextureSlotCount), resourceDesc.BindPoint+resourceDesc.BindCount);	
 					++uTextureCount;
 				}
 				else if( resourceDesc.Type == D3D_SIT_CBUFFER )
 				{
-					AWAssert(resourceDesc.BindPoint<EExp::keShaderParamFreq__Count);
+					ZENAssert(resourceDesc.BindPoint<EExp::keShaderParamFreq__Count);
 					ProcessShaderParamDef( *pGfxShaderReflection, resourceDesc, mResID.Source(), maParamDefID[resourceDesc.BindPoint] );
 				}
 			}			

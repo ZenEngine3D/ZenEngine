@@ -11,7 +11,7 @@ namespace zen { namespace zenType {
 	template<class TType, GrowthPolicyFunction TGrowthPolicy=GrowthPolicyOneandHalf>
 	class zenArrayDynamic : public zenArrayBase<TType>
 	{
-	AWClassDeclare(zenArrayDynamic, zenArrayBase<TType>)
+	ZENClassDeclare(zenArrayDynamic, zenArrayBase<TType>)
 	public:
 									zenArrayDynamic();
 									zenArrayDynamic(zenU32 _uCount);

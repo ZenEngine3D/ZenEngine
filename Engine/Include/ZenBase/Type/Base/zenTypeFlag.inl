@@ -4,7 +4,7 @@ template<typename TEnumFlag, int TEnumMax, typename TStorage>
 zenFlag<TEnumFlag, TEnumMax, TStorage>::zenFlag() 
 : muFlags(0)
 {
-	AWStaticAssertMsg( sizeof(TStorage)*8>=TEnumMax, StorageContainerTooSmallForMaxValue );
+	ZENStaticAssertMsg( sizeof(TStorage)*8>=TEnumMax, StorageContainerTooSmallForMaxValue );
 };
 
 template<typename TEnumFlag, int TEnumMax, typename TStorage> 
@@ -130,7 +130,7 @@ const zenFlag<TEnumFlag, TEnumMax, TStorage>& zenFlag<TEnumFlag, TEnumMax, TStor
 template<typename TEnumFlag, int TEnumMax, typename TStorage>
 AWForceInline void zenFlag<TEnumFlag, TEnumMax, TStorage>::CheckValid(TStorage _Value)
 {
-	AWAssertMsg( (_Value & (~((TStorage(1)<<TEnumMax)-1)))==0, "Using an enum value higher than allowed");
+	ZENAssertMsg( (_Value & (~((TStorage(1)<<TEnumMax)-1)))==0, "Using an enum value higher than allowed");
 }
 
 template<typename TEnumFlag, int TEnumMax, typename TStorage>

@@ -6,7 +6,7 @@ namespace EExp
 {	
 	class SerialGfxInputSignature_DX11 : public SerialInputSignature_Base
 	{
-	AWClassDeclare(SerialGfxInputSignature_DX11, SerialInputSignature_Base)
+	ZENClassDeclare(SerialGfxInputSignature_DX11, SerialInputSignature_Base)
 		//-------------------------------------------------------------------------------------------------
 		// Serialization and Asset creation support
 		//-------------------------------------------------------------------------------------------------

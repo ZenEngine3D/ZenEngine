@@ -7,7 +7,7 @@ namespace CFil
 
 	
 FileInfo::FileInfo()
-	: AWClassPlatform(FileInfo)()
+	: ZENClassPlatform(FileInfo)()
 	, miFileSize(0)
 	, miFilePos(0)
 	, muFlags(0)
@@ -328,7 +328,7 @@ void Filename::SplitFolder(zenArrayDynamic<zenArrayStatic<wchar_t>>& _aFolderOut
 	// Find all path separators	
 	while( ++uPos < uCount)
 	{
-		AWAssert(uOffetCount < AWArrayCount(aOffset) )
+		ZENAssert(uOffetCount < ZENArrayCount(aOffset) )
 		if( mzFilename[uPos] == L'\\' || mzFilename[uPos] == L'/')
 			aOffset[uOffetCount++] = uPos+1;
 	}

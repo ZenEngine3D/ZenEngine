@@ -53,7 +53,7 @@ namespace EExp
 		dParamDefPerName.SetDefaultValue(0);
 		for(zenUInt paramDefIdx(0), paramDefCount(mSerial.maParamDefID.Count()); paramDefIdx<paramDefCount; ++paramDefIdx )
 		{
-			AWAssert( paramDefIdx < maParameterMask.SizeElement() );			
+			ZENAssert( paramDefIdx < maParameterMask.SizeElement() );			
 			const SerialGfxShaderParamDef_DX11* pParamDef = EMgr::SerialItems.GetItem<const SerialGfxShaderParamDef_DX11>( mSerial.maParamDefID[paramDefIdx] );
 			if( pParamDef )
 			{

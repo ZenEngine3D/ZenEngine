@@ -57,32 +57,32 @@
 #define AW_ASSERTON (AW_ASSERT_BREAKON || AWASSERT_MSG_ON)
 
 #if AW_DEBUGINFOON || AW_ASSERTON
-	#define AWDbgCode( _Code_ )			_Code_
+	#define ZENDbgCode( _Code_ )			_Code_
 #else
-	#define AWDbgCode( _Code_ )
+	#define ZENDbgCode( _Code_ )
 #endif
 
 //=================================================================================================
 //! Support for multi-platform file include
 //=================================================================================================
-#define AWComma									,															//Useful to insert a comma, inside a macro call, without interpreting it as a new macro parameter
-#define AWString(_S_)							#_S_														//Convert parameter into a string
-#define AWStringDefine(_S_)						AWString(_S_)												//Convert content of a define into a string
-#define AWFilenameB(PREFIX, SUFFIX, EXT)		PREFIX##_##SUFFIX##EXT										//Used to generate platform based filename by others macros
-#define AWFilename(PREFIX, SUFFIX, EXT)			AWFilenameB(PREFIX, SUFFIX, EXT )							//Used to generate platform based filename by others macros
+#define ZENComma								,															//Useful to insert a comma, inside a macro call, without interpreting it as a new macro parameter
+#define ZENStringDefineB(_S_)					#_S_														//Convert parameter into a string
+#define ZENStringDefine(_S_)					ZENStringDefineB(_S_)										//Convert content of a define into a string
+#define ZENFilenameB(PREFIX, SUFFIX, EXT)		PREFIX##_##SUFFIX##EXT										//Used to generate platform based filename by others macros
+#define ZENFilename(PREFIX, SUFFIX, EXT)		ZENFilenameB(PREFIX, SUFFIX, EXT )							//Used to generate platform based filename by others macros
 
-#define AWHeaderFile(HEADERNAME, DEFINE)		AWStringDefine( AWFilename(HEADERNAME, DEFINE, .h) )		//!< AllocHeader filename for current Platform type
-#define AWInlineFile(HEADERNAME, DEFINE)		AWStringDefine( AWFilename(HEADERNAME, DEFINE, .inl) )		//!< AllocHeader filename for current Platform type
+#define ZENHeaderFile(HEADERNAME, DEFINE)		ZENStringDefine( ZENFilename(HEADERNAME, DEFINE, .h) )		//!< AllocHeader filename for current Platform type
+#define ZENInlineFile(HEADERNAME, DEFINE)		ZENStringDefine( ZENFilename(HEADERNAME, DEFINE, .inl) )		//!< AllocHeader filename for current Platform type
 
-#define AWHeaderPlatform(HEADERNAME)			AWHeaderFile(HEADERNAME,	AW_PLATFORM)					//!< AllocHeader filename for current Platform type
-#define AWInlinePlatform(HEADERNAME)			AWInlineFile(HEADERNAME,	AW_PLATFORM)					//!< Inline filename for current Platform type
-#define AWClassPlatform(CLASSNAME)				AWDefineStich3(CLASSNAME, _, AW_PLATFORM)					//!< AllocHeader filename for current Platform type
+#define ZENHeaderPlatform(HEADERNAME)			ZENHeaderFile(HEADERNAME,	AW_PLATFORM)					//!< AllocHeader filename for current Platform type
+#define ZENInlinePlatform(HEADERNAME)			ZENInlineFile(HEADERNAME,	AW_PLATFORM)					//!< Inline filename for current Platform type
+#define ZENClassPlatform(CLASSNAME)				ZENDefineStich3(CLASSNAME, _, AW_PLATFORM)					//!< AllocHeader filename for current Platform type
 
-#define AWHeaderRenderer(HEADERNAME)			AWHeaderFile(HEADERNAME, AW_RENDERER)						//!< AllocHeader filename for current Renderer type
-#define AWInlineRenderer(HEADERNAME)			AWInlineFile(HEADERNAME, AW_RENDERER)						//!< Inline filename for current Renderer type
-#define AWClassRenderer(CLASSNAME)				AWDefineStich3(CLASSNAME, _, AW_RENDERER)					//!< AllocHeader filename for current Platform type
+#define ZENHeaderRenderer(HEADERNAME)			ZENHeaderFile(HEADERNAME, AW_RENDERER)						//!< AllocHeader filename for current Renderer type
+#define ZENInlineRenderer(HEADERNAME)			ZENInlineFile(HEADERNAME, AW_RENDERER)						//!< Inline filename for current Renderer type
+#define ZENClassRenderer(CLASSNAME)				ZENDefineStich3(CLASSNAME, _, AW_RENDERER)					//!< AllocHeader filename for current Platform type
 
-#include AWHeaderPlatform(zenConstBuildDefines)
-#include AWHeaderRenderer(zenConstBuildDefines)
+#include ZENHeaderPlatform(zenConstBuildDefines)
+#include ZENHeaderRenderer(zenConstBuildDefines)
 
 #endif

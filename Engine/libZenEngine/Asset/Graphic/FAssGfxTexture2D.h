@@ -6,7 +6,7 @@ namespace FAss
 {
 	class GfxTexture2D : public FAss::AssetItem
 	{
-	AWClassDeclare(GfxTexture2D, FAss::AssetItem)
+	ZENClassDeclare(GfxTexture2D, FAss::AssetItem)
 	public:
 		virtual FAss::AssetItem::enumType	GetType()const{return keType_Texture2D;}
 		virtual FAss::PropertyArray&		GetPropertyDef() const;		

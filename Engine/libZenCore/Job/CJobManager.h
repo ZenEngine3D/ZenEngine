@@ -7,7 +7,7 @@ namespace CJob
 
 class ManagerJob_Base : public zbType::Manager
 {
-AWClassDeclare(ManagerJob_Base, zbType::Manager);
+ZENClassDeclare(ManagerJob_Base, zbType::Manager);
 public:
 	void		Add(JobItem* _pJob);
 	void		Update();
@@ -22,7 +22,7 @@ protected:
 
 }  
 
-#include AWHeaderPlatform( CJobManager )
+#include ZENHeaderPlatform( CJobManager )
 
 namespace CMgr { extern CJob::ManagerJob Job; }
 

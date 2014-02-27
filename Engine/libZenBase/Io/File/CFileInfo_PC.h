@@ -6,7 +6,7 @@ namespace CFil
 {
 	class FileInfo_PC
 	{
-		AWClassDeclareNoParent(FileInfo_PC);
+		ZENClassDeclareNoParent(FileInfo_PC);
 	public:
 							FileInfo_PC();
 

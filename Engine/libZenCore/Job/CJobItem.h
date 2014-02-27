@@ -7,7 +7,7 @@ namespace CJob
 
 class JobItem : public zenList2xNode
 {
-AWClassDeclare(JobItem, zenList2xNode)
+ZENClassDeclare(JobItem, zenList2xNode)
 public:
 	enum eStatus{ keStatus_Wait, keStatus_Ready, keStatus_Running, keStatus_Success, keStatus_FailStart, keStatus_FailExe, keStatus_FailEnd, keStatus__Count };
 	

@@ -9,7 +9,7 @@ namespace zen { namespace awres {
 	//=============================================================================================
 	class awShaderDefine
 	{
-	AWClassDeclareNoParent(awShaderDefine)
+	ZENClassDeclareNoParent(awShaderDefine)
 	public:
 		inline		awShaderDefine();
 		inline		awShaderDefine(const char* _zName, const char* _zValue);
@@ -23,7 +23,7 @@ namespace zen { namespace awres {
 	//=============================================================================================
 	class awShaderTexture
 	{
-	AWClassDeclareNoParent(awShaderTexture)
+	ZENClassDeclareNoParent(awShaderTexture)
 	public:
 		inline awShaderTexture();
 		inline awShaderTexture(zenHash32 _hTextureName, zenResID _TextureID, zenResID _SamplerID);
@@ -40,7 +40,7 @@ namespace zen { namespace awres {
 	//=============================================================================================
 	class awShaderParameter
 	{
-	AWClassDeclareNoParent(awShaderParameter)
+	ZENClassDeclareNoParent(awShaderParameter)
 	public:
 		zenHash32	mhName;						//!< Parameter name
 		zenU32		meType			: 4;		//!< eShaderElementType
@@ -56,7 +56,7 @@ namespace zen { namespace awres {
 	template <class TType, awconst::eShaderElementType TShaderType>
 	class awShaderParamVector1 : public awShaderParameter
 	{
-	AWClassDeclare(awShaderParamVector1, awShaderParameter)
+	ZENClassDeclare(awShaderParamVector1, awShaderParameter)
 	public:
 		inline		awShaderParamVector1( zenHash32 _hName, TType _Value);
 		TType		mValue;
@@ -65,7 +65,7 @@ namespace zen { namespace awres {
 	template <class TType, awconst::eShaderElementType TShaderType>
 	class awShaderParamVector2 : public awShaderParameter
 	{
-	AWClassDeclare(awShaderParamVector2, awShaderParameter)
+	ZENClassDeclare(awShaderParamVector2, awShaderParameter)
 	public:
 		inline		awShaderParamVector2( zenHash32 _hName, TType _Value1, TType _Value2); 
 		inline		awShaderParamVector2( zenHash32 _hName, const TType _Values[2]);
@@ -76,7 +76,7 @@ namespace zen { namespace awres {
 	template <class TType, awconst::eShaderElementType TShaderType>
 	class awShaderParamVector3 : public awShaderParameter
 	{
-	AWClassDeclare(awShaderParamVector3, awShaderParameter)
+	ZENClassDeclare(awShaderParamVector3, awShaderParameter)
 	public:
 		inline		awShaderParamVector3( zenHash32 _hName, TType _Value1, TType _Value2, TType _Value3); 
 		inline		awShaderParamVector3( zenHash32 _hName, const TType _Values[3]);
@@ -87,7 +87,7 @@ namespace zen { namespace awres {
 	template <class TType, awconst::eShaderElementType TShaderType>
 	class awShaderParamVector4 : public awShaderParameter
 	{
-	AWClassDeclare(awShaderParamVector4, awShaderParameter)
+	ZENClassDeclare(awShaderParamVector4, awShaderParameter)
 	public:
 		inline		awShaderParamVector4( zenHash32 _hName, TType _Value1, TType _Value2, TType _Value3, TType _Value4);
 		inline		awShaderParamVector4( zenHash32 _hName, const TType _Values[4]);

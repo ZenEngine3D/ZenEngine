@@ -13,7 +13,7 @@ namespace zen { namespace zenType {
 //=================================================================================================
 class zenList1xNode
 {
-AWClassDeclareNoParent(zenList1xNode)
+ZENClassDeclareNoParent(zenList1xNode)
 public:
 						zenList1xNode	():mpLstNext(NULL){};
 						~zenList1xNode	(){};
@@ -33,7 +33,7 @@ protected:
 //=================================================================================================
 class zenList1xItem : public zenList1xNode
 {
-AWClassDeclare(zenList1xItem, zenList1xNode)
+ZENClassDeclare(zenList1xItem, zenList1xNode)
 public:
 						zenList1xItem	( void* _pObject, bool _bAutoDelete=false );
 	virtual				~zenList1xItem	( void );
@@ -53,7 +53,7 @@ protected:
 //=================================================================================================
 class zenList1x
 {
-AWClassDeclareNoParent(zenList1x)
+ZENClassDeclareNoParent(zenList1x)
 public:
 							zenList1x	( 											);
 							~zenList1x	( 											);

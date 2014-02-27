@@ -13,7 +13,7 @@ namespace ERes
 //=================================================================================================
 zenResID CreateExportItemRuntime(EExp::ExportInfoBase* _pExportInfo)
 {
-	AWAssert(_pExportInfo);
+	ZENAssert(_pExportInfo);
 	awres::awResourceRef rResource;
 	switch( _pExportInfo->mExportResID.Type() )
 	{
@@ -77,7 +77,7 @@ bool ManagerResource::Unload()
 //=================================================================================================
 awres::awResourceRef ManagerResource::GetResource(const zenResID& _ResID, bool _bSupportDefault)
 {
-	//AWAssert(_ResID.IsValid());cd
+	//ZENAssert(_ResID.IsValid());cd
 	awres::awResource* pResource;
 	if( mdResources.Get(_ResID.HashID(), pResource) )	return pResource;
 	else if(_bSupportDefault )							return maResourcesDefault[_ResID.Type()];
@@ -94,7 +94,7 @@ awres::awResourceRef ManagerResource::GetResource(const zenResID& _ResID, bool _
 //=================================================================================================
 awres::awResourceRef ManagerResource::GetResourceAnySource(const zenResID& _ResID, bool _bSupportDefault)
 {
-	//AWAssert(_ResID.IsValid());
+	//ZENAssert(_ResID.IsValid());
 	awres::awResource* pResource;
 	zenResID anySourceResID(_ResID);
 	anySourceResID.SetSource(awconst::keResSource_Loaded);

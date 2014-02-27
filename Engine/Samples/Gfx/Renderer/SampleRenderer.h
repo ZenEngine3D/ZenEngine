@@ -18,7 +18,7 @@ struct SimpleVertex
 
 class SampleRendererInstance : public awsys::awEngineInstance
 {
-AWClassDeclare(SampleRendererInstance, awsys::awEngineInstance);
+ZENClassDeclare(SampleRendererInstance, awsys::awEngineInstance);
 public:
 	virtual bool Init();
 	virtual void Destroy();

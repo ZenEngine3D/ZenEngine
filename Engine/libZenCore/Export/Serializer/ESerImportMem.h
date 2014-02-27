@@ -6,7 +6,7 @@ namespace EExp
 {		
 class SerializerImportMem : public ISerializerImporter
 {
-AWClassDeclare(SerializerImportMem, ISerializerImporter)
+ZENClassDeclare(SerializerImportMem, ISerializerImporter)
 public:
 					SerializerImportMem(zenU8* apBuffer, zenUInt auBufferSize);
 	bool			Load(const char* azFilename);//! @todo: abstract this

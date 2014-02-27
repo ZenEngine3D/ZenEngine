@@ -50,7 +50,7 @@ enum eLogOutput
 //=================================================================================================
 class ManagerLog : public zbType::Manager
 {
-AWClassDeclare(ManagerLog, zbType::Manager);
+ZENClassDeclare(ManagerLog, zbType::Manager);
 public:  	
 			void			Reset			();
 	inline	void			Clear			( eLogOutput _eOutput );

@@ -7,7 +7,7 @@ namespace FAss
 
 class ManagerAsset : public Manager
 {
-AWClassDeclare(ManagerAsset, Manager)
+ZENClassDeclare(ManagerAsset, Manager)
 public:
 												ManagerAsset	();
 	void										PackageLoad		();

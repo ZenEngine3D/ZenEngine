@@ -11,7 +11,7 @@ namespace EExp
 		if( pExportInfo->mbGenerateMip )
 		{
 			//! @todo image conversion
-			AWAssert( (mSerial.maMipData.Count()==1) && zenMath::IsPower2(mSerial.maMipData[0].mvDim.x) && zenMath::IsPower2(mSerial.maMipData[0].mvDim.y) );
+			ZENAssert( (mSerial.maMipData.Count()==1) && zenMath::IsPower2(mSerial.maMipData[0].mvDim.x) && zenMath::IsPower2(mSerial.maMipData[0].mvDim.y) );
 		}
 		
 		if( pExportInfo->meFormatInput != pExportInfo->meFormatOutput )

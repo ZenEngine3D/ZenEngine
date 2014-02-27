@@ -89,7 +89,7 @@ struct ConfigDepthStencil
 
 class ManagerState_Base : public zbType::Manager
 {
-AWClassDeclare(ManagerState_Base, zbType::Manager)
+ZENClassDeclare(ManagerState_Base, zbType::Manager)
 public:
 					ManagerState_Base();
 	
@@ -98,7 +98,7 @@ protected:
 
 };
 
-#include AWHeaderRenderer( EGStateManager )
+#include ZENHeaderRenderer( EGStateManager )
 
 namespace EMgr { extern EGfx::ManagerState GfxState; }
 

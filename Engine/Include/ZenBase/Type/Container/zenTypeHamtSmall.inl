@@ -94,21 +94,21 @@ bool zenHamt<TKey, TValue, TIndex, TIndexBits>::Iterator::IsValid()
 template<class TKey, class TValue, class TIndex, int TIndexBits>
 TKey zenHamt<TKey, TValue, TIndex, TIndexBits>::Iterator::GetKey()							
 { 
-	AWAssert( IsValid() ); 
+	ZENAssert( IsValid() ); 
 	return mpNodeTree[msDepth]->mpSlots[mpSlotID[msDepth]].Key; 
 }
 
 template<class TKey, class TValue, class TIndex, int TIndexBits>
 TValue& zenHamt<TKey, TValue, TIndex, TIndexBits>::Iterator::GetValue()						
 { 
-	AWAssert( IsValid() ); 
+	ZENAssert( IsValid() ); 
 	return mpNodeTree[msDepth]->mpSlots[mpSlotID[msDepth]].Value(); 
 }
 
 template<class TKey, class TValue, class TIndex, int TIndexBits>
 void zenHamt<TKey, TValue, TIndex, TIndexBits>::Iterator::operator++()
 {
-	AWAssert( IsValid() );									
+	ZENAssert( IsValid() );									
 	// Go to next SlotID
 	// And go up hierarchy while SlotID bigger than current Node slot count
 	++mpSlotID[msDepth];		
@@ -133,7 +133,7 @@ void zenHamt<TKey, TValue, TIndex, TIndexBits>::Iterator::operator++()
 template<class TKey, class TValue, class TIndex, int TIndexBits>
 void zenHamt<TKey, TValue, TIndex, TIndexBits>::Iterator::operator--()
 {
-	AWAssert( IsValid() );
+	ZENAssert( IsValid() );
 	// Go to previous SlotID
 	// And go up hierarchy while SlotID smaller than 0
 	--mpSlotID[msDepth];
@@ -168,7 +168,7 @@ zenHamt< TKey, TValue, TIndex, TIndexBits>::zenHamt()
 : mpRootNode(NULL)
 , muCount(0)
 { 
-	AWStaticAssertMsg( sizeof(TIndex)*8 >= kuSlotCount,"Size of Index not big enough to contain '1<<TIndexBits' Index, check template definition" ); 
+	ZENStaticAssertMsg( sizeof(TIndex)*8 >= kuSlotCount,"Size of Index not big enough to contain '1<<TIndexBits' Index, check template definition" ); 
 }
 
 //==================================================================================================
@@ -182,7 +182,7 @@ zenHamt< TKey, TValue, TIndex, TIndexBits>::zenHamt( zenUInt _uReservePool )
 : mpRootNode(NULL)
 , muCount(0)
 {
-	AWStaticAssertMsg( sizeof(TIndex)*8 >= kuSlotCount,"Size of Index not big enough to contain '1<<TIndexBits' Index, check template definition" ); 
+	ZENStaticAssertMsg( sizeof(TIndex)*8 >= kuSlotCount,"Size of Index not big enough to contain '1<<TIndexBits' Index, check template definition" ); 
 	Init(_uReservePool);
 }
 
@@ -232,7 +232,7 @@ void zenHamt< TKey, TValue, TIndex, TIndexBits>::Clear()
 template<class TKey, class TValue, class TIndex, int TIndexBits>
 void zenHamt< TKey, TValue, TIndex, TIndexBits>::Init( zenUInt _uReservePool )
 {	
-	AWAssertMsg(!IsInit(),"zenHamt already initialized");			
+	ZENAssertMsg(!IsInit(),"zenHamt already initialized");			
 	zenS32 iPoolItemLeft(static_cast<zenS32>(_uReservePool)-1);
 	zenS32 iPoolItemMin	= zenMath::Max<zenS32>((iPoolItemLeft / 3) / kuSlotCount, 1);	//< @Note: A 1/3 of PoolItemCount get split evenly between each Pool. Remaining assigned with 1/2 less every time. Need metric to adjust for optimal value
 	iPoolItemLeft		= zenMath::Max<zenS32>(iPoolItemLeft-iPoolItemMin*kuSlotCount, 0);
@@ -329,7 +329,7 @@ bool zenHamt< TKey, TValue, TIndex, TIndexBits>::SetReplace(const TKey _Key, con
 template<class TKey, class TValue, class TIndex, int TIndexBits>
 const TValue& zenHamt< TKey, TValue, TIndex, TIndexBits>::Get( const TKey _Key ) const
 {
-	AWAssertMsg(IsInit(),"zenHamt isn't initialized");
+	ZENAssertMsg(IsInit(),"zenHamt isn't initialized");
 	const Node**	ppParentNode;
 	zenU32		uSlotID, uNodeIndex, uDepth;
 	bool	bFound = GetNode( _Key, ppParentNode, uNodeIndex, uSlotID, uDepth );
@@ -347,7 +347,7 @@ const TValue& zenHamt< TKey, TValue, TIndex, TIndexBits>::Get( const TKey _Key )
 template<class TKey, class TValue, class TIndex, int TIndexBits>
 bool zenHamt< TKey, TValue, TIndex, TIndexBits>::Get(const TKey _Key, TValue& _ValueOut) const
 {
-	AWAssertMsg(IsInit(),"zenHamt isn't initialized");
+	ZENAssertMsg(IsInit(),"zenHamt isn't initialized");
 	const Node**	ppParentNode;
 	zenU32		uSlotID, uNodeIndex, uDepth;
 	bool	bFound	= GetNode( _Key, ppParentNode, uNodeIndex, uSlotID, uDepth );
@@ -365,7 +365,7 @@ bool zenHamt< TKey, TValue, TIndex, TIndexBits>::Get(const TKey _Key, TValue& _V
 template<class TKey, class TValue, class TIndex, int TIndexBits>
 bool zenHamt< TKey, TValue, TIndex, TIndexBits>::Get(const TKey _Key, TValue* _pValueOut) const
 {
-	AWAssertMsg(IsInit(),"zenHamt isn't initialized");
+	ZENAssertMsg(IsInit(),"zenHamt isn't initialized");
 	const Node**	ppParentNode;
 	zenU32		uSlotID, uNodeIndex, uDepth;
 	bool	bFound	= GetNode( _Key, ppParentNode, uNodeIndex, uSlotID, uDepth );
@@ -411,7 +411,7 @@ TValue& zenHamt< TKey, TValue, TIndex, TIndexBits>::GetAdd(const TKey _Key)
 template<class TKey, class TValue, class TIndex, int TIndexBits>
 bool zenHamt< TKey, TValue, TIndex, TIndexBits>::Unset(const TKey _Key)
 {		
-	AWAssertMsg(IsInit(),"zenHamt isn't initialized");
+	ZENAssertMsg(IsInit(),"zenHamt isn't initialized");
 	Node**		ppNodeTree[kuTreeMaxDepth];
 	zenUInt		uSlotID[kuTreeMaxDepth];
 	zenUInt		uNodeIndex[kuTreeMaxDepth];
@@ -628,7 +628,7 @@ void zenHamt< TKey, TValue, TIndex, TIndexBits>::Export( zenArrayBase<TKey>& _aK
 template<class TKey, class TValue, class TIndex, int TIndexBits>
 void zenHamt< TKey, TValue, TIndex, TIndexBits>::Import( const zenArrayBase<TKey>& _aKey, const zenArrayBase<TValue>& _aValue ) 
 {			
-	AWAssertMsg( _aKey.Count() == _aValue.Count(), "Importing mismatching keys/values pair");
+	ZENAssertMsg( _aKey.Count() == _aValue.Count(), "Importing mismatching keys/values pair");
 	const TValue* pValCur(_aValue.First());			
 	const TKey* pKeyCur(_aKey.First());
 	const TKey* pKeyLast(_aKey.Last());
@@ -718,7 +718,7 @@ typename zenHamt<TKey, TValue, TIndex, TIndexBits>::Node* zenHamt< TKey, TValue,
 template<class TKey, class TValue, class TIndex, int TIndexBits>
 bool zenHamt< TKey, TValue, TIndex, TIndexBits>::GetNode(TKey _Key, const Node**& _pParentSlot, zenU32& _uNodeIndex, zenU32& _uSlotID, zenU32& _uDepth) const
 {
-	AWAssertMsg(mpRootNode!=NULL,"zenHamt isn't initialized");
+	ZENAssertMsg(mpRootNode!=NULL,"zenHamt isn't initialized");
 	const Node* pNode	= mpRootNode;
 	_pParentSlot		= (const Node**)&mpRootNode;
 	_uDepth				= 0;

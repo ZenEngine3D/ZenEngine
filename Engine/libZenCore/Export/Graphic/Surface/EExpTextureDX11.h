@@ -6,7 +6,7 @@ namespace EExp
 {	
 	class SerialGfxTexture2D_DX11 : public SerialTexture2D_Base
 	{
-	AWClassDeclare(SerialGfxTexture2D_DX11, SerialTexture2D_Base)
+	ZENClassDeclare(SerialGfxTexture2D_DX11, SerialTexture2D_Base)
 	//-------------------------------------------------------------------------------------------------
 	// Serialization and Asset creation support
 	//-------------------------------------------------------------------------------------------------

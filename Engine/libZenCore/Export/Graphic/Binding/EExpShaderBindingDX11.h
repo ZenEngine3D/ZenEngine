@@ -6,7 +6,7 @@ namespace EExp
 {	
 	class SerialGfxShaderBinding_DX11 : public SerialShaderBinding_Base
 	{
-	AWClassDeclare(SerialGfxShaderBinding_DX11, SerialShaderBinding_Base)
+	ZENClassDeclare(SerialGfxShaderBinding_DX11, SerialShaderBinding_Base)
 	//-------------------------------------------------------------------------------------------------
 	// Serialization and Asset creation support
 	//-------------------------------------------------------------------------------------------------
@@ -18,7 +18,7 @@ namespace EExp
 			: muCollapsedSlots(0)
 			, muCollapsedCounts(0)
 			{
-				AWStaticAssertMsg( sizeof(zenU64) >= sizeof(zenU8)*EExp::keShaderStage__Count, "More stage that can fit in a zenU64" );
+				ZENStaticAssertMsg( sizeof(zenU64) >= sizeof(zenU8)*EExp::keShaderStage__Count, "More stage that can fit in a zenU64" );
 			}
 
 			virtual bool Serialize( EExp::Serializer_Base& _Serializer )

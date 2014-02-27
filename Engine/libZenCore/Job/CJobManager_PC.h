@@ -6,7 +6,7 @@ namespace CJob
 {
 	class ManagerJob : public ManagerJob_Base
 	{
-	AWClassDeclare(ManagerJob, ManagerJob_Base);
+	ZENClassDeclare(ManagerJob, ManagerJob_Base);
 	public:
 		
 	protected:

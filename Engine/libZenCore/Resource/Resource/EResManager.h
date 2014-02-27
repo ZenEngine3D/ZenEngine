@@ -8,7 +8,7 @@ namespace ERes
 	
 	class ManagerResource : public zbType::Manager
 	{
-	AWClassDeclare(ManagerResource, zbType::Manager)
+	ZENClassDeclare(ManagerResource, zbType::Manager)
 	public:		
 		awres::awResourceRef	GetResource				(const zenResID& _ResID, bool _bSupportDefault=TRUE);
 		awres::awResourceRef	GetResourceAnySource	(const zenResID& _ResID, bool _bSupportDefault=TRUE);		

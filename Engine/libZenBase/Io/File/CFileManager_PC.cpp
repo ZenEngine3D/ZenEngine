@@ -7,12 +7,12 @@ bool ManagerFile_PC::Load()
 {
 	bool bValid(false);
 	wchar_t zWorkingDir[512];
-	GetCurrentDirectory( AWArrayCount(zWorkingDir), zWorkingDir );
+	GetCurrentDirectory( ZENArrayCount(zWorkingDir), zWorkingDir );
 	size_t uPosEnd = wcslen(zWorkingDir);
 	while( !bValid && zWorkingDir[0] != L'' )
 	{
 		// Look for 'Content' directory in working path		
-		_snwprintf_s( &zWorkingDir[uPosEnd], AWArrayCount(zWorkingDir)-uPosEnd, _TRUNCATE, L"/Content");
+		_snwprintf_s( &zWorkingDir[uPosEnd], ZENArrayCount(zWorkingDir)-uPosEnd, _TRUNCATE, L"/Content");
 		WIN32_FIND_DATA	FileInfo;
 		HANDLE hSearch	= FindFirstFile(zWorkingDir, &FileInfo);		
 		if( hSearch != INVALID_HANDLE_VALUE )
@@ -56,7 +56,7 @@ bool ManagerFile_PC::Load()
 
 	filenameTest[3].Set(L"Packages");
 	filenameTest[3] += L"testFile.xml";
-	for(zenUInt idx(0); idx<AWArrayCount(filenameTest); ++idx)
+	for(zenUInt idx(0); idx<ZENArrayCount(filenameTest); ++idx)
 	{
 		wprintf(L"FILENAME %i\n", idx );
 		wprintf(L"NameFull  : %s\n", filenameTest[idx].GetNameFull() );
@@ -97,10 +97,10 @@ bool ManagerFile_PC::SearchNext( const FileInfo*& _pOutFile )
 
 bool ManagerFile_PC::Search(zenUInt _uWantedFlag, const wchar_t* _zDirName, const wchar_t* _zFilePatern, bool bRecursive)
 {
-	AWAssert(_zDirName );
-	AWAssert(_zFilePatern );
-	AWAssertMsg(_zDirName[wcslen(_zDirName)-1] != L'\\' && _zDirName[wcslen(_zDirName)-1] != L'/', "Directory name shouldn't end with '\\' or '/'");
-	AWAssertMsg(_zFilePatern[0] != L'\\' && _zFilePatern[0] != L'/', "Filename patern shouldn't start with '\\' or '/'");
+	ZENAssert(_zDirName );
+	ZENAssert(_zFilePatern );
+	ZENAssertMsg(_zDirName[wcslen(_zDirName)-1] != L'\\' && _zDirName[wcslen(_zDirName)-1] != L'/', "Directory name shouldn't end with '\\' or '/'");
+	ZENAssertMsg(_zFilePatern[0] != L'\\' && _zFilePatern[0] != L'/', "Filename patern shouldn't start with '\\' or '/'");
 		
 	muSearchIndex = 0;
 	maSearchResult.Clear();

@@ -6,7 +6,7 @@ namespace EExp
 {
 	class SerialSampler_Base : public EExp::ExportItem
 	{
-	AWClassDeclare(SerialSampler_Base, EExp::ExportItem)
+	ZENClassDeclare(SerialSampler_Base, EExp::ExportItem)
 	public:
 		struct ExportInfo : public EExp::ExportInfoBase
 		{			
@@ -21,7 +21,7 @@ namespace EExp
 
 	class SerialBlend_Base : public EExp::ExportItem
 	{
-	AWClassDeclare(SerialBlend_Base, EExp::ExportItem)
+	ZENClassDeclare(SerialBlend_Base, EExp::ExportItem)
 	public:
 		struct ExportInfo : public EExp::ExportInfoBase
 		{
@@ -31,7 +31,7 @@ namespace EExp
 
 	class SerialDepthStencil_Base : public EExp::ExportItem
 	{
-	AWClassDeclare(SerialDepthStencil_Base, EExp::ExportItem)
+	ZENClassDeclare(SerialDepthStencil_Base, EExp::ExportItem)
 	public:
 
 		struct ExportInfo : public EExp::ExportInfoBase
@@ -42,7 +42,7 @@ namespace EExp
 
 	class SerialRasterizer_Base : public EExp::ExportItem
 	{
-		AWClassDeclare(SerialRasterizer_Base, EExp::ExportItem)
+		ZENClassDeclare(SerialRasterizer_Base, EExp::ExportItem)
 	public:
 		struct ExportInfo : public EExp::ExportInfoBase
 		{			

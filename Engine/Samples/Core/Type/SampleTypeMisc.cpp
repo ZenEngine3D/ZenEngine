@@ -16,7 +16,7 @@ namespace sample
 	{
 		zenU32 mTestVal;
 	};
-	AWAddSupportsMemCopy(TestWithMemCopy);
+	ZENSupportMemcopy(TestWithMemCopy);
 
 	//==================================================================================================
 	//! @brief		Test misc type functionalities
@@ -29,19 +29,19 @@ namespace sample
 
 		//-------------------------------------------------
 		// Verify compile time type/class informations
-		bool bPointerFalse	= AWIsPointer<int>::value;	
-		bool bPointerTrue	= AWIsPointer<int*>::value;
-		bool bMemcpyTrue1	= AWSupportsMemCopy<zenU8>::value;
-		bool bMemcpyTrue2	= AWSupportsMemCopy<TestWithMemCopy>::value;
-		bool bMemcpyFalse	= AWSupportsMemCopy<TestNoMemCopy>::value;
+		bool bPointerFalse	= ZenIsPointer<int>::value;	
+		bool bPointerTrue	= ZenIsPointer<int*>::value;
+		bool bMemcpyTrue1	= ZenSupportsMemCopy<zenU8>::value;
+		bool bMemcpyTrue2	= ZenSupportsMemCopy<TestWithMemCopy>::value;
+		bool bMemcpyFalse	= ZenSupportsMemCopy<TestNoMemCopy>::value;
 
 		
 		CMgr::Log.Log(CLog::keLog_Game, "Compile Type Info :");
-		CMgr::Log.Log(CLog::keLog_Game, "   AWIsPointer<int>                    = 0 ? %s", awconst::kzFalseTrue[bPointerFalse==false] );
-		CMgr::Log.Log(CLog::keLog_Game, "   AWIsPointer<int*>                   = 1 ? %s", awconst::kzFalseTrue[bPointerTrue==true] );
-		CMgr::Log.Log(CLog::keLog_Game, "   AWSupportsMemCopy<TestNoMemCopy>    = 0 ? %s", awconst::kzFalseTrue[bMemcpyFalse==false] );
-		CMgr::Log.Log(CLog::keLog_Game, "   AWSupportsMemCopy<zenU8>             = 1 ? %s", awconst::kzFalseTrue[bMemcpyTrue1==true] );
-		CMgr::Log.Log(CLog::keLog_Game, "   AWSupportsMemCopy<TestWithMemCopy>  = 1 ? %s", awconst::kzFalseTrue[bMemcpyTrue2==true] );
+		CMgr::Log.Log(CLog::keLog_Game, "   ZenIsPointer<int>                    = 0 ? %s", awconst::kzFalseTrue[bPointerFalse==false] );
+		CMgr::Log.Log(CLog::keLog_Game, "   ZenIsPointer<int*>                   = 1 ? %s", awconst::kzFalseTrue[bPointerTrue==true] );
+		CMgr::Log.Log(CLog::keLog_Game, "   ZenSupportsMemCopy<TestNoMemCopy>    = 0 ? %s", awconst::kzFalseTrue[bMemcpyFalse==false] );
+		CMgr::Log.Log(CLog::keLog_Game, "   ZenSupportsMemCopy<zenU8>             = 1 ? %s", awconst::kzFalseTrue[bMemcpyTrue1==true] );
+		CMgr::Log.Log(CLog::keLog_Game, "   ZenSupportsMemCopy<TestWithMemCopy>  = 1 ? %s", awconst::kzFalseTrue[bMemcpyTrue2==true] );
 	}
 
 }

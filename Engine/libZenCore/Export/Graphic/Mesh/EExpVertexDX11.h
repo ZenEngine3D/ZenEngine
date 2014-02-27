@@ -7,7 +7,7 @@ namespace EExp
 
 class SerialGfxVertex_DX11 : public SerialVertex_Base
 {
-AWClassDeclare(SerialGfxVertex_DX11, SerialVertex_Base)
+ZENClassDeclare(SerialGfxVertex_DX11, SerialVertex_Base)
 //-------------------------------------------------------------------------------------------------
 // Serialization and Asset creation support
 //-------------------------------------------------------------------------------------------------
@@ -15,7 +15,7 @@ public:
 
 	class Stream : public EExp::ISerialize
 	{
-	AWClassDeclare(Stream, EExp::ISerialize)
+	ZENClassDeclare(Stream, EExp::ISerialize)
 	public:		
 		virtual bool					Serialize( EExp::Serializer_Base& _Serializer );		
 		zenArrayStatic<zenU8>				maData;				//!< Vertex elements data (pos, uv, etc...)

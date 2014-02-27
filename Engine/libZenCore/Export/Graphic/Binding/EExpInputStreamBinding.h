@@ -6,7 +6,7 @@ namespace EExp
 {
 	class SerialInputStream_Base : public EExp::ExportItem
 	{
-	AWClassDeclare(SerialInputStream_Base,EExp::ExportItem)
+	ZENClassDeclare(SerialInputStream_Base,EExp::ExportItem)
 	public:		
 		struct ExportInfo : public EExp::ExportInfoBase
 		{			

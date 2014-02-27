@@ -7,7 +7,7 @@ namespace EExp
 
 class SerialInputSignature_Base : public EExp::ExportItem
 {
-AWClassDeclare(SerialInputSignature_Base, EExp::ExportItem)
+ZENClassDeclare(SerialInputSignature_Base, EExp::ExportItem)
 public:
 	struct ExportInfo : public EExp::ExportInfoBase
 	{				

@@ -6,7 +6,7 @@ namespace FAss
 {
 	class GfxMesh : public FAss::AssetItem
 	{
-	AWClassDeclare(GfxMesh, FAss::AssetItem)
+	ZENClassDeclare(GfxMesh, FAss::AssetItem)
 	public:
 		virtual FAss::AssetItem::enumType	GetType()const{return keType_Mesh;}
 		virtual FAss::PropertyArray&		GetPropertyDef() const;

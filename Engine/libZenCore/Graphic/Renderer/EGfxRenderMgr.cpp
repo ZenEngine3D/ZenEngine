@@ -15,7 +15,7 @@ ManagerRender_Base::ManagerRender_Base()
 
 void ManagerRender_Base::FrameBegin( ERes::GfxWindowRef _FrameWindow )
 {
-	AWAssertMsg( !mrWindowCurrent.IsValid(), "End previous frame before starting a new one" );
+	ZENAssertMsg( !mrWindowCurrent.IsValid(), "End previous frame before starting a new one" );
 	_FrameWindow->PerformResize();
 	mrWindowCurrent = _FrameWindow;
 	/*

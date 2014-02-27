@@ -38,7 +38,7 @@ protected:
 	
 inline void ExportItem::ExportSkipWork()
 {
-	AWAssertMsg(mpExportInfo, "Call only from ExportStart()"); 
+	ZENAssertMsg(mpExportInfo, "Call only from ExportStart()"); 
 	mpExportInfo->mbSuccessWork = TRUE; 
 }
 

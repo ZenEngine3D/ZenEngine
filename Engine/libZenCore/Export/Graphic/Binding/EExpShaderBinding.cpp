@@ -4,8 +4,8 @@ namespace EExp
 {
 	zenResID SerialShaderBinding_Base::CallbackGetItemID(awconst::eResPlatform _ePlatform, awconst::eResType _eType, awconst::eResSource _eSource, const EExp::ExportInfoBase* _pExportInfo, bool& _bExistOut)
 	{
-		AWAssert(_ePlatform==awconst::keResPlatform_DX11 && _eType==awconst::keResType_GfxShaderBinding);
-		AWAssert( _pExportInfo );
+		ZENAssert(_ePlatform==awconst::keResPlatform_DX11 && _eType==awconst::keResType_GfxShaderBinding);
+		ZENAssert( _pExportInfo );
 		const ExportInfo* pExportInfo = static_cast<const ExportInfo*>(_pExportInfo);
 
 		zenUInt uValidCount(0);
@@ -59,8 +59,8 @@ namespace EExp
 		SerialShaderBinding_Base::ExportInfo*	pExport = static_cast<SerialShaderBinding_Base::ExportInfo*>(mpExportInfo);
 		const zenResID						aShaderIdNull[]={zenResID(),zenResID()};
 		zenArrayStatic<zenResID>					aShaderID;
-		AWStaticAssert(AWArrayCount(aShaderIdNull) == keShaderStage__Count);
-		aShaderID.Copy(aShaderIdNull, AWArrayCount(aShaderIdNull));
+		ZENStaticAssert(ZENArrayCount(aShaderIdNull) == keShaderStage__Count);
+		aShaderID.Copy(aShaderIdNull, ZENArrayCount(aShaderIdNull));
 		pExport->mdStagePerParamDef.Init(8);
 		pExport->mdStagePerParamDef.SetDefaultValue(0);
 		for(zenUInt idx=0; idx<pExport->maShaderID.Count(); ++idx)
@@ -68,7 +68,7 @@ namespace EExp
 			SerialShader_Base* pShader = EMgr::SerialItems.GetItem<SerialShader_Base>( pExport->maShaderID[idx] );
 			if( pShader )
 			{
-				AWAssertMsg(!aShaderID[pShader->meShaderStage].IsValid(), "Should only specify 1 shader per shader stage");	//! @todo error output
+				ZENAssertMsg(!aShaderID[pShader->meShaderStage].IsValid(), "Should only specify 1 shader per shader stage");	//! @todo error output
 				aShaderID[pShader->meShaderStage] = pShader->mResID;
 				for(zenResID *pParamIDCur(pShader->maParamDefID.First()), *pParamIDLast(pShader->maParamDefID.Last()); pParamIDCur<=pParamIDLast;  ++pParamIDCur )
 				{

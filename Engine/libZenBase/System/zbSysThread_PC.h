@@ -8,7 +8,7 @@ namespace CSys
 template< class T >
 class AWThread_PC : public AWThread<T>
 {
-	AWClassDeclare(AWThread_PC, AWThread);
+	ZENClassDeclare(AWThread_PC, AWThread);
 
 public:
 	explicit AWThread_PC(T* pObject, zenU32 ( T::* method)(void)) : 

@@ -6,7 +6,7 @@ namespace FAss
 {
 	class Package
 	{
-	AWClassDeclareNoParent(Package)
+	ZENClassDeclareNoParent(Package)
 	public:
 												Package			();
 		virtual									~Package		();

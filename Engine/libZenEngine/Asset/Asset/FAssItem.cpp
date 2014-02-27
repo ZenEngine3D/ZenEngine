@@ -25,7 +25,7 @@ AssetItem::AssetItem()
 : mpPackage(NULL)
 , mhID("")
 {
-	AWStaticAssertMsg( AWArrayCount(sTypeDescription)==keType__Count, "Make sure to have a valid description for each resource type" );
+	ZENStaticAssertMsg( ZENArrayCount(sTypeDescription)==keType__Count, "Make sure to have a valid description for each resource type" );
 
 	static zenU64 sCounter(1);
 	mhID = sCounter++; //HACK
@@ -51,7 +51,7 @@ AssetItem* AssetItem::CreateItem( enumType _eAssetType, Package& _Owner )
 	{
 	case keType_Texture2D:	pNewItem = zenNewDefault FAss::GfxTexture2D();	break;
 	case keType_Mesh:		pNewItem = zenNewDefault FAss::GfxMesh();		break;
-	default:				AWAssertMsg(0, "Unsupported Asset Type");
+	default:				ZENAssertMsg(0, "Unsupported Asset Type");
 	}
 
 	if( pNewItem )
@@ -71,7 +71,7 @@ AssetItem* AssetItem::CreateItem( enumType _eAssetType, Package& _Owner )
 //=================================================================================================
 const char* AssetItem::GetTypeDesc(AssetItem::enumType _eAssetType)
 {	
-	AWAssert(_eAssetType<keType__Count);
+	ZENAssert(_eAssetType<keType__Count);
 	return sTypeDescription[_eAssetType].mzName;
 }
 
@@ -83,7 +83,7 @@ const char* AssetItem::GetTypeDesc(AssetItem::enumType _eAssetType)
 //=================================================================================================
 AssetItem::enumType AssetItem::GetType(zenHash32 _hAssetName)
 {
-	zenUInt uIndex = zenStringHash32::Find(_hAssetName, sTypeDescription, AWArrayCount(sTypeDescription));
+	zenUInt uIndex = zenStringHash32::Find(_hAssetName, sTypeDescription, ZENArrayCount(sTypeDescription));
 	return uIndex < keType__Count ? static_cast<AssetItem::enumType>(uIndex) : keType__Invalid;
 }
 

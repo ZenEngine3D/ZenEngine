@@ -4,7 +4,7 @@
 namespace FAss
 {
 
-#define AWAssetTypeExpand(_TypeName_) zenMem::AllocatorPool PropertyDef##_TypeName_##::sPoolAlloc( "PropertyDef"AWString(_TypeName_)"Pool", sizeof(PropertyDef##_TypeName_##::Value), 100, 100);
+#define AWAssetTypeExpand(_TypeName_) zenMem::AllocatorPool PropertyDef##_TypeName_##::sPoolAlloc( "PropertyDef"ZENStringDefine2(_TypeName_)"Pool", sizeof(PropertyDef##_TypeName_##::Value), 100, 100);
 AWAssetTypes
 #undef	AWAssetTypeExpand
 
@@ -23,7 +23,7 @@ static zenStringHash32 sTypeDescription[]={
 //=================================================================================================
 const char* PropertyDefBase::GetTypeDesc(PropertyDefBase::enumType _ePropertyType)
 {	
-	AWAssert(_ePropertyType<keType__Count);
+	ZENAssert(_ePropertyType<keType__Count);
 	return sTypeDescription[_ePropertyType].mzName;
 }
 
@@ -35,7 +35,7 @@ const char* PropertyDefBase::GetTypeDesc(PropertyDefBase::enumType _ePropertyTyp
 //=================================================================================================
 PropertyDefBase::enumType PropertyDefBase::GetType(zenHash32 _hPropertyName)
 {
-	zenUInt uIndex = zenStringHash32::Find(_hPropertyName, sTypeDescription, AWArrayCount(sTypeDescription));
+	zenUInt uIndex = zenStringHash32::Find(_hPropertyName, sTypeDescription, ZENArrayCount(sTypeDescription));
 	return uIndex < keType__Count ? static_cast<PropertyDefBase::enumType>(uIndex) : keType__Invalid;
 }
 
@@ -95,7 +95,7 @@ void PropertyDefBase::ValueToXml(const PropertyDefBase::Value& _Value, pugi::xml
 //=================================================================================================
 void PropertyDefBool::ValueToString(const PropertyDefBase::Value& _Value, char* _zBuffer, zenUInt _uSizebuffer) const 
 { 
-	AWAssert(_Value.mParentDef.GetType() == GetType());
+	ZENAssert(_Value.mParentDef.GetType() == GetType());
 	const Value& value = static_cast<const Value&>(_Value);
 	sprintf(_zBuffer, "%s", awconst::kzFalseTrue[value.mValue]);
 }
@@ -108,7 +108,7 @@ void PropertyDefBool::ValueToString(const PropertyDefBase::Value& _Value, char* 
 //=================================================================================================
 bool PropertyDefBool::ValueFromXml(PropertyDefBase::Value& _Value, const pugi::xml_node& _NodeProperty)const
 {
-	AWAssert(_Value.mParentDef.GetType() == GetType());
+	ZENAssert(_Value.mParentDef.GetType() == GetType());
 	Value& value					= static_cast<Value&>(_Value);
 	pugi::xml_attribute attrValue	= _NodeProperty.attribute("Value");
 	if( attrValue )
@@ -129,7 +129,7 @@ bool PropertyDefBool::ValueFromXml(PropertyDefBase::Value& _Value, const pugi::x
 //=================================================================================================
 void PropertyDefInt::ValueToString(const PropertyDefBase::Value& _Value, char* _zBuffer, zenUInt _uSizebuffer) const 
 { 
-	AWAssert(_Value.mParentDef.GetType() == GetType());
+	ZENAssert(_Value.mParentDef.GetType() == GetType());
 	const Value& value = static_cast<const Value&>(_Value);
 	sprintf(_zBuffer, "%i", value.mValue);
 }
@@ -142,7 +142,7 @@ void PropertyDefInt::ValueToString(const PropertyDefBase::Value& _Value, char* _
 //=================================================================================================
 bool PropertyDefInt::ValueFromXml(PropertyDefBase::Value& _Value, const pugi::xml_node& _NodeProperty)const
 {
-	AWAssert(_Value.mParentDef.GetType() == GetType());
+	ZENAssert(_Value.mParentDef.GetType() == GetType());
 	Value& value					= static_cast<Value&>(_Value);
 	pugi::xml_attribute attrValue	= _NodeProperty.attribute("Value");
 	if( attrValue )
@@ -163,7 +163,7 @@ bool PropertyDefInt::ValueFromXml(PropertyDefBase::Value& _Value, const pugi::xm
 //=================================================================================================
 void PropertyDefFloat::ValueToString(const PropertyDefBase::Value& _Value, char* _zBuffer, zenUInt _uSizebuffer) const 
 { 
-	AWAssert(_Value.mParentDef.GetType() == GetType());
+	ZENAssert(_Value.mParentDef.GetType() == GetType());
 	const Value& value = static_cast<const Value&>(_Value);
 	sprintf(_zBuffer, "%f", value.mValue);
 }
@@ -176,7 +176,7 @@ void PropertyDefFloat::ValueToString(const PropertyDefBase::Value& _Value, char*
 //=================================================================================================
 bool PropertyDefFloat::ValueFromXml(PropertyDefBase::Value& _Value, const pugi::xml_node& _NodeProperty)const
 {
-	AWAssert(_Value.mParentDef.GetType() == GetType());
+	ZENAssert(_Value.mParentDef.GetType() == GetType());
 	Value& value					= static_cast<Value&>(_Value);
 	pugi::xml_attribute attrValue	= _NodeProperty.attribute("Value");
 	if( attrValue )
@@ -197,7 +197,7 @@ bool PropertyDefFloat::ValueFromXml(PropertyDefBase::Value& _Value, const pugi::
 //=================================================================================================
 void PropertyDefEnum::ValueToString(const PropertyDefBase::Value& _Value, char* _zBuffer, zenUInt _uSizebuffer) const 
 { 
-	AWAssert(_Value.mParentDef.GetType() == GetType());
+	ZENAssert(_Value.mParentDef.GetType() == GetType());
 	const Value& value = static_cast<const Value&>(_Value);
 	zenUInt foundIdx(maEntry.Count()-1);
 	for(zenUInt idx(0); idx<foundIdx; ++idx)
@@ -214,7 +214,7 @@ void PropertyDefEnum::ValueToString(const PropertyDefBase::Value& _Value, char* 
 //=================================================================================================
 bool PropertyDefEnum::ValueFromXml(PropertyDefBase::Value& _Value, const pugi::xml_node& _NodeProperty)const
 {
-	AWAssert(_Value.mParentDef.GetType() == GetType());
+	ZENAssert(_Value.mParentDef.GetType() == GetType());
 	Value& value					= static_cast<Value&>(_Value);
 	pugi::xml_attribute attrValue	= _NodeProperty.attribute("Value");
 	if( attrValue )
@@ -235,7 +235,7 @@ bool PropertyDefEnum::ValueFromXml(PropertyDefBase::Value& _Value, const pugi::x
 //=================================================================================================
 void PropertyDefFile::ValueToString(const PropertyDefBase::Value& _Value, char* _zBuffer, zenUInt _uSizebuffer) const 
 { 
-	AWAssert(_Value.mParentDef.GetType() == GetType());
+	ZENAssert(_Value.mParentDef.GetType() == GetType());
 	const Value& value = static_cast<const Value&>(_Value);
 	sprintf(_zBuffer, "%s", (const char*)value.mValue);
 }
@@ -248,7 +248,7 @@ void PropertyDefFile::ValueToString(const PropertyDefBase::Value& _Value, char* 
 //=================================================================================================
 bool PropertyDefFile::ValueFromXml(PropertyDefBase::Value& _Value, const pugi::xml_node& _NodeProperty)const
 {
-	AWAssert(_Value.mParentDef.GetType() == GetType());
+	ZENAssert(_Value.mParentDef.GetType() == GetType());
 	Value& value					= static_cast<Value&>(_Value);
 	pugi::xml_attribute attrValue	= _NodeProperty.attribute("Value");
 	if( attrValue )
@@ -269,14 +269,14 @@ bool PropertyDefFile::ValueFromXml(PropertyDefBase::Value& _Value, const pugi::x
 //=================================================================================================
 void PropertyDefFloat2::ValueToString(const PropertyDefBase::Value& _Value, char* _zBuffer, zenUInt _uSizebuffer) const 
 { 
-	AWAssert(_Value.mParentDef.GetType() == GetType());
+	ZENAssert(_Value.mParentDef.GetType() == GetType());
 	const Value& value = static_cast<const Value&>(_Value);
 	sprintf(_zBuffer, "%f, %f", value.mValue.x, value.mValue.y);
 }
 
 void PropertyDefFloat2::ValueToXml(const PropertyDefBase::Value& _Value, pugi::xml_node& _ParamNode) const
 {	
-	AWAssert(_Value.mParentDef.GetType() == GetType());
+	ZENAssert(_Value.mParentDef.GetType() == GetType());
 	const Value& PropertyValue = static_cast<const Value&>(_Value);
 	_ParamNode.append_attribute("x").set_value(PropertyValue.mValue.x);
 	_ParamNode.append_attribute("y").set_value(PropertyValue.mValue.y);
@@ -290,7 +290,7 @@ void PropertyDefFloat2::ValueToXml(const PropertyDefBase::Value& _Value, pugi::x
 //=================================================================================================
 bool PropertyDefFloat2::ValueFromXml(PropertyDefBase::Value& _Value, const pugi::xml_node& _NodeProperty)const
 {
-	AWAssert(_Value.mParentDef.GetType() == GetType());
+	ZENAssert(_Value.mParentDef.GetType() == GetType());
 	Value& value				= static_cast<Value&>(_Value);
 	pugi::xml_attribute attrX	= _NodeProperty.attribute("x");
 	pugi::xml_attribute attrY	= _NodeProperty.attribute("y");

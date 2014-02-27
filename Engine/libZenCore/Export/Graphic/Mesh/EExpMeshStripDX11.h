@@ -6,7 +6,7 @@ namespace EExp
 {	
 	class SerialGfxMeshStrip_DX11 : public SerialMeshStrip_Base
 	{
-	AWClassDeclare(SerialGfxMeshStrip_DX11, SerialMeshStrip_Base)
+	ZENClassDeclare(SerialGfxMeshStrip_DX11, SerialMeshStrip_Base)
 	//-------------------------------------------------------------------------------------------------
 	// Serialization and Asset creation support
 	//-------------------------------------------------------------------------------------------------

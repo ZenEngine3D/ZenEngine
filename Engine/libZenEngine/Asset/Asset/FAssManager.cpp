@@ -58,7 +58,7 @@ void ManagerAsset::PackageRename( zenHash32 _hOldID, zenHash32 _hNewID)
 void ManagerAsset::PackageRemove( zenHash32 _hPackageID )	
 {
 	//! @todo : Process removal
-	AWAssert(0);
+	ZENAssert(0);
 	Package* pPackage = mdPackage[_hPackageID];
 	if( pPackage )
 	{		

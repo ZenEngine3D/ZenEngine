@@ -7,7 +7,7 @@ namespace EExp
 	
 class ParameterBase
 {
-AWClassDeclareNoParent(ParameterBase)
+ZENClassDeclareNoParent(ParameterBase)
 public:
  	zenHash32		mhName;						//!< Parameter name
 	zenU32			meType			: 4;		//!< eShaderElementType
@@ -29,7 +29,7 @@ protected:
 template <class TType, awconst::eShaderElementType TShaderType>
 class ParameterVector1 : public ParameterBase
 {
-AWClassDeclare(ParameterVector1, ParameterBase)
+ZENClassDeclare(ParameterVector1, ParameterBase)
 public:
 				ParameterVector1( zenHash32 _hName, TType _Value) 
 				: ParameterBase(_hName, TShaderType, 1, 0, sizeof(mValue))
@@ -40,7 +40,7 @@ public:
 template <class TType, awconst::eShaderElementType TShaderType>
 class ParameterVector2 : public ParameterBase
 {
-AWClassDeclare(ParameterVector2, ParameterBase)
+ZENClassDeclare(ParameterVector2, ParameterBase)
 public:
 				ParameterVector2( zenHash32 _hName, TType _Value1, TType _Value2) 
 				: ParameterBase(_hName, TShaderType, 2, 0, sizeof(mValue))
@@ -66,7 +66,7 @@ public:
 template <class TType, awconst::eShaderElementType TShaderType>
 class ParameterVector3 : public ParameterBase
 {
-AWClassDeclare(ParameterVector3, ParameterBase)
+ZENClassDeclare(ParameterVector3, ParameterBase)
 public:
 				ParameterVector3( zenHash32 _hName, TType _Value1, TType _Value2, TType _Value3) 
 				: ParameterBase(_hName, TShaderType, 3, 0, sizeof(mValue))
@@ -95,7 +95,7 @@ public:
 template <class TType, awconst::eShaderElementType TShaderType>
 class ParameterVector4 : public ParameterBase
 {
-AWClassDeclare(ParameterVector4, ParameterBase)
+ZENClassDeclare(ParameterVector4, ParameterBase)
 public:
 				ParameterVector4( zenHash32 _hName, TType _Value1, TType _Value2, TType _Value3, TType _Value4) 
 				: ParameterBase(_hName, TShaderType, 4, 0, sizeof(mValue))
@@ -131,7 +131,7 @@ typedef ParameterVector4< float, awconst::keShaderElemType_Float > ParameterFloa
 
 class SerialShaderParam_Base : public EExp::ExportItem
 {
-AWClassDeclare(SerialShaderParam_Base, EExp::ExportItem)
+ZENClassDeclare(SerialShaderParam_Base, EExp::ExportItem)
 public:
 	struct ExportInfo : public EExp::ExportInfoBase
 	{		

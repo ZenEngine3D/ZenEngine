@@ -12,7 +12,7 @@ namespace zbType
 //=================================================================================================
 class Manager
 {
-AWClassDeclareNoParent(Manager);
+ZENClassDeclareNoParent(Manager);
 public:
 	//=============================================================================================
 	//! @brief		Should be empty
@@ -32,7 +32,7 @@ public:
 	//=============================================================================================
 	virtual ~Manager()
 	{
-		AWCriticalMsg(!mbIsloaded, "Stop the manager before engine termination");
+		ZENCriticalMsg(!mbIsloaded, "Stop the manager before engine termination");
 	}	
 	
 	//=============================================================================================
@@ -44,7 +44,7 @@ public:
 	//=============================================================================================
 	bool Startup()
 	{
-		AWCriticalMsg(!mbIsloaded, "This manager has already been started");	
+		ZENCriticalMsg(!mbIsloaded, "This manager has already been started");	
 		mbIsloaded = Load();
 		return mbIsloaded;
 	}
@@ -57,7 +57,7 @@ public:
 	//=============================================================================================
 	bool Shutdown()
 	{
-		AWCriticalMsg(mbIsloaded, "This manager has already been stopped");	
+		ZENCriticalMsg(mbIsloaded, "This manager has already been stopped");	
 		mbIsloaded = Unload();
 		return !mbIsloaded;
 	}

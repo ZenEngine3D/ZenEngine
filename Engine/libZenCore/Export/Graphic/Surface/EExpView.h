@@ -6,7 +6,7 @@ namespace EExp
 {
 	class SerialGfxView_Base : public EExp::ExportItem
 	{
-	AWClassDeclare(SerialGfxView_Base, EExp::ExportItem)
+	ZENClassDeclare(SerialGfxView_Base, EExp::ExportItem)
 	public:		
 		struct ExportInfo : public EExp::ExportInfoBase
 		{				

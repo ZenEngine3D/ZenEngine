@@ -13,7 +13,7 @@ namespace EExp
 
 	class SerialTexture2D_Base : public EExp::ExportItem
 	{
-	AWClassDeclare(SerialTexture2D_Base, EExp::ExportItem)
+	ZENClassDeclare(SerialTexture2D_Base, EExp::ExportItem)
 	public:
 		struct MipInfo
 		{

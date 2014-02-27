@@ -60,9 +60,9 @@ void ManagerExport::SetExportInfos(awconst::eResPlatform _aPlatforms[awconst::ke
 
 zenResID ManagerExport::CreateItem( zenResID::ePlatformType _ePlatformType, awconst::eResType _eResourceType, ExportInfoBase* _pExportInfoBase )
 { 
-	AWAssert(_ePlatformType<awconst::keResPlatform__Count);
-	AWAssert(_eResourceType<awconst::keResType__Count);
-	AWAssert(_pExportInfoBase);
+	ZENAssert(_ePlatformType<awconst::keResPlatform__Count);
+	ZENAssert(_eResourceType<awconst::keResType__Count);
+	ZENAssert(_pExportInfoBase);
 	bool bExist(false);
 	awconst::eResPlatform eExportPlatform	= maPlatforms[_ePlatformType];
 	_pExportInfoBase->mExportResID			= mpCallbackGetItemID[eExportPlatform][_eResourceType](eExportPlatform, _eResourceType, meSource, _pExportInfoBase, bExist);
@@ -132,7 +132,7 @@ void ManagerExport::ExportDone(ExportItem* _pExportItem)
 {
 	if( _pExportItem->mResID.IsExport() )
 	{
-		AWAssert(muExportPending>0);
+		ZENAssert(muExportPending>0);
 		--muExportPending;	
 	}
 

@@ -22,8 +22,8 @@ namespace sample
 
 		aDynamicA.SetCount(40);
 		aStaticA.SetCount(40);
-		aDynamicB.Copy(puValueDynamic, AWArrayCount(puValueDynamic) );
-		aStaticB.Copy(puValueStatic, AWArrayCount(puValueStatic) );
+		aDynamicB.Copy(puValueDynamic, ZENArrayCount(puValueDynamic) );
+		aStaticB.Copy(puValueStatic, ZENArrayCount(puValueStatic) );
 		
 		for(zenU32 i=0; i<40; ++i)
 		{
@@ -40,7 +40,7 @@ namespace sample
 		CMgr::Log.Log(CLog::keLog_Game, awconst::kzLineA40);
 		zenArrayStatic<zenU32> uTestSort;
 		const zenUInt pSourceData[] = {2,132,876,23,54,265,34,1,475,287,452,884,343,2,88,3,324,827,123,278};
-		uTestSort.Copy( pSourceData, AWArrayCount(pSourceData) );
+		uTestSort.Copy( pSourceData, ZENArrayCount(pSourceData) );
 		CMgr::Log.Log(CLog::keLog_Game, "Unsorted  :");
 		for(zenUInt idx(0), count(uTestSort.Count()); idx<count; ++idx )
 			CMgr::Log.Printf(CLog::keLog_Game, " %03i", uTestSort[idx] );
@@ -50,7 +50,7 @@ namespace sample
 		CMgr::Log.Log(CLog::keLog_Game, "Sorted    :");
 		for(zenUInt idx(0), count(uTestSort.Count()); idx<count; ++idx )
 		{
-			AWAssert(	(uPrevValue < uTestSort[idx]) ||					//Previous value always smaller than current
+			ZENAssert(	(uPrevValue < uTestSort[idx]) ||					//Previous value always smaller than current
 						(uPrevValue == uTestSort[idx] && uPrevValue==2));	//Or current is equal to previous when it's 2 (only double inserted in array)
 			CMgr::Log.Printf(CLog::keLog_Game, " %03i", uTestSort[idx] );
 		}
