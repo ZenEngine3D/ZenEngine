@@ -1,6 +1,6 @@
 #pragma once
-#ifndef __LibFrw_Base_h__
-#define __LibFrw_Base_h__ 
+#ifndef __LibZenEngine_h__
+#define __LibZenEngine_h__ 
 
 //=================================================================================================
 //! @file		LibFrwBase.h
@@ -9,7 +9,8 @@
 //=================================================================================================
 #include <ZenEngine/zenEngine.h>
 #include <Engine/libZenCore/libZenCore.h>
-#include <Engine/libZenEngine/ToDel/FWndViewport.h>
-#include <Engine/libZenEngine/Asset/FrameworkAssetAll.h>
-#include <Engine/libZenEngine/System/FSysInitialize.h>
+#include <Engine/libZenEngine/libZenEngineAsset.h>
+#include <Engine/libZenEngine/libZenEngineSystem.h>
+#include <Engine/libZenEngine/ToDel/zeWndViewport.h>
+
 #endif

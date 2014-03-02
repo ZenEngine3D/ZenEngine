@@ -1,7 +1,8 @@
 #include "libZenEngine.h"
+
 #if AW_ENGINETOOL
 
-namespace FAss
+namespace zen { namespace zeAss
 {
 
 const char* kzXmlName_Node_Package="Package";
@@ -28,7 +29,7 @@ AssetItem::AssetItem()
 	ZENStaticAssertMsg( ZENArrayCount(sTypeDescription)==keType__Count, "Make sure to have a valid description for each resource type" );
 
 	static zenU64 sCounter(1);
-	mhID = sCounter++; //HACK
+	mhID = sCounter++; //! @todo : fix this (HACK)
 }
 
 AssetItem::~AssetItem()	
@@ -49,8 +50,8 @@ AssetItem* AssetItem::CreateItem( enumType _eAssetType, Package& _Owner )
 	AssetItem* pNewItem(NULL);
 	switch( _eAssetType )
 	{
-	case keType_Texture2D:	pNewItem = zenNewDefault FAss::GfxTexture2D();	break;
-	case keType_Mesh:		pNewItem = zenNewDefault FAss::GfxMesh();		break;
+	case keType_Texture2D:	pNewItem = zenNewDefault GfxTexture2D();	break;
+	case keType_Mesh:		pNewItem = zenNewDefault GfxMesh();			break;
 	default:				ZENAssertMsg(0, "Unsupported Asset Type");
 	}
 
@@ -96,7 +97,7 @@ AssetItem::enumType AssetItem::GetType(zenHash32 _hAssetName)
 void AssetItem::ResetPropertyValues()
 {
 	FreePropertyValues();
-	FAss::PropertyArray& propDefinition = GetPropertyDef();
+	PropertyArray& propDefinition = GetPropertyDef();
 	maPropertyValue.SetCount(propDefinition.Count());
 	for(zenUInt valIdx(0), valCount(maPropertyValue.Count()); valIdx<valCount; ++valIdx)
 	{
@@ -125,7 +126,7 @@ void AssetItem::FreePropertyValues()
 //-------------------------------------------------------------------------------------------------
 //! @return		PropertyValue pointer if found (null if not found)
 //=================================================================================================	
-FAss::ValuePointer AssetItem::GetPropertyValue(zenHash32 _hPropertyName)const
+ValuePointer AssetItem::GetPropertyValue(zenHash32 _hPropertyName)const
 {
 	zenUInt propIdx = GetPropertyDefIndex(_hPropertyName);
 	if( propIdx < maPropertyValue.Count() )
@@ -216,13 +217,13 @@ void AssetItem::RebuiltDescription()
 //=================================================================================================
 void AssetItem::InitPropertyDefIndex(zenMap<zenUInt>::Key32& _dPropertyMap)const
 {	
-	const zenArrayStatic<const FAss::PropertyDefBase*>& aPropertyDef = GetPropertyDef();
+	const zenArrayStatic<const PropertyDefBase*>& aPropertyDef = GetPropertyDef();
 	_dPropertyMap.Init(aPropertyDef.Count()*2);
 	_dPropertyMap.SetDefaultValue(0xFFFFFFFF);
 	for(zenUInt idx(0), count(aPropertyDef.Count()); idx<count; ++idx)
 		_dPropertyMap.Set( aPropertyDef[idx]->mhName, idx );
 }
 
-}
+}} //namespace zen { namespace zeAss
 
 #endif //AW_ENGINETOOL

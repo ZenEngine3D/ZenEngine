@@ -1,10 +1,10 @@
 #include "libZenEngine.h"
 #if AW_ENGINETOOL
 
-namespace FAss
+namespace zen { namespace zeAss
 {
 
-#define AWAssetTypeExpand(_TypeName_) zenMem::AllocatorPool PropertyDef##_TypeName_##::sPoolAlloc( "PropertyDef"ZENStringDefine2(_TypeName_)"Pool", sizeof(PropertyDef##_TypeName_##::Value), 100, 100);
+#define AWAssetTypeExpand(_TypeName_) zenMem::AllocatorPool PropertyDef##_TypeName_##::sPoolAlloc( "PropertyDef Pool", sizeof(PropertyDef##_TypeName_##::Value), 100, 100);
 AWAssetTypes
 #undef	AWAssetTypeExpand
 
@@ -303,6 +303,6 @@ bool PropertyDefFloat2::ValueFromXml(PropertyDefBase::Value& _Value, const pugi:
 	return false;
 }
 
-}
+}} //namespace zen { namespace zeAss
 
 #endif //AW_ENGINETOOL

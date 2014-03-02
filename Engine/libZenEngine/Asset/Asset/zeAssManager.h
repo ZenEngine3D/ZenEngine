@@ -1,13 +1,14 @@
 #pragma once
-#if !defined(__LibAsset_Asset_Manager_h__) && AW_ENGINETOOL
-#define __LibAsset_Asset_Manager_h__
+#ifndef __LibZenEngine_Asset_Manager_h__
+#define __LibZenEngine_Asset_Manager_h__
 
-namespace FAss
+#if AW_ENGINETOOL
+namespace zen { namespace zeAss
 {	
 
-class ManagerAsset : public Manager
+class ManagerAsset : public zbType::Manager
 {
-ZENClassDeclare(ManagerAsset, Manager)
+ZENClassDeclare(ManagerAsset, zbType::Manager)
 public:
 												ManagerAsset	();
 	void										PackageLoad		();
@@ -31,8 +32,9 @@ public:
 	virtual	bool					Load();
 	virtual	bool					Unload();
 };	
-}
+}} //namespace zen { namespace zeAss
 
-namespace FMgr{ extern FAss::ManagerAsset Asset; }
+namespace zeMgr{ extern zeAss::ManagerAsset Asset; }
 
+#endif
 #endif

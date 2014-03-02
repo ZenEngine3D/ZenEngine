@@ -1,4 +1,4 @@
-vSourceFiles			= {"**.h", "**.inl", "**.cpp"}
+vSourceFiles			= {"**.h", "**.inl", "**.cpp", "**.ui"}
 vLibEngineGame 			= {"libZenBase", "libZenCore", "libZenEngine"  }
 vLibEngineTool 			= {"libZenBase", "libZenCore", "libZenEngine", "libThirdParty" }
 bLibEngineGameRender	= {"d3d11", "d3dcompiler", "dxguid"}	--TODO per platform config
@@ -15,6 +15,8 @@ if vPath:sub(vPath,-1) ~= '/' then
 -- 	Setup the build parameter per build/platform configuration
 -- ============================================================================
 function Orion_ConfigureBuild()
+	local vIsLib = kind() == "StaticLib"	
+	
 	--[[ Build version config ]]--
 	configuration		( "Debug" )
 		defines			( {"DEBUG", "_DEBUG", "AW_BUILD_DEBUG"} )
@@ -25,53 +27,41 @@ function Orion_ConfigureBuild()
 		defines			( {"NDEBUG", "AW_BUILD_RELEASE"} )
 		flags 			( {"Symbols"} )
 		optimize		( "On" )
-		targetsuffix 	("_Rel")
+		targetsuffix 	( "_Rel")
 	configuration 		( "Final" )
 		defines			( {"NDEBUG", "AW_BUILD_FINAL"} )
 		optimize		( "Full" )
 	
 	--[[ Platform ]]--
-	configuration		({"PC*"})
-		system 			("Windows")
-		defines			({"WIN32","_WINDOWS", "AW_PLATFORM=PC", "AW_PLATFORM_PC=1", "AW_RENDERER=DX11", "AW_RENDERER_DX11=1"})
-
-	--[[ Game vs Tool config ]]--
-	configuration		({"PCGame32"})
-		architecture 	("x32")
-		defines			({"AW_ENGINEGAME=1"})
-		if kind() == "ConsoleApp" then
-			targetdir 	(vOutputRoot .. "/../[Bin]/Windows32")
-		end
-	configuration 		({"PCGame64"})
-		architecture 	("x64")		
-		defines			({"AW_ENGINEGAME=1"})
-		if kind() == "ConsoleApp" then
-			targetdir 	(vOutputRoot .. "/../[Bin]/Windows64")
-		end
-	configuration 		({"PCTool32"})
-		architecture 	("x32")
-		defines			({"AW_ENGINETOOL=1"})
-		if kind() == "ConsoleApp" then
-			targetdir 	(vOutputRoot .. "/../[Bin]/Windows32")
-		end
-	configuration 		({"PCTool64"})
-		architecture 	("x64")
-		defines			({"AW_ENGINETOOL=1"})
-		if kind() == "ConsoleApp" then
-			targetdir 	(vOutputRoot .. "/../[Bin]/Windows64")
-		end
-	--for i, vPath in ipairs(aPathList) do		
-	--	excludes( vPath .. vFile )
-	--end			
+	configuration		( "PC*")
+		system 			( "Windows")
+		defines			( {"WIN32","_WINDOWS", "AW_PLATFORM=PC", "AW_PLATFORM_PC=1", "AW_RENDERER=DX11", "AW_RENDERER_DX11=1"})
+		debugdir		( vSourceRoot .. "/Build/Content")
+		
+	configuration		( "PCGame32")
+		architecture 	( "x32")
+		defines			( {"AW_ENGINEGAME=1"})
+		targetdir 		( vOutputRoot .. iif(vIsLib, "/" .. project().name .. "/Game32", "/../[Bin]/Windows32") )		
+	configuration 		( "PCGame64")
+		architecture 	( "x64")		
+		defines			( {"AW_ENGINEGAME=1"})
+		targetdir 		( vOutputRoot .. iif(vIsLib, "/" .. project().name .. "/Game64", "/../[Bin]/Windows64") )
+	configuration 		( "PCTool32")
+		architecture 	( "x32")
+		defines			( {"AW_ENGINETOOL=1"})
+		targetdir 		( vOutputRoot .. iif(vIsLib, "/" .. project().name .. "/Tool32", "/../[Bin]/Windows32") )
+	configuration 		( "PCTool64")
+		architecture 	( "x64")
+		defines			( {"AW_ENGINETOOL=1"})
+		targetdir 		( vOutputRoot .. iif(vIsLib, "/" .. project().name .. "/Tool64", "/../[Bin]/Windows64") )	
 end
 
 -- ============================================================================
 -- 	Setup the Precompiled header of a project
--- 		aLibName 	: Library target name
 -- 		aPathList	: List of root path of library
 -- 		aPchFile	: Name of PCH header filename ("" if none is used)
 -- ============================================================================
-function Orion_ConfigurePCH(aLibName, aPathList, aPchFile)
+function Orion_ConfigurePCH(aPathList, aPchFile)
 	
 	-- Look for pch file
 	if #aPchFile == 0 then return end
@@ -110,29 +100,46 @@ end
 
 -- ============================================================================
 -- 	Common project creation code
--- 		aProjectName 	: Library target name
 -- 		aPathList		: List of root path of library
 -- 		aPchFile		: Name of PCH header filename ("" if none is used)
 -- ============================================================================
-function Orion_AddProjectCommon(aProjectName, aPathList, aPchFile)			
-	os.mkdir			( vOutputRoot .. "/" .. aProjectName )
-	location 			( vOutputRoot .. "/" .. aProjectName )
+function Orion_AddProjectCommon(aPathList, aPchFile)			
+	os.mkdir			( vOutputRoot .. "/" .. project().name )
+	location 			( vOutputRoot .. "/" .. project().name )
 	includedirs 		( {vSourceRoot, vSourceRoot .. "/Engine/Include"} )
 	vpaths 				( {["*"] = "../../../Engine/Include" } )
 	vpaths 				( {["*"] = "../../../Engine/libZenBase"} )
 	vpaths 				( {["*"] = "../../../Engine/libZenCore"} )
 	vpaths 				( {["*"] = "../../../Engine/libZenEngine"} )
 	language 			( "C++" )	
-	Orion_ConfigurePCH	( aProjectName, aPathList, aPchFile )
+	Orion_ConfigurePCH	( aPathList, aPchFile )
 	
 	for i, vPath in ipairs(aPathList) do 
 		for j, vExt in ipairs(vSourceFiles) do 
 			files( vSourceRoot .. "/" .. vPath .. vExt )
-			--print("[" .. aProjectName .. "] Adding : " .. vPath .. vExt)
+			--print("[" .. project().name .. "] Adding : " .. vPath .. vExt)
 		end
 	end
 	
 	Orion_ConfigureBuild()
 end
 
-
+-- ============================================================================
+-- 	Add support for WxWidget, to a particular project
+-- ============================================================================
+function Orion_AddProjectWxWidget()
+	vLibsDebug = {"wxmsw29ud_core", "wxbase29ud", "wxmsw29ud_aui", "wxmsw29ud_propgrid", "wxmsw29ud_adv", "wxjpegd", "wxpngd", "wxzlibd", "wxregexud", "wxexpatd", "wxtiffd"}
+	vLibsRelease = {"wxmsw29u_core", "wxbase29u", "wxmsw29u_aui", "wxmsw29u_propgrid", "wxmsw29u_adv", "wxjpeg", "wxpng", "wxzlib", "wxregexu", "wxexpat", "wxtiff"}
+	
+	configuration		( "*32")
+		libdirs 		(vSourceRoot .. "/Engine/ThirdParty/wxWidgets/wxWidgets-2_9_4(x32)/lib/vc_lib")
+	configuration		( "*64")
+		libdirs 		(vSourceRoot .. "/Engine/ThirdParty/wxWidgets/wxWidgets-2_9_4(x64)/lib/vc_lib")
+	configuration		( "Debug" )
+		links			( vLibsDebug )
+	configuration 		( "Release" )
+		links			( vLibsRelease )
+	configuration 		( "Final" )
+		links			( vLibsRelease )
+	
+end

@@ -21,6 +21,7 @@ protected:
 };
 
 void					LaunchEngine(awEngineInstance* _pEngineInstance, int argc, const char* const * argv);
+void					SetEngine(awEngineInstance* _pEngineInstance);
 awEngineInstance*		GetEngineInstance();
 
 }} // namespace zen, zenRes

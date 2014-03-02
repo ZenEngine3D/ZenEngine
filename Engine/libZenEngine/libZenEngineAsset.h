@@ -1,6 +1,6 @@
 #pragma once
-#ifndef __LibAsset_All_h__
-#define __LibAsset_All_h__
+#ifndef __LibZenEngine_Asset_All_h__
+#define __LibZenEngine_Asset_All_h__
 
 //=================================================================================================
 //! @file		FrameworkAssetAll.h
@@ -16,13 +16,11 @@
 //! @section	mainpage-libasset Section Asset Library
 //=================================================================================================
 
-#include <Engine/libZenBase/libZenBase.h>
-#include <Engine/libZenEngine/Asset/FrameworkAssetBase.h>
-
-// #include <AWEngine/Export/EngineExportBase.h>
-// #include <AWEngine/Export/Graphic/EExpGraphicAll.h>
-// #include <AWEngine/Export/Export/EExpManager.h>
-
-
+#include <Engine/libZenEngine/Asset/Asset/zeAssProperty.h>
+#include <Engine/libZenEngine/Asset/Asset/zeAssItem.h>
+#include <Engine/libZenEngine/Asset/Asset/zeAssPackage.h>
+#include <Engine/libZenEngine/Asset/Asset/zeAssManager.h>
+#include <Engine/libZenEngine/Asset/Graphic/zeAssGfxMesh.h>
+#include <Engine/libZenEngine/Asset/Graphic/zeAssGfxTexture2D.h>
 
 #endif

@@ -9,3 +9,4 @@ solution( "Zen" )
 	flags				( {"Unicode"} )
 	
 	dofile("Engine/PRJEngine.lua")
+	dofile("Tool/PRJTool.lua")

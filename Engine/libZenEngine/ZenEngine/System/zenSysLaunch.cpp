@@ -5,17 +5,22 @@ namespace zen { namespace awsys {
 static awEngineInstance*	gpActiveEngine(NULL);
 static FWnd::Window*		gpMainWindow;			//! @todo wrap this inside EngineInstance
 void LaunchEngine(awEngineInstance* _pEngineInstance, int argc, const char* const* argv)
-{
-	ZENAssert(!gpActiveEngine);
-	gpActiveEngine = _pEngineInstance;
-	if( gpActiveEngine->Init() )
+{	
+	if( _pEngineInstance->Init() )
 	{
+		SetEngine(_pEngineInstance);
 		while( !gpActiveEngine->IsDone() && CSys::IsSystemActive() )
 		{
 			gpActiveEngine->Update();
 		}
 	}	
 	gpActiveEngine->Destroy();
+}
+
+void SetEngine(awEngineInstance* _pEngineInstance)
+{
+	ZENAssert(!gpActiveEngine);
+	gpActiveEngine = _pEngineInstance;
 }
 
 awEngineInstance* GetEngineInstance()

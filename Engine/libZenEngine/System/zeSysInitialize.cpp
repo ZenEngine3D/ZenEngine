@@ -21,7 +21,7 @@ bool StartupEngine()
 	bResult &= EMgr::GfxState.Startup();
 	bResult &= EMgr::GfxRender.Startup();
 #if AW_ENGINETOOL
-	bResult &= FMgr::Asset.Startup();
+	bResult &= zeMgr::Asset.Startup();
 #endif
 	if( bResult )	printf("\nEngine Initialization... Success");
 	else			printf("\nEngine Initialization... Failed");
@@ -38,7 +38,7 @@ bool ShutdownEngine()
 {
 	bool bResult(true);	
 #if AW_ENGINETOOL
-	bResult &= FMgr::Asset.Shutdown();
+	bResult &= zeMgr::Asset.Shutdown();
 #endif
 	bResult &= EMgr::GfxRender.Shutdown();
 	bResult &= EMgr::GfxState.Shutdown();		

@@ -55,10 +55,12 @@ namespace zen { namespace zenMem
 	{	
 	ZENClassDeclareNoParent(ScopedAllocator);
 	public:
-					ScopedAllocator(Allocator* _pAllocator);
-					~ScopedAllocator();
+								ScopedAllocator(Allocator* _pAllocator);
+								~ScopedAllocator();
+		static Allocator&		GetActive();
 	protected:
-		Allocator*	mpAllocator;
+		Allocator*				mpAllocator;
+
 	};
 
 }} //namespace zen { namespace mem  

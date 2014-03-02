@@ -1,7 +1,7 @@
 #include "libZenEngine.h"
 #if AW_ENGINETOOL
 
-namespace FAss
+namespace zen { namespace zeAss
 {	
 
 Package::Package()
@@ -145,6 +145,6 @@ void LoadGroupAndName(const char* _zName, const char* _zGroup, zenArrayStatic<ze
 	*_aOutGroup.Last() = _zName;
 }
 
-}
+}} //namespace zen { namespace zeAss
 
 #endif //AW_ENGINETOOL
