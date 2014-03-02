@@ -1,7 +1,7 @@
 #include "libZenEngine.h"
 #if AW_ENGINETOOL
 
-namespace FAss
+namespace zen { namespace zeAss
 {
 
 zenArrayStatic<zenU32>	GfxMesh::saIcon;
@@ -20,11 +20,11 @@ zenArrayStatic<zenU32>	GfxMesh::saIcon;
 //-------------------------------------------------------------------------------------------------
 //! @return		List of properties this asset needs
 //=================================================================================================
-const zenArrayStatic<const FAss::PropertyDefBase*>& GfxMesh::GetPropertyDef() const
+const zenArrayStatic<const PropertyDefBase*>& GfxMesh::GetPropertyDef() const
 {
-	static const FAss::PropertyDefFile		Property01("Source", "", "3D Model", true,	"", "");
-	static const FAss::PropertyDefBase*		aPropertyAll[] = { &Property01 };
-	static zenArrayStatic<const FAss::PropertyDefBase*> saPropertyDef(aPropertyAll, ZENArrayCount(aPropertyAll));
+	static const PropertyDefFile		Property01("Source", "", "3D Model", true,	"", "");
+	static const PropertyDefBase*		aPropertyAll[] = { &Property01 };
+	static zenArrayStatic<const PropertyDefBase*> saPropertyDef(aPropertyAll, ZENArrayCount(aPropertyAll));
 	return saPropertyDef;		
 }
 
@@ -44,6 +44,6 @@ zenUInt GfxMesh::GetPropertyDefIndex(zenHash32 _hPropertyName)const
 	return sdPropertyIndex[_hPropertyName];
 }
 
-}
+}} //namespace zen { namespace zeAss
 
 #endif //AW_ENGINETOOL

@@ -27,7 +27,7 @@ namespace ERes
 		ZENStaticAssert( ZENArrayCount(zSemanticNames)==awconst::keShaderSemantic__Count );
 	
 		//D3D11_USAGE eUsage(D3D11_USAGE_DEFAULT);//! @todo configure this
-		//uint uCpuAccess(0);
+		//zenUInt uCpuAccess(0);
 		D3D11_USAGE eUsage(D3D11_USAGE_DYNAMIC);
 		UINT uCpuAccess(D3D11_CPU_ACCESS_WRITE);
 		//! @todo

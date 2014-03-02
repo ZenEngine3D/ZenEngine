@@ -37,7 +37,7 @@ template<class TType>
 zenArrayStatic<TType>::zenArrayStatic(const zenArrayStatic& _Copy, zenUInt _uExtraCount=0)
 {					
 	muCount					= _Copy.Count()+_uExtraCount;
-	mpData					= zenNew(mpAllocator) TType[muCount];		
+	mpData					= zenNewDefault TType[muCount];		
 	const TType* pItemSrc	= _Copy.First();
 	if( ZenSupportsMemCopy<TType>::value )
 	{

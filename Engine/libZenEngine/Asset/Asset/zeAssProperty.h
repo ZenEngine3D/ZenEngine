@@ -1,10 +1,11 @@
 #pragma once
-#if !defined(__LibAsset_Asset_Property_h__) && AW_ENGINETOOL
-#define __LibAsset_Asset_Property_h__
+#ifndef __LibZenEngine_Asset_Property_h__
+#define __LibZenEngine_Asset_Property_h__
 
-#include "AWEngine/External/pugixml/src/pugixml.hpp"
+#if AW_ENGINETOOL
+#include "Engine/ThirdParty/pugixml/src/pugixml.hpp"
 
-namespace FAss
+namespace zen { namespace zeAss
 {
 //! @note: When adding support for new parameter type in assets :
 //!			1-Add name here
@@ -209,7 +210,7 @@ public:
 						: TPropertyDefBase( _zName, _zDisplayName, _zDescription, _bShowInAssetDesc, _hDefaultKey )
 						, maEntry(_pEntries, _uEntryCount)
 						{
-							AWAssert(_uEntryCount > 0);
+							ZENAssert(_uEntryCount > 0);
 						}
 	virtual bool		ValueFromXml	(PropertyDefBase::Value& _Value, const pugi::xml_node& _Property)const;
 	zenArrayStatic<Entry>	maEntry;
@@ -343,8 +344,8 @@ public:
 	
 #define AWAssetTypeExpand(_TypeName_)																											\
 	bool									Is##_TypeName_##() const			{return GetType()==PropertyDefBase::keType_##_TypeName_##;}			\
-	PropertyDef##_TypeName_##::Value*		Get##_TypeName_##()					{AWAssert(Is##_TypeName_##()); return mpValue##_TypeName_##;}	\
-	const PropertyDef##_TypeName_##::Value*	Get##_TypeName_##()const			{AWAssert(Is##_TypeName_##()); return mpValue##_TypeName_##;}
+	PropertyDef##_TypeName_##::Value*		Get##_TypeName_##()					{ZENAssert(Is##_TypeName_##()); return mpValue##_TypeName_##;}	\
+	const PropertyDef##_TypeName_##::Value*	Get##_TypeName_##()const			{ZENAssert(Is##_TypeName_##()); return mpValue##_TypeName_##;}
 	AWAssetTypes
 #undef	AWAssetTypeExpand
 
@@ -356,6 +357,7 @@ protected:
 };
 
 typedef const zenArrayStatic<const PropertyDefBase*> PropertyArray;
-}
+}} //namespace zen { namespace zeAss
 
+#endif
 #endif

@@ -1,8 +1,8 @@
 #include "libZenEngine.h"
 #if AW_ENGINETOOL
-namespace FMgr{ FAss::ManagerAsset Asset; }
+namespace zeMgr{ zeAss::ManagerAsset Asset; }
 
-namespace FAss
+namespace zen { namespace zeAss
 {
 
 //=================================================================================================
@@ -99,6 +99,6 @@ void ManagerAsset::PackageLoad(const zenString& _zDir)
 	}
 }
 
-}
+}} //namespace zen { namespace zeAss
 
 #endif //AW_ENGINETOOL

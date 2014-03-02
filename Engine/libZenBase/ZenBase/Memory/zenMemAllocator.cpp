@@ -6,28 +6,35 @@
 namespace zen { namespace zenMem
 {
 
-Allocator*		gpAllocatorDefault = NULL;
-zenList2x		gAllocatorOverideList;
-AllocatorMalloc	gAllocatorMalloc("DefaultMalloc");
-ScopedAllocator	gAllocatorOveride(&gAllocatorMalloc);
+inline zenList2x& GetAllocatorScopeList()
+{
+	static zenList2x sOverideList;
+	return sOverideList;
+}
 
 ScopedAllocator::ScopedAllocator(Allocator* _pAllocator)
 : mpAllocator(_pAllocator)
 {
 	ZENAssert(mpAllocator);
-	gpAllocatorDefault = mpAllocator;
-	gAllocatorOverideList.AddTail(this);
+	zenList2x* testList = &GetAllocatorScopeList();
+	GetAllocatorScopeList().AddTail(this);
 }
 ScopedAllocator::~ScopedAllocator()
 {
 	LstRemove();
-	ZENAssert(!gAllocatorOverideList.IsEmpty());	//! Should be impossible with global 'GAllocatorOveride'
-	gpAllocatorDefault = static_cast<ScopedAllocator*>(gAllocatorOverideList.GetTail())->mpAllocator;
+	ZENAssert(!GetAllocatorScopeList().IsEmpty());	//! Should be impossible with global 'GAllocatorOveride'
 }		
+
+Allocator& ScopedAllocator::GetActive()
+{
+	return *static_cast<ScopedAllocator*>(GetAllocatorScopeList().GetTail())->mpAllocator;
+}
 
 Allocator& Allocator::GetDefault()
 {
-	return *gpAllocatorDefault;
+	static AllocatorMalloc sAllocatorMalloc("DefaultMalloc");
+	static ScopedAllocator sAllocatorOveride(&sAllocatorMalloc);
+	return ScopedAllocator::GetActive();
 }
 
 Allocator::Allocator(zenDebugString _zName)
