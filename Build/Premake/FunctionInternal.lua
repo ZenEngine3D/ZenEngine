@@ -131,10 +131,14 @@ function Orion_AddProjectWxWidget()
 	vLibsDebug = {"wxmsw29ud_core", "wxbase29ud", "wxmsw29ud_aui", "wxmsw29ud_propgrid", "wxmsw29ud_adv", "wxjpegd", "wxpngd", "wxzlibd", "wxregexud", "wxexpatd", "wxtiffd"}
 	vLibsRelease = {"wxmsw29u_core", "wxbase29u", "wxmsw29u_aui", "wxmsw29u_propgrid", "wxmsw29u_adv", "wxjpeg", "wxpng", "wxzlib", "wxregexu", "wxexpat", "wxtiff"}
 	
+	configuration		( {} )
+		includedirs( {vSourceRoot .. "/Engine/ThirdParty/[wxWidgets]/include"} )
+		includedirs( {vSourceRoot .. "/Engine/ThirdParty/[wxWidgets]/include/msvc"} )
+	
 	configuration		( "*32")
-		libdirs 		(vSourceRoot .. "/Engine/ThirdParty/wxWidgets/wxWidgets-2_9_4(x32)/lib/vc_lib")
+		libdirs 		(vSourceRoot .. "/Engine/ThirdParty/[wxWidgets]/wxWidgets-2_9_4(x32)/lib/vc_lib")
 	configuration		( "*64")
-		libdirs 		(vSourceRoot .. "/Engine/ThirdParty/wxWidgets/wxWidgets-2_9_4(x64)/lib/vc_lib")
+		libdirs 		(vSourceRoot .. "/Engine/ThirdParty/[wxWidgets]/wxWidgets-2_9_4(x64)/lib/vc_lib")
 	configuration		( "Debug" )
 		links			( vLibsDebug )
 	configuration 		( "Release" )
