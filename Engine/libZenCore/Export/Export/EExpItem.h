@@ -28,21 +28,21 @@ protected:
 	virtual bool				ExportStart();									//!< @brief Called from Thread:Main before the start of export
 	virtual bool				ExportWork(bool _bIsTHRTask){return TRUE;};		//!< @brief Called from Thread:Main or Thread:Task for main export operation (must be threadsafe)
 	virtual bool				ExportEnd();									//!< @brief Called from Thread:Main, for some post export task 
-	inline	void				ExportSkipWork();								//!< @brief Call in ExportStart to avoid launching a job for this
+	ZENInline	void				ExportSkipWork();								//!< @brief Call in ExportStart to avoid launching a job for this
 
-	//static zenResID	ValidateItemID(awconst::eResPlatform _ePlatform, awconst::eResType _eType, awconst::eResSource _eSource, zenResID::NameHash _hName, bool& _bExistOut);
+	//static zenResID	ValidateItemID(zenConst::eResPlatform _ePlatform, zenConst::eResType _eType, zenConst::eResSource _eSource, zenResID::NameHash _hName, bool& _bExistOut);
 
 	friend class ExportTask;
 	friend class ManagerExport;
 };
 	
-inline void ExportItem::ExportSkipWork()
+ZENInline void ExportItem::ExportSkipWork()
 {
 	ZENAssertMsg(mpExportInfo, "Call only from ExportStart()"); 
 	mpExportInfo->mbSuccessWork = TRUE; 
 }
 
-inline zenResID ValidateItemID(awconst::eResPlatform _ePlatform, awconst::eResType _eType, awconst::eResSource _eSource, zenResID::NameHash _hName, bool& _bExistOut)
+ZENInline zenResID ValidateItemID(zenConst::eResPlatform _ePlatform, zenConst::eResType _eType, zenConst::eResSource _eSource, zenResID::NameHash _hName, bool& _bExistOut)
 {
 	zenResID newResID(_hName, _ePlatform, _eType, _eSource);
 	EExp::SerialItem* pItem	= EMgr::SerialItems.GetItemBaseAnySource( newResID );

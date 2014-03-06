@@ -12,14 +12,14 @@ namespace zen { namespace zenType {
 								zenVector2(TType _Val);
 								zenVector2(TType aX, TType aY );
 								zenVector2(const zenVector2& _vCopy);
-		inline zenVector2&		operator=(const zenVector2& _vCopy);
-		inline zenVector2&		operator=(TType _Val);		
-		inline zenVector2		operator*(TType _Val)const;
-		inline zenVector2		operator+(const zenVector2& _vAdd)const;
-		inline bool				operator==(const zenVector2& _vCompare)const;
-		inline bool				operator!=(const zenVector2& _vCompare)const;		
-		inline bool				IsNull();
-		inline const zenVector2& SetNull();
+		ZENInline zenVector2&		operator=(const zenVector2& _vCopy);
+		ZENInline zenVector2&		operator=(TType _Val);		
+		ZENInline zenVector2		operator*(TType _Val)const;
+		ZENInline zenVector2		operator+(const zenVector2& _vAdd)const;
+		ZENInline bool				operator==(const zenVector2& _vCompare)const;
+		ZENInline bool				operator!=(const zenVector2& _vCompare)const;		
+		ZENInline bool				IsNull();
+		ZENInline const zenVector2& SetNull();
 		union
 		{
 			struct {TType x; TType y;};
@@ -39,14 +39,14 @@ namespace zen { namespace zenType {
 								zenVector3(TType _val);
 								zenVector3(TType aX, TType aY, TType aZ );
 								zenVector3(const zenVector3& _vCopy);
-		inline zenVector3&		operator=(const zenVector3& _vCopy);
-		inline zenVector3&		operator=(TType _Val);
-		inline zenVector3		operator*(TType _Val)const;
-		inline zenVector3		operator+(const zenVector3& _vAdd)const;
-		inline bool				operator==(const zenVector3& _vCompare)const;
-		inline bool				operator!=(const zenVector3& _vCompare)const;
-		inline bool				IsNull();
-		inline const zenVector3& SetNull();
+		ZENInline zenVector3&		operator=(const zenVector3& _vCopy);
+		ZENInline zenVector3&		operator=(TType _Val);
+		ZENInline zenVector3		operator*(TType _Val)const;
+		ZENInline zenVector3		operator+(const zenVector3& _vAdd)const;
+		ZENInline bool				operator==(const zenVector3& _vCompare)const;
+		ZENInline bool				operator!=(const zenVector3& _vCompare)const;
+		ZENInline bool				IsNull();
+		ZENInline const zenVector3& SetNull();
 		union
 		{
 			struct {TType x; TType y; TType z;};
@@ -67,14 +67,14 @@ namespace zen { namespace zenType {
 								zenVector4(TType _Val);
 								zenVector4(TType aX, TType aY, TType aZ, TType aW );
 								zenVector4(const zenVector4& _vCopy);
-		inline zenVector4&		operator=(const zenVector4& _vCopy);
-		inline zenVector4&		operator=(TType _Val);
-		inline zenVector4		operator*(TType _Val)const;
-		inline zenVector4		operator+(const zenVector4& _vAdd)const;
-		inline bool				operator==(const zenVector4& _vCompare)const;
-		inline bool				operator!=(const zenVector4& _vCompare)const;
-		inline bool				IsNull();
-		inline const zenVector4& SetNull();
+		ZENInline zenVector4&		operator=(const zenVector4& _vCopy);
+		ZENInline zenVector4&		operator=(TType _Val);
+		ZENInline zenVector4		operator*(TType _Val)const;
+		ZENInline zenVector4		operator+(const zenVector4& _vAdd)const;
+		ZENInline bool				operator==(const zenVector4& _vCompare)const;
+		ZENInline bool				operator!=(const zenVector4& _vCompare)const;
+		ZENInline bool				IsNull();
+		ZENInline const zenVector4& SetNull();
 		union
 		{
 			struct {TType x; TType y; TType z; TType w;};

@@ -2,9 +2,9 @@
 
 namespace EExp
 {
-	zenResID SerialMesh_Base::CallbackGetItemID(awconst::eResPlatform _ePlatform, awconst::eResType _eType, awconst::eResSource _eSource, const EExp::ExportInfoBase* _pExportInfo, bool& _bExistOut)
+	zenResID SerialMesh_Base::CallbackGetItemID(zenConst::eResPlatform _ePlatform, zenConst::eResType _eType, zenConst::eResSource _eSource, const EExp::ExportInfoBase* _pExportInfo, bool& _bExistOut)
 	{
-		ZENAssert(_eType==awconst::keResType_GfxMesh);
+		ZENAssert(_eType==zenConst::keResType_GfxMesh);
 		ZENAssert( _pExportInfo );
 		const ExportInfo* pExportInfo = static_cast<const ExportInfo*>(_pExportInfo);
 
@@ -27,7 +27,7 @@ namespace EExp
 		static zenMem::AllocatorPool sMemPool("Pool CreateMesh", sizeof(SerialMesh_Base::ExportInfo), 1, 5 );
 		SerialMesh_Base::ExportInfo* pExportInfo	= zenNew(&sMemPool) SerialMesh_Base::ExportInfo;
 		pExportInfo->maMeshStripID					= _aMeshStripID;	
-		return EMgr::Export.CreateItem( zenResID::kePlatformType_GFX, awconst::keResType_GfxMesh, pExportInfo );
+		return EMgr::Export.CreateItem( zenResID::kePlatformType_GFX, zenConst::keResType_GfxMesh, pExportInfo );
 	}
 
 }

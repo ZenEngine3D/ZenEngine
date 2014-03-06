@@ -43,7 +43,7 @@ bool ZendoApp::OnInit()
 
 	wxInitAllImageHandlers();
 	static EngineInstance Engine;
-	
+
 	//Connect( wxID_ANY, wxEVT_IDLE, wxIdleEventHandler(ZendoApp::onIdle) );
 	if( Engine.Init() )
 	{
@@ -87,9 +87,9 @@ bool ZendoApp::InitResources()
 		{
 			wxBitmap bmpIconUnknown(imgIconUnknown);
 			maIcon[keIco_Asset16+idxSize] = zenNewDefault wxImageList(auIconSize[idxSize], auIconSize[idxSize], true);
-			for(zenUInt idxType(0); idxType<zeAss::AssetItem::keType__Count; ++idxType)
+			for(zenUInt idxType(0); idxType<zenConst::keAssType__Count; ++idxType)
 			{
-				zFilename = zFolder + wxString(zeAss::AssetItem::GetTypeDesc(zeAss::AssetItem::enumType(idxType))) + wxT(".png");				
+				zFilename = zFolder + wxString(zeAss::AssetItem::GetTypeDesc(zenConst::eAssetType(idxType))) + wxT(".png");				
 				wxImage imgIcon(zFilename);
 				if( imgIcon.IsOk() )
 				{

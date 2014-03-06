@@ -51,7 +51,7 @@ namespace EExp
 			zenArrayStatic<const EExp::ParameterBase*> aEmptyParamValues;
 			for(zenUInt paramDefIdx(0); paramDefIdx<paramDefCount; ++paramDefIdx)
 			{					
-				if( mSerial.maShaderParamID[paramDefIdx].Type() == awconst::keResType_GfxShaderParamDef )
+				if( mSerial.maShaderParamID[paramDefIdx].Type() == zenConst::keResType_GfxShaderParamDef )
 					mSerial.maShaderParamID[paramDefIdx] = EExp::CreateGfxShaderParam( mSerial.maShaderParamID[paramDefIdx], aEmptyParamValues);					
 			}
 			

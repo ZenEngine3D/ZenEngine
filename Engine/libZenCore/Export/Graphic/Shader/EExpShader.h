@@ -23,7 +23,7 @@ namespace EExp
 		zenArrayStatic<BindInfo>						maTextureSamplerSlot;	//!< Texture or sampler slot used for each item in mTextureSamplerName
 		zenU8										muTextureSlotCount;		//!< Texture slot used in shader
 
-		static zenResID CallbackGetItemID(awconst::eResPlatform _ePlatform, awconst::eResType _eType, awconst::eResSource _eSource, const EExp::ExportInfoBase* _pExportInfo, bool& _bExistOut);
+		static zenResID CallbackGetItemID(zenConst::eResPlatform _ePlatform, zenConst::eResType _eType, zenConst::eResSource _eSource, const EExp::ExportInfoBase* _pExportInfo, bool& _bExistOut);
 	};
 	
 	zenResID CreateGfxShaderVertex	( const char* _zFilename, const char* _zEntryname );

@@ -29,15 +29,15 @@ namespace EExp
 		struct ExportInfo : public EExp::ExportInfoBase
 		{				
 			zenArrayStatic<MipInfo>		maMipData;
-			awconst::eTextureFormat		meFormatInput;	
-			awconst::eTextureFormat		meFormatOutput;
-			awFlagResTexCreate			mCreationFlags;
+			zenConst::eTextureFormat		meFormatInput;	
+			zenConst::eTextureFormat		meFormatOutput;
+			zenFlagResTexCreate			mCreationFlags;
 			zenU8						mbGenerateMip;
 		};
 	};
 
-	const TextureBlockInfo& GetTextureBlockInfo( awconst::eTextureFormat _eFormat );	
-	zenResID CreateGfxTexture2D( awconst::eTextureFormat _eFormat, awFlagResTexCreate _CreationFlags, zenVec2U16 _vDim, const zenArrayBase<zenU8>& _aRawData=zenArrayStatic<zenU8>(zenUInt(0)) );
+	const TextureBlockInfo& GetTextureBlockInfo( zenConst::eTextureFormat _eFormat );	
+	zenResID CreateGfxTexture2D( zenConst::eTextureFormat _eFormat, zenFlagResTexCreate _CreationFlags, zenVec2U16 _vDim, const zenArrayBase<zenU8>& _aRawData=zenArrayStatic<zenU8>(zenUInt(0)) );
 
 }
 

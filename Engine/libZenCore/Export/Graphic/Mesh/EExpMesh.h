@@ -13,7 +13,7 @@ namespace EExp
 			zenArrayStatic<zenResID>		maMeshStripID;			//!< List of Mesh strips used this Mesh
 		};
 
-		static zenResID CallbackGetItemID(awconst::eResPlatform _ePlatform, awconst::eResType _eType, awconst::eResSource _eSource, const EExp::ExportInfoBase* _pExportInfo, bool& _bExistOut);
+		static zenResID CallbackGetItemID(zenConst::eResPlatform _ePlatform, zenConst::eResType _eType, zenConst::eResSource _eSource, const EExp::ExportInfoBase* _pExportInfo, bool& _bExistOut);
 	};
 	
 	zenResID CreateGfxMesh(const zenArrayBase<zenResID>& _aMeshStripID);

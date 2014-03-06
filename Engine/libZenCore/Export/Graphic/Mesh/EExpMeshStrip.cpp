@@ -25,7 +25,7 @@ namespace EExp
 		pExportInfo->maShaderParamID					= _aShaderParamID;		
 		pExportInfo->muIndexFirst						= _uIndexFirst;
 		pExportInfo->muIndexCount						= _uIndexCount;
-		return EMgr::Export.CreateItem( zenResID::kePlatformType_GFX, awconst::keResType_GfxMeshStrip, pExportInfo );
+		return EMgr::Export.CreateItem( zenResID::kePlatformType_GFX, zenConst::keResType_GfxMeshStrip, pExportInfo );
 	}
 
 

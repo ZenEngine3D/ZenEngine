@@ -53,17 +53,17 @@ class ManagerLog : public zbType::Manager
 ZENClassDeclare(ManagerLog, zbType::Manager);
 public:  	
 			void			Reset			();
-	inline	void			Clear			( eLogOutput _eOutput );
-	inline	void			SetActive		( eLogOutput _eOutput, eLogType _eType, bool _bActive=true );
-	inline	bool			IsActive		( eLogOutput _eOutput, eLogType _eType );
+	ZENInline	void			Clear			( eLogOutput _eOutput );
+	ZENInline	void			SetActive		( eLogOutput _eOutput, eLogType _eType, bool _bActive=true );
+	ZENInline	bool			IsActive		( eLogOutput _eOutput, eLogType _eType );
 				
-	inline	void			Log				( eLogType _eErrorType, const char* _sFormat, ... );
+	ZENInline	void			Log				( eLogType _eErrorType, const char* _sFormat, ... );
 			void			Log				( eLogType _eErrorType, const char* _sFormat, const va_list _pArgs );		
-	inline	void			Printf			( eLogType _eErrorType, const char* _sFormat, ... );		
+	ZENInline	void			Printf			( eLogType _eErrorType, const char* _sFormat, ... );		
 			void			Printf			( eLogType _eErrorType, const char* _sFormat, const va_list _pArgs );				
 		
-	inline	const char*		GetTypeStamp	( eLogType _eLogType );	
-	inline  const char*		GetEmptyStamp	();
+	ZENInline	const char*		GetTypeStamp	( eLogType _eLogType );	
+	ZENInline  const char*		GetEmptyStamp	();
 
 protected:
 	virtual	bool			Load			();
@@ -72,8 +72,8 @@ protected:
 	static	const char*		ssLogTypeDesc[keLog__Count+1];	//!< Description of each error type
 };
 
-//inline void Printf(eLogType _eType, const char* _zText, ...);
-//inline void Log(eLogType _eType, const char* _zFormat, ... );
+//ZENInline void Printf(eLogType _eType, const char* _zText, ...);
+//ZENInline void Log(eLogType _eType, const char* _zFormat, ... );
 
 }   
 

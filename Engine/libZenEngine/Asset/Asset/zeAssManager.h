@@ -2,7 +2,7 @@
 #ifndef __LibZenEngine_Asset_Manager_h__
 #define __LibZenEngine_Asset_Manager_h__
 
-#if AW_ENGINETOOL
+#if ZEN_ENGINETOOL
 namespace zen { namespace zeAss
 {	
 

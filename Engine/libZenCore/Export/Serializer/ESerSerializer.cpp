@@ -135,7 +135,7 @@ bool Serializer_Base::Serialize(zenResID& _Value)
 	{
 		ZENAssertMsg(_Value.IsExport(), "Can only save export SerialItem.");
 		zenResID ResId(_Value);
-		ResId.SetSource(awconst::keResSource_Loaded);
+		ResId.SetSource(zenConst::keResSource_Loaded);
 		return Serialize(*(zenU64*)&ResId);	
 	}
 	return Serialize(*(zenU64*)&_Value);	

@@ -16,7 +16,7 @@ namespace EExp
 		SerialInputStream_Base::ExportInfo* pExportInfo	= zenNew(&sMemPool) SerialInputStream_Base::ExportInfo;
 		pExportInfo->mVertexBufferID							= _VertexBufferID;
 		pExportInfo->mShaderInputSignatureID					= _ShaderInputSignatureID;
-		return EMgr::Export.CreateItem( zenResID::kePlatformType_GFX, awconst::keResType_GfxInputStream, pExportInfo );
+		return EMgr::Export.CreateItem( zenResID::kePlatformType_GFX, zenConst::keResType_GfxInputStream, pExportInfo );
 	}
 
 }

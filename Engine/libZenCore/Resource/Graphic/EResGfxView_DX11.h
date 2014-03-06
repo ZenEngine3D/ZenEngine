@@ -11,7 +11,7 @@ namespace ERes
 			zenArrayStatic<GfxRenderTargetRef>	marTargetColor;
 			GfxRenderTargetRef					mrTargetDepth;
 		};
-		AWResourceDeclare(GfxView_DX11, InstanceInfo, awconst::keResType_GfxView)
+		AWResourceDeclare(GfxView_DX11, InstanceInfo, zenConst::keResType_GfxView)
 	//------------------------------------------------------------------
 	// Common to all RenderTarget
 	//------------------------------------------------------------------

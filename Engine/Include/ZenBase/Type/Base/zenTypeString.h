@@ -14,17 +14,17 @@ class zenString
 {
 ZENClassDeclareNoParent(zenString)
 public:
-	inline 				zenString();
-	inline 				zenString(const zenString& _zString);
-	inline 				zenString(const char* _zString);
+	ZENInline 				zenString();
+	ZENInline 				zenString(const zenString& _zString);
+	ZENInline 				zenString(const char* _zString);
 
-	inline zenString&	operator=(const zenString& _zString);
-	inline zenString&	operator=(const char* _zString);
-	inline zenString&	operator+=(const zenString& _zString);
-	inline zenString&	operator+=(const char* _zString);
-	inline 				operator const char*() const;
+	ZENInline zenString&	operator=(const zenString& _zString);
+	ZENInline zenString&	operator=(const char* _zString);
+	ZENInline zenString&	operator+=(const zenString& _zString);
+	ZENInline zenString&	operator+=(const char* _zString);
+	ZENInline 				operator const char*() const;
 	
-	inline const char*	Last(zenUInt index=0)const;
+	ZENInline const char*	Last(zenUInt index=0)const;
 
 protected:
 	zenArrayDynamic<char>	maChar;

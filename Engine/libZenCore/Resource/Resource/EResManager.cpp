@@ -17,25 +17,25 @@ zenResID CreateExportItemRuntime(EExp::ExportInfoBase* _pExportInfo)
 	zenRes::awResourceRef rResource;
 	switch( _pExportInfo->mExportResID.Type() )
 	{
-	case awconst::keResType_GfxShaderPixel:				rResource = GfxShaderPixel::Create(*_pExportInfo);			break;
-	case awconst::keResType_GfxShaderVertex:			rResource = GfxShaderVertex::Create(*_pExportInfo);			break;	
-	case awconst::keResType_GfxShaderParamDef:			rResource = GfxShaderParamDef::Create(*_pExportInfo);		break;
-	case awconst::keResType_GfxShaderParam:				rResource = GfxShaderParam::Create(*_pExportInfo);			break;
-	case awconst::keResType_GfxShaderBinding:			rResource = GfxShaderBinding::Create(*_pExportInfo);		break;
-	case awconst::keResType_GfxIndex:					rResource = GfxIndex::Create(*_pExportInfo);				break;
-	case awconst::keResType_GfxVertex:					rResource = GfxVertex::Create(*_pExportInfo);				break;
-	case awconst::keResType_GfxTexture2D:				rResource = GfxTexture2D::Create(*_pExportInfo);			break;
-	case awconst::keResType_GfxRenderTarget:			rResource = GfxRenderTarget::Create(*_pExportInfo);			break;
-	case awconst::keResType_GfxView:					rResource = GfxView::Create(*_pExportInfo);					break;
-	case awconst::keResType_GfxWindow:					rResource = GfxWindow::Create(*_pExportInfo);				break;
-	case awconst::keResType_GfxMeshStrip:				rResource = GfxMeshStrip::Create(*_pExportInfo);			break;
-	case awconst::keResType_GfxMesh:					rResource = GfxMesh::Create(*_pExportInfo);					break;
-	case awconst::keResType_GfxInputStream:				rResource = GfxInputStream::Create(*_pExportInfo);			break;
-	case awconst::keResType_GfxInputSignature:			rResource = GfxInputSignature::Create(*_pExportInfo);		break;
-	case awconst::keResType_GfxSampler:					rResource = GfxSampler::Create(*_pExportInfo);				break;
-	case awconst::keResType_GfxBlend:					rResource = GfxBlend::Create(*_pExportInfo);				break;
-	case awconst::keResType_GfxDepthStencil:			rResource = GfxDepthStencil::Create(*_pExportInfo);				break;
-	case awconst::keResType_GfxRasterizer:				rResource = GfxRasterizer::Create(*_pExportInfo);				break;
+	case zenConst::keResType_GfxShaderPixel:				rResource = GfxShaderPixel::Create(*_pExportInfo);			break;
+	case zenConst::keResType_GfxShaderVertex:			rResource = GfxShaderVertex::Create(*_pExportInfo);			break;	
+	case zenConst::keResType_GfxShaderParamDef:			rResource = GfxShaderParamDef::Create(*_pExportInfo);		break;
+	case zenConst::keResType_GfxShaderParam:				rResource = GfxShaderParam::Create(*_pExportInfo);			break;
+	case zenConst::keResType_GfxShaderBinding:			rResource = GfxShaderBinding::Create(*_pExportInfo);		break;
+	case zenConst::keResType_GfxIndex:					rResource = GfxIndex::Create(*_pExportInfo);				break;
+	case zenConst::keResType_GfxVertex:					rResource = GfxVertex::Create(*_pExportInfo);				break;
+	case zenConst::keResType_GfxTexture2D:				rResource = GfxTexture2D::Create(*_pExportInfo);			break;
+	case zenConst::keResType_GfxRenderTarget:			rResource = GfxRenderTarget::Create(*_pExportInfo);			break;
+	case zenConst::keResType_GfxView:					rResource = GfxView::Create(*_pExportInfo);					break;
+	case zenConst::keResType_GfxWindow:					rResource = GfxWindow::Create(*_pExportInfo);				break;
+	case zenConst::keResType_GfxMeshStrip:				rResource = GfxMeshStrip::Create(*_pExportInfo);			break;
+	case zenConst::keResType_GfxMesh:					rResource = GfxMesh::Create(*_pExportInfo);					break;
+	case zenConst::keResType_GfxInputStream:				rResource = GfxInputStream::Create(*_pExportInfo);			break;
+	case zenConst::keResType_GfxInputSignature:			rResource = GfxInputSignature::Create(*_pExportInfo);		break;
+	case zenConst::keResType_GfxSampler:					rResource = GfxSampler::Create(*_pExportInfo);				break;
+	case zenConst::keResType_GfxBlend:					rResource = GfxBlend::Create(*_pExportInfo);				break;
+	case zenConst::keResType_GfxDepthStencil:			rResource = GfxDepthStencil::Create(*_pExportInfo);				break;
+	case zenConst::keResType_GfxRasterizer:				rResource = GfxRasterizer::Create(*_pExportInfo);				break;
 	}
 	zenDelNull(_pExportInfo);
 	return rResource.GetResID();
@@ -51,10 +51,10 @@ bool ManagerResource::Load()
 	mdResources.Init(1024);	
 	zenMem::Set(maResourcesDefault, sizeof(maResourcesDefault), 0);
 	
-	awconst::eResPlatform aPlatformTypes[zenResID::kePlatformType__Count];
-	aPlatformTypes[zenResID::kePlatformType_OS]		= awconst::kAWCurrentPlatformOS;
-	aPlatformTypes[zenResID::kePlatformType_GFX]	= awconst::kAWCurrentPlatformGfx;
-	EMgr::Export.SetExportInfos( aPlatformTypes, awconst::keResSource_Runtime, CreateExportItemRuntime );
+	zenConst::eResPlatform aPlatformTypes[zenResID::kePlatformType__Count];
+	aPlatformTypes[zenResID::kePlatformType_OS]		= zenConst::kAWCurrentPlatformOS;
+	aPlatformTypes[zenResID::kePlatformType_GFX]	= zenConst::kAWCurrentPlatformGfx;
+	EMgr::Export.SetExportInfos( aPlatformTypes, zenConst::keResSource_Runtime, CreateExportItemRuntime );
 	return true;
 }
 
@@ -97,14 +97,14 @@ zenRes::awResourceRef ManagerResource::GetResourceAnySource(const zenResID& _Res
 	//ZENAssert(_ResID.IsValid());
 	zenRes::awResource* pResource;
 	zenResID anySourceResID(_ResID);
-	anySourceResID.SetSource(awconst::keResSource_Loaded);
+	anySourceResID.SetSource(zenConst::keResSource_Loaded);
 	if( mdResources.Get(_ResID.HashID(), pResource) )	
 	{
 		return pResource;
 	}
 	else
 	{
-		anySourceResID.SetSource(awconst::keResSource_Runtime);	
+		anySourceResID.SetSource(zenConst::keResSource_Runtime);	
 		if( mdResources.Get(_ResID.HashID(), pResource) )	return pResource;
 		else if(_bSupportDefault )							return maResourcesDefault[_ResID.Type()];
 		else												return (zenRes::awResource*)NULL;

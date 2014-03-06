@@ -22,7 +22,7 @@ namespace EExp
 //-------------------------------------------------------------------------------------------------
 // Export
 //-------------------------------------------------------------------------------------------------
-		static zenResID	CallbackGetItemID(awconst::eResPlatform _ePlatform, awconst::eResType _eType, awconst::eResSource _eSource, const EExp::ExportInfoBase* _pExportInfo, bool& _bExistOut);
+		static zenResID	CallbackGetItemID(zenConst::eResPlatform _ePlatform, zenConst::eResType _eType, zenConst::eResSource _eSource, const EExp::ExportInfoBase* _pExportInfo, bool& _bExistOut);
 	protected:	
 		virtual bool				ExportWork(bool _bIsTHRTask);	
 	};	
@@ -45,7 +45,7 @@ namespace EExp
 		//-------------------------------------------------------------------------------------------------
 		// Export
 		//-------------------------------------------------------------------------------------------------
-		static zenResID	CallbackGetItemID(awconst::eResPlatform _ePlatform, awconst::eResType _eType, awconst::eResSource _eSource, const EExp::ExportInfoBase* _pExportInfo, bool& _bExistOut);
+		static zenResID	CallbackGetItemID(zenConst::eResPlatform _ePlatform, zenConst::eResType _eType, zenConst::eResSource _eSource, const EExp::ExportInfoBase* _pExportInfo, bool& _bExistOut);
 	protected:	
 		virtual bool				ExportWork(bool _bIsTHRTask);	
 	};	
@@ -68,7 +68,7 @@ namespace EExp
 		//-------------------------------------------------------------------------------------------------
 		// Export
 		//-------------------------------------------------------------------------------------------------
-		static zenResID	CallbackGetItemID(awconst::eResPlatform _ePlatform, awconst::eResType _eType, awconst::eResSource _eSource, const EExp::ExportInfoBase* _pExportInfo, bool& _bExistOut);
+		static zenResID	CallbackGetItemID(zenConst::eResPlatform _ePlatform, zenConst::eResType _eType, zenConst::eResSource _eSource, const EExp::ExportInfoBase* _pExportInfo, bool& _bExistOut);
 	protected:	
 		virtual bool				ExportWork(bool _bIsTHRTask);	
 	};	
@@ -91,7 +91,7 @@ namespace EExp
 		//-------------------------------------------------------------------------------------------------
 		// Export
 		//-------------------------------------------------------------------------------------------------
-		static zenResID	CallbackGetItemID(awconst::eResPlatform _ePlatform, awconst::eResType _eType, awconst::eResSource _eSource, const EExp::ExportInfoBase* _pExportInfo, bool& _bExistOut);
+		static zenResID	CallbackGetItemID(zenConst::eResPlatform _ePlatform, zenConst::eResType _eType, zenConst::eResSource _eSource, const EExp::ExportInfoBase* _pExportInfo, bool& _bExistOut);
 	protected:	
 		virtual bool				ExportWork(bool _bIsTHRTask);	
 	};	

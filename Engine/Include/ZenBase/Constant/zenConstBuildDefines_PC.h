@@ -6,5 +6,12 @@
 #include <Shellapi.h>
 #endif
 
-#define	AW_EXPORT_OR_RESOURCE_WIN	AW_PLATFORM_PC
-#define	AW_EXPORT_WIN				AW_BUILD_PC_GAMEORTOOL
+#define	ZEN_EXPORT_OR_RESOURCE_PC	AW_PLATFORM_PC
+#define	ZEN_EXPORT_PC				AW_BUILD_PC_GAMEORTOOL
+
+#define ZENInline					__inline
+#if !AW_BUILD_DEBUG
+	#define ZENForceInline			__forceinline
+#else
+	#define ZENForceInline			ZENInline
+#endif

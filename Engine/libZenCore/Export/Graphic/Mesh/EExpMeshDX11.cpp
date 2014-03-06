@@ -15,7 +15,7 @@ namespace EExp
 		for(zenUInt stripIdx(0), stripCount(mSerial.maMeshStripID.Count()); stripIdx<stripCount; ++stripIdx)
 		{
 			zenResID resID = mSerial.maMeshStripID[stripIdx];
-			if( resID.Type()!=awconst::keResType_GfxMeshStrip || !EMgr::SerialItems.GetItem<EExp::SerialGfxMeshStrip_DX11>(resID) )
+			if( resID.Type()!=zenConst::keResType_GfxMeshStrip || !EMgr::SerialItems.GetItem<EExp::SerialGfxMeshStrip_DX11>(resID) )
 				return false;
 		}
 

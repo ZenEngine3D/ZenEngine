@@ -2,9 +2,9 @@
 
 namespace EExp
 {
-	zenResID SerialShaderBinding_Base::CallbackGetItemID(awconst::eResPlatform _ePlatform, awconst::eResType _eType, awconst::eResSource _eSource, const EExp::ExportInfoBase* _pExportInfo, bool& _bExistOut)
+	zenResID SerialShaderBinding_Base::CallbackGetItemID(zenConst::eResPlatform _ePlatform, zenConst::eResType _eType, zenConst::eResSource _eSource, const EExp::ExportInfoBase* _pExportInfo, bool& _bExistOut)
 	{
-		ZENAssert(_ePlatform==awconst::keResPlatform_DX11 && _eType==awconst::keResType_GfxShaderBinding);
+		ZENAssert(_ePlatform==zenConst::keResPlatform_DX11 && _eType==zenConst::keResType_GfxShaderBinding);
 		ZENAssert( _pExportInfo );
 		const ExportInfo* pExportInfo = static_cast<const ExportInfo*>(_pExportInfo);
 
@@ -37,7 +37,7 @@ namespace EExp
 		static zenMem::AllocatorPool sMemPool("Pool CreateShaderBinding", sizeof(SerialShaderBinding_Base::ExportInfo), 1, 5 );
 		SerialShaderBinding_Base::ExportInfo* pExportInfo	= zenNew(&sMemPool) SerialShaderBinding_Base::ExportInfo;
 		pExportInfo->maShaderID								= _aShaderID;
-		return EMgr::Export.CreateItem( zenResID::kePlatformType_GFX, awconst::keResType_GfxShaderBinding, pExportInfo );
+		return EMgr::Export.CreateItem( zenResID::kePlatformType_GFX, zenConst::keResType_GfxShaderBinding, pExportInfo );
 	}
 
 	//=================================================================================================

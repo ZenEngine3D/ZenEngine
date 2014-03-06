@@ -1,5 +1,5 @@
 #include "libZenEngine.h"
-
+/*
 namespace zen { namespace zenType {
 	zenU32 zenRender2D::SFillQuad(zenVec2DSimple* pxVB, zenS32 x1, zenS32 y1, zenS32 x2, zenS32 y2, zenU32 z, zenU32 uColour, const awRegionS32& xClipArea)
 	{
@@ -48,3 +48,4 @@ namespace zen { namespace zenType {
 	}
 
 }}  //namespace zen, Type 
+*/

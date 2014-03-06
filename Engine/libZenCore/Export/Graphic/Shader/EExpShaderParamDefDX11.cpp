@@ -8,9 +8,9 @@
 namespace EExp
 {
 
-zenResID SerialGfxShaderParamDef_DX11::CallbackGetItemID(awconst::eResPlatform _ePlatform, awconst::eResType _eType, awconst::eResSource _eSource, const EExp::ExportInfoBase* _pExportInfo, bool& _bExistOut)
+zenResID SerialGfxShaderParamDef_DX11::CallbackGetItemID(zenConst::eResPlatform _ePlatform, zenConst::eResType _eType, zenConst::eResSource _eSource, const EExp::ExportInfoBase* _pExportInfo, bool& _bExistOut)
 {
-	ZENAssert(_ePlatform==awconst::keResPlatform_DX11 && _eType==awconst::keResType_GfxShaderParamDef);
+	ZENAssert(_ePlatform==zenConst::keResPlatform_DX11 && _eType==zenConst::keResType_GfxShaderParamDef);
 	ZENAssert( _pExportInfo );
 	const ExportInfo*			pExportInfo		= static_cast<const ExportInfo*>(_pExportInfo);
 	const SerialShader_DX11*	pParentShader	= EMgr::SerialItems.GetItem<SerialShader_DX11>( pExportInfo->mParentShaderID );	
@@ -100,10 +100,10 @@ bool SerialGfxShaderParamDef_DX11::ExportWork(bool _bIsTHRTask)
 				EExp::ShaderParamItemInfo Param;
 				switch( TypeDesc.Type )
 				{
-				case D3D_SVT_FLOAT:	Param.meType = awconst::keShaderElemType_Float;	break;			
-				case D3D_SVT_INT:	Param.meType = awconst::keShaderElemType_SInt;	break;
-				case D3D_SVT_UINT:	Param.meType = awconst::keShaderElemType_UInt;	break;
-				case D3D_SVT_UINT8:	Param.meType = awconst::keShaderElemType_UByte;	break;
+				case D3D_SVT_FLOAT:	Param.meType = zenConst::keShaderElemType_Float;	break;			
+				case D3D_SVT_INT:	Param.meType = zenConst::keShaderElemType_SInt;	break;
+				case D3D_SVT_UINT:	Param.meType = zenConst::keShaderElemType_UInt;	break;
+				case D3D_SVT_UINT8:	Param.meType = zenConst::keShaderElemType_UByte;	break;
 				default: 			bValid = false;									break; 	//! @todo : Support structure
 				//default: 			bValid = false; strncpy( mzLogDetail, "Unsupported Shader variable type.", keLogSizeDetail );	break;
 				}

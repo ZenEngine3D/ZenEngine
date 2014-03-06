@@ -2,7 +2,7 @@
 
 namespace zen { namespace zenRes {	
 
-awResourceRef::awResourceRef(awFlagResType _SupportedTypes, zenResID _ResourceID)
+awResourceRef::awResourceRef(zenFlagResType _SupportedTypes, zenResID _ResourceID)
 : mpResource(NULL)
 {
 	ZENDbgCode( mSupportedTypeMask = _SupportedTypes; )

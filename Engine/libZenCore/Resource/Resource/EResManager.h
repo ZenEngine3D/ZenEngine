@@ -15,7 +15,7 @@ namespace ERes
 		zenRes::awResourceRef	Add						(zenRes::awResource* _pResource);
 	protected:
 		zenMap<zenRes::awResource*>::Key64	mdResources;											//!< All resource currently loaded
-		zenRes::awResource*					maResourcesDefault[awconst::keResType__Invalid+1];	//!< Default resource used when resource at a key entry isn't loaded
+		zenRes::awResource*					maResourcesDefault[zenConst::keResType__Invalid+1];	//!< Default resource used when resource at a key entry isn't loaded
 
 	//---------------------------------------------------------
 	// ManagerBase Section

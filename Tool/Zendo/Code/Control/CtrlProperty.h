@@ -77,6 +77,15 @@ public:
 	virtual				~wxBetlBoolProperty();
 };
 
+class wxBetlFileProperty : public wxFileProperty
+{
+public:
+	wxBetlFileProperty(zeAss::PropertyDefFile::Value& _AssetValue);
+	virtual				~wxBetlFileProperty();
+};
+
+
+#if 0
 class wxBetlIntProperty : public wxIntProperty
 {
 public:
@@ -98,12 +107,6 @@ public:
 	virtual				~wxBetlEnumProperty();
 };
 
-class wxBetlFileProperty : public wxFileProperty
-{
-public:
-						wxBetlFileProperty(zeAss::PropertyDefFile::Value& _AssetValue);
-	virtual				~wxBetlFileProperty();
-};
 
 class wxBetlVector2fProperty : public wxPGProperty
 {
@@ -115,6 +118,8 @@ public:
 	virtual wxVariant	ChildChanged( wxVariant& thisValue, int childIndex, wxVariant& childValue ) const;
 	virtual void		RefreshChildren();
 };
+
+#endif
 
 }
 

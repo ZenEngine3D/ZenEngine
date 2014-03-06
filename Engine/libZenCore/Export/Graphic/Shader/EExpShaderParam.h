@@ -17,7 +17,7 @@ public:
 	const void*	GetData()const {return this + 1;}
 
 protected:
-				ParameterBase(zenHash32 _hName, awconst::eShaderElementType _eType, zenU16 _uVectorSize, zenU16 _uArrayCount, zenU16 _uSizeTotal)
+				ParameterBase(zenHash32 _hName, zenConst::eShaderElementType _eType, zenU16 _uVectorSize, zenU16 _uArrayCount, zenU16 _uSizeTotal)
 				: mhName(_hName)
 				, meType( static_cast<zenU16>(_eType))
 				, muVectorSize(_uVectorSize)
@@ -26,7 +26,7 @@ protected:
 				{}	
 };
 
-template <class TType, awconst::eShaderElementType TShaderType>
+template <class TType, zenConst::eShaderElementType TShaderType>
 class ParameterVector1 : public ParameterBase
 {
 ZENClassDeclare(ParameterVector1, ParameterBase)
@@ -37,7 +37,7 @@ public:
 	TType		mValue;									
 };
 
-template <class TType, awconst::eShaderElementType TShaderType>
+template <class TType, zenConst::eShaderElementType TShaderType>
 class ParameterVector2 : public ParameterBase
 {
 ZENClassDeclare(ParameterVector2, ParameterBase)
@@ -63,7 +63,7 @@ public:
 	TType		mValue[2];
 };
 
-template <class TType, awconst::eShaderElementType TShaderType>
+template <class TType, zenConst::eShaderElementType TShaderType>
 class ParameterVector3 : public ParameterBase
 {
 ZENClassDeclare(ParameterVector3, ParameterBase)
@@ -92,7 +92,7 @@ public:
 	TType		mValue[3];
 };
 
-template <class TType, awconst::eShaderElementType TShaderType>
+template <class TType, zenConst::eShaderElementType TShaderType>
 class ParameterVector4 : public ParameterBase
 {
 ZENClassDeclare(ParameterVector4, ParameterBase)
@@ -123,10 +123,10 @@ public:
 				}
 	TType		mValue[4];
 };
-typedef ParameterVector1< float, awconst::keShaderElemType_Float > ParameterFloat1;
-typedef ParameterVector2< float, awconst::keShaderElemType_Float > ParameterFloat2;
-typedef ParameterVector3< float, awconst::keShaderElemType_Float > ParameterFloat3;
-typedef ParameterVector4< float, awconst::keShaderElemType_Float > ParameterFloat4;
+typedef ParameterVector1< float, zenConst::keShaderElemType_Float > ParameterFloat1;
+typedef ParameterVector2< float, zenConst::keShaderElemType_Float > ParameterFloat2;
+typedef ParameterVector3< float, zenConst::keShaderElemType_Float > ParameterFloat3;
+typedef ParameterVector4< float, zenConst::keShaderElemType_Float > ParameterFloat4;
 
 
 class SerialShaderParam_Base : public EExp::ExportItem

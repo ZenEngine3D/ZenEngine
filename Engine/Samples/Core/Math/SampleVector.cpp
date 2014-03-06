@@ -11,7 +11,7 @@ namespace sample
 
 void TestSimd(zenU32 auCount)
 {
-	std::cout << "\n" << awconst::kzLineA40 << "\nLoop : " << auCount;
+	std::cout << "\n" << zenConst::kzLineA40 << "\nLoop : " << auCount;
 	zenU64 uStartA, uStartB;
 	zenU64 uStopA, uStopB;
 

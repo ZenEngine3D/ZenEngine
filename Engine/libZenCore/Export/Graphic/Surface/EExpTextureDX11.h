@@ -15,8 +15,8 @@ namespace EExp
 		struct SerialUseOnly
 		{
 			zenArrayStatic<MipInfo>		maMipData;
-			awconst::eTextureFormat		meFormat;
-			awFlagResTexCreate			mCreationFlags;
+			zenConst::eTextureFormat		meFormat;
+			zenFlagResTexCreate			mCreationFlags;
 		};
 		SerialUseOnly					mSerial;		
 		

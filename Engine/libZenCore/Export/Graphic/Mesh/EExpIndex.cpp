@@ -13,13 +13,13 @@ namespace EExp
 //! @param _PrimType		- Type of primitive this list of indices represents (TriangleStrip, ...)
 //! @return 				- Unique zenResID of created Resource
 //=================================================================================================
-zenResID CreateGfxIndexBuffer( const zenArrayBase<zenU16>& _Indices, awconst::ePrimitiveType _ePrimitiveType )
+zenResID CreateGfxIndexBuffer( const zenArrayBase<zenU16>& _Indices, zenConst::ePrimitiveType _ePrimitiveType )
 {
 	static zenMem::AllocatorPool sMemPool("Pool CreateIndexBuffer", sizeof(SerialIndex_Base::ExportInfo), 1, 5 );
 	SerialIndex_Base::ExportInfo* pExportInfo	= zenNew(&sMemPool) SerialIndex_Base::ExportInfo;
 	pExportInfo->maIndice16						= _Indices;
 	pExportInfo->mePrimitiveType				= _ePrimitiveType;
-	return EMgr::Export.CreateItem( zenResID::kePlatformType_GFX, awconst::keResType_GfxIndex, pExportInfo );
+	return EMgr::Export.CreateItem( zenResID::kePlatformType_GFX, zenConst::keResType_GfxIndex, pExportInfo );
 }
 
 //=================================================================================================
@@ -32,13 +32,13 @@ zenResID CreateGfxIndexBuffer( const zenArrayBase<zenU16>& _Indices, awconst::eP
 //! @param _PrimType		- Type of primitive this list of indices represents (TriangleStrip, ...)
 //! @return 				- Unique zenResID of created Resource
 //=================================================================================================
-zenResID CreateGfxIndexBuffer( const zenArrayBase<zenU32>& _Indices, awconst::ePrimitiveType _ePrimitiveType )
+zenResID CreateGfxIndexBuffer( const zenArrayBase<zenU32>& _Indices, zenConst::ePrimitiveType _ePrimitiveType )
 {
 	static zenMem::AllocatorPool sMemPool("Pool CreateIndexBuffer", sizeof(SerialIndex_Base::ExportInfo), 1, 5 );
 	SerialIndex_Base::ExportInfo* pExportInfo	= zenNew(&sMemPool) SerialIndex_Base::ExportInfo;
 	pExportInfo->maIndice32						= _Indices;
 	pExportInfo->mePrimitiveType				= _ePrimitiveType;
-	return EMgr::Export.CreateItem( zenResID::kePlatformType_GFX, awconst::keResType_GfxIndex, pExportInfo );
+	return EMgr::Export.CreateItem( zenResID::kePlatformType_GFX, zenConst::keResType_GfxIndex, pExportInfo );
 }
 
 

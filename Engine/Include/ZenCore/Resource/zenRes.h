@@ -11,10 +11,10 @@ namespace zen { namespace zenRes {
 	{
 	ZENClassDeclare(awResource, zenRefCounted<false>)
 	public:									
-		inline const zenResID&	GetResID()const;	//!< @brief return resource ID of resource
-		inline bool				IsValid()const;		//!< @brief true if the object is a valid resource
+		ZENInline const zenResID&	GetResID()const;	//!< @brief return resource ID of resource
+		ZENInline bool				IsValid()const;		//!< @brief true if the object is a valid resource
 	protected:
-		inline					awResource();
+		ZENInline					awResource();
 		zenResID				mResID;
 	};
 
@@ -26,54 +26,54 @@ namespace zen { namespace zenRes {
 	{
 	ZENClassDeclareNoParent(awResourceRef)
 	public:
-		inline				awResourceRef();
-		inline				awResourceRef(awResource* _pResource);
-		inline				awResourceRef(awFlagResType _SupportedTypes);		
-		inline				awResourceRef(awFlagResType _SupportedTypes, awResource* _pResource);
-							awResourceRef(awFlagResType _SupportedTypes, zenResID _ResourceID);
+		ZENInline				awResourceRef();
+		ZENInline				awResourceRef(awResource* _pResource);
+		ZENInline				awResourceRef(zenFlagResType _SupportedTypes);		
+		ZENInline				awResourceRef(zenFlagResType _SupportedTypes, awResource* _pResource);
+							awResourceRef(zenFlagResType _SupportedTypes, zenResID _ResourceID);
 		
-		inline const		awResourceRef&	operator=(awResource* _pResource);
-		inline const		awResourceRef&	operator=(const awResourceRef& _ResourceRef);
+		ZENInline const		awResourceRef&	operator=(awResource* _pResource);
+		ZENInline const		awResourceRef&	operator=(const awResourceRef& _ResourceRef);
 		 const				awResourceRef&	operator=(const zenResID& _ResourceID);
 	
-		inline bool			IsValid()const;
-		inline zenResID		GetResID()const;
-		inline bool			operator==(const awResourceRef& _rCmp)const;
-		inline bool			operator!=(const awResourceRef& _rCmp)const;
-		inline				operator zenResID()const;
+		ZENInline bool			IsValid()const;
+		ZENInline zenResID		GetResID()const;
+		ZENInline bool			operator==(const awResourceRef& _rCmp)const;
+		ZENInline bool			operator!=(const awResourceRef& _rCmp)const;
+		ZENInline				operator zenResID()const;
 		
 	protected:
-		inline void			SetResource(awResource* _pResource);
+		ZENInline void			SetResource(awResource* _pResource);
 		awResource*			mpResource;
-		ZENDbgCode( awFlagResType mSupportedTypeMask; )
+		ZENDbgCode( zenFlagResType mSupportedTypeMask; )
 	};
 
 	//=============================================================================================
 	//! @class	Specialized version of awResourceRef, that supports 1 resource type for this
 	//!			object, when checking validity of resource type
 	//=============================================================================================	
-	template<awconst::eResType TType>
+	template<zenConst::eResType TType>
 	class awResourceTypedRef : public awResourceRef
 	{
 	ZENClassDeclare(awResourceTypedRef, awResourceRef)
 	public:
-		inline				awResourceTypedRef();
-		inline				awResourceTypedRef(awResource* _pResource);
-		inline				awResourceTypedRef(zenResID _ResourceID);
+		ZENInline				awResourceTypedRef();
+		ZENInline				awResourceTypedRef(awResource* _pResource);
+		ZENInline				awResourceTypedRef(zenResID _ResourceID);
 	};
 
 	//=============================================================================================
 	//! @class	Specialized version of awResourceRef, that supports 2 resource type for this
 	//!			object, when checking validity of resource type
 	//=============================================================================================	
-	template<awconst::eResType TType1, awconst::eResType TType2>
+	template<zenConst::eResType TType1, zenConst::eResType TType2>
 	class awResourceTyped2Ref : public awResourceRef
 	{
 	ZENClassDeclare(awResourceTyped2Ref, awResourceRef)
 	public:
-		inline				awResourceTyped2Ref();		
-		inline				awResourceTyped2Ref(awResource* _pResource);
-		inline				awResourceTyped2Ref(zenResID _ResourceID);
+		ZENInline				awResourceTyped2Ref();		
+		ZENInline				awResourceTyped2Ref(awResource* _pResource);
+		ZENInline				awResourceTyped2Ref(zenResID _ResourceID);
 	};
 
 }} // namespace zen, zenRes

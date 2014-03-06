@@ -2,9 +2,9 @@
 
 namespace EExp
 {
-	zenResID SerialShader_Base::CallbackGetItemID(awconst::eResPlatform _ePlatform, awconst::eResType _eType, awconst::eResSource _eSource, const EExp::ExportInfoBase* _pExportInfo, bool& _bExistOut)
+	zenResID SerialShader_Base::CallbackGetItemID(zenConst::eResPlatform _ePlatform, zenConst::eResType _eType, zenConst::eResSource _eSource, const EExp::ExportInfoBase* _pExportInfo, bool& _bExistOut)
 	{
-		ZENAssert( awconst::kFlagResShaders.Any(_eType) );
+		ZENAssert( zenConst::kFlagResShaders.Any(_eType) );
 		ZENAssert( _pExportInfo );
 		const ExportInfo* pExportInfo		= static_cast<const ExportInfo*>(_pExportInfo);
 		const zenRes::awShaderDefine* pEntry	= pExportInfo->maDefines.First();
@@ -48,7 +48,7 @@ namespace EExp
 		pExportInfo->mzEntryname					= _zEntryname;
 		pExportInfo->maDefines						= _aDefines;
 		pExportInfo->meShaderStage					= EExp::keShaderStage_Vertex;
-		return EMgr::Export.CreateItem( zenResID::kePlatformType_GFX, awconst::keResType_GfxShaderVertex, pExportInfo );
+		return EMgr::Export.CreateItem( zenResID::kePlatformType_GFX, zenConst::keResType_GfxShaderVertex, pExportInfo );
 	}
 
 	//=================================================================================================
@@ -68,7 +68,7 @@ namespace EExp
 		pExportInfo->mzEntryname					= _zEntryname;
 		pExportInfo->maDefines						= _aDefines;
 		pExportInfo->meShaderStage					= EExp::keShaderStage_Pixel;
-		return EMgr::Export.CreateItem( zenResID::kePlatformType_GFX, awconst::keResType_GfxShaderPixel, pExportInfo );
+		return EMgr::Export.CreateItem( zenResID::kePlatformType_GFX, zenConst::keResType_GfxShaderPixel, pExportInfo );
 	}
 
 	

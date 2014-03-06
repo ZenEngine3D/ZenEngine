@@ -12,17 +12,17 @@ namespace ERes
 			GfxRenderTargetRef		mrBackbufferColor;
 			GfxRenderTargetRef		mrBackbufferDepth;
 			GfxViewRef				mrBackbufferView;
-			awconst::eTextureFormat	meBackbufferColorFormat;
-			awconst::eTextureFormat	meBackbufferDepthFormat;
+			zenConst::eTextureFormat	meBackbufferColorFormat;
+			zenConst::eTextureFormat	meBackbufferDepthFormat;
 			zenVec2U16				mvSize;			
 		};
-		AWResourceDeclare(GfxWindow_DX11, InstanceInfo, awconst::keResType_GfxWindow)
+		AWResourceDeclare(GfxWindow_DX11, InstanceInfo, zenConst::keResType_GfxWindow)
 	
 	//------------------------------------------------------------------
 	// Common to all Window
 	//------------------------------------------------------------------
 	public:
-		inline ERes::GfxViewRef		GetBackbuffer(){ return mInstanceInfo.mrBackbufferView; }
+		ZENInline ERes::GfxViewRef		GetBackbuffer(){ return mInstanceInfo.mrBackbufferView; }
 		void						Resize(const zenVec2U16& _vSize);		
 
 	//------------------------------------------------------------------

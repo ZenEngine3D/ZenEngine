@@ -16,7 +16,7 @@ namespace ERes
 			zenMap<TextureSlot>::Key32		mdStageSlotPerTexture;	//!< Texture Index of each Shader stage using this parameter name		
 		};
 
-	AWResourceDeclare(GfxShaderBinding_DX11, InstanceInfo, awconst::keResType_GfxShaderBinding)	
+	AWResourceDeclare(GfxShaderBinding_DX11, InstanceInfo, zenConst::keResType_GfxShaderBinding)	
 	public:												
 		virtual bool	ResourceInit();
 	};
@@ -34,7 +34,7 @@ namespace ERes
 			ID3D11InputLayout*			mpInputLayout;	//!< Contain DX object for vertex input remaping
 		};
 
-	AWResourceDeclare(GfxInputStream_DX11, InstanceInfo, awconst::keResType_GfxInputStream)
+	AWResourceDeclare(GfxInputStream_DX11, InstanceInfo, zenConst::keResType_GfxInputStream)
 	public:
 		virtual			~GfxInputStream_DX11();
 		virtual bool	ResourceInit();
@@ -54,7 +54,7 @@ namespace ERes
 			zenArrayStatic<zenArrayStatic<GfxTexture2DRef>>	maTextureRef;			//!< Per Shader stage texture input (Array sub Index = Slot)
 			zenArrayStatic<zenArrayStatic<GfxSamplerRef>>		maGfxSamplerRef;		//!< Per Shader stage texture input (Array sub Index = Slot)			
 		};	
-	AWResourceDeclare(GfxMeshStrip_DX11, InstanceInfo, awconst::keResType_GfxMeshStrip)	
+	AWResourceDeclare(GfxMeshStrip_DX11, InstanceInfo, zenConst::keResType_GfxMeshStrip)	
 	public:
 		virtual bool	ResourceInit();
 
@@ -83,7 +83,7 @@ namespace ERes
 		{
 			zenArrayStatic<GfxMeshStripRef>			maGfxMeshStripRef;			//!< Shader used for each shader stage			
 		};
-	AWResourceDeclare(GfxMesh_DX11, InstanceInfo, awconst::keResType_GfxMesh)
+	AWResourceDeclare(GfxMesh_DX11, InstanceInfo, zenConst::keResType_GfxMesh)
 	public:												
 		virtual bool	ResourceInit();
 

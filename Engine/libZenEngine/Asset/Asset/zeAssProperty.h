@@ -2,41 +2,20 @@
 #ifndef __LibZenEngine_Asset_Property_h__
 #define __LibZenEngine_Asset_Property_h__
 
-#if AW_ENGINETOOL
+#if ZEN_ENGINETOOL
 #include "Engine/ThirdParty/pugixml/src/pugixml.hpp"
 
 namespace zen { namespace zeAss
 {
-//! @note: When adding support for new parameter type in assets :
-//!			1-Add name here
-//!			2-Add matching ParameterDefinition class to support it, with same ending name
-//!
-
-//!	To use this macro, define 'AWAssetTypeExpand' to the content you want expanded with 
-//! each supported parameter name, and then undef it.
-#define AWAssetTypes	AWAssetTypeExpand(Bool)		\
-						AWAssetTypeExpand(Int)		\
-						AWAssetTypeExpand(Float)	\
-						AWAssetTypeExpand(Float2)	\
- 						AWAssetTypeExpand(Enum)		\
- 						AWAssetTypeExpand(File)		
-	
-// 							AWAssetTypeExpand(Int2)		\
-// 							AWAssetTypeExpand(Int3)		\
-// 							AWAssetTypeExpand(Int4)		\						
-
-// 							AWAssetTypeExpand(Float3)	\
-// 							AWAssetTypeExpand(Float4)	\
-// 							AWAssetTypeExpand(AssetRef)	
 
 //=================================================================================================
 // Common class declaration of all asset value definition
 //=================================================================================================
 #define AWPropertyDefDeclare(_PropertyDef_)																			\
-	ZENClassDeclare(_PropertyDef_, TPropertyDefBase)																	\
+	ZENClassDeclare(_PropertyDef_, TPropertyDefBase)																\
 	public:																											\
-		virtual PropertyDefBase::Value* Allocate()const{return zenNew(&sPoolAlloc)Value(*this);}						\
-		virtual void ValueToString(const PropertyDefBase::Value& _Value, char* _zBuffer, zenUInt _uSizebuffer)const;	\
+		virtual PropertyDefBase::Value* Allocate()const{return zenNew(&sPoolAlloc)Value(*this);}					\
+		virtual void ValueToString(const PropertyDefBase::Value& _Value, char* _zBuffer, zenUInt _uSizebuffer)const;\
 	protected:																										\
 		static zenMem::AllocatorPool	sPoolAlloc;													
 
@@ -46,25 +25,13 @@ class PropertyDefBase
 ZENClassDeclareNoParent(PropertyDefBase)
 public:
 //-----------------------------------------------------------------------------
-// Enum of resource types
-//-----------------------------------------------------------------------------
-	#define AWAssetTypeExpand(_TypeName_)	keType_##_TypeName_,
-	enum enumType
-	{
-		AWAssetTypes
-		keType__Count,
-		keType__Invalid
-	};
-	#undef AWAssetTypeExpand
-	
-//-----------------------------------------------------------------------------
 // Base class for properties value
 //-----------------------------------------------------------------------------
 	class Value
 	{	
 	ZENClassDeclareNoParent(Value)
 	public:		
-		inline void	ValueToString(char* _zBuffer, zenUInt _uSizebuffer)const 
+		ZENInline void	ValueToString(char* _zBuffer, zenUInt _uSizebuffer)const 
 		{ 
 			mParentDef.ValueToString( *this, _zBuffer, _uSizebuffer); 
 		}
@@ -92,34 +59,35 @@ public:
 							{ }
 	virtual 				~PropertyDefBase(){}
 
-	virtual	enumType		GetType()const=0;
+	virtual	zenConst::eAssetPropertyType		GetType()const=0;
 	virtual Value*			Allocate()const=0;
 	
 	virtual bool			ValueFromXml	(PropertyDefBase::Value& _Value, const pugi::xml_node& _Property)const=0;	
 	virtual void			ValueToString	(const PropertyDefBase::Value& _Value, char* _zBuffer, zenUInt _uSizebuffer)const=0;
 	virtual void			ValueToXml		(const PropertyDefBase::Value& _Value, pugi::xml_node& _ParamNode)const;	
 
-	inline const char*		GetTypeDesc		()const {return GetTypeDesc(GetType());}
+	ZENInline const char*		GetTypeDesc		()const {return GetTypeDesc(GetType());}
 
+	
 	const char*				mzName;
-	zenHash32			mhName;
+	zenHash32				mhName;
 	const char*				mzDisplayName;
 	const char*				mzDescription;
 	bool					mbShowInAssetDesc;
 #if AW_DEBUGINFOON
-	enumType				meType;
+	zenConst::eAssetPropertyType				meType;
 #endif
 
 //-----------------------------------------------------------------------------
 // Static methods
 //-----------------------------------------------------------------------------
-	static const char*					GetTypeDesc	(PropertyDefBase::enumType _ePropertyType);
-	static PropertyDefBase::enumType	GetType(zenHash32 _hPropertyName);
+	static const char*					GetTypeDesc	(zenConst::eAssetPropertyType _ePropertyType);
+	static zenConst::eAssetPropertyType	GetType(zenHash32 _hPropertyName);
 // 	static pugi::xml_node				ValueToXml	(const PropertyDefBase::Value& _Value, pugi::xml_node& _NodeParent )const;
 // 	static bool							ValueFromXml(PropertyDefBase::Value& _Value, pugi::xml_node& _NodeParameter )const;
 };
 
-template<PropertyDefBase::enumType TEType, class TValue>
+template<zenConst::eAssetPropertyType TEType, class TValue>
 class TPropertyDefBase : public PropertyDefBase
 {
 ZENClassDeclare(TPropertyDefBase, PropertyDefBase)
@@ -140,11 +108,11 @@ public:
 							meType = TEType;
 						#endif
 						}	
-	virtual	enumType	GetType			()const	{ return TEType; }		
+	virtual	zenConst::eAssetPropertyType	GetType			()const	{ return TEType; }		
 	TValue				mDefault;		//!< Default value assigned when none present		
 };
 
-class PropertyDefBool : public TPropertyDefBase<PropertyDefBase::keType_Bool, bool>
+class PropertyDefBool : public TPropertyDefBase<zenConst::keAssProp_Bool, bool>
 {
 AWPropertyDefDeclare(PropertyDefBool)
 public:
@@ -154,7 +122,20 @@ public:
 	virtual bool		ValueFromXml(PropertyDefBase::Value& _Value, const pugi::xml_node& _NodeProperty)const;
 };
 
-class PropertyDefInt : public TPropertyDefBase<PropertyDefBase::keType_Int, zenS32>
+class PropertyDefFile : public TPropertyDefBase<zenConst::keAssProp_File, zenString>
+{
+	AWPropertyDefDeclare(PropertyDefFile)
+public:
+	PropertyDefFile(const char* _zName, const char* _zDisplayName, const char* _zDescription, bool _bShowInAssetDesc, const char* _zDefault, const char* _ZFileExt="Any(*.*)|*.*")
+		: TPropertyDefBase(_zName, _zDisplayName, _zDescription, _bShowInAssetDesc, _zDefault)
+		, mzFileExt(_ZFileExt)
+	{}
+	virtual bool		ValueFromXml	(PropertyDefBase::Value& _Value, const pugi::xml_node& _Property)const;
+	const char*			mzFileExt;	// List of supported files extensions to display in file dialog
+};
+
+#if 0
+class PropertyDefInt : public TPropertyDefBase<zenConst::keAssProp_Int, zenS32>
 {
 AWPropertyDefDeclare(PropertyDefInt)
 public:
@@ -170,7 +151,7 @@ public:
 	int					miIncrement;	//!< Increment value used when using ticker component 	
 };
 
-class PropertyDefFloat : public TPropertyDefBase<PropertyDefBase::keType_Float, float>
+class PropertyDefFloat : public TPropertyDefBase<zenConst::keAssProp_Float, float>
 {
 AWPropertyDefDeclare(PropertyDefFloat)
 public:
@@ -186,7 +167,7 @@ public:
 	float				mfIncrement;	//!< Increment value used when using ticker component 
 };
 
-class PropertyDefEnum : public TPropertyDefBase<PropertyDefBase::keType_Enum, zenHash32>
+class PropertyDefEnum : public TPropertyDefBase<zenConst::keAssProp_Enum, zenHash32>
 {
 AWPropertyDefDeclare(PropertyDefEnum)
 public:
@@ -216,19 +197,7 @@ public:
 	zenArrayStatic<Entry>	maEntry;
 };
 
-class PropertyDefFile : public TPropertyDefBase<PropertyDefBase::keType_File, zenString>
-{
-AWPropertyDefDeclare(PropertyDefFile)
-public:
-						PropertyDefFile(const char* _zName, const char* _zDisplayName, const char* _zDescription, bool _bShowInAssetDesc, const char* _zDefault, const char* _ZFileExt="Any(*.*)|*.*")
-						: TPropertyDefBase(_zName, _zDisplayName, _zDescription, _bShowInAssetDesc, _zDefault)
-						, mzFileExt(_ZFileExt)
-						{}
-	virtual bool		ValueFromXml	(PropertyDefBase::Value& _Value, const pugi::xml_node& _Property)const;
-	const char*			mzFileExt;	// List of supported files extensions to display in file dialog
-};
-
-class PropertyDefFloat2 : public TPropertyDefBase<PropertyDefBase::keType_Float2, zenVec2F>
+class PropertyDefFloat2 : public TPropertyDefBase<zenConst::keAssProp_Float2, zenVec2F>
 {
 AWPropertyDefDeclare(PropertyDefFloat2)
 public:
@@ -244,7 +213,7 @@ public:
 	zenVec2F			mvfMax;			//!< Maximum acceptable value
 	zenVec2F			mvfIncrement;	//!< Increment value used when using ticker component 
 };
-
+#endif // 0
 
 /*
 class PropertyDefInt2 : public PropertyDefBase
@@ -331,29 +300,32 @@ public:
 	float		mfIncrement;	//!< Increment value used when using ticker component 
 };*/
 
-union ValuePointer
+class ValuePointer
 {
 public:
 											ValuePointer():mpValueBase(NULL)			{											}
 											ValuePointer(PropertyDefBase::Value* _pValue):mpValueBase(_pValue){						}
 	ValuePointer&							operator=(PropertyDefBase::Value* _pValue)	{ mpValueBase = _pValue; return *this;		}
-	PropertyDefBase::enumType				GetType() const								{ return mpValueBase->mParentDef.GetType(); }
+	zenConst::eAssetPropertyType			GetType() const								{ return mpValueBase->mParentDef.GetType(); }
 	void									Set(PropertyDefBase::Value* _pValue)		{ mpValueBase = _pValue;					}
 	PropertyDefBase::Value*					GetBase()									{ return mpValueBase;						}
 	const PropertyDefBase::Value*			GetBase()const								{ return mpValueBase;						}
 	
-#define AWAssetTypeExpand(_TypeName_)																											\
-	bool									Is##_TypeName_##() const			{return GetType()==PropertyDefBase::keType_##_TypeName_##;}			\
-	PropertyDef##_TypeName_##::Value*		Get##_TypeName_##()					{ZENAssert(Is##_TypeName_##()); return mpValue##_TypeName_##;}	\
-	const PropertyDef##_TypeName_##::Value*	Get##_TypeName_##()const			{ZENAssert(Is##_TypeName_##()); return mpValue##_TypeName_##;}
-	AWAssetTypes
-#undef	AWAssetTypeExpand
+#define ZEN_ASSETPROPERTIES_EXPAND_CODE(_TypeName_)																								\
+	bool									Is##_TypeName_() const			{return GetType()==zenConst::keAssProp_##_TypeName_;}		\
+	PropertyDef##_TypeName_##::Value*		Get##_TypeName_()					{ZENAssert(Is##_TypeName_##()); return mpValue##_TypeName_;}	\
+	const PropertyDef##_TypeName_##::Value*	Get##_TypeName_()const			{ZENAssert(Is##_TypeName_##()); return mpValue##_TypeName_;}
+	ZEN_ASSETPROPERTIES_EXPAND
+#undef	ZEN_ASSETPROPERTIES_EXPAND_CODE
 
 protected:
-	PropertyDefBase::Value*	mpValueBase;
-	#define AWAssetTypeExpand(_TypeName_) PropertyDef##_TypeName_::Value* mpValue##_TypeName_;
-	AWAssetTypes
-	#undef	AWAssetTypeExpand
+	#define ZEN_ASSETPROPERTIES_EXPAND_CODE(_TypeName_) PropertyDef##_TypeName_::Value* mpValue##_TypeName_;
+	union
+	{
+		PropertyDefBase::Value*	mpValueBase;	
+		ZEN_ASSETPROPERTIES_EXPAND	
+	};
+	#undef	ZEN_ASSETPROPERTIES_EXPAND_CODE
 };
 
 typedef const zenArrayStatic<const PropertyDefBase*> PropertyArray;

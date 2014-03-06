@@ -4,21 +4,21 @@
 
 namespace zen { namespace zenRes {	
 	
-	AWClassResourceRefDeclare(GfxVertex, awconst::keResType_GfxVertex)
+	AWClassResourceRefDeclare(GfxVertex, zenConst::keResType_GfxVertex)
 	public:
 		struct Element
 		{
 		public:
 			Element(){};
-			Element(awconst::eShaderElementType _eType, zenU8 _ElementCount, awconst::eShaderSemantic _eSemantic, zenU8 _Offset )
+			Element(zenConst::eShaderElementType _eType, zenU8 _ElementCount, zenConst::eShaderSemantic _eSemantic, zenU8 _Offset )
 			: meType(_eType)
 			, meSemantic(_eSemantic)
 			, muVectorSize(_ElementCount)
 			, muOffset(_Offset)
 			{}
 
-			awconst::eShaderElementType	meType;
-			awconst::eShaderSemantic	meSemantic;
+			zenConst::eShaderElementType	meType;
+			zenConst::eShaderSemantic	meSemantic;
 			zenU8						muVectorSize;
 			zenU8						muOffset;		
 		};
@@ -44,23 +44,23 @@ namespace zen { namespace zenRes {
 		static GfxVertex		Create(const zenArrayBase<GfxVertex::Stream>& _aStreams, zenU32 _uCreationFlags);
 	};
 
-	AWClassResourceRefDeclare(GfxIndex, awconst::keResType_GfxIndex)
+	AWClassResourceRefDeclare(GfxIndex, zenConst::keResType_GfxIndex)
 	public:		
 		zenU8*					Lock();
 		void					Unlock();
 
-		static GfxIndex			Create(const zenArrayBase<zenU16>& _Indices, awconst::ePrimitiveType _ePrimitiveType);
-		static GfxIndex			Create(const zenArrayBase<zenU32>& _Indices, awconst::ePrimitiveType _ePrimitiveType);
+		static GfxIndex			Create(const zenArrayBase<zenU16>& _Indices, zenConst::ePrimitiveType _ePrimitiveType);
+		static GfxIndex			Create(const zenArrayBase<zenU32>& _Indices, zenConst::ePrimitiveType _ePrimitiveType);
 	};
 
-	AWClassResourceRefDeclare(GfxTexture2D, awconst::keResType_GfxTexture2D)
+	AWClassResourceRefDeclare(GfxTexture2D, zenConst::keResType_GfxTexture2D)
 	public:		
 		const zenVec2U16&		GetDim();
-		static GfxTexture2D		Create(awconst::eTextureFormat _eFormat, zenVec2U16 _vDim, awFlagResTexCreate _CreationFlags=awFlagResTexCreate());		
-		static GfxTexture2D		Create(awconst::eTextureFormat _eFormat, zenVec2U16 _vDim, const zenArrayBase<zenU8>& _aRawData, awFlagResTexCreate _CreationFlags=awFlagResTexCreate());
+		static GfxTexture2D		Create(zenConst::eTextureFormat _eFormat, zenVec2U16 _vDim, zenFlagResTexCreate _CreationFlags=zenFlagResTexCreate());		
+		static GfxTexture2D		Create(zenConst::eTextureFormat _eFormat, zenVec2U16 _vDim, const zenArrayBase<zenU8>& _aRawData, zenFlagResTexCreate _CreationFlags=zenFlagResTexCreate());
 	};
 
-	AWClassResourceRefDeclare(GfxRenderTarget, awconst::keResType_GfxRenderTarget)
+	AWClassResourceRefDeclare(GfxRenderTarget, zenConst::keResType_GfxRenderTarget)
 	public:		
 		bool					IsDepth();
 		const zenVec2U16&		GetDim();
@@ -69,7 +69,7 @@ namespace zen { namespace zenRes {
 		void					Clear(float _fDepth=1, zenU8 _uStencil=0, bool _bClearDepth=true, bool _bClearStencil=false);
 		
 
-		static GfxRenderTarget	Create(awconst::eTextureFormat _eFormat, zenVec2U16 _vDim, bool _bSrgb=true);
+		static GfxRenderTarget	Create(zenConst::eTextureFormat _eFormat, zenVec2U16 _vDim, bool _bSrgb=true);
 	};
 
 }} // namespace zen, zenRes

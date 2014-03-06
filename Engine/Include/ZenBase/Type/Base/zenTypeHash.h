@@ -27,7 +27,7 @@ namespace zen { namespace zenType
 	//=================================================================================================	
 	struct ConstCharWrapper
 	{ 
-		inline ConstCharWrapper(const char* _zStr) 
+		ZENInline ConstCharWrapper(const char* _zStr) 
 		: mzStr(_zStr){} 
 		const char* mzStr;
 	};		
@@ -60,11 +60,11 @@ namespace zen { namespace zenType
 		//=================================================================================================	
 		// Comparators and assignation
 		//=================================================================================================	
-		inline bool					operator==(const zenHash32& _hCmpr);
-		inline bool					operator!=(const zenHash32& _hCmpr);
-		inline zenHash32&			operator=(const zenHash32& _hCopy);
-		inline zenHash32&			operator=(const zenU32& _uCopy);
-		inline operator const		zenU32&()const;
+		ZENInline bool					operator==(const zenHash32& _hCmpr);
+		ZENInline bool					operator!=(const zenHash32& _hCmpr);
+		ZENInline zenHash32&			operator=(const zenHash32& _hCopy);
+		ZENInline zenHash32&			operator=(const zenU32& _uCopy);
+		ZENInline operator const		zenU32&()const;
 
 		//=================================================================================================	
 		// Constructors
@@ -123,11 +123,11 @@ namespace zen { namespace zenType
 		//=================================================================================================	
 		// Comparators and assignation
 		//=================================================================================================	
-		inline bool					operator==(const zenHash64& _hCmpr);
-		inline bool					operator!=(const zenHash64& _hCmpr);
-		inline zenHash64&			operator=(const zenHash64& _hCopy);
-		inline zenHash64&			operator=(const zenU64& _uCopy);
-		inline						operator const zenU64&()const;
+		ZENInline bool					operator==(const zenHash64& _hCmpr);
+		ZENInline bool					operator!=(const zenHash64& _hCmpr);
+		ZENInline zenHash64&			operator=(const zenHash64& _hCopy);
+		ZENInline zenHash64&			operator=(const zenU64& _uCopy);
+		ZENInline						operator const zenU64&()const;
 
 		//=================================================================================================	
 		// Constructors
@@ -161,7 +161,7 @@ namespace zen { namespace zenType
 	template<class THashType>
 	struct zenStringHash
 	{ 
-		inline zenStringHash(const char* _zString);
+		ZENInline zenStringHash(const char* _zString);
 		//! @todo: Remove this function
 		static zenUInt Find( THashType _HashName, const zenStringHash* _pFirst, zenUInt _uCount );
 		const char* mzName; 

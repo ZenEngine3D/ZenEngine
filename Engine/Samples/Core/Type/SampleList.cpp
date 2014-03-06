@@ -34,9 +34,9 @@ public:
 //==================================================================================================
 void SampleList1x()
 {	
-	CMgr::Log.Log(CLog::keLog_Game, awconst::kzLineA40);
+	CMgr::Log.Log(CLog::keLog_Game, zenConst::kzLineA40);
 	CMgr::Log.Log(CLog::keLog_Game, " zenList1x (single linked list) Sorting");
-	CMgr::Log.Log(CLog::keLog_Game, awconst::kzLineA40);
+	CMgr::Log.Log(CLog::keLog_Game, zenConst::kzLineA40);
 
 	//-----------------------------------------------------
 	// Create 5 items with increasing value
@@ -100,9 +100,9 @@ void SampleList1x()
 //==================================================================================================
 void SampleList2x()
 {	
-	CMgr::Log.Log(CLog::keLog_Game, awconst::kzLineA40);
+	CMgr::Log.Log(CLog::keLog_Game, zenConst::kzLineA40);
 	CMgr::Log.Log(CLog::keLog_Game, " zenList2x (double linked list) Sorting");
-	CMgr::Log.Log(CLog::keLog_Game, awconst::kzLineA40);
+	CMgr::Log.Log(CLog::keLog_Game, zenConst::kzLineA40);
 
 	//-----------------------------------------------------
 	// Create 5 items with increasing value

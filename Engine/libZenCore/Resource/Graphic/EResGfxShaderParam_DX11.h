@@ -6,7 +6,7 @@ namespace ERes
 {
 class GfxShaderParamDef_DX11 : public Resource
 {
-AWResourceDeclare(GfxShaderParamDef_DX11, EExp::SerialGfxShaderParamDef_DX11, awconst::keResType_GfxShaderParamDef)
+AWResourceDeclare(GfxShaderParamDef_DX11, EExp::SerialGfxShaderParamDef_DX11, zenConst::keResType_GfxShaderParamDef)
 public:
 	virtual bool				ResourceInit();
 };
@@ -18,7 +18,7 @@ class GfxShaderParam_DX11 : public Resource
 		GfxShaderParamDefRef		mpParentShaderParamDef;
 		ID3D11Buffer*				mpBufferBinding;
 	};
-AWResourceDeclare(GfxShaderParam_DX11, InstanceInfo, awconst::keResType_GfxShaderParam)
+AWResourceDeclare(GfxShaderParam_DX11, InstanceInfo, zenConst::keResType_GfxShaderParam)
 public:
 	virtual						~GfxShaderParam_DX11();
 	virtual bool				ResourceInit();

@@ -5,18 +5,18 @@ namespace zen { namespace zenRes {
 //=================================================================================================
 // CREATES
 //=================================================================================================
-GfxTexture2D GfxTexture2D::Create(awconst::eTextureFormat _eFormat, zenVec2U16 _vDim, awFlagResTexCreate _CreationFlags)
+GfxTexture2D GfxTexture2D::Create(zenConst::eTextureFormat _eFormat, zenVec2U16 _vDim, zenFlagResTexCreate _CreationFlags)
 {
 	static zenArrayStatic<zenU8> aEmpty(zenUInt(0));
 	return EExp::CreateGfxTexture2D(_eFormat, _CreationFlags, _vDim, aEmpty);
 }
 
-GfxTexture2D GfxTexture2D::Create(awconst::eTextureFormat _eFormat, zenVec2U16 _vDim, const zenArrayBase<zenU8>& _aRawData, awFlagResTexCreate _CreationFlags)
+GfxTexture2D GfxTexture2D::Create(zenConst::eTextureFormat _eFormat, zenVec2U16 _vDim, const zenArrayBase<zenU8>& _aRawData, zenFlagResTexCreate _CreationFlags)
 {
 	return EExp::CreateGfxTexture2D(_eFormat, _CreationFlags, _vDim, _aRawData);
 }
 
-GfxRenderTarget GfxRenderTarget::Create(awconst::eTextureFormat _eFormat, zenVec2U16 _vDim, bool _bSrgb)
+GfxRenderTarget GfxRenderTarget::Create(zenConst::eTextureFormat _eFormat, zenVec2U16 _vDim, bool _bSrgb)
 {
 	return EExp::CreateGfxRenderTarget(_eFormat, _vDim, _bSrgb);
 }
@@ -26,12 +26,12 @@ GfxVertex GfxVertex::Create(const zenArrayBase<GfxVertex::Stream>& _aStreams, ze
 	return EExp::CreateGfxVertex(_aStreams, _uCreationFlags);
 }
 
-GfxIndex GfxIndex::Create(const zenArrayBase<zenU16>& _Indices, awconst::ePrimitiveType _ePrimitiveType)
+GfxIndex GfxIndex::Create(const zenArrayBase<zenU16>& _Indices, zenConst::ePrimitiveType _ePrimitiveType)
 {
 	return EExp::CreateGfxIndexBuffer(_Indices, _ePrimitiveType);
 }
 
-GfxIndex GfxIndex::Create(const zenArrayBase<zenU32>& _Indices, awconst::ePrimitiveType _ePrimitiveType)
+GfxIndex GfxIndex::Create(const zenArrayBase<zenU32>& _Indices, zenConst::ePrimitiveType _ePrimitiveType)
 {
 	return EExp::CreateGfxIndexBuffer(_Indices, _ePrimitiveType);
 }

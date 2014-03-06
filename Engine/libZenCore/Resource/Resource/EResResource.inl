@@ -7,11 +7,11 @@
 #define AWResourceDeclareParent(_Class_, _ClassParent_, _ClassInstance_, _ResourceType_)											\
 	ZENClassDeclare(_Class_, _ClassParent_)																							\
 public:																																\
-	inline const _ClassInstance_&	Get()const									{	return mInstanceInfo;};							\
-	inline _ClassInstance_&	Get()												{	return mInstanceInfo;};							\
+	ZENInline const _ClassInstance_&	Get()const									{	return mInstanceInfo;};							\
+	ZENInline _ClassInstance_&	Get()												{	return mInstanceInfo;};							\
 	static _Class_*					Create(EExp::ExportInfoBase& _ExportInfo)	{	_Class_* pNewRes = zenNewDefault _Class_();		\
 																					return pNewRes->ResourceCreate(pNewRes->mInstanceInfo, _ExportInfo) ? pNewRes : NULL; }\
-	static awconst::eResType		GetResourceType()							{	return _ResourceType_; }						\
+	static zenConst::eResType		GetResourceType()							{	return _ResourceType_; }						\
 protected:																															\
 	_ClassInstance_					mInstanceInfo;																					\
 private:																															\
