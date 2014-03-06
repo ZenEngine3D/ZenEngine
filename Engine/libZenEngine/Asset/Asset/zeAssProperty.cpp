@@ -1,29 +1,29 @@
 #include "libZenEngine.h"
-#if AW_ENGINETOOL
+#if ZEN_ENGINETOOL
 
 namespace zen { namespace zeAss
 {
 
-#define AWAssetTypeExpand(_TypeName_) zenMem::AllocatorPool PropertyDef##_TypeName_##::sPoolAlloc( "PropertyDef Pool", sizeof(PropertyDef##_TypeName_##::Value), 100, 100);
-AWAssetTypes
-#undef	AWAssetTypeExpand
+#define ZEN_ASSETPROPERTIES_EXPAND_CODE(_TypeName_) zenMem::AllocatorPool PropertyDef##_TypeName_##::sPoolAlloc( "PropertyDef Pool", sizeof(PropertyDef##_TypeName_##::Value), 100, 100);
+ZEN_ASSETPROPERTIES_EXPAND
+#undef	ZEN_ASSETPROPERTIES_EXPAND_CODE
 
 static zenStringHash32 sTypeDescription[]={
-	#define AWAssetTypeExpand(_TypeName_)	zenStringHash32(#_TypeName_),
-	AWAssetTypes	
-	#undef AWAssetTypeExpand
+	#define ZEN_ASSETPROPERTIES_EXPAND_CODE(_TypeName_)	zenStringHash32(#_TypeName_),
+	ZEN_ASSETPROPERTIES_EXPAND	
+	#undef ZEN_ASSETPROPERTIES_EXPAND_CODE
 };
 
 //=================================================================================================
 //! @brief		zenString representation of all PropertyDef type enum
-//! @details	Constructed automatically from 'AWAssetTypes' define
+//! @details	Constructed automatically from 'ZEN_ASSETPROPERTIES_EXPAND' define
 //-------------------------------------------------------------------------------------------------
 //! @param		_ePropertyType	- Property we want name from
 //! @return						- zenString representation of the enum value
 //=================================================================================================
-const char* PropertyDefBase::GetTypeDesc(PropertyDefBase::enumType _ePropertyType)
+const char* PropertyDefBase::GetTypeDesc(zenConst::eAssetPropertyType _ePropertyType)
 {	
-	ZENAssert(_ePropertyType<keType__Count);
+	ZENAssert(_ePropertyType<zenConst::keAssProp__Count);
 	return sTypeDescription[_ePropertyType].mzName;
 }
 
@@ -33,10 +33,10 @@ const char* PropertyDefBase::GetTypeDesc(PropertyDefBase::enumType _ePropertyTyp
 //-------------------------------------------------------------------------------------------------
 //! @param		_hPropertyName	- Property name we want enum value from
 //=================================================================================================
-PropertyDefBase::enumType PropertyDefBase::GetType(zenHash32 _hPropertyName)
+zenConst::eAssetPropertyType PropertyDefBase::GetType(zenHash32 _hPropertyName)
 {
 	zenUInt uIndex = zenStringHash32::Find(_hPropertyName, sTypeDescription, ZENArrayCount(sTypeDescription));
-	return uIndex < keType__Count ? static_cast<PropertyDefBase::enumType>(uIndex) : keType__Invalid;
+	return uIndex < zenConst::keAssProp__Count ? static_cast<zenConst::eAssetPropertyType>(uIndex) : zenConst::keAssProp__Invalid;
 }
 
 //=================================================================================================
@@ -63,7 +63,7 @@ pugi::xml_node PropertyDefBase::Value::ValueToXml(pugi::xml_node& _NodeParent)co
 bool PropertyDefBase::Value::ValueFromXml(const pugi::xml_node& _NodeProperty)
 {
 	const char* zPropType(_NodeProperty.attribute(kzXmlName_PropAtr_Type).as_string());
-	PropertyDefBase::enumType ePropType(PropertyDefBase::GetType(zenHash32(zPropType)));
+	zenConst::eAssetPropertyType ePropType(PropertyDefBase::GetType(zenHash32(zPropType)));
 	if( mParentDef.GetType() == ePropType )
 		return mParentDef.ValueFromXml( *this, _NodeProperty );
 
@@ -97,7 +97,7 @@ void PropertyDefBool::ValueToString(const PropertyDefBase::Value& _Value, char* 
 { 
 	ZENAssert(_Value.mParentDef.GetType() == GetType());
 	const Value& value = static_cast<const Value&>(_Value);
-	sprintf(_zBuffer, "%s", awconst::kzFalseTrue[value.mValue]);
+	sprintf(_zBuffer, "%s", zenConst::kzFalseTrue[value.mValue]);
 }
 
 //=================================================================================================
@@ -119,6 +119,41 @@ bool PropertyDefBool::ValueFromXml(PropertyDefBase::Value& _Value, const pugi::x
 	return false;
 }
 
+//=================================================================================================
+//! @brief		Output a string representation of the value using this PropertyDefinition
+//! @details	
+//-------------------------------------------------------------------------------------------------
+//! @param		_Value		- Value to create a string for (type must be same as this parameterdef)
+//! @param		_zBuffer	- Buffer to store string in (instead of allocation a string every time)
+//! @param		_uSizebuffer- Buffer size
+//=================================================================================================
+void PropertyDefFile::ValueToString(const PropertyDefBase::Value& _Value, char* _zBuffer, zenUInt _uSizebuffer) const 
+{ 
+	ZENAssert(_Value.mParentDef.GetType() == GetType());
+	const Value& value = static_cast<const Value&>(_Value);
+	sprintf(_zBuffer, "%s", (const char*)value.mValue);
+}
+
+//=================================================================================================
+//! @brief		Load a property value from an xml node
+//! @details	Looks for attributes specific to property type, and load data accordingly
+//-------------------------------------------------------------------------------------------------
+//! @return 	- True if successful
+//=================================================================================================
+bool PropertyDefFile::ValueFromXml(PropertyDefBase::Value& _Value, const pugi::xml_node& _NodeProperty)const
+{
+	ZENAssert(_Value.mParentDef.GetType() == GetType());
+	Value& value					= static_cast<Value&>(_Value);
+	pugi::xml_attribute attrValue	= _NodeProperty.attribute("Value");
+	if( attrValue )
+	{		
+		value.mValue = attrValue.as_string();
+		return true;
+	}
+	return false;
+}
+
+#if 0
 //=================================================================================================
 //! @brief		Output a string representation of the value using this PropertyDefinition
 //! @details	
@@ -225,39 +260,9 @@ bool PropertyDefEnum::ValueFromXml(PropertyDefBase::Value& _Value, const pugi::x
 	return false;
 }
 
-//=================================================================================================
-//! @brief		Output a string representation of the value using this PropertyDefinition
-//! @details	
-//-------------------------------------------------------------------------------------------------
-//! @param		_Value		- Value to create a string for (type must be same as this parameterdef)
-//! @param		_zBuffer	- Buffer to store string in (instead of allocation a string every time)
-//! @param		_uSizebuffer- Buffer size
-//=================================================================================================
-void PropertyDefFile::ValueToString(const PropertyDefBase::Value& _Value, char* _zBuffer, zenUInt _uSizebuffer) const 
-{ 
-	ZENAssert(_Value.mParentDef.GetType() == GetType());
-	const Value& value = static_cast<const Value&>(_Value);
-	sprintf(_zBuffer, "%s", (const char*)value.mValue);
-}
 
-//=================================================================================================
-//! @brief		Load a property value from an xml node
-//! @details	Looks for attributes specific to property type, and load data accordingly
-//-------------------------------------------------------------------------------------------------
-//! @return 	- True if successful
-//=================================================================================================
-bool PropertyDefFile::ValueFromXml(PropertyDefBase::Value& _Value, const pugi::xml_node& _NodeProperty)const
-{
-	ZENAssert(_Value.mParentDef.GetType() == GetType());
-	Value& value					= static_cast<Value&>(_Value);
-	pugi::xml_attribute attrValue	= _NodeProperty.attribute("Value");
-	if( attrValue )
-	{		
-		value.mValue = attrValue.as_string();
-		return true;
-	}
-	return false;
-}
+
+
 
 //=================================================================================================
 //! @brief		Output a string representation of the value using this PropertyDefinition
@@ -303,6 +308,8 @@ bool PropertyDefFloat2::ValueFromXml(PropertyDefBase::Value& _Value, const pugi:
 	return false;
 }
 
+#endif
+
 }} //namespace zen { namespace zeAss
 
-#endif //AW_ENGINETOOL
+#endif //ZEN_ENGINETOOL

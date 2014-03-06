@@ -2,7 +2,7 @@
 #ifndef __LibZenEngine_Asset_Gfx_Mesh_h__
 #define __LibZenEngine_Asset_Gfx_Mesh_h__
 
-#if AW_ENGINETOOL
+#if ZEN_ENGINETOOL
 
 namespace zen { namespace zeAss
 {
@@ -10,9 +10,10 @@ namespace zen { namespace zeAss
 	{
 	ZENClassDeclare(GfxMesh, AssetItem)
 	public:
-		virtual AssetItem::enumType		GetType()const{return keType_Mesh;}
-		virtual PropertyArray&			GetPropertyDef() const;
-		virtual zenUInt					GetPropertyDefIndex(zenHash32 _hPropertyName)const;
+		virtual zenConst::eAssetType			GetType()const{return zenConst::keAssType_Mesh;}
+		virtual PropertyArray&					GetPropertyDef() const;
+		virtual zenUInt							GetPropertyDefIndex(zenHash32 _hPropertyName)const;
+		virtual const zenAss::PropertyArray&	GetProperties()const{ static zenAss::PropertyArray test(0); return test;};
 	protected:
 		static zenArrayStatic<zenU32>	saIcon;		//!< All mesh share the same icon
 	};

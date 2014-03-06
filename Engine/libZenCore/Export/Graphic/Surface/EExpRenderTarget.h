@@ -10,12 +10,12 @@ namespace EExp
 	public:
 		struct ExportInfo : public EExp::ExportInfoBase
 		{				
-			awconst::eTextureFormat	meFormat;
+			zenConst::eTextureFormat	meFormat;
 			zenVec2U16				mvDim;
 			bool					mbSRGB;
 		};
 
-		awconst::eTextureFormat	meFormat;	
+		zenConst::eTextureFormat	meFormat;	
 		zenVec2U16				mvDim;
 		bool					mbSRGB;
 
@@ -26,7 +26,7 @@ namespace EExp
 		virtual bool	ExportEnd();
 	};
 
-	zenResID CreateGfxRenderTarget(awconst::eTextureFormat _eFormat, zenVec2U16 _vDim, bool _bSrgb=true);
+	zenResID CreateGfxRenderTarget(zenConst::eTextureFormat _eFormat, zenVec2U16 _vDim, bool _bSrgb=true);
 }
 
 #endif

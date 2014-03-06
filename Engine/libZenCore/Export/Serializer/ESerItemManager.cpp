@@ -80,15 +80,15 @@ SerialItem* ManagerSerialItem::GetItemBaseAnySource(const zenResID _ResID)
 	EExp::SerialItem* pSerialItem(NULL);
 	zenResID anySourceResID(_ResID);
 
-	anySourceResID.SetSource(awconst::keResSource_Loaded);
+	anySourceResID.SetSource(zenConst::keResSource_Loaded);
 	if( mdSerialItems.Get(_ResID.HashID(), pSerialItem) )	
 		return pSerialItem;
 
-	anySourceResID.SetSource(awconst::keResSource_Runtime);	
+	anySourceResID.SetSource(zenConst::keResSource_Runtime);	
 	if( mdSerialItems.Get(_ResID.HashID(), pSerialItem) )	
 		return pSerialItem;
 	
-	anySourceResID.SetSource(awconst::keResSource_Offline);	
+	anySourceResID.SetSource(zenConst::keResSource_Offline);	
 	if( mdSerialItems.Get(_ResID.HashID(), pSerialItem) )	
 		return pSerialItem;
 		

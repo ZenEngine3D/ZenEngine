@@ -3,7 +3,7 @@
 #define __zenCore_Const_Resource_h__
 
 namespace zen { 
-	namespace awconst 
+	namespace zenConst 
 	{
 		enum eResSource
 		{
@@ -209,14 +209,14 @@ namespace zen {
 
 	namespace zenType
 	{
-		typedef zenFlag<awconst::eResType,awconst::keResType__Count, zenU64>	awFlagResType;
-		typedef zenFlag<awconst::eResType,awconst::keResPlatform__Count>		awFlagResPlatform;
-		typedef zenFlag<awconst::eTextureCreate,awconst::keTexCreate__Count>	awFlagResTexCreate;
+		typedef zenFlag<zenConst::eResType,zenConst::keResType__Count, zenU64>	zenFlagResType;
+		typedef zenFlag<zenConst::eResType,zenConst::keResPlatform__Count>		zenFlagResPlatform;
+		typedef zenFlag<zenConst::eTextureCreate,zenConst::keTexCreate__Count>	zenFlagResTexCreate;
 	}
 
-	namespace awconst
+	namespace zenConst
 	{
-		const awFlagResType kFlagResShaders = awFlagResType(keResType_GfxShaderPixel, keResType_GfxShaderVertex);
+		const zenFlagResType kFlagResShaders = zenFlagResType(keResType_GfxShaderPixel, keResType_GfxShaderVertex);
 	}
 
 

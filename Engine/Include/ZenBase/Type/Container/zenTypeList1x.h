@@ -17,7 +17,7 @@ ZENClassDeclareNoParent(zenList1xNode)
 public:
 						zenList1xNode	():mpLstNext(NULL){};
 						~zenList1xNode	(){};
-inline  zenList1xNode*	LstNext			();
+ZENInline  zenList1xNode*	LstNext			();
 
 protected:
 		zenList1xNode*	mpLstNext;	//!< Next item in the list

@@ -2,7 +2,7 @@
 #ifndef __LibZenEngine_Asset_Package_h__
 #define __LibZenEngine_Asset_Package_h__
 
-#if AW_ENGINETOOL
+#if ZEN_ENGINETOOL
 namespace zen { namespace zeAss
 {
 	class Package
@@ -13,14 +13,14 @@ namespace zen { namespace zeAss
 		virtual										~Package		();
 		
 		bool										Save			();
-		inline zenHash32							GetID			(){return mID;}
-		inline const zenArrayStatic<zenString>&		GetGroupAndName	(){return maGroup;}
+		ZENInline zenHash32							GetID			(){return mID;}
+		ZENInline const zenArrayStatic<zenString>&		GetGroupAndName	(){return maGroup;}
 		
-		inline const zenString&						GetName			(){return *maGroup.Last();}		
+		ZENInline const zenString&						GetName			(){return *maGroup.Last();}		
 //		bool										AssetAdd		(AssetItem* _pAsset);
 //		void										AssetRemove		(AssetItem* _pAsset);
-		AssetItem*									AssetGet		(AssetItem::enumType _eType, zenHash64 _hAssetName);
-		inline zenMap<AssetItem*>::Key64&			AssetGet		(AssetItem::enumType _eType){return madAssetPerType[_eType];}
+		AssetItem*									AssetGet		(zenConst::eAssetType _eType, zenHash64 _hAssetName);
+		ZENInline zenMap<AssetItem*>::Key64&			AssetGet		(zenConst::eAssetType _eType){return madAssetPerType[_eType];}
 	
 	protected:			
 		bool										Load			(const CFil::Filename& _Filename, zenMap<AssetItem*>::Key64& _dAllAsset);

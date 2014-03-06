@@ -7,12 +7,12 @@ bool SerialGfxVertex_DX11::ExportWork(bool _bIsTHRTask)
 {
 	ExportInfo* pExportInfo = static_cast<ExportInfo*>(mpExportInfo);
 	zenUInt uSemanticIndex[]	= {	0,0,0,0,0,0,0,0 };
-	const DXGI_FORMAT eFormats[awconst::keShaderElemType__Count][4]= {
+	const DXGI_FORMAT eFormats[zenConst::keShaderElemType__Count][4]= {
 		{DXGI_FORMAT_R32_FLOAT,	DXGI_FORMAT_R32G32_FLOAT,	DXGI_FORMAT_R32G32B32_FLOAT,	DXGI_FORMAT_R32G32B32A32_FLOAT},
 		{DXGI_FORMAT_R32_SINT,	DXGI_FORMAT_R32G32_SINT,	DXGI_FORMAT_R32G32B32_SINT,		DXGI_FORMAT_R32G32B32A32_SINT},
 		{DXGI_FORMAT_R32_UINT,	DXGI_FORMAT_R32G32_UINT,	DXGI_FORMAT_R32G32B32_UINT,		DXGI_FORMAT_R32G32B32A32_UINT}};	
 	
-	ZENStaticAssert( ZENArrayCount(uSemanticIndex)==awconst::keShaderSemantic__Count );
+	ZENStaticAssert( ZENArrayCount(uSemanticIndex)==zenConst::keShaderSemantic__Count );
 	
 	zenU8 uElementTotal(0);
 	zenU8 uElementCur(0);

@@ -37,7 +37,7 @@ namespace CFil
 		const wchar_t*					GetExt()const;
 		void							SplitFolder(zenArrayDynamic<zenArrayStatic<wchar_t>>& _aFolder)const;
 	protected:	
-		inline void						FindOffsets();
+		ZENInline void						FindOffsets();
 		mutable zenArrayDynamic<wchar_t>	mzFilename;			//!< Contains filename string, +2characters to handle no offset for some filename component (ext, parentdir, ...)
 		zenU16								muOffsetName;		//!< Offset to filename,extension
 		zenU16								muOffsetParentPath;	//!< Offset to parent folder, filename, extension
@@ -71,10 +71,10 @@ namespace CFil
 		};
 								FileInfo();
 		const Filename&			GetFilename()const	{return mFilename;}
-		inline bool				IsDir()const		{return (muFlags&keFileFlag_Dir)!=0; }
-		inline bool				IsFile()const		{return (muFlags&keFileFlag_File)!=0; }
-		inline zenS64			GetFileSize()const	{return miFileSize;}
-		inline zenS64			GetFilePos()const	{return miFilePos;}
+		ZENInline bool				IsDir()const		{return (muFlags&keFileFlag_Dir)!=0; }
+		ZENInline bool				IsFile()const		{return (muFlags&keFileFlag_File)!=0; }
+		ZENInline zenS64			GetFileSize()const	{return miFileSize;}
+		ZENInline zenS64			GetFilePos()const	{return miFilePos;}
 		bool					IsEOF()const;
 
 		void					Close();

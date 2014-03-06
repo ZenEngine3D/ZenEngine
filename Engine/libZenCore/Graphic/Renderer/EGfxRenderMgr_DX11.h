@@ -30,11 +30,11 @@ public:
 	
 	ID3D11Device*			DX11GetDevice(){return mDX11pDevice;}
 	ID3D11DeviceContext*	DX11GetDeviceContext(){return mDX11pContextImmediate;}
-	DXGI_FORMAT				AWFormatToNative( awconst::eTextureFormat _eTexFormat )const { return meFormatConversion[_eTexFormat]; }
+	DXGI_FORMAT				AWFormatToNative( zenConst::eTextureFormat _eTexFormat )const { return meFormatConversion[_eTexFormat]; }
 	void					UnbindTextures();
 protected:
 	zenU16					muPerStageTextureCount[EExp::keShaderStage__Count];
-	DXGI_FORMAT				meFormatConversion[awconst::keTexFormat__Count];
+	DXGI_FORMAT				meFormatConversion[zenConst::keTexFormat__Count];
 	D3D_DRIVER_TYPE         mDX11DriverType;
 	D3D_FEATURE_LEVEL       mDX11FeatureLevel;
 	ID3D11Device*           mDX11pDevice;

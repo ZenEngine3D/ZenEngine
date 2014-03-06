@@ -2,7 +2,7 @@
 #ifndef __LibZenBase_Api_Const_Constants_h__
 #define __LibZenBase_Api_Const_Constants_h__
 
-namespace zen { namespace awconst {
+namespace zen { namespace zenConst {
 
 	#define				NULL	0
 	#define				TRUE	1

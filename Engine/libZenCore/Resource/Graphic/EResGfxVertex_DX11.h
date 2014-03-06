@@ -20,7 +20,7 @@ class GfxVertex_DX11 : public Resource
 		zenArrayStatic<StreamInfo>				maStreamInfo;	//!< Element infos of stream
 		zenArrayStatic<D3D11_INPUT_ELEMENT_DESC>	maElementDef;	//!< D3D11 infos on each vertice element contained in all buffer (pos, uv, etc...)
 	};
-AWResourceDeclare(GfxVertex_DX11, InstanceInfo, awconst::keResType_GfxVertex)
+AWResourceDeclare(GfxVertex_DX11, InstanceInfo, zenConst::keResType_GfxVertex)
 public:
 	
 	virtual										~GfxVertex_DX11();

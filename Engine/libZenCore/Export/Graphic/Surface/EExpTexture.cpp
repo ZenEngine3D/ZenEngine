@@ -8,7 +8,7 @@ namespace EExp
 //-------------------------------------------------------------------------------------------------
 //! @return 	- Texture Block info 
 //=================================================================================================
-const TextureBlockInfo& GetTextureBlockInfo( awconst::eTextureFormat _eFormat )
+const TextureBlockInfo& GetTextureBlockInfo( zenConst::eTextureFormat _eFormat )
 {
 	static const TextureBlockInfo aTextureInfos[] =
 	{
@@ -24,8 +24,8 @@ const TextureBlockInfo& GetTextureBlockInfo( awconst::eTextureFormat _eFormat )
 		{4,		4,		16},	//keTexFormat_BC7,
 		{1,		1,		32},	//keTexFormat_RGBA32f,
 	};
-	ZENStaticAssert(ZENArrayCount(aTextureInfos)==awconst::keTexFormat__Count);
-	ZENAssert(_eFormat<awconst::keTexFormat__Count);
+	ZENStaticAssert(ZENArrayCount(aTextureInfos)==zenConst::keTexFormat__Count);
+	ZENAssert(_eFormat<zenConst::keTexFormat__Count);
 	return aTextureInfos[_eFormat];
 }
 
@@ -39,7 +39,7 @@ const TextureBlockInfo& GetTextureBlockInfo( awconst::eTextureFormat _eFormat )
 //! @param _aRawData		- Image data in r/rgb/rgba format
 //! @return 				- Unique zenResID of created Resource
 //=================================================================================================
-zenResID CreateGfxTexture2D(awconst::eTextureFormat _eFormat, awFlagResTexCreate _CreationFlags, zenVec2U16 _vDim, const zenArrayBase<zenU8>& _aRawData)
+zenResID CreateGfxTexture2D(zenConst::eTextureFormat _eFormat, zenFlagResTexCreate _CreationFlags, zenVec2U16 _vDim, const zenArrayBase<zenU8>& _aRawData)
 {
 	static zenMem::AllocatorPool sMemPool("Pool CreateTexture2D", sizeof(SerialTexture2D_Base::ExportInfo), 1, 5 );
 	SerialTexture2D_Base::ExportInfo* pExportInfo	= zenNew(&sMemPool) SerialTexture2D_Base::ExportInfo;
@@ -52,7 +52,7 @@ zenResID CreateGfxTexture2D(awconst::eTextureFormat _eFormat, awFlagResTexCreate
 	pExportInfo->meFormatOutput						= _eFormat;
 	pExportInfo->mCreationFlags						= _CreationFlags;
 	pExportInfo->mbGenerateMip						= FALSE;
-	return EMgr::Export.CreateItem( zenResID::kePlatformType_GFX, awconst::keResType_GfxTexture2D, pExportInfo );
+	return EMgr::Export.CreateItem( zenResID::kePlatformType_GFX, zenConst::keResType_GfxTexture2D, pExportInfo );
 }
 
 }

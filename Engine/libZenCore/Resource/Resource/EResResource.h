@@ -17,7 +17,7 @@ namespace ERes
 		bool								ResourceCreateRuntime(); //!< @todo Get rid of this
 	protected:			
 											Resource();
-		static zenList2x						spResourceActive[awconst::keResType__Count];	//!< List of all actives resources created, per type
+		static zenList2x						spResourceActive[zenConst::keResType__Count];	//!< List of all actives resources created, per type
 		static zenList2x						spActiveToDelete[3];							//!< List of resources to delete (with 1 frame delay to make sure GPU are done with them)
 		static zenUInt						suDeleteIndex;									//!< Current active ToDelete list
 	};
@@ -43,12 +43,12 @@ namespace ERes
 	{
 	ZENClassDeclare(ResourceRef, TReferenceClass)
 	public:	
-		inline								ResourceRef();
-		inline								ResourceRef(zenRes::awResource* _pResource);
-		inline								ResourceRef(zenResID _ResourceID);
-		inline								ResourceRef(const TReferenceClass& _Copy);
-		inline TResourceClass*				operator->();		//!< Return a pointer to resource
-		inline const TResourceClass*		operator->()const;	//!< Return a const pointiner to resource
+		ZENInline								ResourceRef();
+		ZENInline								ResourceRef(zenRes::awResource* _pResource);
+		ZENInline								ResourceRef(zenResID _ResourceID);
+		ZENInline								ResourceRef(const TReferenceClass& _Copy);
+		ZENInline TResourceClass*				operator->();		//!< Return a pointer to resource
+		ZENInline const TResourceClass*		operator->()const;	//!< Return a const pointiner to resource
 	};
 }
 

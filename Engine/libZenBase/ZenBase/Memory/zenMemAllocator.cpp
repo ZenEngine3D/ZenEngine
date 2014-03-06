@@ -6,7 +6,7 @@
 namespace zen { namespace zenMem
 {
 
-inline zenList2x& GetAllocatorScopeList()
+ZENInline zenList2x& GetAllocatorScopeList()
 {
 	static zenList2x sOverideList;
 	return sOverideList;
@@ -53,9 +53,9 @@ Allocator::~Allocator()
 void Allocator::DebugPrint()
 {
 #if AW_MEMORYDEBUG
-	CLog::Log( CLog::keLog_DebugInfo, awconst::kzLineA60 );
+	CLog::Log( CLog::keLog_DebugInfo, zenConst::kzLineA60 );
 	CLog::Log( CLog::keLog_DebugInfo, "Memory" );
-	CLog::Log( CLog::keLog_DebugInfo, awconst::kzLineA60 );
+	CLog::Log( CLog::keLog_DebugInfo, zenConst::kzLineA60 );
 	zenList2xNode* pAlloc = mlstAllocations.GetHead();
 	while( pAlloc != mlstAllocations.GetInvalid() )
 	{

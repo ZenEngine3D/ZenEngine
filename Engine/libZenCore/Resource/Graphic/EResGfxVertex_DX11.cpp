@@ -24,7 +24,7 @@ namespace ERes
 			"BLENDINDICES",	//keVertexSemantic_BlendIndex,
 			"BLENDWEIGHT",	//keVertexSemantic_BlendWeight,
 		};
-		ZENStaticAssert( ZENArrayCount(zSemanticNames)==awconst::keShaderSemantic__Count );
+		ZENStaticAssert( ZENArrayCount(zSemanticNames)==zenConst::keShaderSemantic__Count );
 	
 		//D3D11_USAGE eUsage(D3D11_USAGE_DEFAULT);//! @todo configure this
 		//zenUInt uCpuAccess(0);

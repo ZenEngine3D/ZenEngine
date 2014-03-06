@@ -22,7 +22,7 @@ namespace zen { namespace zenMem
 		virtual					~Allocator			();
 		size_t					GetTotalAllocSize	()const {return muTotalAllocSize;}
 		zenUInt					GetTotalAllocCount	()const {return muTotalAllocCount;}
-		inline zenHash32		GetValidityStamp	()const {return mh32ValidStamp;}
+		ZENInline zenHash32		GetValidityStamp	()const {return mh32ValidStamp;}
 		static Allocator&		GetDefault			();
 	
 	protected:

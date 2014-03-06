@@ -18,7 +18,7 @@ const zenResID& awResource::GetResID()const
 
 bool awResource::IsValid()const		
 { 
-	return mResID.meType<awconst::keResType__Invalid; 
+	return mResID.meType<zenConst::keResType__Invalid; 
 }
 
 //#################################################################################################
@@ -47,13 +47,13 @@ void awResourceRef::SetResource(awResource* _pResource)
 		mpResource->ReferenceAdd();
 }	
 
-awResourceRef::awResourceRef(awFlagResType _SupportedTypes)
+awResourceRef::awResourceRef(zenFlagResType _SupportedTypes)
 : mpResource(NULL)
 {
 	ZENDbgCode( mSupportedTypeMask = _SupportedTypes; )
 }
 
-awResourceRef::awResourceRef(awFlagResType _SupportedTypes, awResource* _pResource)
+awResourceRef::awResourceRef(zenFlagResType _SupportedTypes, awResource* _pResource)
 : mpResource(NULL)
 {
 	ZENDbgCode( mSupportedTypeMask = _SupportedTypes; )
@@ -100,37 +100,37 @@ awResourceRef::operator zenResID()const
 //#################################################################################################
 // RESOURCE TYPED REF
 //#################################################################################################
-template<awconst::eResType TType>
+template<zenConst::eResType TType>
 awResourceTypedRef<TType>::awResourceTypedRef()								
-: awResourceRef(awFlagResType(TType))
+: awResourceRef(zenFlagResType(TType))
 {}
 
-template<awconst::eResType TType>
+template<zenConst::eResType TType>
 awResourceTypedRef<TType>::awResourceTypedRef(awResource* _pResource)	
-: awResourceRef(awFlagResType(TType), _pResource)
+: awResourceRef(zenFlagResType(TType), _pResource)
 {}
 
-template<awconst::eResType TType>
+template<zenConst::eResType TType>
 awResourceTypedRef<TType>::awResourceTypedRef(zenResID _ResourceID)		
-: awResourceRef(awFlagResType(TType), _ResourceID)
+: awResourceRef(zenFlagResType(TType), _ResourceID)
 {}
 
 //#################################################################################################
 // RESOURCE TYPED2 REF
 //#################################################################################################
-template<awconst::eResType TType1, awconst::eResType TType2>
+template<zenConst::eResType TType1, zenConst::eResType TType2>
 awResourceTyped2Ref<TType1,TType2>::awResourceTyped2Ref()							
-: awResourceRef(awFlagResType(TType1,TType2))
+: awResourceRef(zenFlagResType(TType1,TType2))
 {}
 
-template<awconst::eResType TType1, awconst::eResType TType2>
+template<zenConst::eResType TType1, zenConst::eResType TType2>
 awResourceTyped2Ref<TType1,TType2>::awResourceTyped2Ref(awResource* _pResource)	
-: awResourceRef(awFlagResType(TType1,TType2), _pResource)
+: awResourceRef(zenFlagResType(TType1,TType2), _pResource)
 {}
 
-template<awconst::eResType TType1, awconst::eResType TType2>
+template<zenConst::eResType TType1, zenConst::eResType TType2>
 awResourceTyped2Ref<TType1,TType2>::awResourceTyped2Ref(zenResID _ResourceID)	
-: awResourceRef(awFlagResType(TType1,TType2), _ResourceID)
+: awResourceRef(zenFlagResType(TType1,TType2), _ResourceID)
 {}
 
 }} // namespace zen, zenRes
@@ -143,9 +143,9 @@ class _ClassName_ : public zenRes::awResourceTypedRef<_Type_>						\
 {																					\
 ZENClassDeclare(_ClassName_, zenRes::awResourceTypedRef<_Type_>)						\
 public:																				\
-	inline	_ClassName_(){}															\
-	inline	_ClassName_(zenRes::awResource* _pResource):Super(_pResource){}			\
-	inline	_ClassName_(zenResID _ResourceID):Super(_ResourceID){}
+	ZENInline	_ClassName_(){}															\
+	ZENInline	_ClassName_(zenRes::awResource* _pResource):Super(_pResource){}			\
+	ZENInline	_ClassName_(zenResID _ResourceID):Super(_ResourceID){}
 
 //#################################################################################################
 // Used for declaration of awResourceTyped2Ref classes
@@ -155,6 +155,6 @@ class _ClassName_ : public zenRes::awResourceTyped2Ref<_Type1_ , _Type2_>			\
 {																					\
 ZENClassDeclare(_ClassName_, zenRes::awResourceTyped2Ref<_Type1_ ZENComma _Type2_> )	\
 public:																				\
-	inline	_ClassName_(){}															\
-	inline	_ClassName_(zenRes::awResource* _pResource):Super(_pResource){}			\
-	inline	_ClassName_(zenResID _ResourceID):Super(_ResourceID){}
+	ZENInline	_ClassName_(){}															\
+	ZENInline	_ClassName_(zenRes::awResource* _pResource):Super(_pResource){}			\
+	ZENInline	_ClassName_(zenResID _ResourceID):Super(_ResourceID){}

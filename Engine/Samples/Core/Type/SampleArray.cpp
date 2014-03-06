@@ -35,9 +35,9 @@ namespace sample
 		aDynamicA += aStaticA;
 		aDynamicA += aStaticB;
 
-		CMgr::Log.Log(CLog::keLog_Game, awconst::kzLineA40);
+		CMgr::Log.Log(CLog::keLog_Game, zenConst::kzLineA40);
 		CMgr::Log.Log(CLog::keLog_Game, " Array Sorting");
-		CMgr::Log.Log(CLog::keLog_Game, awconst::kzLineA40);
+		CMgr::Log.Log(CLog::keLog_Game, zenConst::kzLineA40);
 		zenArrayStatic<zenU32> uTestSort;
 		const zenUInt pSourceData[] = {2,132,876,23,54,265,34,1,475,287,452,884,343,2,88,3,324,827,123,278};
 		uTestSort.Copy( pSourceData, ZENArrayCount(pSourceData) );

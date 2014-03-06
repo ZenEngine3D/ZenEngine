@@ -34,14 +34,14 @@ struct ConfigBlend
 	float	mfAlphaRef;
 	zenUInt	muWriteMask;
 
-	inline bool operator==(const ConfigBlend& _Compare)
+	ZENInline bool operator==(const ConfigBlend& _Compare)
 	{
 		return	meBlendRGB		== _Compare.meBlendRGB		&&
 				meBlendAlpha	== _Compare.meBlendAlpha	&&
 				mfAlphaRef		== _Compare.mfAlphaRef		&&
 				muWriteMask		== _Compare.muWriteMask;
 	}
-	inline bool operator!=(const ConfigBlend& _Compare)
+	ZENInline bool operator!=(const ConfigBlend& _Compare)
 	{
 		return !(*this == _Compare);
 	}
@@ -73,7 +73,7 @@ struct ConfigDepthStencil
 	zenS8			muStencilRef;
 	bool		mbDepthWrite;
 
-	inline bool operator==(const ConfigDepthStencil& _Compare)
+	ZENInline bool operator==(const ConfigDepthStencil& _Compare)
 	{
 		return 	meDepthTest		== _Compare.meDepthTest		&&
 				meStencilTest	== _Compare.meStencilTest	&&
@@ -81,7 +81,7 @@ struct ConfigDepthStencil
 				muStencilRef	== _Compare.muStencilRef	&&	
 				mbDepthWrite	== _Compare.mbDepthWrite;
 	}
-	inline bool operator!=(const ConfigDepthStencil& _Compare)
+	ZENInline bool operator!=(const ConfigDepthStencil& _Compare)
 	{
 		return !(*this==_Compare);
 	}

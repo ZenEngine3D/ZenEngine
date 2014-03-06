@@ -34,7 +34,7 @@ namespace ERes
 	{
 		HRESULT hr(S_FALSE);
 
-		mInstanceInfo.mrTargetTexture = EExp::CreateGfxTexture2D(mInstanceInfo.meFormat, awFlagResTexCreate(awconst::keTexCreate_RenderTarget), mInstanceInfo.mvDim );
+		mInstanceInfo.mrTargetTexture = EExp::CreateGfxTexture2D(mInstanceInfo.meFormat, zenFlagResTexCreate(zenConst::keTexCreate_RenderTarget), mInstanceInfo.mvDim );
 		if( mInstanceInfo.mrTargetTexture.IsValid() )
 		{
 			if( EMgr::GfxRender.IsDepth(mInstanceInfo.meFormat) )
@@ -65,7 +65,7 @@ namespace ERes
 	//! @param _vDim -			Dimensions of the rendertarget
 	//=================================================================================================
 	//SF TODO Cleanup this recource creation process 
-	GfxRenderTargetRef GfxRenderTarget_DX11::CreateFromBackuffer(IDXGISwapChain* _pSwapchain, awconst::eTextureFormat _eFormat, const zenVec2U16& _vDim)
+	GfxRenderTargetRef GfxRenderTarget_DX11::CreateFromBackuffer(IDXGISwapChain* _pSwapchain, zenConst::eTextureFormat _eFormat, const zenVec2U16& _vDim)
 	{
 		ID3D11Texture2D*		pColorTexture(NULL);
 		ID3D11RenderTargetView*	pColorView;
@@ -76,7 +76,7 @@ namespace ERes
 			{
 				bool bUnused;
 				pBackbufferTarget									= zenNewDefault GfxRenderTarget_DX11;
-				pBackbufferTarget->mResID							= EMgr::Export.GetNewResourceID( awconst::kAWCurrentPlatformGfx, awconst::keResType_GfxRenderTarget, awconst::keResSource_Runtime, NULL, bUnused );
+				pBackbufferTarget->mResID							= EMgr::Export.GetNewResourceID( zenConst::kAWCurrentPlatformGfx, zenConst::keResType_GfxRenderTarget, zenConst::keResSource_Runtime, NULL, bUnused );
 				pBackbufferTarget->mInstanceInfo.mResID				= pBackbufferTarget->mResID;
 				pBackbufferTarget->mInstanceInfo.mpTargetColorView	= pColorView;
 				pBackbufferTarget->mInstanceInfo.mrTargetTexture	= NULL;

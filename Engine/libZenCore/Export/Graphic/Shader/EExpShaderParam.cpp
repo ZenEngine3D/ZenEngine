@@ -13,12 +13,12 @@ namespace EExp
 //=================================================================================================
 zenResID CreateGfxShaderParam(zenResID _ParentParamDefID, const zenArrayBase<const EExp::ParameterBase*>& _aParamValues)
 {
-	ZENAssert( _ParentParamDefID.Type() == awconst::keResType_GfxShaderParamDef );	
+	ZENAssert( _ParentParamDefID.Type() == zenConst::keResType_GfxShaderParamDef );	
 	static zenMem::AllocatorPool sMemPool("Pool CreateShaderParam", sizeof(SerialShaderParam_Base::ExportInfo), 1, 5 );
 	SerialShaderParam_Base::ExportInfo*	pExportInfo = zenNew(&sMemPool) SerialShaderParam_Base::ExportInfo;
 	pExportInfo->maParamValues						= _aParamValues;
 	pExportInfo->mParentParamDefID					= _ParentParamDefID;
-	return EMgr::Export.CreateItem( zenResID::kePlatformType_GFX, awconst::keResType_GfxShaderParam, pExportInfo );
+	return EMgr::Export.CreateItem( zenResID::kePlatformType_GFX, zenConst::keResType_GfxShaderParam, pExportInfo );
 }
 
 //=================================================================================================
@@ -33,7 +33,7 @@ zenResID CreateGfxShaderParam(zenResID _ParentParamDefID, const zenArrayBase<con
 //=================================================================================================
 zenResID CreateGfxShaderParam(zenResID _ParentShaderID, EExp::eShaderParamFreq _eShaderParamIndex, const zenArrayBase<const EExp::ParameterBase*>& _aParamValues)
 {
-	ZENAssert( awconst::kFlagResShaders.Any(_ParentShaderID.Type()) );
+	ZENAssert( zenConst::kFlagResShaders.Any(_ParentShaderID.Type()) );
 	SerialShader_Base* pParentShader = EMgr::SerialItems.GetItem<SerialShader_Base>(_ParentShaderID);
 	if( pParentShader && pParentShader->maParamDefID[_eShaderParamIndex].IsValid() )
 		return CreateGfxShaderParam( pParentShader->maParamDefID[_eShaderParamIndex], _aParamValues);	

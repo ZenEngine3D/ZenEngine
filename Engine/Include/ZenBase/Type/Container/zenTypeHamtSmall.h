@@ -48,7 +48,7 @@ namespace zen { namespace zenType {
 		struct Node
 		{
 			struct Slot	{	TKey Key; union { Node* pChildNode; zenU8 aValue[sizeof(TValue)]; }; 
-							inline TValue& Value(){return *(TValue*)aValue;} };
+							ZENInline TValue& Value(){return *(TValue*)aValue;} };
 
 			zenUInt				GetSlotCount() const;						//! @brief Get count of valid Slots in this node
 			bool				IsLeafSlot( zenUInt _uSlotID ) const;		//! @brief Check if a Node Slot is a leaf (contains value) or point to child node
@@ -98,9 +98,9 @@ namespace zen { namespace zenType {
 
 		
 		void					Init( zenUInt _uReservePool);													//!< @brief Initialize the HashTable
-		inline bool				Exist(const TKey _Key)const;															    
-		inline bool				IsInit()const;																			    
-		inline zenUInt			Count() const;																	//!< @brief Number of element (leaf node) stored in hashmap		
+		ZENInline bool				Exist(const TKey _Key)const;															    
+		ZENInline bool				IsInit()const;																			    
+		ZENInline zenUInt			Count() const;																	//!< @brief Number of element (leaf node) stored in hashmap		
 																														    
 		void					Clear();																				    
 		void					SetDefaultValue( const TValue& _Value );										//!< @brief Set value return when no value found
@@ -108,7 +108,7 @@ namespace zen { namespace zenType {
 		const TValue&			Get( const TKey _Key ) const;													//!< @brief Return value stored at a key entry
 		bool					Get(const TKey _Key, TValue& _ValueOut) const;									//!< @brief Return value stored at a key entry
 		bool					Get(const TKey _Key, TValue* _pValueOut) const;									//!< @brief Return value stored at a key entry
-		inline const TValue&	operator[](const TKey _Key)const;												//!< @brief Return value stored at that key entry																											    
+		ZENInline const TValue&	operator[](const TKey _Key)const;												//!< @brief Return value stored at that key entry																											    
 		TValue&					GetAdd(const TKey _Key);														//!< @brief Return value stored at that key entry
 		bool					Unset(const TKey _Key);															//!< @brief Remove the value stored at that key entry
 																														    																														    

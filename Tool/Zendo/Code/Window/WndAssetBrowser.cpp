@@ -59,17 +59,17 @@ WndAssetBrowser::WndAssetBrowser(wxWindow *parent, const wxString& title)
 , mpIconAsset(NULL)
 , mpIconPackage(NULL)
 {	
-	mAssetTypeMask = 0;	
+	mAssetTypeMask.Reset();	
 	mdCountPerPackage.Init(128);
 	mdCountPerPackage.SetDefaultValue(0);
-	maCountPerType.SetCount(zeAss::AssetItem::keType__Count);
+	maCountPerType.SetCount(zenConst::keAssType__Count);
 
 	CreateSectionAsset();
 	CreateSectionPackage();
 	CreateSectionType();
 	
 	wxAuiPaneInfo panelInfo;
-	panelInfo.Left();
+	panelInfo.Top();
 	panelInfo.Gripper(false);
 	panelInfo.GripperTop(false);
 	panelInfo.Dock();
@@ -77,6 +77,7 @@ WndAssetBrowser::WndAssetBrowser(wxWindow *parent, const wxString& title)
 	panelInfo.PaneBorder(false);
 	panelInfo.PinButton(false);
 	panelInfo.CaptionVisible(true);
+	panelInfo.MinSize(200,200);
 
 	if( mpPanelType ) 
 	{
@@ -116,9 +117,9 @@ void WndAssetBrowser::CreateSectionType()
 	//mpTreeTypes->GetDataView()->SetRowHeight(33);
 
 	wxTreeListItem rootItem = mpTreeTypes->GetRootItem();
-	for(zenUInt idx(0); idx<zeAss::AssetItem::keType__Count; ++idx)
+	for(zenUInt idx(0); idx<zenConst::keAssType__Count; ++idx)
 	{		
-		const char* zTypeDesc =zeAss::AssetItem::GetTypeDesc( (zeAss::AssetItem::enumType)idx );
+		const char* zTypeDesc =zeAss::AssetItem::GetTypeDesc( (zenConst::eAssetType)idx );
 		wxTreeListItem newItemID = mpTreeTypes->AppendItem(rootItem, zTypeDesc, idx, idx); 	
 	}
 			
@@ -221,7 +222,7 @@ void WndAssetBrowser::UpdateAssetList()
 
 	// If only 1 asset type is selected, can displayed detailed column
 	mpLstAsset->InsertColumn(0, wxT("Name"), wxLIST_FORMAT_LEFT);
-	if( zenMath::BitsCount(mAssetTypeMask) == 1 )
+	if( mAssetTypeMask.CountActive() == 1 )
 	{
 		//AAss::AssetItem::GetTypeDesc()
 		mpLstAsset->InsertColumn(1, wxT("Description"), wxLIST_FORMAT_LEFT, wxLIST_AUTOSIZE_USEHEADER);
@@ -239,13 +240,14 @@ void WndAssetBrowser::UpdateAssetList()
 	for(zenUInt idxPack(0), countPack(maPackageSelected.Count()); idxPack<countPack; ++idxPack)
 	{
 		zeAss::Package* pPackage = maPackageSelected[idxPack];
-		for(zenUInt typIdx(0); typIdx<zeAss::AssetItem::keType__Count; ++typIdx)
+		for(zenUInt typIdx(0); typIdx<zenConst::keAssType__Count; ++typIdx)
 		{
-			zenUInt uPackageItemCount(0);
-			if( mAssetTypeMask & zenU64(1)<<typIdx )
+			zenUInt					uPackageItemCount(0);
+			zenConst::eAssetType	eTypeIdx = (zenConst::eAssetType)typIdx;
+			if( mAssetTypeMask.Any( eTypeIdx ) )
 			{
 				zenMap<zeAss::AssetItem*>::Key64::Iterator it;
-				pPackage->AssetGet( zeAss::AssetItem::enumType(typIdx) ).GetFirst(it);
+				pPackage->AssetGet( eTypeIdx ).GetFirst(it);
 				while( it.IsValid() )
 				{
 					const zeAss::AssetItem* pItem	= it.GetValue();
@@ -405,13 +407,15 @@ void WndAssetBrowser::OnAssetViewChange(wxCommandEvent& event)
 //=================================================================================================
 void WndAssetBrowser::OnTypeItemChecked(wxTreeListEvent& event)
 {		
-	mAssetTypeMask = 0;
+	mAssetTypeMask.Reset();
 	zenUInt uTypeIndex(0);
 	wxTreeListItem itemCurrent = mpTreeTypes->GetFirstItem();
 	while( itemCurrent.IsOk() )
-	{
-		mAssetTypeMask |= mpTreeTypes->GetCheckedState(itemCurrent) == wxCHK_CHECKED ? zenU64(1)<<uTypeIndex : 0;
+	{		
+		if( mpTreeTypes->GetCheckedState(itemCurrent) == wxCHK_CHECKED )
+			mAssetTypeMask |= zenConst::eAssetType(uTypeIndex);
 		itemCurrent = mpTreeTypes->GetNextItem(itemCurrent);
+		++uTypeIndex;
 	}
 	UpdateAssetList();
 }

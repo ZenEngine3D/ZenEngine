@@ -20,7 +20,7 @@ namespace ERes
 	//=============================================================================================
 	class GfxInputSignature_DX11 : public Resource
 	{
-	AWResourceDeclare(GfxInputSignature_DX11, EExp::SerialGfxInputSignature_DX11, awconst::keResType_GfxInputSignature )
+	AWResourceDeclare(GfxInputSignature_DX11, EExp::SerialGfxInputSignature_DX11, zenConst::keResType_GfxInputSignature )
 	};
 
 	//=============================================================================================
@@ -38,7 +38,7 @@ namespace ERes
 	public:
 											GfxShader_DX11(EExp::SerialShader_DX11& _SerialItem, InstanceInfoBase& _CommonInstance);
 		virtual bool						ResourceInit();
-		inline const InstanceInfoBase&		GetInstanceBase(){return mBaseInstance;}
+		ZENInline const InstanceInfoBase&		GetInstanceBase(){return mBaseInstance;}
 		GfxShaderParamDefRef				GetShaderParamDef(EExp::eShaderParamFreq _eShaderParam)const;
 		EExp::eShaderStage					GetShaderStage()const{return mBaseSerialItem.meShaderStage;}		
 		const MapBindInfo&					GetTextureSlotInfo()const{return mBaseInstance.mdTextureSamplerSlot;}
@@ -58,7 +58,7 @@ namespace ERes
 			ID3D11VertexShader*				mpVertexShader;
 			GfxInputSignatureRef			mGfxInputSignatureRef;
 		};
-	AWResourceDeclareParent(GfxShaderVertex_DX11, GfxShader_DX11, InstanceInfo, awconst::keResType_GfxShaderVertex)
+	AWResourceDeclareParent(GfxShaderVertex_DX11, GfxShader_DX11, InstanceInfo, zenConst::keResType_GfxShaderVertex)
 	public:
 		virtual								~GfxShaderVertex_DX11();
 		virtual bool						ResourceInit();
@@ -73,7 +73,7 @@ namespace ERes
 		{
 			ID3D11PixelShader*				mpPixelShader;
 		};
-	AWResourceDeclareParent(GfxShaderPixel_DX11, GfxShader_DX11, InstanceInfo, awconst::keResType_GfxShaderPixel)
+	AWResourceDeclareParent(GfxShaderPixel_DX11, GfxShader_DX11, InstanceInfo, zenConst::keResType_GfxShaderPixel)
 	public:
 		virtual								~GfxShaderPixel_DX11();
 		virtual bool						ResourceInit();		

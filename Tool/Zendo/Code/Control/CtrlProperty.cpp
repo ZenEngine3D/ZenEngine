@@ -30,17 +30,19 @@ wxPGProperty* CreateAssetValueControl(wxPropertyGridInterface& _GridControl, zeA
 	wxPGProperty* pProperty(NULL);
 	switch( _Value.GetType() )
 	{
-	case zeAss::PropertyDefBase::keType_Bool:	pProperty=zenNewDefault wxBetlBoolProperty(*_Value.GetBool());			break;
-	case zeAss::PropertyDefBase::keType_Int:		pProperty=zenNewDefault wxBetlIntProperty(*_Value.GetInt());				break;
-		// 		case AAss::PropertyDefBase::keType_Int2:			break;
-		// 		case AAss::PropertyDefBase::keType_Int3:			break;
-		// 		case AAss::PropertyDefBase::keType_Int4:			break;
-	case zeAss::PropertyDefBase::keType_Float:	pProperty=zenNewDefault wxBetlFloatProperty(*_Value.GetFloat());			break;
-	case zeAss::PropertyDefBase::keType_Float2:	pProperty=zenNewDefault wxBetlVector2fProperty(*_Value.GetFloat2());		break;
-		// 		case AAss::PropertyDefBase::keType_Float3:			break;
-		// 		case AAss::PropertyDefBase::keType_Float4:			break;
-	case zeAss::PropertyDefBase::keType_Enum:	pProperty=zenNewDefault wxBetlEnumProperty(*_Value.GetEnum());			break;
-	case zeAss::PropertyDefBase::keType_File:	pProperty=zenNewDefault wxBetlFileProperty(*_Value.GetFile());			break;
+	case zenConst::keAssProp_Bool:	pProperty=zenNewDefault wxBetlBoolProperty(*_Value.GetBool());			break;
+	case zenConst::keAssProp_File:	pProperty=zenNewDefault wxBetlFileProperty(*_Value.GetFile());			break;
+#if 0
+	case zenConst::keAssProp_Int:		pProperty=zenNewDefault wxBetlIntProperty(*_Value.GetInt());				break;
+		// 		case AAss::zenConst::keAssProp_Int2:			break;
+		// 		case AAss::zenConst::keAssProp_Int3:			break;
+		// 		case AAss::zenConst::keAssProp_Int4:			break;
+	case zenConst::keAssProp_Float:	pProperty=zenNewDefault wxBetlFloatProperty(*_Value.GetFloat());			break;
+	case zenConst::keAssProp_Float2:	pProperty=zenNewDefault wxBetlVector2fProperty(*_Value.GetFloat2());		break;
+		// 		case AAss::zenConst::keAssProp_Float3:			break;
+		// 		case AAss::zenConst::keAssProp_Float4:			break;
+	case zenConst::keAssProp_Enum:	pProperty=zenNewDefault wxBetlEnumProperty(*_Value.GetEnum());			break;
+#endif
 	default:									ZENAssertMsg(0, "Unknown property type, implement it")			break;
 	}	
 	
@@ -94,6 +96,30 @@ wxBetlBoolProperty::~wxBetlBoolProperty()
 	zenDel(GetClientData());
 }
 
+//=================================================================================================
+// PROPERTY :
+//=================================================================================================
+wxBetlFileProperty::wxBetlFileProperty(zeAss::PropertyDefFile::Value& _AssetValue)
+{
+	wxFileName Value((const char*)_AssetValue.mValue);
+	const zeAss::PropertyDefFile& PropertyDef	= (const zeAss::PropertyDefFile&)_AssetValue.mParentDef;
+	PropertyMetaData* pMetaData					= zenNew(&sPoolMetaData)PropertyMetaData(&_AssetValue, Value.GetFullPath());
+	SetClientData		( pMetaData );
+	SetDefaultValue		( wxVariant((const char*)PropertyDef.mDefault) );
+	SetValue			( Value.GetFullPath() );
+	SetHelpString		( PropertyDef.mzDescription );
+	SetAttribute		( wxPG_FILE_INITIAL_PATH,	Value.GetPath());
+	SetAttribute		( wxPG_FILE_WILDCARD,		PropertyDef.mzFileExt);
+	SetAttribute		( wxPG_FILE_DIALOG_TITLE,	wxString::Format("Open file for '%s'", PropertyDef.mzDisplayName));
+	SetAttribute		( wxPG_FILE_SHOW_FULL_PATH,	true);
+}
+
+wxBetlFileProperty::~wxBetlFileProperty()
+{
+	zenDel(GetClientData());
+}
+
+#if 0
 //=================================================================================================
 // PROPERTY :
 //=================================================================================================
@@ -166,30 +192,6 @@ wxBetlEnumProperty::~wxBetlEnumProperty()
 //=================================================================================================
 // PROPERTY :
 //=================================================================================================
-wxBetlFileProperty::wxBetlFileProperty(zeAss::PropertyDefFile::Value& _AssetValue)
-{
-	wxFileName Value((const char*)_AssetValue.mValue);
-	const zeAss::PropertyDefFile& PropertyDef	= (const zeAss::PropertyDefFile&)_AssetValue.mParentDef;
-	PropertyMetaData* pMetaData					= zenNew(&sPoolMetaData)PropertyMetaData(&_AssetValue, Value.GetFullPath());
-	SetClientData		( pMetaData );
-	SetDefaultValue		( wxVariant((const char*)PropertyDef.mDefault) );
-	SetValue			( Value.GetFullPath() );
-	SetHelpString		( PropertyDef.mzDescription );
-	SetAttribute		( wxPG_FILE_INITIAL_PATH,	Value.GetPath());
-	SetAttribute		( wxPG_FILE_WILDCARD,		PropertyDef.mzFileExt);
-	SetAttribute		( wxPG_FILE_DIALOG_TITLE,	wxString::Format("Open file for '%s'", PropertyDef.mzDisplayName));
-	SetAttribute		( wxPG_FILE_SHOW_FULL_PATH,	true);
-}
-
-wxBetlFileProperty::~wxBetlFileProperty()
-{
-	zenDel(GetClientData());
-}
-
-
-//=================================================================================================
-// PROPERTY :
-//=================================================================================================
 WX_PG_IMPLEMENT_PROPERTY_CLASS(wxBetlVector2fProperty, wxPGProperty, wxVector2f, const wxVector2f&, TextCtrl)
 wxBetlVector2fProperty::wxBetlVector2fProperty(zeAss::PropertyDefFloat2::Value& _AssetValue )
 {	
@@ -242,5 +244,6 @@ wxVariant wxBetlVector2fProperty::ChildChanged( wxVariant& thisValue, int childI
 	return newVariant;
 }
 
+#endif
 
 }

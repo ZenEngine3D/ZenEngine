@@ -17,7 +17,7 @@ zenResID CreateGfxShaderParamDef( zenResID _ParentShaderID, EExp::eShaderParamFr
 	SerialShaderParamDef_Base::ExportInfo* pExportInfo	= zenNew(&sMemPool) SerialShaderParamDef_Base::ExportInfo;	
 	pExportInfo->mParentShaderID						= _ParentShaderID;
 	pExportInfo->meBufferIndex							= _eBufferIndex;		
-	return EMgr::Export.CreateItem( zenResID::kePlatformType_GFX, awconst::keResType_GfxShaderParamDef, pExportInfo );
+	return EMgr::Export.CreateItem( zenResID::kePlatformType_GFX, zenConst::keResType_GfxShaderParamDef, pExportInfo );
 }
 
 }

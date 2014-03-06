@@ -12,7 +12,7 @@ namespace EExp
 //! @brief		Process the shader texture infos
 //! @details	
 //=================================================================================================
-inline void ProcessTexture(ID3D11ShaderReflection& _GfxShaderReflection, const D3D11_SHADER_INPUT_BIND_DESC& _InputDesc, SerialShader_DX11::BindInfo& _BindingOut, zenHash32& _TextureNameOut)
+ZENInline void ProcessTexture(ID3D11ShaderReflection& _GfxShaderReflection, const D3D11_SHADER_INPUT_BIND_DESC& _InputDesc, SerialShader_DX11::BindInfo& _BindingOut, zenHash32& _TextureNameOut)
 {
 	char zName[128];
 	// We package texture access inside a structure that contains bother Texture Buffer and Sampler,
@@ -33,7 +33,7 @@ inline void ProcessTexture(ID3D11ShaderReflection& _GfxShaderReflection, const D
 //! @brief		Process the shader constant buffer infos
 //! @details	
 //=================================================================================================
-inline void ProcessShaderParamDef(ID3D11ShaderReflection& _GfxShaderReflection, const D3D11_SHADER_INPUT_BIND_DESC& _InputDesc, awconst::eResSource _eSource, zenResID& _ShaderParaDefIDOut)
+ZENInline void ProcessShaderParamDef(ID3D11ShaderReflection& _GfxShaderReflection, const D3D11_SHADER_INPUT_BIND_DESC& _InputDesc, zenConst::eResSource _eSource, zenResID& _ShaderParaDefIDOut)
 {
 	D3D11_SHADER_BUFFER_DESC				bufferDesc;
 	D3D11_SHADER_VARIABLE_DESC				VarDesc;
@@ -50,7 +50,7 @@ inline void ProcessShaderParamDef(ID3D11ShaderReflection& _GfxShaderReflection, 
 		hName.Append(&VarDesc.StartOffset, sizeof(VarDesc.StartOffset));
 	}
 
-	_ShaderParaDefIDOut = zenResID(hName, awconst::keResPlatform_DX11, awconst::keResType_GfxShaderParamDef, _eSource );
+	_ShaderParaDefIDOut = zenResID(hName, zenConst::keResPlatform_DX11, zenConst::keResType_GfxShaderParamDef, _eSource );
 }
 
 //=================================================================================================

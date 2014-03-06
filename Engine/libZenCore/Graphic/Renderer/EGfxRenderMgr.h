@@ -23,10 +23,10 @@ public:
 	virtual void				FrameEnd();
 	
 	zenU64						GetFrameCount();
-	inline ERes::GfxWindowRef	GetWindowCurrent(){return mrWindowCurrent;}
+	ZENInline ERes::GfxWindowRef	GetWindowCurrent(){return mrWindowCurrent;}
 
 	//! @todo move to more generic AWformat testing functions file?
-	bool						IsDepth( awconst::eTextureFormat _eTexFormat ) const { return _eTexFormat>=awconst::keTexFormat__DepthFirst && _eTexFormat<=awconst::keTexFormat__DepthLast; }
+	bool						IsDepth( zenConst::eTextureFormat _eTexFormat ) const { return _eTexFormat>=zenConst::keTexFormat__DepthFirst && _eTexFormat<=zenConst::keTexFormat__DepthLast; }
 	
 protected:
 	enum eConstants{kuFramesSaved=10};

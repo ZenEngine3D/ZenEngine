@@ -21,17 +21,17 @@ bool ManagerRender::Load()
 	// Configure Texture Format mapping
 	//-------------------------------------------------------------------------
 	zenMem::Set(meFormatConversion, DXGI_FORMAT_UNKNOWN, sizeof(meFormatConversion) );	
-	meFormatConversion[awconst::keTexFormat_R8]			= DXGI_FORMAT_R8_UNORM;	
-	meFormatConversion[awconst::keTexFormat_RGB8]		= DXGI_FORMAT_UNKNOWN;
-	meFormatConversion[awconst::keTexFormat_RGBA8]		= DXGI_FORMAT_R8G8B8A8_UNORM;
-	meFormatConversion[awconst::keTexFormat_D24S8]		= DXGI_FORMAT_D24_UNORM_S8_UINT;
-	meFormatConversion[awconst::keTexFormat_D32]		= DXGI_FORMAT_D32_FLOAT_S8X24_UINT;
-	meFormatConversion[awconst::keTexFormat_BC1]		= DXGI_FORMAT_BC1_UNORM;	
-	meFormatConversion[awconst::keTexFormat_BC2]		= DXGI_FORMAT_BC2_UNORM;
-	meFormatConversion[awconst::keTexFormat_BC3]		= DXGI_FORMAT_BC3_UNORM;
-	meFormatConversion[awconst::keTexFormat_BC5]		= DXGI_FORMAT_BC5_UNORM;
-	meFormatConversion[awconst::keTexFormat_BC7]		= DXGI_FORMAT_BC7_UNORM;
-	meFormatConversion[awconst::keTexFormat_RGBA32f]	= DXGI_FORMAT_R32_FLOAT;
+	meFormatConversion[zenConst::keTexFormat_R8]			= DXGI_FORMAT_R8_UNORM;	
+	meFormatConversion[zenConst::keTexFormat_RGB8]		= DXGI_FORMAT_UNKNOWN;
+	meFormatConversion[zenConst::keTexFormat_RGBA8]		= DXGI_FORMAT_R8G8B8A8_UNORM;
+	meFormatConversion[zenConst::keTexFormat_D24S8]		= DXGI_FORMAT_D24_UNORM_S8_UINT;
+	meFormatConversion[zenConst::keTexFormat_D32]		= DXGI_FORMAT_D32_FLOAT_S8X24_UINT;
+	meFormatConversion[zenConst::keTexFormat_BC1]		= DXGI_FORMAT_BC1_UNORM;	
+	meFormatConversion[zenConst::keTexFormat_BC2]		= DXGI_FORMAT_BC2_UNORM;
+	meFormatConversion[zenConst::keTexFormat_BC3]		= DXGI_FORMAT_BC3_UNORM;
+	meFormatConversion[zenConst::keTexFormat_BC5]		= DXGI_FORMAT_BC5_UNORM;
+	meFormatConversion[zenConst::keTexFormat_BC7]		= DXGI_FORMAT_BC7_UNORM;
+	meFormatConversion[zenConst::keTexFormat_RGBA32f]	= DXGI_FORMAT_R32_FLOAT;
 
 	UINT createDeviceFlags = 0;
 	#ifdef _DEBUG

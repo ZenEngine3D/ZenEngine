@@ -1,5 +1,5 @@
 #include "libZenEngine.h"
-#if AW_ENGINETOOL
+#if ZEN_ENGINETOOL
 
 #define kuValue_Source "Source"
 
@@ -13,6 +13,7 @@ namespace zen { namespace zeAss
 	//=================================================================================================
 	const zenArrayStatic<const PropertyDefBase*>& GfxTexture2D::GetPropertyDef() const
 	{
+#if 0
 		const PropertyDefEnum::Entry	enumEntries[]={	PropertyDefEnum::Entry(0, "Value0", "Enum Value 0"),	
 														PropertyDefEnum::Entry(1, "Value1", "Enum Value 1"),	
 														PropertyDefEnum::Entry(2, "Value2", "Enum Value 2"),	
@@ -36,6 +37,11 @@ namespace zen { namespace zeAss
 		static const PropertyDefBase*		aPropertyAll[] = {	&Property00, &Property01, &Property02, &Property03, /*&Property04, 
 																	&Property05,*/ &Property06, &Property07/*, &Property08, &Property09,
 																	&Property10*/};
+#else
+		static const PropertyDefFile	Property02(kuValue_Source,	"", "Texture file",			true,	"C:\\temp\\test.txt", "Images|*.bmp;*.png;*.jpeg;*.jpg|BMP(*.bmp)|*.bmp|PNG(*.png)|*.png|JPEG(*.jpg;*.jpeg)|*.jpg;*.jpeg");
+		static const PropertyDefBase*	aPropertyAll[] = {	&Property02 };
+#endif
+		
 		static zenArrayStatic<const PropertyDefBase*> saPropertyDef( aPropertyAll, ZENArrayCount(aPropertyAll) );
 		return saPropertyDef;		
 	}
@@ -56,4 +62,4 @@ namespace zen { namespace zeAss
 	}
 }} //namespace zen { namespace zeAss
 
-#endif //AW_ENGINETOOL
+#endif //ZEN_ENGINETOOL

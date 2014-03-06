@@ -4,27 +4,27 @@
 
 namespace zen { namespace zenRes {	
 
-	AWClassResourceRefDeclare(GfxSampler, awconst::keResType_GfxSampler)
+	AWClassResourceRefDeclare(GfxSampler, zenConst::keResType_GfxSampler)
 	public:
-		static GfxSampler			Create( awconst::eTextureFiltering _eFilterMin=awconst::keTexFilter_Bilinear, awconst::eTextureFiltering _eFilterMag=awconst::keTexFilter_Bilinear, awconst::eTextureWrap _eWrapU=awconst::keTexWrap_Repeat, awconst::eTextureWrap _eWrapV=awconst::keTexWrap_Repeat, float _fLodBias=0, const zenVec4F& _vBorderColor=zenVec4F(0,0,0,1) );
+		static GfxSampler			Create( zenConst::eTextureFiltering _eFilterMin=zenConst::keTexFilter_Bilinear, zenConst::eTextureFiltering _eFilterMag=zenConst::keTexFilter_Bilinear, zenConst::eTextureWrap _eWrapU=zenConst::keTexWrap_Repeat, zenConst::eTextureWrap _eWrapV=zenConst::keTexWrap_Repeat, float _fLodBias=0, const zenVec4F& _vBorderColor=zenVec4F(0,0,0,1) );
 	};
 
-	AWClassResourceRefDeclare(GfxBlend, awconst::keResType_GfxBlend)
+	AWClassResourceRefDeclare(GfxBlend, zenConst::keResType_GfxBlend)
 	public:
 		static GfxBlend			Create( zenType::awBlendDesc::awRTBlendDesc* _pxBlendDesc=nullptr, zenU8 _uRenderTargets = 0, bool _bAlphaToCoverageEnable = false, bool _bIndependentBlendEnable = false );
 	};
 
-	AWClassResourceRefDeclare(GfxDepthStencil, awconst::keResType_GfxDepthStencil)
+	AWClassResourceRefDeclare(GfxDepthStencil, zenConst::keResType_GfxDepthStencil)
 	public:
-		static GfxDepthStencil	Create( bool _bDepthEnable = false, bool _bDepthWrite = false, bool _bStencilEnable = false, zenU8 _uStencilReadMask = 0xFF, zenU8 _uStencilWriteMask = 0xFF, awconst::eComparisonFunc _eDepthFunc = awconst::keComparisonFunc_Always, zenType::awDepthStencilDesc::DepthStencilOp _xFrontFace = zenType::awDepthStencilDesc::DepthStencilOp(), zenType::awDepthStencilDesc::DepthStencilOp _xBackFace = zenType::awDepthStencilDesc::DepthStencilOp() );
+		static GfxDepthStencil	Create( bool _bDepthEnable = false, bool _bDepthWrite = false, bool _bStencilEnable = false, zenU8 _uStencilReadMask = 0xFF, zenU8 _uStencilWriteMask = 0xFF, zenConst::eComparisonFunc _eDepthFunc = zenConst::keComparisonFunc_Always, zenType::awDepthStencilDesc::DepthStencilOp _xFrontFace = zenType::awDepthStencilDesc::DepthStencilOp(), zenType::awDepthStencilDesc::DepthStencilOp _xBackFace = zenType::awDepthStencilDesc::DepthStencilOp() );
 	};
 
-	AWClassResourceRefDeclare(GfxRasterizer, awconst::keResType_GfxRasterizer)
+	AWClassResourceRefDeclare(GfxRasterizer, zenConst::keResType_GfxRasterizer)
 	public:
-		static GfxRasterizer		Create( bool _bFrontCounterClockwise = false, bool _bDepthClipEnable = false, bool _bScissorEnable = false, bool _bMultisampleEnable = false, bool _bAntialiasedLineEnable = false, bool _bWireFrame = false, awconst::eCullMode _eCullMode = awconst::keCullMode_None, zenS32 _iDepthBias = 0, zenF32 _fDepthBiasClamp = 0.0f, zenF32 _fSlopeScaledDepthBias = 0.0f );
+		static GfxRasterizer		Create( bool _bFrontCounterClockwise = false, bool _bDepthClipEnable = false, bool _bScissorEnable = false, bool _bMultisampleEnable = false, bool _bAntialiasedLineEnable = false, bool _bWireFrame = false, zenConst::eCullMode _eCullMode = zenConst::keCullMode_None, zenS32 _iDepthBias = 0, zenF32 _fDepthBiasClamp = 0.0f, zenF32 _fSlopeScaledDepthBias = 0.0f );
 	};
 
-	AWClassResourceRefDeclare(GfxShaderBinding, awconst::keResType_GfxShaderBinding)
+	AWClassResourceRefDeclare(GfxShaderBinding, zenConst::keResType_GfxShaderBinding)
 	public:		
 		//! @todo Convert these function to only use pointer/count
 		static GfxShaderBinding	Create(const zenArrayBase<zenRes::GfxShader>& _aShader);
@@ -32,9 +32,9 @@ namespace zen { namespace zenRes {
 	};
 
 	//! @todo remove this from api
-	AWClassResourceRefDeclare(GfxInputStream, awconst::keResType_GfxInputStream) };
+	AWClassResourceRefDeclare(GfxInputStream, zenConst::keResType_GfxInputStream) };
 
-	AWClassResourceRefDeclare(GfxMeshStrip, awconst::keResType_GfxMeshStrip)
+	AWClassResourceRefDeclare(GfxMeshStrip, zenConst::keResType_GfxMeshStrip)
 	public:
 		void						RenderMeshStrip();
 		void						SetValue(const awShaderParameter& _Value);			
@@ -55,7 +55,7 @@ namespace zen { namespace zenRes {
 		static GfxMeshStrip		Create(GfxVertex _VertexBuffer, GfxIndex _IndexBuffer, GfxShaderBinding _rShaderBinding, zenU32 _uIndexFirst=0, zenU32 _uIndexCount=0xFFFFFFFF);
 	};
 
-	AWClassResourceRefDeclare(GfxMesh, awconst::keResType_GfxMesh)
+	AWClassResourceRefDeclare(GfxMesh, zenConst::keResType_GfxMesh)
 	public:
 		void						RenderMesh();
 		void						SetValue(const awShaderParameter& _Value);			
@@ -73,7 +73,7 @@ namespace zen { namespace zenRes {
 		static GfxMesh			Create(const GfxMeshStrip* _aMeshStrip, zenUInt _uMeshStripCount);
 	};
 
-	AWClassResourceRefDeclare(GfxView, awconst::keResType_GfxView)
+	AWClassResourceRefDeclare(GfxView, zenConst::keResType_GfxView)
 	public:
 		void						ActivateView();
 		void						Clear( bool _bClearColor, const zenVec4F& _vRGBA, bool _bClearDepth=true, float _fDepth=1, bool _bClearStencil=false, zenU8 _uStencil=0 );
@@ -83,7 +83,7 @@ namespace zen { namespace zenRes {
 		static GfxView			Create( const zenArrayBase<GfxRenderTarget>& _aRTColor, const GfxRenderTarget& _RTDepth, const zenVec2U16& _vDim=zenVec2U16(9999,9999), const zenVec2U16& _vOrigin=zenVec2U16(0,0) );
 	};
 
-	AWClassResourceRefDeclare(GfxWindow, awconst::keResType_GfxWindow)
+	AWClassResourceRefDeclare(GfxWindow, zenConst::keResType_GfxWindow)
 	public:
 		void						FrameBegin();
 		void						FrameEnd();

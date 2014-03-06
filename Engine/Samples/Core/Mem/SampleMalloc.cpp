@@ -35,9 +35,9 @@ namespace sample
 	//==================================================================================================
 	void SampleMalloc()
 	{	
-		CMgr::Log.Log(CLog::keLog_Game, awconst::kzLineA40);
+		CMgr::Log.Log(CLog::keLog_Game, zenConst::kzLineA40);
 		CMgr::Log.Log(CLog::keLog_Game, " MALLOC");
-		CMgr::Log.Log(CLog::keLog_Game, awconst::kzLineA40);
+		CMgr::Log.Log(CLog::keLog_Game, zenConst::kzLineA40);
 
 		zenU32 size1 = sizeof(int);
 		zenU32 size2 = sizeof(TestAlloc);

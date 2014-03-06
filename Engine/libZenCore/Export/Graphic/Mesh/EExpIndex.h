@@ -12,12 +12,12 @@ namespace EExp
 		{			
 			zenArrayStatic<zenU16>	maIndice16;			//!< 16bits Indices list (Pick 1st one valid)
 			zenArrayStatic<zenU32>	maIndice32;			//!< 32bits Indices list
-			awconst::ePrimitiveType	mePrimitiveType;	//!< Type of primitive the indices are for
+			zenConst::ePrimitiveType	mePrimitiveType;	//!< Type of primitive the indices are for
 		};
 	};
 	
-	zenResID CreateGfxIndexBuffer(const zenArrayBase<zenU16>& _Indices, awconst::ePrimitiveType _ePrimitiveType);
-	zenResID CreateGfxIndexBuffer(const zenArrayBase<zenU32>& _Indices, awconst::ePrimitiveType _ePrimitiveType);
+	zenResID CreateGfxIndexBuffer(const zenArrayBase<zenU16>& _Indices, zenConst::ePrimitiveType _ePrimitiveType);
+	zenResID CreateGfxIndexBuffer(const zenArrayBase<zenU32>& _Indices, zenConst::ePrimitiveType _ePrimitiveType);
 }
 
 #include "EExpIndexDX11.h"

@@ -117,6 +117,18 @@ bool zenFlag<TEnumFlag, TEnumMax, TStorage>::operator!=( const zenFlag<TEnumFlag
 	return muFlags != _Cmp.muFlags;
 }
 
+template<typename TEnumFlag, int TEnumMax, typename TStorage>
+zenUInt zenFlag<TEnumFlag, TEnumMax, TStorage>::CountActive()
+{
+	return zenMath::BitsCount(muFlags);
+}
+
+template<typename TEnumFlag, int TEnumMax, typename TStorage>
+zenUInt zenFlag<TEnumFlag, TEnumMax, TStorage>::CountInactive()
+{
+	return (TEnumMax-1) - zenMath::BitsCount(muFlags);
+}
+
 /*
 template<typename TEnumFlag, int TEnumMax, typename TStorage>
 const zenFlag<TEnumFlag, TEnumMax, TStorage>& zenFlag<TEnumFlag, TEnumMax, TStorage>::ForceSet(TStorage _FlagValues)

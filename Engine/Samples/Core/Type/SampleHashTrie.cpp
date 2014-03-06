@@ -122,9 +122,9 @@ namespace sample
 	{
 		#define kuTestCount (10000)
 		#define	kuPoolSize	1024
-		CMgr::Log.Log(CLog::keLog_Game, awconst::kzLineA40);
+		CMgr::Log.Log(CLog::keLog_Game, zenConst::kzLineA40);
 		CMgr::Log.Log(CLog::keLog_Game, " HASH TABLE (%i entries tested)", kuTestCount);
-		CMgr::Log.Log(CLog::keLog_Game, awconst::kzLineA40);
+		CMgr::Log.Log(CLog::keLog_Game, zenConst::kzLineA40);
 
 		zenU32 uValKey(0);
 		zenU64 uTimeStartGet,uTimeStartSet;

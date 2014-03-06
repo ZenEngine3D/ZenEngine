@@ -16,7 +16,7 @@ namespace EExp
 	, mExportTime(0)	
 	, mVersion(0,0)
 	{
-		ZENStaticAssert( ZENArrayCount(sVersions)==awconst::keResType__Count );
+		ZENStaticAssert( ZENArrayCount(sVersions)==zenConst::keResType__Count );
 	}
 
 	bool SerialItem::Serialize( EExp::Serializer_Base& aSerializer )

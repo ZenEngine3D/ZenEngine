@@ -10,7 +10,7 @@ namespace ERes
 	{
 		ID3D11SamplerState*		mpSamplerState;
 	};
-	AWResourceDeclare(GfxSampler_DX11, InstanceInfo, awconst::keResType_GfxSampler)
+	AWResourceDeclare(GfxSampler_DX11, InstanceInfo, zenConst::keResType_GfxSampler)
 	public:
 		virtual					~GfxSampler_DX11();
 		virtual bool			ResourceInit();		
@@ -22,7 +22,7 @@ namespace ERes
 		{
 			ID3D11BlendState*		mpBlendState;
 		};
-		AWResourceDeclare(GfxBlend_DX11, InstanceInfo, awconst::keResType_GfxBlend)
+		AWResourceDeclare(GfxBlend_DX11, InstanceInfo, zenConst::keResType_GfxBlend)
 	public:
 		virtual					~GfxBlend_DX11();
 		virtual bool			ResourceInit();		
@@ -34,7 +34,7 @@ namespace ERes
 		{
 			ID3D11DepthStencilState*		mpDepthStencilState;
 		};
-		AWResourceDeclare(GfxDepthStencil_DX11, InstanceInfo, awconst::keResType_GfxDepthStencil)
+		AWResourceDeclare(GfxDepthStencil_DX11, InstanceInfo, zenConst::keResType_GfxDepthStencil)
 	public:
 		virtual					~GfxDepthStencil_DX11();
 		virtual bool			ResourceInit();		
@@ -46,7 +46,7 @@ namespace ERes
 		{
 			ID3D11RasterizerState*		mpRasterizerState;
 		};
-		AWResourceDeclare(GfxRasterizer_DX11, InstanceInfo, awconst::keResType_GfxRasterizer)
+		AWResourceDeclare(GfxRasterizer_DX11, InstanceInfo, zenConst::keResType_GfxRasterizer)
 	public:
 		virtual					~GfxRasterizer_DX11();
 		virtual bool			ResourceInit();		

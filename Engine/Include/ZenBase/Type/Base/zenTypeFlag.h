@@ -18,7 +18,7 @@ template<typename TEnumFlag, int TEnumMax, typename TStorage=zenU32>
 class zenFlag
 {
 public:
-	inline					zenFlag();
+	ZENInline					zenFlag();
 
 	FLAG_CONSTRUCTOR(0);	FLAG_CONSTRUCTOR(1);	FLAG_CONSTRUCTOR(2);	FLAG_CONSTRUCTOR(3);	FLAG_CONSTRUCTOR(4);
 	FLAG_CONSTRUCTOR(5);	FLAG_CONSTRUCTOR(6);	FLAG_CONSTRUCTOR(7);	FLAG_CONSTRUCTOR(8);	FLAG_CONSTRUCTOR(9);
@@ -29,33 +29,35 @@ public:
 	FLAG_ANY(0);			FLAG_ANY(1);			FLAG_ANY(2);			FLAG_ANY(3);			FLAG_ANY(4);
 	FLAG_ANY(5);			FLAG_ANY(6);			FLAG_ANY(7);			FLAG_ANY(8);			FLAG_ANY(9);
 	
-	inline const zenFlag&	operator= (const zenFlag& _Cpy);
-	inline const zenFlag&	operator+=(const zenFlag& _Add);
-	inline const zenFlag&	operator-=(const zenFlag& _Rem);
-	inline const zenFlag&	operator&=(const zenFlag& _And);
-	inline const zenFlag&	operator|=(const zenFlag& _Or);
-	inline const zenFlag&	operator^=(const zenFlag& _Xor);
+	ZENInline const zenFlag&	operator= (const zenFlag& _Cpy);
+	ZENInline const zenFlag&	operator+=(const zenFlag& _Add);
+	ZENInline const zenFlag&	operator-=(const zenFlag& _Rem);
+	ZENInline const zenFlag&	operator&=(const zenFlag& _And);
+	ZENInline const zenFlag&	operator|=(const zenFlag& _Or);
+	ZENInline const zenFlag&	operator^=(const zenFlag& _Xor);
 
-	inline zenFlag			operator&(const zenFlag& _And);
-	inline zenFlag			operator|(const zenFlag& _And);
-	inline zenFlag			operator^(const zenFlag& _And);
+	ZENInline zenFlag			operator&(const zenFlag& _And);
+	ZENInline zenFlag			operator|(const zenFlag& _And);
+	ZENInline zenFlag			operator^(const zenFlag& _And);
 	
-	inline const zenFlag&	Reset()	;
-	inline const zenFlag&	Invert();
-	//inline const zenFlag&	ForceSet(TStorage _FlagValues);
+	ZENInline const zenFlag&	Reset()	;
+	ZENInline const zenFlag&	Invert();
+	//ZENInline const zenFlag&	ForceSet(TStorage _FlagValues);
 
-	inline bool				Any( )const						;
-	inline bool				Any( const zenFlag& _Cmp )const	;
-	inline bool				All( const zenFlag& _Cmp )const	;
-	
-	inline bool				operator==( const zenFlag& _Cmp )const;
-	inline bool				operator!=( const zenFlag& _Cmp )const;
-		
+	ZENInline bool				Any( )const						;
+	ZENInline bool				Any( const zenFlag& _Cmp )const	;
+	ZENInline bool				All( const zenFlag& _Cmp )const	;
+	ZENInline zenUInt			CountActive();
+	ZENInline zenUInt			CountInactive();
+
+	ZENInline bool				operator==( const zenFlag& _Cmp )const;
+	ZENInline bool				operator!=( const zenFlag& _Cmp )const;
+
 protected:
-	inline					zenFlag(TStorage _Mask);
+	ZENInline					zenFlag(TStorage _Mask);
 	AWForceInline void		CheckValid(TStorage _Value);
-	inline bool				Any( TStorage _uFlags );
-	inline bool				All( TStorage _uFlags );
+	ZENInline bool				Any( TStorage _uFlags );
+	ZENInline bool				All( TStorage _uFlags );
 	TStorage				muFlags;
 };
 

@@ -22,8 +22,8 @@ namespace ERes
 		RECT rc;
 		GetClientRect( Get().mhWindow, &rc );
 		mInstanceInfo.mvSize					= zenVec2U16(zenU16(rc.right-rc.left), zenU16(rc.bottom-rc.top));
-		mInstanceInfo.meBackbufferColorFormat	= awconst::keTexFormat_RGBA8;
-		mInstanceInfo.meBackbufferDepthFormat	= awconst::keTexFormat_D24S8;
+		mInstanceInfo.meBackbufferColorFormat	= zenConst::keTexFormat_RGBA8;
+		mInstanceInfo.meBackbufferDepthFormat	= zenConst::keTexFormat_D24S8;
 
 		DXGI_SWAP_CHAIN_DESC swapDesc;
 		ZeroMemory( &swapDesc, sizeof( swapDesc ) );

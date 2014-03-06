@@ -1,11 +1,11 @@
 #include "libZenEngine.h"
-#if AW_ENGINETOOL
+#if ZEN_ENGINETOOL
 
 namespace zen { namespace zeAss
 {	
 
 Package::Package()
-: madAssetPerType(AssetItem::keType__Count)
+: madAssetPerType(zenConst::keAssType__Count)
 {
 	for(zenUInt typIdx(0), typCount(madAssetPerType.Count()); typIdx<typCount; ++typIdx)
 	{
@@ -59,8 +59,8 @@ bool Package::Load(const CFil::Filename& _Filename, zenMap<AssetItem*>::Key64& _
 	for(pugi::xml_node nodeAsset = Doc.child(kzXmlName_Node_Asset); nodeAsset; nodeAsset = nodeAsset.next_sibling(kzXmlName_Node_Asset))
 	{		
 		const char* zAssetType			= nodeAsset.attribute(kzXmlName_AssetAtr_Type).as_string();		
-		AssetItem::enumType eAssetType	= AssetItem::GetType(zenHash32(zAssetType));
-		if( eAssetType < AssetItem::keType__Count )
+		zenConst::eAssetType eAssetType	= AssetItem::GetType(zenHash32(zAssetType));
+		if( eAssetType < zenConst::keAssType__Count )
 		{
 			AssetItem* pNewAsset = AssetItem::CreateItem( eAssetType, *this );
 			pNewAsset->Load( nodeAsset );
@@ -105,7 +105,7 @@ bool Package::Save()
 	return true;
 }
 
-AssetItem* Package::AssetGet(AssetItem::enumType _eType, zenHash64 _hAssetName)
+AssetItem* Package::AssetGet(zenConst::eAssetType _eType, zenHash64 _hAssetName)
 {
 	return madAssetPerType[_eType][_hAssetName];
 }
@@ -147,4 +147,4 @@ void LoadGroupAndName(const char* _zName, const char* _zGroup, zenArrayStatic<ze
 
 }} //namespace zen { namespace zeAss
 
-#endif //AW_ENGINETOOL
+#endif //ZEN_ENGINETOOL

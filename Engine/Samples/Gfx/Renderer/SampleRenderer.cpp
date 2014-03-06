@@ -42,8 +42,8 @@ SimpleVertex CubeVertices[] =
 };
 
 const zenRes::GfxVertex::Element CubeVerticeInfos[]={	
-	zenRes::GfxVertex::Element(awconst::keShaderElemType_Float, 3, awconst::keShaderSemantic_Position,	ZENMemberOffset(SimpleVertex, Pos) ),
-	zenRes::GfxVertex::Element(awconst::keShaderElemType_Float, 2, awconst::keShaderSemantic_UV,		ZENMemberOffset(SimpleVertex, Tex) ) 
+	zenRes::GfxVertex::Element(zenConst::keShaderElemType_Float, 3, zenConst::keShaderSemantic_Position,	ZENMemberOffset(SimpleVertex, Pos) ),
+	zenRes::GfxVertex::Element(zenConst::keShaderElemType_Float, 2, zenConst::keShaderSemantic_UV,		ZENMemberOffset(SimpleVertex, Tex) ) 
 };
 
 zenU16 CubeIndices[] =
@@ -76,7 +76,7 @@ bool SampleRendererInstance::Init()
 
 	zenArrayStatic<zenU8>		aTexRGBA;
 	zenVec2U16				vTexSize(256,256);
-	awconst::eTextureFormat	eTexFormat = awconst::keTexFormat_RGBA8;
+	zenConst::eTextureFormat	eTexFormat = zenConst::keTexFormat_RGBA8;
 	//aTexRGBA.SetCount( EExp::GetTextureBlockInfo(eTexFormat).muSize * vTexSize.x * vTexSize.y ); //! @todo export this in api
 	aTexRGBA.SetCount( vTexSize.x*vTexSize.y*4 );
 	zenU8*						pTexCur = aTexRGBA.First();
@@ -105,14 +105,14 @@ bool SampleRendererInstance::Init()
 	test[0] = zenRes::awShaderDefine("DEFINETEST", "1");
 
 	rCubeVertex			= zenRes::GfxVertex::Create(aVerticeStreams, 0);
-	rCubeIndex			= zenRes::GfxIndex::Create( zenArrayStatic<zenU16>(CubeIndices, ZENArrayCount(CubeIndices), TRUE), awconst::kePrimType_TriangleList );
+	rCubeIndex			= zenRes::GfxIndex::Create( zenArrayStatic<zenU16>(CubeIndices, ZENArrayCount(CubeIndices), TRUE), zenConst::kePrimType_TriangleList );
 	rShaderVS			= zenRes::GfxShaderVertex::Create( "Shader/Tutorial07.fx", "VS");
 	rShaderPS			= zenRes::GfxShaderPixel::Create( "Shader/Tutorial07.fx", "PS", test );		
-	rTexture			= zenRes::GfxTexture2D::Create(awconst::keTexFormat_RGBA8, vTexSize, aTexRGBA );
-	rSampler			= zenRes::GfxSampler::Create(awconst::keTexFilter_Trilinear, awconst::keTexFilter_Bilinear, awconst::keTexWrap_Clamp, awconst::keTexWrap_Clamp, 0);
-	rSampler2			= zenRes::GfxSampler::Create(awconst::keTexFilter_Point, awconst::keTexFilter_Point, awconst::keTexWrap_Clamp, awconst::keTexWrap_Clamp, 0);
-	rRenderColor		= zenRes::GfxRenderTarget::Create(awconst::keTexFormat_RGBA8, zenVec2U16(512,512) );
-	rRenderDepth		= zenRes::GfxRenderTarget::Create(awconst::keTexFormat_D24S8, zenVec2U16(512,512) );
+	rTexture			= zenRes::GfxTexture2D::Create(zenConst::keTexFormat_RGBA8, vTexSize, aTexRGBA );
+	rSampler			= zenRes::GfxSampler::Create(zenConst::keTexFilter_Trilinear, zenConst::keTexFilter_Bilinear, zenConst::keTexWrap_Clamp, zenConst::keTexWrap_Clamp, 0);
+	rSampler2			= zenRes::GfxSampler::Create(zenConst::keTexFilter_Point, zenConst::keTexFilter_Point, zenConst::keTexWrap_Clamp, zenConst::keTexWrap_Clamp, 0);
+	rRenderColor		= zenRes::GfxRenderTarget::Create(zenConst::keTexFormat_RGBA8, zenVec2U16(512,512) );
+	rRenderDepth		= zenRes::GfxRenderTarget::Create(zenConst::keTexFormat_D24S8, zenVec2U16(512,512) );
 	rView				= zenRes::GfxView::Create( rRenderColor, rRenderDepth, zenVec2U16(256,256), zenVec2U16(256,256) );
 
 	// Some bindings of render resource together

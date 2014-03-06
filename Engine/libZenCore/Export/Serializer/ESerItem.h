@@ -20,10 +20,10 @@ namespace EExp
 	public:
 		struct Version
 		{	
-			Version():muEngine(awconst::keEngineVersion__Current),muMajor(0),muMinor(0){};
-			Version(zenU8 auMajor, zenU8 auMinor):muEngine(awconst::keEngineVersion__Current),muMajor(auMajor),muMinor(auMinor){};
+			Version():muEngine(zenConst::keEngineVersion__Current),muMajor(0),muMinor(0){};
+			Version(zenU8 auMajor, zenU8 auMinor):muEngine(zenConst::keEngineVersion__Current),muMajor(auMajor),muMinor(auMinor){};
 			Version(const Version& aCopy):muEngine(aCopy.muEngine),muMajor(aCopy.muMajor),muMinor(aCopy.muMinor){};
-			bool IsValid( awconst::eResType _eResType )const {return muEngine==awconst::keEngineVersion__Current && SerialItem::sVersions[_eResType].muMajor == muMajor && SerialItem::sVersions[_eResType].muMinor == muMinor; }
+			bool IsValid( zenConst::eResType _eResType )const {return muEngine==zenConst::keEngineVersion__Current && SerialItem::sVersions[_eResType].muMajor == muMajor && SerialItem::sVersions[_eResType].muMinor == muMinor; }
 			zenU16 muEngine;
 			zenU8 muMajor;	
 			zenU8 muMinor;	
@@ -35,7 +35,7 @@ namespace EExp
 		Version						mVersion;
 		zenTimeStamp			mExportTime;		
 		zenResID			mResID;				
-		static const Version		sVersions[awconst::keResType__Count];
+		static const Version		sVersions[zenConst::keResType__Count];
 	};
 }
 

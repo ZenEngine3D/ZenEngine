@@ -17,7 +17,7 @@ zenResID CreateGfxVertex(const zenArrayBase<zenRes::GfxVertex::Stream>& _aStream
 	SerialVertex_Base::ExportInfo* pExportInfo	= zenNew(&sMemPool) SerialVertex_Base::ExportInfo;
 	pExportInfo->maStreams						= _aStreams;
 	pExportInfo->muCreationFlags				= _uCreationFlags;
-	return EMgr::Export.CreateItem( zenResID::kePlatformType_GFX, awconst::keResType_GfxVertex, pExportInfo );
+	return EMgr::Export.CreateItem( zenResID::kePlatformType_GFX, zenConst::keResType_GfxVertex, pExportInfo );
 }
 
 }
