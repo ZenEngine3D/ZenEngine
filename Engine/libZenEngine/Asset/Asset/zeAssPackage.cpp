@@ -59,7 +59,7 @@ bool Package::Load(const CFil::Filename& _Filename, zenMap<AssetItem*>::Key64& _
 	for(pugi::xml_node nodeAsset = Doc.child(kzXmlName_Node_Asset); nodeAsset; nodeAsset = nodeAsset.next_sibling(kzXmlName_Node_Asset))
 	{		
 		const char* zAssetType			= nodeAsset.attribute(kzXmlName_AssetAtr_Type).as_string();		
-		zenConst::eAssetType eAssetType	= AssetItem::GetType(zenHash32(zAssetType));
+		zenConst::eAssetType eAssetType	= AssetItem::GetTypeFromName(zenHash32(zAssetType));
 		if( eAssetType < zenConst::keAssType__Count )
 		{
 			AssetItem* pNewAsset = AssetItem::CreateItem( eAssetType, *this );

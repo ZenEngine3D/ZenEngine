@@ -110,9 +110,8 @@ TabAssetProperty::TabAssetProperty(wxWindow *_pParent, zeAss::AssetItem* _pEditA
 
 	// Add every property of this asset
 	TabAssetPropertyGridPage* pPage = zenNewDefault TabAssetPropertyGridPage();
-	zenArrayStatic<zeAss::ValuePointer>& aValues = mpAsset->GetPropertyValues();
-	for(zenUInt propIdx(0), propCount(aValues.Count()); propIdx<propCount; ++propIdx)
-		CreateAssetValueControl(*pPage, aValues[propIdx]);
+	for(zenUInt propIdx(0), propCount(mpAsset->GetValueCount()); propIdx<propCount; ++propIdx)
+		CreateAssetValueControl(*pPage, mpAsset->GetValue(propIdx));
 
 	mpPropertyGrid->AddPage("All", wxNullBitmap, pPage);
 	

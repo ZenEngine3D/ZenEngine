@@ -60,27 +60,27 @@ namespace BCtrl
 
 struct PropertyMetaData
 {
-	PropertyMetaData(const zeAss::ValuePointer& _AssetValue, const wxVariant& _OriginalValue)
+	PropertyMetaData(const zenAss::PropertyValue& _AssetValue, const wxVariant& _OriginalValue)
 	: mAssetValue(_AssetValue)
 	, mOriginalValue(_OriginalValue)
 	{}
-	zeAss::ValuePointer	mAssetValue;
-	wxVariant			mOriginalValue;
+	zenAss::PropertyValue	mAssetValue;
+	wxVariant				mOriginalValue;
 };
 
-wxPGProperty* CreateAssetValueControl(wxPropertyGridInterface& _GridControl, zeAss::ValuePointer& _Value);
+wxPGProperty* CreateAssetValueControl(wxPropertyGridInterface& _GridControl, zenAss::PropertyValue& _Value);
 
 class wxBetlBoolProperty : public wxBoolProperty
 {
 public:
-						wxBetlBoolProperty(zeAss::PropertyDefBool::Value& _AssetValue);
+						wxBetlBoolProperty(zenAss::PropertyValue& _AssetValue);
 	virtual				~wxBetlBoolProperty();
 };
 
 class wxBetlFileProperty : public wxFileProperty
 {
 public:
-	wxBetlFileProperty(zeAss::PropertyDefFile::Value& _AssetValue);
+						wxBetlFileProperty(zenAss::PropertyValue& _AssetValue);
 	virtual				~wxBetlFileProperty();
 };
 

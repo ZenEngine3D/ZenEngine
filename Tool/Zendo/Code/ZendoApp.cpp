@@ -41,6 +41,14 @@ bool ZendoApp::OnInit()
 	if ( !wxApp::OnInit() )
 		return false;
 
+	char zBuffer[256];
+	zeAss::TestProperty Test;
+	Test.InitDefault();
+	Test.GetValue(0).ToString( sizeof(zBuffer), zBuffer);
+	Test.GetValue(0).ToXml( sizeof(zBuffer), zBuffer);
+	Test.GetValue(1).ToString( sizeof(zBuffer), zBuffer);
+	Test.GetValue(1).ToXml( sizeof(zBuffer), zBuffer);
+
 	wxInitAllImageHandlers();
 	static EngineInstance Engine;
 
@@ -89,7 +97,7 @@ bool ZendoApp::InitResources()
 			maIcon[keIco_Asset16+idxSize] = zenNewDefault wxImageList(auIconSize[idxSize], auIconSize[idxSize], true);
 			for(zenUInt idxType(0); idxType<zenConst::keAssType__Count; ++idxType)
 			{
-				zFilename = zFolder + wxString(zeAss::AssetItem::GetTypeDesc(zenConst::eAssetType(idxType))) + wxT(".png");				
+				zFilename = zFolder + wxString(zeAss::AssetItem::GetTypeName(zenConst::eAssetType(idxType))) + wxT(".png");				
 				wxImage imgIcon(zFilename);
 				if( imgIcon.IsOk() )
 				{

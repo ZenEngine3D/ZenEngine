@@ -6,96 +6,76 @@
 
 namespace zen { namespace zenAss 
 {
+	const char* GetPropertyTypeName(zenConst::eAssetPropertyType _eType);
+
+	//=============================================================================================
+	// Property : Base
+	//=============================================================================================
 	class PropertyBase
 	{
-	ZENClassDeclareNoParent(PropertyBase)
-	public:
-		ZENInline zenConst::eAssetPropertyType		GetType()const{return meType;}
+	ZENClassDeclareNoParent(PropertyBase)	
 	protected:
-		//-----------------------------------------------------------------------------
-		// Property definition methods
-		//-----------------------------------------------------------------------------
 												PropertyBase( const char* _zName, zenConst::eAssetPropertyType _eType, const char* _zDisplayName, const char* _zDescription, bool _bShowInAssetDesc );
-		
-		//virtual void*							Allocate()const=0;
-	protected:
+	public:		
 		zenStringHash32							mName;
 		zenConst::eAssetPropertyType			meType;
 		const char*								mzDisplayName;
 		const char*								mzDescription;		
 		bool									mbShowInAssetDesc;
+		
 	};
-	/*
-	template<class TDataType, zenConst::eAssetPropertyType TAssetType >
-	class PropertyTemplated : public PropertyBase
-	{
-	ZENClassDeclare(PropertyTemplated, PropertyBase)
-	public:
-		typedef TDataType Data;
 
-		PropertyTemplated( const char* _zName, const char* _zDisplayName, const char* _zDescription, bool _bShowInAssetDesc, const Data& _DefaultValue )
-		: PropertyBase( _zName, _zDisplayName, _zDescription, _bShowInAssetDesc )
-		, mDefault(_DefaultValue)
-		{
-		}
-
-		virtual	zenConst::eAssetPropertyType GetType()const
-		{
-			return TAssetType;
-		};
-
-		virtual	void* Allocate()const
-		{
-			static zenMem::AllocatorPool sPoolAlloc( "PropertyTemplated Pool", sizeof(Data), 100, 100 );
-			return zenNew(&sPoolAlloc) Data(mDefault);
-		};
-
-		Data mDefault;
-	};
-	*/
-	class PropertyBool : public PropertyBase//PropertyTemplated<bool, zenConst::keAssProp_Bool>
+	//=============================================================================================
+	// Property : Bool
+	//=============================================================================================
+	class PropertyBool : public PropertyBase
 	{
 	ZENClassDeclare(PropertyBool, PropertyBase)
 	public:
-		PropertyBool(const char* _zName, const char* _zDisplayName, const char* _zDescription, bool _bShowInAssetDesc, bool _bDefault)
-		: PropertyBase(_zName, zenConst::keAssProp_Bool, _zDisplayName, _zDescription, _bShowInAssetDesc )
-		, mDefault(_bDefault)
-		{}
-
-		typedef bool Data;
-		Data mDefault;		
+		typedef bool		Data;
+		Data				mDefault;
+		
+		ZENInline zenUInt	ToString	(const Data& _Value, zenUInt _zLen, char* _zOutString)const;
+		ZENInline zenUInt	ToXml		(const Data& _Value, zenUInt _zLen, char* _zOutString)const;
+		ZENInline			PropertyBool(const char* _zName, const char* _zDisplayName, const char* _zDescription, bool _bShowInAssetDesc, Data _bDefault);
 	};
 
-
-	class PropertyFile : public PropertyBase//PropertyTemplated<zenString, zenConst::keAssProp_File>
+	//=============================================================================================
+	// Property : File
+	//=============================================================================================
+	class PropertyFile : public PropertyBase
 	{
 	ZENClassDeclare(PropertyFile, PropertyBase)
 	public:
-		PropertyFile(const char* _zName, const char* _zDisplayName, const char* _zDescription, bool _bShowInAssetDesc, const char* _zDefault, const char* _zFileExt="Any(*.*)|*.*" )
-		: PropertyBase(_zName, zenConst::keAssProp_File, _zDisplayName, _zDescription, _bShowInAssetDesc )
-		, mDefault(_zDefault)
-		, mzFileExt(_zFileExt)
-		{}
 		typedef zenString	Data;
-		zenString			mDefault;
+		Data				mDefault;
 		const char*			mzFileExt;	//!< List of supported files extensions to display in file dialog
+		
+		ZENInline zenUInt	ToString	(const Data& _Value, zenUInt _zLen, char* _zOutString)const;
+		ZENInline zenUInt	ToXml		(const Data& _Value, zenUInt _zLen, char* _zOutString)const;
+		ZENInline			PropertyFile(const char* _zName, const char* _zDisplayName, const char* _zDescription, bool _bShowInAssetDesc, const char* _zDefault, const char* _zFileExt="Any(*.*)|*.*" );
 	};
 
+	//=============================================================================================
+	// Property Value
+	//=============================================================================================
 	class PropertyValue
 	{
 	public:
 		ZENInline									PropertyValue();
 													~PropertyValue();
-		ZENForceInline zenConst::eAssetPropertyType	GetType()const;
-		ZENForceInline void							Allocate(const PropertyBase& _PropertyDef);
-		ZENForceInline void							Reset();
-		ZENForceInline const PropertyBase*			GetProperty();
+		ZENForceInline zenConst::eAssetPropertyType	GetType		()const;
+		ZENForceInline void							Allocate	(const PropertyBase& _PropertyDef);
+		ZENForceInline void							Reset		();
+		ZENForceInline const PropertyBase*			GetProperty	()const;
+		ZENInline zenUInt							ToString	(zenUInt _zLen, char* _zOutString)const;
+		ZENInline zenUInt							ToXml		(zenUInt _zLen, char* _zOutString)const;
 
 	#define ZEN_ASSETPROPERTIES_EXPAND_CODE(_TypeName_)																							\
-	ZENInline bool									Is##_TypeName_() const			{return GetType()==zenConst::keAssProp_##_TypeName_##;}			\
-	ZENInline const Property##_TypeName_##::Data*	GetValue##_TypeName_()const		{ZENAssert(Is##_TypeName_##()); return mpValue##_TypeName_;}	\
-	ZENInline Property##_TypeName_##::Data*			GetValue##_TypeName_()			{ZENAssert(Is##_TypeName_##()); return mpValue##_TypeName_;}	\
-	ZENInline const Property##_TypeName_*			GetProperty##_TypeName_()const	{ZENAssert(Is##_TypeName_##()); return static_cast<const Property##_TypeName_*>(mpDefinition);}
+	ZENInline bool									Is##_TypeName_()const			{return GetType()==zenConst::keAssProp_##_TypeName_##;}			\
+	ZENInline const Property##_TypeName_##::Data&	GetValue##_TypeName_()const		{ZENAssert(Is##_TypeName_##()); return *mpValue##_TypeName_;}	\
+	ZENInline Property##_TypeName_##::Data&			GetValue##_TypeName_()			{ZENAssert(Is##_TypeName_##()); return *mpValue##_TypeName_;}	\
+	ZENInline const Property##_TypeName_&			GetProperty##_TypeName_()const	{ZENAssert(Is##_TypeName_##()); return *static_cast<const Property##_TypeName_*>(mpDefinition);}
 	ZEN_ASSETPROPERTIES_EXPAND
 	#undef	ZEN_ASSETPROPERTIES_EXPAND_CODE
 

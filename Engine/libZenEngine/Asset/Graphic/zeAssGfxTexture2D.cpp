@@ -5,6 +5,7 @@
 
 namespace zen { namespace zeAss
 {
+#if 0
 	//=================================================================================================
 	//! @brief		Get the list of properties definition for this asset
 	//! @details	Used to know which data to read/write to xml
@@ -60,6 +61,31 @@ namespace zen { namespace zeAss
 			InitPropertyDefIndex(sdPropertyIndex);
 		return sdPropertyIndex[_hPropertyName];
 	}
+#endif
+	//=================================================================================================
+	//! @brief		
+	//! @details	
+	//-------------------------------------------------------------------------------------------------
+	//! @param hPropertyName	- Name of property to look for
+	//! @return					- Index of found item (-1 if not found)
+	//=================================================================================================
+	zenInt GfxTexture2D::GetValueIndex(zenHash32 _hPropertyName)const	
+	{
+		static zenMap<zenInt>::Key32 sdPropertyIndex;
+		static bool sbInit = InitPropertyMap(sdPropertyIndex);	//!< suEntryCount only used to init hashtable once
+		return sdPropertyIndex[_hPropertyName];
+	}
+
+	const zenAss::PropertyArray& GfxTexture2D::GetProperties()const
+	{ 	
+		//zenMap<zenU32>::Key32					mdPropertyIndex; todo
+		static const zenAss::PropertyBool	Property00("TestBool",		"", "Test Bool Field",		true,	false);		
+		static const zenAss::PropertyFile	Property02("Source",		"", "Texture file",			true,	"C:\\temp\\test.txt", "Images|*.bmp;*.png;*.jpeg;*.jpg|BMP(*.bmp)|*.bmp|PNG(*.png)|*.png|JPEG(*.jpg;*.jpeg)|*.jpg;*.jpeg");
+		static const zenAss::PropertyBase*	aPropertiesAll[] = {&Property00, &Property02 };
+		static zenAss::PropertyArray		saProperties( aPropertiesAll, ZENArrayCount(aPropertiesAll) );
+		return saProperties;
+	}
+
 }} //namespace zen { namespace zeAss
 
 #endif //ZEN_ENGINETOOL
