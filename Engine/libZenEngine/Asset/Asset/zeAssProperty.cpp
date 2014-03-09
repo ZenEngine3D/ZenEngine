@@ -4,15 +4,16 @@
 namespace zen { namespace zeAss
 {
 
+static zenStringHash32 sTypeDescription[]={
+#define ZEN_ASSETPROPERTIES_EXPAND_CODE(_TypeName_)	zenStringHash32(#_TypeName_),
+		ZEN_ASSETPROPERTIES_EXPAND	
+#undef ZEN_ASSETPROPERTIES_EXPAND_CODE
+	};
+
+#if 0
 #define ZEN_ASSETPROPERTIES_EXPAND_CODE(_TypeName_) zenMem::AllocatorPool PropertyDef##_TypeName_##::sPoolAlloc( "PropertyDef Pool", sizeof(PropertyDef##_TypeName_##::Value), 100, 100);
 ZEN_ASSETPROPERTIES_EXPAND
 #undef	ZEN_ASSETPROPERTIES_EXPAND_CODE
-
-static zenStringHash32 sTypeDescription[]={
-	#define ZEN_ASSETPROPERTIES_EXPAND_CODE(_TypeName_)	zenStringHash32(#_TypeName_),
-	ZEN_ASSETPROPERTIES_EXPAND	
-	#undef ZEN_ASSETPROPERTIES_EXPAND_CODE
-};
 
 //=================================================================================================
 //! @brief		zenString representation of all PropertyDef type enum
@@ -307,6 +308,8 @@ bool PropertyDefFloat2::ValueFromXml(PropertyDefBase::Value& _Value, const pugi:
 	}
 	return false;
 }
+
+#endif
 
 #endif
 

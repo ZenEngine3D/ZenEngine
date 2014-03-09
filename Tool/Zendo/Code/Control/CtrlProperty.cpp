@@ -23,34 +23,34 @@ static zenMem::AllocatorPool sPoolMetaData("Betl::PropertyMetaData Pool", sizeof
 //! @param _Value		- Asset value to edit
 //! @return				- Created property control
 //=================================================================================================
-wxPGProperty* CreateAssetValueControl(wxPropertyGridInterface& _GridControl, zeAss::ValuePointer& _Value)
+wxPGProperty* CreateAssetValueControl(wxPropertyGridInterface& _GridControl, zenAss::PropertyValue& _Value)
 {
 	static const wxColour bgColors[]={wxColour(230,240,250,255),wxColour(240,245,240,255)};
 	static zenUInt suLineIndex(0);
 	wxPGProperty* pProperty(NULL);
 	switch( _Value.GetType() )
 	{
-	case zenConst::keAssProp_Bool:	pProperty=zenNewDefault wxBetlBoolProperty(*_Value.GetBool());			break;
-	case zenConst::keAssProp_File:	pProperty=zenNewDefault wxBetlFileProperty(*_Value.GetFile());			break;
+	case zenConst::keAssProp_Bool:	pProperty=zenNewDefault wxBetlBoolProperty(_Value);			break;
+	case zenConst::keAssProp_File:	pProperty=zenNewDefault wxBetlFileProperty(_Value);			break;
 #if 0
-	case zenConst::keAssProp_Int:		pProperty=zenNewDefault wxBetlIntProperty(*_Value.GetInt());				break;
+	case zenConst::keAssProp_Int:		pProperty=zenNewDefault wxBetlIntProperty(_Value.GetInt());				break;
 		// 		case AAss::zenConst::keAssProp_Int2:			break;
 		// 		case AAss::zenConst::keAssProp_Int3:			break;
 		// 		case AAss::zenConst::keAssProp_Int4:			break;
-	case zenConst::keAssProp_Float:	pProperty=zenNewDefault wxBetlFloatProperty(*_Value.GetFloat());			break;
-	case zenConst::keAssProp_Float2:	pProperty=zenNewDefault wxBetlVector2fProperty(*_Value.GetFloat2());		break;
+	case zenConst::keAssProp_Float:		pProperty=zenNewDefault wxBetlFloatProperty(_Value.GetFloat());			break;
+	case zenConst::keAssProp_Float2:	pProperty=zenNewDefault wxBetlVector2fProperty(_Value.GetFloat2());		break;
 		// 		case AAss::zenConst::keAssProp_Float3:			break;
 		// 		case AAss::zenConst::keAssProp_Float4:			break;
-	case zenConst::keAssProp_Enum:	pProperty=zenNewDefault wxBetlEnumProperty(*_Value.GetEnum());			break;
+	case zenConst::keAssProp_Enum:	pProperty=zenNewDefault wxBetlEnumProperty(_Value.GetEnum());			break;
 #endif
 	default:									ZENAssertMsg(0, "Unknown property type, implement it")			break;
 	}	
 	
 	if( pProperty )
 	{		
-		const zeAss::PropertyDefBase& PropertyDef = _Value.GetBase()->mParentDef;
-		pProperty->SetName				( PropertyDef.mzName );
-		pProperty->SetLabel				( PropertyDef.mzDisplayName );				
+		const zenAss::PropertyBase* pPropertyDef = _Value.GetProperty();
+		pProperty->SetName				( pPropertyDef->mName.mzName );
+		pProperty->SetLabel				( pPropertyDef->mzDisplayName );				
 		pProperty->SetModifiedStatus	( pProperty->GetValue() != pProperty->GetDefaultValue() );
 		_GridControl.Append				( pProperty );
 		pProperty->SetBackgroundColour	( bgColors[++suLineIndex%ZENArrayCount(bgColors)] );
@@ -79,16 +79,16 @@ void ConfigurePropertyScalar(wxPGProperty& _Property, const wxVariant& _Min, con
 //=================================================================================================
 // PROPERTY :
 //=================================================================================================
-wxBetlBoolProperty::wxBetlBoolProperty(zeAss::PropertyDefBool::Value& _AssetValue)
+wxBetlBoolProperty::wxBetlBoolProperty(zenAss::PropertyValue& _AssetValue)
 {
-	const zeAss::PropertyDefBool&	PropertyDef		= (const zeAss::PropertyDefBool&)_AssetValue.mParentDef;
-	PropertyMetaData*				pMetaData		= zenNew(&sPoolMetaData)PropertyMetaData(&_AssetValue, _AssetValue.mValue);
-	const wxString					zFalseTrue[2]	= {wxT("False"), wxT("True")};	
-	SetClientData		( pMetaData );
-	SetDefaultValue		( wxVariant(PropertyDef.mDefault) );
-	SetValue			( _AssetValue.mValue );	
-	SetHelpString		( wxString::Format("%s\n(Default %s)", PropertyDef.mzDescription, zFalseTrue[PropertyDef.mDefault]));
-	SetAttribute		( wxPG_BOOL_USE_CHECKBOX, true );
+	const zenAss::PropertyBool&	Property		= _AssetValue.GetPropertyBool();
+	PropertyMetaData*			pMetaData		= zenNew(&sPoolMetaData)PropertyMetaData(_AssetValue, _AssetValue.GetValueBool());
+	const wxString				zFalseTrue[2]	= {wxT("False"), wxT("True")};	
+	SetClientData	( pMetaData );
+	SetDefaultValue	( wxVariant(Property.mDefault) );
+	SetValue		( _AssetValue.GetValueBool() );	
+	SetHelpString	( wxString::Format("%s\n(Default %s)", Property.mzDescription, zFalseTrue[Property.mDefault]));
+	SetAttribute	( wxPG_BOOL_USE_CHECKBOX, true );
 }
 
 wxBetlBoolProperty::~wxBetlBoolProperty()
@@ -99,18 +99,18 @@ wxBetlBoolProperty::~wxBetlBoolProperty()
 //=================================================================================================
 // PROPERTY :
 //=================================================================================================
-wxBetlFileProperty::wxBetlFileProperty(zeAss::PropertyDefFile::Value& _AssetValue)
+wxBetlFileProperty::wxBetlFileProperty(zenAss::PropertyValue& _AssetValue)
 {
-	wxFileName Value((const char*)_AssetValue.mValue);
-	const zeAss::PropertyDefFile& PropertyDef	= (const zeAss::PropertyDefFile&)_AssetValue.mParentDef;
-	PropertyMetaData* pMetaData					= zenNew(&sPoolMetaData)PropertyMetaData(&_AssetValue, Value.GetFullPath());
+	wxFileName Value((const char*)_AssetValue.GetValueFile());
+	const zenAss::PropertyFile& Property	= _AssetValue.GetPropertyFile();
+	PropertyMetaData* pMetaData				= zenNew(&sPoolMetaData)PropertyMetaData(_AssetValue, Value.GetFullPath());
 	SetClientData		( pMetaData );
-	SetDefaultValue		( wxVariant((const char*)PropertyDef.mDefault) );
+	SetDefaultValue		( wxVariant((const char*)Property.mDefault) );
 	SetValue			( Value.GetFullPath() );
-	SetHelpString		( PropertyDef.mzDescription );
+	SetHelpString		( Property.mzDescription );
 	SetAttribute		( wxPG_FILE_INITIAL_PATH,	Value.GetPath());
-	SetAttribute		( wxPG_FILE_WILDCARD,		PropertyDef.mzFileExt);
-	SetAttribute		( wxPG_FILE_DIALOG_TITLE,	wxString::Format("Open file for '%s'", PropertyDef.mzDisplayName));
+	SetAttribute		( wxPG_FILE_WILDCARD,		Property.mzFileExt);
+	SetAttribute		( wxPG_FILE_DIALOG_TITLE,	wxString::Format("Open file for '%s'", Property.mzDisplayName));
 	SetAttribute		( wxPG_FILE_SHOW_FULL_PATH,	true);
 }
 

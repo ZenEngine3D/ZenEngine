@@ -10,6 +10,7 @@
 #define	ZEN_EXPORT_PC				AW_BUILD_PC_GAMEORTOOL
 
 #define ZENInline					__inline
+#define ZENForceDebugInline			__forceinline
 #if !AW_BUILD_DEBUG
 	#define ZENForceInline			__forceinline
 #else

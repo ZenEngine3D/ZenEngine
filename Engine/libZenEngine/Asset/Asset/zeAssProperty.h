@@ -8,6 +8,8 @@
 namespace zen { namespace zeAss
 {
 
+#if 0
+
 //=================================================================================================
 // Common class declaration of all asset value definition
 //=================================================================================================
@@ -329,6 +331,9 @@ protected:
 };
 
 typedef const zenArrayStatic<const PropertyDefBase*> PropertyArray;
+
+#endif
+
 }} //namespace zen { namespace zeAss
 
 #endif

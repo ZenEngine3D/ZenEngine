@@ -119,8 +119,8 @@ void WndAssetBrowser::CreateSectionType()
 	wxTreeListItem rootItem = mpTreeTypes->GetRootItem();
 	for(zenUInt idx(0); idx<zenConst::keAssType__Count; ++idx)
 	{		
-		const char* zTypeDesc =zeAss::AssetItem::GetTypeDesc( (zenConst::eAssetType)idx );
-		wxTreeListItem newItemID = mpTreeTypes->AppendItem(rootItem, zTypeDesc, idx, idx); 	
+		const char* zTypeDesc		= zeAss::AssetItem::GetTypeName( (zenConst::eAssetType)idx );
+		wxTreeListItem newItemID	= mpTreeTypes->AppendItem(rootItem, zTypeDesc, idx, idx); 	
 	}
 			
 	sizer->Add( mpTreeTypes, 100, wxGROW | wxALL, 2); 	
