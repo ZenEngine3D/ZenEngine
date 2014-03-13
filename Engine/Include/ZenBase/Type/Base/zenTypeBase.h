@@ -6,30 +6,28 @@
 
 namespace zen { namespace zenType {
 
-typedef int8_t			zenS8;		//!< Basic integer type
-typedef int16_t			zenS16;		//!< Basic integer type
-typedef int32_t			zenS32;		//!< Basic integer type
-typedef int64_t			zenS64;		//!< Basic integer type
-typedef uint8_t			zenU8;		//!< Basic integer type
-typedef uint16_t		zenU16;		//!< Basic integer type
-typedef uint32_t		zenU32;		//!< Basic integer type
-typedef uint64_t		zenU64;		//!< Basic integer type
-typedef float			zenF32;		//!< Basic integer type
-typedef double			zenF64;		//!< Basic integer type
-typedef int				zenInt;		//!< Basic int
-typedef unsigned int	zenUInt;	//!< Basic unsigned int
-typedef uintptr_t		zenPointer;	
+typedef int8_t			zS8;		//!< Basic integer type
+typedef int16_t			zS16;		//!< Basic integer type
+typedef int32_t			zS32;		//!< Basic integer type
+typedef int64_t			zS64;		//!< Basic integer type
+typedef uint8_t			zU8;		//!< Basic integer type
+typedef uint16_t		zU16;		//!< Basic integer type
+typedef uint32_t		zU32;		//!< Basic integer type
+typedef uint64_t		zU64;		//!< Basic integer type
+typedef int				zInt;		//!< Basic int
+typedef unsigned int	zUInt;		//!< Basic unsigned int
 
-ZENSupportMemcopy(zenS8);
-ZENSupportMemcopy(zenS16);
-ZENSupportMemcopy(zenS32);
-ZENSupportMemcopy(zenS64);
-ZENSupportMemcopy(zenU8);
-ZENSupportMemcopy(zenU16);
-ZENSupportMemcopy(zenU32);
-ZENSupportMemcopy(zenU64);
-ZENSupportMemcopy(zenF32);
-ZENSupportMemcopy(zenF64);
+
+ZENSupportMemcopy(zS8);
+ZENSupportMemcopy(zS16);
+ZENSupportMemcopy(zS32);
+ZENSupportMemcopy(zS64);
+ZENSupportMemcopy(zU8);
+ZENSupportMemcopy(zU16);
+ZENSupportMemcopy(zU32);
+ZENSupportMemcopy(zU64);
+ZENSupportMemcopy(float);
+ZENSupportMemcopy(double);
 
 }} //namespace zen, zenType
 

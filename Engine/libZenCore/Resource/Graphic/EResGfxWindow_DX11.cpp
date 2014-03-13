@@ -8,7 +8,7 @@ namespace ERes
 		mInstanceInfo.mDX11pSwapChain	= NULL;
 		mInstanceInfo.mrBackbufferColor	= NULL;
 		mInstanceInfo.mrBackbufferDepth	= NULL;
-		mInstanceInfo.mvSize			= zenVec2U16(0,0);
+		mInstanceInfo.mvSize			= zVec2U16(0,0);
 	}
 
 	GfxWindow_DX11::~GfxWindow_DX11()
@@ -21,7 +21,7 @@ namespace ERes
 	{
 		RECT rc;
 		GetClientRect( Get().mhWindow, &rc );
-		mInstanceInfo.mvSize					= zenVec2U16(zenU16(rc.right-rc.left), zenU16(rc.bottom-rc.top));
+		mInstanceInfo.mvSize					= zVec2U16(zU16(rc.right-rc.left), zU16(rc.bottom-rc.top));
 		mInstanceInfo.meBackbufferColorFormat	= zenConst::keTexFormat_RGBA8;
 		mInstanceInfo.meBackbufferDepthFormat	= zenConst::keTexFormat_D24S8;
 
@@ -58,7 +58,7 @@ namespace ERes
 		return false;;
 	}
 
-	void GfxWindow_DX11::Resize(const zenVec2U16& _vSize)
+	void GfxWindow_DX11::Resize(const zVec2U16& _vSize)
 	{
 		mvPendingResize	 = _vSize;
 	}

@@ -1,45 +1,45 @@
 namespace zen { namespace zenRes {	
 	
-awShaderParameter::awShaderParameter(zenHash32 _hName, zenConst::eShaderElementType _eType, zenU16 _uVectorSize, zenU16 _uArrayCount, zenU16 _uSizeTotal)
+zShaderParameter::zShaderParameter(zHash32 _hName, zenConst::eShaderElementType _eType, zU16 _uVectorSize, zU16 _uArrayCount, zU16 _uSizeTotal)
 : mhName(_hName)
-, meType( static_cast<zenU16>(_eType))
+, meType( static_cast<zU16>(_eType))
 , muVectorSize(_uVectorSize)
 , muArrayCount(_uArrayCount)
 , muSizeTotal(_uSizeTotal)
 {}	
 
 template <class TType, zenConst::eShaderElementType TShaderType>
-awShaderParamVector1<TType,TShaderType>::awShaderParamVector1( zenHash32 _hName, TType _Value) 
+zShaderParamVector1<TType,TShaderType>::zShaderParamVector1( zHash32 _hName, TType _Value) 
 : ParameterBase(_hName, TShaderType, 1, 0, sizeof(mValue))
 , mValue(_Value)
 {}	
 
 template <class TType, zenConst::eShaderElementType TShaderType>
-awShaderParamVector2<TType,TShaderType>::awShaderParamVector2( zenHash32 _hName, TType _Value1, TType _Value2) 
-: awShaderParameter(_hName, TShaderType, 2, 0, sizeof(mValue))
+zShaderParamVector2<TType,TShaderType>::zShaderParamVector2( zHash32 _hName, TType _Value1, TType _Value2) 
+: zShaderParameter(_hName, TShaderType, 2, 0, sizeof(mValue))
 {
 	mValue[0] = _Value1;
 	mValue[1] = _Value2;
 }	
 
 template <class TType, zenConst::eShaderElementType TShaderType>
-awShaderParamVector2<TType,TShaderType>::awShaderParamVector2( zenHash32 _hName, const TType _Values[2]) 
-: awShaderParameter(_hName, TShaderType, 2, 0, sizeof(mValue))
+zShaderParamVector2<TType,TShaderType>::zShaderParamVector2( zHash32 _hName, const TType _Values[2]) 
+: zShaderParameter(_hName, TShaderType, 2, 0, sizeof(mValue))
 {
 	mValue[0] = _Values[0];
 	mValue[1] = _Values[1];
 }
 template <class TType, zenConst::eShaderElementType TShaderType>
-awShaderParamVector2<TType,TShaderType>::awShaderParamVector2( zenHash32 _hName, const zenVector2<TType>& _vValue) 
-: awShaderParameter(_hName, TShaderType, 2, 0, sizeof(mValue))
+zShaderParamVector2<TType,TShaderType>::zShaderParamVector2( zHash32 _hName, const zVector2<TType>& _vValue) 
+: zShaderParameter(_hName, TShaderType, 2, 0, sizeof(mValue))
 {
 	mValue[0] = _vValue.array[0];
 	mValue[1] = _vValue.array[1];
 }
 
 template <class TType, zenConst::eShaderElementType TShaderType>
-awShaderParamVector3<TType,TShaderType>::awShaderParamVector3( zenHash32 _hName, TType _Value1, TType _Value2, TType _Value3) 
-: awShaderParameter(_hName, TShaderType, 3, 0, sizeof(mValue))
+zShaderParamVector3<TType,TShaderType>::zShaderParamVector3( zHash32 _hName, TType _Value1, TType _Value2, TType _Value3) 
+: zShaderParameter(_hName, TShaderType, 3, 0, sizeof(mValue))
 {
 	mValue[0] = _Value1;
 	mValue[1] = _Value2;
@@ -47,8 +47,8 @@ awShaderParamVector3<TType,TShaderType>::awShaderParamVector3( zenHash32 _hName,
 }
 
 template <class TType, zenConst::eShaderElementType TShaderType>
-awShaderParamVector3<TType,TShaderType>::awShaderParamVector3( zenHash32 _hName, const TType _Values[3]) 
-: awShaderParameter(_hName, TShaderType, 3, 0, sizeof(mValue))
+zShaderParamVector3<TType,TShaderType>::zShaderParamVector3( zHash32 _hName, const TType _Values[3]) 
+: zShaderParameter(_hName, TShaderType, 3, 0, sizeof(mValue))
 {
 	mValue[0] = _Values[0];
 	mValue[1] = _Values[1];
@@ -56,8 +56,8 @@ awShaderParamVector3<TType,TShaderType>::awShaderParamVector3( zenHash32 _hName,
 }
 
 template <class TType, zenConst::eShaderElementType TShaderType>
-awShaderParamVector3<TType,TShaderType>::awShaderParamVector3( zenHash32 _hName, const zenVector3<TType>& _vValue) 
-: awShaderParameter(_hName, TShaderType, 3, 0, sizeof(mValue))
+zShaderParamVector3<TType,TShaderType>::zShaderParamVector3( zHash32 _hName, const zVector3<TType>& _vValue) 
+: zShaderParameter(_hName, TShaderType, 3, 0, sizeof(mValue))
 {
 	mValue[0] = _vValue.array[0];
 	mValue[1] = _vValue.array[1];
@@ -65,8 +65,8 @@ awShaderParamVector3<TType,TShaderType>::awShaderParamVector3( zenHash32 _hName,
 }
 
 template <class TType, zenConst::eShaderElementType TShaderType>
-awShaderParamVector4<TType,TShaderType>::awShaderParamVector4( zenHash32 _hName, TType _Value1, TType _Value2, TType _Value3, TType _Value4) 
-: awShaderParameter(_hName, TShaderType, 4, 0, sizeof(mValue))
+zShaderParamVector4<TType,TShaderType>::zShaderParamVector4( zHash32 _hName, TType _Value1, TType _Value2, TType _Value3, TType _Value4) 
+: zShaderParameter(_hName, TShaderType, 4, 0, sizeof(mValue))
 {
 	mValue[0] = _Value1;
 	mValue[1] = _Value2;
@@ -74,8 +74,8 @@ awShaderParamVector4<TType,TShaderType>::awShaderParamVector4( zenHash32 _hName,
 	mValue[3] = _Value4;
 }	
 template <class TType, zenConst::eShaderElementType TShaderType>
-awShaderParamVector4<TType,TShaderType>::awShaderParamVector4( zenHash32 _hName, const TType _Values[4]) 
-: awShaderParameter(_hName, TShaderType, 4, 0, sizeof(mValue))
+zShaderParamVector4<TType,TShaderType>::zShaderParamVector4( zHash32 _hName, const TType _Values[4]) 
+: zShaderParameter(_hName, TShaderType, 4, 0, sizeof(mValue))
 {
 	mValue[0] = _Values[0];
 	mValue[1] = _Values[1];
@@ -84,8 +84,8 @@ awShaderParamVector4<TType,TShaderType>::awShaderParamVector4( zenHash32 _hName,
 }
 
 template <class TType, zenConst::eShaderElementType TShaderType>
-awShaderParamVector4<TType,TShaderType>::awShaderParamVector4( zenHash32 _hName, const zenVector4<TType>& _vValues) 
-: awShaderParameter(_hName, TShaderType, 4, 0, sizeof(mValue))
+zShaderParamVector4<TType,TShaderType>::zShaderParamVector4( zHash32 _hName, const zVector4<TType>& _vValues) 
+: zShaderParameter(_hName, TShaderType, 4, 0, sizeof(mValue))
 {
 	mValue[0] = _vValues.xyzw[0];
 	mValue[1] = _vValues.xyzw[1];
@@ -93,31 +93,31 @@ awShaderParamVector4<TType,TShaderType>::awShaderParamVector4( zenHash32 _hName,
 	mValue[3] = _vValues.xyzw[3];
 }
 
-awShaderTexture::awShaderTexture()
+zShaderTexture::zShaderTexture()
 : mhTextureName("")
 , mTextureID()
 , mSamplerID()
 {}
 
-awShaderTexture::awShaderTexture(zenHash32 _hTextureName, zenResID _TextureID, zenResID _SamplerID)
+zShaderTexture::zShaderTexture(zHash32 _hTextureName, zResID _TextureID, zResID _SamplerID)
 : mhTextureName(_hTextureName)
 , mTextureID(_TextureID)	
 , mSamplerID(_SamplerID)
 {}
 
-awShaderDefine::awShaderDefine()
+zShaderDefine::zShaderDefine()
 : mzName("")
 , mzValue("")
 {
 }
 
-awShaderDefine::awShaderDefine(const char* _zName, const char* _zValue)
+zShaderDefine::zShaderDefine(const char* _zName, const char* _zValue)
 : mzName(_zName)
 , mzValue(_zValue)
 {
 }
 
-awShaderDefine::awShaderDefine(const zenString& _zName, const zenString& _zValue)
+zShaderDefine::zShaderDefine(const zString& _zName, const zString& _zValue)
 : mzName(_zName)
 , mzValue(_zValue)
 {

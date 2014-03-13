@@ -5647,7 +5647,7 @@ PUGI__NS_BEGIN
 	}
 PUGI__NS_END
 
-// Allocator used for AST and evaluation stacks
+// zAllocator used for AST and evaluation stacks
 PUGI__NS_BEGIN
 	struct xpath_memory_block
 	{	

@@ -46,7 +46,7 @@ namespace EExp
 	//=============================================================================================
 	bool ExportItem::ExportStart()
 	{ 
-		mResID = mpExportInfo ? mpExportInfo->mExportResID : zenResID(); 
+		mResID = mpExportInfo ? mpExportInfo->mExportResID : zResID(); 
 		return mResID.IsValid();
 	}
 

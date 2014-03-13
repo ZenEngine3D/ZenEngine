@@ -40,12 +40,12 @@ namespace zen { namespace zenMath
 
 	ZENInline float Fract(float _fValue){ float fIntPart; return modf(_fValue, &fIntPart); }
 
-	ZENInline bool IsPower2(zenU32 x){ return ( (x > 0) && ((x & (x - 1)) == 0) ); }
-	ZENInline bool IsPower2(zenU64 x){ return ( (x > 0) && ((x & (x - 1)) == 0) ); }
-	ZENInline bool IsPower2(zenS32 x){ return ( (x > 0) && ((x & (x - 1)) == 0) ); }
-	ZENInline bool IsPower2(zenS64 x){ return ( (x > 0) && ((x & (x - 1)) == 0) ); }
+	ZENInline bool IsPower2(zU32 x){ return ( (x > 0) && ((x & (x - 1)) == 0) ); }
+	ZENInline bool IsPower2(zU64 x){ return ( (x > 0) && ((x & (x - 1)) == 0) ); }
+	ZENInline bool IsPower2(zS32 x){ return ( (x > 0) && ((x & (x - 1)) == 0) ); }
+	ZENInline bool IsPower2(zS64 x){ return ( (x > 0) && ((x & (x - 1)) == 0) ); }
 
-	ZENInline zenUInt RoundPow2( zenUInt _Value, zenUInt _Pow2Multiple )
+	ZENInline zUInt RoundPow2( zUInt _Value, zUInt _Pow2Multiple )
 	{
 		ZENAssert(IsPower2(_Pow2Multiple));
 		return (_Value + (_Pow2Multiple-1)) & ~(_Pow2Multiple-1);

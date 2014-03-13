@@ -5,38 +5,38 @@
 namespace zen { namespace zenType {
 
 	//! @brief Default array size increase policy (1.5x needed size)
-	typedef zenUInt(*GrowthPolicyFunction)(zenUInt _uCurrentCount, zenUInt _uNeededCount, zenUInt _uItemSize); 
-	zenUInt GrowthPolicyOneandHalf( zenUInt _uCurrentCount, zenUInt _uNeededCount, zenUInt _uItemSize);
+	typedef zUInt(*GrowthPolicyFunction)(zUInt _uCurrentCount, zUInt _uNeededCount, zUInt _uItemSize); 
+	zUInt GrowthPolicyOneandHalf( zUInt _uCurrentCount, zUInt _uNeededCount, zUInt _uItemSize);
 
 	template<class TType, GrowthPolicyFunction TGrowthPolicy=GrowthPolicyOneandHalf>
-	class zenArrayDynamic : public zenArrayBase<TType>
+	class zArrayDynamic : public zArrayBase<TType>
 	{
-	ZENClassDeclare(zenArrayDynamic, zenArrayBase<TType>)
+	ZENClassDeclare(zArrayDynamic, zArrayBase<TType>)
 	public:
-									zenArrayDynamic();
-									zenArrayDynamic(zenU32 _uCount);
-									zenArrayDynamic(const TType* _pCopy, zenUInt _uCount, zenUInt _uExtraCount=0);
-									zenArrayDynamic(const zenArrayDynamic& _Copy, zenUInt _uExtraCount=0);
-		virtual						~zenArrayDynamic();
-		virtual zenUInt				SetCount(zenUInt _uCount);
+									zArrayDynamic();
+									zArrayDynamic(zU32 _uCount);
+									zArrayDynamic(const TType* _pCopy, zUInt _uCount, zUInt _uExtraCount=0);
+									zArrayDynamic(const zArrayDynamic& _Copy, zUInt _uExtraCount=0);
+		virtual						~zArrayDynamic();
+		virtual zUInt				SetCount(zUInt _uCount);
 		
-		void						operator+=( const zenArrayBase<TType>& _ArrayAdd );
+		void						operator+=( const zArrayBase<TType>& _ArrayAdd );
 		void						Append(const TType& _Copy);
-		void						Append(const TType* _Copy, zenUInt _uCount);
+		void						Append(const TType* _Copy, zUInt _uCount);
 
-		void						Reserve(zenUInt _uCount);
+		void						Reserve(zUInt _uCount);
 		TType						Pop();
-		zenUInt						ReservedCount()const;
-		zenUInt						ReservedSize()const;
+		zUInt						ReservedCount()const;
+		zUInt						ReservedSize()const;
 	protected:
 		void						Shrink( );											//!< @brief	Reduce array size when needed
-		void						Grow( zenUInt _auCountNeeded );						//!< @brief Increase array size when needed
-		void						GrowNoConstructor( zenUInt _auCountNeeded );			//!< @brief Increase array size without calling TType's constructors
-		virtual zenUInt				SetCountNoConstructor(zenUInt _uCount);				//!< @brief Resize array without calling constructor (usefull for quick memcopy, use carefully)
-		zenUInt						muCountReserved;									//!< Space currently allocated
-		zenUInt						muCountReservedMin;									//!< Minimum space we should always have allocated
+		void						Grow( zUInt _auCountNeeded );						//!< @brief Increase array size when needed
+		void						GrowNoConstructor( zUInt _auCountNeeded );			//!< @brief Increase array size without calling TType's constructors
+		virtual zUInt				SetCountNoConstructor(zUInt _uCount);				//!< @brief Resize array without calling constructor (usefull for quick memcopy, use carefully)
+		zUInt						muCountReserved;									//!< Space currently allocated
+		zUInt						muCountReservedMin;									//!< Minimum space we should always have allocated
 	public:
-		using zenArrayBase<TType>::operator=;
+		using zArrayBase<TType>::operator=;
 	};
 
 } } //namespace zen, Type

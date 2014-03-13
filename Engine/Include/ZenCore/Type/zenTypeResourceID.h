@@ -5,6 +5,7 @@
 namespace zen { namespace zenType {
 
 	//! @todo Move this to state files
+
 	class awBlendDesc
 	{
 	ZENClassDeclareNoParent(awBlendDesc)
@@ -23,7 +24,7 @@ namespace zen { namespace zenType {
 			{
 			}
 			bool				mbBlendEnable;
-			zenU8				muRenderTargetWriteMask;
+			zU8				muRenderTargetWriteMask;
 			zenConst::eBlend		meSrcBlend;
 			zenConst::eBlend		meDestBlend;
 			zenConst::eBlendOp	meBlendOp;
@@ -42,7 +43,7 @@ namespace zen { namespace zenType {
 		bool			mbIndependentBlendEnable;
 		awRTBlendDesc	mxRenderTarget[ 8 ];
 	};
-
+	ZENSupportMemcopy(awBlendDesc);
 	class awDepthStencilDesc
 	{
 	ZENClassDeclareNoParent(awDepthStencilDesc)
@@ -75,18 +76,20 @@ namespace zen { namespace zenType {
 		bool						mbDepthEnable;
 		bool						mbDepthWrite;
 		bool						mbStencilEnable;
-		zenU8						muStencilReadMask;
-		zenU8						muStencilWriteMask;
+		zU8						muStencilReadMask;
+		zU8						muStencilWriteMask;
 		zenConst::eComparisonFunc	meDepthFunc;
 		DepthStencilOp				mxFrontFace;
 		DepthStencilOp				mxBackFace;
 	};
+	ZENSupportMemcopy(awDepthStencilDesc);
 
-	class zenResID
+
+	class zResID
 	{
-	ZENClassDeclareNoParent(zenResID)
+	ZENClassDeclareNoParent(zResID)
 	public:
-		typedef zenHash32	NameHash;
+		typedef zHash32	NameHash;
 
 		enum ePlatformType
 		{
@@ -94,14 +97,14 @@ namespace zen { namespace zenType {
 			kePlatformType_GFX,
 			kePlatformType__Count,
 		};
-		zenResID():mhName(""), meType(zenConst::keResType__Invalid), mePlatform(zenConst::keResPlatform__Invalid), meSource(zenConst::keResSource_Runtime){}
-		zenResID(NameHash _hName, zenConst::eResPlatform _ePlatform, zenConst::eResType _eType, zenConst::eResSource _eSource):mhName(_hName), meType(_eType), mePlatform(_ePlatform), meSource(_eSource){}								
+		zResID():mhName(""), meType(zenConst::keResType__Invalid), mePlatform(zenConst::keResPlatform__Invalid), meSource(zenConst::keResSource_Runtime){}
+		zResID(NameHash _hName, zenConst::eResPlatform _ePlatform, zenConst::eResType _eType, zenConst::eResSource _eSource):mhName(_hName), meType(_eType), mePlatform(_ePlatform), meSource(_eSource){}								
 
 		ZENInline const NameHash&			Name()const							{ return mhName; }
 		ZENInline zenConst::eResType		Type()const							{ return static_cast<zenConst::eResType>(meType); }
 		ZENInline zenConst::eResPlatform	Platform()const						{ return static_cast<zenConst::eResPlatform>(mePlatform); } 
 		ZENInline zenConst::eResSource		Source()const						{ return static_cast<zenConst::eResSource>(meSource); }
-		ZENInline zenU64					HashID()const						{ return muHashID; }
+		ZENInline zU64						HashID()const						{ return muHashID; }
 		ZENInline void						SetName(NameHash _hName)			{ mhName = _hName; }
 		ZENInline void						SetType(zenConst::eResType _eResType)			{ meType = _eResType; }
 		ZENInline void						SetPlatform(zenConst::eResPlatform _ePlatform)	{ mePlatform = _ePlatform; }
@@ -110,9 +113,9 @@ namespace zen { namespace zenType {
 		ZENInline bool						IsExport()const						{ return meSource==zenConst::keResSource_Offline; }
 		ZENInline bool						IsLoaded()const						{ return meSource==zenConst::keResSource_Loaded; }
 		ZENInline bool						IsValid()const						{ return meType < zenConst::keResType__Count; }
-		ZENInline bool						operator==(const zenResID& _Compare)const{return muHashID == _Compare.muHashID;};
-		ZENInline bool						operator!=(const zenResID& _Compare)const{return muHashID != _Compare.muHashID;};
-		const zenResID&					operator=(const zenResID& _Copy){muHashID = _Copy.muHashID; return *this;}
+		ZENInline bool						operator==(const zResID& _Compare)const{return muHashID == _Compare.muHashID;};
+		ZENInline bool						operator!=(const zResID& _Compare)const{return muHashID != _Compare.muHashID;};
+		const zResID&						operator=(const zResID& _Copy){muHashID = _Copy.muHashID; return *this;}
 
 	protected:
 		union
@@ -120,15 +123,15 @@ namespace zen { namespace zenType {
 			struct 
 			{			
 				NameHash	mhName;		//!< Hashed name of the resource
-				zenU16		meType;		//!< Resource type (eType)
-				zenU8		mePlatform;	//!< Platform this should be used on
-				zenU8		meSource;	//!< Source of the resource (eSource)			
+				zU16		meType;		//!< Resource type (eType)
+				zU8			mePlatform;	//!< Platform this should be used on
+				zU8			meSource;	//!< Source of the resource (eSource)			
 			};
-			zenU64 muHashID;
+			zU64 muHashID;
 		};
 	};
-	ZENSupportMemcopy(zenResID);
-	ZENSupportMemcopy(awBlendDesc);
+	ZENSupportMemcopy(zResID);
+	
 
 }}  //namespace zen, Type 
 

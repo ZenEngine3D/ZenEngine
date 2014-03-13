@@ -7,19 +7,19 @@ namespace zen { namespace zenType {
 //=================================================================================================
 //! Used to store informations about the OS current date/time
 //=================================================================================================
-struct zenDateTime
+struct zDateTime
 {   
-    zenU16 muYear;
-    zenU16 muDayOfYear;
-    zenU8  muDayOfMonth;
-    zenU8  muDayOfWeek;    
-    zenU8  muMonth;
-    zenU8  muHour;        
-    zenU8  muMinute;
-    zenU8  muSecond;
+    zU16 muYear;
+    zU16 muDayOfYear;
+    zU8  muDayOfMonth;
+    zU8  muDayOfWeek;    
+    zU8  muMonth;
+    zU8  muHour;        
+    zU8  muMinute;
+    zU8  muSecond;
 };
 
-typedef time_t zenTimeStamp;
+typedef time_t zTimeStamp;
 
 }}  //namespace zen, Type 
 

@@ -4,9 +4,9 @@ namespace ERes
 {	
 
 //! @todo keep track of this
-zenList2x Resource::spResourceActive[zenConst::keResType__Count];
-zenList2x Resource::spActiveToDelete[3];
-zenUInt Resource::suDeleteIndex(0);
+zList2x Resource::spResourceActive[zenConst::keResType__Count];
+zList2x Resource::spActiveToDelete[3];
+zUInt Resource::suDeleteIndex(0);
 
 //=================================================================================
 Resource::Resource()

@@ -21,20 +21,20 @@ namespace EExp
 		struct Version
 		{	
 			Version():muEngine(zenConst::keEngineVersion__Current),muMajor(0),muMinor(0){};
-			Version(zenU8 auMajor, zenU8 auMinor):muEngine(zenConst::keEngineVersion__Current),muMajor(auMajor),muMinor(auMinor){};
+			Version(zU8 auMajor, zU8 auMinor):muEngine(zenConst::keEngineVersion__Current),muMajor(auMajor),muMinor(auMinor){};
 			Version(const Version& aCopy):muEngine(aCopy.muEngine),muMajor(aCopy.muMajor),muMinor(aCopy.muMinor){};
 			bool IsValid( zenConst::eResType _eResType )const {return muEngine==zenConst::keEngineVersion__Current && SerialItem::sVersions[_eResType].muMajor == muMajor && SerialItem::sVersions[_eResType].muMinor == muMinor; }
-			zenU16 muEngine;
-			zenU8 muMajor;	
-			zenU8 muMinor;	
+			zU16 muEngine;
+			zU8 muMajor;	
+			zU8 muMinor;	
 		};
 									SerialItem();		
 		virtual bool				Serialize( EExp::Serializer_Base& aSerializer );		
 
-		zenU32							muSize;
+		zU32							muSize;
 		Version						mVersion;
-		zenTimeStamp			mExportTime;		
-		zenResID			mResID;				
+		zTimeStamp			mExportTime;		
+		zResID			mResID;				
 		static const Version		sVersions[zenConst::keResType__Count];
 	};
 }

@@ -5,7 +5,7 @@ namespace zen { namespace zenType {
 //==================================================================================================
 //--------------------------------------------------------------------------------------------------
 //==================================================================================================
-zenList2xNode::zenList2xNode()
+zList2xNode::zList2xNode()
 : mpLstNext(NULL)
 , mpLstPrev(NULL)
 {
@@ -14,7 +14,7 @@ zenList2xNode::zenList2xNode()
 //==================================================================================================
 //--------------------------------------------------------------------------------------------------
 //==================================================================================================
-zenList2xNode::~zenList2xNode( void )
+zList2xNode::~zList2xNode( void )
 {
 	LstRemove();
 }
@@ -22,7 +22,7 @@ zenList2xNode::~zenList2xNode( void )
 //==================================================================================================
 //--------------------------------------------------------------------------------------------------
 //==================================================================================================
-zenList2x::zenList2x( void )
+zList2x::zList2x( void )
 {
 	moRoot.mpLstNext	= &moRoot;
 	moRoot.mpLstPrev	= &moRoot;
@@ -31,7 +31,7 @@ zenList2x::zenList2x( void )
 //==================================================================================================
 //--------------------------------------------------------------------------------------------------
 //==================================================================================================
-zenList2x::~zenList2x( void )
+zList2x::~zList2x( void )
 {
 	Clear();
 }
@@ -41,7 +41,7 @@ zenList2x::~zenList2x( void )
 //--------------------------------------------------------------------------------------------------
 //! @param[in]	_bDelete - If true, will also delete each item.
 //==================================================================================================
-void zenList2x::Clear( bool _bDelete )
+void zList2x::Clear( bool _bDelete )
 {
 	if( _bDelete )
 	{
@@ -61,7 +61,7 @@ void zenList2x::Clear( bool _bDelete )
 //! @param[in]	_pAdd - Item to Add.
 //! @param[in]	_pItem - Item position to insert before.
 //==================================================================================================
-void zenList2x::InsertBefore( zenList2xNode* AWRestrict _pAdd, zenList2xNode* AWRestrict _pItem )
+void zList2x::InsertBefore( zList2xNode* AWRestrict _pAdd, zList2xNode* AWRestrict _pItem )
 {       
 	ZENAssert(_pAdd && _pItem && _pAdd != _pItem);
 	_pAdd->LstRemove();	
@@ -78,7 +78,7 @@ void zenList2x::InsertBefore( zenList2xNode* AWRestrict _pAdd, zenList2xNode* AW
 //! @param[in]	_pAdd - Item to Add.
 //! @param[in]	_pItem - Item position to insert after.
 //==================================================================================================
-void zenList2x::InsertAfter( zenList2xNode* AWRestrict _pAdd, zenList2xNode* AWRestrict _pItem )
+void zList2x::InsertAfter( zList2xNode* AWRestrict _pAdd, zList2xNode* AWRestrict _pItem )
 {
 	ZENAssert(_pAdd && _pItem && _pAdd != _pItem);
 	_pAdd->LstRemove();	
@@ -93,7 +93,7 @@ void zenList2x::InsertAfter( zenList2xNode* AWRestrict _pAdd, zenList2xNode* AWR
 //!-----------------------------------------------------------------------------
 //! @return		Next item. Equal to GetInvalid() if last item of the list.
 //==================================================================================================
-zenList2xNode*	zenList2xNode::LstNext()
+zList2xNode*	zList2xNode::LstNext()
 {
 	return mpLstNext;
 }
@@ -103,7 +103,7 @@ zenList2xNode*	zenList2xNode::LstNext()
 //!-----------------------------------------------------------------------------
 //! @return		Previous item. Equal to GetInvalid() if first item of the list.
 //==================================================================================================
-zenList2xNode* zenList2xNode::LstPrev()
+zList2xNode* zList2xNode::LstPrev()
 {
 	return mpLstPrev;
 }
@@ -111,7 +111,7 @@ zenList2xNode* zenList2xNode::LstPrev()
 //==================================================================================================
 //! @brief		Remove the item from its parent list.
 //==================================================================================================
-void zenList2xNode::LstRemove()
+void zList2xNode::LstRemove()
 {
 	if( mpLstPrev )
 	{
@@ -125,7 +125,7 @@ void zenList2xNode::LstRemove()
 //==================================================================================================
 //! @brief		Remove the item from its parent list.
 //==================================================================================================
-void zenList2xNode::LstReset()
+void zList2xNode::LstReset()
 {
 	mpLstNext	= NULL;
 	mpLstPrev	= NULL;
@@ -136,7 +136,7 @@ void zenList2xNode::LstReset()
 //--------------------------------------------------------------------------------------------------
 //! @return		First item of the list (check if == GetInvalid() for empty list).
 //==================================================================================================
-zenList2xNode*	zenList2x::GetHead() const
+zList2xNode*	zList2x::GetHead() const
 {
 	return moRoot.mpLstNext;
 }
@@ -146,7 +146,7 @@ zenList2xNode*	zenList2x::GetHead() const
 //--------------------------------------------------------------------------------------------------
 //! @return		Last item of the list (check if == GetInvalid() for empty list).
 //==================================================================================================
-zenList2xNode*	zenList2x::GetTail() const
+zList2xNode*	zList2x::GetTail() const
 {
 	return moRoot.mpLstPrev;
 }
@@ -157,7 +157,7 @@ zenList2xNode*	zenList2x::GetTail() const
 //--------------------------------------------------------------------------------------------------
 //! @return Value of the invalid item in this list.
 //==================================================================================================
-const zenList2xNode* zenList2x::GetInvalid() const
+const zList2xNode* zList2x::GetInvalid() const
 {
 	return &moRoot;
 }
@@ -167,7 +167,7 @@ const zenList2xNode* zenList2x::GetInvalid() const
 //--------------------------------------------------------------------------------------------------
 //! @return		True when list is empty
 //==================================================================================================
-bool zenList2x::IsEmpty()const
+bool zList2x::IsEmpty()const
 {
 	return GetHead() == GetInvalid();
 }
@@ -178,7 +178,7 @@ bool zenList2x::IsEmpty()const
 //--------------------------------------------------------------------------------------------------
 //! @param[in]	_pAdd - Item to add at the start of the list.
 //==================================================================================================
-void zenList2x::AddHead( zenList2xNode* _pAdd	)
+void zList2x::AddHead( zList2xNode* _pAdd	)
 {
 	InsertBefore(_pAdd, GetHead());
 };
@@ -189,7 +189,7 @@ void zenList2x::AddHead( zenList2xNode* _pAdd	)
 //--------------------------------------------------------------------------------------------------
 //! @param[in]	_pAdd - Item to add at the end of the list.
 //==================================================================================================
-void zenList2x::AddTail( zenList2xNode* _pAdd	)
+void zList2x::AddTail( zList2xNode* _pAdd	)
 {
 	InsertAfter(_pAdd, GetTail());
 };
@@ -200,10 +200,10 @@ void zenList2x::AddTail( zenList2xNode* _pAdd	)
 //--------------------------------------------------------------------------------------------------
 //! @return		- First item in the list
 //==================================================================================================
-zenList2xNode*	zenList2x::PopHead( void )
+zList2xNode*	zList2x::PopHead( void )
 {
 	ZENAssert(!IsEmpty());
-	zenList2xNode* pItem = moRoot.mpLstNext;
+	zList2xNode* pItem = moRoot.mpLstNext;
 	pItem->LstRemove();
 	return pItem;
 }
@@ -214,10 +214,10 @@ zenList2xNode*	zenList2x::PopHead( void )
 //--------------------------------------------------------------------------------------------------
 //! @return		- Last item in the list
 //==================================================================================================
-zenList2xNode*	zenList2x::PopTail( void )
+zList2xNode*	zList2x::PopTail( void )
 {
 	ZENAssert(!IsEmpty());
-	zenList2xNode* pItem = moRoot.mpLstPrev;
+	zList2xNode* pItem = moRoot.mpLstPrev;
 	pItem->LstRemove();
 	return pItem;
 }

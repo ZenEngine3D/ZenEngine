@@ -20,12 +20,12 @@ void ManagerRender_Base::FrameBegin( ERes::GfxWindowRef _FrameWindow )
 	mrWindowCurrent = _FrameWindow;
 	/*
 	//! @todo Stats per window
-	zenU64 uElapsed					= zenSys::GetTimeUSec() - muTimeLast;
+	zU64 uElapsed					= zenSys::GetTimeUSec() - muTimeLast;
 	muTimeLast						= zenSys::GetTimeUSec();
 	muFramesTimeTotal				+= uElapsed;
 	muFrameTimeIndex				= (muFrameTimeIndex + 1) % kuFramesSaved;
-	muFramesTimes[muFrameTimeIndex]	= static_cast<zenU32>(uElapsed);
-	zenU64 uTimeAvg=0;
+	muFramesTimes[muFrameTimeIndex]	= static_cast<zU32>(uElapsed);
+	zU64 uTimeAvg=0;
 	for(int i=0; i<kuFramesSaved; ++i)
 		uTimeAvg += muFramesTimes[i];
 	mfFrameTime						= static_cast<float>(double(uTimeAvg) / (double(kuFramesSaved) * 1000.0));
@@ -38,7 +38,7 @@ void ManagerRender_Base::FrameEnd()
 	mrWindowCurrent = NULL;
 }
 
-zenU64	ManagerRender_Base::GetFrameCount()
+zU64	ManagerRender_Base::GetFrameCount()
 {
 	return muFrameCount;
 }

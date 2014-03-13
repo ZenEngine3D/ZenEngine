@@ -9,7 +9,7 @@ DWORD WINAPI ExecuteThreadTask( LPVOID lpParam )
 {
 	while(1)
 	{
-		zenList2xNode* pItem = CMgr::Job.GetTaskReady().GetHead();
+		zList2xNode* pItem = CMgr::Job.GetTaskReady().GetHead();
 		while( pItem != CMgr::Job.GetTaskReady().GetInvalid() )
 		{
 			JobItem* pTask = static_cast<JobItem*>(pItem);

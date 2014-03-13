@@ -39,12 +39,12 @@ namespace sample
 		CMgr::Log.Log(CLog::keLog_Game, " MALLOC");
 		CMgr::Log.Log(CLog::keLog_Game, zenConst::kzLineA40);
 
-		zenU32 size1 = sizeof(int);
-		zenU32 size2 = sizeof(TestAlloc);
+		zU32 size1 = sizeof(int);
+		zU32 size2 = sizeof(TestAlloc);
 
 		TestAlloc* pTest1		= zenNewDefault TestAlloc(1);
 		TestAlloc* pTest2		= zenNewDefault TestAlloc(2);
-		TestAlloc* pTest3		= zenNew(&zenMem::Allocator::GetDefault()) TestAlloc(3);
+		TestAlloc* pTest3		= zenNew(&zenMem::zAllocator::GetDefault()) TestAlloc(3);
 		TestAlloc* pArrayTest	= zenNewDefault TestAlloc[5];
 
 		//Test buffer overrun detection
@@ -54,7 +54,7 @@ namespace sample
 		delete pTest1;
 		delete[] pArrayTest;
 
-		zenMem::AllocatorPool PoolAlloc( "TestPool", sizeof(TestAlloc), 2, 1); 
+		zenMem::zAllocatorPool PoolAlloc( "TestPool", sizeof(TestAlloc), 2, 1); 
 		pTest1 = zenNew(&PoolAlloc) TestAlloc(0x01);
 		pTest2 = zenNew(&PoolAlloc) TestAlloc(0x02);
 		pTest3 = zenNew(&PoolAlloc) TestAlloc(0x03);

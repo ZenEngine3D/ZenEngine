@@ -27,7 +27,7 @@ WndAssetProperty::~WndAssetProperty()
 {
 }
 
-void WndAssetProperty::AddAssetTab(zenHash64 _hAssetID)
+void WndAssetProperty::AddAssetTab(zHash64 _hAssetID)
 {	
 	zeAss::AssetItem* pEditItem	= zeMgr::Asset.AssetGet(_hAssetID);
 	if( pEditItem )

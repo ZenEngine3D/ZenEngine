@@ -5,37 +5,33 @@
 #if ZEN_ENGINETOOL
 namespace zen { namespace zeAss
 {
-	class Package
+	class Package : public zRefCounted<true>
 	{
-	ZENClassDeclareNoParent(Package)
+	ZENClassDeclare(Package, zRefCounted<true>)
 	public:
 													Package			();
 		virtual										~Package		();
 		
 		bool										Save			();
-		ZENInline zenHash32							GetID			(){return mID;}
-		ZENInline const zenArrayStatic<zenString>&		GetGroupAndName	(){return maGroup;}
-		
-		ZENInline const zenString&						GetName			(){return *maGroup.Last();}		
-//		bool										AssetAdd		(AssetItem* _pAsset);
-//		void										AssetRemove		(AssetItem* _pAsset);
-		AssetItem*									AssetGet		(zenConst::eAssetType _eType, zenHash64 _hAssetName);
-		ZENInline zenMap<AssetItem*>::Key64&			AssetGet		(zenConst::eAssetType _eType){return madAssetPerType[_eType];}
-	
+		ZENInline zHash64							GetID			()const{return mID;}
+		ZENInline const zArrayStatic<zString>&		GetGroupAndName	()const{return maGroup;}		
+		ZENInline const zString&					GetName			()const{return *maGroup.Last();}		
+		ZENInline const zenAss::zAssetItem&					GetAsset		(zenConst::eAssetType _eType, zHash64 _hAssetName){return madAssetPerType[_eType][_hAssetName];}
+		ZENInline const zMap<zenAss::zAssetItem>::Key64&	GetAsset		(zenConst::eAssetType _eType){return madAssetPerType[_eType];}
+
 	protected:			
-		bool										Load			(const CFil::Filename& _Filename, zenMap<AssetItem*>::Key64& _dAllAsset);
+		bool										Load			(const CFil::Filename& _Filename, zMap<AssetItem*>::Key64& _dAllAsset);
 		void										Unload			();		
 
-		zenHash32									mID;				//!< Package ID, taken from path		
-		zenArrayStatic<zenString>					maGroup;			//!< Package belongs to a group hierarchy for easier finding of packages (last element is package name)
-		
-		zenHash32									mhGroupID;			//!< Group ID of this package
+		zHash64										mID;				//!< Package ID, taken from path		
+		zArrayStatic<zString>						maGroup;			//!< Package belongs to a group hierarchy for easier finding of packages (last element is package name)
+		zHash32										mhGroupID;			//!< Group ID of this package
 		CFil::Filename								mPackagePath;		//!< Full path to package file
-		zenArrayStatic<zenMap<AssetItem*>::Key64>	madAssetPerType;	//!< Asset dictionary per Asset type
+		zArrayStatic<zMap<zenAss::zAssetItem>::Key64>		madAssetPerType;	//!< Asset dictionary per Asset type
 		friend class ManagerAsset;
 	};
 
-	void LoadGroupAndName(const char* _zName, const char* _zGroup, zenArrayStatic<zenString>& _aOutGroup );
+	void LoadGroupAndName(const char* _zName, const char* _zGroup, zArrayStatic<zString>& _aOutGroup );
 }} //namespace zen { namespace zeAss
 
 #endif

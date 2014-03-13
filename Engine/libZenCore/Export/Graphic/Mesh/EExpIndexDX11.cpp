@@ -11,14 +11,14 @@ bool SerialGfxIndex_DX11::ExportWork(bool _bIsTHRTask)
 		meIndiceFormat	= DXGI_FORMAT_R16_UINT;
 		muIndiceSize	= 2;
 		muIndiceCount	= pExportInfo->maIndice16.Count();;
-		mSerial.maIndices.Copy( (zenU8*)pExportInfo->maIndice16.First(), pExportInfo->maIndice16.Size() );
+		mSerial.maIndices.Copy( (zU8*)pExportInfo->maIndice16.First(), pExportInfo->maIndice16.Size() );
 	}
 	else
 	{
 		meIndiceFormat	= DXGI_FORMAT_R32_UINT;
 		muIndiceSize	= 4;		
 		muIndiceCount	= pExportInfo->maIndice32.Count();
-		mSerial.maIndices.Copy( (zenU8*)pExportInfo->maIndice32.First(), pExportInfo->maIndice32.Size() );
+		mSerial.maIndices.Copy( (zU8*)pExportInfo->maIndice32.First(), pExportInfo->maIndice32.Size() );
 	}
 	
 	switch( pExportInfo->mePrimitiveType )

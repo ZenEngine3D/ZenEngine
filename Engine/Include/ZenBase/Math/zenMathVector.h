@@ -20,9 +20,9 @@ namespace zen { namespace zenMath
     ZENInline V4		XYZW            ( const float* _pValues );
     ZENInline V4		XYZW            ( float _fX, float _fY, float _fZ, float _fW);
 	/*
-	ZENInline V4		XYZW            ( zenU32 _uValue         );
-	ZENInline V4		XYZW            ( const zenU32* _uValues );
-	ZENInline V4		XYZW            ( zenU32 _uX, zenU32 _uY, zenU32 _uZ, zenU32 _uW);
+	ZENInline V4		XYZW            ( zU32 _uValue         );
+	ZENInline V4		XYZW            ( const zU32* _uValues );
+	ZENInline V4		XYZW            ( zU32 _uX, zU32 _uY, zU32 _uZ, zU32 _uW);
 	*/
     ZENInline V4		SpreadX         ( V4 _Vect );
     ZENInline V4		SpreadY         ( V4 _Vect );
@@ -33,10 +33,10 @@ namespace zen { namespace zenMath
 
     // Values Get
     ZENInline void		XYZW            ( V4 _Vect, float* _pValuesOut );
-    ZENInline float	X               ( V4 _Vect );
-    ZENInline float	Y               ( V4 _Vect );
-    ZENInline float	Z               ( V4 _Vect );
-    ZENInline float	W               ( V4 _Vect );    
+    ZENInline float		X               ( V4 _Vect );
+    ZENInline float		Y               ( V4 _Vect );
+    ZENInline float		Z               ( V4 _Vect );
+    ZENInline float		W               ( V4 _Vect );    
     
 	// Arithmerics
     ZENInline V4		Add				( V4 _VectA, V4 _VectB );

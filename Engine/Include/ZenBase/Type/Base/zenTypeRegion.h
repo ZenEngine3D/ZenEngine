@@ -5,25 +5,25 @@
 namespace zen { namespace zenType {
 
 template<class _Type_>
-class zenRegion
+class zRegion
 {
-ZENClassDeclareNoParent(zenRegion)
+ZENClassDeclareNoParent(zRegion)
 public:
-	AWForceInline zenRegion(void); //need to specialize for different types (right now there is a default implementation for zenS8, zenU8, zenS16, zenU16, zenS32, zenU32, zenS64, zenU64, zenF32, zenF64)
-	AWForceInline zenRegion(const _Type_ inX1, const _Type_ inY1, const _Type_ inX2, const _Type_ inY2);
-	AWForceInline zenRegion(const zenRegion& xOther);
+	AWForceInline zRegion(void); //need to specialize for different types (right now there is a default implementation for zS8, zU8, zS16, zU16, zS32, zU32, zS64, zU64, float, double)
+	AWForceInline zRegion(const _Type_ inX1, const _Type_ inY1, const _Type_ inX2, const _Type_ inY2);
+	AWForceInline zRegion(const zRegion& xOther);
 
-	AWForceInline bool operator!= (const zenRegion& xOther);
+	AWForceInline bool operator!= (const zRegion& xOther);
 
-	AWForceInline void Intersect(const zenRegion& xBox1, const zenRegion& xBox2);
-	AWForceInline void Intersect(const zenRegion& xBox);
+	AWForceInline void Intersect(const zRegion& xBox1, const zRegion& xBox2);
+	AWForceInline void Intersect(const zRegion& xBox);
 	AWForceInline bool IsInside(_Type_ inX, _Type_ inY);
 
-	AWForceInline void Offset(const zenVector2<_Type_>* pxOffset);
-	AWForceInline bool IsInside(const zenVector2<_Type_>* pxOffset);
+	AWForceInline void Offset(const zVector2<_Type_>* pxOffset);
+	AWForceInline bool IsInside(const zVector2<_Type_>* pxOffset);
 
 	AWForceInline bool IsNull(void);
-	AWForceInline const zenRegion& SetNull(void);
+	AWForceInline const zRegion& SetNull(void);
 
 	union
 	{
@@ -34,16 +34,16 @@ public:
 	};
 };
 
-typedef zenRegion<zenS8> 	awRegionS8;		ZENSupportMemcopy(awRegionS8);
-typedef zenRegion<zenU8> 	awRegionU8;		ZENSupportMemcopy(awRegionU8);
-typedef zenRegion<zenS16>	awRegionS16;	ZENSupportMemcopy(awRegionS16);
-typedef zenRegion<zenU16>	awRegionU16;	ZENSupportMemcopy(awRegionU16);
-typedef zenRegion<zenS32>	awRegionS32;	ZENSupportMemcopy(awRegionS32);
-typedef zenRegion<zenU32>	awRegionU32;	ZENSupportMemcopy(awRegionU32);
-typedef zenRegion<zenS64>	awRegionS64;	ZENSupportMemcopy(awRegionS64);
-typedef zenRegion<zenU64>	awRegionU64;	ZENSupportMemcopy(awRegionU64);
-typedef zenRegion<zenF32>	awRegionF32;	ZENSupportMemcopy(awRegionF32);
-typedef zenRegion<zenF64>	awRegionF64;	ZENSupportMemcopy(awRegionF64);
+typedef zRegion<zS8> 	zRegionS8;	ZENSupportMemcopy(zRegionS8);
+typedef zRegion<zU8> 	zRegionU8;	ZENSupportMemcopy(zRegionU8);
+typedef zRegion<zS16>	zRegionS16;	ZENSupportMemcopy(zRegionS16);
+typedef zRegion<zU16>	zRegionU16;	ZENSupportMemcopy(zRegionU16);
+typedef zRegion<zS32>	zRegionS32;	ZENSupportMemcopy(zRegionS32);
+typedef zRegion<zU32>	zRegionU32;	ZENSupportMemcopy(zRegionU32);
+typedef zRegion<zS64>	zRegionS64;	ZENSupportMemcopy(zRegionS64);
+typedef zRegion<zU64>	zRegionU64;	ZENSupportMemcopy(zRegionU64);
+typedef zRegion<float>	zRegionF32;	ZENSupportMemcopy(zRegionF32);
+typedef zRegion<double>	zRegionF64;	ZENSupportMemcopy(zRegionF64);
 
 } }//namespace zen { namespace zenType {
 

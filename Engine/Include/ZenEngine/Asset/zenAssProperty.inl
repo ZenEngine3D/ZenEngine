@@ -8,7 +8,7 @@ namespace zen { namespace zenAss
 template<class TProperty>
 ZENForceInline void* AllocateValue(const TProperty& _PropertyDef)
 {
-	static zenMem::AllocatorPool sAllocPool( "PropertyPool", sizeof(TProperty::Data), 256, 256 );
+	static zenMem::zAllocatorPool sAllocPool( "PropertyPool", sizeof(TProperty::Data), 256, 256 );
 	return zenNew(&sAllocPool) TProperty::Data( static_cast<const TProperty*>(&_PropertyDef)->mDefault );		
 }
 
@@ -51,7 +51,7 @@ void PropertyValue::Reset()
 	#undef	ZEN_ASSETPROPERTIES_EXPAND_CODE
 }
 
-zenUInt PropertyValue::ToString(zenUInt _zLen, char* _zOutString)const
+zUInt PropertyValue::ToString(zUInt _zLen, char* _zOutString)const
 {
 	ZENAssert( mpDefinition && mpValue );
 	#define ZEN_ASSETPROPERTIES_EXPAND_CODE(_TypeName_)	case zenConst::keAssProp_##_TypeName_: return static_cast<const Property##_TypeName_*>(mpDefinition)->ToString( *mpValue##_TypeName_, _zLen, _zOutString );
@@ -63,11 +63,11 @@ zenUInt PropertyValue::ToString(zenUInt _zLen, char* _zOutString)const
 	return 0;
 }
 
-zenUInt PropertyValue::ToXml(zenUInt _zLen, char* _zOutString)const
+zUInt PropertyValue::ToXml(zUInt _zLen, char* _zOutString)const
 {
 	ZENAssert( mpDefinition && mpValue );
 	char zValue[256];
-	zenUInt uWritten(sizeof(zValue));
+	zUInt uWritten(sizeof(zValue));
 
 	#define ZEN_ASSETPROPERTIES_EXPAND_CODE(_TypeName_)	case zenConst::keAssProp_##_TypeName_: uWritten = static_cast<const Property##_TypeName_*>(mpDefinition)->ToXml( *mpValue##_TypeName_, sizeof(zValue), zValue ); break;
 	switch( mpDefinition->meType )
@@ -91,22 +91,22 @@ PropertyBool::PropertyBool(const char* _zName, const char* _zDisplayName, const 
 }
 
 
-zenUInt PropertyBool::ToString(const Data& _Value, zenUInt _zLen, char* _zOutString)const
+zUInt PropertyBool::ToString(const Data& _Value, zUInt _zLen, char* _zOutString)const
 {
 	return ::sprintf_s(_zOutString, _zLen, "%s", zenConst::kzFalseTrue[_Value]);
 }
 
-zenUInt PropertyBool::ToXml(const Data& _Value, zenUInt _zLen, char* _zOutString)const
+zUInt PropertyBool::ToXml(const Data& _Value, zUInt _zLen, char* _zOutString)const
 {
 	return ::sprintf_s(_zOutString, _zLen, "%i", _Value);
 }
 
-zenUInt PropertyFile::ToString(const Data& _Value, zenUInt _zLen, char* _zOutString)const
+zUInt PropertyFile::ToString(const Data& _Value, zUInt _zLen, char* _zOutString)const
 {
 	return ::sprintf_s(_zOutString, _zLen, "%s", (const char*)_Value);
 }
 
-zenUInt PropertyFile::ToXml(const Data& _Value, zenUInt _zLen, char* _zOutString)const
+zUInt PropertyFile::ToXml(const Data& _Value, zUInt _zLen, char* _zOutString)const
 {
 	return ::sprintf_s(_zOutString, _zLen, "%s", (const char*)_Value);
 }

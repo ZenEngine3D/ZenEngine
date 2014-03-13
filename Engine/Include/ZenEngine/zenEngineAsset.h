@@ -4,5 +4,6 @@
 
 #include <ZenEngine/Asset/zenAssProperty.h>
 #include <ZenEngine/Asset/zenAssItem.h>
+#include <ZenEngine/Asset/zenAssPackage.h>
 
 #endif

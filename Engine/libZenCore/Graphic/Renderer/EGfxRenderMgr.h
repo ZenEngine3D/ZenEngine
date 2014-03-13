@@ -22,7 +22,7 @@ public:
 	virtual void				FrameBegin( ERes::GfxWindowRef _FrameWindow );
 	virtual void				FrameEnd();
 	
-	zenU64						GetFrameCount();
+	zU64						GetFrameCount();
 	ZENInline ERes::GfxWindowRef	GetWindowCurrent(){return mrWindowCurrent;}
 
 	//! @todo move to more generic AWformat testing functions file?
@@ -30,7 +30,7 @@ public:
 	
 protected:
 	enum eConstants{kuFramesSaved=10};
-	zenU64						muFrameCount;	
+	zU64						muFrameCount;	
 	ERes::GfxWindowRef			mrWindowCurrent;
 };
 

@@ -2,8 +2,8 @@
 
 #if ZEN_ENGINETOOL
 
-#define ZEN_ASSETPROPERTIES_EXPAND_CODE(_TypeName_)	zenStringHash32( ZENStringDefine(_TypeName_) ),
-static const zenStringHash32 saPropertyName[]={ ZEN_ASSETPROPERTIES_EXPAND };
+#define ZEN_ASSETPROPERTIES_EXPAND_CODE(_TypeName_)	zStringHash32( ZENStringDefine(_TypeName_) ),
+static const zStringHash32 saPropertyName[]={ ZEN_ASSETPROPERTIES_EXPAND };
 #undef	ZEN_ASSETPROPERTIES_EXPAND_CODE
 
 namespace zen { namespace zenAss

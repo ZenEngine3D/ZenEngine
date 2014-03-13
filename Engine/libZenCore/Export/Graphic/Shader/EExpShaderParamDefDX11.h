@@ -18,13 +18,13 @@ namespace EExp
 		virtual bool				Serialize		( EExp::Serializer_Base& _Serializer );		
 
 		eShaderParamFreq			meFrequence;		
-		zenArrayStatic<zenU8>			maParameterDefaults;
+		zArrayStatic<zU8>			maParameterDefaults;
 
 		struct ExportInfoExt
 		{
-			zenArrayStatic<zenU8>		maCompiledShader;
+			zArrayStatic<zU8>		maCompiledShader;
 		};
-		static zenResID 		CallbackGetItemID(zenConst::eResPlatform _ePlatform, zenConst::eResType _eType, zenConst::eResSource _eSource, const EExp::ExportInfoBase* _pExportInfo, bool& _bExistOut);
+		static zResID 		CallbackGetItemID(zenConst::eResPlatform _ePlatform, zenConst::eResType _eType, zenConst::eResSource _eSource, const EExp::ExportInfoBase* _pExportInfo, bool& _bExistOut);
 	protected:	
 		virtual bool				ExportStart();
 		virtual bool				ExportWork(bool _bIsTHRTask);	

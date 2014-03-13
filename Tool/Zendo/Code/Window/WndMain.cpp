@@ -10,7 +10,7 @@ public:
 	MyRenderWindow(wxWindow* _pParent)
 	: wxWindow(_pParent,-1)	
 	{
-		mrGfxWindow = zenRes::GfxWindow::Create(GetHWND());
+		mrGfxWindow = zenRes::zGfxWindow::Create(GetHWND());
 		mTimer.SetOwner(this);
 		Bind(wxEVT_TIMER, &MyRenderWindow::onTimer, this);
 		mTimer.Start(16);
@@ -31,7 +31,7 @@ public:
 		float t = static_cast<float>(zenSys::GetElapsedSec() / 3.0);	// Update our time animation
 		mrGfxWindow.FrameBegin();
 		mrGfxWindow.GetBackbuffer().ActivateView();
-		zenVec4F vClearColor = zenMath::TriLerp<zenVec4F>( zenVec4F(0.5f,0.5f,0.5f,1), zenVec4F(0.1f,0.1f,0.20f,1), zenVec4F(0.5f,0.5f,0.5f,1), zenMath::Fract(t) );
+		zVec4F vClearColor = zenMath::TriLerp<zVec4F>( zVec4F(0.5f,0.5f,0.5f,1), zVec4F(0.1f,0.1f,0.20f,1), zVec4F(0.5f,0.5f,0.5f,1), zenMath::Fract(t) );
 		mrGfxWindow.GetBackbuffer().Clear( true, vClearColor, true, 0 );
 		mrGfxWindow.FrameEnd();
 		
@@ -45,7 +45,7 @@ protected:
 	}
 
 	wxTimer				mTimer;
-	zenRes::GfxWindow	mrGfxWindow;
+	zenRes::zGfxWindow	mrGfxWindow;
 	wxDECLARE_NO_COPY_CLASS(MyRenderWindow);
 	DECLARE_EVENT_TABLE()
 };

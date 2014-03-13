@@ -9,11 +9,11 @@ struct ExportInfoBase
 {
 								ExportInfoBase();
 								~ExportInfoBase();
-	zenResID			mExportResID;		//!< Export Resource ID (temporarily ID assigned until exported)
+	zResID			mExportResID;		//!< Export Resource ID (temporarily ID assigned until exported)
 	void*						mpExportInfoExt;	//!< Use to extended export info, particular to one platform instead of all
-	zenU8							mbSuccessStart	: 1;
-	zenU8							mbSuccessWork	: 1;
-	zenU8							mbSuccessEnd	: 1;
+	zU8							mbSuccessStart	: 1;
+	zU8							mbSuccessWork	: 1;
+	zU8							mbSuccessEnd	: 1;
 	bool						IsSuccess(){return mbSuccessStart && mbSuccessWork && mbSuccessEnd; }
 };
 
@@ -30,7 +30,7 @@ protected:
 	virtual bool				ExportEnd();									//!< @brief Called from Thread:Main, for some post export task 
 	ZENInline	void				ExportSkipWork();								//!< @brief Call in ExportStart to avoid launching a job for this
 
-	//static zenResID	ValidateItemID(zenConst::eResPlatform _ePlatform, zenConst::eResType _eType, zenConst::eResSource _eSource, zenResID::NameHash _hName, bool& _bExistOut);
+	//static zResID	ValidateItemID(zenConst::eResPlatform _ePlatform, zenConst::eResType _eType, zenConst::eResSource _eSource, zResID::NameHash _hName, bool& _bExistOut);
 
 	friend class ExportTask;
 	friend class ManagerExport;
@@ -42,9 +42,9 @@ ZENInline void ExportItem::ExportSkipWork()
 	mpExportInfo->mbSuccessWork = TRUE; 
 }
 
-ZENInline zenResID ValidateItemID(zenConst::eResPlatform _ePlatform, zenConst::eResType _eType, zenConst::eResSource _eSource, zenResID::NameHash _hName, bool& _bExistOut)
+ZENInline zResID ValidateItemID(zenConst::eResPlatform _ePlatform, zenConst::eResType _eType, zenConst::eResSource _eSource, zResID::NameHash _hName, bool& _bExistOut)
 {
-	zenResID newResID(_hName, _ePlatform, _eType, _eSource);
+	zResID newResID(_hName, _ePlatform, _eType, _eSource);
 	EExp::SerialItem* pItem	= EMgr::SerialItems.GetItemBaseAnySource( newResID );
 	_bExistOut				= pItem != NULL;
 	return _bExistOut ? pItem->mResID : newResID;

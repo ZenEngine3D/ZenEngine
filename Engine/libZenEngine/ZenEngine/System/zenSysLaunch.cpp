@@ -44,15 +44,15 @@ void awEngineInstance::Update()
 	CMgr::Job.Update();
 }
 
-void awEngineInstance::CreateGfxWindow(const zenVec2U16& _vDim, const zenVec2U16& _vPos)
+void awEngineInstance::CreateGfxWindow(const zVec2U16& _vDim, const zVec2U16& _vPos)
 {
 	ZENAssert(gpActiveEngine);
 	gpMainWindow	= zenNewDefault FWnd::Window(L"MainWindow", _vDim);
 	gpMainWindow->Initialize();
-	mrMainGfxWindow = zenRes::GfxWindow::Create( gpMainWindow->GetHandle() );
+	mrMainGfxWindow = zenRes::zGfxWindow::Create( gpMainWindow->GetHandle() );
 }
 
-void awEngineInstance::SetWindow(const zenRes::GfxWindow& _rGfxWindow)
+void awEngineInstance::SetWindow(const zenRes::zGfxWindow& _rGfxWindow)
 {
 	mrMainGfxWindow = _rGfxWindow;
 }

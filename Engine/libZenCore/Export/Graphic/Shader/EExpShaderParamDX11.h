@@ -13,7 +13,7 @@ ZENClassDeclare(SerialGfxShaderParam_DX11, SerialShaderParam_Base)
 //-------------------------------------------------------------------------------------------------
 public:
 	virtual bool			Serialize( EExp::Serializer_Base& _Serializer );
-	zenArrayStatic<zenU8>			maParameterValues;			//!< Bytes data for all buffer values (see ShaderParamDef for each parameter start offset in array)
+	zArrayStatic<zU8>			maParameterValues;			//!< Bytes data for all buffer values (see ShaderParamDef for each parameter start offset in array)
 		
 //-------------------------------------------------------------------------------------------------
 // Export support section

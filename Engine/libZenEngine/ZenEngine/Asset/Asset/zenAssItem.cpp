@@ -4,72 +4,92 @@
 
 namespace zen { namespace zenAss
 {
-#if 0
-//=================================================================================================
-//! @brief		
-//! @details	
-//-------------------------------------------------------------------------------------------------
-//! @return		
-//=================================================================================================
-void AssetBase::InitDefault()
-{	
-	ZENAssert(maPropertyPointer.Count() > 0 );
 
-	// Only need to reset value
-	if( maPropertyValue.Count() > 0 )
+zAssetItem AssetCreate(zenConst::eAssetType _eAssetType)
+{
+	zeAss::AssetItem* pNewItem(NULL);
+	switch( _eAssetType )
 	{
-		zenAss::PropertyValue* pValCur	= maPropertyValue.First();
-		zenAss::PropertyValue* pValLast = maPropertyValue.Last();
-		while( pValCur <= pValLast )
-		{
-			pValCur->Reset();
-			++pValCur;
-		}
+	case zenConst::keAssType_TestProperty:	pNewItem = zenNewDefault zeAss::TestProperty();	break;
+	case zenConst::keAssType_Texture2D:		pNewItem = zenNewDefault zeAss::GfxTexture2D();	break;
+	case zenConst::keAssType_Mesh:			pNewItem = zenNewDefault zeAss::GfxMesh();		break;
+	default:								ZENAssertMsg(0, "Unsupported Asset Type");	break;
 	}
-	// Need to allocate value (which sets it to default)
-	else
+
+	if( pNewItem )
 	{
-		const zenAss::PropertyArray& aProperties = GetProperties();	
-		maPropertyValue.SetCount( aProperties.Count() );
-		const zenAss::PropertyBase* const*	pPropCur	= aProperties.First();
-		zenAss::PropertyValue*				pValCur		= maPropertyValue.First();
-		zenAss::PropertyValue*				pValLast	= maPropertyValue.Last();
-		while( pValCur <= pValLast )
-		{
-			pValCur->Allocate(**pPropCur);
-			++pValCur;
-			++pPropCur;
-		}
+		pNewItem->InitDefault();
+		//pNewItem->mpPackage = &_Owner;
 	}
+	return pNewItem;
 }
 
-//=================================================================================================
-//! @brief		Build a string description based on asset property definitions/values
-//! @details	Take all flagged properties and make a string description from it. Used for
-//!				Asset short description in editor
-//-------------------------------------------------------------------------------------------------
-//! @return		
-//=================================================================================================
-void AssetBase::RebuiltDescription()
-{	
-	mzDescription = "";
-	/*
-	//! @TODO
-	for(zenUInt idx(0), count(maPropertyValue.Count()); idx<count; ++idx)
-	{
-		const PropertyDefBase& propDef = maPropertyValue[idx].GetBase()->mParentDef;
-		if( propDef.mbShowInAssetDesc )
-		{
-			char zBuffer[128];			
-			char zValue[64];
-			maPropertyValue[idx].GetBase()->ValueToString( zValue, sizeof(zValue) );
-			sprintf(zBuffer, "(%s : %s) ", propDef.mzDisplayName, zValue);
-			mzDescription += zBuffer;
-		}		
-	}
-	*/
+zAssetItem::zAssetItem()
+:Super()
+{
 }
-#endif
+
+zAssetItem::zAssetItem(const zAssetItem& _Copy)
+: Super(_Copy.mpReference)
+{
+}
+
+zAssetItem::zAssetItem(zeAss::AssetItem* _pAsset)
+: Super(_pAsset)
+{
+}
+
+zAssetItem& zAssetItem::operator=(const zAssetItem& _Copy)
+{
+	Super::operator=(_Copy.mpReference);
+	return *this;
+}
+
+zHash64 zAssetItem::GetID()const								
+{ 
+	ZENAssert(mpReference);	
+	return mpReference->GetID(); 
+}
+zenConst::eAssetType zAssetItem::GetType()const
+{
+	ZENAssert(mpReference);	
+	return mpReference->GetType(); 
+}
+const zString& zAssetItem::GetName()const						
+{ 
+	ZENAssert(mpReference);	
+	return mpReference->GetName(); 
+}
+const zArrayStatic<zString>& zAssetItem::GetGroupAndName()const 
+{ 
+	ZENAssert(mpReference);	
+	return mpReference->GetGroupAndName(); 
+}
+zHash32 zAssetItem::GetGroupID()const							
+{ 
+	ZENAssert(mpReference);	
+	return mpReference->GetGroupID(); 
+}
+const zString& zAssetItem::GetDescription()const				
+{ 
+	ZENAssert(mpReference);	
+	return mpReference->GetDescription(); 
+}
+zUInt zAssetItem::GetValueCount()const							
+{ 
+	ZENAssert(mpReference);	
+	return mpReference->GetValueCount(); 
+}
+zenAss::PropertyValue& zAssetItem::GetValue(zUInt _uValIndex)	
+{ 
+	ZENAssert(mpReference);	
+	return mpReference->GetValue(_uValIndex); 
+}
+void zAssetItem::InitDefault()									
+{ 
+	ZENAssert(mpReference);	
+	return mpReference->InitDefault(); 
+}
 
 }} //namespace zen { namespace zenAss
 

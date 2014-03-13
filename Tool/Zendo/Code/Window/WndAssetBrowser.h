@@ -53,9 +53,9 @@ protected:
 	wxSizer*						mpSizerAsset;	
 	wxImageList*					mpIconAsset;			//!< Icon array for each resource preview
 	wxImageList*					mpIconPackage;			//!< Icon array for packages
-	zenArrayStatic<zeAss::Package*>	maPackageSelected;		//!< List of selected package to display content for
-	zenMap<zenUInt>::Key32			mdCountPerPackage;		//!< Updated on 'UpdateAssetList()' to reflect number of asset items per package
-	zenArrayStatic<zenUInt>			maCountPerType;			//!< Updated on 'UpdateAssetList()' to reflect number of asset items per type
+	zArrayStatic<zenAss::zPackage>	maPackageSelected;		//!< List of selected package to display content for
+	zMap<zUInt>::Key32				mdCountPerPackage;		//!< Updated on 'UpdateAssetList()' to reflect number of asset items per package
+	zArrayStatic<zUInt>				maCountPerType;			//!< Updated on 'UpdateAssetList()' to reflect number of asset items per type
 	zenFlagAssetType				mAssetTypeMask;			//!< Mask of selected Asset Type	
 };
 

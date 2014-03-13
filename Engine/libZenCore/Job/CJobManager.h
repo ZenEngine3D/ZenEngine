@@ -11,13 +11,13 @@ ZENClassDeclare(ManagerJob_Base, zbType::Manager);
 public:
 	void		Add(JobItem* _pJob);
 	void		Update();
-	zenList2x&	GetTaskReady();
+	zList2x&	GetTaskReady();
 
 protected:
 	void		Remove(JobItem* _pJob);
-	zenList2x	mlstTasksPending;
-	zenList2x	mlstTasksReady;
-	zenList2x	mlstTasksRunning;
+	zList2x	mlstTasksPending;
+	zList2x	mlstTasksReady;
+	zList2x	mlstTasksRunning;
 };
 
 }  

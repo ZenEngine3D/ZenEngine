@@ -12,9 +12,9 @@ namespace EExp
 		mSerial.maMeshStripID = pExportInfo->maMeshStripID;
 
 		// Make sure all MeshStrip are valid
-		for(zenUInt stripIdx(0), stripCount(mSerial.maMeshStripID.Count()); stripIdx<stripCount; ++stripIdx)
+		for(zUInt stripIdx(0), stripCount(mSerial.maMeshStripID.Count()); stripIdx<stripCount; ++stripIdx)
 		{
-			zenResID resID = mSerial.maMeshStripID[stripIdx];
+			zResID resID = mSerial.maMeshStripID[stripIdx];
 			if( resID.Type()!=zenConst::keResType_GfxMeshStrip || !EMgr::SerialItems.GetItem<EExp::SerialGfxMeshStrip_DX11>(resID) )
 				return false;
 		}

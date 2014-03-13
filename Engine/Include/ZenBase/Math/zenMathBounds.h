@@ -15,25 +15,25 @@ namespace zen { namespace zenMath
 		{
 		}
 
-		Bounds( const zenVec3F& _vCenter, float _fRadius )
+		Bounds( const zVec3F& _vCenter, float _fRadius )
 		: mvCenterRadius(_vCenter.x, _vCenter.y, _vCenter.z, _fRadius)
 		{
 		}
 
-		Bounds( const zenVec3F& _vBoxMin, const zenVec3F& _vBoxMax )
+		Bounds( const zVec3F& _vBoxMin, const zVec3F& _vBoxMax )
 		: mvBoxMin(_vBoxMin)
 		, mvBoxMax(_vBoxMax)
 		{
-			zenVec3F vDiff;
+			zVec3F vDiff;
 			//mvBoxMin + (mvBoxMax - mvBoxMin) / 2.f;
-			//zenVec3F vCenter = mvBoxMin + (mvBoxMax - mvBoxMin) / 2.f;
+			//zVec3F vCenter = mvBoxMin + (mvBoxMax - mvBoxMin) / 2.f;
 			//mvCenterRadius
 		}
 
 	protected:
-		zenVec4F	mvCenterRadius;	//!< Center and radius of sphere bounds
-		zenVec3F	mvBoxMin;		//!< Minimum coordinates of box bounds
-		zenVec3F	mvBoxMax;		//!< Maximum coordinates of box bounds
+		zVec4F	mvCenterRadius;	//!< Center and radius of sphere bounds
+		zVec3F	mvBoxMin;		//!< Minimum coordinates of box bounds
+		zVec3F	mvBoxMax;		//!< Maximum coordinates of box bounds
 	};
 }  } // namespace zen, zenMath
 
