@@ -12,9 +12,9 @@ namespace zen { namespace zeAss
 	public:
 		virtual zenConst::eAssetType			GetType()const{return zenConst::keAssType_Texture2D;}
 		virtual const zenAss::PropertyArray&	GetProperties()const;
-		virtual zenInt							GetValueIndex(zenHash32 _hPropertyName)const;
+		virtual zInt							GetValueIndex(zHash32 _hPropertyName)const;
 	protected:
-		mutable zenArrayStatic<zenU32>	maIcon; //!< Store icon data
+		mutable zArrayStatic<zU32>	maIcon; //!< Store icon data
 	};	
 
 }} //namespace zen { namespace zeAss

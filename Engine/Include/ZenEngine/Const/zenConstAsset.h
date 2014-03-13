@@ -48,7 +48,7 @@ namespace zenConst
 
 namespace zenType
 {
-	typedef zenFlag<zenConst::eAssetType,zenConst::keAssType__Count, zenU64>	zenFlagAssetType;
+	typedef zFlag<zenConst::eAssetType,zenConst::keAssType__Count, zU64>	zenFlagAssetType;
 }
 
 } //namespace zen

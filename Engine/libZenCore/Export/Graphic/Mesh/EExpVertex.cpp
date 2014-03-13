@@ -9,15 +9,15 @@ namespace EExp
 //-------------------------------------------------------------------------------------------------
 //! @param _Streams			- Infos on the various streams for the vertex
 //! @param _uCreationFlags	- Type of buffer (SerialVertex_Base::eCreationFlags)
-//! @return 				- Unique zenResID of created Resource
+//! @return 				- Unique zResID of created Resource
 //=================================================================================================
-zenResID CreateGfxVertex(const zenArrayBase<zenRes::GfxVertex::Stream>& _aStreams, zenU32 _uCreationFlags)
+zResID CreateGfxVertex(const zArrayBase<zenRes::zGfxVertex::Stream>& _aStreams, zU32 _uCreationFlags)
 {	
-	static zenMem::AllocatorPool sMemPool("Pool CreateVertexBuffer", sizeof(SerialVertex_Base::ExportInfo), 1, 5 );
+	static zenMem::zAllocatorPool sMemPool("Pool CreateVertexBuffer", sizeof(SerialVertex_Base::ExportInfo), 1, 5 );
 	SerialVertex_Base::ExportInfo* pExportInfo	= zenNew(&sMemPool) SerialVertex_Base::ExportInfo;
 	pExportInfo->maStreams						= _aStreams;
 	pExportInfo->muCreationFlags				= _uCreationFlags;
-	return EMgr::Export.CreateItem( zenResID::kePlatformType_GFX, zenConst::keResType_GfxVertex, pExportInfo );
+	return EMgr::Export.CreateItem( zResID::kePlatformType_GFX, zenConst::keResType_GfxVertex, pExportInfo );
 }
 
 }

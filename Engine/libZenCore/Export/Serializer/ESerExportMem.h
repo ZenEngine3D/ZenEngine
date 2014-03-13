@@ -8,43 +8,43 @@ class SerializerExportMem : public ISerializerExporter
 {
 ZENClassDeclare(SerializerExportMem, ISerializerExporter)
 public:
-					SerializerExportMem(zenUInt auAllocSize);
+					SerializerExportMem(zUInt auAllocSize);
 	virtual			~SerializerExportMem();
 	bool			Save(const char* azFilename);//! @todo: abstract this
 protected:
-	struct Alloc : public zenList1xNode
+	struct Alloc : public zList1xNode
 	{
-		zenU8*	pMemoryStart;
-		zenU8*	pMemoryCur;
-		zenU8*	pMemoryEnd;
+		zU8*	pMemoryStart;
+		zU8*	pMemoryCur;
+		zU8*	pMemoryEnd;
 	};						
 
-	void*			GetMemory	(zenUInt auSize);
-	void			AddMemory	(zenUInt auSize);
+	void*			GetMemory	(zUInt auSize);
+	void			AddMemory	(zUInt auSize);
 	
-	zenList1x		mlstAllocs;
-	zenUInt			muAllocSize;
+	zList1x		mlstAllocs;
+	zUInt			muAllocSize;
 
 //-------------------------------------------------------------------
 // Serializer_Base Interface
 //-------------------------------------------------------------------
 public:
-	virtual bool	Serialize(zenU8&						_uValue);
-	virtual bool	Serialize(zenU16&						_uValue);
-	virtual bool	Serialize(zenU32&						_uValue);
-	virtual bool	Serialize(zenU64&						_uValue);
-	virtual bool	Serialize(zenS8&						_iValue);
-	virtual bool	Serialize(zenS16&						_iValue);
-	virtual bool	Serialize(zenS32&						_iValue);
-	virtual bool	Serialize(zenS64&						_iValue);
-	virtual bool	Serialize(zenArrayBase<zenU8>&	_aValues);
-	virtual bool	Serialize(zenArrayBase<zenU16>&	_aValues);
-	virtual bool	Serialize(zenArrayBase<zenU32>&	_aValues);
-	virtual bool	Serialize(zenArrayBase<zenU64>&	_aValues);
-	virtual bool	Serialize(zenArrayBase<zenS8>&	_aValues);
-	virtual bool	Serialize(zenArrayBase<zenS16>&	_aValues);
-	virtual bool	Serialize(zenArrayBase<zenS32>&	_aValues);
-	virtual bool	Serialize(zenArrayBase<zenS64>&	_aValues);
+	virtual bool	Serialize(zU8&						_uValue);
+	virtual bool	Serialize(zU16&						_uValue);
+	virtual bool	Serialize(zU32&						_uValue);
+	virtual bool	Serialize(zU64&						_uValue);
+	virtual bool	Serialize(zS8&						_iValue);
+	virtual bool	Serialize(zS16&						_iValue);
+	virtual bool	Serialize(zS32&						_iValue);
+	virtual bool	Serialize(zS64&						_iValue);
+	virtual bool	Serialize(zArrayBase<zU8>&	_aValues);
+	virtual bool	Serialize(zArrayBase<zU16>&	_aValues);
+	virtual bool	Serialize(zArrayBase<zU32>&	_aValues);
+	virtual bool	Serialize(zArrayBase<zU64>&	_aValues);
+	virtual bool	Serialize(zArrayBase<zS8>&	_aValues);
+	virtual bool	Serialize(zArrayBase<zS16>&	_aValues);
+	virtual bool	Serialize(zArrayBase<zS32>&	_aValues);
+	virtual bool	Serialize(zArrayBase<zS64>&	_aValues);
 protected:
 	virtual bool	ItemStarted(EExp::SerialItem& aItem);
 

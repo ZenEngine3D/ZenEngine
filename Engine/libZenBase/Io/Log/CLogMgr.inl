@@ -5,12 +5,12 @@ namespace CLog
 	//! @details	This insert info about time and LogType
 	//--------------------------------------------------------------------------------------------------
 	//! @param[in]	_eLogType - Type of log to generate
-	//! @return[in]	zenString describing Log being outputted, valid until method called again
+	//! @return[in]	zString describing Log being outputted, valid until method called again
 	//==================================================================================================
 	const char* ManagerLog::GetTypeStamp( eLogType _eLogType )
 	{
 		static char sBufferStamp[32];
-		const zenDateTime& oDate = zenSys::GetDateTime();
+		const zDateTime& oDate = zenSys::GetDateTime();
 		::sprintf_s(sBufferStamp, sizeof(sBufferStamp), "[%02ih%02i:%02i %15s] ", oDate.muHour, oDate.muMinute, oDate.muSecond, ssLogTypeDesc[_eLogType] );
 		return sBufferStamp;
 	}
@@ -19,7 +19,7 @@ namespace CLog
 	//! @brief		Return the right  number of spaces to match length of TypeStamp
 	//! @details	Use this to write on multiple line while remaining aligned to stamp
 	//--------------------------------------------------------------------------------------------------
-	//! @return		zenString of spaces matching GetTypeStamp length
+	//! @return		zString of spaces matching GetTypeStamp length
 	//==================================================================================================
 	const char* ManagerLog::GetEmptyStamp()
 	{
@@ -30,9 +30,9 @@ namespace CLog
 	void ManagerLog::SetActive( eLogOutput _eOutput, eLogType _eType, bool _bActive )
 	{ 
 		ZENAssertMsg( _eOutput < keLogOut__Count, "Invalid output");
-		zenU32 uMask = (1<<_eType);
+		zU32 uMask = (1<<_eType);
 		muOutputMask[_eOutput] &= ~uMask;
-		muOutputMask[_eOutput] |= (zenU32)_bActive>0 ? uMask : 0;
+		muOutputMask[_eOutput] |= (zU32)_bActive>0 ? uMask : 0;
 	}
 
 	void ManagerLog::Clear( eLogOutput _eOutput )

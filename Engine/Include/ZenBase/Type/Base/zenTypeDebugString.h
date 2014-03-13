@@ -8,13 +8,13 @@ namespace zen { namespace zenType {
 //! @brief		Used to store string in Debug version only
 //! @details	Stripped in release version
 //=================================================================================================
-class zenDebugString
+class zDebugString
 {
 public:
-	ZENInline			zenDebugString();
-	ZENInline			zenDebugString(const char* _zString);
+	ZENInline			zDebugString();
+	ZENInline			zDebugString(const char* _zString);
 	ZENInline			operator const char*();
-	ZENInline void		operator=(const zenDebugString& _Copy);
+	ZENInline void		operator=(const zDebugString& _Copy);
 
 protected:	
 	ZENDbgCode(const char* mzDebugString;)

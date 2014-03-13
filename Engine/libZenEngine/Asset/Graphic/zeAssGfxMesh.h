@@ -12,9 +12,9 @@ namespace zen { namespace zeAss
 	public:
 		virtual zenConst::eAssetType			GetType()const{return zenConst::keAssType_Mesh;}
 		virtual const zenAss::PropertyArray&	GetProperties()const;
-		virtual zenInt							GetValueIndex(zenHash32 _hPropertyName)const;
+		virtual zInt							GetValueIndex(zHash32 _hPropertyName)const;
 	protected:
-		static zenArrayStatic<zenU32>	saIcon;		//!< All mesh share the same icon
+		static zArrayStatic<zU32>	saIcon;		//!< All mesh share the same icon @todo Keep this?
 	};
 }} //namespace zen { namespace zeAss
 

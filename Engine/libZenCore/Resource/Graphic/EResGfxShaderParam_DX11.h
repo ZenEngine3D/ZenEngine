@@ -27,13 +27,13 @@ public:
 // Common to all ShaderParam
 public:	
 	void						Bind(EExp::eShaderStage _eShaderStage)const;	
-	void						SetValue(const zenRes::awShaderParameter& _Value);	
+	void						SetValue(const zenRes::zShaderParameter& _Value);	
 	void						SetValue(const EExp::ParameterBase& _Value);	
-	void						SetValue(const zenHash32& _hParamName, const float& _fValue);
-	void						SetValue(const zenHash32& _hParamName, const zenVec2F& _vValue);
-	void						SetValue(const zenHash32& _hParamName, const zenVec3F& _vValue);
-	void						SetValue(const zenHash32& _hParamName, const zenVec4F& _vValue);
-	void						SetValue(const zenHash32& _hParamName, const zenMath::Matrix& _matValue);
+	void						SetValue(const zHash32& _hParamName, const float& _fValue);
+	void						SetValue(const zHash32& _hParamName, const zVec2F& _vValue);
+	void						SetValue(const zHash32& _hParamName, const zVec3F& _vValue);
+	void						SetValue(const zHash32& _hParamName, const zVec4F& _vValue);
+	void						SetValue(const zHash32& _hParamName, const zenMath::Matrix& _matValue);
 //-----------------------------------------------------------------------------
 
 protected:

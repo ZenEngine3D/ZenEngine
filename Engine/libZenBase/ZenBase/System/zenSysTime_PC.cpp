@@ -4,9 +4,9 @@
 namespace zen { namespace zenSys
 {
 
-static zenU64 suStartTime = GetTimeUSec();
+static zU64 suStartTime = GetTimeUSec();
 
-zenU64 GetTimeUSec()
+zU64 GetTimeUSec()
 {
     //-----------------------------------------------------
     // Should be init by system instead
@@ -21,7 +21,7 @@ zenU64 GetTimeUSec()
 
     LARGE_INTEGER t1;
     QueryPerformanceCounter(&t1);
-    return static_cast<zenU64>(t1.QuadPart * sfFreqPerUSInv);
+    return static_cast<zU64>(t1.QuadPart * sfFreqPerUSInv);
 }
 
 double GetElapsedUSec()
@@ -39,9 +39,9 @@ double GetElapsedSec()
 	return double(GetTimeUSec()-suStartTime)/(1000.0*1000.0);
 }
 
-const zenDateTime& GetDateTime()
+const zDateTime& GetDateTime()
 {
-	static zenDateTime	DateTimeOut;
+	static zDateTime	DateTimeOut;
 	time_t          rawtime;
 	tm              datetime;
 
@@ -59,7 +59,7 @@ const zenDateTime& GetDateTime()
 	return DateTimeOut;
 }
 
-zenTimeStamp GetTimeStamp()
+zTimeStamp GetTimeStamp()
 {
 	time_t rawtime;
 	time( &rawtime );

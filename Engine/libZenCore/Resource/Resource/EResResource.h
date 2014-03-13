@@ -7,9 +7,9 @@ namespace ERes
 	//=============================================================================================
 	//! @class	Base class for all resources that can be created and used
 	//=============================================================================================
-	class Resource: public zenRes::awResource, public zenList2xNode
+	class Resource: public zenRes::zResource, public zList2xNode
 	{
-	ZENClassDeclare(Resource, zenRes::awResource)
+	ZENClassDeclare(Resource, zenRes::zResource)
 	public:									
 		virtual								~Resource();
 		virtual bool						ResourceInit();
@@ -17,9 +17,9 @@ namespace ERes
 		bool								ResourceCreateRuntime(); //!< @todo Get rid of this
 	protected:			
 											Resource();
-		static zenList2x						spResourceActive[zenConst::keResType__Count];	//!< List of all actives resources created, per type
-		static zenList2x						spActiveToDelete[3];							//!< List of resources to delete (with 1 frame delay to make sure GPU are done with them)
-		static zenUInt						suDeleteIndex;									//!< Current active ToDelete list
+		static zList2x						spResourceActive[zenConst::keResType__Count];	//!< List of all actives resources created, per type
+		static zList2x						spActiveToDelete[3];							//!< List of resources to delete (with 1 frame delay to make sure GPU are done with them)
+		static zUInt						suDeleteIndex;									//!< Current active ToDelete list
 	};
 	
 
@@ -44,8 +44,8 @@ namespace ERes
 	ZENClassDeclare(ResourceRef, TReferenceClass)
 	public:	
 		ZENInline								ResourceRef();
-		ZENInline								ResourceRef(zenRes::awResource* _pResource);
-		ZENInline								ResourceRef(zenResID _ResourceID);
+		ZENInline								ResourceRef(zenRes::zResource* _pResource);
+		ZENInline								ResourceRef(zResID _ResourceID);
 		ZENInline								ResourceRef(const TReferenceClass& _Copy);
 		ZENInline TResourceClass*				operator->();		//!< Return a pointer to resource
 		ZENInline const TResourceClass*		operator->()const;	//!< Return a const pointiner to resource
@@ -58,23 +58,23 @@ namespace ERes
 
 namespace ERes
 {	
-	typedef ResourceRef<GfxIndex,			zenRes::GfxIndex>			GfxIndexRef;
-	typedef ResourceRef<GfxVertex,			zenRes::GfxVertex>			GfxVertexRef;
-	typedef ResourceRef<GfxInputStream,		zenRes::GfxInputStream>	GfxInputStreamRef;
-	typedef ResourceRef<GfxInputSignature,	zenRes::GfxInputSignature>	GfxInputSignatureRef;
-	typedef ResourceRef<GfxShaderBinding,	zenRes::GfxShaderBinding>	GfxShaderBindingRef;
-	typedef ResourceRef<GfxMesh,			zenRes::GfxMesh>			GfxMeshRef;
-	typedef ResourceRef<GfxMeshStrip,		zenRes::GfxMeshStrip>		GfxMeshStripRef;
-	typedef ResourceRef<GfxTexture2D,		zenRes::GfxTexture2D>		GfxTexture2DRef;
-	typedef ResourceRef<GfxRenderTarget,	zenRes::GfxRenderTarget>	GfxRenderTargetRef;
-	typedef ResourceRef<GfxView,			zenRes::GfxView>			GfxViewRef;
-	typedef ResourceRef<GfxSampler,			zenRes::GfxSampler>		GfxSamplerRef;
-	typedef ResourceRef<GfxWindow,			zenRes::GfxWindow>			GfxWindowRef;
-	typedef ResourceRef<GfxShaderParamDef,	zenRes::GfxShaderParamDef>	GfxShaderParamDefRef;
-	typedef ResourceRef<GfxShader,			zenRes::GfxShader>			GfxShaderRef;
-	typedef ResourceRef<GfxShaderVertex,	zenRes::GfxShaderVertex>	GfxShaderVertexRef;
-	typedef ResourceRef<GfxShaderPixel,		zenRes::GfxShaderPixel>	GfxShaderPixelRef;
-	typedef ResourceRef<GfxShaderParam,		zenRes::GfxShaderParam>	GfxShaderParamRef;
+	typedef ResourceRef<zGfxIndex,			zenRes::zGfxIndex>			GfxIndexRef;
+	typedef ResourceRef<zGfxVertex,			zenRes::zGfxVertex>			GfxVertexRef;
+	typedef ResourceRef<zGfxInputStream,		zenRes::zGfxInputStream>	GfxInputStreamRef;
+	typedef ResourceRef<zGfxInputSignature,	zenRes::zGfxInputSignature>	GfxInputSignatureRef;
+	typedef ResourceRef<zGfxShaderBinding,	zenRes::zGfxShaderBinding>	GfxShaderBindingRef;
+	typedef ResourceRef<zGfxMesh,			zenRes::zGfxMesh>			GfxMeshRef;
+	typedef ResourceRef<zGfxMeshStrip,		zenRes::zGfxMeshStrip>		GfxMeshStripRef;
+	typedef ResourceRef<zGfxTexture2D,		zenRes::zGfxTexture2D>		GfxTexture2DRef;
+	typedef ResourceRef<zGfxRenderTarget,	zenRes::zGfxRenderTarget>	GfxRenderTargetRef;
+	typedef ResourceRef<zGfxView,			zenRes::zGfxView>			GfxViewRef;
+	typedef ResourceRef<zGfxSampler,			zenRes::zGfxSampler>		GfxSamplerRef;
+	typedef ResourceRef<zGfxWindow,			zenRes::zGfxWindow>			GfxWindowRef;
+	typedef ResourceRef<zGfxShaderParamDef,	zenRes::zGfxShaderParamDef>	GfxShaderParamDefRef;
+	typedef ResourceRef<zGfxShader,			zenRes::zGfxShader>			GfxShaderRef;
+	typedef ResourceRef<zGfxShaderVertex,	zenRes::zGfxShaderVertex>	GfxShaderVertexRef;
+	typedef ResourceRef<zGfxShaderPixel,		zenRes::zGfxShaderPixel>	GfxShaderPixelRef;
+	typedef ResourceRef<zGfxShaderParam,		zenRes::zGfxShaderParam>	GfxShaderParamRef;
 }
 
 #endif

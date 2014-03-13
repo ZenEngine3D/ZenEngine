@@ -13,7 +13,7 @@ namespace BCtrl
 
 const wxString wxPG_ATTR_STEP(wxT("Step"));
 const wxString wxPG_ATTR_WRAP(wxT("Wrap"));
-static zenMem::AllocatorPool sPoolMetaData("Betl::PropertyMetaData Pool", sizeof(PropertyMetaData), 100, 100);
+static zenMem::zAllocatorPool sPoolMetaData("Betl::PropertyMetaData Pool", sizeof(PropertyMetaData), 100, 100);
 
 //=================================================================================================
 //! @brief		Common setup applied to each property control
@@ -26,7 +26,7 @@ static zenMem::AllocatorPool sPoolMetaData("Betl::PropertyMetaData Pool", sizeof
 wxPGProperty* CreateAssetValueControl(wxPropertyGridInterface& _GridControl, zenAss::PropertyValue& _Value)
 {
 	static const wxColour bgColors[]={wxColour(230,240,250,255),wxColour(240,245,240,255)};
-	static zenUInt suLineIndex(0);
+	static zUInt suLineIndex(0);
 	wxPGProperty* pProperty(NULL);
 	switch( _Value.GetType() )
 	{
@@ -170,7 +170,7 @@ wxBetlEnumProperty::wxBetlEnumProperty(zeAss::PropertyDefEnum::Value& _AssetValu
 	SetClientData		( pMetaData );
 	
 	wxPGChoices soc;
-	for(zenUInt enumIdx(0), enumCount(PropertyDef.maEntry.Count()); enumIdx<enumCount; ++enumIdx)
+	for(zUInt enumIdx(0), enumCount(PropertyDef.maEntry.Count()); enumIdx<enumCount; ++enumIdx)
 	{
 		soc.Add( PropertyDef.maEntry[enumIdx].zDescription, long(PropertyDef.maEntry[enumIdx].hKey) );
 		if( PropertyDef.maEntry[enumIdx].hKey == PropertyDef.mDefault )
@@ -200,7 +200,7 @@ wxBetlVector2fProperty::wxBetlVector2fProperty(zeAss::PropertyDefFloat2::Value& 
 	wxVector2f vDefault( PropertyDef.mDefault.x, PropertyDef.mDefault.y);
 	PropertyMetaData* pMetaData					= zenNew(&sPoolMetaData)PropertyMetaData(&_AssetValue, WXVARIANT(vValue));
 		
-	for(zenUInt idx(0); idx<2; ++idx)
+	for(zUInt idx(0); idx<2; ++idx)
 	{
 		const wxString zNames[]={wxT("-->X"),wxT("-->Y")};
 		wxFloatProperty* pProp				= zenNewDefault wxFloatProperty(zNames[idx],wxPG_LABEL);

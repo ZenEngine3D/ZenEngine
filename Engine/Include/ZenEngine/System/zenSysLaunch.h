@@ -14,10 +14,10 @@ public:
 	virtual void		Destroy();
 	virtual void		Update();	
 	virtual bool		IsDone()=0;	
-	void				CreateGfxWindow(const zenVec2U16& _vDim, const zenVec2U16& _vPos);
-	void				SetWindow(const zenRes::GfxWindow& _rGfxWindow);
+	void				CreateGfxWindow(const zVec2U16& _vDim, const zVec2U16& _vPos);
+	void				SetWindow(const zenRes::zGfxWindow& _rGfxWindow);
 protected:
-	zenRes::GfxWindow	mrMainGfxWindow;
+	zenRes::zGfxWindow	mrMainGfxWindow;
 };
 
 void					LaunchEngine(awEngineInstance* _pEngineInstance, int argc, const char* const * argv);

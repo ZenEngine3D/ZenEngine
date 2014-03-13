@@ -17,7 +17,7 @@ namespace zen { namespace zenAss
 	protected:
 												PropertyBase( const char* _zName, zenConst::eAssetPropertyType _eType, const char* _zDisplayName, const char* _zDescription, bool _bShowInAssetDesc );
 	public:		
-		zenStringHash32							mName;
+		zStringHash32							mName;
 		zenConst::eAssetPropertyType			meType;
 		const char*								mzDisplayName;
 		const char*								mzDescription;		
@@ -35,8 +35,8 @@ namespace zen { namespace zenAss
 		typedef bool		Data;
 		Data				mDefault;
 		
-		ZENInline zenUInt	ToString	(const Data& _Value, zenUInt _zLen, char* _zOutString)const;
-		ZENInline zenUInt	ToXml		(const Data& _Value, zenUInt _zLen, char* _zOutString)const;
+		ZENInline zUInt	ToString	(const Data& _Value, zUInt _zLen, char* _zOutString)const;
+		ZENInline zUInt	ToXml		(const Data& _Value, zUInt _zLen, char* _zOutString)const;
 		ZENInline			PropertyBool(const char* _zName, const char* _zDisplayName, const char* _zDescription, bool _bShowInAssetDesc, Data _bDefault);
 	};
 
@@ -47,12 +47,12 @@ namespace zen { namespace zenAss
 	{
 	ZENClassDeclare(PropertyFile, PropertyBase)
 	public:
-		typedef zenString	Data;
+		typedef zString	Data;
 		Data				mDefault;
 		const char*			mzFileExt;	//!< List of supported files extensions to display in file dialog
 		
-		ZENInline zenUInt	ToString	(const Data& _Value, zenUInt _zLen, char* _zOutString)const;
-		ZENInline zenUInt	ToXml		(const Data& _Value, zenUInt _zLen, char* _zOutString)const;
+		ZENInline zUInt	ToString	(const Data& _Value, zUInt _zLen, char* _zOutString)const;
+		ZENInline zUInt	ToXml		(const Data& _Value, zUInt _zLen, char* _zOutString)const;
 		ZENInline			PropertyFile(const char* _zName, const char* _zDisplayName, const char* _zDescription, bool _bShowInAssetDesc, const char* _zDefault, const char* _zFileExt="Any(*.*)|*.*" );
 	};
 
@@ -68,8 +68,8 @@ namespace zen { namespace zenAss
 		ZENForceInline void							Allocate	(const PropertyBase& _PropertyDef);
 		ZENForceInline void							Reset		();
 		ZENForceInline const PropertyBase*			GetProperty	()const;
-		ZENInline zenUInt							ToString	(zenUInt _zLen, char* _zOutString)const;
-		ZENInline zenUInt							ToXml		(zenUInt _zLen, char* _zOutString)const;
+		ZENInline zUInt							ToString	(zUInt _zLen, char* _zOutString)const;
+		ZENInline zUInt							ToXml		(zUInt _zLen, char* _zOutString)const;
 
 	#define ZEN_ASSETPROPERTIES_EXPAND_CODE(_TypeName_)																							\
 	ZENInline bool									Is##_TypeName_()const			{return GetType()==zenConst::keAssProp_##_TypeName_##;}			\
@@ -90,7 +90,7 @@ namespace zen { namespace zenAss
 		#undef	ZEN_ASSETPROPERTIES_EXPAND_CODE
 	};
 
-	typedef const zenArrayStatic<const PropertyBase*> PropertyArray;
+	typedef const zArrayStatic<const PropertyBase*> PropertyArray;
 }} //namespace zen { namespace zenAss
 
 #endif

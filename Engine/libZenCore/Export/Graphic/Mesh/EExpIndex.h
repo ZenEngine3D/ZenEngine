@@ -10,14 +10,14 @@ namespace EExp
 	public:		
 		struct ExportInfo : public EExp::ExportInfoBase
 		{			
-			zenArrayStatic<zenU16>	maIndice16;			//!< 16bits Indices list (Pick 1st one valid)
-			zenArrayStatic<zenU32>	maIndice32;			//!< 32bits Indices list
+			zArrayStatic<zU16>	maIndice16;			//!< 16bits Indices list (Pick 1st one valid)
+			zArrayStatic<zU32>	maIndice32;			//!< 32bits Indices list
 			zenConst::ePrimitiveType	mePrimitiveType;	//!< Type of primitive the indices are for
 		};
 	};
 	
-	zenResID CreateGfxIndexBuffer(const zenArrayBase<zenU16>& _Indices, zenConst::ePrimitiveType _ePrimitiveType);
-	zenResID CreateGfxIndexBuffer(const zenArrayBase<zenU32>& _Indices, zenConst::ePrimitiveType _ePrimitiveType);
+	zResID CreateGfxIndexBuffer(const zArrayBase<zU16>& _Indices, zenConst::ePrimitiveType _ePrimitiveType);
+	zResID CreateGfxIndexBuffer(const zArrayBase<zU32>& _Indices, zenConst::ePrimitiveType _ePrimitiveType);
 }
 
 #include "EExpIndexDX11.h"

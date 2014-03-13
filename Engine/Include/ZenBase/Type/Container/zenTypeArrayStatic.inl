@@ -1,22 +1,22 @@
 namespace zen { namespace zenType {
 
 template<class TType>
-zenArrayStatic<TType>::zenArrayStatic()
-: zenArrayBase()
+zArrayStatic<TType>::zArrayStatic()
+: zArrayBase()
 {
 }
 
 template<class TType>
-zenArrayStatic<TType>::zenArrayStatic(zenUInt _uCount)
-: zenArrayBase()
+zArrayStatic<TType>::zArrayStatic(zUInt _uCount)
+: zArrayBase()
 {
 	muCount	= _uCount;
 	mpData	= zenNewDefault TType[muCount];			
 }
 
 template<class TType>
-zenArrayStatic<TType>::zenArrayStatic(const TType* _pCopy, zenUInt _uCount, zenUInt _uExtraCount=0)
-: zenArrayBase()
+zArrayStatic<TType>::zArrayStatic(const TType* _pCopy, zUInt _uCount, zUInt _uExtraCount=0)
+: zArrayBase()
 {		
 	muCount			= _uCount+_uExtraCount;
 	mpData			= zenNewDefault TType[muCount];			
@@ -34,7 +34,7 @@ zenArrayStatic<TType>::zenArrayStatic(const TType* _pCopy, zenUInt _uCount, zenU
 }	
 
 template<class TType>
-zenArrayStatic<TType>::zenArrayStatic(const zenArrayStatic& _Copy, zenUInt _uExtraCount=0)
+zArrayStatic<TType>::zArrayStatic(const zArrayStatic& _Copy, zUInt _uExtraCount=0)
 {					
 	muCount					= _Copy.Count()+_uExtraCount;
 	mpData					= zenNewDefault TType[muCount];		
@@ -53,13 +53,13 @@ zenArrayStatic<TType>::zenArrayStatic(const zenArrayStatic& _Copy, zenUInt _uExt
 }
 		
 template<class TType>
-zenArrayStatic<TType>::~zenArrayStatic()
+zArrayStatic<TType>::~zArrayStatic()
 {
 	zenDelNullArray(mpData);
 }
 		
 template<class TType>
-zenUInt zenArrayStatic<TType>::SetCount(zenUInt _uCount)
+zUInt zArrayStatic<TType>::SetCount(zUInt _uCount)
 {
 	zenDelNullArray(mpData);			
 	if( _uCount )	mpData = zenNewDefault TType[_uCount];			
@@ -69,10 +69,10 @@ zenUInt zenArrayStatic<TType>::SetCount(zenUInt _uCount)
 }
 
 template<class TType>	
-zenUInt zenArrayStatic<TType>::SetCountNoConstructor(zenUInt _uCount)
+zUInt zArrayStatic<TType>::SetCountNoConstructor(zUInt _uCount)
 {
 	zenDelNullArray(mpData);			
-	if( _uCount )	mpData	= (TType*) zenNewDefault zenU8[sizeof(TType)*_uCount];
+	if( _uCount )	mpData	= (TType*) zenNewDefault zU8[sizeof(TType)*_uCount];
 	else			mpData	= NULL;
 	muCount	= _uCount;
 	return muCount;
@@ -86,10 +86,10 @@ zenUInt zenArrayStatic<TType>::SetCountNoConstructor(zenUInt _uCount)
 //! @param aCopy - Array to exchange content with		
 //==================================================================================================
 template<class TType>
-void zenArrayStatic<TType>::Swap(zenArrayStatic<TType>& _Copy)
+void zArrayStatic<TType>::Swap(zArrayStatic<TType>& _Copy)
 {
 	TType*	pCopyData(_Copy.mpData);
-	zenUInt	uCopyCount(_Copy.muCount);
+	zUInt	uCopyCount(_Copy.muCount);
 	_Copy.mpData	= mpData;
 	_Copy.muCount	= muCount;
 	mpData			= pCopyData;

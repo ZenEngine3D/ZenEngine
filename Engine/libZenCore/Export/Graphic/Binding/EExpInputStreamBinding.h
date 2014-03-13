@@ -10,12 +10,12 @@ namespace EExp
 	public:		
 		struct ExportInfo : public EExp::ExportInfoBase
 		{			
-			zenResID	mVertexBufferID;
-			zenResID	mShaderInputSignatureID;
+			zResID	mVertexBufferID;
+			zResID	mShaderInputSignatureID;
 		};
 	};
 
-	zenResID CreateGfxInputStream(zenResID _VertexBufferID, zenResID _ShaderInputSignatureID);
+	zResID CreateGfxInputStream(zResID _VertexBufferID, zResID _ShaderInputSignatureID);
 }
 
 #include "EExpInputStreamBindingDX11.h"

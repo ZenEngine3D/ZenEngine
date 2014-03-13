@@ -4,42 +4,42 @@
 
 #if ZEN_ENGINETOOL
 
+namespace zen { namespace zeAss { class AssetItem; } }
+namespace zen { namespace zenAss { class zPackage; } }
+
 namespace zen { namespace zenAss 
 {
-	/*
-class AssetBase
-{
-ZENClassDeclareNoParent(AssetBase)
-public:
-												AssetBase();//TEMP PUBLIC
-	virtual										~AssetBase();
-	ZENInline zenHash64							GetID()const;
-	ZENInline const zenString&					GetName()const;
-	ZENInline const zenArrayStatic<zenString>&	GetGroupAndName()const;
-	ZENInline zenHash32							GetGroupID()const;	
-	ZENInline const zenString&					GetDescription()const;
-	ZENForceInline zenUInt						GetValueCount()const;
-	ZENForceInline zenAss::PropertyValue&		GetValue(zenUInt _uValIndex);
-	void										InitDefault();
+	class zAssetItem : public zRefOwner<zeAss::AssetItem>
+	{
+	ZENClassDeclare(zAssetItem, zRefOwner<zeAss::AssetItem>)
+	public:
+										zAssetItem();
+										zAssetItem(const zAssetItem& _Copy);
+										zAssetItem(zeAss::AssetItem* _pAsset);
+		zHash64							GetID()const;
+		const zString&					GetName()const;
+		const zArrayStatic<zString>&	GetGroupAndName()const;
+		zHash32							GetGroupID()const;
+		const zString&					GetDescription()const;
+		zUInt							GetValueCount()const;
+		zenConst::eAssetType			GetType()const;
+		zPackage						GetPackage();
+		zenAss::PropertyValue&			GetValue(zUInt _uValIndex);
+		void							InitDefault();
 
-	virtual zenConst::eAssetType				GetType()const=0;			//!< Child class return the Asset type they represent
-	virtual const zenAss::PropertyArray&		GetProperties()const=0;		//!< Child class return the list of property definition they are made of	
-	virtual void								RebuiltDescription();
-protected:
-	class Package*								mpPackage;					//!< Parent package this asset is kept inside
-	zenHash64									mhID;						//!< Unique ID for this Asset instance
-	zenHash32									mhGroupID;					//!< Group ID of this asset
-	zenString									mzDescription;				//!< Asset description, built from propertydef/values
-	zenArrayStatic<zenString>					maGroup;					//!< Asset belongs to a group hierarchy for easier finding of asset, like package (last element is asset name)	
-	zenArrayStatic<zenAss::PropertyValue>		maPropertyValue;			//!< List of values pointer for this asset	
-};
+		zAssetItem&						operator=(const zAssetItem& _Copy);		
+	};
 
-AssetBase* CreateItem(zenConst::eAssetType _eAssetType, Package& _Owner);
-*/
+	zAssetItem							AssetCreate(zenConst::eAssetType _eAssetType);
+
+	class zAssetTexture2D : public zAssetItem
+	{
+	ZENClassDeclare(zAssetTexture2D, zAssetItem)
+	};
+
+	
+
 }} //namespace zen { namespace zenAss
 
 #endif
-
-#include "zenAssItem.inl"
-
 #endif

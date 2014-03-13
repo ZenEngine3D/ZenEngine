@@ -42,13 +42,23 @@ bool ZendoApp::OnInit()
 		return false;
 
 	char zBuffer[256];
+	/*
 	zeAss::TestProperty Test;
 	Test.InitDefault();
 	Test.GetValue(0).ToString( sizeof(zBuffer), zBuffer);
 	Test.GetValue(0).ToXml( sizeof(zBuffer), zBuffer);
 	Test.GetValue(1).ToString( sizeof(zBuffer), zBuffer);
 	Test.GetValue(1).ToXml( sizeof(zBuffer), zBuffer);
+	*/
+	zenAss::zAssetItem rTest = zenAss::AssetCreate(zenConst::keAssType_Texture2D);
+	zenAss::zAssetItem rTest2;
+	rTest2 = rTest;
+	rTest.GetValue(0).ToString( sizeof(zBuffer), zBuffer);
+	rTest.GetValue(0).ToXml( sizeof(zBuffer), zBuffer);
+	rTest.GetValue(1).ToString( sizeof(zBuffer), zBuffer);
+	rTest.GetValue(1).ToXml( sizeof(zBuffer), zBuffer);
 
+	
 	wxInitAllImageHandlers();
 	static EngineInstance Engine;
 
@@ -85,8 +95,8 @@ int ZendoApp::OnExit()
 bool ZendoApp::InitResources()
 {
 	// Init Asset type icon
-	zenUInt auIconSize[]={16,32,128};
-	for( zenUInt idxSize(0); idxSize<ZENArrayCount(auIconSize); ++idxSize )
+	zUInt auIconSize[]={16,32,128};
+	for( zUInt idxSize(0); idxSize<ZENArrayCount(auIconSize); ++idxSize )
 	{
 		wxString zFolder	= wxString::Format("Zendo/Icons/ResourceType%i/", auIconSize[idxSize]);	//! @todo move root path outside assetmanager control
 		wxString zFilename	= zFolder + "Unknown.png";
@@ -95,7 +105,7 @@ bool ZendoApp::InitResources()
 		{
 			wxBitmap bmpIconUnknown(imgIconUnknown);
 			maIcon[keIco_Asset16+idxSize] = zenNewDefault wxImageList(auIconSize[idxSize], auIconSize[idxSize], true);
-			for(zenUInt idxType(0); idxType<zenConst::keAssType__Count; ++idxType)
+			for(zUInt idxType(0); idxType<zenConst::keAssType__Count; ++idxType)
 			{
 				zFilename = zFolder + wxString(zeAss::AssetItem::GetTypeName(zenConst::eAssetType(idxType))) + wxT(".png");				
 				wxImage imgIcon(zFilename);
@@ -119,15 +129,15 @@ bool ZendoApp::InitResources()
 	return true;
 }
 
-const wxIcon* ZendoApp::GetIcon(const zeAss::AssetItem& _Item)
+const wxIcon* ZendoApp::GetIcon(const zenAss::zAssetItem& _rAsset)
 {
-	wxIcon* pIcon = mdAssetIcon[_Item.GetID()];
-	zenUInt size(128);
+	wxIcon* pIcon = mdAssetIcon[_rAsset.GetID()];
+	zUInt size(128);
 	if( !pIcon )
 	{	
 		pIcon = zenNewDefault wxIcon();
 		*pIcon = wxArtProvider::GetIcon(wxART_INFORMATION,wxART_LIST, wxSize(size,size));
-		mdAssetIcon.Set(_Item.GetID(), pIcon);		
+		mdAssetIcon.Set(_rAsset.GetID(), pIcon);		
 	}
 	return pIcon;
 }

@@ -2,23 +2,23 @@
 
 namespace EExp
 {
-	zenResID SerialShaderBinding_Base::CallbackGetItemID(zenConst::eResPlatform _ePlatform, zenConst::eResType _eType, zenConst::eResSource _eSource, const EExp::ExportInfoBase* _pExportInfo, bool& _bExistOut)
+	zResID SerialShaderBinding_Base::CallbackGetItemID(zenConst::eResPlatform _ePlatform, zenConst::eResType _eType, zenConst::eResSource _eSource, const EExp::ExportInfoBase* _pExportInfo, bool& _bExistOut)
 	{
 		ZENAssert(_ePlatform==zenConst::keResPlatform_DX11 && _eType==zenConst::keResType_GfxShaderBinding);
 		ZENAssert( _pExportInfo );
 		const ExportInfo* pExportInfo = static_cast<const ExportInfo*>(_pExportInfo);
 
-		zenUInt uValidCount(0);
-		zenUInt uShaderCount = pExportInfo->maShaderID.Count();
-		zenArrayStatic<zenU64> aSortedResname(uShaderCount);
+		zUInt uValidCount(0);
+		zUInt uShaderCount = pExportInfo->maShaderID.Count();
+		zArrayStatic<zU64> aSortedResname(uShaderCount);
 
-		for(zenUInt idx=0; idx<uShaderCount; ++idx)
+		for(zUInt idx=0; idx<uShaderCount; ++idx)
 			if( pExportInfo->maShaderID[idx].IsValid() )
 				aSortedResname[uValidCount++] = pExportInfo->maShaderID[idx].HashID();
 
 		aSortedResname.Sort();
 
-		zenResID::NameHash hName( aSortedResname.First(), aSortedResname.Size() );
+		zResID::NameHash hName( aSortedResname.First(), aSortedResname.Size() );
 		return EExp::ValidateItemID(_ePlatform, _eType, _eSource, hName, _bExistOut);
 	}
 
@@ -32,12 +32,12 @@ namespace EExp
 	//! @param _aTexture		- Array of texture binding definition tied to each shader
 	//! @return 				- Created Resource
 	//=================================================================================================
-	zenResID CreateGfxShaderBinding(const zenArrayBase<zenResID>& _aShaderID/*, const Array<zenResID>& _aShaderParamID, const Array<EExp::TextureBinding>& _aTexture*/)
+	zResID CreateGfxShaderBinding(const zArrayBase<zResID>& _aShaderID/*, const Array<zResID>& _aShaderParamID, const Array<EExp::TextureBinding>& _aTexture*/)
 	{	
-		static zenMem::AllocatorPool sMemPool("Pool CreateShaderBinding", sizeof(SerialShaderBinding_Base::ExportInfo), 1, 5 );
+		static zenMem::zAllocatorPool sMemPool("Pool CreateShaderBinding", sizeof(SerialShaderBinding_Base::ExportInfo), 1, 5 );
 		SerialShaderBinding_Base::ExportInfo* pExportInfo	= zenNew(&sMemPool) SerialShaderBinding_Base::ExportInfo;
 		pExportInfo->maShaderID								= _aShaderID;
-		return EMgr::Export.CreateItem( zenResID::kePlatformType_GFX, zenConst::keResType_GfxShaderBinding, pExportInfo );
+		return EMgr::Export.CreateItem( zResID::kePlatformType_GFX, zenConst::keResType_GfxShaderBinding, pExportInfo );
 	}
 
 	//=================================================================================================
@@ -57,20 +57,20 @@ namespace EExp
 		// Set Shader used for each stage, and needed ShaderParam for each
 		//---------------------------------------------------------------------	
 		SerialShaderBinding_Base::ExportInfo*	pExport = static_cast<SerialShaderBinding_Base::ExportInfo*>(mpExportInfo);
-		const zenResID						aShaderIdNull[]={zenResID(),zenResID()};
-		zenArrayStatic<zenResID>					aShaderID;
+		const zResID						aShaderIdNull[]={zResID(),zResID()};
+		zArrayStatic<zResID>					aShaderID;
 		ZENStaticAssert(ZENArrayCount(aShaderIdNull) == keShaderStage__Count);
 		aShaderID.Copy(aShaderIdNull, ZENArrayCount(aShaderIdNull));
 		pExport->mdStagePerParamDef.Init(8);
 		pExport->mdStagePerParamDef.SetDefaultValue(0);
-		for(zenUInt idx=0; idx<pExport->maShaderID.Count(); ++idx)
+		for(zUInt idx=0; idx<pExport->maShaderID.Count(); ++idx)
 		{
 			SerialShader_Base* pShader = EMgr::SerialItems.GetItem<SerialShader_Base>( pExport->maShaderID[idx] );
 			if( pShader )
 			{
 				ZENAssertMsg(!aShaderID[pShader->meShaderStage].IsValid(), "Should only specify 1 shader per shader stage");	//! @todo error output
 				aShaderID[pShader->meShaderStage] = pShader->mResID;
-				for(zenResID *pParamIDCur(pShader->maParamDefID.First()), *pParamIDLast(pShader->maParamDefID.Last()); pParamIDCur<=pParamIDLast;  ++pParamIDCur )
+				for(zResID *pParamIDCur(pShader->maParamDefID.First()), *pParamIDLast(pShader->maParamDefID.Last()); pParamIDCur<=pParamIDLast;  ++pParamIDCur )
 				{
 					if( pParamIDCur->IsValid() )
 						pExport->mdStagePerParamDef.GetAdd(pParamIDCur->HashID()) |= 1<<pShader->meShaderStage;

@@ -8,7 +8,7 @@ struct ID3D11InputLayout;
 
 namespace ERes
 {
-	typedef zenMap<EExp::SerialShader_DX11::BindInfo>::Key32	MapBindInfo;
+	typedef zMap<EExp::SerialShader_DX11::BindInfo>::Key32	MapBindInfo;
 
 	//=============================================================================================
 	//! @class	Empty vertex shader used to match vertex shader signature.
@@ -31,7 +31,7 @@ namespace ERes
 	protected:
 		struct InstanceInfoBase
 		{			
-			zenArrayStatic<GfxShaderParamDefRef>	maGfxShaderParamDefRef;	//! <List of Constant buffer (per frequency) associated with this shader
+			zArrayStatic<GfxShaderParamDefRef>	maGfxShaderParamDefRef;	//! <List of Constant buffer (per frequency) associated with this shader
 			MapBindInfo							mdTextureSamplerSlot;	//! <Dictionary of texture/sampler name used by shader, with associated texture slot		
 		};
 	ZENClassDeclare(GfxShader_DX11, Resource)

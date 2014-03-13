@@ -26,13 +26,13 @@ ResourceRef<TResourceClass, TReferenceClass>::ResourceRef()
 }
 
 template<class TResourceClass, class TReferenceClass>
-ResourceRef<TResourceClass, TReferenceClass>::ResourceRef(zenRes::awResource* _pResource)
+ResourceRef<TResourceClass, TReferenceClass>::ResourceRef(zenRes::zResource* _pResource)
 : Super(_pResource)
 {
 }
 
 template<class TResourceClass, class TReferenceClass>
-ResourceRef<TResourceClass, TReferenceClass>::ResourceRef(zenResID _ResourceID)
+ResourceRef<TResourceClass, TReferenceClass>::ResourceRef(zResID _ResourceID)
 : Super(_ResourceID)
 {
 }

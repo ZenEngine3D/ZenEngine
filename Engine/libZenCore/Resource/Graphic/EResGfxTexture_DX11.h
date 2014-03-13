@@ -19,7 +19,7 @@ namespace ERes
 	//---------------------------------------------------------
 	// Common to all Texture2D
 	//---------------------------------------------------------
-		ZENInline const zenVec2U16&		GetDim(){ return (Get().mSerial.maMipData.Count() > 0 ) ? Get().mSerial.maMipData[0].mvDim : zenVec2U16::Zero; }
+		ZENInline const zVec2U16&		GetDim(){ return (Get().mSerial.maMipData.Count() > 0 ) ? Get().mSerial.maMipData[0].mvDim : zVec2U16::Zero; }
 	};
 }
 

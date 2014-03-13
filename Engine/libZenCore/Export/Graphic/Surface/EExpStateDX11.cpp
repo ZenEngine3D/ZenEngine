@@ -63,13 +63,13 @@ namespace EExp
 		return TRUE;
 	}
 
-	zenResID SerialGfxSampler_DX11::CallbackGetItemID(zenConst::eResPlatform _ePlatform, zenConst::eResType _eType, zenConst::eResSource _eSource, const EExp::ExportInfoBase* _pExportInfo, bool& _bExistOut)
+	zResID SerialGfxSampler_DX11::CallbackGetItemID(zenConst::eResPlatform _ePlatform, zenConst::eResType _eType, zenConst::eResSource _eSource, const EExp::ExportInfoBase* _pExportInfo, bool& _bExistOut)
 	{
 		ZENAssert(_ePlatform==zenConst::keResPlatform_DX11 && _eType==zenConst::keResType_GfxSampler);
 		ZENAssert( _pExportInfo );
 		const ExportInfo* pExportInfo	= static_cast<const ExportInfo*>(_pExportInfo);
-		zenUInt uSize					= ZENMemberOffsetAfter(SerialSampler_Base::ExportInfo, mvBorderColor) - ZENMemberOffset(SerialSampler_Base::ExportInfo, meFilterMin);
-		zenResID::NameHash hName((void*)&pExportInfo->meFilterMin, uSize); 
+		zUInt uSize					= ZENMemberOffsetAfter(SerialSampler_Base::ExportInfo, mvBorderColor) - ZENMemberOffset(SerialSampler_Base::ExportInfo, meFilterMin);
+		zResID::NameHash hName((void*)&pExportInfo->meFilterMin, uSize); 
 		return EExp::ValidateItemID(_ePlatform, _eType, _eSource, hName, _bExistOut);
 	}
 
@@ -106,20 +106,20 @@ namespace EExp
 
 		mSerial.mBlendDesc.AlphaToCoverageEnable = pExportInfo->mxBlendDesc.mbAlphaToCoverageEnable;
 		mSerial.mBlendDesc.IndependentBlendEnable= pExportInfo->mxBlendDesc.mbIndependentBlendEnable;
-		for(zenU8 u = 0; u < 8; ++u)
+		for(zU8 u = 0; u < 8; ++u)
 		{
 			SetRenderTargetBlendDesc(mSerial.mBlendDesc.RenderTarget[u], pExportInfo->mxBlendDesc.mxRenderTarget[u]);
 		}
 		return TRUE;
 	}
 
-	zenResID SerialGfxBlend_DX11::CallbackGetItemID(zenConst::eResPlatform _ePlatform, zenConst::eResType _eType, zenConst::eResSource _eSource, const EExp::ExportInfoBase* _pExportInfo, bool& _bExistOut)
+	zResID SerialGfxBlend_DX11::CallbackGetItemID(zenConst::eResPlatform _ePlatform, zenConst::eResType _eType, zenConst::eResSource _eSource, const EExp::ExportInfoBase* _pExportInfo, bool& _bExistOut)
 	{
 		ZENAssert(_ePlatform==zenConst::keResPlatform_DX11 && _eType==zenConst::keResType_GfxBlend);
 		ZENAssert( _pExportInfo );
 		const ExportInfo* pExportInfo	= static_cast<const ExportInfo*>(_pExportInfo);
-		zenUInt uSize					= ZENMemberOffsetAfter(SerialBlend_Base::ExportInfo, mxBlendDesc) - ZENMemberOffset(SerialBlend_Base::ExportInfo, mxBlendDesc);
-		zenResID::NameHash hName((void*)&pExportInfo->mxBlendDesc, uSize);
+		zUInt uSize					= ZENMemberOffsetAfter(SerialBlend_Base::ExportInfo, mxBlendDesc) - ZENMemberOffset(SerialBlend_Base::ExportInfo, mxBlendDesc);
+		zResID::NameHash hName((void*)&pExportInfo->mxBlendDesc, uSize);
 		return EExp::ValidateItemID(_ePlatform, _eType, _eSource, hName, _bExistOut);
 	}
 
@@ -159,13 +159,13 @@ namespace EExp
 		return TRUE;
 	}
 
-	zenResID SerialGfxDepthStencil_DX11::CallbackGetItemID(zenConst::eResPlatform _ePlatform, zenConst::eResType _eType, zenConst::eResSource _eSource, const EExp::ExportInfoBase* _pExportInfo, bool& _bExistOut)
+	zResID SerialGfxDepthStencil_DX11::CallbackGetItemID(zenConst::eResPlatform _ePlatform, zenConst::eResType _eType, zenConst::eResSource _eSource, const EExp::ExportInfoBase* _pExportInfo, bool& _bExistOut)
 	{
 		ZENAssert(_ePlatform==zenConst::keResPlatform_DX11 && _eType==zenConst::keResType_GfxDepthStencil);
 		ZENAssert( _pExportInfo );
 		const ExportInfo* pExportInfo	= static_cast<const ExportInfo*>(_pExportInfo);
-		zenUInt uSize					= ZENMemberOffsetAfter(SerialDepthStencil_Base::ExportInfo, mxDepthStencilDesc) - ZENMemberOffset(SerialDepthStencil_Base::ExportInfo, mxDepthStencilDesc);
-		zenResID::NameHash hName((void*)&pExportInfo->mxDepthStencilDesc, uSize);
+		zUInt uSize					= ZENMemberOffsetAfter(SerialDepthStencil_Base::ExportInfo, mxDepthStencilDesc) - ZENMemberOffset(SerialDepthStencil_Base::ExportInfo, mxDepthStencilDesc);
+		zResID::NameHash hName((void*)&pExportInfo->mxDepthStencilDesc, uSize);
 		return EExp::ValidateItemID(_ePlatform, _eType, _eSource, hName, _bExistOut);
 	}
 
@@ -198,13 +198,13 @@ namespace EExp
 		return TRUE;
 	}
 
-	zenResID SerialGfxRasterizer_DX11::CallbackGetItemID(zenConst::eResPlatform _ePlatform, zenConst::eResType _eType, zenConst::eResSource _eSource, const EExp::ExportInfoBase* _pExportInfo, bool& _bExistOut)
+	zResID SerialGfxRasterizer_DX11::CallbackGetItemID(zenConst::eResPlatform _ePlatform, zenConst::eResType _eType, zenConst::eResSource _eSource, const EExp::ExportInfoBase* _pExportInfo, bool& _bExistOut)
 	{
 		ZENAssert(_ePlatform==zenConst::keResPlatform_DX11 && _eType==zenConst::keResType_GfxRasterizer);
 		ZENAssert( _pExportInfo );
 		const ExportInfo* pExportInfo	= static_cast<const ExportInfo*>(_pExportInfo);
-		zenUInt uSize					= ZENMemberOffsetAfter(SerialRasterizer_Base::ExportInfo, mfSlopeScaledDepthBias) - ZENMemberOffset(SerialRasterizer_Base::ExportInfo, mbFrontCounterClockwise);
-		zenResID::NameHash hName((void*)&pExportInfo->mbFrontCounterClockwise, uSize);
+		zUInt uSize					= ZENMemberOffsetAfter(SerialRasterizer_Base::ExportInfo, mfSlopeScaledDepthBias) - ZENMemberOffset(SerialRasterizer_Base::ExportInfo, mbFrontCounterClockwise);
+		zResID::NameHash hName((void*)&pExportInfo->mbFrontCounterClockwise, uSize);
 		return EExp::ValidateItemID(_ePlatform, _eType, _eSource, hName, _bExistOut);
 	}
 

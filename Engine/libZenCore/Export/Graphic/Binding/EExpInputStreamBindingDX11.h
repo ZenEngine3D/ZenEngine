@@ -15,8 +15,8 @@ namespace EExp
 
 		struct SerialUseOnly
 		{
-			zenResID		mVertexBufferID;
-			zenResID		mShaderInputSignatureID;
+			zResID		mVertexBufferID;
+			zResID		mShaderInputSignatureID;
 		};
 		
 		SerialUseOnly				mSerial;
@@ -24,7 +24,7 @@ namespace EExp
 	//-------------------------------------------------------------------------------------------------
 	// Export support section
 	//-------------------------------------------------------------------------------------------------
-		static zenResID	CallbackGetItemID(zenConst::eResPlatform _ePlatform, zenConst::eResType _eType, zenConst::eResSource _eSource, const EExp::ExportInfoBase* _pExportInfo, bool& _bExistOut);
+		static zResID	CallbackGetItemID(zenConst::eResPlatform _ePlatform, zenConst::eResType _eType, zenConst::eResSource _eSource, const EExp::ExportInfoBase* _pExportInfo, bool& _bExistOut);
 	protected:	
 		virtual bool				ExportWork(bool _bIsTHRTask);	
 	};

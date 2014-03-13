@@ -5,42 +5,42 @@
 namespace zen { namespace zenMem
 {
 //=================================================================================================
-//! @class		AllocatorPool
+//! @class		zAllocatorPool
 //-------------------------------------------------------------------------------------------------
 //! @brief		Memory pool allocator, return quickly fixed size allocations
 //! @details	Very fast allocator without fragmentation
 //! @todo		ReAdd support for using particular allocator when allocating more memory
 //=================================================================================================
-class AllocatorPool : public zenMem::Allocator
+class zAllocatorPool : public zAllocator
 {
-ZENClassDeclare(AllocatorPool, zenMem::Allocator);
+ZENClassDeclare(zAllocatorPool, zAllocator);
 public:								
-	virtual void*			Malloc				(size_t _uSize, bool _bIsArray, zenU32 _uAlign=zenDefaultAlign);
+	virtual void*			Malloc				(size_t _uSize, bool _bIsArray, zU32 _uAlign=zenDefaultAlign);
 	virtual	void			Free				(void* _pAlloc, void* _pInfoAlloc);
-	virtual zenDebugString	GetDescription()	{return zenDebugString("Pool");}
+	virtual zDebugString	GetDescription()	{return zDebugString("Pool");}
 
 public:
-							AllocatorPool		();
-							AllocatorPool		(const zenDebugString& _zName, size_t _uItemSize, zenU32 _uItemCount, zenU32 _uItemIncrease, zenU32 _uAlign=zenDefaultAlign );
-	virtual					~AllocatorPool		();
-			void			Init				(const zenDebugString& _zName, size_t _uItemSize, zenU32 _uItemCount, zenU32 _uItemIncrease, zenU32 _uAlign=zenDefaultAlign );
-			void			MemoryIncrease		(zenU32 _uItemCount);
+							zAllocatorPool		();
+							zAllocatorPool		(const zDebugString& _zName, size_t _uItemSize, zU32 _uItemCount, zU32 _uItemIncrease, zU32 _uAlign=zenDefaultAlign );
+	virtual					~zAllocatorPool		();
+			void			Init				(const zDebugString& _zName, size_t _uItemSize, zU32 _uItemCount, zU32 _uItemIncrease, zU32 _uAlign=zenDefaultAlign );
+			void			MemoryIncrease		(zU32 _uItemCount);
 			void			ReInit				();
 			void			MemoryReleaseUnused	();
 			size_t			GetItemSize			()const;
 			size_t			GetReservedSize		()const;
-			zenU32			GetReservedCount	()const;
-			zenU32			GetIncreaseCount	()const;
-			void			SetIncreaseCount	(zenU32 _uIncreaseCount);
+			zU32			GetReservedCount	()const;
+			zU32			GetIncreaseCount	()const;
+			void			SetIncreaseCount	(zU32 _uIncreaseCount);
 			void			Clear				();
 protected:	
-	zenU32					mPoolReservedCount;	//!< Number of pool item reserved
+	zU32					mPoolReservedCount;	//!< Number of pool item reserved
 	size_t					mPoolItemSize;		//!< Size of each pool item
-	zenU32					mPoolItemIncrease;	//!< Amount of new item when pool runs out of item (0 for none)
-	zenU32					mPoolItemAlign;		//!< Each item alignement
-	zenU32					mPoolItemCountInit; //!< Original pool item reserved
-	zenList1x				mlstFreeItems;		//!< List of the free pre-allocated items	
-	zenList1x				mlstAlloc;			//!< List of allocations done from mpAllocator to reserve space in the pool
+	zU32					mPoolItemIncrease;	//!< Amount of new item when pool runs out of item (0 for none)
+	zU32					mPoolItemAlign;		//!< Each item alignement
+	zU32					mPoolItemCountInit; //!< Original pool item reserved
+	zList1x					mlstFreeItems;		//!< List of the free pre-allocated items	
+	zList1x					mlstAlloc;			//!< List of allocations done from mpAllocator to reserve space in the pool
 };
 
 } } //namespace zen { namespace zenMem

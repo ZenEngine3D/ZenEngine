@@ -49,7 +49,7 @@ namespace ERes
 		}
 
 		bool bValidInitData(false);
-		for(zenUInt mipIdx(0); mipIdx<bufferDesc.MipLevels; ++mipIdx)
+		for(zUInt mipIdx(0); mipIdx<bufferDesc.MipLevels; ++mipIdx)
 		{
 			ZENAssert(mipIdx < ZENArrayCount(aInitData));			
 			if( mInstanceInfo.mSerial.maMipData[mipIdx].maData.Count() > 0 )

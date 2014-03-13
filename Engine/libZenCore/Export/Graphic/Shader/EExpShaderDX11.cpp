@@ -12,7 +12,7 @@ namespace EExp
 //! @brief		Process the shader texture infos
 //! @details	
 //=================================================================================================
-ZENInline void ProcessTexture(ID3D11ShaderReflection& _GfxShaderReflection, const D3D11_SHADER_INPUT_BIND_DESC& _InputDesc, SerialShader_DX11::BindInfo& _BindingOut, zenHash32& _TextureNameOut)
+ZENInline void ProcessTexture(ID3D11ShaderReflection& _GfxShaderReflection, const D3D11_SHADER_INPUT_BIND_DESC& _InputDesc, SerialShader_DX11::BindInfo& _BindingOut, zHash32& _TextureNameOut)
 {
 	char zName[128];
 	// We package texture access inside a structure that contains bother Texture Buffer and Sampler,
@@ -26,21 +26,21 @@ ZENInline void ProcessTexture(ID3D11ShaderReflection& _GfxShaderReflection, cons
 	// Retrieve texture/sampler infos (name, slot, ...)	
 	_BindingOut.uSlot	= _InputDesc.BindPoint;
 	_BindingOut.uCount	= _InputDesc.BindCount;
-	_TextureNameOut		= zenHash32(zName);
+	_TextureNameOut		= zHash32(zName);
 }
 
 //=================================================================================================
 //! @brief		Process the shader constant buffer infos
 //! @details	
 //=================================================================================================
-ZENInline void ProcessShaderParamDef(ID3D11ShaderReflection& _GfxShaderReflection, const D3D11_SHADER_INPUT_BIND_DESC& _InputDesc, zenConst::eResSource _eSource, zenResID& _ShaderParaDefIDOut)
+ZENInline void ProcessShaderParamDef(ID3D11ShaderReflection& _GfxShaderReflection, const D3D11_SHADER_INPUT_BIND_DESC& _InputDesc, zenConst::eResSource _eSource, zResID& _ShaderParaDefIDOut)
 {
 	D3D11_SHADER_BUFFER_DESC				bufferDesc;
 	D3D11_SHADER_VARIABLE_DESC				VarDesc;
 	ID3D11ShaderReflectionConstantBuffer*	pBufferReflection = _GfxShaderReflection.GetConstantBufferByName( _InputDesc.Name );
 	pBufferReflection->GetDesc( &bufferDesc );
 
-	zenResID::NameHash hName(bufferDesc.Name);
+	zResID::NameHash hName(bufferDesc.Name);
 	for ( UINT uParamIdx = 0; uParamIdx < bufferDesc.Variables; uParamIdx++ )
 	{
 		ID3D11ShaderReflectionVariable* pVariable = pBufferReflection->GetVariableByIndex( uParamIdx );			
@@ -50,7 +50,7 @@ ZENInline void ProcessShaderParamDef(ID3D11ShaderReflection& _GfxShaderReflectio
 		hName.Append(&VarDesc.StartOffset, sizeof(VarDesc.StartOffset));
 	}
 
-	_ShaderParaDefIDOut = zenResID(hName, zenConst::keResPlatform_DX11, zenConst::keResType_GfxShaderParamDef, _eSource );
+	_ShaderParaDefIDOut = zResID(hName, zenConst::keResPlatform_DX11, zenConst::keResType_GfxShaderParamDef, _eSource );
 }
 
 //=================================================================================================
@@ -71,14 +71,14 @@ bool SerialShader_DX11::ExportWorkCompile()
 	// Import defines setting for shader compiler preprocessor
 	//-------------------------------------------------------------------------
 	D3D10_SHADER_MACRO pDefines[128];
-	zenUInt uDefineCount = pExportInfo->maDefines.Count();
+	zUInt uDefineCount = pExportInfo->maDefines.Count();
 	ZENAssertMsg(uDefineCount < ZENArrayCount(pDefines)-2, "Too many defines included, increase capacity");
-	uDefineCount		= zenMath::Min(uDefineCount, zenUInt(ZENArrayCount(pDefines)-2));
+	uDefineCount		= zenMath::Min(uDefineCount, zUInt(ZENArrayCount(pDefines)-2));
 	if( uDefineCount )
 	{
 		D3D10_SHADER_MACRO*		pDefineCur	= pDefines;
-		zenRes::awShaderDefine*	pEntry		= pExportInfo->maDefines.First();
-		zenRes::awShaderDefine*	pEntryEnd	= pEntry + uDefineCount;
+		zenRes::zShaderDefine*	pEntry		= pExportInfo->maDefines.First();
+		zenRes::zShaderDefine*	pEntryEnd	= pEntry + uDefineCount;
 		while( pEntry < pEntryEnd )
 		{
 			pDefineCur->Name		= pEntry->mzName;
@@ -125,7 +125,7 @@ bool SerialShader_DX11::ExportWorkCompile()
 	{
 		if( SUCCEEDED(hr) )
 		{
-			mSerialCommon.maCompiledShader.Copy( static_cast<zenU8*>(pCompiledBlob->GetBufferPointer()), zenUInt(pCompiledBlob->GetBufferSize()) );
+			mSerialCommon.maCompiledShader.Copy( static_cast<zU8*>(pCompiledBlob->GetBufferPointer()), zUInt(pCompiledBlob->GetBufferSize()) );
 		}
 		pCompiledBlob->Release();
 	}
@@ -142,8 +142,8 @@ bool SerialShader_DX11::ExportWorkExtractResources()
 {
 	ExportInfo*								pExportInfo = static_cast<ExportInfo*>(mpExportInfo);
 	BindInfo								aTextureBind[EExp::kuDX11_TexturePerStageMax];
-	zenHash32								aTextureName[EExp::kuDX11_TexturePerStageMax];
-	zenUInt									uTextureCount(0);
+	zHash32								aTextureName[EExp::kuDX11_TexturePerStageMax];
+	zUInt									uTextureCount(0);
 	ID3D11ShaderReflection*					pGfxShaderReflection(NULL);
 	ID3D11ShaderReflectionConstantBuffer*	pConstBuffer(NULL);
 	D3D11_SHADER_DESC						shaderDesc;	
@@ -154,7 +154,7 @@ bool SerialShader_DX11::ExportWorkExtractResources()
 	if( SUCCEEDED( D3DReflect( mSerialCommon.maCompiledShader.First(), mSerialCommon.maCompiledShader.Size(), IID_ID3D11ShaderReflection, (void**) &pGfxShaderReflection ) ) )
 	{
 		pGfxShaderReflection->GetDesc( &shaderDesc );
-		for( zenUInt uResIdx=0; uResIdx<shaderDesc.BoundResources; ++uResIdx )
+		for( zUInt uResIdx=0; uResIdx<shaderDesc.BoundResources; ++uResIdx )
 		{
 			if( SUCCEEDED( pGfxShaderReflection->GetResourceBindingDesc(uResIdx, &resourceDesc ) ) )
 			{				
@@ -191,7 +191,7 @@ bool SerialShader_DX11::ExportEnd()
 {
 	if( mpExportInfo->IsSuccess() && Super::ExportEnd() )
 	{
-		for(zenUInt idx=0; idx<maParamDefID.Count(); ++idx)
+		for(zUInt idx=0; idx<maParamDefID.Count(); ++idx)
 		{
 			if( maParamDefID[idx].IsValid() )
 				maParamDefID[idx] = EExp::CreateGfxShaderParamDef(mResID, static_cast<eShaderParamFreq>(idx));

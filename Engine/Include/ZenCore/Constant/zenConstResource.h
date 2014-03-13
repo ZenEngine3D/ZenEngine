@@ -209,9 +209,9 @@ namespace zen {
 
 	namespace zenType
 	{
-		typedef zenFlag<zenConst::eResType,zenConst::keResType__Count, zenU64>	zenFlagResType;
-		typedef zenFlag<zenConst::eResType,zenConst::keResPlatform__Count>		zenFlagResPlatform;
-		typedef zenFlag<zenConst::eTextureCreate,zenConst::keTexCreate__Count>	zenFlagResTexCreate;
+		typedef zFlag<zenConst::eResType,zenConst::keResType__Count, zU64>	zenFlagResType;
+		typedef zFlag<zenConst::eResType,zenConst::keResPlatform__Count>		zenFlagResPlatform;
+		typedef zFlag<zenConst::eTextureCreate,zenConst::keTexCreate__Count>	zenFlagResTexCreate;
 	}
 
 	namespace zenConst

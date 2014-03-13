@@ -14,22 +14,22 @@ namespace EExp
 		if( !Super::ExportStart() )
 			return false;		
 
-		zenVec2U16 vDim	= pExportInfo->mvDim;
+		zVec2U16 vDim	= pExportInfo->mvDim;
 		const SerialRenderTarget_Base* pParamRender = EMgr::SerialItems.GetItem<const SerialRenderTarget_Base>( pExportInfo->mTargetDepthID );
 		if( pParamRender )	
 		{
-			vDim.x = zenMath::Min<zenU16>(vDim.x, pParamRender->mvDim.x-pExportInfo->mvOrigin.x );
-			vDim.y = zenMath::Min<zenU16>(vDim.y, pParamRender->mvDim.y-pExportInfo->mvOrigin.y );
+			vDim.x = zenMath::Min<zU16>(vDim.x, pParamRender->mvDim.x-pExportInfo->mvOrigin.x );
+			vDim.y = zenMath::Min<zU16>(vDim.y, pParamRender->mvDim.y-pExportInfo->mvOrigin.y );
 		}
 
-		for(zenUInt rtIdx(0), rtCount(pExportInfo->maTargetColorID.Count()); rtIdx<rtCount; ++rtIdx)
+		for(zUInt rtIdx(0), rtCount(pExportInfo->maTargetColorID.Count()); rtIdx<rtCount; ++rtIdx)
 		{
 			pParamRender = EMgr::SerialItems.GetItem<const SerialRenderTarget_Base>( pExportInfo->maTargetColorID[rtIdx] );
 			//! @todo error if mismatch size
 			if( pParamRender )
 			{
-				vDim.x = zenMath::Min<zenU16>(vDim.x, pParamRender->mvDim.x-pExportInfo->mvOrigin.x );
-				vDim.y = zenMath::Min<zenU16>(vDim.y, pParamRender->mvDim.y-pExportInfo->mvOrigin.y );
+				vDim.x = zenMath::Min<zU16>(vDim.x, pParamRender->mvDim.x-pExportInfo->mvOrigin.x );
+				vDim.y = zenMath::Min<zU16>(vDim.y, pParamRender->mvDim.y-pExportInfo->mvOrigin.y );
 			}			
 		}
 		
@@ -41,18 +41,18 @@ namespace EExp
 		return true;
 	}
 
-	zenResID SerialGfxView_Base::CallbackGetItemID(zenConst::eResPlatform _ePlatform, zenConst::eResType _eType, zenConst::eResSource _eSource, const EExp::ExportInfoBase* _pExportInfo, bool& _bExistOut)
+	zResID SerialGfxView_Base::CallbackGetItemID(zenConst::eResPlatform _ePlatform, zenConst::eResType _eType, zenConst::eResSource _eSource, const EExp::ExportInfoBase* _pExportInfo, bool& _bExistOut)
 	{
 		ZENAssert(_eType==zenConst::keResType_GfxView);
 		ZENAssert( _pExportInfo );
 		const ExportInfo* pExportInfo = static_cast<const ExportInfo*>(_pExportInfo);
 
-		zenResID::NameHash hName;
+		zResID::NameHash hName;
 		hName.Append( &pExportInfo->mvDim,		sizeof(&pExportInfo->mvDim) );
 		hName.Append( &pExportInfo->mvOrigin,	sizeof(&pExportInfo->mvOrigin) );
-		hName.Append( &pExportInfo->mTargetDepthID, sizeof(zenResID) );
-		for(zenUInt rtIdx(0), rtCount(pExportInfo->maTargetColorID.Count()); rtIdx<rtCount; ++rtIdx)
-			hName.Append( &(pExportInfo->maTargetColorID[rtIdx]), sizeof(zenResID) );
+		hName.Append( &pExportInfo->mTargetDepthID, sizeof(zResID) );
+		for(zUInt rtIdx(0), rtCount(pExportInfo->maTargetColorID.Count()); rtIdx<rtCount; ++rtIdx)
+			hName.Append( &(pExportInfo->maTargetColorID[rtIdx]), sizeof(zResID) );
 
 		return EExp::ValidateItemID(_ePlatform, _eType, _eSource, hName, _bExistOut);
 	}
@@ -61,21 +61,21 @@ namespace EExp
 	//! @brief		Create a new View Resource
 	//! @details	This bind together Color rendertarget(s), Depth rendertarget, and viewport infos
 	//-------------------------------------------------------------------------------------------------
-	//! @param _TargetColorID	- Color RenderTarget (empty zenResID() if none)
-	//! @param _TargetDepthID	- Depth RenderTarget (empty zenResID() if none)
+	//! @param _TargetColorID	- Color RenderTarget (empty zResID() if none)
+	//! @param _TargetDepthID	- Depth RenderTarget (empty zResID() if none)
 	//! @param _vSize			- Viewport size (entire target size by default)
 	//! @param _vOrigin			- Viewport origin ([0,0] by default)
-	//! @return 				- Unique zenResID of created Resource
+	//! @return 				- Unique zResID of created Resource
 	//=================================================================================================
-	zenResID CreateGfxView( const zenResID& _TargetColorID, const zenResID& _TargetDepthID, const zenVec2U16& _vDim, const zenVec2U16& _vOrigin )
+	zResID CreateGfxView( const zResID& _TargetColorID, const zResID& _TargetDepthID, const zVec2U16& _vDim, const zVec2U16& _vOrigin )
 	{
-		static zenMem::AllocatorPool sMemPool("Pool Views", sizeof(SerialGfxView_Base::ExportInfo), 1, 5 );
+		static zenMem::zAllocatorPool sMemPool("Pool Views", sizeof(SerialGfxView_Base::ExportInfo), 1, 5 );
 		SerialGfxView_Base::ExportInfo* pExportInfo	= zenNew(&sMemPool) SerialGfxView_Base::ExportInfo;
 		pExportInfo->maTargetColorID.Copy(&_TargetColorID, 1);		
 		pExportInfo->mTargetDepthID					= _TargetDepthID;
 		pExportInfo->mvOrigin						= _vOrigin;
 		pExportInfo->mvDim							= _vDim;
-		return EMgr::Export.CreateItem( zenResID::kePlatformType_GFX, zenConst::keResType_GfxView, pExportInfo );
+		return EMgr::Export.CreateItem( zResID::kePlatformType_GFX, zenConst::keResType_GfxView, pExportInfo );
 	}
 
 	//=================================================================================================
@@ -86,17 +86,17 @@ namespace EExp
 	//! @param _TargetDepthID	- Depth RenderTarget (optional)
 	//! @param _vSize			- Viewport size (entire target size by default)
 	//! @param _vOrigin			- Viewport origin ([0,0] by default)
-	//! @return 				- Unique zenResID of created Resource
+	//! @return 				- Unique zResID of created Resource
 	//=================================================================================================
-	zenResID CreateGfxView( const zenArrayBase<zenResID>& _aTargetColorID, const zenResID& _TargetDepthID, const zenVec2U16& _vDim, const zenVec2U16& _vOrigin )
+	zResID CreateGfxView( const zArrayBase<zResID>& _aTargetColorID, const zResID& _TargetDepthID, const zVec2U16& _vDim, const zVec2U16& _vOrigin )
 	{
-		static zenMem::AllocatorPool sMemPool("Pool Views", sizeof(SerialGfxView_Base::ExportInfo), 1, 5 );
+		static zenMem::zAllocatorPool sMemPool("Pool Views", sizeof(SerialGfxView_Base::ExportInfo), 1, 5 );
 		SerialGfxView_Base::ExportInfo* pExportInfo	= zenNew(&sMemPool) SerialGfxView_Base::ExportInfo;
 		pExportInfo->maTargetColorID				= _aTargetColorID;
 		pExportInfo->mTargetDepthID					= _TargetDepthID;
 		pExportInfo->mvOrigin						= _vOrigin;
 		pExportInfo->mvDim							= _vDim;
-		return EMgr::Export.CreateItem( zenResID::kePlatformType_GFX, zenConst::keResType_GfxView, pExportInfo );
+		return EMgr::Export.CreateItem( zResID::kePlatformType_GFX, zenConst::keResType_GfxView, pExportInfo );
 	}
 
 }

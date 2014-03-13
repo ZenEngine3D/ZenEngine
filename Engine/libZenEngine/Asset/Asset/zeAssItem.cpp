@@ -17,10 +17,10 @@ const char* kzXmlName_Node_Property="Property";
 const char* kzXmlName_PropAtr_Name="Name";
 const char* kzXmlName_PropAtr_Type="Type";
 
-static zenStringHash32 sTypeDescription[]={
-		zenStringHash32("TestProperty"),	//keType_TestProperty,
-		zenStringHash32("Texture2D"),		//keType_Texture2D,
-		zenStringHash32("Mesh"),			//keType_Mesh,
+static zStringHash32 sTypeDescription[]={
+		zStringHash32("TestProperty"),	//keType_TestProperty,
+		zStringHash32("Texture2D"),		//keType_Texture2D,
+		zStringHash32("Mesh"),			//keType_Mesh,
 	};
 
 //=================================================================================================
@@ -51,11 +51,11 @@ AssetItem* AssetItem::CreateItem( zenConst::eAssetType _eAssetType, Package& _Ow
 }
 
 //=================================================================================================
-//! @brief		zenString representation of all Asset type enum
+//! @brief		zString representation of all Asset type enum
 //! @details	
 //-------------------------------------------------------------------------------------------------
 //! @param		_eAssetType	- Property we want name from
-//! @return		- zenString representation of the enum value
+//! @return		- zString representation of the enum value
 //=================================================================================================
 const char* AssetItem::GetTypeName(zenConst::eAssetType _eAssetType)
 {	
@@ -63,9 +63,9 @@ const char* AssetItem::GetTypeName(zenConst::eAssetType _eAssetType)
 	return sTypeDescription[_eAssetType].mzName;
 }
 
-zenConst::eAssetType AssetItem::GetTypeFromName(zenHash32 _hAssetName)
+zenConst::eAssetType AssetItem::GetTypeFromName(zHash32 _hAssetName)
 {
-	zenUInt idx = zenStringHash32::Find(_hAssetName, sTypeDescription, ZENArrayCount(sTypeDescription));
+	zUInt idx = zStringHash32::Find(_hAssetName, sTypeDescription, ZENArrayCount(sTypeDescription));
 	return idx < zenConst::keAssType__Count ? static_cast<zenConst::eAssetType>(idx) : zenConst::keAssType__Invalid;
 }
 
@@ -74,7 +74,7 @@ AssetItem::AssetItem()
 , mhID("")
 {
     ZENStaticAssertMsg( ZENArrayCount(sTypeDescription)==zenConst::keAssType__Count, "Make sure to have a valid description for each resource type" );
-	static zenU64 sCounter(1);
+	static zU64 sCounter(1);
 	mhID = sCounter++; //! @todo : fix this (HACK)	
 }
 
@@ -99,7 +99,7 @@ bool AssetItem::Load( const pugi::xml_node& nodeAsset )
 	const char* zAssetGroup	= nodeAsset.attribute(kzXmlName_AssetAtr_Group).as_string();
 	LoadGroupAndName(zAssetName, zAssetGroup, maGroup );
 	
-	mhGroupID = zenHash32("Asset");
+	mhGroupID = zHash32("Asset");
 	for(int idx(0), count(maGroup.Count()-1); idx<count; ++idx )
 		mhGroupID.Append( maGroup[idx] );
 	/*
@@ -108,8 +108,8 @@ bool AssetItem::Load( const pugi::xml_node& nodeAsset )
  	for (pugi::xml_node nodeProp = nodeAsset.child(kzXmlName_Node_Property); nodeProp; nodeProp = nodeProp.next_sibling(kzXmlName_Node_Property))
 	{
 		const char* zPropName(nodeProp.attribute(kzXmlName_PropAtr_Name).as_string());
-		zenHash32 hPropName( zPropName );
-		zenUInt propIdx = GetPropertyDefIndex(hPropName);
+		zHash32 hPropName( zPropName );
+		zUInt propIdx = GetPropertyDefIndex(hPropName);
 		if( propIdx < maPropertyValueOld.Count() )
 			bResult &= maPropertyValueOld[propIdx].GetBase()->ValueFromXml(nodeProp);
 	}
@@ -125,7 +125,7 @@ bool AssetItem::Save( pugi::xml_document& _Doc )
 	pugi::xml_node nodeAsset = _Doc.append_child(kzXmlName_Node_Asset);
 	nodeAsset.append_attribute(kzXmlName_AssetAtr_Name).set_value("testName"); //!< @todo set proper na,e
 	nodeAsset.append_attribute(kzXmlName_AssetAtr_Type).set_value(GetTypeDesc());
-	for(zenUInt idx(0), count(maPropertyValueOld.Count()); idx<count; ++idx)
+	for(zUInt idx(0), count(maPropertyValueOld.Count()); idx<count; ++idx)
 		maPropertyValueOld[idx].GetBase()->ValueToXml(nodeAsset);
 	*/
 	RebuiltDescription();
@@ -144,7 +144,7 @@ void AssetItem::RebuiltDescription()
 	mzDescription = "";
 	//! @TODO
 	/*
-	for(zenUInt idx(0), count(maPropertyValueOld.Count()); idx<count; ++idx)
+	for(zUInt idx(0), count(maPropertyValueOld.Count()); idx<count; ++idx)
 	{
 		const PropertyDefBase& propDef = maPropertyValueOld[idx].GetBase()->mParentDef;
 		if( propDef.mbShowInAssetDesc )
@@ -197,12 +197,12 @@ void AssetItem::InitDefault()
 //! @param		_dPropertyMap - Dictionary to initialize with Property's Name / Index infos
 //! @return		
 //=================================================================================================
-bool AssetItem::InitPropertyMap(zenMap<zenInt>::Key32& _dPropertyMap)const
+bool AssetItem::InitPropertyMap(zMap<zInt>::Key32& _dPropertyMap)const
 {	
 	const zenAss::PropertyArray& aPropertyDef = GetProperties();
 	_dPropertyMap.Init(aPropertyDef.Count()*2);
 	_dPropertyMap.SetDefaultValue(-1);
-	for(zenInt idx(0), count(aPropertyDef.Count()); idx<count; ++idx)
+	for(zInt idx(0), count(aPropertyDef.Count()); idx<count; ++idx)
 		_dPropertyMap.Set( aPropertyDef[idx]->mName.mhName, idx );
 	return _dPropertyMap.Count() > 0;
 }
@@ -214,16 +214,16 @@ bool AssetItem::InitPropertyMap(zenMap<zenInt>::Key32& _dPropertyMap)const
 //! @param hPropertyName	- Name of property to look for
 //! @return					- Index of found item (-1 if not found)
 //=================================================================================================
-zenInt TestProperty::GetValueIndex(zenHash32 _hPropertyName)const	
+zInt TestProperty::GetValueIndex(zHash32 _hPropertyName)const	
 {
-	static zenMap<zenInt>::Key32 sdPropertyIndex;
+	static zMap<zInt>::Key32 sdPropertyIndex;
 	static bool sbInit = InitPropertyMap(sdPropertyIndex);	//!< suEntryCount only used to init hashtable once
 	return sdPropertyIndex[_hPropertyName];
 }
 
 const zenAss::PropertyArray& TestProperty::GetProperties()const
 { 	
-	//zenMap<zenU32>::Key32					mdPropertyIndex; todo
+	//zMap<zU32>::Key32					mdPropertyIndex; todo
 	static const zenAss::PropertyBool	Property00("TestBool",		"", "Test Bool Field",		true,	false);		
 	static const zenAss::PropertyFile	Property02("Source",		"", "Texture file",			true,	"C:\\temp\\test.txt", "Images|*.bmp;*.png;*.jpeg;*.jpg|BMP(*.bmp)|*.bmp|PNG(*.png)|*.png|JPEG(*.jpg;*.jpeg)|*.jpg;*.jpeg");
 	static const zenAss::PropertyBase*	aPropertiesAll[] = {&Property00, &Property02 };

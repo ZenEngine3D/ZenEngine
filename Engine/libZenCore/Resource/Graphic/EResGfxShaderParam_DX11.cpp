@@ -71,7 +71,7 @@ void GfxShaderParam_DX11::SetValue(const EExp::ParameterBase& _Value)
 	}	
 }
 
-void GfxShaderParam_DX11::SetValue(const zenRes::awShaderParameter& _Value)
+void GfxShaderParam_DX11::SetValue(const zenRes::zShaderParameter& _Value)
 {
 	ZENAssert( mInstanceInfo.mpParentShaderParamDef.IsValid() )
 	EExp::ShaderParamItemInfo ItemInfo;
@@ -82,7 +82,7 @@ void GfxShaderParam_DX11::SetValue(const zenRes::awShaderParameter& _Value)
 	}	
 }
 
-void GfxShaderParam_DX11::SetValue(const zenHash32& _hParamName, const float& _fValue)
+void GfxShaderParam_DX11::SetValue(const zHash32& _hParamName, const float& _fValue)
 {
 	ZENAssert( mInstanceInfo.mpParentShaderParamDef.IsValid() )
 	EExp::ShaderParamItemInfo ItemInfo;
@@ -95,7 +95,7 @@ void GfxShaderParam_DX11::SetValue(const zenHash32& _hParamName, const float& _f
 	}	
 }
 
-void GfxShaderParam_DX11::SetValue(const zenHash32& _hParamName, const zenVec2F& _vValue)
+void GfxShaderParam_DX11::SetValue(const zHash32& _hParamName, const zVec2F& _vValue)
 {
 	ZENAssert( mInstanceInfo.mpParentShaderParamDef.IsValid() )
 	EExp::ShaderParamItemInfo ItemInfo;
@@ -109,7 +109,7 @@ void GfxShaderParam_DX11::SetValue(const zenHash32& _hParamName, const zenVec2F&
 	}	
 }
 
-void GfxShaderParam_DX11::SetValue(const zenHash32& _hParamName, const zenVec3F& _vValue)
+void GfxShaderParam_DX11::SetValue(const zHash32& _hParamName, const zVec3F& _vValue)
 {
 	ZENAssert( mInstanceInfo.mpParentShaderParamDef.IsValid() )
 	EExp::ShaderParamItemInfo ItemInfo;
@@ -124,7 +124,7 @@ void GfxShaderParam_DX11::SetValue(const zenHash32& _hParamName, const zenVec3F&
 	}	
 }
 
-void GfxShaderParam_DX11::SetValue(const zenHash32& _hParamName, const zenVec4F& _vValue)
+void GfxShaderParam_DX11::SetValue(const zHash32& _hParamName, const zVec4F& _vValue)
 {
 	ZENAssert( mInstanceInfo.mpParentShaderParamDef.IsValid() )			
 	EExp::ShaderParamItemInfo ItemInfo;
@@ -140,7 +140,7 @@ void GfxShaderParam_DX11::SetValue(const zenHash32& _hParamName, const zenVec4F&
 	}	
 }
 
-void GfxShaderParam_DX11::SetValue(const zenHash32& _hParamName, const zenMath::Matrix& _matValue)
+void GfxShaderParam_DX11::SetValue(const zHash32& _hParamName, const zenMath::Matrix& _matValue)
 {
 	ZENAssert( mInstanceInfo.mpParentShaderParamDef.IsValid() )			
 	EExp::ShaderParamItemInfo ItemInfo;

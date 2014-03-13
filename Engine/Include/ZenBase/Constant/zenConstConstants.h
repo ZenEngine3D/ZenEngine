@@ -8,23 +8,23 @@ namespace zen { namespace zenConst {
 	#define				TRUE	1
 	#define				FALSE	0
 
-	extern const char	kzLineA10[11];	// zenString of '=' (Use for debug printing)
-	extern const char	kzLineA20[21];	// zenString of '=' (Use for debug printing)
-	extern const char	kzLineA30[31];	// zenString of '=' (Use for debug printing)
-	extern const char	kzLineA40[41];	// zenString of '=' (Use for debug printing)
-	extern const char	kzLineA50[51];	// zenString of '=' (Use for debug printing)
-	extern const char	kzLineA60[61];	// zenString of '=' (Use for debug printing)
-	extern const char	kzLineA70[71];	// zenString of '=' (Use for debug printing)
-	extern const char	kzLineA80[81];	// zenString of '=' (Use for debug printing)
-	extern const char	kzLineB10[11];	// zenString of '-' (Use for debug printing)
-	extern const char	kzLineB20[21];	// zenString of '-' (Use for debug printing)
-	extern const char	kzLineB30[31];	// zenString of '-' (Use for debug printing)
-	extern const char	kzLineB40[41];	// zenString of '-' (Use for debug printing)
-	extern const char	kzLineB50[51];	// zenString of '-' (Use for debug printing)
-	extern const char	kzLineB60[61];	// zenString of '-' (Use for debug printing)
-	extern const char	kzLineB70[71];	// zenString of '-' (Use for debug printing)
-	extern const char	kzLineB80[81];	// zenString of '-' (Use for debug printing)
-	extern const char*	kzFalseTrue[2];	// zenString 'False' 'true'
+	extern const char	kzLineA10[11];	// zString of '=' (Use for debug printing)
+	extern const char	kzLineA20[21];	// zString of '=' (Use for debug printing)
+	extern const char	kzLineA30[31];	// zString of '=' (Use for debug printing)
+	extern const char	kzLineA40[41];	// zString of '=' (Use for debug printing)
+	extern const char	kzLineA50[51];	// zString of '=' (Use for debug printing)
+	extern const char	kzLineA60[61];	// zString of '=' (Use for debug printing)
+	extern const char	kzLineA70[71];	// zString of '=' (Use for debug printing)
+	extern const char	kzLineA80[81];	// zString of '=' (Use for debug printing)
+	extern const char	kzLineB10[11];	// zString of '-' (Use for debug printing)
+	extern const char	kzLineB20[21];	// zString of '-' (Use for debug printing)
+	extern const char	kzLineB30[31];	// zString of '-' (Use for debug printing)
+	extern const char	kzLineB40[41];	// zString of '-' (Use for debug printing)
+	extern const char	kzLineB50[51];	// zString of '-' (Use for debug printing)
+	extern const char	kzLineB60[61];	// zString of '-' (Use for debug printing)
+	extern const char	kzLineB70[71];	// zString of '-' (Use for debug printing)
+	extern const char	kzLineB80[81];	// zString of '-' (Use for debug printing)
+	extern const char*	kzFalseTrue[2];	// zString 'False' 'true'
 	
 	extern const float	kfSmallNumber;
 	extern const float	kfPI;
