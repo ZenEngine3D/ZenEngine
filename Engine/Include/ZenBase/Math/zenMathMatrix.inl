@@ -121,12 +121,12 @@ namespace zen { namespace zenMath
 	//! @param _vEyeDir			- Look direction
 	//! @param _vUpDir			- Up position of camera (in worldspace)	
 	//=================================================================================================
-	inline void MatrixLookToLH( Matrix& _matViewOut, V4 _vEyePos, V4 _vEyeDir, V4 _vUpDir )
+	ZENInline void MatrixLookToLH( Matrix& _matViewOut, V4 _vEyePos, V4 _vEyeDir, V4 _vUpDir )
 	{		
 		ZENAssert( !IsNearZero(_vEyeDir) );
 		ZENAssert( !IsNearZero(_vUpDir) );
 				
-		//@todo optimize by just masking value		
+		//@todo Optim: optimize by just masking value		
 		_vEyePos				= Mul(_vEyePos, v4XYZ1);	//Discard w
 		_vEyeDir				= Mul(_vEyeDir, v4XYZ1);	//Discard w
 		_vUpDir					= Mul(_vUpDir, v4XYZ1);		//Discard w
@@ -179,7 +179,7 @@ namespace zen { namespace zenMath
 	//! @param _vTargetPos		- Where we're looking at (target object )
 	//! @param _vUpDir			- Up position of camera (in worldspace)	
 	//=================================================================================================
-	inline void MatrixLookAtLH( Matrix& _matViewOut, V4 _vEyePos, V4 _vTargetPos, V4 _vUpDir )
+	ZENInline void MatrixLookAtLH( Matrix& _matViewOut, V4 _vEyePos, V4 _vTargetPos, V4 _vUpDir )
 	{
 		MatrixLookToLH(_matViewOut, _vEyePos, Sub(_vTargetPos, _vEyePos ), _vUpDir );
 	}
@@ -194,11 +194,11 @@ namespace zen { namespace zenMath
 	//! @param _fNearZ					- Near clipping distance
 	//! @param _fFarZ					- Far clipping distance
 	//=================================================================================================
-	inline void MatrixProjectionLH( Matrix& _matProjectionOut, float _fFovDegreeWidth, float _fAspectRatio, float _fNearZ, float _fFarZ )
+	ZENInline void MatrixProjectionLH( Matrix& _matProjectionOut, float _fFovDegreeWidth, float _fAspectRatio, float _fNearZ, float _fFarZ )
 	{
-		ZENAssert( _fFovDegreeWidth > awconst::kfSmallNumber )
-		ZENAssert( _fAspectRatio > awconst::kfSmallNumber )
-		ZENAssert( _fNearZ > awconst::kfSmallNumber && _fFarZ > _fNearZ )
+		ZENAssert( _fFovDegreeWidth > zenConst::kfSmallNumber )
+		ZENAssert( _fAspectRatio > zenConst::kfSmallNumber )
+		ZENAssert( _fNearZ > zenConst::kfSmallNumber && _fFarZ > _fNearZ )
 		
 		float ScaleX			= 1.f / tanf(_fFovDegreeWidth/180.0f*zenMath::kfPI);		
 		_matProjectionOut.mvRows[0]	= XYZW( ScaleX,		0,						0,									0);

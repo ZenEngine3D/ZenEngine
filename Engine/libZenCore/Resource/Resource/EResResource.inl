@@ -1,17 +1,17 @@
 //=================================================================================================
 // Defines used when declaring a new resource class (engine side)
 //=================================================================================================
-#define AWResourceDeclare(_Class_, _ClassInstance_, _ResourceType_)																	\
-	AWResourceDeclareParent(_Class_, Resource, _ClassInstance_, _ResourceType_)
+#define ZENResourceDeclare(_Class_, _ClassInstance_, _ResourceType_)																	\
+	ZENResourceDeclareParent(_Class_, Resource, _ClassInstance_, _ResourceType_)
 
-#define AWResourceDeclareParent(_Class_, _ClassParent_, _ClassInstance_, _ResourceType_)											\
+#define ZENResourceDeclareParent(_Class_, _ClassParent_, _ClassInstance_, _ResourceType_)											\
 	ZENClassDeclare(_Class_, _ClassParent_)																							\
 public:																																\
-	inline const _ClassInstance_&	Get()const									{	return mInstanceInfo;};							\
-	inline _ClassInstance_&	Get()												{	return mInstanceInfo;};							\
+	ZENInline const _ClassInstance_&	Get()const								{	return mInstanceInfo;};							\
+	ZENInline _ClassInstance_&	Get()											{	return mInstanceInfo;};							\
 	static _Class_*					Create(EExp::ExportInfoBase& _ExportInfo)	{	_Class_* pNewRes = zenNewDefault _Class_();		\
 																					return pNewRes->ResourceCreate(pNewRes->mInstanceInfo, _ExportInfo) ? pNewRes : NULL; }\
-	static awconst::eResType		GetResourceType()							{	return _ResourceType_; }						\
+	static zenConst::eResType		GetResourceType()							{	return _ResourceType_; }						\
 protected:																															\
 	_ClassInstance_					mInstanceInfo;																					\
 private:																															\
@@ -26,13 +26,13 @@ ResourceRef<TResourceClass, TReferenceClass>::ResourceRef()
 }
 
 template<class TResourceClass, class TReferenceClass>
-ResourceRef<TResourceClass, TReferenceClass>::ResourceRef(zenRes::awResource* _pResource)
+ResourceRef<TResourceClass, TReferenceClass>::ResourceRef(zenRes::zResource* _pResource)
 : Super(_pResource)
 {
 }
 
 template<class TResourceClass, class TReferenceClass>
-ResourceRef<TResourceClass, TReferenceClass>::ResourceRef(zenResID _ResourceID)
+ResourceRef<TResourceClass, TReferenceClass>::ResourceRef(zResID _ResourceID)
 : Super(_ResourceID)
 {
 }

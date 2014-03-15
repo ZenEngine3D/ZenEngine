@@ -11,7 +11,7 @@ namespace ERes
 			ID3D11Texture2D*			mpTextureBuffer;
 			ID3D11ShaderResourceView*	mpTextureView;
 		};
-	AWResourceDeclare(GfxTexture2D_DX11, InstanceInfo, awconst::keResType_GfxTexture2D)
+	ZENResourceDeclare(GfxTexture2D_DX11, InstanceInfo, zenConst::keResType_GfxTexture2D)
 	public:
 		virtual						~GfxTexture2D_DX11();
 		virtual bool				ResourceInit();
@@ -19,7 +19,7 @@ namespace ERes
 	//---------------------------------------------------------
 	// Common to all Texture2D
 	//---------------------------------------------------------
-		inline const zenVec2U16&		GetDim(){ return (Get().mSerial.maMipData.Count() > 0 ) ? Get().mSerial.maMipData[0].mvDim : zenVec2U16::Zero; }
+		ZENInline const zVec2U16&		GetDim(){ return (Get().mSerial.maMipData.Count() > 0 ) ? Get().mSerial.maMipData[0].mvDim : zVec2U16::Zero; }
 	};
 }
 

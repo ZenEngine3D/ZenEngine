@@ -115,15 +115,15 @@ float LengthInv( V4 _VectA )
     return LengthInvV(_VectA).m128_f32[0];    
 }
 
-inline V4 Normalize( V4 _VectA )
+ZENInline V4 Normalize( V4 _VectA )
 {
 	V4 vLength = LengthV(_VectA);
     return _mm_div_ps(_VectA, vLength);
 }
 
-inline bool	IsNearZero( V4 _Vect )
+ZENInline bool	IsNearZero( V4 _Vect )
 {
-	return Dot( _Vect, _Vect ) < awconst::kfSmallNumber;
+	return Dot( _Vect, _Vect ) < zenConst::kfSmallNumber;
 }
 
 }  } // namespace zen, zenMath

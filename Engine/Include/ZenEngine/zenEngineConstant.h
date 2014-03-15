@@ -1,5 +1,7 @@
 #pragma once
-#ifndef __LibFramework_Api_Constant_h__
-#define __LibFramework_Api_Constant_h__
+#ifndef __ZenEngine_Const_h__
+#define __ZenEngine_Const_h__
+
+#include <ZenEngine/Const/zenConstAsset.h>
 
 #endif

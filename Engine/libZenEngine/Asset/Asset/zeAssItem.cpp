@@ -1,6 +1,6 @@
 #include "libZenEngine.h"
 
-#if AW_ENGINETOOL
+#if ZEN_ENGINETOOL
 
 namespace zen { namespace zeAss
 {
@@ -17,25 +17,11 @@ const char* kzXmlName_Node_Property="Property";
 const char* kzXmlName_PropAtr_Name="Name";
 const char* kzXmlName_PropAtr_Type="Type";
 
-static zenStringHash32 sTypeDescription[]={
-		zenStringHash32("Texture2D"),	//keType_Texture2D,
-		zenStringHash32("Mesh"),		//keType_Mesh,
+static zStringHash32 sTypeDescription[]={
+		zStringHash32("TestProperty"),	//keType_TestProperty,
+		zStringHash32("Texture2D"),		//keType_Texture2D,
+		zStringHash32("Mesh"),			//keType_Mesh,
 	};
-
-AssetItem::AssetItem()	
-: mpPackage(NULL)
-, mhID("")
-{
-	ZENStaticAssertMsg( ZENArrayCount(sTypeDescription)==keType__Count, "Make sure to have a valid description for each resource type" );
-
-	static zenU64 sCounter(1);
-	mhID = sCounter++; //! @todo : fix this (HACK)
-}
-
-AssetItem::~AssetItem()	
-{
-	FreePropertyValues();
-}
 
 //=================================================================================================
 //! @brief		Factory to create a new Asset of specified type
@@ -45,94 +31,55 @@ AssetItem::~AssetItem()
 //! @param		_Owner		- Owner package of the newly create Asset
 //! @return					- Created Asset
 //=================================================================================================
-AssetItem* AssetItem::CreateItem( enumType _eAssetType, Package& _Owner )
+AssetItem* AssetItem::CreateItem( zenConst::eAssetType _eAssetType, Package& _Owner )
 {
 	AssetItem* pNewItem(NULL);
 	switch( _eAssetType )
 	{
-	case keType_Texture2D:	pNewItem = zenNewDefault GfxTexture2D();	break;
-	case keType_Mesh:		pNewItem = zenNewDefault GfxMesh();			break;
-	default:				ZENAssertMsg(0, "Unsupported Asset Type");
+	case zenConst::keAssType_TestProperty:	pNewItem = zenNewDefault TestProperty();	break;
+	case zenConst::keAssType_Texture2D:		pNewItem = zenNewDefault GfxTexture2D();	break;
+	case zenConst::keAssType_Mesh:			pNewItem = zenNewDefault GfxMesh();			break;
+	default:								ZENAssertMsg(0, "Unsupported Asset Type");	break;
 	}
 
 	if( pNewItem )
 	{
-		pNewItem->ResetPropertyValues();
+		pNewItem->InitDefault();
 		pNewItem->mpPackage = &_Owner;
 	}
 	return pNewItem;
 }
 
 //=================================================================================================
-//! @brief		zenString representation of all Asset type enum
+//! @brief		zString representation of all Asset type enum
 //! @details	
 //-------------------------------------------------------------------------------------------------
 //! @param		_eAssetType	- Property we want name from
-//! @return		- zenString representation of the enum value
+//! @return		- zString representation of the enum value
 //=================================================================================================
-const char* AssetItem::GetTypeDesc(AssetItem::enumType _eAssetType)
+const char* AssetItem::GetTypeName(zenConst::eAssetType _eAssetType)
 {	
-	ZENAssert(_eAssetType<keType__Count);
+	ZENAssert(_eAssetType<zenConst::keAssType__Count);
 	return sTypeDescription[_eAssetType].mzName;
 }
 
-//=================================================================================================
-//! @brief		Find which enum has the same name hash
-//! @details	
-//-------------------------------------------------------------------------------------------------
-//! @param		_hAssetName	- Asset type name we want enum value from
-//=================================================================================================
-AssetItem::enumType AssetItem::GetType(zenHash32 _hAssetName)
+zenConst::eAssetType AssetItem::GetTypeFromName(zHash32 _hAssetName)
 {
-	zenUInt uIndex = zenStringHash32::Find(_hAssetName, sTypeDescription, ZENArrayCount(sTypeDescription));
-	return uIndex < keType__Count ? static_cast<AssetItem::enumType>(uIndex) : keType__Invalid;
+	zUInt idx = zStringHash32::Find(_hAssetName, sTypeDescription, ZENArrayCount(sTypeDescription));
+	return idx < zenConst::keAssType__Count ? static_cast<zenConst::eAssetType>(idx) : zenConst::keAssType__Invalid;
 }
 
-//=================================================================================================
-//! @brief		Configure all supported properties for this Asset, to default values
-//! @details	
-//-------------------------------------------------------------------------------------------------
-//! @return		- None
-//=================================================================================================	
-void AssetItem::ResetPropertyValues()
+AssetItem::AssetItem()	
+: mpPackage(NULL)
+, mhID("")
 {
-	FreePropertyValues();
-	PropertyArray& propDefinition = GetPropertyDef();
-	maPropertyValue.SetCount(propDefinition.Count());
-	for(zenUInt valIdx(0), valCount(maPropertyValue.Count()); valIdx<valCount; ++valIdx)
-	{
-		maPropertyValue[valIdx] = propDefinition[valIdx]->Allocate();
-	}
+    ZENStaticAssertMsg( ZENArrayCount(sTypeDescription)==zenConst::keAssType__Count, "Make sure to have a valid description for each resource type" );
+	static zU64 sCounter(1);
+	mhID = sCounter++; //! @todo Important: fix this (HACK)	
 }
 
-//=================================================================================================
-//! @brief		De-allocate every values allocated
-//! @details	
-//-------------------------------------------------------------------------------------------------
-//! @return		- None
-//=================================================================================================	
-void AssetItem::FreePropertyValues()
+AssetItem::~AssetItem()	
 {
-	for(zenUInt valIdx(0), valCount(maPropertyValue.Count()); valIdx<valCount; ++valIdx)
-	{
-		zenDel(maPropertyValue[valIdx].GetBase());
-	}
-	maPropertyValue.SetCount(0);
-}
-
-//=================================================================================================
-//! @brief		Find property with a particular name
-//! @details	If none has been loaded yet, or the values do not perfectly match the 
-//-------------------------------------------------------------------------------------------------
-//! @return		PropertyValue pointer if found (null if not found)
-//=================================================================================================	
-ValuePointer AssetItem::GetPropertyValue(zenHash32 _hPropertyName)const
-{
-	zenUInt propIdx = GetPropertyDefIndex(_hPropertyName);
-	if( propIdx < maPropertyValue.Count() )
-		return maPropertyValue[propIdx];
-
-	return NULL;
 }
 
 //=================================================================================================
@@ -145,41 +92,42 @@ ValuePointer AssetItem::GetPropertyValue(zenHash32 _hPropertyName)const
 bool AssetItem::Load( const pugi::xml_node& nodeAsset )
 {	
 	bool bResult(true);
-	
-	// Reset properties values to 0
-	ResetPropertyValues();
+	InitDefault();
 
 	// Load base asset infos
 	const char* zAssetName	= nodeAsset.attribute(kzXmlName_AssetAtr_Name).as_string();
 	const char* zAssetGroup	= nodeAsset.attribute(kzXmlName_AssetAtr_Group).as_string();
 	LoadGroupAndName(zAssetName, zAssetGroup, maGroup );
 	
-	mhGroupID = zenHash32("Asset");
+	mhGroupID = zHash32("Asset");
 	for(int idx(0), count(maGroup.Count()-1); idx<count; ++idx )
 		mhGroupID.Append( maGroup[idx] );
-
-	// Load properies values
+	/*
+	//! @todo Asset: Separate code dependency to 3rd lib
+	// Load properties values
  	for (pugi::xml_node nodeProp = nodeAsset.child(kzXmlName_Node_Property); nodeProp; nodeProp = nodeProp.next_sibling(kzXmlName_Node_Property))
 	{
 		const char* zPropName(nodeProp.attribute(kzXmlName_PropAtr_Name).as_string());
-	 zenHash32 hPropName( zPropName );
-		zenUInt propIdx = GetPropertyDefIndex(hPropName);
-		if( propIdx < maPropertyValue.Count() )
-			bResult &= maPropertyValue[propIdx].GetBase()->ValueFromXml(nodeProp);
+		zHash32 hPropName( zPropName );
+		zUInt propIdx = GetPropertyDefIndex(hPropName);
+		if( propIdx < maPropertyValueOld.Count() )
+			bResult &= maPropertyValueOld[propIdx].GetBase()->ValueFromXml(nodeProp);
 	}
-
+	*/
 	RebuiltDescription();
 	return bResult;
 }
 
 bool AssetItem::Save( pugi::xml_document& _Doc )
 {
+	/*
+	//! @todo Asset: Separate code depenency to 3rd lib
 	pugi::xml_node nodeAsset = _Doc.append_child(kzXmlName_Node_Asset);
 	nodeAsset.append_attribute(kzXmlName_AssetAtr_Name).set_value("testName"); //!< @todo set proper na,e
 	nodeAsset.append_attribute(kzXmlName_AssetAtr_Type).set_value(GetTypeDesc());
-	for(zenUInt idx(0), count(maPropertyValue.Count()); idx<count; ++idx)
-		maPropertyValue[idx].GetBase()->ValueToXml(nodeAsset);
-	
+	for(zUInt idx(0), count(maPropertyValueOld.Count()); idx<count; ++idx)
+		maPropertyValueOld[idx].GetBase()->ValueToXml(nodeAsset);
+	*/
 	RebuiltDescription();
 	return true;
 }
@@ -194,36 +142,99 @@ bool AssetItem::Save( pugi::xml_document& _Doc )
 void AssetItem::RebuiltDescription()
 {	
 	mzDescription = "";
-	for(zenUInt idx(0), count(maPropertyValue.Count()); idx<count; ++idx)
+	//! @TODO
+	/*
+	for(zUInt idx(0), count(maPropertyValueOld.Count()); idx<count; ++idx)
 	{
-		const PropertyDefBase& propDef = maPropertyValue[idx].GetBase()->mParentDef;
+		const PropertyDefBase& propDef = maPropertyValueOld[idx].GetBase()->mParentDef;
 		if( propDef.mbShowInAssetDesc )
 		{
 			char zBuffer[128];			
 			char zValue[64];
-			maPropertyValue[idx].GetBase()->ValueToString( zValue, sizeof(zValue) );
+			maPropertyValueOld[idx].GetBase()->ValueToString( zValue, sizeof(zValue) );
 			sprintf(zBuffer, "(%s : %s) ", propDef.mzDisplayName, zValue);
 			mzDescription += zBuffer;
 		}		
 	}
+	*/
+}
+
+void AssetItem::InitDefault()
+{	
+	// Only need to reset value
+	if( maPropertyValue.Count() > 0 )
+	{
+		zenAss::PropertyValue* pValCur	= maPropertyValue.First();
+		zenAss::PropertyValue* pValLast = maPropertyValue.Last();
+		while( pValCur <= pValLast )
+		{
+			pValCur->Reset();
+			++pValCur;
+		}
+	}
+	// Need to allocate value (which sets it to default)
+	else
+	{
+		const zenAss::PropertyArray& aProperties = GetProperties();	
+		ZENAssert(aProperties.Count() > 0 );
+		maPropertyValue.SetCount( aProperties.Count() );
+		const zenAss::PropertyBase* const*	pPropCur	= aProperties.First();
+		zenAss::PropertyValue*				pValCur		= maPropertyValue.First();
+		zenAss::PropertyValue*				pValLast	= maPropertyValue.Last();
+		while( pValCur <= pValLast )
+		{
+			pValCur->Allocate(**pPropCur);
+			++pValCur;
+			++pPropCur;
+		}
+	}
 }
 
 //=================================================================================================
-//! @brief		Construct a dictionary mapping Property,s name to index in the property/value array
+//! @brief		Construct a dictionary mapping Properties name to index in the property/value array
 //! @details	Used by child class to initialize their static dictionary
 //-------------------------------------------------------------------------------------------------
 //! @param		_dPropertyMap - Dictionary to initialize with Property's Name / Index infos
 //! @return		
 //=================================================================================================
-void AssetItem::InitPropertyDefIndex(zenMap<zenUInt>::Key32& _dPropertyMap)const
+bool AssetItem::InitPropertyMap(zMap<zInt>::Key32& _dPropertyMap)const
 {	
-	const zenArrayStatic<const PropertyDefBase*>& aPropertyDef = GetPropertyDef();
+	const zenAss::PropertyArray& aPropertyDef = GetProperties();
 	_dPropertyMap.Init(aPropertyDef.Count()*2);
-	_dPropertyMap.SetDefaultValue(0xFFFFFFFF);
-	for(zenUInt idx(0), count(aPropertyDef.Count()); idx<count; ++idx)
-		_dPropertyMap.Set( aPropertyDef[idx]->mhName, idx );
+	_dPropertyMap.SetDefaultValue(-1);
+	for(zInt idx(0), count(aPropertyDef.Count()); idx<count; ++idx)
+		_dPropertyMap.Set( aPropertyDef[idx]->mName.mhName, idx );
+	return _dPropertyMap.Count() > 0;
 }
+
+//=================================================================================================
+//! @brief		
+//! @details	
+//-------------------------------------------------------------------------------------------------
+//! @param hPropertyName	- Name of property to look for
+//! @return					- Index of found item (-1 if not found)
+//=================================================================================================
+zInt TestProperty::GetValueIndex(zHash32 _hPropertyName)const	
+{
+	static zMap<zInt>::Key32 sdPropertyIndex;
+	static bool sbInit = InitPropertyMap(sdPropertyIndex);	//!< suEntryCount only used to init hashtable once
+	return sdPropertyIndex[_hPropertyName];
+}
+
+const zenAss::PropertyArray& TestProperty::GetProperties()const
+{ 	
+	//zMap<zU32>::Key32					mdPropertyIndex; todo
+	static const zenAss::PropertyBool	Property00("TestBool",		"", "Test Bool Field",		true,	false);		
+	static const zenAss::PropertyFile	Property02("Source",		"", "Texture file",			true,	"C:\\temp\\test.txt", "Images|*.bmp;*.png;*.jpeg;*.jpg|BMP(*.bmp)|*.bmp|PNG(*.png)|*.png|JPEG(*.jpg;*.jpeg)|*.jpg;*.jpeg");
+	static const zenAss::PropertyBase*	aPropertiesAll[] = {&Property00, &Property02 };
+	static zenAss::PropertyArray		saProperties( aPropertiesAll, ZENArrayCount(aPropertiesAll) );
+	return saProperties;
+}
+
+
+
+
 
 }} //namespace zen { namespace zeAss
 
-#endif //AW_ENGINETOOL
+#endif //ZEN_ENGINETOOL

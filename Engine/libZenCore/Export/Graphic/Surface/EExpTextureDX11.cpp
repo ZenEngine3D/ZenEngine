@@ -10,23 +10,23 @@ namespace EExp
 		mSerial.mCreationFlags	= pExportInfo->mCreationFlags;
 		if( pExportInfo->mbGenerateMip )
 		{
-			//! @todo image conversion
+			//! @todo Missing: Mipmap creation
 			ZENAssert( (mSerial.maMipData.Count()==1) && zenMath::IsPower2(mSerial.maMipData[0].mvDim.x) && zenMath::IsPower2(mSerial.maMipData[0].mvDim.y) );
 		}
 		
 		if( pExportInfo->meFormatInput != pExportInfo->meFormatOutput )
 		{
-			//! @todo image conversion
-			zenUInt uMipCount = mSerial.maMipData.SetCount( pExportInfo->maMipData.Count() );
-			for( zenUInt mipIdx=0; mipIdx<uMipCount; ++mipIdx)
+			//! @todo Missing: Image conversion
+			zUInt uMipCount = mSerial.maMipData.SetCount( pExportInfo->maMipData.Count() );
+			for( zUInt mipIdx=0; mipIdx<uMipCount; ++mipIdx)
 			{
 				//..
 			}					
 		}
 		else
 		{
-			zenUInt uMipCount = mSerial.maMipData.SetCount( pExportInfo->maMipData.Count() );
-			for(zenUInt mipIdx(0); mipIdx<uMipCount; ++mipIdx)
+			zUInt uMipCount = mSerial.maMipData.SetCount( pExportInfo->maMipData.Count() );
+			for(zUInt mipIdx(0); mipIdx<uMipCount; ++mipIdx)
 			{
 				mSerial.maMipData[mipIdx].maData	= pExportInfo->maMipData[mipIdx].maData;
 				mSerial.maMipData[mipIdx].mvDim		= pExportInfo->maMipData[mipIdx].mvDim;

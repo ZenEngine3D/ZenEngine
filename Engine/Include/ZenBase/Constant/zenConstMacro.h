@@ -31,8 +31,8 @@
 #include "zenConstMacro.inl"
 
 #define ZENArrayCount(_Array_)						(sizeof(_Array_)/sizeof((_Array_)[0]))
-#define ZENMemberOffset(_Class_, _MemberName_)		( (zenUInt) &(((_Class_*)0)->_MemberName_) )
-#define ZENMemberOffsetAfter(_Class_, _MemberName_)	( (zenUInt) &(((_Class_*)0)->_MemberName_) + sizeof((((_Class_*)0)->_MemberName_)) )
+#define ZENMemberOffset(_Class_, _MemberName_)		( (zUInt) &(((_Class_*)0)->_MemberName_) )
+#define ZENMemberOffsetAfter(_Class_, _MemberName_)	( (zUInt) &(((_Class_*)0)->_MemberName_) + sizeof((((_Class_*)0)->_MemberName_)) )
 
 #define ZENClassDeclareNoParent(_Class_)			public: void zenClassDeclareCheck(){ ZENStaticAssertMsg( sizeof(*this) == sizeof(_Class_), "Wrong Class name in ClassDeclare macro" );}
 #define ZENClassDeclare(_Class_, _ClassParent_)		ZENClassDeclareNoParent(_Class_)			\

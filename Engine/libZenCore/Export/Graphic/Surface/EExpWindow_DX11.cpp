@@ -27,17 +27,17 @@ namespace EExp
 	//!				This will result in DirectX creating a render swapchain with associated Window.
 	//!	@Note		Because Windows has a define named CreateWindow, we can't use it for our function's
 	//				name. Ending it with 'Gfx' to make it different
-	//! @todo		Make it cross platform
+	//! @todo Clean: Make it cross platform (windows handle)
 	//-------------------------------------------------------------------------------------------------
 	//! @param _WindowHandle	- Parent Window
-	//! @return 				- Unique zenResID of created Resource
+	//! @return 				- Unique zResID of created Resource
 	//=================================================================================================
-	zenResID CreateGfxWindow( HWND _WindowHandle )
+	zResID CreateGfxWindow( HWND _WindowHandle )
 	{
-		static zenMem::AllocatorPool sMemPool("Pool Views", sizeof(SerialGfxWindow_DX11::ExportInfo), 1, 5 );
+		static zenMem::zAllocatorPool sMemPool("Pool Views", sizeof(SerialGfxWindow_DX11::ExportInfo), 1, 5 );
 		SerialGfxWindow_DX11::ExportInfo* pExportInfo	= zenNew(&sMemPool) SerialGfxWindow_DX11::ExportInfo;
 		pExportInfo->mhWindow							= _WindowHandle;
-		return EMgr::Export.CreateItem( zenResID::kePlatformType_GFX, awconst::keResType_GfxWindow, pExportInfo );
+		return EMgr::Export.CreateItem( zResID::kePlatformType_GFX, zenConst::keResType_GfxWindow, pExportInfo );
 	}
 
 }

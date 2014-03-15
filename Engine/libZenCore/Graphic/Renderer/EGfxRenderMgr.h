@@ -22,15 +22,15 @@ public:
 	virtual void				FrameBegin( ERes::GfxWindowRef _FrameWindow );
 	virtual void				FrameEnd();
 	
-	zenU64						GetFrameCount();
-	inline ERes::GfxWindowRef	GetWindowCurrent(){return mrWindowCurrent;}
+	zU64						GetFrameCount();
+	ZENInline ERes::GfxWindowRef	GetWindowCurrent(){return mrWindowCurrent;}
 
-	//! @todo move to more generic AWformat testing functions file?
-	bool						IsDepth( awconst::eTextureFormat _eTexFormat ) const { return _eTexFormat>=awconst::keTexFormat__DepthFirst && _eTexFormat<=awconst::keTexFormat__DepthLast; }
+	//! @todo Clean: move to more generic AWformat testing functions file?
+	bool						IsDepth( zenConst::eTextureFormat _eTexFormat ) const { return _eTexFormat>=zenConst::keTexFormat__DepthFirst && _eTexFormat<=zenConst::keTexFormat__DepthLast; }
 	
 protected:
 	enum eConstants{kuFramesSaved=10};
-	zenU64						muFrameCount;	
+	zU64						muFrameCount;	
 	ERes::GfxWindowRef			mrWindowCurrent;
 };
 

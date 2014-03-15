@@ -8,13 +8,13 @@ namespace EExp
 		return FALSE; 
 	}
 
-	zenResID SerialGfxInputStream_DX11::CallbackGetItemID(awconst::eResPlatform _ePlatform, awconst::eResType _eType, awconst::eResSource _eSource, const EExp::ExportInfoBase* _pExportInfo, bool& _bExistOut)
+	zResID SerialGfxInputStream_DX11::CallbackGetItemID(zenConst::eResPlatform _ePlatform, zenConst::eResType _eType, zenConst::eResSource _eSource, const EExp::ExportInfoBase* _pExportInfo, bool& _bExistOut)
 	{
-		ZENAssert(_ePlatform==awconst::keResPlatform_DX11 && _eType==awconst::keResType_GfxInputStream);
+		ZENAssert(_ePlatform==zenConst::keResPlatform_DX11 && _eType==zenConst::keResType_GfxInputStream);
 		ZENAssert( _pExportInfo );
 		const ExportInfo* pExportInfo = static_cast<const ExportInfo*>(_pExportInfo);
 
-		zenResID::NameHash hName = pExportInfo->mVertexBufferID.Name();	//! @todo: Different buffer with same format should return same id, saving a lot of binding
+		zResID::NameHash hName = pExportInfo->mVertexBufferID.Name();	//! @todo Optim: Different buffer with same format should return same id, saving a lot of binding
 		hName.Append( pExportInfo->mShaderInputSignatureID.Name() );
 		return EExp::ValidateItemID(_ePlatform, _eType, _eSource, hName, _bExistOut);
 	}

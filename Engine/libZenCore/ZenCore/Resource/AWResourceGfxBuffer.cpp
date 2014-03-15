@@ -5,33 +5,33 @@ namespace zen { namespace zenRes {
 //=================================================================================================
 // CREATES
 //=================================================================================================
-GfxTexture2D GfxTexture2D::Create(awconst::eTextureFormat _eFormat, zenVec2U16 _vDim, awFlagResTexCreate _CreationFlags)
+zGfxTexture2D zGfxTexture2D::Create(zenConst::eTextureFormat _eFormat, zVec2U16 _vDim, zFlagResTexUse _CreationFlags)
 {
-	static zenArrayStatic<zenU8> aEmpty(zenUInt(0));
+	static zArrayStatic<zU8> aEmpty(zUInt(0));
 	return EExp::CreateGfxTexture2D(_eFormat, _CreationFlags, _vDim, aEmpty);
 }
 
-GfxTexture2D GfxTexture2D::Create(awconst::eTextureFormat _eFormat, zenVec2U16 _vDim, const zenArrayBase<zenU8>& _aRawData, awFlagResTexCreate _CreationFlags)
+zGfxTexture2D zGfxTexture2D::Create(zenConst::eTextureFormat _eFormat, zVec2U16 _vDim, const zArrayBase<zU8>& _aRawData, zFlagResTexUse _CreationFlags)
 {
 	return EExp::CreateGfxTexture2D(_eFormat, _CreationFlags, _vDim, _aRawData);
 }
 
-GfxRenderTarget GfxRenderTarget::Create(awconst::eTextureFormat _eFormat, zenVec2U16 _vDim, bool _bSrgb)
+zGfxRenderTarget zGfxRenderTarget::Create(zenConst::eTextureFormat _eFormat, zVec2U16 _vDim, bool _bSrgb)
 {
 	return EExp::CreateGfxRenderTarget(_eFormat, _vDim, _bSrgb);
 }
 
-GfxVertex GfxVertex::Create(const zenArrayBase<GfxVertex::Stream>& _aStreams, zenU32 _uCreationFlags)
+zGfxVertex zGfxVertex::Create(const zArrayBase<zGfxVertex::Stream>& _aStreams, zFlagResUse _ResourceUse)
 {
-	return EExp::CreateGfxVertex(_aStreams, _uCreationFlags);
+	return EExp::CreateGfxVertex(_aStreams, _ResourceUse);
 }
 
-GfxIndex GfxIndex::Create(const zenArrayBase<zenU16>& _Indices, awconst::ePrimitiveType _ePrimitiveType)
+zGfxIndex zGfxIndex::Create(const zArrayBase<zU16>& _Indices, zenConst::ePrimitiveType _ePrimitiveType)
 {
 	return EExp::CreateGfxIndexBuffer(_Indices, _ePrimitiveType);
 }
 
-GfxIndex GfxIndex::Create(const zenArrayBase<zenU32>& _Indices, awconst::ePrimitiveType _ePrimitiveType)
+zGfxIndex zGfxIndex::Create(const zArrayBase<zU32>& _Indices, zenConst::ePrimitiveType _ePrimitiveType)
 {
 	return EExp::CreateGfxIndexBuffer(_Indices, _ePrimitiveType);
 }
@@ -39,82 +39,82 @@ GfxIndex GfxIndex::Create(const zenArrayBase<zenU32>& _Indices, awconst::ePrimit
 //=================================================================================================
 // GFX VERTEX
 //=================================================================================================
-zenU8* GfxVertex::Lock()
+zU8* zGfxVertex::Lock()
 {
 	ZENAssertMsg(mpResource, "No valid resource assigned");
-	ERes::GfxVertex* pVertex = static_cast<ERes::GfxVertex*>(mpResource);
+	ERes::zGfxVertex* pVertex = static_cast<ERes::zGfxVertex*>(mpResource);
 	return pVertex->Lock();
 }
 	
-void GfxVertex::Unlock()
+void zGfxVertex::Unlock()
 {
 	ZENAssertMsg(mpResource, "No valid resource assigned");
-	ERes::GfxVertex* pVertex = static_cast<ERes::GfxVertex*>(mpResource);
+	ERes::zGfxVertex* pVertex = static_cast<ERes::zGfxVertex*>(mpResource);
 	return pVertex->Unlock();
 }
 
 //=================================================================================================
 // GFX INDEX
 //=================================================================================================
-zenU8* GfxIndex::Lock()
+zU8* zGfxIndex::Lock()
 {
 	ZENAssertMsg(mpResource, "No valid resource assigned");
-	ERes::GfxIndex* pIndex = static_cast<ERes::GfxIndex*>(mpResource);
+	ERes::zGfxIndex* pIndex = static_cast<ERes::zGfxIndex*>(mpResource);
 	return pIndex->Lock();
 }
 
-void GfxIndex::Unlock()
+void zGfxIndex::Unlock()
 {
 	ZENAssertMsg(mpResource, "No valid resource assigned");
-	ERes::GfxIndex* pIndex = static_cast<ERes::GfxIndex*>(mpResource);
+	ERes::zGfxIndex* pIndex = static_cast<ERes::zGfxIndex*>(mpResource);
 	return pIndex->Unlock();
 }
 
 //=================================================================================================
 // GFX TEXTURE2D
 //=================================================================================================
-const zenVec2U16& GfxTexture2D::GetDim()
+const zVec2U16& zGfxTexture2D::GetDim()
 {
 	ZENAssertMsg(mpResource, "No valid resource assigned");
-	ERes::GfxTexture2D* pTexture = static_cast<ERes::GfxTexture2D*>(mpResource);
+	ERes::zGfxTexture2D* pTexture = static_cast<ERes::zGfxTexture2D*>(mpResource);
 	return pTexture->GetDim();
 }
 
 //=================================================================================================
 // GFX RENDER TARGET
 //=================================================================================================
-bool GfxRenderTarget::IsDepth()
+bool zGfxRenderTarget::IsDepth()
 {
 	ZENAssertMsg(mpResource, "No valid resource assigned");
-	ERes::GfxRenderTarget* pRenderTarget = static_cast<ERes::GfxRenderTarget*>(mpResource);
+	ERes::zGfxRenderTarget* pRenderTarget = static_cast<ERes::zGfxRenderTarget*>(mpResource);
 	return pRenderTarget->IsDepth();
 }
 
-const zenVec2U16& GfxRenderTarget::GetDim()
+const zVec2U16& zGfxRenderTarget::GetDim()
 {
 	ZENAssertMsg(mpResource, "No valid resource assigned");
-	ERes::GfxRenderTarget* pRenderTarget = static_cast<ERes::GfxRenderTarget*>(mpResource);
+	ERes::zGfxRenderTarget* pRenderTarget = static_cast<ERes::zGfxRenderTarget*>(mpResource);
 	return pRenderTarget->GetDim();
 }
 
-void GfxRenderTarget::Clear(const zenVec4F& _vRGBA)
+void zGfxRenderTarget::Clear(const zVec4F& _vRGBA)
 {
 	ZENAssertMsg(mpResource, "No valid resource assigned");
-	ERes::GfxRenderTarget* pRenderTarget = static_cast<ERes::GfxRenderTarget*>(mpResource);
+	ERes::zGfxRenderTarget* pRenderTarget = static_cast<ERes::zGfxRenderTarget*>(mpResource);
 	pRenderTarget->Clear(_vRGBA);
 }
 
-void GfxRenderTarget::Clear(float _fDepth, zenU8 _uStencil, bool _bClearDepth, bool _bClearStencil)
+void zGfxRenderTarget::Clear(float _fDepth, zU8 _uStencil, bool _bClearDepth, bool _bClearStencil)
 {
 	ZENAssertMsg(mpResource, "No valid resource assigned");
-	ERes::GfxRenderTarget* pRenderTarget = static_cast<ERes::GfxRenderTarget*>(mpResource);
+	ERes::zGfxRenderTarget* pRenderTarget = static_cast<ERes::zGfxRenderTarget*>(mpResource);
 	pRenderTarget->Clear(_fDepth, _uStencil, _bClearDepth, _bClearStencil);
 }
 
-GfxTexture2D GfxRenderTarget::GetTexture2D()
+zGfxTexture2D zGfxRenderTarget::GetTexture2D()
 {
 	ZENAssertMsg(mpResource, "No valid resource assigned");
-	ERes::GfxRenderTarget* pRenderTarget = static_cast<ERes::GfxRenderTarget*>(mpResource);
+	ERes::zGfxRenderTarget* pRenderTarget = static_cast<ERes::zGfxRenderTarget*>(mpResource);
 	return pRenderTarget->GetTexture2D();
 }
 

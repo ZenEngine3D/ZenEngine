@@ -2,7 +2,7 @@
 #ifndef __zenBase_Type_Constant_Version_h__
 #define __zenBase_Type_Constant_Version_h__
 
-namespace zen { namespace awconst {
+namespace zen { namespace zenConst {
 
 enum eEngineVersion
 {

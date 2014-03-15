@@ -1,9 +1,9 @@
 #include "libZenEngine.h"
-
+/*
 namespace zen { namespace zenType {
-	zenU32 zenRender2D::SFillQuad(zenVec2DSimple* pxVB, zenS32 x1, zenS32 y1, zenS32 x2, zenS32 y2, zenU32 z, zenU32 uColour, const awRegionS32& xClipArea)
+	zU32 zenRender2D::SFillQuad(zVec2DSimple* pxVB, zS32 x1, zS32 y1, zS32 x2, zS32 y2, zU32 z, zU32 uColour, const zRegionS32& xClipArea)
 	{
-		const zenS32 px1(xClipArea.mX1), py1(xClipArea.mY1), px2(xClipArea.mX2), py2(xClipArea.mY2);
+		const zS32 px1(xClipArea.mX1), py1(xClipArea.mY1), px2(xClipArea.mX2), py2(xClipArea.mY2);
 
 		if(!(x2 < px1 || y2 < py1 || x1 > px2 || y1 > py2))
 		{
@@ -21,17 +21,17 @@ namespace zen { namespace zenType {
 		return 0;
 	}
 
-	zenU32 zenRender2D::SFillQuad(zenVec2DFull*   pxVB, zenS32 x1, zenS32 y1, zenS32 x2, zenS32 y2, zenS32 u1, zenS32 v1, zenS32 u2, zenS32 v2, zenU32 uColour, zenU32 uMask, zenU32 z, const awRegionS32& xClipArea)
+	zU32 zenRender2D::SFillQuad(zVec2DFull*   pxVB, zS32 x1, zS32 y1, zS32 x2, zS32 y2, zS32 u1, zS32 v1, zS32 u2, zS32 v2, zU32 uColour, zU32 uMask, zU32 z, const zRegionS32& xClipArea)
 	{
-		const zenS32 px1(xClipArea.mX1), py1(xClipArea.mY1), px2(xClipArea.mX2), py2(xClipArea.mY2);
+		const zS32 px1(xClipArea.mX1), py1(xClipArea.mY1), px2(xClipArea.mX2), py2(xClipArea.mY2);
 
 		if(!(x2 < px1 || y2 < py1 || x1 > px2 || y1 > py2))
 		{
-			zenS32 uw = u2 - u1, vh = v2 - v1;
-			if(x1 < px1)		{x1 = px1; zenS32 w = x2 - x1; if(w < uw) u1 += uw - w;}
-			else if(x2 > px2)	{x2 = px2; zenS32 w = x2 - x1; if(w < uw) u2 -= uw - w;}
-			if(y1 < py1)		{y1 = py1; zenS32 h = y2 - y1; if(h < vh) v1 += vh - h;}
-			else if(y2 > py2)	{y2 = py2; zenS32 h = y2 - y1; if(h < vh) v2 -= vh - h;}
+			zS32 uw = u2 - u1, vh = v2 - v1;
+			if(x1 < px1)		{x1 = px1; zS32 w = x2 - x1; if(w < uw) u1 += uw - w;}
+			else if(x2 > px2)	{x2 = px2; zS32 w = x2 - x1; if(w < uw) u2 -= uw - w;}
+			if(y1 < py1)		{y1 = py1; zS32 h = y2 - y1; if(h < vh) v1 += vh - h;}
+			else if(y2 > py2)	{y2 = py2; zS32 h = y2 - y1; if(h < vh) v2 -= vh - h;}
 			//TopLeft, TopRight, BottomRight,BottomLeft
 			pxVB[0].Set(x1, y1, z, uColour, uMask, u1, v1);
 			pxVB[1].Set(x2, y1, z, uColour, uMask, u2, v1);
@@ -48,3 +48,4 @@ namespace zen { namespace zenType {
 	}
 
 }}  //namespace zen, Type 
+*/

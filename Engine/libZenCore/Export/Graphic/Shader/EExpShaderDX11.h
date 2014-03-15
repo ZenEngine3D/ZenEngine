@@ -4,14 +4,14 @@
 
 namespace EExp
 {	
-	//! @todo Move ShaderParamDef here instead of ShaderBinding?
+	//! @todo Clean: Move ShaderParamDef here instead of ShaderBinding?
 	class SerialShader_DX11 : public SerialShader_Base
 	{
 	ZENClassDeclare(SerialShader_DX11, SerialShader_Base)
 	public:
 		struct SerialUseOnly
 		{
-			zenArrayStatic<zenU8>	maCompiledShader;			
+			zArrayStatic<zU8>	maCompiledShader;			
 		};
 		SerialUseOnly	mSerialCommon;
 	protected:
@@ -48,7 +48,7 @@ namespace EExp
 
 		struct SerialUseOnly
 		{
-			zenResID			mShaderInputSignatureID;
+			zResID			mShaderInputSignatureID;
 		};
 		SerialUseOnly				mSerial;
 

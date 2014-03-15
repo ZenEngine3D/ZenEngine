@@ -7,73 +7,73 @@ namespace zen { namespace zenRes {
 	//=============================================================================================
 	//! @class	Base class for all resources that can be created and used
 	//=============================================================================================
-	class awResource : public zenRefCounted<false>
+	class zResource : public zRefCounted
 	{
-	ZENClassDeclare(awResource, zenRefCounted<false>)
+	ZENClassDeclare(zResource, zRefCounted)
 	public:									
-		inline const zenResID&	GetResID()const;	//!< @brief return resource ID of resource
-		inline bool				IsValid()const;		//!< @brief true if the object is a valid resource
+		ZENInline const zResID&	GetResID()const;	//!< @brief return resource ID of resource
+		ZENInline bool			IsValid()const;		//!< @brief true if the object is a valid resource
 	protected:
-		inline					awResource();
-		zenResID				mResID;
+		ZENInline				zResource();
+		zResID					mResID;
 	};
 
 	//=============================================================================================
 	//! @class	SmartPointer for resource. Uses the resource refcounting mechanics, and check 
 	//!			if resource that we assign, is part of the supported resource type.
 	//=============================================================================================	
-	class awResourceRef
+	class zResourceRef
 	{
-	ZENClassDeclareNoParent(awResourceRef)
+	ZENClassDeclareNoParent(zResourceRef)
 	public:
-		inline				awResourceRef();
-		inline				awResourceRef(awResource* _pResource);
-		inline				awResourceRef(awFlagResType _SupportedTypes);		
-		inline				awResourceRef(awFlagResType _SupportedTypes, awResource* _pResource);
-							awResourceRef(awFlagResType _SupportedTypes, zenResID _ResourceID);
+		ZENInline			zResourceRef();
+		ZENInline			zResourceRef(zResource* _pResource);
+		ZENInline			zResourceRef(zFlagResType _SupportedTypes);		
+		ZENInline			zResourceRef(zFlagResType _SupportedTypes, zResource* _pResource);
+							zResourceRef(zFlagResType _SupportedTypes, zResID _ResourceID);
 		
-		inline const		awResourceRef&	operator=(awResource* _pResource);
-		inline const		awResourceRef&	operator=(const awResourceRef& _ResourceRef);
-		 const				awResourceRef&	operator=(const zenResID& _ResourceID);
+		ZENInline const		zResourceRef&	operator=(zResource* _pResource);
+		ZENInline const		zResourceRef&	operator=(const zResourceRef& _ResourceRef);
+		 const				zResourceRef&	operator=(const zResID& _ResourceID);
 	
-		inline bool			IsValid()const;
-		inline zenResID		GetResID()const;
-		inline bool			operator==(const awResourceRef& _rCmp)const;
-		inline bool			operator!=(const awResourceRef& _rCmp)const;
-		inline				operator zenResID()const;
+		ZENInline bool		IsValid()const;
+		ZENInline zResID	GetResID()const;
+		ZENInline bool		operator==(const zResourceRef& _rCmp)const;
+		ZENInline bool		operator!=(const zResourceRef& _rCmp)const;
+		ZENInline			operator zResID()const;
 		
 	protected:
-		inline void			SetResource(awResource* _pResource);
-		awResource*			mpResource;
-		ZENDbgCode( awFlagResType mSupportedTypeMask; )
+		ZENInline void		SetResource(zResource* _pResource);
+		zResource*			mpResource;
+		ZENDbgCode( zFlagResType mSupportedTypeMask; )
 	};
 
 	//=============================================================================================
-	//! @class	Specialized version of awResourceRef, that supports 1 resource type for this
+	//! @class	Specialized version of zResourceRef, that supports 1 resource type for this
 	//!			object, when checking validity of resource type
 	//=============================================================================================	
-	template<awconst::eResType TType>
-	class awResourceTypedRef : public awResourceRef
+	template<zenConst::eResType TType>
+	class zResourceTypedRef : public zResourceRef
 	{
-	ZENClassDeclare(awResourceTypedRef, awResourceRef)
+	ZENClassDeclare(zResourceTypedRef, zResourceRef)
 	public:
-		inline				awResourceTypedRef();
-		inline				awResourceTypedRef(awResource* _pResource);
-		inline				awResourceTypedRef(zenResID _ResourceID);
+		ZENInline				zResourceTypedRef();
+		ZENInline				zResourceTypedRef(zResource* _pResource);
+		ZENInline				zResourceTypedRef(zResID _ResourceID);
 	};
 
 	//=============================================================================================
-	//! @class	Specialized version of awResourceRef, that supports 2 resource type for this
+	//! @class	Specialized version of zResourceRef, that supports 2 resource type for this
 	//!			object, when checking validity of resource type
 	//=============================================================================================	
-	template<awconst::eResType TType1, awconst::eResType TType2>
-	class awResourceTyped2Ref : public awResourceRef
+	template<zenConst::eResType TType1, zenConst::eResType TType2>
+	class zResourceTyped2Ref : public zResourceRef
 	{
-	ZENClassDeclare(awResourceTyped2Ref, awResourceRef)
+	ZENClassDeclare(zResourceTyped2Ref, zResourceRef)
 	public:
-		inline				awResourceTyped2Ref();		
-		inline				awResourceTyped2Ref(awResource* _pResource);
-		inline				awResourceTyped2Ref(zenResID _ResourceID);
+		ZENInline				zResourceTyped2Ref();		
+		ZENInline				zResourceTyped2Ref(zResource* _pResource);
+		ZENInline				zResourceTyped2Ref(zResID _ResourceID);
 	};
 
 }} // namespace zen, zenRes

@@ -15,10 +15,10 @@ class AWThread
 
 protected:
 	//pointer to an object's method
-	typedef zenU32 (T::* Method)(void);
+	typedef zU32 (T::* Method)(void);
 
 public:
-	explicit AWThread(T* pObject, zenU32 ( T::* method)(void))
+	explicit AWThread(T* pObject, zU32 ( T::* method)(void))
 	{
 		mpObject = pObject;
 		mMethod = method;
@@ -29,21 +29,21 @@ public:
 
 	virtual bool Start() { return false; }
 	virtual bool Interrupt() { return false; }
-	virtual void Sleep(zenU32 _duration) { }
+	virtual void Sleep(zU32 _duration) { }
 	virtual bool IsInterrupted()  { return false; }
 	virtual bool IsRunning()  { return false; }
 
 	virtual void Join() { }		//!< Blocks the calling thread until this thread has stopped.
 	virtual void Detach() { }
 
-	inline zenU32 GetThreadID()const { return mThreadID; }
+	ZENInline zU32 GetThreadID()const { return mThreadID; }
 
 protected:
-	zenU32 mThreadID;
+	zU32 mThreadID;
 	T* mpObject;
 	Method mMethod;
 
-	static zenU32 Run(void* pThreadObj)
+	static zU32 Run(void* pThreadObj)
 	{
 		AWThread<T>* pThread = (AWThread<T>*)(pThreadObj);
 		return (pThread->mpObject->*pThread->mMethod)();

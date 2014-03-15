@@ -25,11 +25,11 @@
 #ifndef AW_BUILD_FINAL
 	#define	AW_BUILD_FINAL				0
 #endif
-#ifndef AW_ENGINEGAME
-	#define AW_ENGINEGAME				0
+#ifndef ZEN_ENGINEGAME
+	#define ZEN_ENGINEGAME				0
 #endif
-#ifndef AW_ENGINETOOL
-	#define AW_ENGINETOOL				0
+#ifndef ZEN_ENGINETOOL
+	#define ZEN_ENGINETOOL				0
 #endif
 #ifndef AW_PLATFORM_PC
 	#define AW_PLATFORM_PC				0

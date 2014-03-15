@@ -6,7 +6,7 @@ namespace ERes
 {
 class GfxShaderParamDef_DX11 : public Resource
 {
-AWResourceDeclare(GfxShaderParamDef_DX11, EExp::SerialGfxShaderParamDef_DX11, awconst::keResType_GfxShaderParamDef)
+ZENResourceDeclare(GfxShaderParamDef_DX11, EExp::SerialGfxShaderParamDef_DX11, zenConst::keResType_GfxShaderParamDef)
 public:
 	virtual bool				ResourceInit();
 };
@@ -18,7 +18,7 @@ class GfxShaderParam_DX11 : public Resource
 		GfxShaderParamDefRef		mpParentShaderParamDef;
 		ID3D11Buffer*				mpBufferBinding;
 	};
-AWResourceDeclare(GfxShaderParam_DX11, InstanceInfo, awconst::keResType_GfxShaderParam)
+ZENResourceDeclare(GfxShaderParam_DX11, InstanceInfo, zenConst::keResType_GfxShaderParam)
 public:
 	virtual						~GfxShaderParam_DX11();
 	virtual bool				ResourceInit();
@@ -27,13 +27,13 @@ public:
 // Common to all ShaderParam
 public:	
 	void						Bind(EExp::eShaderStage _eShaderStage)const;	
-	void						SetValue(const zenRes::awShaderParameter& _Value);	
+	void						SetValue(const zenRes::zShaderParameter& _Value);	
 	void						SetValue(const EExp::ParameterBase& _Value);	
-	void						SetValue(const zenHash32& _hParamName, const float& _fValue);
-	void						SetValue(const zenHash32& _hParamName, const zenVec2F& _vValue);
-	void						SetValue(const zenHash32& _hParamName, const zenVec3F& _vValue);
-	void						SetValue(const zenHash32& _hParamName, const zenVec4F& _vValue);
-	void						SetValue(const zenHash32& _hParamName, const zenMath::Matrix& _matValue);
+	void						SetValue(const zHash32& _hParamName, const float& _fValue);
+	void						SetValue(const zHash32& _hParamName, const zVec2F& _vValue);
+	void						SetValue(const zHash32& _hParamName, const zVec3F& _vValue);
+	void						SetValue(const zHash32& _hParamName, const zVec4F& _vValue);
+	void						SetValue(const zHash32& _hParamName, const zenMath::Matrix& _matValue);
 //-----------------------------------------------------------------------------
 
 protected:

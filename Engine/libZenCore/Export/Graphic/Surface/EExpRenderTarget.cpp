@@ -18,16 +18,16 @@ namespace EExp
 	//! @param _eFormat			- Format of raw data
 	//! @param _vDim			- Width/Height of input image
 	//! @param _bRgb			- If we're rendering to a srgb target	
-	//! @return 				- Unique zenResID of created Resource
+	//! @return 				- Unique zResID of created Resource
 	//=================================================================================================
-	zenResID CreateGfxRenderTarget(awconst::eTextureFormat _eFormat, zenVec2U16 _vDim, bool _bSrgb)
+	zResID CreateGfxRenderTarget(zenConst::eTextureFormat _eFormat, zVec2U16 _vDim, bool _bSrgb)
 	{		
-		static zenMem::AllocatorPool sMemPool("Pool RenderTarget", sizeof(SerialRenderTarget_Base::ExportInfo), 1, 5 );
+		static zenMem::zAllocatorPool sMemPool("Pool RenderTarget", sizeof(SerialRenderTarget_Base::ExportInfo), 1, 5 );
 		SerialRenderTarget_Base::ExportInfo* pExportInfo	= zenNew(&sMemPool) SerialRenderTarget_Base::ExportInfo;		
 		pExportInfo->meFormat								= _eFormat;
 		pExportInfo->mvDim									= _vDim;
 		pExportInfo->mbSRGB									= _bSrgb;
-		return EMgr::Export.CreateItem( zenResID::kePlatformType_GFX, awconst::keResType_GfxRenderTarget, pExportInfo );
+		return EMgr::Export.CreateItem( zResID::kePlatformType_GFX, zenConst::keResType_GfxRenderTarget, pExportInfo );
 	}
 
 }

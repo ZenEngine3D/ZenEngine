@@ -3,10 +3,10 @@
 namespace ERes
 {	
 
-//! @todo keep track of this
-zenList2x Resource::spResourceActive[awconst::keResType__Count];
-zenList2x Resource::spActiveToDelete[3];
-zenUInt Resource::suDeleteIndex(0);
+//! @todo Missing: keep track of this
+zList2x Resource::spResourceActive[zenConst::keResType__Count];
+zList2x Resource::spActiveToDelete[3];
+zUInt Resource::suDeleteIndex(0);
 
 //=================================================================================
 Resource::Resource()
@@ -42,7 +42,7 @@ bool Resource::ResourceCreate( EExp::ExportItem& _SerialItem, EExp::ExportInfoBa
 	return false;
 }
 
-//! @todo : plan this better
+//! @todo Missing: Plan this better. Keep list of live resources
 bool Resource::ResourceCreateRuntime()
 {
 	if( EMgr::Resources.Add(this).IsValid() )

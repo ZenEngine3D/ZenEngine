@@ -9,9 +9,9 @@ public:
 					~WndAssetBrowser();
 
 						
-	inline bool		IsViewIcon()const	{ return mpRdioAssetView[0]->GetValue(); }
-	inline bool		IsViewList()const	{ return mpRdioAssetView[1]->GetValue(); }
-	inline bool		IsViewDetail()const	{ return mpRdioAssetView[2]->GetValue(); }
+	ZENInline bool		IsViewIcon()const	{ return mpRdioAssetView[0]->GetValue(); }
+	ZENInline bool		IsViewList()const	{ return mpRdioAssetView[1]->GetValue(); }
+	ZENInline bool		IsViewDetail()const	{ return mpRdioAssetView[2]->GetValue(); }
 protected:	
 	void			CreateSectionType();
 	void			CreateSectionPackage();
@@ -22,7 +22,7 @@ protected:
 	void			UpdateAssetList();
 	void			UpdatePackageChecked(wxTreeListItem _ParentTreeID);
 	void			UpdateAssetCount();
-
+	void			ClearAssetList();
 	DECLARE_EVENT_TABLE()
 	void			OnAssetViewChange(wxCommandEvent& event);
 	void			OnAssetViewActivated(wxListEvent& event);
@@ -53,10 +53,10 @@ protected:
 	wxSizer*						mpSizerAsset;	
 	wxImageList*					mpIconAsset;			//!< Icon array for each resource preview
 	wxImageList*					mpIconPackage;			//!< Icon array for packages
-	zenArrayStatic<zeAss::Package*>	maPackageSelected;		//!< List of selected package to display content for
-	zenMap<zenUInt>::Key32			mdCountPerPackage;		//!< Updated on 'UpdateAssetList()' to reflect number of asset items per package
-	zenArrayStatic<zenUInt>			maCountPerType;			//!< Updated on 'UpdateAssetList()' to reflect number of asset items per type
-	zenU64							mAssetTypeMask;			//!< Mask of selected Asset Type	
+	zArrayStatic<zenAss::zPackage>	maPackageSelected;		//!< List of selected package to display content for
+	zMap<zUInt>::Key32				mdCountPerPackage;		//!< Updated on 'UpdateAssetList()' to reflect number of asset items per package
+	zArrayStatic<zUInt>				maCountPerType;			//!< Updated on 'UpdateAssetList()' to reflect number of asset items per type
+	zenFlagAssetType				mAssetTypeMask;			//!< Mask of selected Asset Type	
 };
 
 #endif

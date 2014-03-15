@@ -8,13 +8,13 @@ namespace FWnd
 	{
 	}
 
-	void Viewport_PC::Initialize(HWND _hWndHandle, zenVec2U16 _vSize)
+	void Viewport_PC::Initialize(HWND _hWndHandle, zVec2U16 _vSize)
 	{
 		mhMainWindow	= _hWndHandle;
 		mvSize			= _vSize;
 	}
 	*/
-	Window::Window(const WCHAR* _zWindowName, zenVec2U16 _ClientSize)
+	Window::Window(const WCHAR* _zWindowName, zVec2U16 _ClientSize)
 	: mhMainWindowThread(NULL)
 	, mhWindowInstance(NULL)
 	, meMainWindowThreadStatus(keThread_Ended)
@@ -47,7 +47,7 @@ namespace FWnd
 		case WM_DESTROY:{ pParentWindow->meMainWindowThreadStatus = keThread_Ended; break; }
 		case WM_SIZING:	{ 
 			RECT* pSize = (RECT*)lParam; 
-			pParentWindow->SetSize(zenVec2U16(zenU16(pSize->right-pSize->left), zenU16(pSize->bottom-pSize->top)));
+			pParentWindow->SetSize(zVec2U16(zU16(pSize->right-pSize->left), zU16(pSize->bottom-pSize->top)));
 			break; }
 		case WM_PAINT:	{
 				PAINTSTRUCT ps;

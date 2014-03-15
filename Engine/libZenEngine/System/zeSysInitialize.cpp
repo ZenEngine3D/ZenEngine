@@ -20,7 +20,7 @@ bool StartupEngine()
 	bResult &= EMgr::SerialItems.Startup();	
 	bResult &= EMgr::GfxState.Startup();
 	bResult &= EMgr::GfxRender.Startup();
-#if AW_ENGINETOOL
+#if ZEN_ENGINETOOL
 	bResult &= zeMgr::Asset.Startup();
 #endif
 	if( bResult )	printf("\nEngine Initialization... Success");
@@ -37,7 +37,7 @@ bool StartupEngine()
 bool ShutdownEngine()
 {
 	bool bResult(true);	
-#if AW_ENGINETOOL
+#if ZEN_ENGINETOOL
 	bResult &= zeMgr::Asset.Shutdown();
 #endif
 	bResult &= EMgr::GfxRender.Shutdown();

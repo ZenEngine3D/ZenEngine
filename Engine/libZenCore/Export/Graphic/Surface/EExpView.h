@@ -10,26 +10,26 @@ namespace EExp
 	public:		
 		struct ExportInfo : public EExp::ExportInfoBase
 		{				
-			zenArrayStatic<zenResID>	maTargetColorID;
-			zenResID				mTargetDepthID;
-			zenVec2U16						mvOrigin;
-			zenVec2U16						mvDim;
+			zArrayStatic<zResID>	maTargetColorID;
+			zResID				mTargetDepthID;
+			zVec2U16						mvOrigin;
+			zVec2U16						mvDim;
 		};
 		struct SerialUseOnly
 		{							
-			zenArrayStatic<zenResID>	maTargetColorID;
-			zenResID				mTargetDepthID;
+			zArrayStatic<zResID>	maTargetColorID;
+			zResID				mTargetDepthID;
 		};
 		virtual bool						ExportStart();
-		static zenResID			CallbackGetItemID(awconst::eResPlatform _ePlatform, awconst::eResType _eType, awconst::eResSource _eSource, const EExp::ExportInfoBase* _pExportInfo, bool& _bExistOut);
+		static zResID			CallbackGetItemID(zenConst::eResPlatform _ePlatform, zenConst::eResType _eType, zenConst::eResSource _eSource, const EExp::ExportInfoBase* _pExportInfo, bool& _bExistOut);
 		
 		SerialUseOnly						mSerial;
-		zenVec2U16							mvOrigin;
-		zenVec2U16							mvDim;
+		zVec2U16							mvOrigin;
+		zVec2U16							mvDim;
 	};
 
-	zenResID CreateGfxView( const zenResID& _TargetColorID, const zenResID& _TargetDepthID, const zenVec2U16& _vDim=zenVec2U16(9999,9999), const zenVec2U16& _vOrigin=zenVec2U16(0,0) );
-	zenResID CreateGfxView( const zenArrayBase<zenResID>& _aTargetColorID, const zenResID& _TargetDepthID, const zenVec2U16& _vDim=zenVec2U16(9999,9999), const zenVec2U16& _vOrigin=zenVec2U16(0,0) );
+	zResID CreateGfxView( const zResID& _TargetColorID, const zResID& _TargetDepthID, const zVec2U16& _vDim=zVec2U16(9999,9999), const zVec2U16& _vOrigin=zVec2U16(0,0) );
+	zResID CreateGfxView( const zArrayBase<zResID>& _aTargetColorID, const zResID& _TargetDepthID, const zVec2U16& _vDim=zVec2U16(9999,9999), const zVec2U16& _vOrigin=zVec2U16(0,0) );
 }
 
 

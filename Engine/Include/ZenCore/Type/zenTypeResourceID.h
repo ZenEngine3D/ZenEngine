@@ -4,7 +4,8 @@
 
 namespace zen { namespace zenType {
 
-	//! @todo Move this to state files
+	//! @todo Clean: Move this to state files
+
 	class awBlendDesc
 	{
 	ZENClassDeclareNoParent(awBlendDesc)
@@ -14,22 +15,22 @@ namespace zen { namespace zenType {
 			awRTBlendDesc(void)
 				: mbBlendEnable(false)
 				, muRenderTargetWriteMask(0xFF)
-				, meSrcBlend(awconst::keBlend_SrcColor)
-				, meDestBlend(awconst::keBlend_InvSrcColor)
-				, meBlendOp(awconst::keBlendOp_Add)
-				, meSrcBlendAlpha(awconst::keBlend_SrcColor)
-				, meDestBlendAlpha(awconst::keBlend_InvSrcColor)
-				, meBlendOpAlpha(awconst::keBlendOp_Add)
+				, meSrcBlend(zenConst::keBlend_SrcColor)
+				, meDestBlend(zenConst::keBlend_InvSrcColor)
+				, meBlendOp(zenConst::keBlendOp_Add)
+				, meSrcBlendAlpha(zenConst::keBlend_SrcColor)
+				, meDestBlendAlpha(zenConst::keBlend_InvSrcColor)
+				, meBlendOpAlpha(zenConst::keBlendOp_Add)
 			{
 			}
 			bool				mbBlendEnable;
-			zenU8				muRenderTargetWriteMask;
-			awconst::eBlend		meSrcBlend;
-			awconst::eBlend		meDestBlend;
-			awconst::eBlendOp	meBlendOp;
-			awconst::eBlend		meSrcBlendAlpha;
-			awconst::eBlend		meDestBlendAlpha;
-			awconst::eBlendOp	meBlendOpAlpha;
+			zU8				muRenderTargetWriteMask;
+			zenConst::eBlend		meSrcBlend;
+			zenConst::eBlend		meDestBlend;
+			zenConst::eBlendOp	meBlendOp;
+			zenConst::eBlend		meSrcBlendAlpha;
+			zenConst::eBlend		meDestBlendAlpha;
+			zenConst::eBlendOp	meBlendOpAlpha;
 		};
 
 		AWForceInline awBlendDesc(void)
@@ -42,7 +43,7 @@ namespace zen { namespace zenType {
 		bool			mbIndependentBlendEnable;
 		awRTBlendDesc	mxRenderTarget[ 8 ];
 	};
-
+	ZENSupportMemcopy(awBlendDesc);
 	class awDepthStencilDesc
 	{
 	ZENClassDeclareNoParent(awDepthStencilDesc)
@@ -50,16 +51,16 @@ namespace zen { namespace zenType {
 		struct DepthStencilOp
 		{
 			DepthStencilOp(void)
-				: meStencilFailOp(awconst::keStencilOp_Keep)
-				, meStencilDepthFailOp(awconst::keStencilOp_Keep)
-				, meStencilPassOp(awconst::keStencilOp_Keep)
-				, meStencilFunc(awconst::keComparisonFunc_Always)
+				: meStencilFailOp(zenConst::keStencilOp_Keep)
+				, meStencilDepthFailOp(zenConst::keStencilOp_Keep)
+				, meStencilPassOp(zenConst::keStencilOp_Keep)
+				, meStencilFunc(zenConst::keComparisonFunc_Always)
 			{
 			}
-			awconst::eStencilOp			meStencilFailOp;
-			awconst::eStencilOp			meStencilDepthFailOp;
-			awconst::eStencilOp			meStencilPassOp;
-			awconst::eComparisonFunc	meStencilFunc;
+			zenConst::eStencilOp			meStencilFailOp;
+			zenConst::eStencilOp			meStencilDepthFailOp;
+			zenConst::eStencilOp			meStencilPassOp;
+			zenConst::eComparisonFunc	meStencilFunc;
 		};
 
 		awDepthStencilDesc(void)
@@ -68,25 +69,27 @@ namespace zen { namespace zenType {
 			, mbStencilEnable(false)
 			, muStencilReadMask(0xFF)
 			, muStencilWriteMask(0xFF)
-			, meDepthFunc(awconst::keComparisonFunc_Always)
+			, meDepthFunc(zenConst::keComparisonFunc_Always)
 		{
 		}
 
 		bool						mbDepthEnable;
 		bool						mbDepthWrite;
 		bool						mbStencilEnable;
-		zenU8						muStencilReadMask;
-		zenU8						muStencilWriteMask;
-		awconst::eComparisonFunc	meDepthFunc;
+		zU8						muStencilReadMask;
+		zU8						muStencilWriteMask;
+		zenConst::eComparisonFunc	meDepthFunc;
 		DepthStencilOp				mxFrontFace;
 		DepthStencilOp				mxBackFace;
 	};
+	ZENSupportMemcopy(awDepthStencilDesc);
 
-	class zenResID
+
+	class zResID
 	{
-	ZENClassDeclareNoParent(zenResID)
+	ZENClassDeclareNoParent(zResID)
 	public:
-		typedef zenHash32	NameHash;
+		typedef zHash32	NameHash;
 
 		enum ePlatformType
 		{
@@ -94,25 +97,25 @@ namespace zen { namespace zenType {
 			kePlatformType_GFX,
 			kePlatformType__Count,
 		};
-		zenResID():mhName(""), meType(awconst::keResType__Invalid), mePlatform(awconst::keResPlatform__Invalid), meSource(awconst::keResSource_Runtime){}
-		zenResID(NameHash _hName, awconst::eResPlatform _ePlatform, awconst::eResType _eType, awconst::eResSource _eSource):mhName(_hName), meType(_eType), mePlatform(_ePlatform), meSource(_eSource){}								
+		zResID():mhName(""), meType(zenConst::keResType__Invalid), mePlatform(zenConst::keResPlatform__Invalid), meSource(zenConst::keResSource_Runtime){}
+		zResID(NameHash _hName, zenConst::eResPlatform _ePlatform, zenConst::eResType _eType, zenConst::eResSource _eSource):mhName(_hName), meType(_eType), mePlatform(_ePlatform), meSource(_eSource){}								
 
-		inline const NameHash&			Name()const							{ return mhName; }
-		inline awconst::eResType		Type()const							{ return static_cast<awconst::eResType>(meType); }
-		inline awconst::eResPlatform	Platform()const						{ return static_cast<awconst::eResPlatform>(mePlatform); } 
-		inline awconst::eResSource		Source()const						{ return static_cast<awconst::eResSource>(meSource); }
-		inline zenU64					HashID()const						{ return muHashID; }
-		inline void						SetName(NameHash _hName)			{ mhName = _hName; }
-		inline void						SetType(awconst::eResType _eResType)			{ meType = _eResType; }
-		inline void						SetPlatform(awconst::eResPlatform _ePlatform)	{ mePlatform = _ePlatform; }
-		inline void						SetSource(awconst::eResSource _eSource)			{ meSource = _eSource; }
-		inline bool						IsRuntime()const					{ return meSource==awconst::keResSource_Runtime; }
-		inline bool						IsExport()const						{ return meSource==awconst::keResSource_Offline; }
-		inline bool						IsLoaded()const						{ return meSource==awconst::keResSource_Loaded; }
-		inline bool						IsValid()const						{ return meType < awconst::keResType__Count; }
-		inline bool						operator==(const zenResID& _Compare)const{return muHashID == _Compare.muHashID;};
-		inline bool						operator!=(const zenResID& _Compare)const{return muHashID != _Compare.muHashID;};
-		const zenResID&					operator=(const zenResID& _Copy){muHashID = _Copy.muHashID; return *this;}
+		ZENInline const NameHash&			Name()const							{ return mhName; }
+		ZENInline zenConst::eResType		Type()const							{ return static_cast<zenConst::eResType>(meType); }
+		ZENInline zenConst::eResPlatform	Platform()const						{ return static_cast<zenConst::eResPlatform>(mePlatform); } 
+		ZENInline zenConst::eResSource		Source()const						{ return static_cast<zenConst::eResSource>(meSource); }
+		ZENInline zU64						HashID()const						{ return muHashID; }
+		ZENInline void						SetName(NameHash _hName)			{ mhName = _hName; }
+		ZENInline void						SetType(zenConst::eResType _eResType)			{ meType = _eResType; }
+		ZENInline void						SetPlatform(zenConst::eResPlatform _ePlatform)	{ mePlatform = _ePlatform; }
+		ZENInline void						SetSource(zenConst::eResSource _eSource)			{ meSource = _eSource; }
+		ZENInline bool						IsRuntime()const					{ return meSource==zenConst::keResSource_Runtime; }
+		ZENInline bool						IsExport()const						{ return meSource==zenConst::keResSource_Offline; }
+		ZENInline bool						IsLoaded()const						{ return meSource==zenConst::keResSource_Loaded; }
+		ZENInline bool						IsValid()const						{ return meType < zenConst::keResType__Count; }
+		ZENInline bool						operator==(const zResID& _Compare)const{return muHashID == _Compare.muHashID;};
+		ZENInline bool						operator!=(const zResID& _Compare)const{return muHashID != _Compare.muHashID;};
+		const zResID&						operator=(const zResID& _Copy){muHashID = _Copy.muHashID; return *this;}
 
 	protected:
 		union
@@ -120,15 +123,15 @@ namespace zen { namespace zenType {
 			struct 
 			{			
 				NameHash	mhName;		//!< Hashed name of the resource
-				zenU16		meType;		//!< Resource type (eType)
-				zenU8		mePlatform;	//!< Platform this should be used on
-				zenU8		meSource;	//!< Source of the resource (eSource)			
+				zU16		meType;		//!< Resource type (eType)
+				zU8			mePlatform;	//!< Platform this should be used on
+				zU8			meSource;	//!< Source of the resource (eSource)			
 			};
-			zenU64 muHashID;
+			zU64 muHashID;
 		};
 	};
-	ZENSupportMemcopy(zenResID);
-	ZENSupportMemcopy(awBlendDesc);
+	ZENSupportMemcopy(zResID);
+	
 
 }}  //namespace zen, Type 
 

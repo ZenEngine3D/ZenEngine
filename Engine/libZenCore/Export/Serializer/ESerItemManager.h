@@ -11,29 +11,29 @@ public:
 										ManagerSerialItem();			
 	void								SetItem(EExp::SerialItem* _pItem);
 	
-	SerialItem*							GetItemBase(const zenResID _ResID);
-	EExp::SerialItem*					GetItemBaseAnySource(const zenResID _ResID);
-	bool								IsValid(const zenResID _ResID);
-	bool								IsValid(const zenArrayBase<zenResID>& _aResID);
+	SerialItem*							GetItemBase(const zResID _ResID);
+	EExp::SerialItem*					GetItemBaseAnySource(const zResID _ResID);
+	bool								IsValid(const zResID _ResID);
+	bool								IsValid(const zArrayBase<zResID>& _aResID);
 	template<class TType>
-	TType* GetItem(const zenResID _ResID)
+	TType* GetItem(const zResID _ResID)
 	{
-		//! @todo Add type check back, using mask
+		//! @todo Important: Add type check back, (with resource mask supports)
 		SerialItem* pSerialItem = GetItemBase(_ResID);
 		return static_cast<TType*>(pSerialItem);
 	} 
 
 	template<class TType>
-	TType* GetItemAnySource(const zenResID _ResID)
+	TType* GetItemAnySource(const zResID _ResID)
 	{
-		//! @todo Add type check back, using mask
+		//! @todo Important: Add type check back, (with resource mask supports)
 		SerialItem* pSerialItem = GetItemBaseAnySource(_ResID);
 		return static_cast<TType*>(pSerialItem);
 	}
 
 	
 protected:
-	zenMap<EExp::SerialItem*>::Key64	mdSerialItems;		//!< Loaded and created serial items
+	zMap<EExp::SerialItem*>::Key64	mdSerialItems;		//!< Loaded and created serial items
 	
 //---------------------------------------------------------
 // ManagerBase Section

@@ -8,7 +8,7 @@ namespace ERes
 	
 	GfxVertex_DX11::~GfxVertex_DX11()
 	{
-		for(zenUInt streamIdx=0; streamIdx<mInstanceInfo.maStreamBuffer.Count(); ++streamIdx)
+		for(zUInt streamIdx=0; streamIdx<mInstanceInfo.maStreamBuffer.Count(); ++streamIdx)
 			mInstanceInfo.maStreamBuffer[streamIdx]->Release();
 	}
 
@@ -24,20 +24,19 @@ namespace ERes
 			"BLENDINDICES",	//keVertexSemantic_BlendIndex,
 			"BLENDWEIGHT",	//keVertexSemantic_BlendWeight,
 		};
-		ZENStaticAssert( ZENArrayCount(zSemanticNames)==awconst::keShaderSemantic__Count );
+		ZENStaticAssert( ZENArrayCount(zSemanticNames)==zenConst::keShaderSemantic__Count );
 	
-		//D3D11_USAGE eUsage(D3D11_USAGE_DEFAULT);//! @todo configure this
-		//zenUInt uCpuAccess(0);
+		//! @todo Missing: configure resource creations flags
+		//D3D11_USAGE eUsage(D3D11_USAGE_DEFAULT);
+		//zUInt uCpuAccess(0);
 		D3D11_USAGE eUsage(D3D11_USAGE_DYNAMIC);
 		UINT uCpuAccess(D3D11_CPU_ACCESS_WRITE);
-		//! @todo
-		//if( mInstanceInfo.eCreationFlags & SerialVertex_Base::keFlag_Static ) eUsage = D3D11_USAGE_IMMUTABLE;
 
 		// Vertex Streams buffer init
-		zenUInt uStreamCount = mInstanceInfo.maStreamBuffer.SetCount( mInstanceInfo.mSerial.maStream.Count() );
+		zUInt uStreamCount = mInstanceInfo.maStreamBuffer.SetCount( mInstanceInfo.mSerial.maStream.Count() );
 		mInstanceInfo.maStreamInfo.SetCount( mInstanceInfo.mSerial.maStream.Count() );
 		mInstanceInfo.maStreamStride.SetCount( mInstanceInfo.mSerial.maStream.Count() );
-		for(zenUInt streamIdx=0; streamIdx<uStreamCount; ++streamIdx)
+		for(zUInt streamIdx=0; streamIdx<uStreamCount; ++streamIdx)
 		{
 			const EExp::SerialGfxVertex_DX11::Stream& stream			= mInstanceInfo.mSerial.maStream[streamIdx];			
 			mInstanceInfo.maStreamStride[streamIdx]						= stream.muStride;
@@ -66,18 +65,17 @@ namespace ERes
 		}	
 		
 		// Vertex element Definitions
-		zenUInt uElemDefCount = mInstanceInfo.maElementDef.Copy( (D3D11_INPUT_ELEMENT_DESC*)mInstanceInfo.mSerial.maElementDef.First(), mInstanceInfo.mSerial.maElementDef.Size() / sizeof(D3D11_INPUT_ELEMENT_DESC) );
-		for(zenUInt elemIdx=0; elemIdx<uElemDefCount; ++elemIdx)
-			mInstanceInfo.maElementDef[elemIdx].SemanticName = zSemanticNames[(zenUInt)mInstanceInfo.maElementDef[elemIdx].SemanticName];	//Convert Semantic Name index to string		
+		zUInt uElemDefCount = mInstanceInfo.maElementDef.Copy( (D3D11_INPUT_ELEMENT_DESC*)mInstanceInfo.mSerial.maElementDef.First(), mInstanceInfo.mSerial.maElementDef.Size() / sizeof(D3D11_INPUT_ELEMENT_DESC) );
+		for(zUInt elemIdx=0; elemIdx<uElemDefCount; ++elemIdx)
+			mInstanceInfo.maElementDef[elemIdx].SemanticName = zSemanticNames[(zUInt)mInstanceInfo.maElementDef[elemIdx].SemanticName];	//Convert Semantic Name index to string		
 		
 		return true;
 	}
 
-	zenU8* GfxVertex_DX11::Lock()
+	zU8* GfxVertex_DX11::Lock()
 	{
-		//! @todo some lock test here
-		//! @todo Stream index parameter
-		//! @todo specify access type
+		//! @todo Missing: Stream index parameter
+		//! @todo Missing: specify access type
 		if( Get().maStreamBuffer.Count() > 0 )
 		{
 			D3D11_MAPPED_SUBRESOURCE mapRes;
@@ -86,7 +84,7 @@ namespace ERes
 			{
 				int i=0;
 			}
-			return (zenU8*)mapRes.pData;
+			return (zU8*)mapRes.pData;
 		}
 		return NULL;
 	}
