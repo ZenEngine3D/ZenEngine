@@ -46,7 +46,7 @@ void awEngineInstance::Update()
 
 void awEngineInstance::CreateGfxWindow(const zenVec2U16& _vDim, const zenVec2U16& _vPos)
 {
-	ZENAssert(gpActiveEngine);
+	ZENAssert(gpActiveEngine==NULL);
 	gpMainWindow	= zenNewDefault FWnd::Window(L"MainWindow", _vDim);
 	gpMainWindow->Initialize();
 	mrMainGfxWindow = zenRes::GfxWindow::Create( gpMainWindow->GetHandle() );
