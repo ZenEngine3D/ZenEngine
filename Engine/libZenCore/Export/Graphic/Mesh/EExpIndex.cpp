@@ -7,7 +7,7 @@ namespace EExp
 //! @brief		Create a new 16bits Index Buffer
 //! @details	Create a temporary SerialItem to create a new Resource and then delete the SerialItem.
 //!				The temporary SerialItem and Asset created, will be for engine default renderer type
-//! @todo		Create reference to array, when executed synchronously (instead of duplicating info)
+//! @todo Optim: Create reference to array, when executed synchronously (instead of duplicating info)
 //-------------------------------------------------------------------------------------------------
 //! @param _Indices			- List of Indices
 //! @param _PrimType		- Type of primitive this list of indices represents (TriangleStrip, ...)
@@ -26,7 +26,7 @@ zResID CreateGfxIndexBuffer( const zArrayBase<zU16>& _Indices, zenConst::ePrimit
 //! @brief		Create a new 32bits Index Buffer
 //! @details	Create a temporary SerialItem to create a new Resource and then delete the SerialItem.
 //!				The temporary SerialItem and Asset created, will be for engine default renderer type
-//! @todo		Create reference to array, when executed synchronously (instead of duplicating info)
+//! @todo Optim: Create reference to array, when executed synchronously (instead of duplicating info)
 //-------------------------------------------------------------------------------------------------
 //! @param _Indices			- List of Indices
 //! @param _PrimType		- Type of primitive this list of indices represents (TriangleStrip, ...)

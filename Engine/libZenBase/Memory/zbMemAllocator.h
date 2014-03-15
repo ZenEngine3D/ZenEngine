@@ -14,7 +14,7 @@ namespace zbMem
 	//!					-# AllocHeader : Infos on the allocation
 	//!					-# Memory : User requested memory
 	//!					-# Footer : Padding added at the end to detect buffer overrun
-	//! @todo		Reduce memory footprint by packing together infos and removing debug only infos 
+	//! @todo Optim:	Reduce memory footprint by packing together infos and removing debug only infos 
 	//=================================================================================================
 	class AllocHeader
 #if AW_MEMORYDEBUG

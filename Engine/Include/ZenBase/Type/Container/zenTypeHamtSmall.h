@@ -16,7 +16,7 @@ namespace zen { namespace zenType {
 	//!				-# Node : Contains 0 to 'kuSlotCount' slots
 	//!				-# Slot : Key + Value of element or Key + Pointer to child Node
 	//!				-# Pool : Each node is created from a memory pool. There's 'kuSlotCount+1' memory pool (1 per possible slot count in a node)
-	//! @todo		Specify pool size increase	
+	//! @todo Optim:	Specify pool size increase	
 	//! @tparam TKey		Datatype of Keys used to find/retrieve entries
 	//! @tparam TValue		Datatype of Values stored
 	//! @tparam TIndex		Datatype bitfield used to store info of each slot in a node. Must be big enough to contain TIndexBits bits.

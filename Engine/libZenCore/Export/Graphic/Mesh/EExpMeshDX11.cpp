@@ -19,7 +19,7 @@ namespace EExp
 				return false;
 		}
 
-		//! @todo parse all strip, concatenate all vertex together to quickly draw object in 1 call (for depth pass)
+		//! @todo Optimn: Parse all strip, concatenate all vertex together to quickly draw object in 1 call (for depth pass)
 		ExportSkipWork();
 		return true;
 	}

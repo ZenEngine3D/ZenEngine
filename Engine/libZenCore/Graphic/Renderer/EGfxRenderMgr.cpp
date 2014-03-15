@@ -19,7 +19,7 @@ void ManagerRender_Base::FrameBegin( ERes::GfxWindowRef _FrameWindow )
 	_FrameWindow->PerformResize();
 	mrWindowCurrent = _FrameWindow;
 	/*
-	//! @todo Stats per window
+	//! @todo Missing: Stats per window
 	zU64 uElapsed					= zenSys::GetTimeUSec() - muTimeLast;
 	muTimeLast						= zenSys::GetTimeUSec();
 	muFramesTimeTotal				+= uElapsed;

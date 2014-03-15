@@ -5,6 +5,16 @@
 namespace zen { namespace zenAss
 {
 
+const zPackage& GetPackage( zHash64 _hPackageID )
+{
+	return zeMgr::Asset.PackageGet(_hPackageID);
+}
+
+const zMap<zPackage>::Key64& GetPackages()
+{
+	return zeMgr::Asset.PackageGet();
+}
+
 zPackage::zPackage()
 :Super()
 {
@@ -41,14 +51,11 @@ const zArrayStatic<zString>& zPackage::GetGroupAndName()const
 	ZENAssert(mpReference); 
 	return mpReference->GetGroupAndName(); 
 }
-const zMap<zAssetItem>::Key64& zPackage::GetAsset(zenConst::eAssetType _eType)
+const zMap<zAssetItem>::Key64& zPackage::GetAssets(zenConst::eAssetType _eType)
 {
 	ZENAssert(mpReference); 
 	return mpReference->GetAsset(_eType); 
 }
-
-//zHash32 zPackage::GetGroupID()const							{ return Get()->GetGroupID(); }
-//const zString& zAssetItem::GetDescription()const				{ return Get()->GetDescription(); }
 
 }} //namespace zen { namespace zenAss
 

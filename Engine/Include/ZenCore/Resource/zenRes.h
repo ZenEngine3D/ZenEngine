@@ -7,9 +7,9 @@ namespace zen { namespace zenRes {
 	//=============================================================================================
 	//! @class	Base class for all resources that can be created and used
 	//=============================================================================================
-	class zResource : public zRefCounted<false>
+	class zResource : public zRefCounted
 	{
-	ZENClassDeclare(zResource, zRefCounted<false>)
+	ZENClassDeclare(zResource, zRefCounted)
 	public:									
 		ZENInline const zResID&	GetResID()const;	//!< @brief return resource ID of resource
 		ZENInline bool			IsValid()const;		//!< @brief true if the object is a valid resource
@@ -28,9 +28,9 @@ namespace zen { namespace zenRes {
 	public:
 		ZENInline			zResourceRef();
 		ZENInline			zResourceRef(zResource* _pResource);
-		ZENInline			zResourceRef(zenFlagResType _SupportedTypes);		
-		ZENInline			zResourceRef(zenFlagResType _SupportedTypes, zResource* _pResource);
-							zResourceRef(zenFlagResType _SupportedTypes, zResID _ResourceID);
+		ZENInline			zResourceRef(zFlagResType _SupportedTypes);		
+		ZENInline			zResourceRef(zFlagResType _SupportedTypes, zResource* _pResource);
+							zResourceRef(zFlagResType _SupportedTypes, zResID _ResourceID);
 		
 		ZENInline const		zResourceRef&	operator=(zResource* _pResource);
 		ZENInline const		zResourceRef&	operator=(const zResourceRef& _ResourceRef);
@@ -45,7 +45,7 @@ namespace zen { namespace zenRes {
 	protected:
 		ZENInline void		SetResource(zResource* _pResource);
 		zResource*			mpResource;
-		ZENDbgCode( zenFlagResType mSupportedTypeMask; )
+		ZENDbgCode( zFlagResType mSupportedTypeMask; )
 	};
 
 	//=============================================================================================

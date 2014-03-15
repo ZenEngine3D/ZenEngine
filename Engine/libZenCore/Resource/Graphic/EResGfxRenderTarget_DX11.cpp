@@ -34,7 +34,7 @@ namespace ERes
 	{
 		HRESULT hr(S_FALSE);
 
-		mInstanceInfo.mrTargetTexture = EExp::CreateGfxTexture2D(mInstanceInfo.meFormat, zenFlagResTexCreate(zenConst::keTexCreate_RenderTarget), mInstanceInfo.mvDim );
+		mInstanceInfo.mrTargetTexture = EExp::CreateGfxTexture2D(mInstanceInfo.meFormat, zFlagResTexUse(zenConst::keTexCreate_RenderTarget), mInstanceInfo.mvDim );
 		if( mInstanceInfo.mrTargetTexture.IsValid() )
 		{
 			if( EMgr::GfxRender.IsDepth(mInstanceInfo.meFormat) )

@@ -8,7 +8,7 @@ namespace zen { namespace zenType {
 //! @class		zString
 //-------------------------------------------------------------------------------------------------
 //! @brief		Very primitive implementation at the moment, will grow with need
-//! @todo		Support datasharing with same strings, format, etc...
+//! @todo Optim: Support datasharing with same strings, format, etc...
 //=================================================================================================
 class zString
 {

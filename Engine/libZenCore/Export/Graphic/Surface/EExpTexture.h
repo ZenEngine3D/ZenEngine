@@ -31,13 +31,13 @@ namespace EExp
 			zArrayStatic<MipInfo>		maMipData;
 			zenConst::eTextureFormat	meFormatInput;	
 			zenConst::eTextureFormat	meFormatOutput;
-			zenFlagResTexCreate			mCreationFlags;
+			zFlagResTexUse			mCreationFlags;
 			zU8							mbGenerateMip;
 		};
 	};
 
 	const TextureBlockInfo& GetTextureBlockInfo( zenConst::eTextureFormat _eFormat );	
-	zResID CreateGfxTexture2D( zenConst::eTextureFormat _eFormat, zenFlagResTexCreate _CreationFlags, zVec2U16 _vDim, const zArrayBase<zU8>& _aRawData=zArrayStatic<zU8>(zUInt(0)) );
+	zResID CreateGfxTexture2D( zenConst::eTextureFormat _eFormat, zFlagResTexUse _CreationFlags, zVec2U16 _vDim, const zArrayBase<zU8>& _aRawData=zArrayStatic<zU8>(zUInt(0)) );
 
 }
 

@@ -41,7 +41,7 @@ namespace zen { namespace zenRes {
 		zU8*					Lock();
 		void					Unlock();
 		
-		static zGfxVertex		Create(const zArrayBase<zGfxVertex::Stream>& _aStreams, zU32 _uCreationFlags);
+		static zGfxVertex		Create(const zArrayBase<zGfxVertex::Stream>& _aStreams, zFlagResUse _ResourceUse);
 	};
 
 	AWClassResourceRefDeclare(zGfxIndex, zenConst::keResType_GfxIndex)
@@ -56,8 +56,8 @@ namespace zen { namespace zenRes {
 	AWClassResourceRefDeclare(zGfxTexture2D, zenConst::keResType_GfxTexture2D)
 	public:		
 		const zVec2U16&			GetDim();
-		static zGfxTexture2D	Create(zenConst::eTextureFormat _eFormat, zVec2U16 _vDim, zenFlagResTexCreate _CreationFlags=zenFlagResTexCreate());		
-		static zGfxTexture2D	Create(zenConst::eTextureFormat _eFormat, zVec2U16 _vDim, const zArrayBase<zU8>& _aRawData, zenFlagResTexCreate _CreationFlags=zenFlagResTexCreate());
+		static zGfxTexture2D	Create(zenConst::eTextureFormat _eFormat, zVec2U16 _vDim, zFlagResTexUse _CreationFlags=zFlagResTexUse());		
+		static zGfxTexture2D	Create(zenConst::eTextureFormat _eFormat, zVec2U16 _vDim, const zArrayBase<zU8>& _aRawData, zFlagResTexUse _CreationFlags=zFlagResTexUse());
 	};
 
 	AWClassResourceRefDeclare(zGfxRenderTarget, zenConst::keResType_GfxRenderTarget)

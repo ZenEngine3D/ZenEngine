@@ -7,32 +7,32 @@ namespace zen { namespace zenRes {
 //=================================================================================================
 zGfxMesh zGfxMesh::Create(const zArrayBase<zGfxMeshStrip>& _aMeshStrip)
 {
-	//! @todo Use a heap allocator instead, for faster creation
-	zArrayStatic<zResID>	aMeshStripID;
+	//! @todo Optim: Use a heap allocator instead, for faster creation
+	zArrayStatic<zResID> aMeshStripID;
 	aMeshStripID.Copy<zGfxMeshStrip>(_aMeshStrip);
 	return EExp::CreateGfxMesh( aMeshStripID );
 }
 
 zGfxMesh zGfxMesh::Create(const zGfxMeshStrip* _aMeshStrip, zUInt _uMeshStripCount)
 {
-	//! @todo Use a heap allocator instead, for faster creation
-	zArrayStatic<zResID>	aMeshStripID;
+	//! @todo Optim: Use a heap allocator instead, for faster creation
+	zArrayStatic<zResID> aMeshStripID;
 	aMeshStripID.Copy<zGfxMeshStrip>(_aMeshStrip, _uMeshStripCount);
 	return EExp::CreateGfxMesh( aMeshStripID );
 }
 
-zGfxMeshStrip zGfxMeshStrip::Create(zGfxVertex _VertexBuffer, zGfxIndex _IndexBuffer, zGfxShaderBinding _rShaderBinding, const zArrayBase<zResID>& _aShaderParamID, const zArrayBase<zShaderTexture>& _aTexture, zU32 _uIndexFirst, zU32 _uIndexCount)
+zGfxMeshStrip zGfxMeshStrip::Create(const zGfxVertex& _VertexBuffer, const zGfxIndex& _IndexBuffer, const zGfxShaderBinding& _rShaderBinding, const zArrayBase<zResID>& _aShaderParamID, const zArrayBase<zShaderTexture>& _aTexture, zU32 _uIndexFirst, zU32 _uIndexCount)
 {
 	return EExp::CreateGfxMeshStrip(_VertexBuffer, _IndexBuffer, _rShaderBinding.GetResID(), _uIndexFirst, _uIndexCount, _aShaderParamID, _aTexture);
 }
 
-zGfxMeshStrip zGfxMeshStrip::Create(zGfxVertex _VertexBuffer, zGfxIndex _IndexBuffer, zGfxShaderBinding _rShaderBinding, const zArrayBase<zResID>& _aShaderParamID, zU32 _uIndexFirst, zU32 _uIndexCount)
+zGfxMeshStrip zGfxMeshStrip::Create(const zGfxVertex& _VertexBuffer, const zGfxIndex& _IndexBuffer, const zGfxShaderBinding& _rShaderBinding, const zArrayBase<zResID>& _aShaderParamID, zU32 _uIndexFirst, zU32 _uIndexCount)
 {	
 	static const zArrayStatic<zShaderTexture>	aTexture(zUInt(0));
 	return EExp::CreateGfxMeshStrip(_VertexBuffer, _IndexBuffer, _rShaderBinding.GetResID(), _uIndexFirst, _uIndexCount, _aShaderParamID, aTexture);
 }
 
-zGfxMeshStrip zGfxMeshStrip::Create(zGfxVertex _VertexBuffer, zGfxIndex _IndexBuffer, zGfxShaderBinding _rShaderBinding, zU32 _uIndexFirst, zU32 _uIndexCount)
+zGfxMeshStrip zGfxMeshStrip::Create(const zGfxVertex& _VertexBuffer, const zGfxIndex& _IndexBuffer, const zGfxShaderBinding& _rShaderBinding, zU32 _uIndexFirst, zU32 _uIndexCount)
 {
 	static const zArrayStatic<zResID>	aShaderParamID(zUInt(0));
 	static const zArrayStatic<zShaderTexture>	aTexture(zUInt(0));
@@ -93,7 +93,7 @@ zGfxShaderBinding zGfxShaderBinding::Create(const zenRes::zGfxShader* _pShaders,
 //=================================================================================================
 // GFX WINDOW
 //=================================================================================================
-//! @todo Convert all mpResouce cast to using Ref Object
+//! @todo Missing: Convert all mpResouce cast to using Ref Object
 zGfxView zGfxWindow::GetBackbuffer()
 {
 	ZENAssertMsg(mpResource, "No valid resource assigned");

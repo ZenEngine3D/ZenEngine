@@ -104,7 +104,7 @@ bool SerialGfxShaderParamDef_DX11::ExportWork(bool _bIsTHRTask)
 				case D3D_SVT_INT:	Param.meType = zenConst::keShaderElemType_SInt;	break;
 				case D3D_SVT_UINT:	Param.meType = zenConst::keShaderElemType_UInt;	break;
 				case D3D_SVT_UINT8:	Param.meType = zenConst::keShaderElemType_UByte;	break;
-				default: 			bValid = false;									break; 	//! @todo : Support structure
+				default: 			bValid = false;									break; 	//! @todo Missing: Support structure
 				//default: 			bValid = false; strncpy( mzLogDetail, "Unsupported Shader variable type.", keLogSizeDetail );	break;
 				}
 				Param.muColCount			= TypeDesc.Columns;
@@ -129,7 +129,7 @@ bool SerialGfxShaderParamDef_DX11::ExportWork(bool _bIsTHRTask)
 		pGfxShaderReflection->Release();
 	}
 
-	//! @todo : support loging
+	//! @todo Missing : support logging
 	//if( !bValid )
 	//	strncpy( mzLogDetail, "Failed initializing ConstantBuffer SerialItem", keLogSizeDetail );
 	return bValid;
@@ -138,7 +138,6 @@ bool SerialGfxShaderParamDef_DX11::ExportWork(bool _bIsTHRTask)
 //=================================================================================================
 //! @brief		
 //! @details	
-//! @todo		Implement serialization
 //-------------------------------------------------------------------------------------------------
 //! @param		_Serializer - Object use to serialize
 //! @return		true if successful

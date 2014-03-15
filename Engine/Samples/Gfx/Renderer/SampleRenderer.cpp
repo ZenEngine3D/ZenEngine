@@ -77,7 +77,7 @@ bool SampleRendererInstance::Init()
 	zArrayStatic<zU8>		aTexRGBA;
 	zVec2U16				vTexSize(256,256);
 	zenConst::eTextureFormat	eTexFormat = zenConst::keTexFormat_RGBA8;
-	//aTexRGBA.SetCount( EExp::GetTextureBlockInfo(eTexFormat).muSize * vTexSize.x * vTexSize.y ); //! @todo export this in api
+	//aTexRGBA.SetCount( EExp::GetTextureBlockInfo(eTexFormat).muSize * vTexSize.x * vTexSize.y ); //! @todo Missing: export this in api
 	aTexRGBA.SetCount( vTexSize.x*vTexSize.y*4 );
 	zU8*						pTexCur = aTexRGBA.First();
 	for(zUInt line=0; line<vTexSize.y; ++line)
@@ -104,7 +104,7 @@ bool SampleRendererInstance::Init()
 	zArrayStatic<zenRes::zShaderDefine> test(2);
 	test[0] = zenRes::zShaderDefine("DEFINETEST", "1");
 
-	rCubeVertex			= zenRes::zGfxVertex::Create(aVerticeStreams, 0);	
+	rCubeVertex			= zenRes::zGfxVertex::Create(aVerticeStreams, zFlagResUse());	
 	rCubeIndex			= zenRes::zGfxIndex::Create( zArrayStatic<zU16>(CubeIndices, ZENArrayCount(CubeIndices), TRUE), zenConst::kePrimType_TriangleList );
 	rShaderVS			= zenRes::zGfxShaderVertex::Create( "Shader/Tutorial07.fx", "VS");
 	rShaderPS			= zenRes::zGfxShaderPixel::Create( "Shader/Tutorial07.fx", "PS", test );		
@@ -211,9 +211,7 @@ void SampleRendererInstance::Update()
 	}
 
 	mrMainGfxWindow.FrameBegin();
-	static float t(0);
-	t += 0.01f; //! @todo Get elapsed time back
-	//float t = static_cast<float>(CSys::GetElapsedSec() / 3.0);	// Update our time animation
+	float t = static_cast<float>(zenSys::GetElapsedSec() / 3.0);	// Update our time animation
 
 	//-----------------------------------------------------------------
 	// Render cube in rendertarget

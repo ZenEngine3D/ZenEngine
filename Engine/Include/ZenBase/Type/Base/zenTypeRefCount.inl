@@ -1,87 +1,35 @@
 
 namespace zen { namespace zenType {
 
-template<bool TAutoDelete>
-zRefCounted<TAutoDelete>::zRefCounted()
+//=================================================================================================
+// zREF COUNTED
+//=================================================================================================
+zRefCounted::zRefCounted()
 : miRefCount(0)
-{}
+{
+}
 
-template<bool TAutoDelete>
-zRefCounted<TAutoDelete>::~zRefCounted()
-{}
-
-template<bool TAutoDelete>
-void zRefCounted<TAutoDelete>::ReferenceAdd()
+void zRefCounted::ReferenceAdd()
 {
 	++miRefCount;
 }
 
-template<bool TAutoDelete>
-void zRefCounted<TAutoDelete>::ReferenceRem()
+void zRefCounted::ReferenceRem()
 {
+	ZENAssert(miRefCount > 0)
 	--miRefCount; 
-	if(miRefCount<=0 && TAutoDelete) 
-		delete this; 
+	if(miRefCount<=0) 
+		ReferenceNoneCB();
 }
 
-template<bool TAutoDelete>
-int zRefCounted<TAutoDelete>::ReferenceGet()
+zInt zRefCounted::ReferenceCount()
 {
 	return miRefCount;
 }
 
-/*
-template<class TRefCountedType>
-zSharedPtr<TRefCountedType>::zSharedPtr()
-: mpReference(NULL)
-{
-}
-
-template<class TRefCountedType>
-zSharedPtr<TRefCountedType>::zSharedPtr(TRefCountedType* _pReference)
-: mpReference(_pReference)
-{
-	if( mpReference )
-		mpReference->ReferenceAdd();
-}
-
-template<class TRefCountedType>
-zSharedPtr<TRefCountedType>::~zSharedPtr()
-{
-	if( mpReference )
-		mpReference->ReferenceRem();
-}
-
-template<class TRefCountedType>
-const zSharedPtr<TRefCountedType>& zSharedPtr<TRefCountedType>::operator=(TRefCountedType* _pReference)
-{
-	if( mpReference )
-		mpReference->ReferenceRem();
-	mpReference = _pReference;
-	if( mpReference )
-		mpReference->ReferenceAdd();
-	return *this;
-}
-
-template<class TRefCountedType>
-bool zSharedPtr<TRefCountedType>::operator==(const zSharedPtr& _Cmp)
-{
-	return mpReference == _Cmp.mpReference;
-}
-
-template<class TRefCountedType>
-bool zSharedPtr<TRefCountedType>::operator!=(const zSharedPtr& _Cmp)
-{
-	return mpReference != _Cmp.mpReference;
-}
-
-template<class TRefCountedType>
-bool zSharedPtr<TRefCountedType>::IsValid()
-{
-	return mpReference != NULL;
-}
-*/
-
+//=================================================================================================
+// zREF OWNER
+//=================================================================================================
 template<class TRefCountedType>
 zRefOwner<TRefCountedType>::zRefOwner()
 : mpReference(NULL)
@@ -90,35 +38,33 @@ zRefOwner<TRefCountedType>::zRefOwner()
 
 template<class TRefCountedType>
 zRefOwner<TRefCountedType>::zRefOwner(TRefCountedType* _pReference)
-: mpReference(_pReference)
+: mpReference(NULL)
 {
-	if( mpReference )
-		mpReference->ReferenceAdd();
+	*this = _pReference;	
 }
 
 template<class TRefCountedType>
 zRefOwner<TRefCountedType>::zRefOwner(const zRefOwner& _Copy)
-: mpReference(_Copy.mpReference)
+: mpReference(NULL)
 {
-	if( mpReference )
-		mpReference->ReferenceAdd();
+	*this = _Copy.mpReference;
 }
 
 template<class TRefCountedType>
 zRefOwner<TRefCountedType>::~zRefOwner()
 {
-	if( mpReference )
-		mpReference->ReferenceRem();
+	*this = NULL;
 }
 
 template<class TRefCountedType>
 const zRefOwner<TRefCountedType>& zRefOwner<TRefCountedType>::operator=(TRefCountedType* _pReference)
-{
+{	
 	if( mpReference )
-		mpReference->ReferenceRem();
+		reinterpret_cast<zRefCounted*>(mpReference)->ReferenceRem();
 	mpReference = _pReference;
 	if( mpReference )
-		mpReference->ReferenceAdd();
+		reinterpret_cast<zRefCounted*>(mpReference)->ReferenceAdd();
+	
 	return *this;
 }
 
@@ -135,11 +81,14 @@ bool zRefOwner<TRefCountedType>::operator!=(const zRefOwner& _Cmp)
 }
 
 template<class TRefCountedType>
-bool zRefOwner<TRefCountedType>::IsValid()
+bool zRefOwner<TRefCountedType>::IsValid()const
 {
 	return mpReference != NULL;
 }
 
+//=================================================================================================
+// zSHARED POINTER
+//=================================================================================================
 template<class TRefCountedType>
 zSharedPtr<TRefCountedType>::zSharedPtr()
 : Super()

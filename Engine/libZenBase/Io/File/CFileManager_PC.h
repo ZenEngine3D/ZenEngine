@@ -21,7 +21,7 @@ namespace CFil
 		void						LoadDirectory	( zUInt _uWantedFlag, zArrayDynamic<wchar_t>& _zDirName, const wchar_t* _zFilePatern, const zUInt _uFilePaternLen, bool bRecursive);
 		virtual bool				Load();
 		virtual bool				Unload();
-		zArrayDynamic<wchar_t>		mzRoot;			//! @todo Use proper string class
+		zArrayDynamic<wchar_t>		mzRoot;			//! @todo Clean: Use proper string class
 		zArrayDynamic<FileInfo>	maSearchResult;
 		zUInt						muSearchIndex;	
 	};

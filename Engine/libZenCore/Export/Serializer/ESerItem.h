@@ -28,14 +28,14 @@ namespace EExp
 			zU8 muMajor;	
 			zU8 muMinor;	
 		};
-									SerialItem();		
-		virtual bool				Serialize( EExp::Serializer_Base& aSerializer );		
+								SerialItem();		
+		virtual bool			Serialize( EExp::Serializer_Base& aSerializer );		
 
-		zU32							muSize;
-		Version						mVersion;
-		zTimeStamp			mExportTime;		
-		zResID			mResID;				
-		static const Version		sVersions[zenConst::keResType__Count];
+		zU32					muSize;
+		Version					mVersion;
+		zTimeStamp				mExportTime;		
+		zResID					mResID;				
+		static const Version	sVersions[zenConst::keResType__Count];
 	};
 }
 

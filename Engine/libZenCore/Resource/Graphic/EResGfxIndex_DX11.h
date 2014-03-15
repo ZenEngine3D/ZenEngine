@@ -11,7 +11,7 @@ struct InstanceInfo : public EExp::SerialGfxIndex_DX11
 {
 	ID3D11Buffer*				mpIndiceBuffer;
 };
-AWResourceDeclare(GfxIndex_DX11, InstanceInfo, zenConst::keResType_GfxIndex)
+ZENResourceDeclare(GfxIndex_DX11, InstanceInfo, zenConst::keResType_GfxIndex)
 public:
 	virtual						~GfxIndex_DX11();
 	virtual bool				ResourceInit();

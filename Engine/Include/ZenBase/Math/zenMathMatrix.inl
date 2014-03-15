@@ -126,7 +126,7 @@ namespace zen { namespace zenMath
 		ZENAssert( !IsNearZero(_vEyeDir) );
 		ZENAssert( !IsNearZero(_vUpDir) );
 				
-		//@todo optimize by just masking value		
+		//@todo Optim: optimize by just masking value		
 		_vEyePos				= Mul(_vEyePos, v4XYZ1);	//Discard w
 		_vEyeDir				= Mul(_vEyeDir, v4XYZ1);	//Discard w
 		_vUpDir					= Mul(_vUpDir, v4XYZ1);		//Discard w

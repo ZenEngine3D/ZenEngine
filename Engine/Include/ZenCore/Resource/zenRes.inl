@@ -47,13 +47,13 @@ void zResourceRef::SetResource(zResource* _pResource)
 		mpResource->ReferenceAdd();
 }	
 
-zResourceRef::zResourceRef(zenFlagResType _SupportedTypes)
+zResourceRef::zResourceRef(zFlagResType _SupportedTypes)
 : mpResource(NULL)
 {
 	ZENDbgCode( mSupportedTypeMask = _SupportedTypes; )
 }
 
-zResourceRef::zResourceRef(zenFlagResType _SupportedTypes, zResource* _pResource)
+zResourceRef::zResourceRef(zFlagResType _SupportedTypes, zResource* _pResource)
 : mpResource(NULL)
 {
 	ZENDbgCode( mSupportedTypeMask = _SupportedTypes; )
@@ -102,17 +102,17 @@ zResourceRef::operator zResID()const
 //#################################################################################################
 template<zenConst::eResType TType>
 zResourceTypedRef<TType>::zResourceTypedRef()								
-: zResourceRef(zenFlagResType(TType))
+: zResourceRef(zFlagResType(TType))
 {}
 
 template<zenConst::eResType TType>
 zResourceTypedRef<TType>::zResourceTypedRef(zResource* _pResource)	
-: zResourceRef(zenFlagResType(TType), _pResource)
+: zResourceRef(zFlagResType(TType), _pResource)
 {}
 
 template<zenConst::eResType TType>
 zResourceTypedRef<TType>::zResourceTypedRef(zResID _ResourceID)		
-: zResourceRef(zenFlagResType(TType), _ResourceID)
+: zResourceRef(zFlagResType(TType), _ResourceID)
 {}
 
 //#################################################################################################
@@ -120,17 +120,17 @@ zResourceTypedRef<TType>::zResourceTypedRef(zResID _ResourceID)
 //#################################################################################################
 template<zenConst::eResType TType1, zenConst::eResType TType2>
 zResourceTyped2Ref<TType1,TType2>::zResourceTyped2Ref()							
-: zResourceRef(zenFlagResType(TType1,TType2))
+: zResourceRef(zFlagResType(TType1,TType2))
 {}
 
 template<zenConst::eResType TType1, zenConst::eResType TType2>
 zResourceTyped2Ref<TType1,TType2>::zResourceTyped2Ref(zResource* _pResource)	
-: zResourceRef(zenFlagResType(TType1,TType2), _pResource)
+: zResourceRef(zFlagResType(TType1,TType2), _pResource)
 {}
 
 template<zenConst::eResType TType1, zenConst::eResType TType2>
 zResourceTyped2Ref<TType1,TType2>::zResourceTyped2Ref(zResID _ResourceID)	
-: zResourceRef(zenFlagResType(TType1,TType2), _ResourceID)
+: zResourceRef(zFlagResType(TType1,TType2), _ResourceID)
 {}
 
 }} // namespace zen, zenRes

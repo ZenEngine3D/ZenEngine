@@ -46,7 +46,7 @@ void ManagerSerialItem::SetItem(EExp::SerialItem* _pItem)
 	if( mdSerialItems.SetReplace(_pItem->mResID.HashID(), _pItem, pOldSerialItem) )
 	{
 		// Item already existed, need to delete it
-		//! @todo Actually take into account resource still using this item, this will crash if not taken care of
+		//! @todo Important: Actually take into account resource still using this item, this will crash if not taken care of (to delete list?)
 		zenDelNull(pOldSerialItem);
 	}
 } 

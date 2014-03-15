@@ -1,10 +1,10 @@
 #include "libZenEngine.h"
 
-namespace zen { namespace awsys {	
+namespace zen { namespace zenSys {	
 
-static awEngineInstance*	gpActiveEngine(NULL);
-static FWnd::Window*		gpMainWindow;			//! @todo wrap this inside EngineInstance
-void LaunchEngine(awEngineInstance* _pEngineInstance, int argc, const char* const* argv)
+static zEngineInstance*		gpActiveEngine(NULL);
+static FWnd::Window*		gpMainWindow;			//! @todo Clean: Wrap this inside EngineInstance
+void LaunchEngine(zEngineInstance* _pEngineInstance, int argc, const char* const* argv)
 {	
 	if( _pEngineInstance->Init() )
 	{
@@ -17,42 +17,42 @@ void LaunchEngine(awEngineInstance* _pEngineInstance, int argc, const char* cons
 	gpActiveEngine->Destroy();
 }
 
-void SetEngine(awEngineInstance* _pEngineInstance)
+void SetEngine(zEngineInstance* _pEngineInstance)
 {
 	ZENAssert(!gpActiveEngine);
 	gpActiveEngine = _pEngineInstance;
 }
 
-awEngineInstance* GetEngineInstance()
+zEngineInstance* GetEngineInstance()
 {
 	return gpActiveEngine;
 }
 
-bool awEngineInstance::Init()
+bool zEngineInstance::Init()
 {
 	return FSys::EngineStart();
 }
 
-void awEngineInstance::Destroy()
+void zEngineInstance::Destroy()
 {
 	FSys::EngineStop();
 	gpActiveEngine = NULL;
 }
 
-void awEngineInstance::Update()
+void zEngineInstance::Update()
 {
 	CMgr::Job.Update();
 }
 
-void awEngineInstance::CreateGfxWindow(const zVec2U16& _vDim, const zVec2U16& _vPos)
+void zEngineInstance::CreateGfxWindow(const zVec2U16& _vDim, const zVec2U16& _vPos)
 {
-	ZENAssert(gpActiveEngine);
+	ZENAssert(gpActiveEngine==NULL);
 	gpMainWindow	= zenNewDefault FWnd::Window(L"MainWindow", _vDim);
 	gpMainWindow->Initialize();
 	mrMainGfxWindow = zenRes::zGfxWindow::Create( gpMainWindow->GetHandle() );
 }
 
-void awEngineInstance::SetWindow(const zenRes::zGfxWindow& _rGfxWindow)
+void zEngineInstance::SetWindow(const zenRes::zGfxWindow& _rGfxWindow)
 {
 	mrMainGfxWindow = _rGfxWindow;
 }

@@ -25,7 +25,7 @@ namespace EExp
 		for(zUInt rtIdx(0), rtCount(pExportInfo->maTargetColorID.Count()); rtIdx<rtCount; ++rtIdx)
 		{
 			pParamRender = EMgr::SerialItems.GetItem<const SerialRenderTarget_Base>( pExportInfo->maTargetColorID[rtIdx] );
-			//! @todo error if mismatch size
+			//! @todo Missing: error if mismatch size
 			if( pParamRender )
 			{
 				vDim.x = zenMath::Min<zU16>(vDim.x, pParamRender->mvDim.x-pExportInfo->mvOrigin.x );

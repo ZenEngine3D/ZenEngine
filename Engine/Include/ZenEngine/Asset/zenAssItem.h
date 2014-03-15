@@ -11,7 +11,7 @@ namespace zen { namespace zenAss
 {
 	class zAssetItem : public zRefOwner<zeAss::AssetItem>
 	{
-	ZENClassDeclare(zAssetItem, zRefOwner<zeAss::AssetItem>)
+	ZENClassDeclare(zAssetItem, zRefOwner)
 	public:
 										zAssetItem();
 										zAssetItem(const zAssetItem& _Copy);
@@ -30,7 +30,10 @@ namespace zen { namespace zenAss
 		zAssetItem&						operator=(const zAssetItem& _Copy);		
 	};
 
-	zAssetItem							AssetCreate(zenConst::eAssetType _eAssetType);
+	zAssetItem							AssetCreate			(zenConst::eAssetType _eAssetType);
+	const char*							AssetTypeToString	(zenConst::eAssetType _ePropertyType);
+	zenConst::eAssetType				AssetNameToType		(zHash32 _hAssetName);
+	const zAssetItem&					AssetGet			( zHash64 _hAssetID ); //! @todo Asset: Move to an asset manager at api level?
 
 	class zAssetTexture2D : public zAssetItem
 	{

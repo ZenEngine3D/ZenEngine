@@ -4,18 +4,25 @@
 
 namespace zen { namespace zenType {
 	
-	template<bool TAutoDelete>
 	class zRefCounted
 	{
 	ZENClassDeclareNoParent(zRefCounted)
 	public:
-							zRefCounted();
+		ZENInline			zRefCounted();
 		virtual				~zRefCounted();
 		ZENInline void		ReferenceAdd();
 		ZENInline void		ReferenceRem();
-		int					ReferenceGet();
+		ZENInline zInt		ReferenceCount();
 	protected:
-		zInt				miRefCount;		
+		virtual	 void		ReferenceNoneCB();	//!< Called when no reference are left on object
+		zS32				miRefCount;		
+	};
+	
+	class zRefCountedAutoDel : public zRefCounted
+	{
+	ZENClassDeclare(zRefCountedAutoDel, zRefCounted);
+	protected:
+		virtual	 void		ReferenceNoneCB();
 	};
 
 	template<class TRefCountedType>
@@ -30,7 +37,7 @@ namespace zen { namespace zenType {
 		ZENInline const zRefOwner&			operator=(TRefCountedType* _pReference);
 		ZENInline bool						operator==(const zRefOwner& _Cmp);
 		ZENInline bool						operator!=(const zRefOwner& _Cmp);
-		ZENInline bool						IsValid();
+		ZENInline bool						IsValid()const;
 
 	protected:
 		TRefCountedType*					mpReference;
@@ -39,25 +46,19 @@ namespace zen { namespace zenType {
 	template<class TRefCountedType>
 	class zSharedPtr : public zRefOwner<TRefCountedType>
 	{
-	ZENClassDeclare(zSharedPtr, zRefOwner<TRefCountedType>)
+	ZENClassDeclare(zSharedPtr, zRefOwner )
 	public:
 		ZENInline 							zSharedPtr();
 		ZENInline 							zSharedPtr(TRefCountedType* _pReference);
 		ZENInline 							zSharedPtr(const zRefOwner<TRefCountedType>& _Copy);
-		/*
-		ZENInline 							~zSharedPtr();
-		ZENInline const zSharedPtr&			operator=(TRefCountedType* _pReference);
-		ZENInline bool						operator==(const zSharedPtr& _Cmp);
-		ZENInline bool						operator!=(const zSharedPtr& _Cmp);
-		ZENInline bool						IsValid();
-		*/
+
 		ZENInline TRefCountedType*			Get();				//!< Return a pointer to resource
 		ZENInline const TRefCountedType*	Get()const;			//!< Return a const pointer to resource
 		ZENInline TRefCountedType*			operator->();		//!< Return a pointer to resource
 		ZENInline const TRefCountedType*	operator->()const;	//!< Return a const pointer to resource
 		
 	protected:
-		TRefCountedType*				mpReference;
+		TRefCountedType*					mpReference;
 	};
 	
 }} // namespace zen, zenType

@@ -20,7 +20,7 @@ namespace ERes
 	//=============================================================================================
 	class GfxInputSignature_DX11 : public Resource
 	{
-	AWResourceDeclare(GfxInputSignature_DX11, EExp::SerialGfxInputSignature_DX11, zenConst::keResType_GfxInputSignature )
+	ZENResourceDeclare(GfxInputSignature_DX11, EExp::SerialGfxInputSignature_DX11, zenConst::keResType_GfxInputSignature )
 	};
 
 	//=============================================================================================
@@ -58,7 +58,7 @@ namespace ERes
 			ID3D11VertexShader*				mpVertexShader;
 			GfxInputSignatureRef			mGfxInputSignatureRef;
 		};
-	AWResourceDeclareParent(GfxShaderVertex_DX11, GfxShader_DX11, InstanceInfo, zenConst::keResType_GfxShaderVertex)
+	ZENResourceDeclareParent(GfxShaderVertex_DX11, GfxShader_DX11, InstanceInfo, zenConst::keResType_GfxShaderVertex)
 	public:
 		virtual								~GfxShaderVertex_DX11();
 		virtual bool						ResourceInit();
@@ -73,7 +73,7 @@ namespace ERes
 		{
 			ID3D11PixelShader*				mpPixelShader;
 		};
-	AWResourceDeclareParent(GfxShaderPixel_DX11, GfxShader_DX11, InstanceInfo, zenConst::keResType_GfxShaderPixel)
+	ZENResourceDeclareParent(GfxShaderPixel_DX11, GfxShader_DX11, InstanceInfo, zenConst::keResType_GfxShaderPixel)
 	public:
 		virtual								~GfxShaderPixel_DX11();
 		virtual bool						ResourceInit();		

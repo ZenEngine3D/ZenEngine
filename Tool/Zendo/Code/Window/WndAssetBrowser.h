@@ -22,7 +22,7 @@ protected:
 	void			UpdateAssetList();
 	void			UpdatePackageChecked(wxTreeListItem _ParentTreeID);
 	void			UpdateAssetCount();
-
+	void			ClearAssetList();
 	DECLARE_EVENT_TABLE()
 	void			OnAssetViewChange(wxCommandEvent& event);
 	void			OnAssetViewActivated(wxListEvent& event);

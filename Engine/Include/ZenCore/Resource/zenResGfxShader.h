@@ -4,7 +4,7 @@
 
 namespace zen { namespace zenRes {	
 
-	//! @todo remove this from api ?
+	//! @todo Clean: remove this from api ?
 	AWClassResourceRefDeclare(zGfxInputSignature, zenConst::keResType_GfxInputSignature) };
 	AWClassResourceRefDeclare(zGfxShaderParamDef, zenConst::keResType_GfxShaderParamDef) };
 
@@ -16,7 +16,7 @@ namespace zen { namespace zenRes {
 	public:	
 	};
 
-	//! @todo Expose shader compiling to runtime?
+	//! @todo Clean: Expose shader compiling to runtime?
 	AWClassResourceRefDeclare(zGfxShaderVertex, zenConst::keResType_GfxShaderVertex) 
 	public:
 		static zGfxShaderVertex Create( const char* _zFilename, const char* _zEntryname );

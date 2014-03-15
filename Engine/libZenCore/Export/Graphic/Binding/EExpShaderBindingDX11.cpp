@@ -66,7 +66,7 @@ namespace EExp
 			}
 			else
 			{
-				//! @todo export error, missing ParamDef
+				//! @todo Missing: export error, missing ParamDef
 			}
 		}
 		dParamDefPerName.Export( maParameterName, maParameterMask );

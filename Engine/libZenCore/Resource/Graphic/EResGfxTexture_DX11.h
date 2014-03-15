@@ -11,7 +11,7 @@ namespace ERes
 			ID3D11Texture2D*			mpTextureBuffer;
 			ID3D11ShaderResourceView*	mpTextureView;
 		};
-	AWResourceDeclare(GfxTexture2D_DX11, InstanceInfo, zenConst::keResType_GfxTexture2D)
+	ZENResourceDeclare(GfxTexture2D_DX11, InstanceInfo, zenConst::keResType_GfxTexture2D)
 	public:
 		virtual						~GfxTexture2D_DX11();
 		virtual bool				ResourceInit();

@@ -119,7 +119,7 @@ void WndAssetBrowser::CreateSectionType()
 	wxTreeListItem rootItem = mpTreeTypes->GetRootItem();
 	for(zUInt idx(0); idx<zenConst::keAssType__Count; ++idx)
 	{		
-		const char* zTypeDesc		= zeAss::AssetItem::GetTypeName( (zenConst::eAssetType)idx );
+		const char* zTypeDesc		= zenAss::AssetTypeToString( (zenConst::eAssetType)idx );
 		wxTreeListItem newItemID	= mpTreeTypes->AppendItem(rootItem, zTypeDesc, idx, idx); 	
 	}
 			
@@ -187,6 +187,7 @@ void WndAssetBrowser::RecreateSectionAsset()
 {
 	if( mpLstAsset )
 	{
+		ClearAssetList();
 		mpPanelAsset->GetSizer()->Detach(mpLstAsset);
 		zenDelNull(mpLstAsset);
 	}
@@ -204,12 +205,22 @@ void WndAssetBrowser::RecreateSectionAsset()
 	mpPanelAsset->GetSizer()->Add(mpLstAsset,	100,	wxGROW | wxALL, 2);
 }
 
+void WndAssetBrowser::ClearAssetList()
+{
+	for(zInt idx(0), count(mpLstAsset->GetItemCount()); idx<count; ++idx)
+		delete reinterpret_cast<zenAss::zAssetItem*>(mpLstAsset->GetItemData(idx));
+	mpLstAsset->ClearAll();	
+}
+
 void WndAssetBrowser::UpdateAssetList()
 {
-	mpLstAsset->Freeze();
-	mpLstAsset->DeleteAllItems();	
-	// Recreate Icon Image List
+	static zenMem::zAllocatorPool sPoolAsset("Asset Pool", sizeof(zenAss::zAssetItem), 256, 256 );
 	
+	// Free memory allocated, and clear list of asset
+	mpLstAsset->Freeze();
+	ClearAssetList();
+
+	// Recreate Icon Image List	
 	const wxImageList* pTypeIconList = wxGetApp().maIcon[ZendoApp::keIco_Asset128];
 	int sizeX, sizeY;
 	pTypeIconList->GetSize(0, sizeX, sizeY);
@@ -247,14 +258,14 @@ void WndAssetBrowser::UpdateAssetList()
 			if( mAssetTypeMask.Any( eTypeIdx ) )
 			{
 				zMap<zenAss::zAssetItem>::Key64::Iterator it;
-				rPackage.GetAsset( eTypeIdx ).GetFirst(it);
+				rPackage.GetAssets( eTypeIdx ).GetFirst(it);
 				while( it.IsValid() )
 				{
-					const zenAss::zAssetItem& rItem	= it.GetValue();
-					zUInt uIconIndex				= rItem.GetType();
+					zenAss::zAssetItem* prItem	= zenNew(&sPoolAsset) zenAss::zAssetItem(it.GetValue());
+					zUInt uIconIndex			= prItem->GetType();
 					if( IsViewIcon() )
 					{
-						const wxIcon* pIcon	= wxGetApp().GetIcon(rItem);
+						const wxIcon* pIcon	= wxGetApp().GetIcon(*prItem);
 						if(  pIcon )
 						{
 							uIconIndex = mpIconAsset->GetImageCount();
@@ -263,13 +274,13 @@ void WndAssetBrowser::UpdateAssetList()
 					}					
 
 					// Add the asset to list
-					long itemID = mpLstAsset->InsertItem(mpLstAsset->GetItemCount(), (const char*)rItem.GetName(), uIconIndex);
-				//! @todo	mpLstAsset->SetItemPtrData(itemID, reinterpret_cast<wxUIntPtr>(rItem));
+					long itemID = mpLstAsset->InsertItem(mpLstAsset->GetItemCount(), (const char*)prItem->GetName(), uIconIndex);
+					mpLstAsset->SetItemPtrData(itemID, reinterpret_cast<wxUIntPtr>(prItem));
 					if( IsViewDetail() )
-						mpLstAsset->SetItem(itemID, 1, (const char*)rItem.GetDescription());
+						mpLstAsset->SetItem(itemID, 1, (const char*)prItem->GetDescription());
 					
 					++uPackageItemCount;
-					++maCountPerType[rItem.GetType()];
+					++maCountPerType[prItem->GetType()];
 					++it;
 				}
 			}	
@@ -292,7 +303,7 @@ void WndAssetBrowser::UpdateAssetList()
 
 void WndAssetBrowser::AddPackages()
 {
-	const zMap<zenAss::zPackage>::Key64& dAllPackages = zeMgr::Asset.PackageGet();
+	const zMap<zenAss::zPackage>::Key64& dAllPackages = zenAss::GetPackages();
 	zMap<zenAss::zPackage>::Key64::Iterator it;	
 	mpTreePackage->DeleteAllItems();
 
@@ -447,7 +458,7 @@ void WndAssetBrowser::OnPackageItemChecked(wxTreeListEvent& event)
 		UpdatePackageChecked(event.GetItem());
 
 		// Update the list of selected packages
-		zArrayStatic<zenAss::zPackage> aPackageSelected(zeMgr::Asset.PackageGet().Count());
+		zArrayStatic<zenAss::zPackage> aPackageSelected(zenAss::GetPackages().Count());
 		wxTreeListItem itemCurrent = mpTreePackage->GetFirstItem();
 		zUInt uSelectedCount(0);
 		while( itemCurrent.IsOk() )
@@ -485,9 +496,9 @@ void WndAssetBrowser::OnPackageItemActivated(wxTreeListEvent& event)
 //=================================================================================================
 void WndAssetBrowser::OnAssetViewActivated(wxListEvent& event)
 {
-	zeAss::AssetItem* pItem = reinterpret_cast<zeAss::AssetItem*>(event.GetItem().GetData());
-	if( pItem )
-		wxGetApp().mpFrame->GetWndAssetProperty()->AddAssetTab( pItem->GetID() );
+	zenAss::zAssetItem* prItem = reinterpret_cast<zenAss::zAssetItem*>(event.GetItem().GetData());
+	if( prItem )
+		wxGetApp().mpFrame->GetWndAssetProperty()->AddAssetTab( prItem->GetID() );
 }
 
 //=================================================================================================

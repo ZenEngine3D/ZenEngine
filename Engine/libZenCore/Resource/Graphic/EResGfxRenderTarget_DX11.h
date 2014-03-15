@@ -12,7 +12,7 @@ namespace ERes
 			ID3D11DepthStencilView*	mpTargetDepthView;			
 			GfxTexture2DRef			mrTargetTexture;			
 		};
-	AWResourceDeclare(GfxRenderTarget_DX11, InstanceInfo, zenConst::keResType_GfxRenderTarget)
+	ZENResourceDeclare(GfxRenderTarget_DX11, InstanceInfo, zenConst::keResType_GfxRenderTarget)
 	//---------------------------------------------------------
 	// Common to all RenderTarget
 	//---------------------------------------------------------

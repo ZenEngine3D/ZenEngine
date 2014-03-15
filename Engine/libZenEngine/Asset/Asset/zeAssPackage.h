@@ -5,9 +5,9 @@
 #if ZEN_ENGINETOOL
 namespace zen { namespace zeAss
 {
-	class Package : public zRefCounted<true>
+	class Package : public zRefCountedAutoDel
 	{
-	ZENClassDeclare(Package, zRefCounted<true>)
+	ZENClassDeclare(Package, zRefCountedAutoDel)
 	public:
 													Package			();
 		virtual										~Package		();
@@ -20,7 +20,7 @@ namespace zen { namespace zeAss
 		ZENInline const zMap<zenAss::zAssetItem>::Key64&	GetAsset		(zenConst::eAssetType _eType){return madAssetPerType[_eType];}
 
 	protected:			
-		bool										Load			(const CFil::Filename& _Filename, zMap<AssetItem*>::Key64& _dAllAsset);
+		bool										Load			(const CFil::Filename& _Filename, zMap<zenAss::zAssetItem>::Key64& _dAllAsset);
 		void										Unload			();		
 
 		zHash64										mID;				//!< Package ID, taken from path		

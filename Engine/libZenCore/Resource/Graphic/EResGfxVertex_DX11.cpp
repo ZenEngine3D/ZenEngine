@@ -26,12 +26,11 @@ namespace ERes
 		};
 		ZENStaticAssert( ZENArrayCount(zSemanticNames)==zenConst::keShaderSemantic__Count );
 	
-		//D3D11_USAGE eUsage(D3D11_USAGE_DEFAULT);//! @todo configure this
+		//! @todo Missing: configure resource creations flags
+		//D3D11_USAGE eUsage(D3D11_USAGE_DEFAULT);
 		//zUInt uCpuAccess(0);
 		D3D11_USAGE eUsage(D3D11_USAGE_DYNAMIC);
 		UINT uCpuAccess(D3D11_CPU_ACCESS_WRITE);
-		//! @todo
-		//if( mInstanceInfo.eCreationFlags & SerialVertex_Base::keFlag_Static ) eUsage = D3D11_USAGE_IMMUTABLE;
 
 		// Vertex Streams buffer init
 		zUInt uStreamCount = mInstanceInfo.maStreamBuffer.SetCount( mInstanceInfo.mSerial.maStream.Count() );
@@ -75,9 +74,8 @@ namespace ERes
 
 	zU8* GfxVertex_DX11::Lock()
 	{
-		//! @todo some lock test here
-		//! @todo Stream index parameter
-		//! @todo specify access type
+		//! @todo Missing: Stream index parameter
+		//! @todo Missing: specify access type
 		if( Get().maStreamBuffer.Count() > 0 )
 		{
 			D3D11_MAPPED_SUBRESOURCE mapRes;
