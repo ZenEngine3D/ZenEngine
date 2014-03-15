@@ -12,13 +12,13 @@ namespace sample
 
 struct SimpleVertex
 {
-	zenVec3F Pos;
-	zenVec2F Tex;
+	zVec3F Pos;
+	zVec2F Tex;
 };
 
-class SampleRendererInstance : public awsys::awEngineInstance
+class SampleRendererInstance : public zenSys::zEngineInstance
 {
-ZENClassDeclare(SampleRendererInstance, awsys::awEngineInstance);
+ZENClassDeclare(SampleRendererInstance, zenSys::zEngineInstance);
 public:
 	virtual bool Init();
 	virtual void Destroy();
@@ -29,21 +29,21 @@ protected:
 	zenMath::Matrix				matView;
 	zenMath::Matrix				matProjection;
 	zenMath::Matrix				matProjectionRT;
-	zenRes::GfxVertex			rCubeVertex;	
-	zenRes::GfxIndex			rCubeIndex;	
-	zenRes::GfxShaderVertex	rShaderVS;	
-	zenRes::GfxShaderPixel		rShaderPS;	
-	zenRes::GfxTexture2D		rTexture;	
-	zenRes::GfxSampler			rSampler;	
-	zenRes::GfxSampler			rSampler2;	
-	zenRes::GfxRenderTarget	rRenderColor;
-	zenRes::GfxRenderTarget	rRenderDepth;
-	zenRes::GfxView			rView;
-	zenRes::GfxShaderBinding	rTestShaderBind;
-	zenRes::GfxMeshStrip		rCube1MeshStrip;
-	zenRes::GfxMeshStrip		rCube2MeshStrip;
-	zenRes::GfxMeshStrip		rCube3MeshStrip;
-	zenRes::GfxMesh			rCube4Mesh;
+	zenRes::zGfxVertex			rCubeVertex;	
+	zenRes::zGfxIndex			rCubeIndex;	
+	zenRes::zGfxShaderVertex	rShaderVS;	
+	zenRes::zGfxShaderPixel		rShaderPS;	
+	zenRes::zGfxTexture2D		rTexture;	
+	zenRes::zGfxSampler			rSampler;	
+	zenRes::zGfxSampler			rSampler2;	
+	zenRes::zGfxRenderTarget	rRenderColor;
+	zenRes::zGfxRenderTarget	rRenderDepth;
+	zenRes::zGfxView			rView;
+	zenRes::zGfxShaderBinding	rTestShaderBind;
+	zenRes::zGfxMeshStrip		rCube1MeshStrip;
+	zenRes::zGfxMeshStrip		rCube2MeshStrip;
+	zenRes::zGfxMeshStrip		rCube3MeshStrip;
+	zenRes::zGfxMesh			rCube4Mesh;
 };
 
 }

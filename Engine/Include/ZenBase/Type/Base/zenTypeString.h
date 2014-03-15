@@ -5,29 +5,29 @@
 namespace zen { namespace zenType {
 
 //=================================================================================================
-//! @class		zenString
+//! @class		zString
 //-------------------------------------------------------------------------------------------------
 //! @brief		Very primitive implementation at the moment, will grow with need
-//! @todo		Support datasharing with same strings, format, etc...
+//! @todo Optim: Support datasharing with same strings, format, etc...
 //=================================================================================================
-class zenString
+class zString
 {
-ZENClassDeclareNoParent(zenString)
+ZENClassDeclareNoParent(zString)
 public:
-	inline 				zenString();
-	inline 				zenString(const zenString& _zString);
-	inline 				zenString(const char* _zString);
+	ZENInline 				zString();
+	ZENInline 				zString(const zString& _zString);
+	ZENInline 				zString(const char* _zString);
 
-	inline zenString&	operator=(const zenString& _zString);
-	inline zenString&	operator=(const char* _zString);
-	inline zenString&	operator+=(const zenString& _zString);
-	inline zenString&	operator+=(const char* _zString);
-	inline 				operator const char*() const;
+	ZENInline zString&		operator=(const zString& _zString);
+	ZENInline zString&		operator=(const char* _zString);
+	ZENInline zString&		operator+=(const zString& _zString);
+	ZENInline zString&		operator+=(const char* _zString);
+	ZENInline 				operator const char*() const;
 	
-	inline const char*	Last(zenUInt index=0)const;
+	ZENInline const char*	Last(zUInt index=0)const;
 
 protected:
-	zenArrayDynamic<char>	maChar;
+	zArrayDynamic<char>	maChar;
 };
 
 }}  //namespace zen, Type 

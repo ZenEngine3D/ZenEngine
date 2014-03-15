@@ -7,30 +7,30 @@ namespace zen { namespace zenRes {
 	//=============================================================================================
 	//! @class	Used for shader compiling preprocessor
 	//=============================================================================================
-	class awShaderDefine
+	class zShaderDefine
 	{
-	ZENClassDeclareNoParent(awShaderDefine)
+	ZENClassDeclareNoParent(zShaderDefine)
 	public:
-		inline		awShaderDefine();
-		inline		awShaderDefine(const char* _zName, const char* _zValue);
-		inline		awShaderDefine(const zenString& _zName, const zenString& _zValue);
-		zenString	mzName;
-		zenString	mzValue;
+		ZENInline	zShaderDefine();
+		ZENInline	zShaderDefine(const char* _zName, const char* _zValue);
+		ZENInline	zShaderDefine(const zString& _zName, const zString& _zValue);
+		zString		mzName;
+		zString		mzValue;
 	};
 
 	//=============================================================================================
 	//! @class	Used when setting the properties of a texture/sampler pair
 	//=============================================================================================
-	class awShaderTexture
+	class zShaderTexture
 	{
-	ZENClassDeclareNoParent(awShaderTexture)
+	ZENClassDeclareNoParent(zShaderTexture)
 	public:
-		inline awShaderTexture();
-		inline awShaderTexture(zenHash32 _hTextureName, zenResID _TextureID, zenResID _SamplerID);
+		ZENInline	zShaderTexture();
+		ZENInline	zShaderTexture(zHash32 _hTextureName, zResID _TextureID, zResID _SamplerID);
 
-		zenHash32		mhTextureName;
-		zenResID	mTextureID;
-		zenResID	mSamplerID;
+		zHash32		mhTextureName;
+		zResID		mTextureID;
+		zResID		mSamplerID;
 	};
 
 	//=============================================================================================
@@ -38,67 +38,67 @@ namespace zen { namespace zenRes {
 	//!			of various parameters types that can set at once. Child class configure the content
 	//!			of this parent
 	//=============================================================================================
-	class awShaderParameter
+	class zShaderParameter
 	{
-	ZENClassDeclareNoParent(awShaderParameter)
+	ZENClassDeclareNoParent(zShaderParameter)
 	public:
-		zenHash32	mhName;						//!< Parameter name
-		zenU32		meType			: 4;		//!< eShaderElementType
-		zenU32		muVectorSize	: 4;		//!< Number of elements in vector
-		zenU32		muArrayCount	: 10;		//!< Number of elements in array
-		zenU32		muSizeTotal		: 16;		//!< Total size of the child class
-		inline const void* GetData()const {return this + 1;}
+		zHash32		mhName;						//!< Parameter name
+		zU32		meType			: 4;		//!< eShaderElementType
+		zU32		muVectorSize	: 4;		//!< Number of elements in vector
+		zU32		muArrayCount	: 10;		//!< Number of elements in array
+		zU32		muSizeTotal		: 16;		//!< Total size of the child class
+		ZENInline const void* GetData()const {return this + 1;}
 
 	protected:
-		inline			awShaderParameter(zenHash32 _hName, awconst::eShaderElementType _eType, zenU16 _uVectorSize, zenU16 _uArrayCount, zenU16 _uSizeTotal);
+		ZENInline			zShaderParameter(zHash32 _hName, zenConst::eShaderElementType _eType, zU16 _uVectorSize, zU16 _uArrayCount, zU16 _uSizeTotal);
 	};
 
-	template <class TType, awconst::eShaderElementType TShaderType>
-	class awShaderParamVector1 : public awShaderParameter
+	template <class TType, zenConst::eShaderElementType TShaderType>
+	class zShaderParamVector1 : public zShaderParameter
 	{
-	ZENClassDeclare(awShaderParamVector1, awShaderParameter)
+	ZENClassDeclare(zShaderParamVector1, zShaderParameter)
 	public:
-		inline		awShaderParamVector1( zenHash32 _hName, TType _Value);
+		ZENInline		zShaderParamVector1( zHash32 _hName, TType _Value);
 		TType		mValue;
 	};
 
-	template <class TType, awconst::eShaderElementType TShaderType>
-	class awShaderParamVector2 : public awShaderParameter
+	template <class TType, zenConst::eShaderElementType TShaderType>
+	class zShaderParamVector2 : public zShaderParameter
 	{
-	ZENClassDeclare(awShaderParamVector2, awShaderParameter)
+	ZENClassDeclare(zShaderParamVector2, zShaderParameter)
 	public:
-		inline		awShaderParamVector2( zenHash32 _hName, TType _Value1, TType _Value2); 
-		inline		awShaderParamVector2( zenHash32 _hName, const TType _Values[2]);
-		inline		awShaderParamVector2( zenHash32 _hName, const zenVector2<TType>& _vValue);
+		ZENInline		zShaderParamVector2( zHash32 _hName, TType _Value1, TType _Value2); 
+		ZENInline		zShaderParamVector2( zHash32 _hName, const TType _Values[2]);
+		ZENInline		zShaderParamVector2( zHash32 _hName, const zVector2<TType>& _vValue);
 		TType		mValue[2];
 	};
 
-	template <class TType, awconst::eShaderElementType TShaderType>
-	class awShaderParamVector3 : public awShaderParameter
+	template <class TType, zenConst::eShaderElementType TShaderType>
+	class zShaderParamVector3 : public zShaderParameter
 	{
-	ZENClassDeclare(awShaderParamVector3, awShaderParameter)
+	ZENClassDeclare(zShaderParamVector3, zShaderParameter)
 	public:
-		inline		awShaderParamVector3( zenHash32 _hName, TType _Value1, TType _Value2, TType _Value3); 
-		inline		awShaderParamVector3( zenHash32 _hName, const TType _Values[3]);
-		inline		awShaderParamVector3( zenHash32 _hName, const zenVector3<TType>& _vValue);
+		ZENInline		zShaderParamVector3( zHash32 _hName, TType _Value1, TType _Value2, TType _Value3); 
+		ZENInline		zShaderParamVector3( zHash32 _hName, const TType _Values[3]);
+		ZENInline		zShaderParamVector3( zHash32 _hName, const zVector3<TType>& _vValue);
 		TType		mValue[3];
 	};
 
-	template <class TType, awconst::eShaderElementType TShaderType>
-	class awShaderParamVector4 : public awShaderParameter
+	template <class TType, zenConst::eShaderElementType TShaderType>
+	class zShaderParamVector4 : public zShaderParameter
 	{
-	ZENClassDeclare(awShaderParamVector4, awShaderParameter)
+	ZENClassDeclare(zShaderParamVector4, zShaderParameter)
 	public:
-		inline		awShaderParamVector4( zenHash32 _hName, TType _Value1, TType _Value2, TType _Value3, TType _Value4);
-		inline		awShaderParamVector4( zenHash32 _hName, const TType _Values[4]);
-		inline		awShaderParamVector4( zenHash32 _hName, const zenVector4<TType>& _vValues);
+		ZENInline		zShaderParamVector4( zHash32 _hName, TType _Value1, TType _Value2, TType _Value3, TType _Value4);
+		ZENInline		zShaderParamVector4( zHash32 _hName, const TType _Values[4]);
+		ZENInline		zShaderParamVector4( zHash32 _hName, const zVector4<TType>& _vValues);
 		TType		mValue[4];
 	};
 
-	typedef awShaderParamVector1<float, awconst::keShaderElemType_Float> awShaderFloat1;
-	typedef awShaderParamVector2<float, awconst::keShaderElemType_Float> awShaderFloat2;
-	typedef awShaderParamVector3<float, awconst::keShaderElemType_Float> awShaderFloat3;
-	typedef awShaderParamVector4<float, awconst::keShaderElemType_Float> awShaderFloat4;
+	typedef zShaderParamVector1<float, zenConst::keShaderElemType_Float> zShaderFloat1;
+	typedef zShaderParamVector2<float, zenConst::keShaderElemType_Float> zShaderFloat2;
+	typedef zShaderParamVector3<float, zenConst::keShaderElemType_Float> zShaderFloat3;
+	typedef zShaderParamVector4<float, zenConst::keShaderElemType_Float> zShaderFloat4;
 
 }} // namespace zen, zenRes
 

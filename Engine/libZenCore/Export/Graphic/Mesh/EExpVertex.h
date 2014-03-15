@@ -10,7 +10,7 @@ namespace EExp
 	ZENClassDeclareNoParent(VertexElemInfo)
 	public:
 							VertexElemInfo(){};
-							VertexElemInfo(eShaderElementType _eType, zenU8 _ElementCount, eShaderSemantic _eSemantic, zenU8 _Offset )
+							VertexElemInfo(eShaderElementType _eType, zU8 _ElementCount, eShaderSemantic _eSemantic, zU8 _Offset )
 							: meType(_eType)
 							, meSemantic(_eSemantic)
 							, muVectorSize(_ElementCount)
@@ -19,17 +19,17 @@ namespace EExp
 
 		eShaderElementType	meType;
 		eShaderSemantic		meSemantic;
-		zenU8					muVectorSize;
-		zenU8					muOffset;		
+		zU8					muVectorSize;
+		zU8					muOffset;		
 	};
 
 	class VertexStreamInfo
 	{
 	ZENClassDeclareNoParent(VertexStreamInfo)
 	public:
-		zenArrayStatic<zenU8>				maData;
-		zenArrayStatic<VertexElemInfo>	maElements;
-		zenU8							muStride;
+		zArrayStatic<zU8>				maData;
+		zArrayStatic<VertexElemInfo>	maElements;
+		zU8							muStride;
 		VertexStreamInfo& operator=(const VertexStreamInfo& _Copy)
 		{
 			maData		= _Copy.maData;
@@ -44,23 +44,14 @@ namespace EExp
 	{
 	ZENClassDeclare(SerialVertex_Base,EExp::ExportItem)
 	public:
-		//! @todo replace awu32 flag by generic flag class
-		enum eCreationFlags
-		{
-			keFlag_Static	= 1<<0,		// Never updated once created
-			keFlag_Dynamic	= 1<<1,		// Can be updated once per frame
-			keFlag_Volatile	= 1<<2,		// Can be updated multiple time per frame
-		};
-
-		
 		struct ExportInfo : public EExp::ExportInfoBase
 		{			
-			zenArrayStatic<zenRes::GfxVertex::Stream>	maStreams;
-			zenU32										muCreationFlags;
+			zArrayStatic<zenRes::zGfxVertex::Stream>	maStreams;
+			zFlagResUse									mResourceUse;
 		};
 	};
 	
-	zenResID CreateGfxVertex(const zenArrayBase<zenRes::GfxVertex::Stream>& _aStreams, zenU32 _uCreationFlags);
+	zResID CreateGfxVertex(const zArrayBase<zenRes::zGfxVertex::Stream>& _aStreams, zFlagResUse _ResourceUse);
 }
 
 #include "EExpVertexDX11.h"

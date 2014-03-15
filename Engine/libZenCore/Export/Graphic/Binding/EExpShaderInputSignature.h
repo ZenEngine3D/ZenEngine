@@ -11,11 +11,11 @@ ZENClassDeclare(SerialInputSignature_Base, EExp::ExportItem)
 public:
 	struct ExportInfo : public EExp::ExportInfoBase
 	{				
-		zenResID mParentShaderID;
+		zResID mParentShaderID;
 	};
 };
 
-zenResID CreateGfxInputSignature( const zenResID& _ParentShaderID );
+zResID CreateGfxInputSignature( const zResID& _ParentShaderID );
 
 }
 

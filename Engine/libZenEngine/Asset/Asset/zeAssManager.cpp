@@ -1,5 +1,5 @@
 #include "libZenEngine.h"
-#if AW_ENGINETOOL
+#if ZEN_ENGINETOOL
 namespace zeMgr{ zeAss::ManagerAsset Asset; }
 
 namespace zen { namespace zeAss
@@ -45,33 +45,33 @@ void ManagerAsset::PackageAdd( Package* _pPackage )
 	// Process adding package
 }
 
-void ManagerAsset::PackageRename( zenHash32 _hOldID, zenHash32 _hNewID)
+void ManagerAsset::PackageRename( zHash64 _hOldID, zHash64 _hNewID)
 {
-	Package* pPackage = mdPackage[_hOldID];
-	if( pPackage )
+	zenAss::zPackage rPackage = mdPackage[_hOldID];
+	if( rPackage.IsValid() )
 	{		
 		mdPackage.Unset(_hOldID);
-		mdPackage.Set(_hNewID, pPackage);
+		mdPackage.Set(_hNewID, rPackage);
 	}	
 }
 
-void ManagerAsset::PackageRemove( zenHash32 _hPackageID )	
+void ManagerAsset::PackageRemove( zHash64 _hPackageID )	
 {
-	//! @todo : Process removal
+	//! @todo Asset: Process removal
 	ZENAssert(0);
-	Package* pPackage = mdPackage[_hPackageID];
-	if( pPackage )
+	zenAss::zPackage rPackage = mdPackage[_hPackageID];
+	if( rPackage.IsValid() )
 	{		
 		mdPackage.Unset(_hPackageID);
 	}	
 }
 
-Package* ManagerAsset::PackageGet( zenHash32 _hPackageID )
+const zenAss::zPackage& ManagerAsset::PackageGet( zHash64 _hPackageID )
 {
 	return mdPackage[_hPackageID];
 }
 
-AssetItem* ManagerAsset::AssetGet( zenHash64 _hAssetID )
+const zenAss::zAssetItem& ManagerAsset::AssetGet( zHash64 _hAssetID )
 {
 	return mdAsset[_hAssetID];
 }
@@ -82,7 +82,7 @@ void ManagerAsset::PackageLoad()
 	PackageLoad( "" );
 }
 
-void ManagerAsset::PackageLoad(const zenString& _zDir)
+void ManagerAsset::PackageLoad(const zString& _zDir)
 {
 	//---------------------------------------------------------------
 	// Load all package file from currently loading directory
@@ -101,4 +101,4 @@ void ManagerAsset::PackageLoad(const zenString& _zDir)
 
 }} //namespace zen { namespace zeAss
 
-#endif //AW_ENGINETOOL
+#endif //ZEN_ENGINETOOL

@@ -4,31 +4,31 @@
 
 namespace zen { namespace zenRes {	
 	
-	AWClassResourceRefDeclare(GfxVertex, awconst::keResType_GfxVertex)
+	AWClassResourceRefDeclare(zGfxVertex, zenConst::keResType_GfxVertex)
 	public:
 		struct Element
 		{
 		public:
 			Element(){};
-			Element(awconst::eShaderElementType _eType, zenU8 _ElementCount, awconst::eShaderSemantic _eSemantic, zenU8 _Offset )
+			Element(zenConst::eShaderElementType _eType, zU8 _ElementCount, zenConst::eShaderSemantic _eSemantic, zU8 _Offset )
 			: meType(_eType)
 			, meSemantic(_eSemantic)
 			, muVectorSize(_ElementCount)
 			, muOffset(_Offset)
 			{}
 
-			awconst::eShaderElementType	meType;
-			awconst::eShaderSemantic	meSemantic;
-			zenU8						muVectorSize;
-			zenU8						muOffset;		
+			zenConst::eShaderElementType	meType;
+			zenConst::eShaderSemantic	meSemantic;
+			zU8						muVectorSize;
+			zU8						muOffset;		
 		};
 
 		struct Stream
 		{
 		public:
-			zenArrayStatic<zenU8>		maData;
-			zenArrayStatic<Element>	maElements;
-			zenU8					muStride;
+			zArrayStatic<zU8>		maData;
+			zArrayStatic<Element>	maElements;
+			zU8					muStride;
 			Stream& operator=(const Stream& _Copy)
 			{
 				maData		= _Copy.maData;
@@ -38,38 +38,37 @@ namespace zen { namespace zenRes {
 			}
 		};
 	public:		
-		zenU8*					Lock();
+		zU8*					Lock();
 		void					Unlock();
 		
-		static GfxVertex		Create(const zenArrayBase<GfxVertex::Stream>& _aStreams, zenU32 _uCreationFlags);
+		static zGfxVertex		Create(const zArrayBase<zGfxVertex::Stream>& _aStreams, zFlagResUse _ResourceUse);
 	};
 
-	AWClassResourceRefDeclare(GfxIndex, awconst::keResType_GfxIndex)
+	AWClassResourceRefDeclare(zGfxIndex, zenConst::keResType_GfxIndex)
 	public:		
-		zenU8*					Lock();
+		zU8*					Lock();
 		void					Unlock();
 
-		static GfxIndex			Create(const zenArrayBase<zenU16>& _Indices, awconst::ePrimitiveType _ePrimitiveType);
-		static GfxIndex			Create(const zenArrayBase<zenU32>& _Indices, awconst::ePrimitiveType _ePrimitiveType);
+		static zGfxIndex		Create(const zArrayBase<zU16>& _Indices, zenConst::ePrimitiveType _ePrimitiveType);
+		static zGfxIndex		Create(const zArrayBase<zU32>& _Indices, zenConst::ePrimitiveType _ePrimitiveType);
 	};
 
-	AWClassResourceRefDeclare(GfxTexture2D, awconst::keResType_GfxTexture2D)
+	AWClassResourceRefDeclare(zGfxTexture2D, zenConst::keResType_GfxTexture2D)
 	public:		
-		const zenVec2U16&		GetDim();
-		static GfxTexture2D		Create(awconst::eTextureFormat _eFormat, zenVec2U16 _vDim, awFlagResTexCreate _CreationFlags=awFlagResTexCreate());		
-		static GfxTexture2D		Create(awconst::eTextureFormat _eFormat, zenVec2U16 _vDim, const zenArrayBase<zenU8>& _aRawData, awFlagResTexCreate _CreationFlags=awFlagResTexCreate());
+		const zVec2U16&			GetDim();
+		static zGfxTexture2D	Create(zenConst::eTextureFormat _eFormat, zVec2U16 _vDim, zFlagResTexUse _CreationFlags=zFlagResTexUse());		
+		static zGfxTexture2D	Create(zenConst::eTextureFormat _eFormat, zVec2U16 _vDim, const zArrayBase<zU8>& _aRawData, zFlagResTexUse _CreationFlags=zFlagResTexUse());
 	};
 
-	AWClassResourceRefDeclare(GfxRenderTarget, awconst::keResType_GfxRenderTarget)
+	AWClassResourceRefDeclare(zGfxRenderTarget, zenConst::keResType_GfxRenderTarget)
 	public:		
 		bool					IsDepth();
-		const zenVec2U16&		GetDim();
-		GfxTexture2D			GetTexture2D();
-		void					Clear(const zenVec4F& _vRGBA);
-		void					Clear(float _fDepth=1, zenU8 _uStencil=0, bool _bClearDepth=true, bool _bClearStencil=false);
+		const zVec2U16&			GetDim();
+		zGfxTexture2D			GetTexture2D();
+		void					Clear(const zVec4F& _vRGBA);
+		void					Clear(float _fDepth=1, zU8 _uStencil=0, bool _bClearDepth=true, bool _bClearStencil=false);
 		
-
-		static GfxRenderTarget	Create(awconst::eTextureFormat _eFormat, zenVec2U16 _vDim, bool _bSrgb=true);
+		static zGfxRenderTarget	Create(zenConst::eTextureFormat _eFormat, zVec2U16 _vDim, bool _bSrgb=true);
 	};
 
 }} // namespace zen, zenRes

@@ -20,22 +20,22 @@ namespace EExp
 	public:
 		struct Version
 		{	
-			Version():muEngine(awconst::keEngineVersion__Current),muMajor(0),muMinor(0){};
-			Version(zenU8 auMajor, zenU8 auMinor):muEngine(awconst::keEngineVersion__Current),muMajor(auMajor),muMinor(auMinor){};
+			Version():muEngine(zenConst::keEngineVersion__Current),muMajor(0),muMinor(0){};
+			Version(zU8 auMajor, zU8 auMinor):muEngine(zenConst::keEngineVersion__Current),muMajor(auMajor),muMinor(auMinor){};
 			Version(const Version& aCopy):muEngine(aCopy.muEngine),muMajor(aCopy.muMajor),muMinor(aCopy.muMinor){};
-			bool IsValid( awconst::eResType _eResType )const {return muEngine==awconst::keEngineVersion__Current && SerialItem::sVersions[_eResType].muMajor == muMajor && SerialItem::sVersions[_eResType].muMinor == muMinor; }
-			zenU16 muEngine;
-			zenU8 muMajor;	
-			zenU8 muMinor;	
+			bool IsValid( zenConst::eResType _eResType )const {return muEngine==zenConst::keEngineVersion__Current && SerialItem::sVersions[_eResType].muMajor == muMajor && SerialItem::sVersions[_eResType].muMinor == muMinor; }
+			zU16 muEngine;
+			zU8 muMajor;	
+			zU8 muMinor;	
 		};
-									SerialItem();		
-		virtual bool				Serialize( EExp::Serializer_Base& aSerializer );		
+								SerialItem();		
+		virtual bool			Serialize( EExp::Serializer_Base& aSerializer );		
 
-		zenU32							muSize;
-		Version						mVersion;
-		zenTimeStamp			mExportTime;		
-		zenResID			mResID;				
-		static const Version		sVersions[awconst::keResType__Count];
+		zU32					muSize;
+		Version					mVersion;
+		zTimeStamp				mExportTime;		
+		zResID					mResID;				
+		static const Version	sVersions[zenConst::keResType__Count];
 	};
 }
 

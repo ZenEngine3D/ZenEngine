@@ -12,33 +12,33 @@ bool SerialGfxInputSignature_DX11::Serialize( EExp::Serializer_Base& _Serializer
 	return FALSE; 
 }
 
-zenResID SerialGfxInputSignature_DX11::CallbackGetItemID(awconst::eResPlatform _ePlatform, awconst::eResType _eType, awconst::eResSource _eSource, const EExp::ExportInfoBase* _pExportInfo, bool& _bExistOut)
+zResID SerialGfxInputSignature_DX11::CallbackGetItemID(zenConst::eResPlatform _ePlatform, zenConst::eResType _eType, zenConst::eResSource _eSource, const EExp::ExportInfoBase* _pExportInfo, bool& _bExistOut)
 {
-	ZENAssert(_ePlatform==awconst::keResPlatform_DX11 && _eType==awconst::keResType_GfxInputSignature);
+	ZENAssert(_ePlatform==zenConst::keResPlatform_DX11 && _eType==zenConst::keResType_GfxInputSignature);
 	ZENAssert( _pExportInfo );
 	const ExportInfo* pExportInfo = static_cast<const ExportInfo*>(_pExportInfo);
 	
-	zenResID::NameHash hName;
+	zResID::NameHash hName;
 	const SerialShader_DX11* pParentShader = EMgr::SerialItems.GetItem<SerialShader_DX11>( pExportInfo->mParentShaderID );
 	if( pParentShader )
 	{
 		ID3D11ShaderReflection* pGfxShaderReflection = NULL;	
 		if ( SUCCEEDED( D3DReflect( &pParentShader->mSerialCommon.maCompiledShader[0], pParentShader->mSerialCommon.maCompiledShader.Size(), IID_ID3D11ShaderReflection, (void**)&pGfxShaderReflection ) ) ) 
 		{
-			// Get zenResID of Input Signature
+			// Get zResID of Input Signature
 			D3D11_SHADER_DESC shaderDesc;
 			pGfxShaderReflection->GetDesc( &shaderDesc );
-			for ( zenU32 i=0; i< shaderDesc.InputParameters; i++ )
+			for ( zU32 i=0; i< shaderDesc.InputParameters; i++ )
 			{
 				D3D11_SIGNATURE_PARAMETER_DESC paramDesc;
 				pGfxShaderReflection->GetInputParameterDesc(i, &paramDesc );
 				hName.Append(paramDesc.SemanticName);
-				hName.Append((zenU8*)&paramDesc.SemanticIndex, sizeof(paramDesc.SemanticIndex) );
-				hName.Append((zenU8*)&paramDesc.Register, sizeof(paramDesc.Register) );
-				hName.Append((zenU8*)&paramDesc.SystemValueType, sizeof(paramDesc.SystemValueType) );
-				hName.Append((zenU8*)&paramDesc.ComponentType, sizeof(paramDesc.ComponentType) );
-				hName.Append((zenU8*)&paramDesc.Mask, sizeof(paramDesc.Mask) );
-				//SignatureID.Append((zenU8*)&paramDesc.ReadWriteMask, sizeof(paramDesc.ReadWriteMask) );		
+				hName.Append((zU8*)&paramDesc.SemanticIndex, sizeof(paramDesc.SemanticIndex) );
+				hName.Append((zU8*)&paramDesc.Register, sizeof(paramDesc.Register) );
+				hName.Append((zU8*)&paramDesc.SystemValueType, sizeof(paramDesc.SystemValueType) );
+				hName.Append((zU8*)&paramDesc.ComponentType, sizeof(paramDesc.ComponentType) );
+				hName.Append((zU8*)&paramDesc.Mask, sizeof(paramDesc.Mask) );
+				//SignatureID.Append((zU8*)&paramDesc.ReadWriteMask, sizeof(paramDesc.ReadWriteMask) );		
 			}		
 			pGfxShaderReflection->Release();	 //Free allocation shader reflection memory
 		}
@@ -96,11 +96,11 @@ bool SerialGfxInputSignature_DX11::ExportWork(bool _bIsTHRTask)
 		//-----------------------------------------------------------------------------------------
 		// Create dummy shader code
 		//-----------------------------------------------------------------------------------------		
-		const char* zVarTypes[4]={"","zenUInt","int","float"};	//Match D3D10_REGISTER_COMPONENT_TYPE
+		const char* zVarTypes[4]={"","zUInt","int","float"};	//Match D3D10_REGISTER_COMPONENT_TYPE
 		D3D11_SHADER_DESC shaderDesc;
 		pGfxShaderReflection->GetDesc( &shaderDesc );
 		strncpy(zShaderText, "struct VS_INPUT {\n", sizeof(zShaderText) );		
-		for ( zenU32 i=0; i<shaderDesc.InputParameters; ++i )
+		for ( zU32 i=0; i<shaderDesc.InputParameters; ++i )
 		{			
 			D3D11_SIGNATURE_PARAMETER_DESC paramDesc;
 			pGfxShaderReflection->GetInputParameterDesc(i, &paramDesc );
@@ -118,7 +118,7 @@ bool SerialGfxInputSignature_DX11::ExportWork(bool _bIsTHRTask)
 		ID3DBlob*	pShaderCompiled;
 		if( SUCCEEDED(D3DCompile( zShaderText, strlen(zShaderText), NULL, NULL, NULL, "main", "vs_5_0", dwShaderFlags, 0, &pShaderCompiled, &pErrorBlob) ) )
 		{
-			maDummyShaderCode.Copy( (zenU8*)pShaderCompiled->GetBufferPointer(), zenUInt(pShaderCompiled->GetBufferSize())  );
+			maDummyShaderCode.Copy( (zU8*)pShaderCompiled->GetBufferPointer(), zUInt(pShaderCompiled->GetBufferSize())  );
 			bSuccess = TRUE;
 		}
 		

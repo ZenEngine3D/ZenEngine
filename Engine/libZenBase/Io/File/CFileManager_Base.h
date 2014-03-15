@@ -35,13 +35,13 @@ namespace CFil
 		const wchar_t*					GetPathParent()const;
 		const wchar_t*					GetPathFull()const;
 		const wchar_t*					GetExt()const;
-		void							SplitFolder(zenArrayDynamic<zenArrayStatic<wchar_t>>& _aFolder)const;
+		void							SplitFolder(zArrayDynamic<zArrayStatic<wchar_t>>& _aFolder)const;
 	protected:	
-		inline void						FindOffsets();
-		mutable zenArrayDynamic<wchar_t>	mzFilename;			//!< Contains filename string, +2characters to handle no offset for some filename component (ext, parentdir, ...)
-		zenU16								muOffsetName;		//!< Offset to filename,extension
-		zenU16								muOffsetParentPath;	//!< Offset to parent folder, filename, extension
-		zenU16								muOffsetExt;		//!< Offset to extension
+		ZENInline void						FindOffsets();
+		mutable zArrayDynamic<wchar_t>	mzFilename;			//!< Contains filename string, +2characters to handle no offset for some filename component (ext, parentdir, ...)
+		zU16								muOffsetName;		//!< Offset to filename,extension
+		zU16								muOffsetParentPath;	//!< Offset to parent folder, filename, extension
+		zU16								muOffsetExt;		//!< Offset to extension
 	};
 
 	class File
@@ -63,25 +63,25 @@ namespace CFil
 	public:
 		struct FileTime
 		{
-			zenU16		Year;
-			zenU16		Month	: 4;
-			zenU16		Day		: 9;
-			zenU16		Hour	: 5;
-			zenU16		Second	: 6;
+			zU16		Year;
+			zU16		Month	: 4;
+			zU16		Day		: 9;
+			zU16		Hour	: 5;
+			zU16		Second	: 6;
 		};
 								FileInfo();
 		const Filename&			GetFilename()const	{return mFilename;}
-		inline bool				IsDir()const		{return (muFlags&keFileFlag_Dir)!=0; }
-		inline bool				IsFile()const		{return (muFlags&keFileFlag_File)!=0; }
-		inline zenS64			GetFileSize()const	{return miFileSize;}
-		inline zenS64			GetFilePos()const	{return miFilePos;}
+		ZENInline bool				IsDir()const		{return (muFlags&keFileFlag_Dir)!=0; }
+		ZENInline bool				IsFile()const		{return (muFlags&keFileFlag_File)!=0; }
+		ZENInline zS64			GetFileSize()const	{return miFileSize;}
+		ZENInline zS64			GetFilePos()const	{return miFilePos;}
 		bool					IsEOF()const;
 
 		void					Close();
-		void					Seek(const zenS64 uFilePos);
-		void					Skip(const zenS32 iNumOfBytes);
-		void					Read(void* pxDest, const zenU32 uNumBytes);
-		void					Write(const void* pxSource, const zenU32 uNumBytes);
+		void					Seek(const zS64 uFilePos);
+		void					Skip(const zS32 iNumOfBytes);
+		void					Read(void* pxDest, const zU32 uNumBytes);
+		void					Write(const void* pxSource, const zU32 uNumBytes);
 		void					Flush();
 
 		const FileInfo&	operator=(const FileInfo& _Copy);
@@ -90,9 +90,9 @@ namespace CFil
 		FileTime				mTimeCreated;
 		FileTime				mTimeChanged;
 		FileTime				mTimeAccess;
-		zenS64					miFileSize;
-		zenS64					miFilePos;
-		zenUInt					muFlags;
+		zS64					miFileSize;
+		zS64					miFilePos;
+		zUInt					muFlags;
 		bool					mbValidHandle;
 		
 		friend class			ManagerFile;
@@ -158,39 +158,39 @@ namespace CFil
 
 					~AWStream( void )							{m_hFileHandle.Close();}
 
-		void		Seek(const zenS64 uFilePos)					{m_hFileHandle.Seek(uFilePos);}
-		void		Skip(const zenS32 iNumOfBytes)				{m_hFileHandle.Skip(iNumOfBytes);}
-		zenS64		GetFileSize(void)							{return m_hFileHandle.GetFileSize();}
-		zenS64		GetFilePosition(void)						{return m_hFileHandle.GetFilePos();}
+		void		Seek(const zS64 uFilePos)					{m_hFileHandle.Seek(uFilePos);}
+		void		Skip(const zS32 iNumOfBytes)				{m_hFileHandle.Skip(iNumOfBytes);}
+		zS64		GetFileSize(void)							{return m_hFileHandle.GetFileSize();}
+		zS64		GetFilePosition(void)						{return m_hFileHandle.GetFilePos();}
 
 		void		Flush(void)									{m_hFileHandle.Flush();}
 		bool		IsEOF(void)									{return m_hFileHandle.IsEOF();}
 
-		void		Read(void* pxDest, const zenU32 uNumBytes)	{m_hFileHandle.Read(pxDest, uNumBytes);}
+		void		Read(void* pxDest, const zU32 uNumBytes)	{m_hFileHandle.Read(pxDest, uNumBytes);}
 		AWStream&	operator>>(bool& bIn)						{Read(&bIn, sizeof(bool )); return *this;}
-		AWStream&	operator>>(zenU8& uIn)						{Read(&uIn, sizeof(zenU8 )); return *this;}
-		AWStream&	operator>>(zenS8& iIn)						{Read(&iIn, sizeof(zenS8 )); return *this;}
-		AWStream&	operator>>(zenU16&uIn)						{Read(&uIn, sizeof(zenU16)); return *this;}
-		AWStream&	operator>>(zenS16&iIn)						{Read(&iIn, sizeof(zenS16)); return *this;}
-		AWStream&	operator>>(zenU32&uIn)						{Read(&uIn, sizeof(zenU32)); return *this;}
-		AWStream&	operator>>(zenS32&iIn)						{Read(&iIn, sizeof(zenS32)); return *this;}
-		AWStream&	operator>>(zenU64&uIn)						{Read(&uIn, sizeof(zenU64)); return *this;}
-		AWStream&	operator>>(zenS64&iIn )						{Read(&iIn, sizeof(zenS64)); return *this;}
-		AWStream&	operator>>(zenF32&fIn )						{Read(&fIn, sizeof(zenF32)); return *this;}
-		AWStream&	operator>>(zenF64&fIn )						{Read(&fIn, sizeof(zenF64)); return *this;}
+		AWStream&	operator>>(zU8& uIn)						{Read(&uIn, sizeof(zU8 )); return *this;}
+		AWStream&	operator>>(zS8& iIn)						{Read(&iIn, sizeof(zS8 )); return *this;}
+		AWStream&	operator>>(zU16&uIn)						{Read(&uIn, sizeof(zU16)); return *this;}
+		AWStream&	operator>>(zS16&iIn)						{Read(&iIn, sizeof(zS16)); return *this;}
+		AWStream&	operator>>(zU32&uIn)						{Read(&uIn, sizeof(zU32)); return *this;}
+		AWStream&	operator>>(zS32&iIn)						{Read(&iIn, sizeof(zS32)); return *this;}
+		AWStream&	operator>>(zU64&uIn)						{Read(&uIn, sizeof(zU64)); return *this;}
+		AWStream&	operator>>(zS64&iIn )						{Read(&iIn, sizeof(zS64)); return *this;}
+		AWStream&	operator>>(float&fIn )						{Read(&fIn, sizeof(float)); return *this;}
+		AWStream&	operator>>(double&fIn )						{Read(&fIn, sizeof(double)); return *this;}
 
-		void		Write(const void* pxSource, const zenU32 uNumBytes) { m_hFileHandle.Write(pxSource, uNumBytes);}
+		void		Write(const void* pxSource, const zU32 uNumBytes) { m_hFileHandle.Write(pxSource, uNumBytes);}
 		AWStream&	operator<<(const bool& bOut)				{Write(&bOut,sizeof(bool )); return *this;}
-		AWStream&	operator<<(const zenU8& uOut)				{Write(&uOut,sizeof(zenU8 )); return *this;}
-		AWStream&	operator<<(const zenS8& iOut)				{Write(&iOut,sizeof(zenS8 )); return *this;}
-		AWStream&	operator<<(const zenU16&uOut)				{Write(&uOut,sizeof(zenU16)); return *this;}
-		AWStream&	operator<<(const zenS16&iOut)				{Write(&iOut,sizeof(zenS16)); return *this;}
-		AWStream&	operator<<(const zenU32&uOut)				{Write(&uOut,sizeof(zenU32)); return *this;}
-		AWStream&	operator<<(const zenS32&iOut)				{Write(&iOut,sizeof(zenS32)); return *this;}
-		AWStream&	operator<<(const zenU64&uOut)				{Write(&uOut,sizeof(zenU64)); return *this;}
-		AWStream&	operator<<(const zenS64&iOut)				{Write(&iOut,sizeof(zenS64)); return *this;}
-		AWStream&	operator<<(const zenF32&fOut)				{Write(&fOut,sizeof(zenF32)); return *this;}
-		AWStream&	operator<<(const zenF64&fOut)				{Write(&fOut,sizeof(zenF64)); return *this;}
+		AWStream&	operator<<(const zU8& uOut)				{Write(&uOut,sizeof(zU8 )); return *this;}
+		AWStream&	operator<<(const zS8& iOut)				{Write(&iOut,sizeof(zS8 )); return *this;}
+		AWStream&	operator<<(const zU16&uOut)				{Write(&uOut,sizeof(zU16)); return *this;}
+		AWStream&	operator<<(const zS16&iOut)				{Write(&iOut,sizeof(zS16)); return *this;}
+		AWStream&	operator<<(const zU32&uOut)				{Write(&uOut,sizeof(zU32)); return *this;}
+		AWStream&	operator<<(const zS32&iOut)				{Write(&iOut,sizeof(zS32)); return *this;}
+		AWStream&	operator<<(const zU64&uOut)				{Write(&uOut,sizeof(zU64)); return *this;}
+		AWStream&	operator<<(const zS64&iOut)				{Write(&iOut,sizeof(zS64)); return *this;}
+		AWStream&	operator<<(const float&fOut)				{Write(&fOut,sizeof(float)); return *this;}
+		AWStream&	operator<<(const double&fOut)				{Write(&fOut,sizeof(double)); return *this;}
 
 	private:
 		FileInfo	m_hFileHandle;

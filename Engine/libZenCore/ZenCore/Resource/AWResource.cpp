@@ -2,17 +2,17 @@
 
 namespace zen { namespace zenRes {	
 
-awResourceRef::awResourceRef(awFlagResType _SupportedTypes, zenResID _ResourceID)
+zResourceRef::zResourceRef(zFlagResType _SupportedTypes, zResID _ResourceID)
 : mpResource(NULL)
 {
 	ZENDbgCode( mSupportedTypeMask = _SupportedTypes; )
-	awResourceRef rResourceRef = EMgr::Resources.GetResource(_ResourceID); 
+	zResourceRef rResourceRef = EMgr::Resources.GetResource(_ResourceID); 
 	SetResource( rResourceRef.mpResource );
 }
 
-const awResourceRef& awResourceRef::operator=(const zenResID& _ResourceID)
+const zResourceRef& zResourceRef::operator=(const zResID& _ResourceID)
 {
-	awResourceRef rResourceRef = _ResourceID.IsValid() ? EMgr::Resources.GetResource(_ResourceID) : NULL;
+	zResourceRef rResourceRef = _ResourceID.IsValid() ? EMgr::Resources.GetResource(_ResourceID) : NULL;
 	SetResource( rResourceRef.mpResource );
 	return *this;
 }

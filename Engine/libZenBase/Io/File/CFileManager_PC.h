@@ -11,19 +11,19 @@ namespace CFil
 	//-------------------------------------------------------------------------
 	// Common Interface to all ManagerFile
 	//-------------------------------------------------------------------------
-		bool						Search			( zenUInt _uFileSearchFlag, const wchar_t* _zDirName, const wchar_t* _zFilePatern, bool bRecursive);
+		bool						Search			( zUInt _uFileSearchFlag, const wchar_t* _zDirName, const wchar_t* _zFilePatern, bool bRecursive);
 		bool						SearchNext		( const FileInfo*& _pOutFile );
 		bool						CreateDir		( const Filename& _Filename );
 
 		bool						OpenFile		( const Filename& _Filename, FileInfo* _pOutFile );
 		bool						OpenFileForWrite( const Filename& _Filename, FileInfo* _pOutFile );
 	protected:
-		void						LoadDirectory	( zenUInt _uWantedFlag, zenArrayDynamic<wchar_t>& _zDirName, const wchar_t* _zFilePatern, const zenUInt _uFilePaternLen, bool bRecursive);
+		void						LoadDirectory	( zUInt _uWantedFlag, zArrayDynamic<wchar_t>& _zDirName, const wchar_t* _zFilePatern, const zUInt _uFilePaternLen, bool bRecursive);
 		virtual bool				Load();
 		virtual bool				Unload();
-		zenArrayDynamic<wchar_t>		mzRoot;			//! @todo Use proper string class
-		zenArrayDynamic<FileInfo>	maSearchResult;
-		zenUInt						muSearchIndex;	
+		zArrayDynamic<wchar_t>		mzRoot;			//! @todo Clean: Use proper string class
+		zArrayDynamic<FileInfo>	maSearchResult;
+		zUInt						muSearchIndex;	
 	};
 
 }  

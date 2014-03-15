@@ -14,9 +14,9 @@ namespace EExp
 		virtual bool					Serialize( EExp::Serializer_Base& _Serializer );	
 		struct SerialUseOnly
 		{
-			zenArrayStatic<MipInfo>		maMipData;
-			awconst::eTextureFormat		meFormat;
-			awFlagResTexCreate			mCreationFlags;
+			zArrayStatic<MipInfo>		maMipData;
+			zenConst::eTextureFormat		meFormat;
+			zFlagResTexUse			mCreationFlags;
 		};
 		SerialUseOnly					mSerial;		
 		

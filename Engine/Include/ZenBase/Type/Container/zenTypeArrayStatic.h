@@ -5,22 +5,22 @@
 namespace zen { namespace zenType {
 
 template<class TType>
-class zenArrayStatic : public zenArrayBase<TType>
+class zArrayStatic : public zArrayBase<TType>
 {
-ZENClassDeclare(zenArrayStatic, zenArrayBase<TType>)	
+ZENClassDeclare(zArrayStatic, zArrayBase<TType>)	
 public:
-					zenArrayStatic();
-					zenArrayStatic(zenUInt _uCount);
-					zenArrayStatic(const TType* _pCopy, zenUInt _uCount, zenUInt _uExtraCount=0);
-					zenArrayStatic(const zenArrayStatic& _Copy, zenUInt _uExtraCount=0);
-	virtual			~zenArrayStatic();
+					zArrayStatic();
+					zArrayStatic(zUInt _uCount);
+					zArrayStatic(const TType* _pCopy, zUInt _uCount, zUInt _uExtraCount=0);
+					zArrayStatic(const zArrayStatic& _Copy, zUInt _uExtraCount=0);
+	virtual			~zArrayStatic();
 				
-	void			Swap(zenArrayStatic<TType>& _Copy);		//!< @brief Exchange content between 2 arrays
-	virtual zenUInt	SetCount(zenUInt _uCount);				//!< @brief Resize array
+	void			Swap(zArrayStatic<TType>& _Copy);		//!< @brief Exchange content between 2 arrays
+	virtual zUInt	SetCount(zUInt _uCount);				//!< @brief Resize array
 protected:
-	virtual zenUInt	SetCountNoConstructor(zenUInt _uCount);	//!< @brief Resize array without calling constructor (usefull for quick memcopy, use carefully)
+	virtual zUInt	SetCountNoConstructor(zUInt _uCount);	//!< @brief Resize array without calling constructor (usefull for quick memcopy, use carefully)
 public:
-	using zenArrayBase<TType>::operator=;
+	using zArrayBase<TType>::operator=;
 };
 
 } } //namespace zen, Type

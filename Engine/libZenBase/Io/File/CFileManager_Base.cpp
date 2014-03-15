@@ -44,22 +44,22 @@ void FileInfo::Close()
 	Super::Close(miFilePos, miFileSize, mbValidHandle);
 }
 
-void FileInfo::Seek(const zenS64 iFilePos)
+void FileInfo::Seek(const zS64 iFilePos)
 {
 	Super::Seek(miFilePos, iFilePos);
 }
 
-void FileInfo::Skip(const zenS32 iNumOfBytes)
+void FileInfo::Skip(const zS32 iNumOfBytes)
 {
 	Super::Skip(miFilePos, iNumOfBytes);
 }
 
-void FileInfo::Read(void* pxDest, const zenU32 uNumBytes)
+void FileInfo::Read(void* pxDest, const zU32 uNumBytes)
 {
 	Super::Read(miFilePos, pxDest, uNumBytes);
 }
 
-void FileInfo::Write(const void* pxSource, const zenU32 uNumBytes)
+void FileInfo::Write(const void* pxSource, const zU32 uNumBytes)
 {
 	Super::Write(miFilePos, miFileSize, pxSource, uNumBytes);
 }
@@ -133,7 +133,7 @@ void Filename::Clear()
 //=================================================================================================
 void Filename::FindOffsets()
 {
-	zenUInt end			= mzFilename.Count()-1;
+	zUInt end			= mzFilename.Count()-1;
 	int pos				= end;
 	muOffsetName		= end;
 	muOffsetParentPath	= end;
@@ -167,7 +167,7 @@ void Filename::FindOffsets()
 //=================================================================================================
 void Filename::Set(const wchar_t* _zFilename)
 {
-	zenUInt len(static_cast<zenUInt>(wcslen(_zFilename)));
+	zUInt len(static_cast<zUInt>(wcslen(_zFilename)));
 	mzFilename.SetCount(len+3);	//add some padding handling of null name offsets
 	mzFilename[len+0] = L'';
 	mzFilename[len+1] = L'';
@@ -184,8 +184,8 @@ void Filename::Set(const wchar_t* _zFilename)
 //=================================================================================================
 void Filename::Set(const wchar_t* _zPath, const wchar_t* _zFilename)
 {
-	zenUInt len1(static_cast<zenUInt>(wcslen(_zPath)));
-	zenUInt len2(static_cast<zenUInt>(wcslen(_zFilename)));
+	zUInt len1(static_cast<zUInt>(wcslen(_zPath)));
+	zUInt len2(static_cast<zUInt>(wcslen(_zFilename)));
 	bool bNoSeparator	=	(_zPath[len1-1] != L'\\')	&& (_zPath[len1-1] != L'/') && 
 							(_zFilename[0] != L'\\')	&& (_zFilename[0] != L'/' );
 	len1				+= bNoSeparator ? 1 : 0;
@@ -210,8 +210,8 @@ void Filename::Set(const wchar_t* _zPath, const wchar_t* _zFilename)
 //=================================================================================================
 void Filename::operator+=(const wchar_t* _zFilename)
 {
-	zenUInt len1(mzFilename.Count()-3);
-	zenUInt len2(static_cast<zenUInt>(wcslen(_zFilename)));
+	zUInt len1(mzFilename.Count()-3);
+	zUInt len2(static_cast<zUInt>(wcslen(_zFilename)));
 	bool bNoSeparator	=	(mzFilename[len1-1] != L'\\')	&& (mzFilename[len1-1] != L'/') && 
 							(_zFilename[0] != L'\\')		&& (_zFilename[0] != L'/' );
 	len1				+= bNoSeparator ? 1 : 0;
@@ -316,11 +316,11 @@ const wchar_t* Filename::GetExt()const
 //-------------------------------------------------------------------------------------------------
 //! @Param		_aFolderOut -	Array each folder string will be stored in
 //=================================================================================================
-void Filename::SplitFolder(zenArrayDynamic<zenArrayStatic<wchar_t>>& _aFolderOut)const
+void Filename::SplitFolder(zArrayDynamic<zArrayStatic<wchar_t>>& _aFolderOut)const
 {
-	zenUInt aOffset[64];
-	zenUInt uOffetCount(1);
-	zenUInt uPos(0), uCount(mzFilename.Count()-3);
+	zUInt aOffset[64];
+	zUInt uOffetCount(1);
+	zUInt uPos(0), uCount(mzFilename.Count()-3);
 	
 	//Make sure filename is intact (no \0 inserted)
 	GetNameFull(); 

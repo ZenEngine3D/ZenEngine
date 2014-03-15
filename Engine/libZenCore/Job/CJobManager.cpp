@@ -13,7 +13,7 @@ void ManagerJob_Base::Add(JobItem* _pTask)
 void ManagerJob_Base::Update()
 {
 	// Move each ready pending task, into readylist
-	zenList2xNode* pItem = mlstTasksPending.GetHead();
+	zList2xNode* pItem = mlstTasksPending.GetHead();
 	while( pItem != mlstTasksPending.GetInvalid() )
 	{
 		JobItem* pTask = static_cast<JobItem*>(pItem);
@@ -58,7 +58,7 @@ void ManagerJob_Base::Remove(JobItem* _pTask)
 		_pTask->Cleanup();
 }
 
-zenList2x& ManagerJob_Base::GetTaskReady()
+zList2x& ManagerJob_Base::GetTaskReady()
 {
 	return mlstTasksReady;
 }

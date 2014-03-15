@@ -14,16 +14,16 @@ namespace EExp
 		virtual bool					Serialize( EExp::Serializer_Base& _Serializer );
 		struct SerialUseOnly
 		{
-			zenResID								mIndexBufferID;
-			zenResID								mStreamBindingID;
-			zenResID								mShaderBindingID;
-			zenArrayStatic<zenResID>					maShaderParamID;		//!< Array of all ShaderParam used by all Shaders stage
-			zenArrayStatic<zenArrayStatic<zenResID>>	maTextureID;			//!< Per Shader stage texture input for each slot
-			zenArrayStatic<zenArrayStatic<zenResID>>	maSamplerID;			//!< Per Shader stage sampler state for each slot			
+			zResID								mIndexBufferID;
+			zResID								mStreamBindingID;
+			zResID								mShaderBindingID;
+			zArrayStatic<zResID>					maShaderParamID;		//!< Array of all ShaderParam used by all Shaders stage
+			zArrayStatic<zArrayStatic<zResID>>	maTextureID;			//!< Per Shader stage texture input for each slot
+			zArrayStatic<zArrayStatic<zResID>>	maSamplerID;			//!< Per Shader stage sampler state for each slot			
 		};
 		SerialUseOnly					mSerial;
-		zenU32								muIndexFirst;
-		zenU32								muIndexCount;
+		zU32								muIndexFirst;
+		zU32								muIndexCount;
 
 	//-------------------------------------------------------------------------------------------------
 	// Export support section

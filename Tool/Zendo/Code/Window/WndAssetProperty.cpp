@@ -27,16 +27,16 @@ WndAssetProperty::~WndAssetProperty()
 {
 }
 
-void WndAssetProperty::AddAssetTab(zenHash64 _hAssetID)
+void WndAssetProperty::AddAssetTab(zHash64 _hAssetID)
 {	
-	zeAss::AssetItem* pEditItem	= zeMgr::Asset.AssetGet(_hAssetID);
-	if( pEditItem )
+	const zenAss::zAssetItem& rEditItem = zenAss::AssetGet(_hAssetID);
+	if( rEditItem.IsValid() )
 	{
 		BCtrl::TabAssetProperty* pTabAsset	= mdTabPerAsset[_hAssetID];
 		if( !pTabAsset )
 		{
-			pTabAsset = zenNewDefault BCtrl::TabAssetProperty(mpNotebook, pEditItem);
-			mpNotebook->AddPage(pTabAsset, static_cast<const char*>(pEditItem->GetName()) );
+			pTabAsset = zenNewDefault BCtrl::TabAssetProperty(mpNotebook, rEditItem);
+			mpNotebook->AddPage(pTabAsset, static_cast<const char*>(rEditItem.GetName()) );
 			mdTabPerAsset.Set(_hAssetID, pTabAsset);
 		}
 		mpNotebook->SetSelection( mpNotebook->GetPageIndex(pTabAsset) );

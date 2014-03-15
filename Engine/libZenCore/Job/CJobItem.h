@@ -5,9 +5,9 @@
 namespace CJob
 {
 
-class JobItem : public zenList2xNode
+class JobItem : public zList2xNode
 {
-ZENClassDeclare(JobItem, zenList2xNode)
+ZENClassDeclare(JobItem, zList2xNode)
 public:
 	enum eStatus{ keStatus_Wait, keStatus_Ready, keStatus_Running, keStatus_Success, keStatus_FailStart, keStatus_FailExe, keStatus_FailEnd, keStatus__Count };
 	
@@ -28,9 +28,9 @@ public:
 	bool			IsFailed(){return meStatus >= keStatus_FailStart;}	
 	eStatus			meStatus;		//!< Current task status
 	bool			mbAutoCleanup;	//!< If task should be cleanup after completion
-	zenTimeStamp		mTimeAdded;		//!< Time task was added to the queue
-	zenTimeStamp		mTimeStart;		//!< Time task was started
-	zenTimeStamp		mTimeStop;		//!< Time task was completed
+	zTimeStamp		mTimeAdded;		//!< Time task was added to the queue
+	zTimeStamp		mTimeStart;		//!< Time task was started
+	zTimeStamp		mTimeStop;		//!< Time task was completed
 };
 
 }  

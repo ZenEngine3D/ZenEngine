@@ -36,7 +36,7 @@ namespace ERes
 		bufferDesc.CPUAccessFlags				= 0;
 		bufferDesc.MiscFlags					= 0;
 
-		if( mInstanceInfo.mSerial.mCreationFlags.All(awconst::keTexCreate_RenderTarget) )
+		if( mInstanceInfo.mSerial.mCreationFlags.All(zenConst::keTexCreate_RenderTarget) )
 		{			
 			bufferDesc.Usage					= D3D11_USAGE_DEFAULT;
 			bufferDesc.BindFlags				= bIsDepth ? D3D11_BIND_DEPTH_STENCIL : D3D11_BIND_SHADER_RESOURCE|D3D11_BIND_RENDER_TARGET;
@@ -49,7 +49,7 @@ namespace ERes
 		}
 
 		bool bValidInitData(false);
-		for(zenUInt mipIdx(0); mipIdx<bufferDesc.MipLevels; ++mipIdx)
+		for(zUInt mipIdx(0); mipIdx<bufferDesc.MipLevels; ++mipIdx)
 		{
 			ZENAssert(mipIdx < ZENArrayCount(aInitData));			
 			if( mInstanceInfo.mSerial.maMipData[mipIdx].maData.Count() > 0 )

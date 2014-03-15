@@ -6,40 +6,40 @@
 #define		zenDelArray(_Pointer_)				{ delete[]	_Pointer_; }
 #define		zenDelNull(_Pointer_)				{ delete	_Pointer_; _Pointer_=NULL; }
 #define		zenDelNullArray(_Pointer_)			{ delete[]	_Pointer_; _Pointer_=NULL; }
-#define		zenDefaultAlign						sizeof(zenPointer)
+#define		zenDefaultAlign						sizeof(void*)
 #define		zenNew(_Allocator_)					new(_Allocator_)
 #define		zenNewAlign(_Allocator_, _Align_)	new(_Allocator_, _Align_)
-#define		zenNewDefault						new(static_cast<zenMem::Allocator*>(NULL))
-#define		zenNewDefaultAlign(_Align_)			new(static_cast<zenMem::Allocator*>(NULL), _Align_)
+#define		zenNewDefault						new(static_cast<zenMem::zAllocator*>(NULL))
+#define		zenNewDefaultAlign(_Align_)			new(static_cast<zenMem::zAllocator*>(NULL), _Align_)
 
 namespace zen { namespace zenMem
 {
-	class Allocator
+	class zAllocator
 	{
-	ZENClassDeclareNoParent(Allocator);
+	ZENClassDeclareNoParent(zAllocator);
 	public:
-								Allocator			(zenDebugString _zName);		
-		virtual					~Allocator			();
+								zAllocator			(zDebugString _zName);		
+		virtual					~zAllocator			();
 		size_t					GetTotalAllocSize	()const {return muTotalAllocSize;}
-		zenUInt					GetTotalAllocCount	()const {return muTotalAllocCount;}
-		inline zenHash32		GetValidityStamp	()const {return mh32ValidStamp;}
-		static Allocator&		GetDefault			();
+		zUInt					GetTotalAllocCount	()const {return muTotalAllocCount;}
+		ZENInline zHash32		GetValidityStamp	()const {return mh32ValidStamp;}
+		static zAllocator&		GetDefault			();
 	
 	protected:
-		size_t					GetAllocSize		(size_t _uWantedSize, size_t _uExtraSize, zenU32 _uAlign);
-		void*					AddAlloc			(size_t _uWantedSize, size_t _uExtraSize, zenU32 _uAlign, void* _pAllocation, const bool _bIsArray);
+		size_t					GetAllocSize		(size_t _uWantedSize, size_t _uExtraSize, zU32 _uAlign);
+		void*					AddAlloc			(size_t _uWantedSize, size_t _uExtraSize, zU32 _uAlign, void* _pAllocation, const bool _bIsArray);
 		void					RemAlloc			(void* _pAlloc);
 		size_t					muTotalAllocSize;
-		zenUInt					muTotalAllocCount;
-		zenHash32				mh32ValidStamp;				
-		zenList2x				mlstAllocations;	//!< List of every allocations currently held by this allocator (if compiled with MemoryDebugFlag)
-		zenDebugString			mzAllocatorName;	//!< Name of the allocator, for debug purpose	
+		zUInt					muTotalAllocCount;
+		zHash32					mh32ValidStamp;				
+		zList2x					mlstAllocations;	//!< List of every allocations currently held by this allocator (if compiled with MemoryDebugFlag)
+		zDebugString			mzAllocatorName;	//!< Name of the allocator, for debug purpose	
 	
 	// Implement on child class
 	public:
-		virtual void*			Malloc(size_t _uSize, bool _bIsArray, zenU32 _uAlign)=0;
+		virtual void*			Malloc(size_t _uSize, bool _bIsArray, zU32 _uAlign)=0;
 		virtual	void			Free(void* _pAlloc, void* _pInfoAlloc)=0;
-		virtual zenDebugString	GetDescription()=0;
+		virtual zDebugString	GetDescription()=0;
 	};
 
 	
@@ -51,15 +51,15 @@ namespace zen { namespace zenMem
 	//! @details	one specified. At object destruction, restore the value it was 
 	//! @details	initially set at		
 	//=================================================================================================
-	class ScopedAllocator : public zenList2xNode
+	class ScopedAllocator : public zList2xNode
 	{	
 	ZENClassDeclareNoParent(ScopedAllocator);
 	public:
-								ScopedAllocator(Allocator* _pAllocator);
+								ScopedAllocator(zAllocator* _pAllocator);
 								~ScopedAllocator();
-		static Allocator&		GetActive();
+		static zAllocator&		GetActive();
 	protected:
-		Allocator*				mpAllocator;
+		zAllocator*				mpAllocator;
 
 	};
 
@@ -68,22 +68,22 @@ namespace zen { namespace zenMem
 //=============================================================================
 // Override of builtin memory allocator
 //=============================================================================
-void* operator new(size_t _uSize,		zenMem::Allocator* _pAllocator );
-void* operator new[](size_t _uSize,		zenMem::Allocator* _pAllocator );
-void operator delete(void* _pAlloc,		zenMem::Allocator* _pAllocator );
-void operator delete[](void* _pAlloc,	zenMem::Allocator* _pAllocator );
-void* operator new(size_t _uSize,		zenMem::Allocator* _pAllocator, zenUInt _uAlign );
-void* operator new[](size_t _uSize,		zenMem::Allocator* _pAllocator, zenUInt _uAlign );
-void operator delete(void* _pAlloc,		zenMem::Allocator* _pAllocator, zenUInt _uAlign );
-void operator delete[](void* _pAlloc,	zenMem::Allocator* _pAllocator, zenUInt _uAlign );
+void* operator new(size_t _uSize,		zenMem::zAllocator* _pAllocator );
+void* operator new[](size_t _uSize,		zenMem::zAllocator* _pAllocator );
+void operator delete(void* _pAlloc,		zenMem::zAllocator* _pAllocator );
+void operator delete[](void* _pAlloc,	zenMem::zAllocator* _pAllocator );
+void* operator new(size_t _uSize,		zenMem::zAllocator* _pAllocator, zUInt _uAlign );
+void* operator new[](size_t _uSize,		zenMem::zAllocator* _pAllocator, zUInt _uAlign );
+void operator delete(void* _pAlloc,		zenMem::zAllocator* _pAllocator, zUInt _uAlign );
+void operator delete[](void* _pAlloc,	zenMem::zAllocator* _pAllocator, zUInt _uAlign );
 void operator delete(void* _pAlloc);
 void operator delete[](void* _pAlloc);
 
-void* zenMalloc(size_t _uSize_, zenU32 uAlign=zenDefaultAlign);
-void* zenMalloc(zenMem::Allocator* _pAllocator, size_t _uSize_, zenU32 uAlign=zenDefaultAlign);
+void* zMalloc(size_t _uSize_, zU32 uAlign=zenDefaultAlign);
+void* zMalloc(zenMem::zAllocator* _pAllocator, size_t _uSize_, zU32 uAlign=zenDefaultAlign);
 
 //! @todo remove new library and implement my own
-//#define		malloc			ZENStaticAssert(0, "Use zenMalloc")
+//#define		malloc			ZENStaticAssert(0, "Use zMalloc")
 //#define		new				ZENAssertMsg(0, "Use zenNew")
 //#define		delete			ZENAssertMsg(0, "User zenDel")
 

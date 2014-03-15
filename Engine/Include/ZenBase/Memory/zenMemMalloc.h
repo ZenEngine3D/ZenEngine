@@ -5,20 +5,20 @@
 namespace zen { namespace zenMem
 {
 	//=================================================================================================
-	//! @class		AllocatorMalloc
+	//! @class		zAllocatorMalloc
 	//-------------------------------------------------------------------------------------------------
 	//! @brief		Basic malloc allocator the simply call the system malloc
 	//! @details	Used as a temporary stand-in until more elaborate memory 
 	//!				get implemented
 	//=================================================================================================
-	class AllocatorMalloc : public zenMem::Allocator
+	class zAllocatorMalloc : public zenMem::zAllocator
 	{
-	ZENClassDeclare(AllocatorMalloc, zenMem::Allocator);
+	ZENClassDeclare(zAllocatorMalloc, zenMem::zAllocator);
 	public:
-								AllocatorMalloc(const char* _zName);
-		virtual void*			Malloc(size_t _uSize, bool _bIsArray, zenU32 _uAlign);
+								zAllocatorMalloc(const char* _zName);
+		virtual void*			Malloc(size_t _uSize, bool _bIsArray, zU32 _uAlign);
 		virtual	void			Free(void* _pAlloc, void* _pInfoAlloc);
-		virtual zenDebugString	GetDescription(){return "Malloc";};
+		virtual zDebugString	GetDescription(){return "Malloc";};
 	};
 }} //namespace zen { namespace zenMem
 

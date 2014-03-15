@@ -73,11 +73,11 @@ void TabAssetPropertyGridPage::RefreshModifiedItems()
 //=================================================================================================
 // ASSET PROPERTIES TABS
 //=================================================================================================
-TabAssetProperty::TabAssetProperty(wxWindow *_pParent, zeAss::AssetItem* _pEditAsset)
+TabAssetProperty::TabAssetProperty(wxWindow *_pParent, const zenAss::zAssetItem& _rEditAsset)
 : wxPanel(_pParent, wxID_ANY)
-, mpAsset(_pEditAsset)
+, mrAsset(_rEditAsset)
 {
-	ZENAssert(mpAsset);
+	ZENAssert(mrAsset.IsValid());
 	wxBoxSizer* sizer = zenNewDefault wxBoxSizer(wxVERTICAL);	
 	const int margin(3);
 	const long flags(wxGROW | wxALL);
@@ -110,9 +110,8 @@ TabAssetProperty::TabAssetProperty(wxWindow *_pParent, zeAss::AssetItem* _pEditA
 
 	// Add every property of this asset
 	TabAssetPropertyGridPage* pPage = zenNewDefault TabAssetPropertyGridPage();
-	zenArrayStatic<zeAss::ValuePointer>& aValues = mpAsset->GetPropertyValues();
-	for(zenUInt propIdx(0), propCount(aValues.Count()); propIdx<propCount; ++propIdx)
-		CreateAssetValueControl(*pPage, aValues[propIdx]);
+	for(zUInt propIdx(0), propCount(mrAsset.GetValueCount()); propIdx<propCount; ++propIdx)
+		CreateAssetValueControl(*pPage, mrAsset.GetValue(propIdx));
 
 	mpPropertyGrid->AddPage("All", wxNullBitmap, pPage);
 	
@@ -138,7 +137,7 @@ void TabAssetProperty::OnToolbarDefault( wxCommandEvent& event )
 {
 	TabAssetPropertyGridPage*	pPage		= static_cast<TabAssetPropertyGridPage*>(mpPropertyGrid->GetCurrentPage());
 	const wxArrayPGProperty&	aSelected 	= pPage->GetSelectedProperties();
-	for(zenUInt propIdx(0), propCount(aSelected.Count()); propIdx<propCount; ++propIdx)
+	for(zUInt propIdx(0), propCount(aSelected.Count()); propIdx<propCount; ++propIdx)
 	{
 		wxPGProperty* pProp = aSelected[propIdx];
 		pProp->SetValue( pProp->GetDefaultValue() );
@@ -150,7 +149,7 @@ void TabAssetProperty::OnToolbarOriginal( wxCommandEvent& event )
 {
 	TabAssetPropertyGridPage*	pPage		= static_cast<TabAssetPropertyGridPage*>(mpPropertyGrid->GetCurrentPage());
 	const wxArrayPGProperty&	aSelected 	= pPage->GetSelectedProperties();
-	for(zenUInt propIdx(0), propCount(aSelected.Count()); propIdx<propCount; ++propIdx)
+	for(zUInt propIdx(0), propCount(aSelected.Count()); propIdx<propCount; ++propIdx)
 	{
 		wxPGProperty* pProp			= aSelected[propIdx];
 		PropertyMetaData* pMetaData = (PropertyMetaData*)pProp->GetClientData();

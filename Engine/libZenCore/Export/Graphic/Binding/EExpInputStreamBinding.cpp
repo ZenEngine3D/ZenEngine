@@ -8,15 +8,15 @@ namespace EExp
 	//-------------------------------------------------------------------------------------------------
 	//! @param _VertexBufferID			- VertexBufer ID to bind with ShaderInputSignature
 	//! @param _ShaderInputSignatureID	- ShaderInputSignature ID to bind with a particular VertexBuffer
-	//! @return 						- Unique zenResID of created Resource
+	//! @return 						- Unique zResID of created Resource
 	//=================================================================================================
-	zenResID CreateGfxInputStream(zenResID _VertexBufferID, zenResID _ShaderInputSignatureID)
+	zResID CreateGfxInputStream(zResID _VertexBufferID, zResID _ShaderInputSignatureID)
 	{
-		static zenMem::AllocatorPool sMemPool("Pool CreateInputStream", sizeof(SerialInputStream_Base::ExportInfo), 1, 5 );
+		static zenMem::zAllocatorPool sMemPool("Pool CreateInputStream", sizeof(SerialInputStream_Base::ExportInfo), 1, 5 );
 		SerialInputStream_Base::ExportInfo* pExportInfo	= zenNew(&sMemPool) SerialInputStream_Base::ExportInfo;
 		pExportInfo->mVertexBufferID							= _VertexBufferID;
 		pExportInfo->mShaderInputSignatureID					= _ShaderInputSignatureID;
-		return EMgr::Export.CreateItem( zenResID::kePlatformType_GFX, awconst::keResType_GfxInputStream, pExportInfo );
+		return EMgr::Export.CreateItem( zResID::kePlatformType_GFX, zenConst::keResType_GfxInputStream, pExportInfo );
 	}
 
 }

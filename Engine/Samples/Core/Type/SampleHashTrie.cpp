@@ -122,23 +122,23 @@ namespace sample
 	{
 		#define kuTestCount (10000)
 		#define	kuPoolSize	1024
-		CMgr::Log.Log(CLog::keLog_Game, awconst::kzLineA40);
+		CMgr::Log.Log(CLog::keLog_Game, zenConst::kzLineA40);
 		CMgr::Log.Log(CLog::keLog_Game, " HASH TABLE (%i entries tested)", kuTestCount);
-		CMgr::Log.Log(CLog::keLog_Game, awconst::kzLineA40);
+		CMgr::Log.Log(CLog::keLog_Game, zenConst::kzLineA40);
 
-		zenU32 uValKey(0);
-		zenU64 uTimeStartGet,uTimeStartSet;
-		zenU64 uTimeStopGet, uTimeStopSet;
-		zenU32 uTemp(0);
+		zU32 uValKey(0);
+		zU64 uTimeStartGet,uTimeStartSet;
+		zU64 uTimeStopGet, uTimeStopSet;
+		zU32 uTemp(0);
 		
 
 		//---------------------------------------------------------------------------
 		// Small hamt test
 		//---------------------------------------------------------------------------
-		zenMap<zenU32>::Key32 dArraySize(kuPoolSize);
+		zMap<zU32>::Key32 dArraySize(kuPoolSize);
 		srand(1);
 		uTimeStartSet = zenSys::GetTimeUSec();
-		for(zenU32 i=0; i<kuTestCount; ++i)
+		for(zU32 i=0; i<kuTestCount; ++i)
 		{	
 			uValKey = rand()<<16 | rand();
 			dArraySize.GetAdd(uValKey) = i;
@@ -146,28 +146,28 @@ namespace sample
 		uTimeStopSet = zenSys::GetTimeUSec();
 		srand(1);
 		uTimeStartGet = zenSys::GetTimeUSec();
-		for(zenU32 i=0; i<kuTestCount; ++i)
+		for(zU32 i=0; i<kuTestCount; ++i)
 		{	
 			uValKey = rand()<<16 | rand();
 			uTemp += dArraySize[uValKey];
 		}
 		uTimeStopGet = zenSys::GetTimeUSec();
 		CMgr::Log.Log(CLog::keLog_Game, "SparseArray:small32 Set(%7ius) Get(%7ius) Mem(%6iKb) Overhead(%6iKb)", 
-			zenU32(uTimeStopSet-uTimeStartSet), 
-			zenU32(uTimeStopGet-uTimeStartGet),
-			zenU32(dArraySize.GetMemoryFootprint())/1024, 
-			zenU32(dArraySize.GetMemoryFootprint()-kuTestCount*sizeof(zenU32))/1024 );
+			zU32(uTimeStopSet-uTimeStartSet), 
+			zU32(uTimeStopGet-uTimeStartGet),
+			zU32(dArraySize.GetMemoryFootprint())/1024, 
+			zU32(dArraySize.GetMemoryFootprint()-kuTestCount*sizeof(zU32))/1024 );
 
 		//---------------------------------------------------------------------------
 		// Fast hamt test
 		//---------------------------------------------------------------------------
 		/*
-		CTyp::HamtFast<zenU32, zenU32, zenU16, 4> dArraySpeed(kuPoolSize);
+		CTyp::HamtFast<zU32, zU32, zU16, 4> dArraySpeed(kuPoolSize);
 		srand(1);
 		dArraySpeed.Set(0xFFFFFFFF, 0);
 		dArraySpeed.Set(0xFFFFFFF7, 0);
 		uTimeStartSet = zenSys::GetTimeUSec();
-		for(zenU32 i=0; i<kuTestCount; ++i)
+		for(zU32 i=0; i<kuTestCount; ++i)
 		{	
 			uValKey = rand()<<16 | rand();
 			dArraySpeed.[uValKey] = i;
@@ -175,27 +175,27 @@ namespace sample
 		uTimeStopSet = zenSys::GetTimeUSec();
 		srand(1);
 		uTimeStartGet = zenSys::GetTimeUSec();
-		for(zenU32 i=0; i<kuTestCount; ++i)
+		for(zU32 i=0; i<kuTestCount; ++i)
 		{			
 			uValKey = rand()<<16 | rand();
 			uTemp += dArraySpeed[uValKey];
 		}
 		uTimeStopGet = zenSys::GetTimeUSec();
 		CMgr::Log.Log(CLog::keLog_Game, "SparseArray:fast32  Set(%7ius) Get(%7ius) Mem(%6iKb) Overhead(%6iKb)", 
-			zenU32(uTimeStopSet-uTimeStartSet), 
-			zenU32(uTimeStopGet-uTimeStartGet),
-			zenU32(dArraySpeed.GetMemoryFootprint())/1024, 
-			zenU32(dArraySpeed.GetMemoryFootprint()-kuTestCount*sizeof(zenU32))/1024 );
+			zU32(uTimeStopSet-uTimeStartSet), 
+			zU32(uTimeStopGet-uTimeStartGet),
+			zU32(dArraySpeed.GetMemoryFootprint())/1024, 
+			zU32(dArraySpeed.GetMemoryFootprint()-kuTestCount*sizeof(zU32))/1024 );
 		*/
 		//---------------------------------------------------------------------------
 		// std::unordered_map test
 		//---------------------------------------------------------------------------
-		typedef std::unordered_map<zenU32, zenU32, std::tr1::hash<zenU32>, std::equal_to<zenU32>, tracking_allocator::allocator<zenU32> > hashsettype;
+		typedef std::unordered_map<zU32, zU32, std::tr1::hash<zU32>, std::equal_to<zU32>, tracking_allocator::allocator<zU32> > hashsettype;
 
 		hashsettype hashset;
 		srand(1);
 		uTimeStartSet = zenSys::GetTimeUSec();
-		for(zenU32 i=0; i<kuTestCount; ++i)
+		for(zU32 i=0; i<kuTestCount; ++i)
 		{			
 			uValKey = rand()<<16 | rand();
 			hashset[uValKey] = i;
@@ -203,44 +203,44 @@ namespace sample
 		uTimeStopSet = zenSys::GetTimeUSec();
 		srand(1);
 		uTimeStartGet = zenSys::GetTimeUSec();
-		for(zenU32 i=0; i<kuTestCount; ++i)
+		for(zU32 i=0; i<kuTestCount; ++i)
 		{			
 			uValKey = rand()<<16 | rand();
 			uTemp += hashset[uValKey];
 		}
 		uTimeStopGet = zenSys::GetTimeUSec();
 		CMgr::Log.Log(CLog::keLog_Game, "std::unordered_map  Set(%7ius) Get(%7ius) Mem(%6iKb) Overhead(%6iKb)", 
-			zenU32(uTimeStopSet-uTimeStartSet), 
-			zenU32(uTimeStopGet-uTimeStartGet),
-			zenU32(tracking_allocator::g_bytesAllocated)/1024, 
-			zenU32(tracking_allocator::g_bytesAllocated-kuTestCount*sizeof(zenU32))/1024 );
+			zU32(uTimeStopSet-uTimeStartSet), 
+			zU32(uTimeStopGet-uTimeStartGet),
+			zU32(tracking_allocator::g_bytesAllocated)/1024, 
+			zU32(tracking_allocator::g_bytesAllocated-kuTestCount*sizeof(zU32))/1024 );
 		
 		//---------------------------------------------------------------------------
 		// std::map test
 		//---------------------------------------------------------------------------
-		typedef std::map<zenU32, zenU32, std::less<zenU32>, tracking_allocator::allocator<zenU32> > hashmap; 
+		typedef std::map<zU32, zU32, std::less<zU32>, tracking_allocator::allocator<zU32> > hashmap; 
 		hashmap hashmaptest;
 		srand(1);
 		size_t AllocSizeStart = tracking_allocator::g_bytesAllocated;
 		uTimeStartSet = zenSys::GetTimeUSec();
-		for(zenU32 i=0; i<kuTestCount; ++i)
+		for(zU32 i=0; i<kuTestCount; ++i)
 		{			
 			uValKey = uValKey<<16 | rand();
 			hashmaptest[uValKey] = i;
 		}
 		uTimeStopSet = zenSys::GetTimeUSec();
 		uTimeStartGet = zenSys::GetTimeUSec();
-		for(zenU32 i=0; i<kuTestCount; ++i)
+		for(zU32 i=0; i<kuTestCount; ++i)
 		{			
 			uValKey = uValKey<<16 | rand();
 			uTemp += hashmaptest[uValKey];
 		}
 		uTimeStopGet = zenSys::GetTimeUSec();
 		CMgr::Log.Log(CLog::keLog_Game, "std::map            Set(%7ius) Get(%7ius) Mem(%6iKb) Overhead(%6iKb)", 
-			zenU32(uTimeStopSet-uTimeStartSet), 
-			zenU32(uTimeStopGet-uTimeStartGet),
-			zenU32(tracking_allocator::g_bytesAllocated-AllocSizeStart)/1024, 
-			zenU32(tracking_allocator::g_bytesAllocated-AllocSizeStart-kuTestCount*sizeof(zenU32))/1024 );
+			zU32(uTimeStopSet-uTimeStartSet), 
+			zU32(uTimeStopGet-uTimeStartGet),
+			zU32(tracking_allocator::g_bytesAllocated-AllocSizeStart)/1024, 
+			zU32(tracking_allocator::g_bytesAllocated-AllocSizeStart-kuTestCount*sizeof(zU32))/1024 );
 
 		//dArraySpeed.Clear();
 		CMgr::Log.Log(CLog::keLog_Game, ".... Cleared", uTemp);		

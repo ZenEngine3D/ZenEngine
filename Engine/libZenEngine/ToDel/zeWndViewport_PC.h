@@ -13,17 +13,17 @@ namespace FWnd
 	ZENClassDeclareNoParent(Window)
 	enum eThreadStatus{keThread_Starting, keThread_Error, keThread_Running, keThread_Ended};
 	public:	
-								Window(const WCHAR* _zWindowName, zenVec2U16 _ClientSize);
+								Window(const WCHAR* _zWindowName, zVec2U16 _ClientSize);
 		bool					Initialize();
-		virtual void			SetSize(const zenVec2U16 _vSize){mvSize = _vSize;}
-		const zenVec2U16&		GetSize()const {return mvSize;}
+		virtual void			SetSize(const zVec2U16 _vSize){mvSize = _vSize;}
+		const zVec2U16&		GetSize()const {return mvSize;}
 		HWND					GetHandle(){return mhMainWindow;}
 	protected:		
 		static DWORD WINAPI		WndThread( LPVOID lpParam );
 		static LRESULT CALLBACK WndEventCallback(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 		
 		
-		zenVec2U16				mvSize;
+		zVec2U16				mvSize;
 		WCHAR					mzWindowName[64];
 		HWND					mhMainWindow;
 		HANDLE					mhMainWindowThread;			//!< Handle on main window thread (process windows messages)

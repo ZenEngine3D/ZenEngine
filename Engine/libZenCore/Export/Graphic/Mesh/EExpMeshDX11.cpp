@@ -12,14 +12,14 @@ namespace EExp
 		mSerial.maMeshStripID = pExportInfo->maMeshStripID;
 
 		// Make sure all MeshStrip are valid
-		for(zenUInt stripIdx(0), stripCount(mSerial.maMeshStripID.Count()); stripIdx<stripCount; ++stripIdx)
+		for(zUInt stripIdx(0), stripCount(mSerial.maMeshStripID.Count()); stripIdx<stripCount; ++stripIdx)
 		{
-			zenResID resID = mSerial.maMeshStripID[stripIdx];
-			if( resID.Type()!=awconst::keResType_GfxMeshStrip || !EMgr::SerialItems.GetItem<EExp::SerialGfxMeshStrip_DX11>(resID) )
+			zResID resID = mSerial.maMeshStripID[stripIdx];
+			if( resID.Type()!=zenConst::keResType_GfxMeshStrip || !EMgr::SerialItems.GetItem<EExp::SerialGfxMeshStrip_DX11>(resID) )
 				return false;
 		}
 
-		//! @todo parse all strip, concatenate all vertex together to quickly draw object in 1 call (for depth pass)
+		//! @todo Optimn: Parse all strip, concatenate all vertex together to quickly draw object in 1 call (for depth pass)
 		ExportSkipWork();
 		return true;
 	}

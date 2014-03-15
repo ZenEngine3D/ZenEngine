@@ -22,13 +22,13 @@ public:
 	//void onIdle(wxIdleEvent& evt);
 
 	bool					InitResources();
-	const wxIcon*			GetIcon(const zeAss::AssetItem& _Item);
+	const wxIcon*			GetIcon(const zenAss::zAssetItem& _rAsset);
 	WndMain*				mpFrame;
 
 	wxImageList*			maIcon[keIco__Count];
 
 protected:
-	zenMap<wxIcon*>::Key64	mdAssetIcon;	//!< Buffer asset icon so they only get built once
+	zMap<wxIcon*>::Key64	mdAssetIcon;	//!< Buffer asset icon so they only get built once
 };
 
 ZendoApp& wxGetApp();

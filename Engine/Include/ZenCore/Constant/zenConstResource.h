@@ -3,7 +3,7 @@
 #define __zenCore_Const_Resource_h__
 
 namespace zen { 
-	namespace awconst 
+	namespace zenConst 
 	{
 		enum eResSource
 		{
@@ -189,7 +189,7 @@ namespace zen {
 			keCullMode_Back
 		};
 
-		enum eTextureCreate
+		enum eTextureUse
 		{
 			keTexCreate_RenderTarget,	// Used for rendertarget
 			keTexCreate__Count,
@@ -205,18 +205,28 @@ namespace zen {
 			kePrimType_TriangleStrip,
 			kePrimType__Count
 		};
+
+		enum eResourceUse
+		{
+			keResUse_Static,		// Never updated once created
+			keResUse_Dynamic,		// Can be updated once per frame
+			keResUse_Volatile,		// Can be updated multiple time per frame
+			keResUse__Count,
+			keResUse__Invalid
+		};
 	}
 
 	namespace zenType
 	{
-		typedef zenFlag<awconst::eResType,awconst::keResType__Count, zenU64>	awFlagResType;
-		typedef zenFlag<awconst::eResType,awconst::keResPlatform__Count>		awFlagResPlatform;
-		typedef zenFlag<awconst::eTextureCreate,awconst::keTexCreate__Count>	awFlagResTexCreate;
+		typedef zFlag<zenConst::eResType,zenConst::keResType__Count, zU64>	zFlagResType;
+		typedef zFlag<zenConst::eResType,zenConst::keResPlatform__Count>	zFlagResPlatform;
+		typedef zFlag<zenConst::eResourceUse,zenConst::keResUse__Count>		zFlagResUse;
+		typedef zFlag<zenConst::eTextureUse,zenConst::keTexCreate__Count>	zFlagResTexUse;		
 	}
 
-	namespace awconst
+	namespace zenConst
 	{
-		const awFlagResType kFlagResShaders = awFlagResType(keResType_GfxShaderPixel, keResType_GfxShaderVertex);
+		const zFlagResType kFlagResShaders = zFlagResType(keResType_GfxShaderPixel, keResType_GfxShaderVertex);
 	}
 
 

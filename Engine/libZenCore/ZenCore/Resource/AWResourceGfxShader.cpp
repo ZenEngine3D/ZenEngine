@@ -4,22 +4,22 @@ namespace zen { namespace zenRes {
 //=================================================================================================
 // CREATES
 //=================================================================================================
-GfxShaderVertex GfxShaderVertex::Create( const char* _zFilename, const char* _zEntryname )
+zGfxShaderVertex zGfxShaderVertex::Create( const char* _zFilename, const char* _zEntryname )
 {
 	return EExp::CreateGfxShaderVertex(_zFilename, _zEntryname);
 }
 
-GfxShaderPixel GfxShaderPixel::Create( const char* _zFilename, const char* _zEntryname )
+zGfxShaderPixel zGfxShaderPixel::Create( const char* _zFilename, const char* _zEntryname )
 {
 	return EExp::CreateGfxShaderPixel(_zFilename, _zEntryname);
 }
 
-GfxShaderVertex GfxShaderVertex::Create( const char* _zFilename, const char* _zEntryname, const zenArrayBase<awShaderDefine>& _aDefines)
+zGfxShaderVertex zGfxShaderVertex::Create( const char* _zFilename, const char* _zEntryname, const zArrayBase<zShaderDefine>& _aDefines)
 {
 	return EExp::CreateGfxShaderVertex(_zFilename, _zEntryname, _aDefines);
 }
 
-GfxShaderPixel GfxShaderPixel::Create( const char* _zFilename, const char* _zEntryname, const zenArrayBase<awShaderDefine>& _aDefines)
+zGfxShaderPixel zGfxShaderPixel::Create( const char* _zFilename, const char* _zEntryname, const zArrayBase<zShaderDefine>& _aDefines)
 {
 	return EExp::CreateGfxShaderPixel(_zFilename, _zEntryname, _aDefines);
 }

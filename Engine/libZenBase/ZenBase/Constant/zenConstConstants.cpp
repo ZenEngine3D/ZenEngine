@@ -1,6 +1,6 @@
 #include "libZenBase.h"
 
-namespace zen { namespace awconst {
+namespace zen { namespace zenConst {
 
 	#define TYP_LINE_A(N)		=
 	#define TYP_LINE_B(N)		-	

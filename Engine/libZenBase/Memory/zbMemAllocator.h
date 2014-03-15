@@ -14,26 +14,26 @@ namespace zbMem
 	//!					-# AllocHeader : Infos on the allocation
 	//!					-# Memory : User requested memory
 	//!					-# Footer : Padding added at the end to detect buffer overrun
-	//! @todo		Reduce memory footprint by packing together infos and removing debug only infos 
+	//! @todo Optim:	Reduce memory footprint by packing together infos and removing debug only infos 
 	//=================================================================================================
 	class AllocHeader
 #if AW_MEMORYDEBUG
-	: public zenList2xNode
+	: public zList2xNode
 	{
-	ZENClassDeclare(AllocHeader, zenList2xNode);
+	ZENClassDeclare(AllocHeader, zList2xNode);
 #else
 	{
 	ZENClassDeclareNoParent(AllocHeader);
 #endif
 	public:			
-		zenMem::Allocator*		mpAllocator;
+		zenMem::zAllocator*		mpAllocator;
 		size_t					muWantedSize;
-		zenHash32				mhStamp;
-		zenU32					muOffset : 31;
-		zenU32					mbIsArray: 1;
-		inline bool				IsValid(){return mhStamp==zenHash32("ValidAlloc");}
+		zHash32				mhStamp;
+		zU32					muOffset : 31;
+		zU32					mbIsArray: 1;
+		ZENInline bool				IsValid(){return mhStamp==zHash32("ValidAlloc");}
 		bool					IsArray(){return mbIsArray;};
-		void					Set(zenMem::Allocator* _pAllocator, zenU32 _uAllocOffset, size_t _uAllocSize, bool _bIsArray);
+		void					Set(zenMem::zAllocator* _pAllocator, zU32 _uAllocOffset, size_t _uAllocSize, bool _bIsArray);
 	};			
 
 	AllocHeader*		GetHeader(void* _pAlloc, bool _bIsArray);					

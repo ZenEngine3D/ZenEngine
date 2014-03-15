@@ -11,7 +11,7 @@ class AWThread_PC : public AWThread<T>
 	ZENClassDeclare(AWThread_PC, AWThread);
 
 public:
-	explicit AWThread_PC(T* pObject, zenU32 ( T::* method)(void)) : 
+	explicit AWThread_PC(T* pObject, zU32 ( T::* method)(void)) : 
 	AWThread<T>(pObject, method)
 	{
 		mhThread = NULL;
@@ -71,7 +71,7 @@ public:
 		return false;
 	}
 
-	virtual void Sleep(zenU32 _duration)
+	virtual void Sleep(zU32 _duration)
 	{
 		//TODO
 	}

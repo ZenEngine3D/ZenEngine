@@ -87,27 +87,27 @@ bool Serializer_Base::ItemEnded(SerialItem& aItem)
 }	
 
 //=================================================================================================
-//! @brief		Serialize a zenHash32
+//! @brief		Serialize a zHash32
 //! @details	
 //-------------------------------------------------------------------------------------------------
 //! @param		_Value - value to serialize
 //! @return		True successful
 //=================================================================================================
-bool Serializer_Base::Serialize(zenHash32&	_Value)
+bool Serializer_Base::Serialize(zHash32&	_Value)
 {
-	return Serialize(*(zenU32*)&_Value);
+	return Serialize(*(zU32*)&_Value);
 }
 
 //=================================================================================================
-//! @brief		Serialize a zenHash64
+//! @brief		Serialize a zHash64
 //! @details	
 //-------------------------------------------------------------------------------------------------
 //! @param		_Value - value to serialize
 //! @return		True successful
 //=================================================================================================
-bool Serializer_Base::Serialize(zenHash64&	_Value)
+bool Serializer_Base::Serialize(zHash64&	_Value)
 {
-	return Serialize(*(zenU64*)&_Value);
+	return Serialize(*(zU64*)&_Value);
 }
 
 //=================================================================================================
@@ -123,22 +123,22 @@ bool Serializer_Base::Serialize(ISerialize&	_Value)
 }
 
 //=================================================================================================
-//! @brief		Serialize a zenResID
+//! @brief		Serialize a zResID
 //! @details	Will convert the source from 'Export' to 'Loaded'
 //-------------------------------------------------------------------------------------------------
 //! @param		_Value - SerialItem ResourceId to save/load
 //! @return		True successful
 //=================================================================================================
-bool Serializer_Base::Serialize(zenResID& _Value)
+bool Serializer_Base::Serialize(zResID& _Value)
 {	
 	if( GetStatus() == keStatus_Exporting)
 	{
 		ZENAssertMsg(_Value.IsExport(), "Can only save export SerialItem.");
-		zenResID ResId(_Value);
-		ResId.SetSource(awconst::keResSource_Loaded);
-		return Serialize(*(zenU64*)&ResId);	
+		zResID ResId(_Value);
+		ResId.SetSource(zenConst::keResSource_Loaded);
+		return Serialize(*(zU64*)&ResId);	
 	}
-	return Serialize(*(zenU64*)&_Value);	
+	return Serialize(*(zU64*)&_Value);	
 }
 
 //=================================================================================================

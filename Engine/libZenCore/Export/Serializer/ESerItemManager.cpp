@@ -46,7 +46,7 @@ void ManagerSerialItem::SetItem(EExp::SerialItem* _pItem)
 	if( mdSerialItems.SetReplace(_pItem->mResID.HashID(), _pItem, pOldSerialItem) )
 	{
 		// Item already existed, need to delete it
-		//! @todo Actually take into account resource still using this item, this will crash if not taken care of
+		//! @todo Important: Actually take into account resource still using this item, this will crash if not taken care of (to delete list?)
 		zenDelNull(pOldSerialItem);
 	}
 } 
@@ -57,7 +57,7 @@ void ManagerSerialItem::SetItem(EExp::SerialItem* _pItem)
 //-------------------------------------------------------------------------------------------------
 //! @return 	
 //=================================================================================================
-SerialItem* ManagerSerialItem::GetItemBase(const zenResID _ResID)
+SerialItem* ManagerSerialItem::GetItemBase(const zResID _ResID)
 {
 	EExp::SerialItem* pSerialItem(NULL);
 	mdSerialItems.Get( _ResID.HashID(), pSerialItem );
@@ -65,30 +65,30 @@ SerialItem* ManagerSerialItem::GetItemBase(const zenResID _ResID)
 } 
 
 //=================================================================================================
-//! @brief		Find and return the SerialItem with a particular zenResID
+//! @brief		Find and return the SerialItem with a particular zResID
 //! @details	This version try to look in all possible SerialItem Sources, not limited to  
-//!				the one provided in the zenResID parameter.
-//!				Some generated zenResID can be created on the fly or already loaded, useful
+//!				the one provided in the zResID parameter.
+//!				Some generated zResID can be created on the fly or already loaded, useful
 //!				for those cases where we create a resource that depends on another one
 //-------------------------------------------------------------------------------------------------
-//! @param		_ResID				- zenResID to look for
-//! @return 	zenPointer to SerialItem
+//! @param		_ResID				- zResID to look for
+//! @return 	void* to SerialItem
 //=================================================================================================
-SerialItem* ManagerSerialItem::GetItemBaseAnySource(const zenResID _ResID)
+SerialItem* ManagerSerialItem::GetItemBaseAnySource(const zResID _ResID)
 {
 	ZENAssert(_ResID.IsValid());
 	EExp::SerialItem* pSerialItem(NULL);
-	zenResID anySourceResID(_ResID);
+	zResID anySourceResID(_ResID);
 
-	anySourceResID.SetSource(awconst::keResSource_Loaded);
+	anySourceResID.SetSource(zenConst::keResSource_Loaded);
 	if( mdSerialItems.Get(_ResID.HashID(), pSerialItem) )	
 		return pSerialItem;
 
-	anySourceResID.SetSource(awconst::keResSource_Runtime);	
+	anySourceResID.SetSource(zenConst::keResSource_Runtime);	
 	if( mdSerialItems.Get(_ResID.HashID(), pSerialItem) )	
 		return pSerialItem;
 	
-	anySourceResID.SetSource(awconst::keResSource_Offline);	
+	anySourceResID.SetSource(zenConst::keResSource_Offline);	
 	if( mdSerialItems.Get(_ResID.HashID(), pSerialItem) )	
 		return pSerialItem;
 		
@@ -99,10 +99,10 @@ SerialItem* ManagerSerialItem::GetItemBaseAnySource(const zenResID _ResID)
 //! @brief		Tell us if the resource exist and is valid
 //! @details	Useful at export, to ensure all resource reference are valid
 //-------------------------------------------------------------------------------------------------
-//! @param		_ResID				- zenResID to look for
+//! @param		_ResID				- zResID to look for
 //! @return 	true if valid
 //=================================================================================================
-bool ManagerSerialItem::IsValid(const zenResID _ResID)
+bool ManagerSerialItem::IsValid(const zResID _ResID)
 {
 	return mdSerialItems.Exist(_ResID.HashID());
 }
@@ -111,13 +111,13 @@ bool ManagerSerialItem::IsValid(const zenResID _ResID)
 //! @brief		Tell us if the resources exist and are valid
 //! @details	Useful at export, to ensure all resource reference are valid
 //-------------------------------------------------------------------------------------------------
-//! @param		_ResID				- zenResID to look for
+//! @param		_ResID				- zResID to look for
 //! @return 	true if valid
 //=================================================================================================
-bool ManagerSerialItem::IsValid(const zenArrayBase<zenResID>& _aResID)
+bool ManagerSerialItem::IsValid(const zArrayBase<zResID>& _aResID)
 {
-	const zenResID* pResIdCur	= _aResID.First();
-	const zenResID* pResIDEnd	= _aResID.Last()+1;
+	const zResID* pResIdCur	= _aResID.First();
+	const zResID* pResIDEnd	= _aResID.Last()+1;
 	while( pResIdCur < pResIDEnd )
 	{
 		if( !mdSerialItems.Exist(pResIdCur->HashID()) )

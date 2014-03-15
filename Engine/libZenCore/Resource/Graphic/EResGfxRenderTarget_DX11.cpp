@@ -8,7 +8,7 @@ namespace ERes
 	{
 		mInstanceInfo.mpTargetColorView	= NULL;
 		mInstanceInfo.mpTargetDepthView	= NULL;
-		mInstanceInfo.mrTargetTexture	= zenResID();		
+		mInstanceInfo.mrTargetTexture	= zResID();		
 	}
 
 	GfxRenderTarget_DX11::~GfxRenderTarget_DX11()
@@ -34,7 +34,7 @@ namespace ERes
 	{
 		HRESULT hr(S_FALSE);
 
-		mInstanceInfo.mrTargetTexture = EExp::CreateGfxTexture2D(mInstanceInfo.meFormat, awFlagResTexCreate(awconst::keTexCreate_RenderTarget), mInstanceInfo.mvDim );
+		mInstanceInfo.mrTargetTexture = EExp::CreateGfxTexture2D(mInstanceInfo.meFormat, zFlagResTexUse(zenConst::keTexCreate_RenderTarget), mInstanceInfo.mvDim );
 		if( mInstanceInfo.mrTargetTexture.IsValid() )
 		{
 			if( EMgr::GfxRender.IsDepth(mInstanceInfo.meFormat) )
@@ -65,7 +65,7 @@ namespace ERes
 	//! @param _vDim -			Dimensions of the rendertarget
 	//=================================================================================================
 	//SF TODO Cleanup this recource creation process 
-	GfxRenderTargetRef GfxRenderTarget_DX11::CreateFromBackuffer(IDXGISwapChain* _pSwapchain, awconst::eTextureFormat _eFormat, const zenVec2U16& _vDim)
+	GfxRenderTargetRef GfxRenderTarget_DX11::CreateFromBackuffer(IDXGISwapChain* _pSwapchain, zenConst::eTextureFormat _eFormat, const zVec2U16& _vDim)
 	{
 		ID3D11Texture2D*		pColorTexture(NULL);
 		ID3D11RenderTargetView*	pColorView;
@@ -76,7 +76,7 @@ namespace ERes
 			{
 				bool bUnused;
 				pBackbufferTarget									= zenNewDefault GfxRenderTarget_DX11;
-				pBackbufferTarget->mResID							= EMgr::Export.GetNewResourceID( awconst::kAWCurrentPlatformGfx, awconst::keResType_GfxRenderTarget, awconst::keResSource_Runtime, NULL, bUnused );
+				pBackbufferTarget->mResID							= EMgr::Export.GetNewResourceID( zenConst::kAWCurrentPlatformGfx, zenConst::keResType_GfxRenderTarget, zenConst::keResSource_Runtime, NULL, bUnused );
 				pBackbufferTarget->mInstanceInfo.mResID				= pBackbufferTarget->mResID;
 				pBackbufferTarget->mInstanceInfo.mpTargetColorView	= pColorView;
 				pBackbufferTarget->mInstanceInfo.mrTargetTexture	= NULL;
@@ -120,13 +120,13 @@ namespace ERes
 		mpSwapchainBackbuffer = NULL;
 	}
 
-	void GfxRenderTarget_DX11::Clear(const zenVec4F& _vRGBA)
+	void GfxRenderTarget_DX11::Clear(const zVec4F& _vRGBA)
 	{
 		ZENAssertMsg( !IsDepth(), "Trying to clear a depth rendertarget as color.");		
 		EMgr::GfxRender.DX11GetDeviceContext()->ClearRenderTargetView( mInstanceInfo.mpTargetColorView, _vRGBA.xyzw );	
 	}
 
-	void GfxRenderTarget_DX11::Clear(float _fDepth, zenU8 _uStencil, bool _bClearDepth, bool _bClearStencil)
+	void GfxRenderTarget_DX11::Clear(float _fDepth, zU8 _uStencil, bool _bClearDepth, bool _bClearStencil)
 	{
 		ZENAssertMsg( IsDepth(), "Trying to clear a color rendertarget as depth.");
 		UINT ClearFlags  = _bClearDepth		? D3D11_CLEAR_DEPTH		: 0;

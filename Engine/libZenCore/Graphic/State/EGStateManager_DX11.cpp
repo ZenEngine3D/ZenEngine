@@ -19,7 +19,7 @@ ManagerState_DX11::ManagerState_DX11()
 bool ManagerState_DX11::Load()
 {	
 	// Init conversion table for Blending WriteMask
-	for(zenU8 uBlendMask=0; uBlendMask<16; ++uBlendMask)
+	for(zU8 uBlendMask=0; uBlendMask<16; ++uBlendMask)
 	{
 		mBlendWriteMaskToDX11[uBlendMask]	= 0;
 		mBlendWriteMaskToDX11[uBlendMask]	|= (uBlendMask&ConfigBlend::keWrite_R) ? D3D11_COLOR_WRITE_ENABLE_RED : 0;
@@ -56,7 +56,7 @@ bool ManagerState_DX11::Unload()
 	return true;
 }
 
-void ManagerState_DX11::SetBlend(const ConfigBlend& _Blend, zenUInt _uRenderTarget)
+void ManagerState_DX11::SetBlend(const ConfigBlend& _Blend, zUInt _uRenderTarget)
 {
 	ZENAssert(_uRenderTarget<kuMaxRenderTarget);
 	if( mConfigBlend[_uRenderTarget] != _Blend )
@@ -99,8 +99,8 @@ void ManagerState_DX11::PipelineUpdate()
 		if( mrView.IsValid() )
 		{
 			// Setup rendertarget
-			zenUInt targetCount = mrView->Get().marTargetColor.Count();
-			for( zenUInt targetIdx(0); targetIdx<kuMaxRenderTarget; ++targetIdx)
+			zUInt targetCount = mrView->Get().marTargetColor.Count();
+			for( zUInt targetIdx(0); targetIdx<kuMaxRenderTarget; ++targetIdx)
 			{
 				ERes::GfxRenderTargetRef rTarget	= (targetIdx<targetCount) ? mrView->Get().marTargetColor[targetIdx] : NULL;
 				apColorViews[targetIdx]				= rTarget.IsValid() ? rTarget->Get().mpTargetColorView : NULL;
@@ -149,7 +149,7 @@ void ManagerState_DX11::PipelineUpdate()
 		float blendFactor[4] = { 0.0f, 0.0f, 0.0f, 0.0f };				//! @note : Global blending factor: Unused functionality for now  
 		if( mpStateBlend )
 			mpStateBlend->Release();
-		pDevice->CreateBlendState(&BlendState, &mpStateBlend);			//! @todo : Create Shader cache manager to re-used created states instead
+		pDevice->CreateBlendState(&BlendState, &mpStateBlend);			//! @todo Missing: Create Shader cache manager to re-used created states instead
 		pContext->OMSetBlendState(mpStateBlend, blendFactor, sampleMask);
 	}
 	*/
@@ -165,7 +165,7 @@ void ManagerState_DX11::PipelineUpdate()
 		DepthStencil.DepthWriteMask	= mConfigDepthStencil.mbDepthWrite ? D3D11_DEPTH_WRITE_MASK_ALL : D3D11_DEPTH_WRITE_MASK_ZERO;
 		DepthStencil.DepthFunc		= mDepthTestToDX11[mConfigDepthStencil.meDepthTest];
 
-		//! @todo : Implement stencil support
+		//! @todo Missing: Implement stencil support
 		DepthStencil.StencilEnable					= false;
 		DepthStencil.StencilReadMask				= 0xFF;
 		DepthStencil.StencilWriteMask				= 0xFF;

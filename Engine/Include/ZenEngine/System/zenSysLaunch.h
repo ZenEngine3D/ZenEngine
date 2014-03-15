@@ -1,28 +1,28 @@
 #pragma once
-#ifndef __LibFramework_Api_System_Launch_h__
-#define __LibFramework_Api_System_Launch_h__
+#ifndef __zenEngine_System_Launch_h__
+#define __zenEngine_System_Launch_h__
 
-namespace zen { namespace awsys {	
+namespace zen { namespace zenSys {	
 
 //=============================================================================
 //! @class	Game should derive from this class, to start the engine
 //=============================================================================
-class awEngineInstance
+class zEngineInstance
 {
 public:
 	virtual bool		Init();
 	virtual void		Destroy();
 	virtual void		Update();	
 	virtual bool		IsDone()=0;	
-	void				CreateGfxWindow(const zenVec2U16& _vDim, const zenVec2U16& _vPos);
-	void				SetWindow(const zenRes::GfxWindow& _rGfxWindow);
+	void				CreateGfxWindow(const zVec2U16& _vDim, const zVec2U16& _vPos);
+	void				SetWindow(const zenRes::zGfxWindow& _rGfxWindow);
 protected:
-	zenRes::GfxWindow	mrMainGfxWindow;
+	zenRes::zGfxWindow	mrMainGfxWindow;
 };
 
-void					LaunchEngine(awEngineInstance* _pEngineInstance, int argc, const char* const * argv);
-void					SetEngine(awEngineInstance* _pEngineInstance);
-awEngineInstance*		GetEngineInstance();
+void					LaunchEngine(zEngineInstance* _pEngineInstance, int argc, const char* const * argv);
+void					SetEngine(zEngineInstance* _pEngineInstance);
+zEngineInstance*		GetEngineInstance();
 
 }} // namespace zen, zenRes
 
