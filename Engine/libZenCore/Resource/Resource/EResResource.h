@@ -14,7 +14,7 @@ namespace ERes
 		virtual								~Resource();
 		virtual bool						ResourceInit();
 		virtual bool						ResourceCreate( EExp::ExportItem& _SerialItem, EExp::ExportInfoBase& _ExportInfo );
-		bool								ResourceCreateRuntime(); //!< @todo Get rid of this
+		bool								ResourceCreateRuntime(); //!< @todo Clean: Get rid of this
 	protected:			
 											Resource();
 		static zList2x						spResourceActive[zenConst::keResType__Count];	//!< List of all actives resources created, per type

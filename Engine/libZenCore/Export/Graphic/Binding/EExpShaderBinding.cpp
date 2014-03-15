@@ -68,7 +68,7 @@ namespace EExp
 			SerialShader_Base* pShader = EMgr::SerialItems.GetItem<SerialShader_Base>( pExport->maShaderID[idx] );
 			if( pShader )
 			{
-				ZENAssertMsg(!aShaderID[pShader->meShaderStage].IsValid(), "Should only specify 1 shader per shader stage");	//! @todo error output
+				ZENAssertMsg(!aShaderID[pShader->meShaderStage].IsValid(), "Should only specify 1 shader per shader stage");	//! @todo Missing: error output
 				aShaderID[pShader->meShaderStage] = pShader->mResID;
 				for(zResID *pParamIDCur(pShader->maParamDefID.First()), *pParamIDLast(pShader->maParamDefID.Last()); pParamIDCur<=pParamIDLast;  ++pParamIDCur )
 				{

@@ -18,7 +18,7 @@ public:
 	template<class TType>
 	TType* GetItem(const zResID _ResID)
 	{
-		//! @todo Add type check back, using mask
+		//! @todo Important: Add type check back, (with resource mask supports)
 		SerialItem* pSerialItem = GetItemBase(_ResID);
 		return static_cast<TType*>(pSerialItem);
 	} 
@@ -26,7 +26,7 @@ public:
 	template<class TType>
 	TType* GetItemAnySource(const zResID _ResID)
 	{
-		//! @todo Add type check back, using mask
+		//! @todo Important: Add type check back, (with resource mask supports)
 		SerialItem* pSerialItem = GetItemBaseAnySource(_ResID);
 		return static_cast<TType*>(pSerialItem);
 	}

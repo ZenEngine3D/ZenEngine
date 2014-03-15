@@ -15,7 +15,7 @@ namespace EExp
 		struct SerialUseOnly
 		{
 			zArrayStatic<zResID>	maMeshStripID;			//!< List of Mesh strips used this Mesh
-			//! @todo generate strip per vb for depth rendering
+			//! @todo Missing: Generate strip per vb for depth rendering
 		};
 		SerialUseOnly					mSerial;
 

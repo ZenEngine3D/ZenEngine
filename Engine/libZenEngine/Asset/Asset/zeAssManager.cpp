@@ -57,7 +57,7 @@ void ManagerAsset::PackageRename( zHash64 _hOldID, zHash64 _hNewID)
 
 void ManagerAsset::PackageRemove( zHash64 _hPackageID )	
 {
-	//! @todo : Process removal
+	//! @todo Asset: Process removal
 	ZENAssert(0);
 	zenAss::zPackage rPackage = mdPackage[_hPackageID];
 	if( rPackage.IsValid() )
@@ -71,7 +71,7 @@ const zenAss::zPackage& ManagerAsset::PackageGet( zHash64 _hPackageID )
 	return mdPackage[_hPackageID];
 }
 
-AssetItem* ManagerAsset::AssetGet( zHash64 _hAssetID )
+const zenAss::zAssetItem& ManagerAsset::AssetGet( zHash64 _hAssetID )
 {
 	return mdAsset[_hAssetID];
 }

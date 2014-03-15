@@ -5,6 +5,12 @@
 namespace zen { namespace zenAss
 {
 
+static const zStringHash32 sTypeDescription[]={
+				zStringHash32("TestProperty"),	//keType_TestProperty,
+				zStringHash32("Texture2D"),		//keType_Texture2D,
+				zStringHash32("Mesh"),			//keType_Mesh,
+};
+
 zAssetItem AssetCreate(zenConst::eAssetType _eAssetType)
 {
 	zeAss::AssetItem* pNewItem(NULL);
@@ -19,9 +25,26 @@ zAssetItem AssetCreate(zenConst::eAssetType _eAssetType)
 	if( pNewItem )
 	{
 		pNewItem->InitDefault();
-		//pNewItem->mpPackage = &_Owner;
+		//pNewItem->mpPackage = &_Owner; //! @todo Asset: Assign package
 	}
 	return pNewItem;
+}
+
+const char* AssetTypeToString(zenConst::eAssetType _eAssetType)
+{
+	ZENAssert(_eAssetType<zenConst::keAssType__Count);
+	return sTypeDescription[_eAssetType].mzName;
+}
+
+zenConst::eAssetType AssetNameToType(zHash32 _hAssetName)
+{
+	zUInt idx = zStringHash32::Find(_hAssetName, sTypeDescription, ZENArrayCount(sTypeDescription));
+	return idx < zenConst::keAssType__Count ? static_cast<zenConst::eAssetType>(idx) : zenConst::keAssType__Invalid;
+}
+
+const zAssetItem& AssetGet( zHash64 _hAssetID )
+{
+	return zeMgr::Asset.AssetGet(_hAssetID);
 }
 
 zAssetItem::zAssetItem()

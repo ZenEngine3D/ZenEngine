@@ -44,7 +44,7 @@ zResID CreateExportItemRuntime(EExp::ExportInfoBase* _pExportInfo)
 //=================================================================================================
 //! @brief		Called at engine start
 //! @return 	True if no error occurred
-//! @todo		Properly evaluate pre-allocation / growth policy
+//! @todo Optim: Properly evaluate pre-allocation / growth policy
 //=================================================================================================
 bool ManagerResource::Load()
 {		
@@ -61,7 +61,7 @@ bool ManagerResource::Load()
 //=================================================================================================
 //! @brief		Called at engine end to free up resources
 //! @return 	True if no error occurred
-//! @todo		Unload resources
+//! @todo Missing: Unload resources
 //=================================================================================================
 bool ManagerResource::Unload()
 {

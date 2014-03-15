@@ -5,13 +5,13 @@ namespace zen { namespace zenRes {
 //=================================================================================================
 // CREATES
 //=================================================================================================
-zGfxTexture2D zGfxTexture2D::Create(zenConst::eTextureFormat _eFormat, zVec2U16 _vDim, zenFlagResTexCreate _CreationFlags)
+zGfxTexture2D zGfxTexture2D::Create(zenConst::eTextureFormat _eFormat, zVec2U16 _vDim, zFlagResTexUse _CreationFlags)
 {
 	static zArrayStatic<zU8> aEmpty(zUInt(0));
 	return EExp::CreateGfxTexture2D(_eFormat, _CreationFlags, _vDim, aEmpty);
 }
 
-zGfxTexture2D zGfxTexture2D::Create(zenConst::eTextureFormat _eFormat, zVec2U16 _vDim, const zArrayBase<zU8>& _aRawData, zenFlagResTexCreate _CreationFlags)
+zGfxTexture2D zGfxTexture2D::Create(zenConst::eTextureFormat _eFormat, zVec2U16 _vDim, const zArrayBase<zU8>& _aRawData, zFlagResTexUse _CreationFlags)
 {
 	return EExp::CreateGfxTexture2D(_eFormat, _CreationFlags, _vDim, _aRawData);
 }
@@ -21,9 +21,9 @@ zGfxRenderTarget zGfxRenderTarget::Create(zenConst::eTextureFormat _eFormat, zVe
 	return EExp::CreateGfxRenderTarget(_eFormat, _vDim, _bSrgb);
 }
 
-zGfxVertex zGfxVertex::Create(const zArrayBase<zGfxVertex::Stream>& _aStreams, zU32 _uCreationFlags)
+zGfxVertex zGfxVertex::Create(const zArrayBase<zGfxVertex::Stream>& _aStreams, zFlagResUse _ResourceUse)
 {
-	return EExp::CreateGfxVertex(_aStreams, _uCreationFlags);
+	return EExp::CreateGfxVertex(_aStreams, _ResourceUse);
 }
 
 zGfxIndex zGfxIndex::Create(const zArrayBase<zU16>& _Indices, zenConst::ePrimitiveType _ePrimitiveType)

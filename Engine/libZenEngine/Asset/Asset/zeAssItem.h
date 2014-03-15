@@ -5,14 +5,12 @@
 #if ZEN_ENGINETOOL
 namespace zen { namespace zeAss
 {
-class AssetItem : public zRefCounted<true>
+class AssetItem : public zRefCountedAutoDel
 {
 public:
 
 ZENClassDeclareNoParent(AssetItem)
 public:
-	//TEMP PUBLIC
-												AssetItem();
 	virtual										~AssetItem();
 	virtual bool								Load(const pugi::xml_node& _NodeAsset);
 	virtual bool								Save(pugi::xml_document& _Doc);
@@ -34,6 +32,7 @@ public:
 	ZENForceInline zenAss::PropertyValue&		GetValue(zUInt _uValIndex){ ZENAssert( _uValIndex< maPropertyValue.Count()); return maPropertyValue[_uValIndex];}
 	
 protected:										
+												AssetItem();
 	void										RebuiltDescription();
 	bool										InitPropertyMap(zMap<zInt>::Key32& _dPropertyMap)const;
 	

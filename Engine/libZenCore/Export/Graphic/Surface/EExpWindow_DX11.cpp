@@ -27,7 +27,7 @@ namespace EExp
 	//!				This will result in DirectX creating a render swapchain with associated Window.
 	//!	@Note		Because Windows has a define named CreateWindow, we can't use it for our function's
 	//				name. Ending it with 'Gfx' to make it different
-	//! @todo		Make it cross platform
+	//! @todo Clean: Make it cross platform (windows handle)
 	//-------------------------------------------------------------------------------------------------
 	//! @param _WindowHandle	- Parent Window
 	//! @return 				- Unique zResID of created Resource

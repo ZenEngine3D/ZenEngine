@@ -16,7 +16,7 @@ namespace ERes
 			zenConst::eTextureFormat	meBackbufferDepthFormat;
 			zVec2U16				mvSize;			
 		};
-		AWResourceDeclare(GfxWindow_DX11, InstanceInfo, zenConst::keResType_GfxWindow)
+		ZENResourceDeclare(GfxWindow_DX11, InstanceInfo, zenConst::keResType_GfxWindow)
 	
 	//------------------------------------------------------------------
 	// Common to all Window

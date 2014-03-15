@@ -23,7 +23,7 @@ namespace EExp
 
 			virtual bool Serialize( EExp::Serializer_Base& _Serializer )
 			{
-				//! @todo serialize
+				//! @todo Missing: serialize
 				return true;
 			}
 			 

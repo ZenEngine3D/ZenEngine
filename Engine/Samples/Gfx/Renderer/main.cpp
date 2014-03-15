@@ -4,6 +4,6 @@
 int main (int argc, char * const argv[])
 {
 	sample::SampleRendererInstance EngineInstance;
-	awsys::LaunchEngine( &EngineInstance, argc, argv );	
+	zenSys::LaunchEngine( &EngineInstance, argc, argv );	
 	return 0;	
 }

@@ -4,7 +4,7 @@
 
 namespace zen { namespace zenType {
 
-	//! @todo Move this to state files
+	//! @todo Clean: Move this to state files
 
 	class awBlendDesc
 	{

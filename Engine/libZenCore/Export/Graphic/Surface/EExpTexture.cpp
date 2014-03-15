@@ -39,7 +39,7 @@ const TextureBlockInfo& GetTextureBlockInfo( zenConst::eTextureFormat _eFormat )
 //! @param _aRawData		- Image data in r/rgb/rgba format
 //! @return 				- Unique zResID of created Resource
 //=================================================================================================
-zResID CreateGfxTexture2D(zenConst::eTextureFormat _eFormat, zenFlagResTexCreate _CreationFlags, zVec2U16 _vDim, const zArrayBase<zU8>& _aRawData)
+zResID CreateGfxTexture2D(zenConst::eTextureFormat _eFormat, zFlagResTexUse _CreationFlags, zVec2U16 _vDim, const zArrayBase<zU8>& _aRawData)
 {
 	static zenMem::zAllocatorPool sMemPool("Pool CreateTexture2D", sizeof(SerialTexture2D_Base::ExportInfo), 1, 5 );
 	SerialTexture2D_Base::ExportInfo* pExportInfo	= zenNew(&sMemPool) SerialTexture2D_Base::ExportInfo;

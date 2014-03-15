@@ -16,7 +16,7 @@ namespace EExp
 		{
 			zArrayStatic<MipInfo>		maMipData;
 			zenConst::eTextureFormat		meFormat;
-			zenFlagResTexCreate			mCreationFlags;
+			zFlagResTexUse			mCreationFlags;
 		};
 		SerialUseOnly					mSerial;		
 		

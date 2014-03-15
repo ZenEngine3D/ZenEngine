@@ -5,9 +5,9 @@
 namespace CAlg
 {
 
-//! @todo Improve quicksort by using buble sort on child 5-10 last elements
-//! @todo Improve quicksort by using loop instead of recursive call (http://stackoverflow.com/questions/1688264/improving-the-quick-sort)
-//! @todo implement radix sort
+//! @todo Optim: Improve quicksort by using buble sort on child 5-10 last elements
+//! @todo Optim: Improve quicksort by using loop instead of recursive call (http://stackoverflow.com/questions/1688264/improving-the-quick-sort)
+//! @todo Optim: implement radix sort
 template<class TType>
 void Quicksort(TType* _pFirst, TType* _pLast)
 {

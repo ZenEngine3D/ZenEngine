@@ -44,23 +44,14 @@ namespace EExp
 	{
 	ZENClassDeclare(SerialVertex_Base,EExp::ExportItem)
 	public:
-		//! @todo replace awu32 flag by generic flag class
-		enum eCreationFlags
-		{
-			keFlag_Static	= 1<<0,		// Never updated once created
-			keFlag_Dynamic	= 1<<1,		// Can be updated once per frame
-			keFlag_Volatile	= 1<<2,		// Can be updated multiple time per frame
-		};
-
-		
 		struct ExportInfo : public EExp::ExportInfoBase
 		{			
 			zArrayStatic<zenRes::zGfxVertex::Stream>	maStreams;
-			zU32										muCreationFlags;
+			zFlagResUse									mResourceUse;
 		};
 	};
 	
-	zResID CreateGfxVertex(const zArrayBase<zenRes::zGfxVertex::Stream>& _aStreams, zU32 _uCreationFlags);
+	zResID CreateGfxVertex(const zArrayBase<zenRes::zGfxVertex::Stream>& _aStreams, zFlagResUse _ResourceUse);
 }
 
 #include "EExpVertexDX11.h"

@@ -34,7 +34,6 @@ namespace EExp
 	//=================================================================================================
 	//! @brief		Create a new Vertex Shader
 	//! @details	
-	//! @todo		Add support for defines
 	//-------------------------------------------------------------------------------------------------
 	//! @param _zFilename	- Filename with code content
 	//! @param _zEntryname	- Name of entry function
@@ -54,7 +53,6 @@ namespace EExp
 	//=================================================================================================
 	//! @brief		Create a new Pixel Shader
 	//! @details	
-	//! @todo		Add support for defines
 	//-------------------------------------------------------------------------------------------------
 	//! @param _zFilename	- Filename with code content
 	//! @param _zEntryname	- Name of entry function

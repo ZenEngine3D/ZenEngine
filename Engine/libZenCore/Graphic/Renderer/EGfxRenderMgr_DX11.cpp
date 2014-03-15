@@ -140,7 +140,7 @@ void ManagerRender::Render(ERes::GfxMeshStripRef _rMeshStrip)
 		{
 			ERes::GfxTexture2DRef rTexture					= _rMeshStrip->Get().maTextureRef[stageIdx][textureIdx];
 			ERes::GfxSamplerRef rSampler					= _rMeshStrip->Get().maGfxSamplerRef[stageIdx][textureIdx];
-			if( rTexture.IsValid() && rSampler.IsValid() ) //! @todo remove test, and make sure we always have default object at worst
+			if( rTexture.IsValid() && rSampler.IsValid() ) //! @todo Missing: remove test, and make sure we always have default object at worst
 			{
 				abSamplerChanged[stageIdx]					|= maCurrentSampler[stageIdx][textureIdx] != rSampler;
 				abTextureChanged[stageIdx]					|= maCurrentTexture[stageIdx][textureIdx] != rTexture;

@@ -16,9 +16,9 @@ struct SimpleVertex
 	zVec2F Tex;
 };
 
-class SampleRendererInstance : public awsys::awEngineInstance
+class SampleRendererInstance : public zenSys::zEngineInstance
 {
-ZENClassDeclare(SampleRendererInstance, awsys::awEngineInstance);
+ZENClassDeclare(SampleRendererInstance, zenSys::zEngineInstance);
 public:
 	virtual bool Init();
 	virtual void Destroy();

@@ -75,7 +75,7 @@ AssetItem::AssetItem()
 {
     ZENStaticAssertMsg( ZENArrayCount(sTypeDescription)==zenConst::keAssType__Count, "Make sure to have a valid description for each resource type" );
 	static zU64 sCounter(1);
-	mhID = sCounter++; //! @todo : fix this (HACK)	
+	mhID = sCounter++; //! @todo Important: fix this (HACK)	
 }
 
 AssetItem::~AssetItem()	
@@ -103,7 +103,7 @@ bool AssetItem::Load( const pugi::xml_node& nodeAsset )
 	for(int idx(0), count(maGroup.Count()-1); idx<count; ++idx )
 		mhGroupID.Append( maGroup[idx] );
 	/*
-	//! @todo
+	//! @todo Asset: Separate code dependency to 3rd lib
 	// Load properties values
  	for (pugi::xml_node nodeProp = nodeAsset.child(kzXmlName_Node_Property); nodeProp; nodeProp = nodeProp.next_sibling(kzXmlName_Node_Property))
 	{
@@ -121,7 +121,7 @@ bool AssetItem::Load( const pugi::xml_node& nodeAsset )
 bool AssetItem::Save( pugi::xml_document& _Doc )
 {
 	/*
-	//! @todo
+	//! @todo Asset: Separate code depenency to 3rd lib
 	pugi::xml_node nodeAsset = _Doc.append_child(kzXmlName_Node_Asset);
 	nodeAsset.append_attribute(kzXmlName_AssetAtr_Name).set_value("testName"); //!< @todo set proper na,e
 	nodeAsset.append_attribute(kzXmlName_AssetAtr_Type).set_value(GetTypeDesc());

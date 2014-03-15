@@ -14,7 +14,7 @@ namespace zen { namespace zeAss
 		virtual const zenAss::PropertyArray&	GetProperties()const;
 		virtual zInt							GetValueIndex(zHash32 _hPropertyName)const;
 	protected:
-		static zArrayStatic<zU32>	saIcon;		//!< All mesh share the same icon @todo Keep this?
+		static zArrayStatic<zU32>	saIcon;		//!< All mesh share the same icon @todo Missing: Keep this?
 	};
 }} //namespace zen { namespace zeAss
 

@@ -7,9 +7,9 @@
 // wxGetApp() which will return the reference of the right type (i.e. ZendoApp and not wxApp)
 IMPLEMENT_APP_CONSOLE(ZendoApp)
 
-class EngineInstance : public awsys::awEngineInstance
+class EngineInstance : public zenSys::zEngineInstance
 {
-ZENClassDeclare(EngineInstance, awsys::awEngineInstance);
+ZENClassDeclare(EngineInstance, zenSys::zEngineInstance);
 public:
 	virtual bool Init()
 	{
@@ -65,7 +65,7 @@ bool ZendoApp::OnInit()
 	//Connect( wxID_ANY, wxEVT_IDLE, wxIdleEventHandler(ZendoApp::onIdle) );
 	if( Engine.Init() )
 	{
-		awsys::SetEngine(&Engine);
+		zenSys::SetEngine(&Engine);
 		/*
 		AAss::Package testPackage;				
 		testPackage.SetFilename( "TestDir/monpackage.xml" );
@@ -75,7 +75,6 @@ bool ZendoApp::OnInit()
 		testPackage.SetFilename("TestDir2/monpackage.xml");
 		*/
 		mpFrame = zenNewDefault WndMain("Zendo Editor");
-		zeMgr::Asset.Load();
 		InitResources();
 		if( mpFrame->Initialize() )
 		{
@@ -88,7 +87,7 @@ bool ZendoApp::OnInit()
 
 int ZendoApp::OnExit()
 {
-	awsys::GetEngineInstance()->Destroy();
+	zenSys::GetEngineInstance()->Destroy();
 	return 0;
 }
 
@@ -98,7 +97,7 @@ bool ZendoApp::InitResources()
 	zUInt auIconSize[]={16,32,128};
 	for( zUInt idxSize(0); idxSize<ZENArrayCount(auIconSize); ++idxSize )
 	{
-		wxString zFolder	= wxString::Format("Zendo/Icons/ResourceType%i/", auIconSize[idxSize]);	//! @todo move root path outside assetmanager control
+		wxString zFolder	= wxString::Format("Zendo/Icons/ResourceType%i/", auIconSize[idxSize]);	//! @todo Clean: move root path outside assetmanager control
 		wxString zFilename	= zFolder + "Unknown.png";
 		wxImage imgIconUnknown(zFilename);
 		if( imgIconUnknown.IsOk() )
@@ -107,7 +106,7 @@ bool ZendoApp::InitResources()
 			maIcon[keIco_Asset16+idxSize] = zenNewDefault wxImageList(auIconSize[idxSize], auIconSize[idxSize], true);
 			for(zUInt idxType(0); idxType<zenConst::keAssType__Count; ++idxType)
 			{
-				zFilename = zFolder + wxString(zeAss::AssetItem::GetTypeName(zenConst::eAssetType(idxType))) + wxT(".png");				
+				zFilename = zFolder + wxString(zenAss::AssetTypeToString(zenConst::eAssetType(idxType))) + wxT(".png");				
 				wxImage imgIcon(zFilename);
 				if( imgIcon.IsOk() )
 				{

@@ -39,7 +39,7 @@ bool SerializerExportMem::ItemStarted(EExp::SerialItem& aItem)
 	return false;
 }
 
-//! @todo: abstract this
+//! @todo Clean: Abstract this
 bool SerializerExportMem::Save(const char* azFilename)
 {
 	FILE* pFile = fopen( azFilename, "wb" );

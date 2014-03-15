@@ -4,7 +4,7 @@
 
 namespace EExp
 {	
-	//! @todo Move ShaderParamDef here instead of ShaderBinding?
+	//! @todo Clean: Move ShaderParamDef here instead of ShaderBinding?
 	class SerialShader_DX11 : public SerialShader_Base
 	{
 	ZENClassDeclare(SerialShader_DX11, SerialShader_Base)

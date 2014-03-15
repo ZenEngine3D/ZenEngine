@@ -9,7 +9,7 @@ class SerializerImportMem : public ISerializerImporter
 ZENClassDeclare(SerializerImportMem, ISerializerImporter)
 public:
 					SerializerImportMem(zU8* apBuffer, zUInt auBufferSize);
-	bool			Load(const char* azFilename);//! @todo: abstract this
+	bool			Load(const char* azFilename);
 
 protected:	
 	zU8*				mpMemoryStart;

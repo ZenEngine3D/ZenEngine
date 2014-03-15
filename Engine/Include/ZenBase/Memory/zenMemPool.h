@@ -9,7 +9,7 @@ namespace zen { namespace zenMem
 //-------------------------------------------------------------------------------------------------
 //! @brief		Memory pool allocator, return quickly fixed size allocations
 //! @details	Very fast allocator without fragmentation
-//! @todo		ReAdd support for using particular allocator when allocating more memory
+//! @todo Clean: ReAdd support for using particular allocator when allocating more memory
 //=================================================================================================
 class zAllocatorPool : public zAllocator
 {

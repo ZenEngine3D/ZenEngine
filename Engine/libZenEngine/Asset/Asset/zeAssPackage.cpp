@@ -27,7 +27,8 @@ void Package::Unload()
 		madAssetPerType[typIdx].GetFirst(it);
 		while( it.IsValid() )
 		{
-			//! @todo remove reference zenDel(it.GetValue());
+			//! @todo Asset: Set package reference to null
+			//zenDel(it.GetValue());
 			++it;
 		}			
 		madAssetPerType[typIdx].Clear();
@@ -36,7 +37,7 @@ void Package::Unload()
 	maGroup.SetCount(0);
 }
 
-bool Package::Load(const CFil::Filename& _Filename, zMap<AssetItem*>::Key64& _dAllAsset)
+bool Package::Load(const CFil::Filename& _Filename, zMap<zenAss::zAssetItem>::Key64& _dAllAsset)
 {	
 	Unload();
 	pugi::xml_document Doc;	
@@ -69,7 +70,7 @@ bool Package::Load(const CFil::Filename& _Filename, zMap<AssetItem*>::Key64& _dA
 		}
 	}
 
-	//! @todo notify manager
+	//! @todo Missing: notify manager
 	return true;
 }
 
@@ -93,14 +94,14 @@ bool Package::Save()
 		madAssetPerType[typIdx].GetFirst(it);
 		while( it.IsValid() )
 		{
-			//SF @todo it.GetValue().Save(Doc);
+			//SF @todo Asset: it.GetValue().Save(Doc);
 			++it;
 		}			
 	}
 
 	// Save package
 	CMgr::File.CreateDir( mPackagePath.GetPathFull() );
-	Doc.save_file((const char*)mPackagePath.GetNameFull() ); //! @todo Secure version of this, with temp file
+	Doc.save_file((const char*)mPackagePath.GetNameFull() ); //! @todo Error: Secure version of this, with temp file
 	
 	return true;
 }

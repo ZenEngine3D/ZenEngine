@@ -19,7 +19,7 @@ bool SerialGfxVertex_DX11::ExportWork(bool _bIsTHRTask)
 	for(zUInt i=0; i<pExportInfo->maStreams.Count(); ++i)
 		uElementTotal += pExportInfo->maStreams[i].maElements.Count();
 
-	mSerial.muCreationFlags = pExportInfo->muCreationFlags;
+	mSerial.mResourceUse = pExportInfo->mResourceUse;
 	mSerial.maStream.SetCount(pExportInfo->maStreams.Count());
 	mSerial.maElementDef.SetCount(sizeof(D3D11_INPUT_ELEMENT_DESC)*uElementTotal);	
 	D3D11_INPUT_ELEMENT_DESC* pElemDX11	= (D3D11_INPUT_ELEMENT_DESC*)mSerial.maElementDef.First();
@@ -41,7 +41,7 @@ bool SerialGfxVertex_DX11::ExportWork(bool _bIsTHRTask)
 			pElemDX11->Format							= eFormats[ElemInfo.meType][ElemInfo.muVectorSize-1];
 			pElemDX11->AlignedByteOffset				= ElemInfo.muOffset;
 			pElemDX11->InputSlot						= stream;
-			pElemDX11->InputSlotClass					= D3D11_INPUT_PER_VERTEX_DATA;	//! @todo Support per intance streams
+			pElemDX11->InputSlotClass					= D3D11_INPUT_PER_VERTEX_DATA;	//! @todo Missing: Support per intance streams
 			pElemDX11->InstanceDataStepRate				= 0;
 			++pElemDX11;
 		}

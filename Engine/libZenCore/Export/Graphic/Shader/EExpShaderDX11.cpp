@@ -117,7 +117,7 @@ bool SerialShader_DX11::ExportWorkCompile()
 		&pErrorBlob );	
 	if( pErrorBlob != NULL )
 	{
-		//@todo Implement logging	strncpy( mzLogDetail, (char*)pErrorBlob->GetBufferPointer(), keLogSizeDetail );
+		//@todo Missing: Implement logging	strncpy( mzLogDetail, (char*)pErrorBlob->GetBufferPointer(), keLogSizeDetail );
 		printf( "\n%s\n", (char*)pErrorBlob->GetBufferPointer() );
 		pErrorBlob->Release();
 	}

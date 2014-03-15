@@ -10,7 +10,7 @@ ZENClassDeclare(SerializerExportMem, ISerializerExporter)
 public:
 					SerializerExportMem(zUInt auAllocSize);
 	virtual			~SerializerExportMem();
-	bool			Save(const char* azFilename);//! @todo: abstract this
+	bool			Save(const char* azFilename);
 protected:
 	struct Alloc : public zList1xNode
 	{
@@ -48,7 +48,7 @@ public:
 protected:
 	virtual bool	ItemStarted(EExp::SerialItem& aItem);
 
-	//! @todo : support skipping failed item
+	//! @todo Missing: Support skipping failed item
 	//virtual bool	ItemSkip(ExportItem& aItem);
 };
 }

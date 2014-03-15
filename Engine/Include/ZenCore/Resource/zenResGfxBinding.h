@@ -26,12 +26,11 @@ namespace zen { namespace zenRes {
 
 	AWClassResourceRefDeclare(zGfxShaderBinding, zenConst::keResType_GfxShaderBinding)
 	public:		
-		//! @todo Convert these function to only use pointer/count
 		static zGfxShaderBinding	Create(const zArrayBase<zenRes::zGfxShader>& _aShader);
 		static zGfxShaderBinding	Create(const zenRes::zGfxShader* _pShaders, zUInt _uCount);
 	};
 
-	//! @todo remove this from api
+	//! @todo Clean: remove this from api
 	AWClassResourceRefDeclare(zGfxInputStream, zenConst::keResType_GfxInputStream) };
 
 	AWClassResourceRefDeclare(zGfxMeshStrip, zenConst::keResType_GfxMeshStrip)
@@ -48,11 +47,9 @@ namespace zen { namespace zenRes {
 		void						SetValue(const zHash32& _hTextureName, zGfxSampler _rSampler );
 		void						SetValue(const zHash32& _hTextureName, zGfxTexture2D _rTexture, zGfxSampler _rSampler );
 		
-
-		//! @todo Replace vertex/index with aw resname
-		static zGfxMeshStrip		Create(zGfxVertex _VertexBuffer, zGfxIndex _IndexBuffer, zGfxShaderBinding _rShaderBinding, const zArrayBase<zResID>& _aShaderParamID, const zArrayBase<zShaderTexture>& _aTexture, zU32 _uIndexFirst=0, zU32 _uIndexCount=0xFFFFFFFF);
-		static zGfxMeshStrip		Create(zGfxVertex _VertexBuffer, zGfxIndex _IndexBuffer, zGfxShaderBinding _rShaderBinding, const zArrayBase<zResID>& _aShaderParamID, zU32 _uIndexFirst=0, zU32 _uIndexCount=0xFFFFFFFF);
-		static zGfxMeshStrip		Create(zGfxVertex _VertexBuffer, zGfxIndex _IndexBuffer, zGfxShaderBinding _rShaderBinding, zU32 _uIndexFirst=0, zU32 _uIndexCount=0xFFFFFFFF);
+		static zGfxMeshStrip		Create(const zGfxVertex& _VertexBuffer, const zGfxIndex& _IndexBuffer, const zGfxShaderBinding& _rShaderBinding, const zArrayBase<zResID>& _aShaderParamID, const zArrayBase<zShaderTexture>& _aTexture, zU32 _uIndexFirst=0, zU32 _uIndexCount=0xFFFFFFFF);
+		static zGfxMeshStrip		Create(const zGfxVertex& _VertexBuffer, const zGfxIndex& _IndexBuffer, const zGfxShaderBinding& _rShaderBinding, const zArrayBase<zResID>& _aShaderParamID, zU32 _uIndexFirst=0, zU32 _uIndexCount=0xFFFFFFFF);
+		static zGfxMeshStrip		Create(const zGfxVertex& _VertexBuffer, const zGfxIndex& _IndexBuffer, const zGfxShaderBinding& _rShaderBinding, zU32 _uIndexFirst=0, zU32 _uIndexCount=0xFFFFFFFF);
 	};
 
 	AWClassResourceRefDeclare(zGfxMesh, zenConst::keResType_GfxMesh)

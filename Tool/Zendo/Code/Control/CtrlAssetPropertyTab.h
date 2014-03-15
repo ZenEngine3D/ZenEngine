@@ -25,13 +25,13 @@ private:
 class TabAssetProperty : public wxPanel
 {
 public:
-							TabAssetProperty(wxWindow* _pParent, zeAss::AssetItem* _pEditAsset);
+							TabAssetProperty(wxWindow* _pParent, const zenAss::zAssetItem& _rEditAsset);
 							~TabAssetProperty();
 protected:
 	void					OnToolbarDefault	( wxCommandEvent& event );
 	void					OnToolbarOriginal	( wxCommandEvent& event );
 	
-	zeAss::AssetItem*		mpAsset;
+	zenAss::zAssetItem		mrAsset;
 	wxPropertyGridManager*	mpPropertyGrid;
 	DECLARE_EVENT_TABLE()
 };

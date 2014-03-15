@@ -25,7 +25,7 @@ public:
 	zU64						GetFrameCount();
 	ZENInline ERes::GfxWindowRef	GetWindowCurrent(){return mrWindowCurrent;}
 
-	//! @todo move to more generic AWformat testing functions file?
+	//! @todo Clean: move to more generic AWformat testing functions file?
 	bool						IsDepth( zenConst::eTextureFormat _eTexFormat ) const { return _eTexFormat>=zenConst::keTexFormat__DepthFirst && _eTexFormat<=zenConst::keTexFormat__DepthLast; }
 	
 protected:

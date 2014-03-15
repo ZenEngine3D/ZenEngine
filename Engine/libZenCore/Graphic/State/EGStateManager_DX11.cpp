@@ -149,7 +149,7 @@ void ManagerState_DX11::PipelineUpdate()
 		float blendFactor[4] = { 0.0f, 0.0f, 0.0f, 0.0f };				//! @note : Global blending factor: Unused functionality for now  
 		if( mpStateBlend )
 			mpStateBlend->Release();
-		pDevice->CreateBlendState(&BlendState, &mpStateBlend);			//! @todo : Create Shader cache manager to re-used created states instead
+		pDevice->CreateBlendState(&BlendState, &mpStateBlend);			//! @todo Missing: Create Shader cache manager to re-used created states instead
 		pContext->OMSetBlendState(mpStateBlend, blendFactor, sampleMask);
 	}
 	*/
@@ -165,7 +165,7 @@ void ManagerState_DX11::PipelineUpdate()
 		DepthStencil.DepthWriteMask	= mConfigDepthStencil.mbDepthWrite ? D3D11_DEPTH_WRITE_MASK_ALL : D3D11_DEPTH_WRITE_MASK_ZERO;
 		DepthStencil.DepthFunc		= mDepthTestToDX11[mConfigDepthStencil.meDepthTest];
 
-		//! @todo : Implement stencil support
+		//! @todo Missing: Implement stencil support
 		DepthStencil.StencilEnable					= false;
 		DepthStencil.StencilReadMask				= 0xFF;
 		DepthStencil.StencilWriteMask				= 0xFF;

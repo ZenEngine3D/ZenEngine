@@ -1,14 +1,14 @@
 //=================================================================================================
 // Defines used when declaring a new resource class (engine side)
 //=================================================================================================
-#define AWResourceDeclare(_Class_, _ClassInstance_, _ResourceType_)																	\
-	AWResourceDeclareParent(_Class_, Resource, _ClassInstance_, _ResourceType_)
+#define ZENResourceDeclare(_Class_, _ClassInstance_, _ResourceType_)																	\
+	ZENResourceDeclareParent(_Class_, Resource, _ClassInstance_, _ResourceType_)
 
-#define AWResourceDeclareParent(_Class_, _ClassParent_, _ClassInstance_, _ResourceType_)											\
+#define ZENResourceDeclareParent(_Class_, _ClassParent_, _ClassInstance_, _ResourceType_)											\
 	ZENClassDeclare(_Class_, _ClassParent_)																							\
 public:																																\
-	ZENInline const _ClassInstance_&	Get()const									{	return mInstanceInfo;};							\
-	ZENInline _ClassInstance_&	Get()												{	return mInstanceInfo;};							\
+	ZENInline const _ClassInstance_&	Get()const								{	return mInstanceInfo;};							\
+	ZENInline _ClassInstance_&	Get()											{	return mInstanceInfo;};							\
 	static _Class_*					Create(EExp::ExportInfoBase& _ExportInfo)	{	_Class_* pNewRes = zenNewDefault _Class_();		\
 																					return pNewRes->ResourceCreate(pNewRes->mInstanceInfo, _ExportInfo) ? pNewRes : NULL; }\
 	static zenConst::eResType		GetResourceType()							{	return _ResourceType_; }						\

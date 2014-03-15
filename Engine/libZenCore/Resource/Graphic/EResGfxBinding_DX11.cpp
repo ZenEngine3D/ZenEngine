@@ -66,7 +66,7 @@ bool GfxMeshStrip_DX11::ResourceInit()
 		mInstanceInfo.maTextureRef[stageIdx].Copy<zResID>( mInstanceInfo.mSerial.maTextureID[stageIdx] );
 		mInstanceInfo.maGfxSamplerRef[stageIdx].Copy<zResID>( mInstanceInfo.mSerial.maSamplerID[stageIdx] );
 	}
-	//! @todo assign default texture for the one not assigned
+	//! @todo Missing: assign default texture for the one not assigned
 
 	return true;
 }
