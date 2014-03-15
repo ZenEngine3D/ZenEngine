@@ -1,6 +1,8 @@
 #include "zenEngine.h"
 #include "SampleRenderer.h"
 
+//Test merge
+
 //=================================================================================================
 //! @example SampleGfxRenderer.cpp
 //! Renderer initialization and test
