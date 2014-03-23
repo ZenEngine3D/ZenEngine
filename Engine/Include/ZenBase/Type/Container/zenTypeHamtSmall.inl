@@ -167,6 +167,7 @@ template<class TKey, class TValue, class TIndex, int TIndexBits>
 zHamt< TKey, TValue, TIndex, TIndexBits>::zHamt()
 : mpRootNode(NULL)
 , muCount(0)
+, mpDeleteItemCB(NULL)
 { 
 	ZENStaticAssertMsg( sizeof(TIndex)*8 >= kuSlotCount,"Size of Index not big enough to contain '1<<TIndexBits' Index, check template definition" ); 
 }
@@ -181,6 +182,7 @@ template<class TKey, class TValue, class TIndex, int TIndexBits>
 zHamt< TKey, TValue, TIndex, TIndexBits>::zHamt( zUInt _uReservePool )
 : mpRootNode(NULL)
 , muCount(0)
+, mpDeleteItemCB(NULL)
 {
 	ZENStaticAssertMsg( sizeof(TIndex)*8 >= kuSlotCount,"Size of Index not big enough to contain '1<<TIndexBits' Index, check template definition" ); 
 	Init(_uReservePool);
@@ -354,7 +356,7 @@ bool zHamt< TKey, TValue, TIndex, TIndexBits>::Get(const TKey _Key, TValue& _Val
 	_ValueOut		= bFound ? (*ppParentNode)->mpSlots[uSlotID].Value() : mDefault;
 	return bFound;
 }
-
+/*
 //==================================================================================================
 //! @details	Do a Exist() and Get() in same call
 //--------------------------------------------------------------------------------------------------
@@ -363,7 +365,7 @@ bool zHamt< TKey, TValue, TIndex, TIndexBits>::Get(const TKey _Key, TValue& _Val
 //! @return					- True if value found
 //==================================================================================================
 template<class TKey, class TValue, class TIndex, int TIndexBits>
-bool zHamt< TKey, TValue, TIndex, TIndexBits>::Get(const TKey _Key, TValue* _pValueOut) const
+bool zHamt< TKey, TValue, TIndex, TIndexBits>::Get(const TKey _Key, TValue*& _pValueOut) const
 {
 	ZENAssertMsg(IsInit(),"zHamt isn't initialized");
 	const Node**	ppParentNode;
@@ -372,7 +374,7 @@ bool zHamt< TKey, TValue, TIndex, TIndexBits>::Get(const TKey _Key, TValue* _pVa
 	_pValueOut		= bFound ? &(*ppParentNode)->mpSlots[uSlotID].Value() : NULL;
 	return bFound;
 }
-
+*/
 //==================================================================================================
 //! @details	Read only access (won't add entry when none found).
 //--------------------------------------------------------------------------------------------------
@@ -437,6 +439,9 @@ bool zHamt< TKey, TValue, TIndex, TIndexBits>::Unset(const TKey _Key)
 	bool bFound = pNode->mpSlots[uSlotID[uDepth]].Key == _Key;
 	muCount		+= bFound ? -1 : 0;
 	pNode		= bFound ? pNode : NULL;
+	if( bFound && mpDeleteItemCB)
+		mpDeleteItemCB(*this, pNode->mpSlots[uSlotID[uDepth]].Value());
+
 	while( pNode )
 	{
 		zUInt uNewSlotCount = pNode->GetSlotCount()-1;
@@ -770,12 +775,14 @@ bool zHamt< TKey, TValue, TIndex, TIndexBits>::GetNode(TKey _Key, Node**& _pPare
 //==================================================================================================
 template<class TKey, class TValue, class TIndex, int TIndexBits>
 void zHamt< TKey, TValue, TIndex, TIndexBits>::ClearNode( Node* _pNode )
-{
-	zUInt uSlotCount = _pNode->GetSlotCount();
-	for(zUInt slot=0; slot<uSlotCount; ++slot)
+{	
+	for(zUInt slot=0, count(_pNode->GetSlotCount()); slot<count; ++slot)
+	{
 		if( !_pNode->IsLeafSlot(slot) )
 			ClearNode( _pNode->mpSlots[slot].pChildNode );
-
+		else if(mpDeleteItemCB)
+			mpDeleteItemCB(*this, _pNode->mpSlots[slot].Value());
+	}
 	zenDelNull( _pNode );
 }
 
@@ -795,7 +802,7 @@ TValue* zHamt< TKey, TValue, TIndex, TIndexBits>::SetSlotValue(TKey _Key, const 
 	// Slot available in Node, resize array and add element
 	if( pNode->IsUsedIndex(_uNodeIndex) == false )
 	{
-		zU32 uSlotCount					= pNode->GetSlotCount();
+		zU32 uSlotCount						= pNode->GetSlotCount();
 		pNewNode							= CreateEmptyNode( uSlotCount + 1 );
 		pNewNode->mIndexUsed				= pNode->mIndexUsed | (TIndex(1)<<_uNodeIndex);				
 		_uSlotID							= pNewNode->GetSlotID(_uNodeIndex);		//Must be updated with new array size
@@ -817,6 +824,8 @@ TValue* zHamt< TKey, TValue, TIndex, TIndexBits>::SetSlotValue(TKey _Key, const 
 	// Slot already taken by same key, replace data
 	else if( pNode->mpSlots[_uSlotID].Key==_Key )
 	{
+		if(mpDeleteItemCB)
+			mpDeleteItemCB(*this, pNode->mpSlots[_uSlotID].Value());
 		pNode->mpSlots[_uSlotID].Value() = _Value;
 		pValue = &pNode->mpSlots[_uSlotID].Value();				
 	}

@@ -27,9 +27,10 @@ namespace zen { namespace zenAss
 		zenAss::PropertyValue&			GetValue(zUInt _uValIndex);
 		void							InitDefault();
 
+		void							Delete();
 		zAssetItem&						operator=(const zAssetItem& _Copy);		
 	};
-
+	
 	zAssetItem							AssetCreate			(zenConst::eAssetType _eAssetType);
 	const char*							AssetTypeToString	(zenConst::eAssetType _ePropertyType);
 	zenConst::eAssetType				AssetNameToType		(zHash32 _hAssetName);

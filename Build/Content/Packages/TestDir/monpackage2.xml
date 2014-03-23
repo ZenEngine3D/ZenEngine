@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <Package Group="MonGroupe\" EngineVersionMaj="0" EngineVersionMin="0" />
 <Asset Name="TestName2" Group="AssetGroup\" Type="Texture2D">
-	<Property Name="TestBool" Type="Bool" Value="False" />
+	<Property Name="TestBool" Type="Bool" Value="0" />
 	<Property Name="TestEnum" Type="Enum" Value="Value0" />
 	<Property Name="Source" Type="File" Value="C:\temp\test.txt" />
 	<Property Name="TestIntA" Type="Int" Value="0" />

@@ -37,11 +37,11 @@ namespace CFil
 		const wchar_t*					GetExt()const;
 		void							SplitFolder(zArrayDynamic<zArrayStatic<wchar_t>>& _aFolder)const;
 	protected:	
-		ZENInline void						FindOffsets();
+		ZENInline void					FindOffsets();
 		mutable zArrayDynamic<wchar_t>	mzFilename;			//!< Contains filename string, +2characters to handle no offset for some filename component (ext, parentdir, ...)
-		zU16								muOffsetName;		//!< Offset to filename,extension
-		zU16								muOffsetParentPath;	//!< Offset to parent folder, filename, extension
-		zU16								muOffsetExt;		//!< Offset to extension
+		zU16							muOffsetName;		//!< Offset to filename,extension
+		zU16							muOffsetParentPath;	//!< Offset to parent folder, filename, extension
+		zU16							muOffsetExt;		//!< Offset to extension
 	};
 
 	class File

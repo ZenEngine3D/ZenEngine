@@ -29,6 +29,7 @@ BEGIN_EVENT_TABLE(WndAssetBrowser, wxPanel)
 	EVT_TREELIST_ITEM_CONTEXT_MENU(ID_Package_Tree, WndAssetBrowser::OnPackageItemContextMenu)
 	EVT_RADIOBUTTON(ID_Asset_Rdio_View,				WndAssetBrowser::OnAssetViewChange)
 	EVT_LIST_ITEM_ACTIVATED(ID_Asset_ListView,		WndAssetBrowser::OnAssetViewActivated)
+	EVT_LIST_KEY_DOWN(ID_Asset_ListView,			WndAssetBrowser::OnAssetKeyDown)
 END_EVENT_TABLE()
 
 class wxPackageClientData : public wxClientData
@@ -520,6 +521,8 @@ void WndAssetBrowser::OnPackageItemContextMenu(wxTreeListEvent& event)
 		ID_Menu_AssetGroupAdd,
 		ID_Menu_AssetGroupDel,
 		ID_Menu_AssetGroupRen,
+		ID_Menu_AssetAdd,
+		ID_Menu_AssetDel,
 	};
 
 	wxMenu menu;
@@ -605,6 +608,27 @@ void WndAssetBrowser::OnPackageItemContextMenu_AssetGroupRen(const wxTreeListIte
 
 }
 
+void WndAssetBrowser::OnAssetKeyDown(wxListEvent& event)
+{
+	int key = event.GetKeyCode();
+	if( key == WXK_DELETE && mpLstAsset->GetSelectedItemCount() > 0 )
+	{
+		wxString zMessage = wxString::Format("This will delete %i Asset(s), are you certain?", mpLstAsset->GetSelectedItemCount() );
+		wxMessageDialog dialConfirm(this, zMessage, wxString("WARNING: Asset Deletion"), wxOK|wxCANCEL|wxCANCEL_DEFAULT|wxICON_WARNING|wxCENTRE);
+		if( dialConfirm.ShowModal() == wxID_OK )
+		{
+			long idx = mpLstAsset->GetNextItem(-1, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
+			while( idx != -1 )
+			{			
+				zenAss::zAssetItem* pAssetItem = reinterpret_cast<zenAss::zAssetItem*>(mpLstAsset->GetItemData(idx));
+				pAssetItem->Delete();
+				zenDel( pAssetItem );
+				mpLstAsset->DeleteItem(idx);
+				idx = mpLstAsset->GetNextItem(-1, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
+			}		
+		}		
+	}	
+}
 
 /*
 void WndAssetBrowser::OnPackageItemContextMenu_AddPackage(const wxTreeListItem& _PackageItem)

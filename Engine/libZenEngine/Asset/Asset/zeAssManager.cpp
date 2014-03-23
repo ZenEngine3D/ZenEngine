@@ -5,6 +5,11 @@ namespace zeMgr{ zeAss::ManagerAsset Asset; }
 namespace zen { namespace zeAss
 {
 
+void ResetAssetReference( zMap<zenAss::zAssetItem>::Key64& _dAssets, zenAss::zAssetItem& _rAssetDel)
+{
+	_rAssetDel = NULL;
+}
+
 //=================================================================================================
 //! @brief		Constructor
 //=================================================================================================
@@ -14,6 +19,7 @@ ManagerAsset::ManagerAsset()
 {	
 	mdPackage.SetDefaultValue(NULL);
 	mdAsset.SetDefaultValue(NULL);
+	mdAsset.SetDeleteItemCB( ResetAssetReference );
 }
 
 //=================================================================================================
@@ -71,9 +77,26 @@ const zenAss::zPackage& ManagerAsset::PackageGet( zHash64 _hPackageID )
 	return mdPackage[_hPackageID];
 }
 
-const zenAss::zAssetItem& ManagerAsset::AssetGet( zHash64 _hAssetID )
+const zenAss::zAssetItem& ManagerAsset::AssetGet( zHash64 _hAssetID )const
 {
 	return mdAsset[_hAssetID];
+}
+
+void ManagerAsset::AssetAdd( zeAss::AssetItem& _Asset )
+{
+	ZENAssert( mdAsset.Exist(_Asset.GetID()) == false );
+	mdAsset.Set(_Asset.GetID(), &_Asset);
+}
+
+void ManagerAsset::AssetRem( zHash64 _hAssetID )
+{
+	zenAss::zAssetItem rAsset;
+	mdAsset.Get(_hAssetID, rAsset);
+	if( rAsset.IsValid() )
+	{
+		rAsset.Get()->SetPackage(NULL);
+		mdAsset.Unset(_hAssetID);
+	}
 }
 
 void ManagerAsset::PackageLoad()
@@ -92,10 +115,10 @@ void ManagerAsset::PackageLoad(const zString& _zDir)
 	while( CMgr::File.SearchNext(pFileInfo) )
 	{
 		Package* pNewPackage = zenNewDefault Package;
-		if( pNewPackage->Load(pFileInfo->GetFilename(), mdAsset) )	
+		if( pNewPackage->Load(pFileInfo->GetFilename()) )	
 			PackageAdd(pNewPackage);
 		else
-			zenDelNull(pNewPackage);
+			zenDelNull(pNewPackage);		
 	}
 }
 

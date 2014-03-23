@@ -86,6 +86,60 @@ bool zRefOwner<TRefCountedType>::IsValid()const
 	return mpReference != NULL;
 }
 
+#if ZEN_ENGINELIB
+	//=================================================================================================
+	//! @brief		Return pointer to underlying resource
+	//! @details	Useful to let engine access the underlying object
+	//! @note		Only use on engine side, else won't compile
+	//-------------------------------------------------------------------------------------------------
+	//! @return		Object reference
+	//=================================================================================================
+	template<class TRefCountedType>
+	TRefCountedType* zRefOwner<TRefCountedType>::Get()
+	{
+		return mpReference;
+	}
+
+	//=================================================================================================
+	//! @brief		Return pointer to underlying resource
+	//! @details	Useful to let engine access the underlying object
+	//! @note		Only use on engine side, else won't compile
+	//-------------------------------------------------------------------------------------------------
+	//! @return		Object reference
+	//=================================================================================================
+	template<class TRefCountedType>
+	const TRefCountedType* zRefOwner<TRefCountedType>::Get()const
+	{
+		return mpReference;
+	}
+
+	//=================================================================================================
+	//! @brief		Return pointer to underlying resource
+	//! @details	Useful to let engine access the underlying object
+	//! @note		Only use on engine side, else won't compile
+	//-------------------------------------------------------------------------------------------------
+	//! @return		Object reference
+	//=================================================================================================
+	template<class TRefCountedType>
+	TRefCountedType* zRefOwner<TRefCountedType>::operator->()
+	{
+		return mpReference;
+	}
+
+	//=================================================================================================
+	//! @brief		Return pointer to underlying resource
+	//! @details	Useful to let engine access the underlying object
+	//! @note		Only use on engine side, else won't compile
+	//-------------------------------------------------------------------------------------------------
+	//! @return		Object reference
+	//=================================================================================================
+	template<class TRefCountedType>
+	const TRefCountedType* zRefOwner<TRefCountedType>::operator->()const
+	{
+		return mpReference;
+	}
+#endif //ZEN_ENGINELIB
+
 //=================================================================================================
 // zSHARED POINTER
 //=================================================================================================

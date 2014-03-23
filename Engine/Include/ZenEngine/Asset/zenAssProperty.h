@@ -16,13 +16,16 @@ namespace zen { namespace zenAss
 	ZENClassDeclareNoParent(PropertyBase)	
 	protected:
 												PropertyBase( const char* _zName, zenConst::eAssetPropertyType _eType, const char* _zDisplayName, const char* _zDescription, bool _bShowInAssetDesc );
-	public:		
+		virtual zUInt							ToString	( const void* _pValue, zUInt _uLen, char* _zOutString)const=0;
+		virtual zUInt							ToXml		( const void* _pValue, zUInt _uLen, char* _zOutString)const=0;
+		virtual void							FromXml		( const char* _zValue, void* _pOutValue )const=0;
+	public:				
 		zStringHash32							mName;
 		zenConst::eAssetPropertyType			meType;
 		const char*								mzDisplayName;
 		const char*								mzDescription;		
 		bool									mbShowInAssetDesc;
-		
+		friend class PropertyValue;
 	};
 
 	//=============================================================================================
@@ -32,12 +35,13 @@ namespace zen { namespace zenAss
 	{
 	ZENClassDeclare(PropertyBool, PropertyBase)
 	public:
-		typedef bool		Data;
+		typedef bool		Data;		
+							PropertyBool(const char* _zName, const char* _zDisplayName, const char* _zDescription, bool _bShowInAssetDesc, Data _bDefault);
 		Data				mDefault;
-		
-		ZENInline zUInt	ToString	(const Data& _Value, zUInt _zLen, char* _zOutString)const;
-		ZENInline zUInt	ToXml		(const Data& _Value, zUInt _zLen, char* _zOutString)const;
-		ZENInline			PropertyBool(const char* _zName, const char* _zDisplayName, const char* _zDescription, bool _bShowInAssetDesc, Data _bDefault);
+	protected:
+		virtual zUInt		ToString	(const void* _pValue, zUInt _uLen, char* _zOutString)const;
+		virtual zUInt		ToXml		(const void* _pValue, zUInt _uLen, char* _zOutString)const;
+		virtual void		FromXml		(const char* _zValue, void* _pOutValue )const;
 	};
 
 	//=============================================================================================
@@ -47,13 +51,15 @@ namespace zen { namespace zenAss
 	{
 	ZENClassDeclare(PropertyFile, PropertyBase)
 	public:
-		typedef zString	Data;
+		typedef zString	Data;		
+							PropertyFile(const char* _zName, const char* _zDisplayName, const char* _zDescription, bool _bShowInAssetDesc, const char* _zDefault, const char* _zFileExt="Any(*.*)|*.*" );
+
 		Data				mDefault;
 		const char*			mzFileExt;	//!< List of supported files extensions to display in file dialog
-		
-		ZENInline zUInt	ToString	(const Data& _Value, zUInt _zLen, char* _zOutString)const;
-		ZENInline zUInt	ToXml		(const Data& _Value, zUInt _zLen, char* _zOutString)const;
-		ZENInline			PropertyFile(const char* _zName, const char* _zDisplayName, const char* _zDescription, bool _bShowInAssetDesc, const char* _zDefault, const char* _zFileExt="Any(*.*)|*.*" );
+	protected:
+		virtual zUInt		ToString	(const void* _pValue, zUInt _uLen, char* _zOutString)const;
+		virtual zUInt		ToXml		(const void* _pValue, zUInt _uLen, char* _zOutString)const;
+		virtual void		FromXml		(const char* _zValue, void* _pOutValue )const;
 	};
 
 	//=============================================================================================
@@ -68,9 +74,9 @@ namespace zen { namespace zenAss
 		ZENForceInline void							Allocate	(const PropertyBase& _PropertyDef);
 		ZENForceInline void							Reset		();
 		ZENForceInline const PropertyBase*			GetProperty	()const;
-		ZENInline zUInt							ToString	(zUInt _zLen, char* _zOutString)const;
-		ZENInline zUInt							ToXml		(zUInt _zLen, char* _zOutString)const;
-
+		ZENInline zUInt								ToString	(zUInt _zLen, char* _zOutString)const;
+		ZENInline zUInt								ToXml		(zUInt _zLen, char* _zOutString)const;
+		ZENInline void								FromXml		(const char* _zValue);
 	#define ZEN_ASSETPROPERTIES_EXPAND_CODE(_TypeName_)																							\
 	ZENInline bool									Is##_TypeName_()const			{return GetType()==zenConst::keAssProp_##_TypeName_##;}			\
 	ZENInline const Property##_TypeName_##::Data&	GetValue##_TypeName_()const		{ZENAssert(Is##_TypeName_##()); return *mpValue##_TypeName_;}	\

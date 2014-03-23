@@ -51,72 +51,24 @@ void PropertyValue::Reset()
 	#undef	ZEN_ASSETPROPERTIES_EXPAND_CODE
 }
 
-zUInt PropertyValue::ToString(zUInt _zLen, char* _zOutString)const
+zUInt PropertyValue::ToString(zUInt _uLen, char* _zOutString)const
 {
 	ZENAssert( mpDefinition && mpValue );
-	#define ZEN_ASSETPROPERTIES_EXPAND_CODE(_TypeName_)	case zenConst::keAssProp_##_TypeName_: return static_cast<const Property##_TypeName_*>(mpDefinition)->ToString( *mpValue##_TypeName_, _zLen, _zOutString );
-	switch( mpDefinition->meType )
-	{
-		ZEN_ASSETPROPERTIES_EXPAND	
-	}
-	#undef	ZEN_ASSETPROPERTIES_EXPAND_CODE
-	return 0;
+	return mpDefinition->ToString(mpValue, _uLen, _zOutString);
 }
 
-zUInt PropertyValue::ToXml(zUInt _zLen, char* _zOutString)const
+zUInt PropertyValue::ToXml(zUInt _uLen, char* _zOutString)const
 {
 	ZENAssert( mpDefinition && mpValue );
-	char zValue[256];
-	zUInt uWritten(sizeof(zValue));
-
-	#define ZEN_ASSETPROPERTIES_EXPAND_CODE(_TypeName_)	case zenConst::keAssProp_##_TypeName_: uWritten = static_cast<const Property##_TypeName_*>(mpDefinition)->ToXml( *mpValue##_TypeName_, sizeof(zValue), zValue ); break;
-	switch( mpDefinition->meType )
-	{
-		ZEN_ASSETPROPERTIES_EXPAND	
-	}
-	#undef	ZEN_ASSETPROPERTIES_EXPAND_CODE
-
-	ZENAssertMsg(uWritten <  sizeof(zValue), "Value string biffer than buffer, increase zValue buffer (or nothing written)");
-	return ::sprintf_s(_zOutString, _zLen, "<Property Name=\"%s\" Type=\"%s\" Value=\"%s\" />", 
-		mpDefinition->mName.mzName, 
-		GetPropertyTypeName(mpDefinition->meType), 
-		zValue);
-	return 0;
+	return mpDefinition->ToXml(mpValue, _uLen, _zOutString);
 }
 
-PropertyBool::PropertyBool(const char* _zName, const char* _zDisplayName, const char* _zDescription, bool _bShowInAssetDesc, bool _bDefault)
-: PropertyBase(_zName, zenConst::keAssProp_Bool, _zDisplayName, _zDescription, _bShowInAssetDesc )
-, mDefault(_bDefault)
+void PropertyValue::FromXml(const char* _zValue)
 {
+	ZENAssert( mpDefinition && mpValue );
+	return mpDefinition->FromXml(_zValue, mpValue);
 }
 
-
-zUInt PropertyBool::ToString(const Data& _Value, zUInt _zLen, char* _zOutString)const
-{
-	return ::sprintf_s(_zOutString, _zLen, "%s", zenConst::kzFalseTrue[_Value]);
-}
-
-zUInt PropertyBool::ToXml(const Data& _Value, zUInt _zLen, char* _zOutString)const
-{
-	return ::sprintf_s(_zOutString, _zLen, "%i", _Value);
-}
-
-zUInt PropertyFile::ToString(const Data& _Value, zUInt _zLen, char* _zOutString)const
-{
-	return ::sprintf_s(_zOutString, _zLen, "%s", (const char*)_Value);
-}
-
-zUInt PropertyFile::ToXml(const Data& _Value, zUInt _zLen, char* _zOutString)const
-{
-	return ::sprintf_s(_zOutString, _zLen, "%s", (const char*)_Value);
-}
-
-PropertyFile::PropertyFile(const char* _zName, const char* _zDisplayName, const char* _zDescription, bool _bShowInAssetDesc, const char* _zDefault, const char* _zFileExt )
-: PropertyBase(_zName, zenConst::keAssProp_File, _zDisplayName, _zDescription, _bShowInAssetDesc )
-, mDefault(_zDefault)
-, mzFileExt(_zFileExt)
-{
-}
 
 }} //namespace zen { namespace zenAss
 
