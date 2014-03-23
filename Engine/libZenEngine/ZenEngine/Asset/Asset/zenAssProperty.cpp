@@ -28,6 +28,61 @@ PropertyValue::~PropertyValue()
 	zenDelNull(mpValue);
 }
 
+//=================================================================================================
+// PROPERTY BOOL
+//=================================================================================================
+PropertyBool::PropertyBool(const char* _zName, const char* _zDisplayName, const char* _zDescription, bool _bShowInAssetDesc, bool _bDefault)
+: PropertyBase(_zName, zenConst::keAssProp_Bool, _zDisplayName, _zDescription, _bShowInAssetDesc )
+, mDefault(_bDefault)
+{
+}
+
+zUInt PropertyBool::ToString(const void* _pValue, zUInt _zLen, char* _zOutString)const
+{
+	const Data* pValue = static_cast<const Data*>(_pValue);
+	return ::sprintf_s(_zOutString, _zLen, "%s", zenConst::kzFalseTrue[*pValue]);
+}
+
+zUInt PropertyBool::ToXml(const void* _pValue, zUInt _zLen, char* _zOutString)const
+{
+	const Data* pValue = static_cast<const Data*>(_pValue);
+	return ::sprintf_s(_zOutString, _zLen, "%i", *pValue);
+}
+
+void PropertyBool::FromXml(const char* _zValue, void* _pOutValue)const
+{
+	Data* pValue = static_cast<Data*>(_pOutValue);
+	*pValue = atoi(_zValue);
+}
+
+//=================================================================================================
+// PROPERTY FILE
+//=================================================================================================
+PropertyFile::PropertyFile(const char* _zName, const char* _zDisplayName, const char* _zDescription, bool _bShowInAssetDesc, const char* _zDefault, const char* _zFileExt )
+: PropertyBase(_zName, zenConst::keAssProp_File, _zDisplayName, _zDescription, _bShowInAssetDesc )
+, mDefault(_zDefault)
+, mzFileExt(_zFileExt)
+{
+}
+
+zUInt PropertyFile::ToString(const void* _pValue, zUInt _zLen, char* _zOutString)const
+{
+	const Data* pValue = static_cast<const Data*>(_pValue);
+	return ::sprintf_s(_zOutString, _zLen, "%s", (const char*)pValue);
+}
+
+zUInt PropertyFile::ToXml(const void* _pValue, zUInt _zLen, char* _zOutString)const
+{
+	const Data* pValue = static_cast<const Data*>(_pValue);
+	return ::sprintf_s(_zOutString, _zLen, "%s", (const char*)pValue);
+}
+
+void PropertyFile::FromXml(const char* _zValue, void* _pOutValue)const
+{
+	Data* pValue = static_cast<Data*>(_pOutValue);
+	*pValue = _zValue;
+}
+
 }} //namespace zen { namespace zenAss
 
 #endif //ZEN_ENGINETOOL

@@ -11,32 +11,30 @@ public:
 
 ZENClassDeclareNoParent(AssetItem)
 public:
-	virtual										~AssetItem();
-	virtual bool								Load(const pugi::xml_node& _NodeAsset);
-	virtual bool								Save(pugi::xml_document& _Doc);
-	//TEMP PUBLIC
+	virtual										~AssetItem();	
 
-	ZENInline zHash64							GetID()const{return mhID;}
-	ZENInline const zArrayStatic<zString>&		GetGroupAndName()const{return maGroup;}
-	ZENInline zHash32							GetGroupID()const{return mhGroupID;}
-	ZENInline const zString&					GetName()const{return *maGroup.Last();}
-	ZENInline const zString&					GetDescription()const{return mzDescription;}
+	ZENInline zHash64							GetID()const;
+	ZENInline const zArrayStatic<zString>&		GetGroupAndName()const;
+	ZENInline zHash32							GetGroupID()const;
+	ZENInline const zString&					GetName()const;
+	ZENInline const zString&					GetDescription()const;
 
-	virtual zenConst::eAssetType				GetType()const=0;										//!< Child class return the Asset type they represent
-	virtual const zenAss::PropertyArray&		GetProperties()const=0;									//!< Child class return the list of property definition they are made of
-	virtual zInt								GetValueIndex(zHash32 _hPropertyName)const=0;
+	void										InitDefault();	
+	void										Init(Package& _ParentPkg, const char* _zName, const char* _zGroup);
+	void										SetPackage(Package* _pParentPkg);
 
-	void										InitDefault();
-	
 	ZENForceInline zUInt						GetValueCount()const {	return maPropertyValue.Count(); }
 	ZENForceInline zenAss::PropertyValue&		GetValue(zUInt _uValIndex){ ZENAssert( _uValIndex< maPropertyValue.Count()); return maPropertyValue[_uValIndex];}
 	
+	virtual zenConst::eAssetType				GetType()const=0;										//!< Child class return the Asset type they represent
+	virtual const zenAss::PropertyArray&		GetProperties()const=0;									//!< Child class return the list of property definition they are made of
+	virtual zInt								GetValueIndex(zHash32 _hPropertyName)const=0;
 protected:										
 												AssetItem();
 	void										RebuiltDescription();
 	bool										InitPropertyMap(zMap<zInt>::Key32& _dPropertyMap)const;
 	
-	class Package*								mpPackage;					//!< Parent package this asset is kept inside
+	zenAss::zPackage							mrPackage;					//!< Parent package this asset is kept inside
 	zHash64										mhID;						//!< Unique ID for this Asset instance
 	zHash32										mhGroupID;					//!< Group ID of this asset
 	zString										mzDescription;				//!< Asset description, built from propertydef/values
@@ -49,9 +47,7 @@ protected:
 // Static
 //-----------------------------------------------------------------------------
 public:
-	static AssetItem*							CreateItem		(zenConst::eAssetType _eAssetType, Package& _Owner);
-	static const char*							GetTypeName		(zenConst::eAssetType _ePropertyType);
-	static zenConst::eAssetType					GetTypeFromName	(zHash32 _hAssetName);	//Move elsewhere?
+	static AssetItem*							CreateItem		(zenConst::eAssetType _eAssetType);
 };
 
 class TestProperty : public AssetItem
@@ -74,8 +70,11 @@ extern const char* kzXmlName_AssetAtr_Type;
 extern const char* kzXmlName_Node_Property;
 extern const char* kzXmlName_PropAtr_Name;
 extern const char* kzXmlName_PropAtr_Type;
-
+extern const char* kzXmlName_PropAtr_Value;
 }} //namespace zen { namespace zeAss
 
 #endif
+
+#include "zeAssItem.inl"
+
 #endif

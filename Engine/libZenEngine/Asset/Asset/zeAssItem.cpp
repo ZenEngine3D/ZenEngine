@@ -16,12 +16,7 @@ const char* kzXmlName_AssetAtr_Type="Type";
 const char* kzXmlName_Node_Property="Property";
 const char* kzXmlName_PropAtr_Name="Name";
 const char* kzXmlName_PropAtr_Type="Type";
-
-static zStringHash32 sTypeDescription[]={
-		zStringHash32("TestProperty"),	//keType_TestProperty,
-		zStringHash32("Texture2D"),		//keType_Texture2D,
-		zStringHash32("Mesh"),			//keType_Mesh,
-	};
+const char* kzXmlName_PropAtr_Value="Value";
 
 //=================================================================================================
 //! @brief		Factory to create a new Asset of specified type
@@ -31,7 +26,7 @@ static zStringHash32 sTypeDescription[]={
 //! @param		_Owner		- Owner package of the newly create Asset
 //! @return					- Created Asset
 //=================================================================================================
-AssetItem* AssetItem::CreateItem( zenConst::eAssetType _eAssetType, Package& _Owner )
+AssetItem* AssetItem::CreateItem( zenConst::eAssetType _eAssetType )
 {
 	AssetItem* pNewItem(NULL);
 	switch( _eAssetType )
@@ -45,91 +40,45 @@ AssetItem* AssetItem::CreateItem( zenConst::eAssetType _eAssetType, Package& _Ow
 	if( pNewItem )
 	{
 		pNewItem->InitDefault();
-		pNewItem->mpPackage = &_Owner;
 	}
 	return pNewItem;
 }
 
-//=================================================================================================
-//! @brief		zString representation of all Asset type enum
-//! @details	
-//-------------------------------------------------------------------------------------------------
-//! @param		_eAssetType	- Property we want name from
-//! @return		- zString representation of the enum value
-//=================================================================================================
-const char* AssetItem::GetTypeName(zenConst::eAssetType _eAssetType)
-{	
-	ZENAssert(_eAssetType<zenConst::keAssType__Count);
-	return sTypeDescription[_eAssetType].mzName;
-}
-
-zenConst::eAssetType AssetItem::GetTypeFromName(zHash32 _hAssetName)
-{
-	zUInt idx = zStringHash32::Find(_hAssetName, sTypeDescription, ZENArrayCount(sTypeDescription));
-	return idx < zenConst::keAssType__Count ? static_cast<zenConst::eAssetType>(idx) : zenConst::keAssType__Invalid;
-}
-
 AssetItem::AssetItem()	
-: mpPackage(NULL)
+: mrPackage(NULL)
 , mhID("")
 {
-    ZENStaticAssertMsg( ZENArrayCount(sTypeDescription)==zenConst::keAssType__Count, "Make sure to have a valid description for each resource type" );
 	static zU64 sCounter(1);
-	mhID = sCounter++; //! @todo Important: fix this (HACK)	
+	mhID = sCounter++; //! @todo Asset: fix this (HACK)	
 }
 
 AssetItem::~AssetItem()	
 {
 }
 
-//=================================================================================================
-//! @brief		Load asset infos from xml stream
-//! @details	Take open xml package and load all supported asset informations. Use child override
-//!				'GetPropertyDef' to know what data to look for
-//-------------------------------------------------------------------------------------------------
-//! @return		True if no warning
-//=================================================================================================
-bool AssetItem::Load( const pugi::xml_node& nodeAsset )
+void AssetItem::Init(Package& _ParentPkg, const char* _zName, const char* _zGroup)
 {	
-	bool bResult(true);
-	InitDefault();
-
-	// Load base asset infos
-	const char* zAssetName	= nodeAsset.attribute(kzXmlName_AssetAtr_Name).as_string();
-	const char* zAssetGroup	= nodeAsset.attribute(kzXmlName_AssetAtr_Group).as_string();
-	LoadGroupAndName(zAssetName, zAssetGroup, maGroup );
-	
+	ParseGroupAndName(_zName, _zGroup, maGroup);
+	//mhID		= 0;//! @todo Asset: Load proper asset id
+	mrPackage = &_ParentPkg;
 	mhGroupID = zHash32("Asset");
 	for(int idx(0), count(maGroup.Count()-1); idx<count; ++idx )
 		mhGroupID.Append( maGroup[idx] );
-	/*
-	//! @todo Asset: Separate code dependency to 3rd lib
-	// Load properties values
- 	for (pugi::xml_node nodeProp = nodeAsset.child(kzXmlName_Node_Property); nodeProp; nodeProp = nodeProp.next_sibling(kzXmlName_Node_Property))
-	{
-		const char* zPropName(nodeProp.attribute(kzXmlName_PropAtr_Name).as_string());
-		zHash32 hPropName( zPropName );
-		zUInt propIdx = GetPropertyDefIndex(hPropName);
-		if( propIdx < maPropertyValueOld.Count() )
-			bResult &= maPropertyValueOld[propIdx].GetBase()->ValueFromXml(nodeProp);
-	}
-	*/
-	RebuiltDescription();
-	return bResult;
+
+	SetPackage( &_ParentPkg );
+	zeMgr::Asset.AssetAdd(*this);
+	//! @todo Asset : description init
+	//RebuiltDescription();
 }
 
-bool AssetItem::Save( pugi::xml_document& _Doc )
+void AssetItem::SetPackage(Package* _pParentPkg)
 {
-	/*
-	//! @todo Asset: Separate code depenency to 3rd lib
-	pugi::xml_node nodeAsset = _Doc.append_child(kzXmlName_Node_Asset);
-	nodeAsset.append_attribute(kzXmlName_AssetAtr_Name).set_value("testName"); //!< @todo set proper na,e
-	nodeAsset.append_attribute(kzXmlName_AssetAtr_Type).set_value(GetTypeDesc());
-	for(zUInt idx(0), count(maPropertyValueOld.Count()); idx<count; ++idx)
-		maPropertyValueOld[idx].GetBase()->ValueToXml(nodeAsset);
-	*/
-	RebuiltDescription();
-	return true;
+	if( mrPackage.IsValid() )
+		mrPackage->AssetRem(*this);
+	
+	mrPackage = _pParentPkg;
+	if( _pParentPkg )
+		_pParentPkg->AssetAdd(*this);
 }
 
 //=================================================================================================

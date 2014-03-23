@@ -38,7 +38,12 @@ namespace zen { namespace zenType {
 		ZENInline bool						operator==(const zRefOwner& _Cmp);
 		ZENInline bool						operator!=(const zRefOwner& _Cmp);
 		ZENInline bool						IsValid()const;
-
+	#if ZEN_ENGINELIB
+		ZENInline TRefCountedType*			Get();				//!< @note Only use on engine side, else won't compile
+		ZENInline const TRefCountedType*	Get()const;			//!< @note Only use on engine side, else won't compile
+		ZENInline TRefCountedType*			operator->();		//!< @note Only use on engine side, else won't compile
+		ZENInline const TRefCountedType*	operator->()const;	//!< @note Only use on engine side, else won't compile
+	#endif
 	protected:
 		TRefCountedType*					mpReference;
 	};
@@ -56,9 +61,6 @@ namespace zen { namespace zenType {
 		ZENInline const TRefCountedType*	Get()const;			//!< Return a const pointer to resource
 		ZENInline TRefCountedType*			operator->();		//!< Return a pointer to resource
 		ZENInline const TRefCountedType*	operator->()const;	//!< Return a const pointer to resource
-		
-	protected:
-		TRefCountedType*					mpReference;
 	};
 	
 }} // namespace zen, zenType

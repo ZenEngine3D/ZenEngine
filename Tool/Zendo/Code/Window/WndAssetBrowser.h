@@ -26,6 +26,7 @@ protected:
 	DECLARE_EVENT_TABLE()
 	void			OnAssetViewChange(wxCommandEvent& event);
 	void			OnAssetViewActivated(wxListEvent& event);
+	void			OnAssetKeyDown(wxListEvent& event);
 	void			OnTypeItemChecked(wxTreeListEvent& event);
 	void			OnPackageItemChecked(wxTreeListEvent& event);
 	void			OnPackageItemActivated(wxTreeListEvent& event);
@@ -39,6 +40,7 @@ protected:
 	void			OnPackageItemContextMenu_AssetGroupAdd(const wxTreeListItem& _PackageItem);
 	void			OnPackageItemContextMenu_AssetGroupDel(const wxTreeListItem& _PackageItem);
 	void			OnPackageItemContextMenu_AssetGroupRen(const wxTreeListItem& _PackageItem);
+	void			OnKeyUp(wxKeyEvent& event);
 	
 	wxAuiManager					mLayoutMgr;
 	wxPanel*						mpPanelType;

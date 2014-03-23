@@ -2,8 +2,9 @@
 #ifndef __LibEngine_Base_h__
 #define __LibEngine_Base_h__ 
 
-#include <ZenCore/zenCore.h>
 #include <Engine/libZenBase/libZenBase.h>
+
+#include <ZenCore/zenCore.h>
 #include <Engine/libZenCore/Job/CJobItem.h>
 #include <Engine/libZenCore/Export/EngineExportBase.h>
 #include <Engine/libZenCore/Graphic/EngineGraphicBase.h>

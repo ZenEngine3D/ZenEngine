@@ -114,6 +114,13 @@ void zAssetItem::InitDefault()
 	return mpReference->InitDefault(); 
 }
 
+void zAssetItem::Delete()
+{
+	ZENAssert(mpReference);
+	zeMgr::Asset.AssetRem( mpReference->GetID() );
+	*this = NULL;
+}
+
 }} //namespace zen { namespace zenAss
 
 #endif //ZEN_ENGINETOOL

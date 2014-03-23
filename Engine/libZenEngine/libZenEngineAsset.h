@@ -16,7 +16,6 @@
 //! @section	mainpage-libasset Section Asset Library
 //=================================================================================================
 
-#include <Engine/libZenEngine/Asset/Asset/zeAssProperty.h>
 #include <Engine/libZenEngine/Asset/Asset/zeAssItem.h>
 #include <Engine/libZenEngine/Asset/Asset/zeAssPackage.h>
 #include <Engine/libZenEngine/Asset/Asset/zeAssManager.h>

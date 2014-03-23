@@ -16,7 +16,8 @@ namespace zen { namespace zenType {
 	//!				-# Node : Contains 0 to 'kuSlotCount' slots
 	//!				-# Slot : Key + Value of element or Key + Pointer to child Node
 	//!				-# Pool : Each node is created from a memory pool. There's 'kuSlotCount+1' memory pool (1 per possible slot count in a node)
-	//! @todo Optim:	Specify pool size increase	
+	//! @todo Optim:		Specify pool size increase	
+	//! @todo Clean:		Support object better, not just pointer. At the moment, need to set a callback when removing object, to call custom destructor, not very programmer error safe
 	//! @tparam TKey		Datatype of Keys used to find/retrieve entries
 	//! @tparam TValue		Datatype of Values stored
 	//! @tparam TIndex		Datatype bitfield used to store info of each slot in a node. Must be big enough to contain TIndexBits bits.
@@ -51,8 +52,8 @@ namespace zen { namespace zenType {
 							ZENInline TValue& Value(){return *(TValue*)aValue;} };
 
 			zUInt				GetSlotCount() const;						//! @brief Get count of valid Slots in this node
-			bool				IsLeafSlot( zUInt _uSlotID ) const;		//! @brief Check if a Node Slot is a leaf (contains value) or point to child node
-			bool				IsUsedIndex( zUInt _uNodeIndex ) const;	//! @brief Check if Node Index is being used in this Node 
+			bool				IsLeafSlot( zUInt _uSlotID ) const;			//! @brief Check if a Node Slot is a leaf (contains value) or point to child node
+			bool				IsUsedIndex( zUInt _uNodeIndex ) const;		//! @brief Check if Node Index is being used in this Node 
 			zUInt				GetSlotID( zUInt _uNodeIndex ) const;		//! @brief Get in which slot a Node Index is stored
 			int					GetFirstUsedSlotID()const;					//! @brief Return first used slotID (-1 if none)			
 			int					GetLastUsedSlotID()const;					//! @brief Return last used slotID (-1 if none)
@@ -63,6 +64,8 @@ namespace zen { namespace zenType {
 		};	  
 		
 	public:	
+		typedef void (*DeleteItemCB)(zHamt& Hamt, TValue& ItemDel);
+
 		//=================================================================================================
 		//! @class		Iterator
 		//-------------------------------------------------------------------------------------------------
@@ -106,7 +109,7 @@ namespace zen { namespace zenType {
 
 		const TValue&			Get( const TKey _Key ) const;													//!< @brief Return value stored at a key entry
 		bool					Get(const TKey _Key, TValue& _ValueOut) const;									//!< @brief Return value stored at a key entry
-		bool					Get(const TKey _Key, TValue* _pValueOut) const;									//!< @brief Return value stored at a key entry
+		//bool					Get(const TKey _Key, TValue*& _pValueOut) const;								//!< @brief Return value stored at a key entry
 		ZENInline const TValue&	operator[](const TKey _Key)const;												//!< @brief Return value stored at that key entry																											    
 		TValue&					GetAdd(const TKey _Key);														//!< @brief Return value stored at that key entry
 		bool					Unset(const TKey _Key);															//!< @brief Remove the value stored at that key entry
@@ -123,7 +126,7 @@ namespace zen { namespace zenType {
 																														    
 		void					DebugPrint(const TKey _First, TKey _Last) const;								//!< @brief Print structure of the tree
 		size_t					GetMemoryFootprint();															//!< @brief Return the amount of memory used by this structure		
-
+		void					SetDeleteItemCB(DeleteItemCB _pCallback){mpDeleteItemCB = _pCallback;}
 	protected:
 		
 		Node*					CreateNodeCopy( const Node* _pNodeCopy );										//!< @brief	Create a copy of a node
@@ -138,6 +141,7 @@ namespace zen { namespace zenType {
 		zU32					muCount;				//!< Keep track of element count in the table, for debug purposes
 		TValue					mDefault;				//!< Default value to assign when accessing a non-existing entry
 		zenMem::zAllocatorPool	mPools[kuPoolCount];	//!< PreAllocated memory pools, to contain our nodes	
+		DeleteItemCB			mpDeleteItemCB;
 		friend class Iterator;
 	};
 

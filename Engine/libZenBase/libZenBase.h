@@ -27,6 +27,7 @@
 //! @brief		Base header file to include in every other header files.
 //! @details	Contains basic data type definitions, etc...
 //=================================================================================================
+#define ZEN_ENGINELIB 1
 #include <ZenBase/ZenBase.h>
 #include <Engine/libZenBase/libZenBaseType.h>
 #include <Engine/libZenBase/libZenBaseMemory.h>

@@ -8,3 +8,7 @@
 	<Property Name="TestFloat" Type="Float" Value="0.500000" />
 	<Property Name="TestFloat2" Type="Float2" x="0" y="1.1" />
 </Asset>
+<Asset Name="TestName2" Type="Texture2D">
+</Asset>
+<Asset Name="TestName3" Type="Texture2D">
+</Asset>
