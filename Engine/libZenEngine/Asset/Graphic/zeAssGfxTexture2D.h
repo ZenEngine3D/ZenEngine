@@ -6,9 +6,9 @@
 
 namespace zen { namespace zeAss
 {
-	class GfxTexture2D : public AssetItem
+	class GfxTexture2D : public Asset
 	{
-	ZENClassDeclare(GfxTexture2D, AssetItem)
+	ZENClassDeclare(GfxTexture2D, Asset)
 	public:
 		virtual zenConst::eAssetType			GetType()const{return zenConst::keAssType_Texture2D;}
 		virtual const zenAss::PropertyArray&	GetProperties()const;

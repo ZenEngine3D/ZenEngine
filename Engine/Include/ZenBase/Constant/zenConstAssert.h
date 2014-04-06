@@ -2,7 +2,7 @@
 #ifndef __LibZenBase_Api_Constant_Assert_h__
 #define __LibZenBase_Api_Constant_Assert_h__
 
-namespace CLog 
+namespace zbLog 
 {
 //=================================================================================================
 //! @brief Level of the error detected
@@ -25,21 +25,21 @@ namespace CLog
 //=================================================================================================
 #if AW_ASSERTON
 	#if AW_ASSERT_BREAKON
-		#define ASSERT_BREAKTYPE (CLog::keErrorLevel_AssertBreak)
+		#define ASSERT_BREAKTYPE (zbLog::keErrorLevel_AssertBreak)
 	#else
-		#define ASSERT_BREAKTYPE (CLog::keErrorLevel_AssertMsg)
+		#define ASSERT_BREAKTYPE (zbLog::keErrorLevel_AssertMsg)
 	#endif		
-	#define	ZENCriticalMsg(_Cond_, _Msg_, ...)		{   if( !(_Cond_) ) CLog::Assert(#_Cond_, __FILE__, __LINE__, CLog::keErrorLevel_Critical, _Msg_, __VA_ARGS__ ); }
-	#define	ZENAssertMsg(_Cond_, _Msg_, ...)			{   if( !(_Cond_) ) CLog::Assert(#_Cond_, __FILE__, __LINE__, ASSERT_BREAKTYPE, _Msg_, __VA_ARGS__ ); }	
+	#define	ZENCriticalMsg(_Cond_, _Msg_, ...)		{   if( !(_Cond_) ) zbLog::Assert(#_Cond_, __FILE__, __LINE__, zbLog::keErrorLevel_Critical, _Msg_, __VA_ARGS__ ); }
+	#define	ZENAssertMsg(_Cond_, _Msg_, ...)			{   if( !(_Cond_) ) zbLog::Assert(#_Cond_, __FILE__, __LINE__, ASSERT_BREAKTYPE, _Msg_, __VA_ARGS__ ); }	
 	#define	ZENAssertMsgOnce(_Cond_, _Msg_, ...)		{   static bool sbTriggered=false;													\
 														if( !sbTriggered && !(_Cond_) )													\
 														{   sbTriggered= true;															\
-															CLog::Assert(#_Cond_, __FILE__, __LINE__, ASSERT_BREAKTYPE, _Msg_, __VA_ARGS__ );   }}
-	#define	ZENWarningMsg(_Cond_, _Msg_, ...)		{   if( !(_Cond_) ) CLog::Assert(#_Cond_, __FILE__, __LINE__, CLog::keErrorLevel_Warning, _Msg_, __VA_ARGS__ ); }	
+															zbLog::Assert(#_Cond_, __FILE__, __LINE__, ASSERT_BREAKTYPE, _Msg_, __VA_ARGS__ );   }}
+	#define	ZENWarningMsg(_Cond_, _Msg_, ...)		{   if( !(_Cond_) ) zbLog::Assert(#_Cond_, __FILE__, __LINE__, zbLog::keErrorLevel_Warning, _Msg_, __VA_ARGS__ ); }	
 	#define	ZENWarningMsgOnce(_Cond_, _Msg_, ...)	{   static bool sbTriggered=false;													\
 														if( !sbTriggered && !(_Cond_) )													\
 														{   sbTriggered= true;															\
-															CLog::Assert(#_Cond_, __FILE__, __LINE__, CLog::keErrorLevel_Warning, _Msg_, __VA_ARGS__ );   }}
+															zbLog::Assert(#_Cond_, __FILE__, __LINE__, zbLog::keErrorLevel_Warning, _Msg_, __VA_ARGS__ );   }}
 	#define	ZENStaticAssertMsg(_Cond_, _Msg_, ...)	{	switch (0) {case 0: case (_Cond_):;} }
 
 //=================================================================================================

@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <assert.h>
 
-namespace CLog
+namespace zbLog
 {
 	//==================================================================================================
 	//! @brief		Reset the output associated with each eLogType to default values

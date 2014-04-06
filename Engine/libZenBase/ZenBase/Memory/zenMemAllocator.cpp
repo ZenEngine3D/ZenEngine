@@ -53,9 +53,9 @@ zAllocator::~zAllocator()
 void zAllocator::DebugPrint()
 {
 #if AW_MEMORYDEBUG
-	CLog::Log( CLog::keLog_DebugInfo, zenConst::kzLineA60 );
-	CLog::Log( CLog::keLog_DebugInfo, "Memory" );
-	CLog::Log( CLog::keLog_DebugInfo, zenConst::kzLineA60 );
+	zbLog::Log( zbLog::keLog_DebugInfo, zenConst::kzLineA60 );
+	zbLog::Log( zbLog::keLog_DebugInfo, "Memory" );
+	zbLog::Log( zbLog::keLog_DebugInfo, zenConst::kzLineA60 );
 	zList2xNode* pAlloc = mlstAllocations.GetHead();
 	while( pAlloc != mlstAllocations.GetInvalid() )
 	{
@@ -77,12 +77,12 @@ void zAllocator::DebugPrint()
 	
 		 zHash32 h32Key = it.GetKey();
 			zSpaces[kuSpacePerLevel*sSharedParentDepth] = 0; 
-			CLog::Printf(CLog::keLog_Game, "\n%s", zSpaces);
+			zbLog::Printf(zbLog::keLog_Game, "\n%s", zSpaces);
 			zSpaces[kuSpacePerLevel*sSharedParentDepth] = ' '; 
 			sCurrentDepth = sSharedParentDepth;
 			while( sCurrentDepth != it.msDepth )
-				CLog::Printf(CLog::keLog_Game, "<%02i>----------", (h32Key>>(kuIndexSize*sCurrentDepth++))&kuIndexMask);
-			CLog::Printf(CLog::keLog_Game, "<%02i> %08X", (h32Key>>(kuIndexSize*sCurrentDepth))&kuIndexMask, h32Key);
+				zbLog::Printf(zbLog::keLog_Game, "<%02i>----------", (h32Key>>(kuIndexSize*sCurrentDepth++))&kuIndexMask);
+			zbLog::Printf(zbLog::keLog_Game, "<%02i> %08X", (h32Key>>(kuIndexSize*sCurrentDepth))&kuIndexMask, h32Key);
 		}
 #endif
 

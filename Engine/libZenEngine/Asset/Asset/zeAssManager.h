@@ -21,11 +21,11 @@ public:
 	const zenAss::zAssetItem&				AssetGet		( zHash64 _hAssetID )const;
 	const zMap<zenAss::zAssetItem>::Key64&	AssetGet		()const{return mdAsset;}
 	
-	void									AssetAdd		( zeAss::AssetItem& _Asset );
+	void									AssetAdd		( zeAss::Asset* _pAsset );
 	void									AssetRem		( zHash64 _hAssetID );
 
 protected:
-	void									PackageAdd		( Package* _pPackage );
+	void									PackageAdd		( zeAss::Package* _pPackage );
 
 	void									PackageLoad		(const zString& _zDir);
 
@@ -38,6 +38,7 @@ protected:
 public:
 	virtual	bool							Load();
 	virtual	bool							Unload();
+	friend class AssetLoader;
 };	
 
 void ResetAssetReference( zMap<zenAss::zAssetItem>::Key64& _dAssets, zenAss::zAssetItem& _rAssetDel);

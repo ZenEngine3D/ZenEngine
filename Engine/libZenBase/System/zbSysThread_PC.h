@@ -2,7 +2,7 @@
 #ifndef __LibCor_System_Thread_PC_h__
 #define __LibCor_System_Thread_PC_h__
 
-namespace CSys
+namespace zbSys
 {
 
 template< class T >

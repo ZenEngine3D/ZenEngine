@@ -9,7 +9,7 @@ void LaunchEngine(zEngineInstance* _pEngineInstance, int argc, const char* const
 	if( _pEngineInstance->Init() )
 	{
 		SetEngine(_pEngineInstance);
-		while( !gpActiveEngine->IsDone() && CSys::IsSystemActive() )
+		while( !gpActiveEngine->IsDone() && zbSys::IsSystemActive() )
 		{
 			gpActiveEngine->Update();
 		}

@@ -34,9 +34,9 @@ public:
 //==================================================================================================
 void SampleList1x()
 {	
-	CMgr::Log.Log(CLog::keLog_Game, zenConst::kzLineA40);
-	CMgr::Log.Log(CLog::keLog_Game, " zList1x (single linked list) Sorting");
-	CMgr::Log.Log(CLog::keLog_Game, zenConst::kzLineA40);
+	CMgr::Log.Log(zbLog::keLog_Game, zenConst::kzLineA40);
+	CMgr::Log.Log(zbLog::keLog_Game, " zList1x (single linked list) Sorting");
+	CMgr::Log.Log(zbLog::keLog_Game, zenConst::kzLineA40);
 
 	//-----------------------------------------------------
 	// Create 5 items with increasing value
@@ -50,23 +50,23 @@ void SampleList1x()
 	// Add the item in random order, insert sorted add
 	//-----------------------------------------------------
 	zList1x moList;
-	CMgr::Log.Log(CLog::keLog_Game, "Added   :");
+	CMgr::Log.Log(zbLog::keLog_Game, "Added   :");
 	for(int i=0; i<kuItemCount; ++i)
 	{
 		zU32 uIndex = uInsertOrder[i];
 		oItems[uIndex].miVal = uIndex;
 		moList.AddSort<int>(&oItems[uIndex], &oItems[uIndex].miVal);
-		CMgr::Log.Printf(CLog::keLog_Game, " %02i", uIndex);
+		CMgr::Log.Printf(zbLog::keLog_Game, " %02i", uIndex);
 	}
 
 	//-----------------------------------------------------
 	// Output the result, making sure it is sorted
 	//-----------------------------------------------------
 	zList1xNode* pItem = moList.GetHead();	
-	CMgr::Log.Log(CLog::keLog_Game, "Sorted  :");
+	CMgr::Log.Log(zbLog::keLog_Game, "Sorted  :");
 	while( pItem != moList.GetInvalid() )
 	{
-		CMgr::Log.Printf(CLog::keLog_Game, " %02i", static_cast<TestList1x*>(pItem)->miVal);
+		CMgr::Log.Printf(zbLog::keLog_Game, " %02i", static_cast<TestList1x*>(pItem)->miVal);
 		pItem = pItem->LstNext();
 	}
 	
@@ -77,16 +77,16 @@ void SampleList1x()
 	{
 		zU32 uIndex = uRemoveOrder[i];
 		moList.Remove( &oItems[ uIndex ] );
-		CMgr::Log.Log(CLog::keLog_Game, "Removed : (%02i) Left:", uIndex);
+		CMgr::Log.Log(zbLog::keLog_Game, "Removed : (%02i) Left:", uIndex);
 		zList1xNode* pItem = moList.GetHead();	
 		while( pItem != moList.GetInvalid() )
 		{
-			CMgr::Log.Printf(CLog::keLog_Game, " %02i", static_cast<TestList1x*>(pItem)->miVal);
+			CMgr::Log.Printf(zbLog::keLog_Game, " %02i", static_cast<TestList1x*>(pItem)->miVal);
 			pItem = pItem->LstNext();
 		}		
 	}
 
-	CMgr::Log.Printf(CLog::keLog_Game, "\n");
+	CMgr::Log.Printf(zbLog::keLog_Game, "\n");
 
 	//-----------------------------------------------------
 	// Remove all items from the list
@@ -100,9 +100,9 @@ void SampleList1x()
 //==================================================================================================
 void SampleList2x()
 {	
-	CMgr::Log.Log(CLog::keLog_Game, zenConst::kzLineA40);
-	CMgr::Log.Log(CLog::keLog_Game, " zList2x (double linked list) Sorting");
-	CMgr::Log.Log(CLog::keLog_Game, zenConst::kzLineA40);
+	CMgr::Log.Log(zbLog::keLog_Game, zenConst::kzLineA40);
+	CMgr::Log.Log(zbLog::keLog_Game, " zList2x (double linked list) Sorting");
+	CMgr::Log.Log(zbLog::keLog_Game, zenConst::kzLineA40);
 
 	//-----------------------------------------------------
 	// Create 5 items with increasing value
@@ -116,22 +116,22 @@ void SampleList2x()
 	// Add the item in random order, insert sorted add
 	//-----------------------------------------------------
 	zList2x moList;
-	CMgr::Log.Log(CLog::keLog_Game, "Added   :");
+	CMgr::Log.Log(zbLog::keLog_Game, "Added   :");
 	for(int i=0; i<kuItemCount; ++i)
 	{
 		oItems[i].miVal = uInsertOrder[i];
 		moList.AddSort<int>(&oItems[i], &oItems[i].miVal);
-		CMgr::Log.Printf(CLog::keLog_Game, " %02i", uInsertOrder[i]);
+		CMgr::Log.Printf(zbLog::keLog_Game, " %02i", uInsertOrder[i]);
 	}
 
 	//-----------------------------------------------------
 	// Output the result, making sure it is sorted
 	//-----------------------------------------------------
 	zList2xNode* pItem = moList.GetHead();
-	CMgr::Log.Log(CLog::keLog_Game, "Sorted  :");
+	CMgr::Log.Log(zbLog::keLog_Game, "Sorted  :");
 	while( pItem != moList.GetInvalid() )
 	{
-		CMgr::Log.Printf(CLog::keLog_Game, " %02i", static_cast<TestList2x*>(pItem)->miVal);
+		CMgr::Log.Printf(zbLog::keLog_Game, " %02i", static_cast<TestList2x*>(pItem)->miVal);
 		pItem = pItem->LstNext();
 	}	
 
@@ -142,15 +142,15 @@ void SampleList2x()
 	{
 		zU32 uIndex = uRemoveOrder[i];
 		oItems[ uIndex ].LstRemove();
-		CMgr::Log.Log(CLog::keLog_Game, "Removed : (%02i) Left:", uIndex);
+		CMgr::Log.Log(zbLog::keLog_Game, "Removed : (%02i) Left:", uIndex);
 		zList2xNode* pItem = moList.GetHead();	
 		while( pItem != moList.GetInvalid() )
 		{
-			CMgr::Log.Printf(CLog::keLog_Game, " %02i", static_cast<TestList2x*>(pItem)->miVal);
+			CMgr::Log.Printf(zbLog::keLog_Game, " %02i", static_cast<TestList2x*>(pItem)->miVal);
 			pItem = pItem->LstNext();
 		}		
 	}
-	CMgr::Log.Printf(CLog::keLog_Game, "\n");
+	CMgr::Log.Printf(zbLog::keLog_Game, "\n");
 
 	
 }

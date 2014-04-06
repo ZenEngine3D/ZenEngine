@@ -59,7 +59,7 @@ namespace ERes
 			HRESULT hr = EMgr::GfxRender.DX11GetDevice()->CreateBuffer( &vertexDesc, &initData, &mInstanceInfo.maStreamBuffer[streamIdx] );
 			if( FAILED(hr) )
 			{
-				//CLog::Log(CLog::keLog_ResGeometry, "Failed creating DX11 VertexBuffer");
+				//zbLog::Log(zbLog::keLog_ResGeometry, "Failed creating DX11 VertexBuffer");
 				int i=0;
 			}
 		}	

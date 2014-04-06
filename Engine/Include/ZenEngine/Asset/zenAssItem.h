@@ -4,18 +4,18 @@
 
 #if ZEN_ENGINETOOL
 
-namespace zen { namespace zeAss { class AssetItem; } }
+namespace zen { namespace zeAss { class Asset; } }
 namespace zen { namespace zenAss { class zPackage; } }
 
 namespace zen { namespace zenAss 
 {
-	class zAssetItem : public zRefOwner<zeAss::AssetItem>
+	class zAssetItem : public zRefOwner<zeAss::Asset>
 	{
 	ZENClassDeclare(zAssetItem, zRefOwner)
 	public:
 										zAssetItem();
 										zAssetItem(const zAssetItem& _Copy);
-										zAssetItem(zeAss::AssetItem* _pAsset);
+										zAssetItem(zeAss::Asset* _pAsset);
 		zHash64							GetID()const;
 		const zString&					GetName()const;
 		const zArrayStatic<zString>&	GetGroupAndName()const;

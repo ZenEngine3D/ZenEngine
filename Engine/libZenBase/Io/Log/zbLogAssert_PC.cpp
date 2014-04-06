@@ -3,7 +3,7 @@
 #include <crtdbg.h>
 #include <intrin.h>
 
-namespace CLog
+namespace zbLog
 {
 
 //==================================================================================================

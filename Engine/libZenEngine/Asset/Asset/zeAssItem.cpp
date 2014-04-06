@@ -5,19 +5,6 @@
 namespace zen { namespace zeAss
 {
 
-const char* kzXmlName_Node_Package="Package";
-const char* kzXmlName_PkgAtr_Group="Group";
-
-const char* kzXmlName_Node_Asset="Asset";
-const char* kzXmlName_AssetAtr_Name="Name";
-const char* kzXmlName_AssetAtr_Group="Group";
-const char* kzXmlName_AssetAtr_Type="Type";
-
-const char* kzXmlName_Node_Property="Property";
-const char* kzXmlName_PropAtr_Name="Name";
-const char* kzXmlName_PropAtr_Type="Type";
-const char* kzXmlName_PropAtr_Value="Value";
-
 //=================================================================================================
 //! @brief		Factory to create a new Asset of specified type
 //! @details	
@@ -26,9 +13,9 @@ const char* kzXmlName_PropAtr_Value="Value";
 //! @param		_Owner		- Owner package of the newly create Asset
 //! @return					- Created Asset
 //=================================================================================================
-AssetItem* AssetItem::CreateItem( zenConst::eAssetType _eAssetType )
+Asset* Asset::CreateItem( zenConst::eAssetType _eAssetType )
 {
-	AssetItem* pNewItem(NULL);
+	Asset* pNewItem(NULL);
 	switch( _eAssetType )
 	{
 	case zenConst::keAssType_TestProperty:	pNewItem = zenNewDefault TestProperty();	break;
@@ -44,7 +31,7 @@ AssetItem* AssetItem::CreateItem( zenConst::eAssetType _eAssetType )
 	return pNewItem;
 }
 
-AssetItem::AssetItem()	
+Asset::Asset()	
 : mrPackage(NULL)
 , mhID("")
 {
@@ -52,11 +39,11 @@ AssetItem::AssetItem()
 	mhID = sCounter++; //! @todo Asset: fix this (HACK)	
 }
 
-AssetItem::~AssetItem()	
+Asset::~Asset()	
 {
 }
 
-void AssetItem::Init(Package& _ParentPkg, const char* _zName, const char* _zGroup)
+void Asset::Init(Package& _ParentPkg, const char* _zName, const char* _zGroup)
 {	
 	ParseGroupAndName(_zName, _zGroup, maGroup);
 	//mhID		= 0;//! @todo Asset: Load proper asset id
@@ -66,12 +53,12 @@ void AssetItem::Init(Package& _ParentPkg, const char* _zName, const char* _zGrou
 		mhGroupID.Append( maGroup[idx] );
 
 	SetPackage( &_ParentPkg );
-	zeMgr::Asset.AssetAdd(*this);
+	zeMgr::Asset.AssetAdd(this);
 	//! @todo Asset : description init
 	//RebuiltDescription();
 }
 
-void AssetItem::SetPackage(Package* _pParentPkg)
+void Asset::SetPackage(Package* _pParentPkg)
 {
 	if( mrPackage.IsValid() )
 		mrPackage->AssetRem(*this);
@@ -88,7 +75,7 @@ void AssetItem::SetPackage(Package* _pParentPkg)
 //-------------------------------------------------------------------------------------------------
 //! @return		
 //=================================================================================================
-void AssetItem::RebuiltDescription()
+void Asset::RebuiltDescription()
 {	
 	mzDescription = "";
 	//! @TODO
@@ -108,7 +95,7 @@ void AssetItem::RebuiltDescription()
 	*/
 }
 
-void AssetItem::InitDefault()
+void Asset::InitDefault()
 {	
 	// Only need to reset value
 	if( maPropertyValue.Count() > 0 )
@@ -146,7 +133,7 @@ void AssetItem::InitDefault()
 //! @param		_dPropertyMap - Dictionary to initialize with Property's Name / Index infos
 //! @return		
 //=================================================================================================
-bool AssetItem::InitPropertyMap(zMap<zInt>::Key32& _dPropertyMap)const
+bool Asset::InitPropertyMap(zMap<zInt>::Key32& _dPropertyMap)const
 {	
 	const zenAss::PropertyArray& aPropertyDef = GetProperties();
 	_dPropertyMap.Init(aPropertyDef.Count()*2);
@@ -179,10 +166,6 @@ const zenAss::PropertyArray& TestProperty::GetProperties()const
 	static zenAss::PropertyArray		saProperties( aPropertiesAll, ZENArrayCount(aPropertiesAll) );
 	return saProperties;
 }
-
-
-
-
 
 }} //namespace zen { namespace zeAss
 

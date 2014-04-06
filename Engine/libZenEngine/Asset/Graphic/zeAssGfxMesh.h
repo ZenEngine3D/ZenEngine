@@ -6,9 +6,9 @@
 
 namespace zen { namespace zeAss
 {
-	class GfxMesh : public AssetItem
+	class GfxMesh : public Asset
 	{
-	ZENClassDeclare(GfxMesh, AssetItem)
+	ZENClassDeclare(GfxMesh, Asset)
 	public:
 		virtual zenConst::eAssetType			GetType()const{return zenConst::keAssType_Mesh;}
 		virtual const zenAss::PropertyArray&	GetProperties()const;

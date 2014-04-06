@@ -1,8 +1,8 @@
 #include "libZenBase.h"
 
-namespace CMgr { CFil::ManagerFile File; }
+namespace CMgr { zbFile::ManagerFile File; }
 
-namespace CFil
+namespace zbFile
 {
 
 	

@@ -2,7 +2,7 @@
 #ifndef __LibZenBase_File_FileManager_h__
 #define __LibZenBase_File_FileManager_h__
 
-namespace CFil
+namespace zbFile
 {
 
 	enum enumFileFlag
@@ -53,9 +53,9 @@ namespace CFil
 	};
 }
 
-#include ZENHeaderPlatform( CFileInfo )
+#include ZENHeaderPlatform( zbFileInfo )
 
-namespace CFil
+namespace zbFile
 {
 	class FileInfo : public ZENClassPlatform(FileInfo)
 	{
@@ -105,9 +105,9 @@ namespace CFil
 	};
 }  
 
-#include ZENHeaderPlatform( CFileManager )
+#include ZENHeaderPlatform( zbFileManager )
 
-namespace CFil
+namespace zbFile
 {
 	class ManagerFile : public ZENClassPlatform(ManagerFile)
 	{
@@ -143,9 +143,9 @@ namespace CFil
 
 }
 
-namespace CMgr { extern CFil::ManagerFile File; }
+namespace CMgr { extern zbFile::ManagerFile File; }
 
-namespace CFil
+namespace zbFile
 {
 	class AWStream
 	{

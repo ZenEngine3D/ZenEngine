@@ -13,7 +13,7 @@ static const zStringHash32 sTypeDescription[]={
 
 zAssetItem AssetCreate(zenConst::eAssetType _eAssetType)
 {
-	zeAss::AssetItem* pNewItem(NULL);
+	zeAss::Asset* pNewItem(NULL);
 	switch( _eAssetType )
 	{
 	case zenConst::keAssType_TestProperty:	pNewItem = zenNewDefault zeAss::TestProperty();	break;
@@ -23,10 +23,8 @@ zAssetItem AssetCreate(zenConst::eAssetType _eAssetType)
 	}
 
 	if( pNewItem )
-	{
 		pNewItem->InitDefault();
-		//pNewItem->mpPackage = &_Owner; //! @todo Asset: Assign package
-	}
+
 	return pNewItem;
 }
 
@@ -57,7 +55,7 @@ zAssetItem::zAssetItem(const zAssetItem& _Copy)
 {
 }
 
-zAssetItem::zAssetItem(zeAss::AssetItem* _pAsset)
+zAssetItem::zAssetItem(zeAss::Asset* _pAsset)
 : Super(_pAsset)
 {
 }

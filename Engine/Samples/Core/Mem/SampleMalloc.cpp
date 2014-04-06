@@ -13,18 +13,18 @@ namespace sample
 		TestAlloc()
 		: mValue(0)
 		{
-			CMgr::Log.Log(CLog::keLog_Game, "Constructor");
+			CMgr::Log.Log(zbLog::keLog_Game, "Constructor");
 		}
 		
 		TestAlloc(int value)
 		: mValue(value)
 		{			
-			CMgr::Log.Log(CLog::keLog_Game, "Constructor %i", mValue);
+			CMgr::Log.Log(zbLog::keLog_Game, "Constructor %i", mValue);
 		}
 		
 		~TestAlloc()
 		{
-			CMgr::Log.Log(CLog::keLog_Game, "Destructor %i", mValue);
+			CMgr::Log.Log(zbLog::keLog_Game, "Destructor %i", mValue);
 		}
 		int mValue;
 	};
@@ -35,9 +35,9 @@ namespace sample
 	//==================================================================================================
 	void SampleMalloc()
 	{	
-		CMgr::Log.Log(CLog::keLog_Game, zenConst::kzLineA40);
-		CMgr::Log.Log(CLog::keLog_Game, " MALLOC");
-		CMgr::Log.Log(CLog::keLog_Game, zenConst::kzLineA40);
+		CMgr::Log.Log(zbLog::keLog_Game, zenConst::kzLineA40);
+		CMgr::Log.Log(zbLog::keLog_Game, " MALLOC");
+		CMgr::Log.Log(zbLog::keLog_Game, zenConst::kzLineA40);
 
 		zU32 size1 = sizeof(int);
 		zU32 size2 = sizeof(TestAlloc);

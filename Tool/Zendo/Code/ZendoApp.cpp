@@ -69,7 +69,7 @@ bool ZendoApp::OnInit()
 		/*
 		AAss::Package testPackage;				
 		testPackage.SetFilename( "TestDir/monpackage.xml" );
-		AGfx::Texture2D* pAssTexture = (AGfx::Texture2D*)AAss::AssetItem::CreateItem(AAss::AssetItem::keType_Texture2D);
+		AGfx::Texture2D* pAssTexture = (AGfx::Texture2D*)AAss::Asset::CreateItem(AAss::Asset::keType_Texture2D);
 		testPackage.AssetAdd(pAssTexture);
 		testPackage.Save();
 		testPackage.SetFilename("TestDir2/monpackage.xml");

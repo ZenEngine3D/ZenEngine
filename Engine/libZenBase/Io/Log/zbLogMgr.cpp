@@ -1,8 +1,8 @@
 #include "libZenBase.h"
 
-namespace CMgr { CLog::ManagerLog Log; }
+namespace CMgr { zbLog::ManagerLog Log; }
 
-namespace CLog
+namespace zbLog
 {
 // Make sure to match enum eLogType
 const char* ManagerLog::ssLogTypeDesc[keLog__Count+1]={

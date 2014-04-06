@@ -32,7 +32,7 @@ namespace sample
 		// Random object with DWORD method (void)
 		SomeSampleClass myClass;
 		// thread should call print method of world.
-		CSys::AWThread_PC<SomeSampleClass> thread0(&myClass, &SomeSampleClass::print);
+		zbSys::AWThread_PC<SomeSampleClass> thread0(&myClass, &SomeSampleClass::print);
 
 		if(thread0.Start())
 		{
@@ -67,7 +67,7 @@ namespace sample
 		// Random object with DWORD method (void)
 		SomeSampleClass myClass;
 		// thread should call print method of world.
-		CSys::AWThread<SomeSampleClass> thread0(&myClass, &SomeSampleClass::print);
+		zbSys::AWThread<SomeSampleClass> thread0(&myClass, &SomeSampleClass::print);
 
 		if(thread0.Start())
 		{
