@@ -13,7 +13,7 @@ int main (int argc, char * const argv[])
 		sample::SampleLog();
 		sample::SampleAssert();
 
-		while( CSys::IsSystemActive() );
+		while( zbSys::IsSystemActive() );
 	}
 	FSys::EngineStop();
 	return 0;

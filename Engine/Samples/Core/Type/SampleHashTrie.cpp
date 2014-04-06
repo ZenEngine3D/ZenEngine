@@ -122,9 +122,9 @@ namespace sample
 	{
 		#define kuTestCount (10000)
 		#define	kuPoolSize	1024
-		CMgr::Log.Log(CLog::keLog_Game, zenConst::kzLineA40);
-		CMgr::Log.Log(CLog::keLog_Game, " HASH TABLE (%i entries tested)", kuTestCount);
-		CMgr::Log.Log(CLog::keLog_Game, zenConst::kzLineA40);
+		CMgr::Log.Log(zbLog::keLog_Game, zenConst::kzLineA40);
+		CMgr::Log.Log(zbLog::keLog_Game, " HASH TABLE (%i entries tested)", kuTestCount);
+		CMgr::Log.Log(zbLog::keLog_Game, zenConst::kzLineA40);
 
 		zU32 uValKey(0);
 		zU64 uTimeStartGet,uTimeStartSet;
@@ -152,7 +152,7 @@ namespace sample
 			uTemp += dArraySize[uValKey];
 		}
 		uTimeStopGet = zenSys::GetTimeUSec();
-		CMgr::Log.Log(CLog::keLog_Game, "SparseArray:small32 Set(%7ius) Get(%7ius) Mem(%6iKb) Overhead(%6iKb)", 
+		CMgr::Log.Log(zbLog::keLog_Game, "SparseArray:small32 Set(%7ius) Get(%7ius) Mem(%6iKb) Overhead(%6iKb)", 
 			zU32(uTimeStopSet-uTimeStartSet), 
 			zU32(uTimeStopGet-uTimeStartGet),
 			zU32(dArraySize.GetMemoryFootprint())/1024, 
@@ -181,7 +181,7 @@ namespace sample
 			uTemp += dArraySpeed[uValKey];
 		}
 		uTimeStopGet = zenSys::GetTimeUSec();
-		CMgr::Log.Log(CLog::keLog_Game, "SparseArray:fast32  Set(%7ius) Get(%7ius) Mem(%6iKb) Overhead(%6iKb)", 
+		CMgr::Log.Log(zbLog::keLog_Game, "SparseArray:fast32  Set(%7ius) Get(%7ius) Mem(%6iKb) Overhead(%6iKb)", 
 			zU32(uTimeStopSet-uTimeStartSet), 
 			zU32(uTimeStopGet-uTimeStartGet),
 			zU32(dArraySpeed.GetMemoryFootprint())/1024, 
@@ -209,7 +209,7 @@ namespace sample
 			uTemp += hashset[uValKey];
 		}
 		uTimeStopGet = zenSys::GetTimeUSec();
-		CMgr::Log.Log(CLog::keLog_Game, "std::unordered_map  Set(%7ius) Get(%7ius) Mem(%6iKb) Overhead(%6iKb)", 
+		CMgr::Log.Log(zbLog::keLog_Game, "std::unordered_map  Set(%7ius) Get(%7ius) Mem(%6iKb) Overhead(%6iKb)", 
 			zU32(uTimeStopSet-uTimeStartSet), 
 			zU32(uTimeStopGet-uTimeStartGet),
 			zU32(tracking_allocator::g_bytesAllocated)/1024, 
@@ -236,14 +236,14 @@ namespace sample
 			uTemp += hashmaptest[uValKey];
 		}
 		uTimeStopGet = zenSys::GetTimeUSec();
-		CMgr::Log.Log(CLog::keLog_Game, "std::map            Set(%7ius) Get(%7ius) Mem(%6iKb) Overhead(%6iKb)", 
+		CMgr::Log.Log(zbLog::keLog_Game, "std::map            Set(%7ius) Get(%7ius) Mem(%6iKb) Overhead(%6iKb)", 
 			zU32(uTimeStopSet-uTimeStartSet), 
 			zU32(uTimeStopGet-uTimeStartGet),
 			zU32(tracking_allocator::g_bytesAllocated-AllocSizeStart)/1024, 
 			zU32(tracking_allocator::g_bytesAllocated-AllocSizeStart-kuTestCount*sizeof(zU32))/1024 );
 
 		//dArraySpeed.Clear();
-		CMgr::Log.Log(CLog::keLog_Game, ".... Cleared", uTemp);		
+		CMgr::Log.Log(zbLog::keLog_Game, ".... Cleared", uTemp);		
 	}
 
 }

@@ -1,6 +1,6 @@
 #include "libZenBase.h"
 
-namespace CSys
+namespace zbSys
 {
 
 }

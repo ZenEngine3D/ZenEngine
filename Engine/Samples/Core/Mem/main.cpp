@@ -10,7 +10,7 @@ int main (int argc, char * const argv[])
 	if( FSys::EngineStart() )
 	{
 		sample::SampleMalloc();		
-		while( CSys::IsSystemActive() );
+		while( zbSys::IsSystemActive() );
 	}	
 	return 0;	
 }

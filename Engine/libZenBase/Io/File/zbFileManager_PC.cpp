@@ -1,6 +1,6 @@
 #include "libZenBase.h"
 
-namespace CFil
+namespace zbFile
 {
 
 bool ManagerFile_PC::Load()

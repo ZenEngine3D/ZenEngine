@@ -1,11 +1,11 @@
 #pragma once
-#ifndef __LibCor_System_Init_h__
-#define __LibCor_System_Init_h__
+#ifndef __LibZenBase_System_Init_h__ 
+#define __LibZenBase_System_Init_h__
 
 //=================================================================================================
 // Main Class / functions
 //=================================================================================================
-namespace CSys
+namespace zbSys
 {	
 	bool StartupSystem( bool (*_pFuncEngineStart)(), bool (*_pFuncEngineStop)() );	
 	void ShutdownSystem();

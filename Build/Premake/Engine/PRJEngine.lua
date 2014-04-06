@@ -5,11 +5,12 @@ vPCHEngineEngine 	= "Engine/Include/ZenEngine/zenEngine.h"
 -------------------------------------------------------------------------------
 -- Engine Libraries 
 -------------------------------------------------------------------------------
-v3rdPartySrc = {"Engine/ThirdParty/pugixml/src"}
-Orion_AddGameAndToolLib("libZenBase", 	"ZenEngine", 	{"Engine/libZenBase", "Engine/Include/ZenBase"}, 		"libZenBase.h")
-Orion_AddGameAndToolLib("libZenCore", 	"ZenEngine",	{"Engine/libZenCore", "Engine/Include/ZenCore"}, 		"libZenCore.h")
-Orion_AddGameAndToolLib("libZenEngine", "ZenEngine",	{"Engine/libZenEngine", "Engine/Include/ZenEngine"}, 	"libZenEngine.h")
-Orion_AddGameAndToolLib("libThirdParty","ZenEngine",	v3rdPartySrc,											"")
+vThirdPartySrc = {"Engine/ThirdParty/pugixml/src"}
+Orion_AddGameAndToolLib("libZenBase", 		"ZenEngine", 	{"Engine/libZenBase", 		"Engine/Include/ZenBase"}, 		"libZenBase.h")
+Orion_AddGameAndToolLib("libZenCore", 		"ZenEngine",	{"Engine/libZenCore", 		"Engine/Include/ZenCore"}, 		"libZenCore.h")
+Orion_AddGameAndToolLib("libZenEngine", 	"ZenEngine",	{"Engine/libZenEngine", 	"Engine/Include/ZenEngine"}, 	"libZenEngine.h")
+Orion_AddGameAndToolLib("libZenExternal",	"ZenEngine",	{"Engine/libZenExternal", 	"Engine/Include/ZenExternal"},	"libZenExternal.h")
+Orion_AddGameAndToolLib("libThirdParty",	"ZenEngine",	vThirdPartySrc,												"")
 
 -------------------------------------------------------------------------------
 -- Engine Samples

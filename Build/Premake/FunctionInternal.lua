@@ -1,6 +1,6 @@
 vSourceFiles			= {"**.h", "**.inl", "**.cpp", "**.ui"}
-vLibEngineGame 			= {"libZenBase", "libZenCore", "libZenEngine"  }
-vLibEngineTool 			= {"libZenBase", "libZenCore", "libZenEngine", "libThirdParty" }
+vLibEngineGame 			= {"libZenBase", "libZenCore", "libZenEngine", "libZenExternal"  }
+vLibEngineTool 			= {"libZenBase", "libZenCore", "libZenEngine", "libZenExternal", "libThirdParty" }
 bLibEngineGameRender	= {"d3d11", "d3dcompiler", "dxguid"}	--TODO per platform config
 bLibEngineToolRender	= {"d3d11", "d3dcompiler", "dxguid"}
 

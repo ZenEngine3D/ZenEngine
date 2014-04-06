@@ -1,6 +1,6 @@
 #include "libZenBase.h"
 
-namespace CFil
+namespace zbFile
 {
 
 FileInfo_PC::FileInfo_PC()

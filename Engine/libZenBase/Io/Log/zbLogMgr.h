@@ -1,11 +1,11 @@
 #pragma once
-#ifndef __LibZenBase_CLogManager_h__
-#define __LibZenBase_CLogManager_h__
+#ifndef __LibZenBase_Log_Manager_h__
+#define __LibZenBase_Log_Manager_h__
 
 #include <stdio.h>
 #include <stdarg.h>
 
-namespace CLog
+namespace zbLog
 {
 
 //=================================================================================================
@@ -52,24 +52,24 @@ class ManagerLog : public zbType::Manager
 {
 ZENClassDeclare(ManagerLog, zbType::Manager);
 public:  	
-			void			Reset			();
+				void			Reset			();
 	ZENInline	void			Clear			( eLogOutput _eOutput );
 	ZENInline	void			SetActive		( eLogOutput _eOutput, eLogType _eType, bool _bActive=true );
 	ZENInline	bool			IsActive		( eLogOutput _eOutput, eLogType _eType );
 				
 	ZENInline	void			Log				( eLogType _eErrorType, const char* _sFormat, ... );
-			void			Log				( eLogType _eErrorType, const char* _sFormat, const va_list _pArgs );		
+				void			Log				( eLogType _eErrorType, const char* _sFormat, const va_list _pArgs );		
 	ZENInline	void			Printf			( eLogType _eErrorType, const char* _sFormat, ... );		
-			void			Printf			( eLogType _eErrorType, const char* _sFormat, const va_list _pArgs );				
+				void			Printf			( eLogType _eErrorType, const char* _sFormat, const va_list _pArgs );				
 		
 	ZENInline	const char*		GetTypeStamp	( eLogType _eLogType );	
-	ZENInline  const char*		GetEmptyStamp	();
+	ZENInline	const char*		GetEmptyStamp	();
 
 protected:
-	virtual	bool			Load			();
-	virtual	bool			Unload			();	
+	virtual	bool				Load			();
+	virtual	bool				Unload			();	
 	zU32						muOutputMask[keLogOut__Count];	//!< List if supported error type for each output
-	static	const char*		ssLogTypeDesc[keLog__Count+1];	//!< Description of each error type
+	static	const char*			ssLogTypeDesc[keLog__Count+1];	//!< Description of each error type
 };
 
 //ZENInline void Printf(eLogType _eType, const char* _zText, ...);
@@ -77,9 +77,9 @@ protected:
 
 }   
 
-namespace CMgr { extern CLog::ManagerLog Log; }
+namespace CMgr { extern zbLog::ManagerLog Log; }
 
-#include "CLogMgr.inl"
+#include "zbLogMgr.inl"
 
 
 #endif

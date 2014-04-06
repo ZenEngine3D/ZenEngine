@@ -5,27 +5,27 @@ namespace zen { namespace zeAss
 
 
 
-zHash64 AssetItem::GetID()const
+zHash64 Asset::GetID()const
 {
 	return mhID;
 }
 
-const zArrayStatic<zString>& AssetItem::GetGroupAndName()const
+const zArrayStatic<zString>& Asset::GetGroupAndName()const
 {
 	return maGroup;
 }
 
-zHash32 AssetItem::GetGroupID()const
+zHash32 Asset::GetGroupID()const
 {
 	return mhGroupID;
 }
 
-const zString& AssetItem::GetName()const
+const zString& Asset::GetName()const
 {
 	return *maGroup.Last();
 }
 
-const zString& AssetItem::GetDescription()const
+const zString& Asset::GetDescription()const
 {
 	return mzDescription;
 }

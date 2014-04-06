@@ -22,7 +22,7 @@ int main (int argc, char * const argv[])
 		sample::SampleHamt();
 		sample::SampleArray();
 		sample::SampleTypeMisc();
-		while( CSys::IsSystemActive() );
+		while( zbSys::IsSystemActive() );
 	}	
 	return 0;	
 }

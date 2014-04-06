@@ -236,7 +236,7 @@ void WndAssetBrowser::UpdateAssetList()
 	mpLstAsset->InsertColumn(0, wxT("Name"), wxLIST_FORMAT_LEFT);
 	if( mAssetTypeMask.CountActive() == 1 )
 	{
-		//AAss::AssetItem::GetTypeDesc()
+		//AAss::Asset::GetTypeDesc()
 		mpLstAsset->InsertColumn(1, wxT("Description"), wxLIST_FORMAT_LEFT, wxLIST_AUTOSIZE_USEHEADER);
 	}
 	// Else display a descriptive string

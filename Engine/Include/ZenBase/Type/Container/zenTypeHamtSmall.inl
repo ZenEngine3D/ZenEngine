@@ -549,12 +549,12 @@ void zHamt< TKey, TValue, TIndex, TIndexBits>::DebugPrint(const TKey _First, TKe
 
 			TKey Key = it.GetKey();
 			zSpaces[kuSpacePerLevel*sSharedParentDepth] = 0; 
-			CLog::Printf(CLog::keLog_DebugInfo, "\n%s", zSpaces);
+			zbLog::Printf(zbLog::keLog_DebugInfo, "\n%s", zSpaces);
 			zSpaces[kuSpacePerLevel*sSharedParentDepth] = ' '; 
 			sCurrentDepth = sSharedParentDepth;
 			while( sCurrentDepth != it.msDepth )
-				CLog::Printf(CLog::keLog_DebugInfo, "<%02i>----------", GetNodeIndex(Key, sCurrentDepth++));
-			CLog::Printf(CLog::keLog_DebugInfo, "<%02i> %08X", GetNodeIndex(Key, sCurrentDepth), Key);
+				zbLog::Printf(zbLog::keLog_DebugInfo, "<%02i>----------", GetNodeIndex(Key, sCurrentDepth++));
+			zbLog::Printf(zbLog::keLog_DebugInfo, "<%02i> %08X", GetNodeIndex(Key, sCurrentDepth), Key);
 		}
 	}
 #endif

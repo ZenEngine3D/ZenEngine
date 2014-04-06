@@ -1,11 +1,19 @@
 #include "libZenEngine.h"
+#include <Engine/libZenExternal/libZenExternal.h>
+
 #if ZEN_ENGINETOOL
 namespace zeMgr{ zeAss::ManagerAsset Asset; }
 
 namespace zen { namespace zeAss
 {
-
-void ResetAssetReference( zMap<zenAss::zAssetItem>::Key64& _dAssets, zenAss::zAssetItem& _rAssetDel)
+//=================================================================================================
+//! @brief		Called by AssetMap, when asset is removed from it
+//! @details	Since no destructor is called on item removed from map, need to 
+//!				decrement refcount manually, makifn sure there's no resource leak
+//-------------------------------------------------------------------------------------------------
+//! @return		True if init was successful
+//=================================================================================================
+void ResetAssetReference( zMap<zenAss::zAssetItem>::Key64& _dAssetKey, zenAss::zAssetItem& _rAssetDel)
 {
 	_rAssetDel = NULL;
 }
@@ -25,7 +33,7 @@ ManagerAsset::ManagerAsset()
 //=================================================================================================
 //! @brief		Load Manager
 //! @details	Part of ManagerBase Interface.
-//!-----------------------------------------------------------------------------
+//-------------------------------------------------------------------------------------------------
 //! @return		True if init was successful
 //=================================================================================================
 bool ManagerAsset::Load()
@@ -82,10 +90,10 @@ const zenAss::zAssetItem& ManagerAsset::AssetGet( zHash64 _hAssetID )const
 	return mdAsset[_hAssetID];
 }
 
-void ManagerAsset::AssetAdd( zeAss::AssetItem& _Asset )
+void ManagerAsset::AssetAdd( zeAss::Asset* _pAsset )
 {
-	ZENAssert( mdAsset.Exist(_Asset.GetID()) == false );
-	mdAsset.Set(_Asset.GetID(), &_Asset);
+	ZENAssert( _pAsset && mdAsset.Exist(_pAsset->GetID()) == false );
+	mdAsset.Set(_pAsset->GetID(), _pAsset);
 }
 
 void ManagerAsset::AssetRem( zHash64 _hAssetID )
@@ -101,25 +109,9 @@ void ManagerAsset::AssetRem( zHash64 _hAssetID )
 
 void ManagerAsset::PackageLoad()
 {
-	mdPackage.Clear();
-	PackageLoad( "" );
-}
-
-void ManagerAsset::PackageLoad(const zString& _zDir)
-{
-	//---------------------------------------------------------------
-	// Load all package file from currently loading directory
-	//---------------------------------------------------------------
-	const CFil::FileInfo* pFileInfo;
-	CMgr::File.Search( CFil::keFileFlag_File, L"Packages", L"*.xml",  true);
-	while( CMgr::File.SearchNext(pFileInfo) )
-	{
-		Package* pNewPackage = zenNewDefault Package;
-		if( pNewPackage->Load(pFileInfo->GetFilename()) )	
-			PackageAdd(pNewPackage);
-		else
-			zenDelNull(pNewPackage);		
-	}
+	zxAss::AssetLoaderXml xmlLoader;
+	mdPackage.Clear();	
+	xmlLoader.Load();
 }
 
 }} //namespace zen { namespace zeAss

@@ -35,24 +35,24 @@ namespace sample
 		aDynamicA += aStaticA;
 		aDynamicA += aStaticB;
 
-		CMgr::Log.Log(CLog::keLog_Game, zenConst::kzLineA40);
-		CMgr::Log.Log(CLog::keLog_Game, " Array Sorting");
-		CMgr::Log.Log(CLog::keLog_Game, zenConst::kzLineA40);
+		CMgr::Log.Log(zbLog::keLog_Game, zenConst::kzLineA40);
+		CMgr::Log.Log(zbLog::keLog_Game, " Array Sorting");
+		CMgr::Log.Log(zbLog::keLog_Game, zenConst::kzLineA40);
 		zArrayStatic<zU32> uTestSort;
 		const zUInt pSourceData[] = {2,132,876,23,54,265,34,1,475,287,452,884,343,2,88,3,324,827,123,278};
 		uTestSort.Copy( pSourceData, ZENArrayCount(pSourceData) );
-		CMgr::Log.Log(CLog::keLog_Game, "Unsorted  :");
+		CMgr::Log.Log(zbLog::keLog_Game, "Unsorted  :");
 		for(zUInt idx(0), count(uTestSort.Count()); idx<count; ++idx )
-			CMgr::Log.Printf(CLog::keLog_Game, " %03i", uTestSort[idx] );
+			CMgr::Log.Printf(zbLog::keLog_Game, " %03i", uTestSort[idx] );
 		
 		uTestSort.Sort();
 		zUInt uPrevValue(0);
-		CMgr::Log.Log(CLog::keLog_Game, "Sorted    :");
+		CMgr::Log.Log(zbLog::keLog_Game, "Sorted    :");
 		for(zUInt idx(0), count(uTestSort.Count()); idx<count; ++idx )
 		{
 			ZENAssert(	(uPrevValue < uTestSort[idx]) ||					//Previous value always smaller than current
 						(uPrevValue == uTestSort[idx] && uPrevValue==2));	//Or current is equal to previous when it's 2 (only double inserted in array)
-			CMgr::Log.Printf(CLog::keLog_Game, " %03i", uTestSort[idx] );
+			CMgr::Log.Printf(zbLog::keLog_Game, " %03i", uTestSort[idx] );
 		}
 	}
 }

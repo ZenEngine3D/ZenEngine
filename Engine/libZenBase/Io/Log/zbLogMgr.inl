@@ -1,4 +1,4 @@
-namespace CLog
+namespace zbLog
 {
 	//==================================================================================================
 	//! @brief		Create a header for each Log line

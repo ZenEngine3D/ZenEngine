@@ -2,7 +2,7 @@
 #ifndef __LibZenBase_File_FileInfo_PC_h__
 #define __LibZenBase_File_FileInfo_PC_h__
 
-namespace CFil
+namespace zbFile
 {
 	class FileInfo_PC
 	{

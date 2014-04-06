@@ -50,7 +50,7 @@ void TestSimd(zU32 auCount)
 		uStopB = zenSys::GetTimeUSec();
 
 		zenMath::XYZW(vResult,  uResult2);
-		CMgr::Log.Printf(CLog::keLog_Game, "\n%15s Cpu:%5i vs Sse:%5i ", "Add", zU32(uStopA - uStartA), zU32(uStopB - uStartB), uResult[0], uResult[1], uResult[2], uResult[3], uResult2[0], uResult2[1], uResult2[2], uResult2[3] );
+		CMgr::Log.Printf(zbLog::keLog_Game, "\n%15s Cpu:%5i vs Sse:%5i ", "Add", zU32(uStopA - uStartA), zU32(uStopB - uStartB), uResult[0], uResult[1], uResult[2], uResult[3], uResult2[0], uResult2[1], uResult2[2], uResult2[3] );
 	}
 	//---------------------------------------------------------------
 	// MAdd
@@ -74,7 +74,7 @@ void TestSimd(zU32 auCount)
 		uStopB = zenSys::GetTimeUSec();
 
 		zenMath::XYZW(vResult1,  uResult2);
-		CMgr::Log.Printf(CLog::keLog_Game, "\n%15s Cpu:%5i vs Sse:%5i ", "Mult+Add", zU32(uStopA - uStartA), zU32(uStopB - uStartB), uResult[0], uResult[1], uResult[2], uResult[3], uResult2[0], uResult2[1], uResult2[2], uResult2[3] );
+		CMgr::Log.Printf(zbLog::keLog_Game, "\n%15s Cpu:%5i vs Sse:%5i ", "Mult+Add", zU32(uStopA - uStartA), zU32(uStopB - uStartB), uResult[0], uResult[1], uResult[2], uResult[3], uResult2[0], uResult2[1], uResult2[2], uResult2[3] );
 	}
 	//---------------------------------------------------------------
 	// Magnitude
@@ -99,7 +99,7 @@ void TestSimd(zU32 auCount)
 		} 
 		zenMath::XYZW(vResult,  uResult);
 		uStopB = zenSys::GetTimeUSec();
-		CMgr::Log.Printf(CLog::keLog_Game, "\n%15s Cpu:%5i vs Sse:%5i ", "Magnitude", zU32(uStopA - uStartA), zU32(uStopB - uStartB), fResA, uResult );
+		CMgr::Log.Printf(zbLog::keLog_Game, "\n%15s Cpu:%5i vs Sse:%5i ", "Magnitude", zU32(uStopA - uStartA), zU32(uStopB - uStartB), fResA, uResult );
 	}
 	//---------------------------------------------------------------
 	// Normalize
@@ -129,7 +129,7 @@ void TestSimd(zU32 auCount)
 		uStopB = zenSys::GetTimeUSec();
 
 		zenMath::XYZW(vResult,  uResult2);
-		CMgr::Log.Printf(CLog::keLog_Game, "\n%15s Cpu:%5i vs Sse:%5i ", "Normalize", zU32(uStopA - uStartA), zU32(uStopB - uStartB), uResult[0], uResult[1], uResult[2], uResult[3], uResult2[0], uResult2[1], uResult2[2], uResult2[3] );
+		CMgr::Log.Printf(zbLog::keLog_Game, "\n%15s Cpu:%5i vs Sse:%5i ", "Normalize", zU32(uStopA - uStartA), zU32(uStopB - uStartB), uResult[0], uResult[1], uResult[2], uResult[3], uResult2[0], uResult2[1], uResult2[2], uResult2[3] );
 	}
 }
 

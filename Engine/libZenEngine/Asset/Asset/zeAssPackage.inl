@@ -27,13 +27,13 @@ const zMap<zenAss::zAssetItem>::Key64& Package::GetAsset(zenConst::eAssetType _e
 	return madAssetPerType[_eType];
 }
 
-void Package::AssetAdd(zeAss::AssetItem& _Asset)
+void Package::AssetAdd(zeAss::Asset& _Asset)
 {
 	ZENAssert( madAssetPerType[_Asset.GetType()].Exist(_Asset.GetID()) == false );
 	madAssetPerType[_Asset.GetType()].Set( _Asset.GetID(), &_Asset);
 }
 
-void Package::AssetRem(zeAss::AssetItem& _Asset)
+void Package::AssetRem(zeAss::Asset& _Asset)
 {
 	madAssetPerType[_Asset.GetType()].Unset( _Asset.GetID() );
 }
@@ -45,7 +45,7 @@ void Package::AssetRem(zeAss::AssetItem& _Asset)
 //! @param		_zGroup		- String (separated by '\') giving the group hierarchy to put package under
 //! @param		_Filename	- Filename of the Package
 //=================================================================================================
-void Package::Init(const char* _zGroup, const CFil::Filename& _Filename )
+void Package::Init(const char* _zGroup, const zbFile::Filename& _Filename )
 {
 	char zName[128];
 

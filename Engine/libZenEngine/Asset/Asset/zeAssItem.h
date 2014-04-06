@@ -5,13 +5,11 @@
 #if ZEN_ENGINETOOL
 namespace zen { namespace zeAss
 {
-class AssetItem : public zRefCountedAutoDel
+class Asset : public zRefCountedAutoDel
 {
+ZENClassDeclareNoParent(Asset)
 public:
-
-ZENClassDeclareNoParent(AssetItem)
-public:
-	virtual										~AssetItem();	
+	virtual										~Asset();	
 
 	ZENInline zHash64							GetID()const;
 	ZENInline const zArrayStatic<zString>&		GetGroupAndName()const;
@@ -30,7 +28,7 @@ public:
 	virtual const zenAss::PropertyArray&		GetProperties()const=0;									//!< Child class return the list of property definition they are made of
 	virtual zInt								GetValueIndex(zHash32 _hPropertyName)const=0;
 protected:										
-												AssetItem();
+												Asset();
 	void										RebuiltDescription();
 	bool										InitPropertyMap(zMap<zInt>::Key32& _dPropertyMap)const;
 	
@@ -40,37 +38,23 @@ protected:
 	zString										mzDescription;				//!< Asset description, built from propertydef/values
 	zArrayStatic<zString>						maGroup;					//!< Asset belongs to a group hierarchy for easier finding of asset, like package (last element is asset name)	
 	zArrayStatic<zenAss::PropertyValue>			maPropertyValue;			//!< List of values pointer for this asset	
-	
-	friend class Package;
 
 //-----------------------------------------------------------------------------
 // Static
 //-----------------------------------------------------------------------------
 public:
-	static AssetItem*							CreateItem		(zenConst::eAssetType _eAssetType);
+	static Asset*							CreateItem		(zenConst::eAssetType _eAssetType);
 };
 
-class TestProperty : public AssetItem
+class TestProperty : public Asset
 {
-ZENClassDeclare(TestProperty, AssetItem)
+ZENClassDeclare(TestProperty, Asset)
 public:
 	virtual zenConst::eAssetType				GetType()const{return zenConst::keAssType_TestProperty;}
 	virtual const zenAss::PropertyArray&		GetProperties()const;
 	virtual zInt								GetValueIndex(zHash32 _hPropertyName)const;
 };	
 
-extern const char* kzXmlName_Node_Package;
-extern const char* kzXmlName_PkgAtr_Group;
-
-extern const char* kzXmlName_Node_Asset;
-extern const char* kzXmlName_AssetAtr_Group;
-extern const char* kzXmlName_AssetAtr_Name;
-extern const char* kzXmlName_AssetAtr_Type;
-
-extern const char* kzXmlName_Node_Property;
-extern const char* kzXmlName_PropAtr_Name;
-extern const char* kzXmlName_PropAtr_Type;
-extern const char* kzXmlName_PropAtr_Value;
 }} //namespace zen { namespace zeAss
 
 #endif

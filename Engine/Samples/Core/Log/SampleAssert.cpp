@@ -14,9 +14,9 @@ void SampleAssert()
 	bool bTestCriticalMsg(false);
 
 	CMgr::Log.Reset();
-	CMgr::Log.Log(CLog::keLog_Game, zenConst::kzLineA40);
-	CMgr::Log.Log(CLog::keLog_Game, " Assert test");
-	CMgr::Log.Log(CLog::keLog_Game, zenConst::kzLineA40);
+	CMgr::Log.Log(zbLog::keLog_Game, zenConst::kzLineA40);
+	CMgr::Log.Log(zbLog::keLog_Game, " Assert test");
+	CMgr::Log.Log(zbLog::keLog_Game, zenConst::kzLineA40);
 	
 	ZENWarning(bTestWarning);
 	ZENWarningMsg(bTestWarningMsg, "Warning with message" );

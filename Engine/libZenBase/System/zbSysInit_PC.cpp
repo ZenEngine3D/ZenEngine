@@ -1,6 +1,6 @@
 #include "libZenBase.h"
 
-namespace CSys
+namespace zbSys
 {		
 	static bool			sbSystemStarted(false);						//!< True if the system has been initialized
 	static bool			sbEngineStarted(false);						//!< True if the engine's managers have been initialized

@@ -3,7 +3,7 @@
 #define __LibZenBase_Log_All_h__ 
 
 //=================================================================================================
-//! @file		CLogAll.h
+//! @file		zbLogAll.h
 //! @brief		All header files includes for @b LibCore subsection @b Logs.
 //! @n@n		See @ref LibCore-Log module for more infos.
 //-------------------------------------------------------------------------------------------------
@@ -12,6 +12,6 @@
 //! @section 	LibCore-Log-Brief More details
 //!				This is a component of the @ref LibCore Library.
 //=================================================================================================
-#include <Engine/libZenBase/Io/Log/CLogMgr.h>
+#include <Engine/libZenBase/Io/Log/zbLogMgr.h>
 
 #endif

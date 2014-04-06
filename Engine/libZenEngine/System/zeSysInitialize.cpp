@@ -61,7 +61,7 @@ bool ShutdownEngine()
 //==================================================================================================
 bool EngineStart()
 {
-	return CSys::StartupSystem(StartupEngine, ShutdownEngine);
+	return zbSys::StartupSystem(StartupEngine, ShutdownEngine);
 }
 
 //==================================================================================================
@@ -71,7 +71,7 @@ bool EngineStart()
 //==================================================================================================
 void EngineStop()
 {	
-	CSys::ShutdownSystem();
+	zbSys::ShutdownSystem();
 }
 
 }
