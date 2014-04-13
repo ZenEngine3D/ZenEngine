@@ -41,6 +41,7 @@ bool ZendoApp::OnInit()
 	if ( !wxApp::OnInit() )
 		return false;
 
+	//! @todo Asset : Remove Test Asset/Property
 	char zBuffer[256];
 	/*
 	zeAss::TestProperty Test;
@@ -54,10 +55,7 @@ bool ZendoApp::OnInit()
 	zenAss::zAssetItem rTest2;
 	rTest2 = rTest;
 	rTest.GetValue(0).ToString( sizeof(zBuffer), zBuffer);
-	rTest.GetValue(0).ToXml( sizeof(zBuffer), zBuffer);
 	rTest.GetValue(1).ToString( sizeof(zBuffer), zBuffer);
-	rTest.GetValue(1).ToXml( sizeof(zBuffer), zBuffer);
-
 	
 	wxInitAllImageHandlers();
 	static EngineInstance Engine;

@@ -18,14 +18,21 @@ PropertyValue::PropertyValue()
 {
 }
 
-zenConst::eAssetPropertyType PropertyValue::GetType() const					
-{ 
-	return mpDefinition->meType;		
-}
-
 const PropertyBase*	PropertyValue::GetProperty()const
 { 
 	return mpDefinition;
+}
+
+zenConst::eAssetPropertyType PropertyValue::GetType() const					
+{ 
+	ZENAssert( mpDefinition && mpValue );
+	return mpDefinition->meType;		
+}
+
+bool PropertyValue::IsDefault() const
+{
+	ZENAssert( mpDefinition && mpValue );
+	return mpDefinition->IsDefault(mpValue);
 }
 
 void PropertyValue::Allocate(const PropertyBase& _PropertyDef)
@@ -56,19 +63,6 @@ zUInt PropertyValue::ToString(zUInt _uLen, char* _zOutString)const
 	ZENAssert( mpDefinition && mpValue );
 	return mpDefinition->ToString(mpValue, _uLen, _zOutString);
 }
-
-zUInt PropertyValue::ToXml(zUInt _uLen, char* _zOutString)const
-{
-	ZENAssert( mpDefinition && mpValue );
-	return mpDefinition->ToXml(mpValue, _uLen, _zOutString);
-}
-
-void PropertyValue::FromXml(const char* _zValue)
-{
-	ZENAssert( mpDefinition && mpValue );
-	return mpDefinition->FromXml(_zValue, mpValue);
-}
-
 
 }} //namespace zen { namespace zenAss
 

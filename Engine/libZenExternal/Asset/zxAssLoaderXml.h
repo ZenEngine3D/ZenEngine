@@ -13,15 +13,13 @@ class AssetLoaderXml : public zeAss::AssetLoader
 {
 ZENClassDeclare(AssetLoaderXml, zeAss::AssetLoader)
 public:
-	virtual bool	Load();
-	virtual bool	Save();
+	virtual bool	LoadPackages();
 	virtual bool	Save(zenAss::zPackage& _rPackage);
 
 protected:
 	bool			LoadPackage(const zbFile::Filename& _Filename);	
-	bool			LoadAsset(zeAss::Package& _Package, const pugi::xml_node& _AssetXmlNode);	
-	bool			SavePackage(const zeAss::Package& _Package);
-	bool			SaveAsset();
+	bool			LoadAsset(zeAss::Package& _Package, const pugi::xml_node& _XmlNodeAsset);	
+	bool			SaveAsset(zenAss::zAssetItem _rAsset, pugi::xml_node& _XmlNodeDoc);
 };
 
 }} //namespace zen { namespace zxAss

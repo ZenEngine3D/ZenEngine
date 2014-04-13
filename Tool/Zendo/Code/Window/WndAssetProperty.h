@@ -9,12 +9,12 @@ class WndAssetProperty : public wxPanel
 public:
 										WndAssetProperty(wxWindow *parent, const wxString& title);
 										~WndAssetProperty();
-	void								AddAssetTab(zHash64 _hAssetID);
+	void								AddAssetTab(zenAss::zAssetItem rEditItem);
 protected:
 	
 	DECLARE_EVENT_TABLE()
-	wxAuiNotebook*							mpNotebook;
-	zMap<BCtrl::TabAssetProperty*>::Key64	mdTabPerAsset;
+	wxAuiNotebook*									mpNotebook;
+	zArraySparse<BCtrl::TabAssetProperty*>::Key32	mdTabPerAsset;
 };
 
 #endif

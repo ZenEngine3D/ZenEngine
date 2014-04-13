@@ -16,10 +16,9 @@ namespace zen { namespace zenAss
 										zAssetItem();
 										zAssetItem(const zAssetItem& _Copy);
 										zAssetItem(zeAss::Asset* _pAsset);
-		zHash64							GetID()const;
+		zU32							GetID()const;
 		const zString&					GetName()const;
 		const zArrayStatic<zString>&	GetGroupAndName()const;
-		zHash32							GetGroupID()const;
 		const zString&					GetDescription()const;
 		zUInt							GetValueCount()const;
 		zenConst::eAssetType			GetType()const;
@@ -31,10 +30,11 @@ namespace zen { namespace zenAss
 		zAssetItem&						operator=(const zAssetItem& _Copy);		
 	};
 	
+	typedef zArraySparse<zenAss::zAssetItem>::Key32 zArrayAsset;
 	zAssetItem							AssetCreate			(zenConst::eAssetType _eAssetType);
 	const char*							AssetTypeToString	(zenConst::eAssetType _ePropertyType);
 	zenConst::eAssetType				AssetNameToType		(zHash32 _hAssetName);
-	const zAssetItem&					AssetGet			( zHash64 _hAssetID ); //! @todo Asset: Move to an asset manager at api level?
+	const zAssetItem&					AssetGet			(zenConst::eAssetType _eAssetType, zU32 _uAssetID); //! @todo Asset: Move to an asset manager at api level?
 
 	class zAssetTexture2D : public zAssetItem
 	{

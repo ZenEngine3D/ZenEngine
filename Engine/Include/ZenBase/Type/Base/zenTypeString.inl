@@ -41,6 +41,30 @@ zString& zString::operator+=(const char* _zString)
 	zenMem::Copy(&maChar[uOldCount-1], _zString, uLen+1);
 	return *this;
 }
+
+bool zString::operator==(const char* _zCmpString)const
+{
+	const char* pLocalCur = maChar.First();
+	const char* pExternCur = _zCmpString;
+	while( *pLocalCur && (*pLocalCur==*pExternCur) )
+	{
+		++pLocalCur;
+		++pExternCur;
+	}
+	return *pLocalCur == *pExternCur;
+}
+
+bool zString::operator==(const zString& _zString)const
+{	
+	return	(maChar.Count() == _zString.maChar.Count()) &&
+			(*this == _zString.maChar.First());
+}
+
+zUInt zString::Len()const
+{
+	return maChar.Count()-1;
+}
+
 zString::operator const char*() const 
 { 
 	return maChar.First();
@@ -49,6 +73,16 @@ zString::operator const char*() const
 const char* zString::Last(zUInt index)const
 {
 	return &maChar[maChar.Count() >= index+2 ? maChar.Count()-2-index : 0];
+}
+
+void zString::Split(char _Separator, zArrayStatic<zString>& _aStringOut, zUInt _uAdditionalArraySize )const
+{
+	Split(maChar.First(), _Separator, _aStringOut, _uAdditionalArraySize);
+}
+
+void zString::Merge(const zArrayStatic<zString>& _aStrings, char _Separator, zInt _iMaxEntry)
+{
+	Merge(_aStrings, _Separator, *this, _iMaxEntry);
 }
 
 }}  //namespace zen, Type 

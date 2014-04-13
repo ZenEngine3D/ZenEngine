@@ -19,12 +19,12 @@ zInt GfxMesh::GetValueIndex(zHash32 _hPropertyName)const
 	return sdPropertyIndex[_hPropertyName];
 }
 
-const zenAss::PropertyArray& GfxMesh::GetProperties()const
+const zenAss::zArrayProperty& GfxMesh::GetProperties()const
 { 	
 	//zMap<zU32>::Key32					mdPropertyIndex; todo
 	static const zenAss::PropertyFile	Property00("Source",		"", "3D Model", true,	"", "");
 	static const zenAss::PropertyBase*	aPropertiesAll[] = {&Property00};
-	static zenAss::PropertyArray		saProperties( aPropertiesAll, ZENArrayCount(aPropertiesAll) );
+	static zenAss::zArrayProperty		saProperties( aPropertiesAll, ZENArrayCount(aPropertiesAll) );
 	return saProperties;
 }
 

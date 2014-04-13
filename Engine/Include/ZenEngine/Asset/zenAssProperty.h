@@ -17,9 +17,8 @@ namespace zen { namespace zenAss
 	protected:
 												PropertyBase( const char* _zName, zenConst::eAssetPropertyType _eType, const char* _zDisplayName, const char* _zDescription, bool _bShowInAssetDesc );
 		virtual zUInt							ToString	( const void* _pValue, zUInt _uLen, char* _zOutString)const=0;
-		virtual zUInt							ToXml		( const void* _pValue, zUInt _uLen, char* _zOutString)const=0;
-		virtual void							FromXml		( const char* _zValue, void* _pOutValue )const=0;
-	public:				
+		virtual bool							IsDefault	( const void* _pValue )const=0;
+	public:
 		zStringHash32							mName;
 		zenConst::eAssetPropertyType			meType;
 		const char*								mzDisplayName;
@@ -40,8 +39,25 @@ namespace zen { namespace zenAss
 		Data				mDefault;
 	protected:
 		virtual zUInt		ToString	(const void* _pValue, zUInt _uLen, char* _zOutString)const;
-		virtual zUInt		ToXml		(const void* _pValue, zUInt _uLen, char* _zOutString)const;
-		virtual void		FromXml		(const char* _zValue, void* _pOutValue )const;
+		virtual bool		IsDefault	(const void* _pValue)const;	
+	};
+
+	//=============================================================================================
+	// Property : Bool
+	//=============================================================================================
+	class PropertyFloat : public PropertyBase
+	{
+	ZENClassDeclare(PropertyFloat, PropertyBase)
+	public:
+		typedef float		Data;		
+							PropertyFloat(const char* _zName, const char* _zDisplayName, const char* _zDescription, bool _bShowInAssetDesc, float _Default, float _Inc=1, float _Min=0.f, float _Max=1.f );
+		Data				mDefault;
+		float				mValMin;
+		float				mValMax;
+		float				mValInc;
+	protected:
+		virtual zUInt		ToString	(const void* _pValue, zUInt _uLen, char* _zOutString)const;
+		virtual bool		IsDefault	(const void* _pValue)const;	
 	};
 
 	//=============================================================================================
@@ -58,8 +74,7 @@ namespace zen { namespace zenAss
 		const char*			mzFileExt;	//!< List of supported files extensions to display in file dialog
 	protected:
 		virtual zUInt		ToString	(const void* _pValue, zUInt _uLen, char* _zOutString)const;
-		virtual zUInt		ToXml		(const void* _pValue, zUInt _uLen, char* _zOutString)const;
-		virtual void		FromXml		(const char* _zValue, void* _pOutValue )const;
+		virtual bool		IsDefault	(const void* _pValue)const;	
 	};
 
 	//=============================================================================================
@@ -75,8 +90,7 @@ namespace zen { namespace zenAss
 		ZENForceInline void							Reset		();
 		ZENForceInline const PropertyBase*			GetProperty	()const;
 		ZENInline zUInt								ToString	(zUInt _zLen, char* _zOutString)const;
-		ZENInline zUInt								ToXml		(zUInt _zLen, char* _zOutString)const;
-		ZENInline void								FromXml		(const char* _zValue);
+		ZENInline bool								IsDefault	()const;
 	#define ZEN_ASSETPROPERTIES_EXPAND_CODE(_TypeName_)																							\
 	ZENInline bool									Is##_TypeName_()const			{return GetType()==zenConst::keAssProp_##_TypeName_##;}			\
 	ZENInline const Property##_TypeName_##::Data&	GetValue##_TypeName_()const		{ZENAssert(Is##_TypeName_##()); return *mpValue##_TypeName_;}	\
@@ -96,7 +110,7 @@ namespace zen { namespace zenAss
 		#undef	ZEN_ASSETPROPERTIES_EXPAND_CODE
 	};
 
-	typedef const zArrayStatic<const PropertyBase*> PropertyArray;
+	typedef const zArrayStatic<const PropertyBase*> zArrayProperty;
 }} //namespace zen { namespace zenAss
 
 #endif

@@ -76,13 +76,13 @@ namespace zen { namespace zeAss
 		return sdPropertyIndex[_hPropertyName];
 	}
 
-	const zenAss::PropertyArray& GfxTexture2D::GetProperties()const
+	const zenAss::zArrayProperty& GfxTexture2D::GetProperties()const
 	{ 	
 		//zMap<zU32>::Key32					mdPropertyIndex; todo
 		static const zenAss::PropertyBool	Property00("TestBool",		"", "Test Bool Field",		true,	false);		
 		static const zenAss::PropertyFile	Property02("Source",		"", "Texture file",			true,	"C:\\temp\\test.txt", "Images|*.bmp;*.png;*.jpeg;*.jpg|BMP(*.bmp)|*.bmp|PNG(*.png)|*.png|JPEG(*.jpg;*.jpeg)|*.jpg;*.jpeg");
 		static const zenAss::PropertyBase*	aPropertiesAll[] = {&Property00, &Property02 };
-		static zenAss::PropertyArray		saProperties( aPropertiesAll, ZENArrayCount(aPropertiesAll) );
+		static zenAss::zArrayProperty		saProperties( aPropertiesAll, ZENArrayCount(aPropertiesAll) );
 		return saProperties;
 	}
 

@@ -6,10 +6,11 @@ namespace zen { namespace zenConst {
 
 enum eEngineVersion
 {
-	keEngineVersion_FirstRelease,
+	keEngineVersion__None,
+	keEngineVersion_Initial,
 	keEngineVersion__Total,
-	keEngineVersion__Current=keEngineVersion__Total-1,
 	keEngineVersion__Invalid,
+	keEngineVersion__Current=keEngineVersion__Total-1,	
 };
   
 

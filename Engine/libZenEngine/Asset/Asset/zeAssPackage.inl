@@ -2,7 +2,7 @@
 namespace zen { namespace zeAss
 {
 
-zHash64 Package::GetID()const
+zU32 Package::GetID()const
 {
 	return mID;
 }
@@ -17,12 +17,17 @@ const zString& Package::GetName()const
 	return *maGroup.Last();
 }
 
-const zenAss::zAssetItem& Package::GetAsset(zenConst::eAssetType _eType, zHash64 _hAssetName)
+const zString& Package::GetStorageName()const
 {
-	return madAssetPerType[_eType][_hAssetName];
+	return mzStorageName;
 }
 
-const zMap<zenAss::zAssetItem>::Key64& Package::GetAsset(zenConst::eAssetType _eType)
+const zenAss::zAssetItem& Package::GetAsset(zenConst::eAssetType _eType, zU32 _uAssetID)
+{
+	return madAssetPerType[_eType][_uAssetID];
+}
+
+const zenAss::zArrayAsset& Package::GetAsset(zenConst::eAssetType _eType)
 {
 	return madAssetPerType[_eType];
 }
@@ -36,27 +41,6 @@ void Package::AssetAdd(zeAss::Asset& _Asset)
 void Package::AssetRem(zeAss::Asset& _Asset)
 {
 	madAssetPerType[_Asset.GetType()].Unset( _Asset.GetID() );
-}
-
-//=================================================================================================
-//! @brief		Initialize a Package
-//! @details	Receive all needed infos to load a Package.
-//-------------------------------------------------------------------------------------------------
-//! @param		_zGroup		- String (separated by '\') giving the group hierarchy to put package under
-//! @param		_Filename	- Filename of the Package
-//=================================================================================================
-void Package::Init(const char* _zGroup, const zbFile::Filename& _Filename )
-{
-	char zName[128];
-
-	wcstombs(zName,_Filename.GetNameNoExt(),sizeof(zName));	//! @todo Optim: needed?
-	ParseGroupAndName(zName, _zGroup, maGroup );
-
-	mID			= zHash32(_Filename.GetNameFull());
-	mhGroupID	= zHash32("Package");
-	mFilename	= _Filename;
-	for(int idx(0), count(maGroup.Count()-1); idx<count; ++idx )
-		mhGroupID.Append( maGroup[idx] );
 }
 
 }} //namespace zen { namespace zeAss

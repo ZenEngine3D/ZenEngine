@@ -9,7 +9,7 @@ struct ExportInfoBase
 {
 								ExportInfoBase();
 								~ExportInfoBase();
-	zResID			mExportResID;		//!< Export Resource ID (temporarily ID assigned until exported)
+	zResID						mExportResID;		//!< Export Resource ID (temporarily ID assigned until exported)
 	void*						mpExportInfoExt;	//!< Use to extended export info, particular to one platform instead of all
 	zU8							mbSuccessStart	: 1;
 	zU8							mbSuccessWork	: 1;
@@ -28,7 +28,7 @@ protected:
 	virtual bool				ExportStart();									//!< @brief Called from Thread:Main before the start of export
 	virtual bool				ExportWork(bool _bIsTHRTask){return TRUE;};		//!< @brief Called from Thread:Main or Thread:Task for main export operation (must be threadsafe)
 	virtual bool				ExportEnd();									//!< @brief Called from Thread:Main, for some post export task 
-	ZENInline	void				ExportSkipWork();								//!< @brief Call in ExportStart to avoid launching a job for this
+	ZENInline	void			ExportSkipWork();								//!< @brief Call in ExportStart to avoid launching a job for this
 
 	//static zResID	ValidateItemID(zenConst::eResPlatform _ePlatform, zenConst::eResType _eType, zenConst::eResSource _eSource, zResID::NameHash _hName, bool& _bExistOut);
 

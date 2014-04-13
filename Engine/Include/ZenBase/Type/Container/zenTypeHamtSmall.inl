@@ -56,7 +56,7 @@ int zHamt<TKey, TValue, TIndex, TIndexBits>::Node::GetFirstUsedSlotID()const
 template<class TKey, class TValue, class TIndex, int TIndexBits>
 int zHamt<TKey, TValue, TIndex, TIndexBits>::Node::GetLastUsedSlotID()const 
 { 
-	static_cast<int>(zenMath::BitsCount( mIndexUsed ))-1; 
+	return static_cast<int>(zenMath::BitsCount( mIndexUsed ))-1; 
 }
 
 //=================================================================================================
@@ -506,18 +506,18 @@ void zHamt< TKey, TValue, TIndex, TIndexBits>::GetLast(Iterator& _It) const
 {	
 	if( mpRootNode->GetSlotCount() == 0 )
 	{
-		aIt.msDepth = -1;
+		_It.msDepth = -1;
 		return;
 	}
 	Node* pNode(mpRootNode);
-	aIt.mpNodeTree[0]	= pNode;
-	aIt.mpSlotID[0]		= pNode->GetLastUsedSlotID();	
-	aIt.msDepth			= 0;
-	while( !pNode->IsLeafSlot( _It.mpSlotID[aIt.msDepth] ) )
+	_It.mpNodeTree[0]	= pNode;
+	_It.mpSlotID[0]		= pNode->GetLastUsedSlotID();	
+	_It.msDepth			= 0;
+	while( !pNode->IsLeafSlot( _It.mpSlotID[_It.msDepth] ) )
 	{
-		pNode							= pNode->mpSlots[ _It.mpSlotID[aIt.msDepth] ].pChildNode;		
-		aIt.mpNodeTree[++aIt.msDepth]	= pNode;
-		aIt.mpSlotID[aIt.msDepth]		= pNode->GetLastUsedSlotID();
+		pNode							= pNode->mpSlots[ _It.mpSlotID[_It.msDepth] ].pChildNode;		
+		_It.mpNodeTree[++_It.msDepth]	= pNode;
+		_It.mpSlotID[_It.msDepth]		= pNode->GetLastUsedSlotID();
 	}
 }
 

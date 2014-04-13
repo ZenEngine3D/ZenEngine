@@ -8,32 +8,33 @@ namespace zen { namespace zeAss
 	class Package : public zRefCountedAutoDel
 	{
 	ZENClassDeclare(Package, zRefCountedAutoDel)
-	public:
-															Package			();
-		virtual												~Package		();
+	public:		
+													Package			();
+		virtual										~Package		();
 				
-		ZENInline zHash64									GetID			()const;
-		ZENInline const zArrayStatic<zString>&				GetGroupAndName	()const;
-		ZENInline const zString&							GetName			()const;
-		ZENInline const zenAss::zAssetItem&					GetAsset		(zenConst::eAssetType _eType, zHash64 _hAssetName);
-		ZENInline const zMap<zenAss::zAssetItem>::Key64&	GetAsset		(zenConst::eAssetType _eType);
+		ZENInline zU32								GetID			()const;
+		ZENInline const zArrayStatic<zString>&		GetGroupAndName	()const;
+		ZENInline const zString&					GetName			()const;
+		ZENInline const zString&					GetStorageName	()const;
+
+		ZENInline const zenAss::zAssetItem&			GetAsset		(zenConst::eAssetType _eType, zU32 _uAssetID);
+		ZENInline const zenAss::zArrayAsset&		GetAsset		(zenConst::eAssetType _eType);
 		
-		void												Unload			();		//! @todo Asset: Useful?
+		void										Unload			();		//! @todo Asset: Useful?
+		bool										Save			();
 
-		ZENInline void										Init			(const char* _zGroup, const zbFile::Filename& _Filename);
-		ZENInline void										AssetAdd		(zeAss::Asset& _Asset);
-		ZENInline void										AssetRem		(zeAss::Asset& _Asset);
+		bool										Init			(zU32 _uID, const char* _zName, const char* _zGroup, const char* _zStorageName, zU32 _uEngineVer);
+		ZENInline void								AssetAdd		(zeAss::Asset& _Asset);
+		ZENInline void								AssetRem		(zeAss::Asset& _Asset);
+		
 	protected:		
-		zHash64												mID;				//!< Package ID, taken from path		
-		zArrayStatic<zString>								maGroup;			//!< Package belongs to a group hierarchy for easier finding of packages (last element is package name)
-		zHash32												mhGroupID;			//!< Group ID of this package
-		zbFile::Filename									mFilename;			//!< Full path to package file
-		zArrayStatic<zMap<zenAss::zAssetItem>::Key64>		madAssetPerType;	//!< Asset dictionary per Asset type
-		friend class ManagerAsset;
-		friend class AssetLoader;
-	};
+		zU32										mID;				//!< Package ID, taken from path		
+		zU32										muEngineVersion;	//!< Engine version used to save the package
+		zArrayStatic<zString>						maGroup;			//!< Package belongs to a group hierarchy for easier finding of packages (last element is package name)
+		zString										mzStorageName;		//!< Where to save this package(filename, database entry id, etc....)
+		zArrayStatic<zenAss::zArrayAsset>			madAssetPerType;	//!< Asset array per Asset type
 
-	void ParseGroupAndName(const char* _zName, const char* _zGroup, zArrayStatic<zString>& _aOutGroup );
+	};
 }} //namespace zen { namespace zeAss
 
 #endif

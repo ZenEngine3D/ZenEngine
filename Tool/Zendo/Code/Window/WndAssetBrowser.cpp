@@ -258,7 +258,7 @@ void WndAssetBrowser::UpdateAssetList()
 			zenConst::eAssetType	eTypeIdx = (zenConst::eAssetType)typIdx;
 			if( mAssetTypeMask.Any( eTypeIdx ) )
 			{
-				zMap<zenAss::zAssetItem>::Key64::Iterator it;
+				zenAss::zArrayAsset::Iterator it;
 				rPackage.GetAssets( eTypeIdx ).GetFirst(it);
 				while( it.IsValid() )
 				{
@@ -304,8 +304,8 @@ void WndAssetBrowser::UpdateAssetList()
 
 void WndAssetBrowser::AddPackages()
 {
-	const zMap<zenAss::zPackage>::Key64& dAllPackages = zenAss::GetPackages();
-	zMap<zenAss::zPackage>::Key64::Iterator it;	
+	const zenAss::zArrayPackage& dAllPackages = zenAss::GetPackages();
+	zenAss::zArrayPackage::Iterator it;	
 	mpTreePackage->DeleteAllItems();
 
 	zUInt packIdx(0);
@@ -499,7 +499,7 @@ void WndAssetBrowser::OnAssetViewActivated(wxListEvent& event)
 {
 	zenAss::zAssetItem* prItem = reinterpret_cast<zenAss::zAssetItem*>(event.GetItem().GetData());
 	if( prItem )
-		wxGetApp().mpFrame->GetWndAssetProperty()->AddAssetTab( prItem->GetID() );
+		wxGetApp().mpFrame->GetWndAssetProperty()->AddAssetTab( *prItem );
 }
 
 //=================================================================================================
