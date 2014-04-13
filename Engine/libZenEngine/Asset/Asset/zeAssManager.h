@@ -13,25 +13,26 @@ public:
 											ManagerAsset	();
 	void									PackageLoad		();
 	
-	void									PackageRename	( zHash64 _hOldID, zHash64 _hNewID);
-	void									PackageRemove	( zHash64 _hPackageID );	
-	const zenAss::zPackage&					PackageGet		( zHash64 _hPackageID );
-	const zMap<zenAss::zPackage>::Key64&	PackageGet		()const{return mdPackage;}
-
-	const zenAss::zAssetItem&				AssetGet		( zHash64 _hAssetID )const;
-	const zMap<zenAss::zAssetItem>::Key64&	AssetGet		()const{return mdAsset;}
+	//void									PackageRename	( zHash64 _hOldID, zHash64 _hNewID);
+	void									PackageRemove	( zU32 _uPackageID );	
+	const zenAss::zPackage&					PackageGet		( zU32 _uPackageID );
+	bool									PackageSave		( zU32 _uPackageID );
+	const zenAss::zArrayPackage&			PackageGet		()const{return mdPackage;}
+	
+	const zenAss::zAssetItem&				AssetGet		( zenConst::eAssetType _eType, zU32 _hAssetID )const;
+	const zenAss::zArrayAsset&				AssetGet		( zenConst::eAssetType _eType )const;
 	
 	void									AssetAdd		( zeAss::Asset* _pAsset );
-	void									AssetRem		( zHash64 _hAssetID );
-
+	void									AssetRem		( zenConst::eAssetType _eType, zU32 _uAssetID );
+	ZENInline zU32							GetAssetNextID(zenConst::eAssetType _eType){ ZENAssert(_eType < zenConst::keAssType__Count); return maAssetNextID[_eType]++;};
+	ZENInline zU32							GetPackageNextID(){return muPackageNextID++;};
 protected:
 	void									PackageAdd		( zeAss::Package* _pPackage );
 
-	void									PackageLoad		(const zString& _zDir);
-
-	zMap<zenAss::zPackage>::Key64			mdPackage;					//!< All existing package
-	zMap<zenAss::zAssetItem>::Key64			mdAsset;					//!< All existing assets
-	
+	zenAss::zArrayPackage					mdPackage;									//!< All existing package
+	zenAss::zArrayAsset						madAsset[zenConst::keAssType__Count];		//!< All existing assets
+	zU32									muPackageNextID;
+	zU32									maAssetNextID[zenConst::keAssType__Count];
 //---------------------------------------------------------
 // ManagerBase Section
 //---------------------------------------------------------
@@ -41,7 +42,7 @@ public:
 	friend class AssetLoader;
 };	
 
-void ResetAssetReference( zMap<zenAss::zAssetItem>::Key64& _dAssets, zenAss::zAssetItem& _rAssetDel);
+void ResetAssetReference( zenAss::zArrayAsset& _dAssets, zenAss::zAssetItem& _rAssetDel);
 
 }} //namespace zen { namespace zeAss
 

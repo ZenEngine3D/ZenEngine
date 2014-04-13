@@ -33,24 +33,23 @@ Asset* Asset::CreateItem( zenConst::eAssetType _eAssetType )
 
 Asset::Asset()	
 : mrPackage(NULL)
-, mhID("")
+, muID(0)
 {
-	static zU64 sCounter(1);
-	mhID = sCounter++; //! @todo Asset: fix this (HACK)	
+	static zU32 sCounter(1);
+	muID = sCounter++; //! @todo Asset: fix this (HACK)	
 }
 
 Asset::~Asset()	
 {
 }
 
-void Asset::Init(Package& _ParentPkg, const char* _zName, const char* _zGroup)
+void Asset::Init(zU32 _uID, const char* _zName, const char* _zGroup, Package& _ParentPkg)
 {	
-	ParseGroupAndName(_zName, _zGroup, maGroup);
-	//mhID		= 0;//! @todo Asset: Load proper asset id
-	mrPackage = &_ParentPkg;
-	mhGroupID = zHash32("Asset");
-	for(int idx(0), count(maGroup.Count()-1); idx<count; ++idx )
-		mhGroupID.Append( maGroup[idx] );
+	zString::Split(_zGroup, '\\', maGroup, 1);
+	*maGroup.Last() = _zName;
+
+	muID		= _uID != 0 ? _uID :  zeMgr::Asset.GetAssetNextID( GetType() ); 
+	mrPackage	= &_ParentPkg;
 
 	SetPackage( &_ParentPkg );
 	zeMgr::Asset.AssetAdd(this);
@@ -111,7 +110,7 @@ void Asset::InitDefault()
 	// Need to allocate value (which sets it to default)
 	else
 	{
-		const zenAss::PropertyArray& aProperties = GetProperties();	
+		const zenAss::zArrayProperty& aProperties = GetProperties();	
 		ZENAssert(aProperties.Count() > 0 );
 		maPropertyValue.SetCount( aProperties.Count() );
 		const zenAss::PropertyBase* const*	pPropCur	= aProperties.First();
@@ -135,7 +134,7 @@ void Asset::InitDefault()
 //=================================================================================================
 bool Asset::InitPropertyMap(zMap<zInt>::Key32& _dPropertyMap)const
 {	
-	const zenAss::PropertyArray& aPropertyDef = GetProperties();
+	const zenAss::zArrayProperty& aPropertyDef = GetProperties();
 	_dPropertyMap.Init(aPropertyDef.Count()*2);
 	_dPropertyMap.SetDefaultValue(-1);
 	for(zInt idx(0), count(aPropertyDef.Count()); idx<count; ++idx)
@@ -157,13 +156,14 @@ zInt TestProperty::GetValueIndex(zHash32 _hPropertyName)const
 	return sdPropertyIndex[_hPropertyName];
 }
 
-const zenAss::PropertyArray& TestProperty::GetProperties()const
+const zenAss::zArrayProperty& TestProperty::GetProperties()const
 { 	
 	//zMap<zU32>::Key32					mdPropertyIndex; todo
-	static const zenAss::PropertyBool	Property00("TestBool",		"", "Test Bool Field",		true,	false);		
-	static const zenAss::PropertyFile	Property02("Source",		"", "Texture file",			true,	"C:\\temp\\test.txt", "Images|*.bmp;*.png;*.jpeg;*.jpg|BMP(*.bmp)|*.bmp|PNG(*.png)|*.png|JPEG(*.jpg;*.jpeg)|*.jpg;*.jpeg");
-	static const zenAss::PropertyBase*	aPropertiesAll[] = {&Property00, &Property02 };
-	static zenAss::PropertyArray		saProperties( aPropertiesAll, ZENArrayCount(aPropertiesAll) );
+	static const zenAss::PropertyBool	Property00("PropertyBool",		"", "Property test: Bool",	true,	false);		
+	static const zenAss::PropertyFloat	Property01("PropertyFloat",		"", "Property test: Float",	true,	0, 0.1, -10, 10);		
+	static const zenAss::PropertyFile	Property02("PropertyFile",		"", "Property test: File",	true,	"C:\\temp\\test.txt", "Images|*.bmp;*.png;*.jpeg;*.jpg|BMP(*.bmp)|*.bmp|PNG(*.png)|*.png|JPEG(*.jpg;*.jpeg)|*.jpg;*.jpeg");
+	static const zenAss::PropertyBase*	aPropertiesAll[] = {&Property00, &Property01, &Property02 };
+	static zenAss::zArrayProperty		saProperties( aPropertiesAll, ZENArrayCount(aPropertiesAll) );
 	return saProperties;
 }
 

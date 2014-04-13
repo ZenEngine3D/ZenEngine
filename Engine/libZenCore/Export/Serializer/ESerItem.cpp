@@ -2,19 +2,18 @@
 
 namespace EExp
 {
-	const SerialItem::Version SerialItem::sVersions[]=
+	const zenConst::eEngineVersion SerialItem::sVersions[]=
 	{
-		//							Major		Minor		
-		SerialItem::Version(		0,			1		),		// keItem_GfxShaderVertex_DX11,
-		SerialItem::Version(		0,			1		),		// keItem_GfxShaderPixel_DX11,
-		SerialItem::Version(		0,			1		),		// keItem_ShaderVertex_GLSL4,
-		SerialItem::Version(		0,			1		),		// keItem_ShaderPixel_GLSL4,
+		zenConst::keEngineVersion_Initial,		// keItem_GfxShaderVertex_DX11,
+		zenConst::keEngineVersion_Initial,		// keItem_GfxShaderPixel_DX11,
+		zenConst::keEngineVersion_Initial,		// keItem_ShaderVertex_GLSL4,
+		zenConst::keEngineVersion_Initial,		// keItem_ShaderPixel_GLSL4,
 	};
 
 	SerialItem::SerialItem()
 	: muSize(0)
 	, mExportTime(0)	
-	, mVersion(0,0)
+	, muVersion(zenConst::keEngineVersion__Current)
 	{
 		ZENStaticAssert( ZENArrayCount(sVersions)==zenConst::keResType__Count );
 	}
@@ -23,10 +22,8 @@ namespace EExp
 	{				
 		bool bSuccess	 = aSerializer.Serialize(muSize);		
 		bSuccess		&= aSerializer.Serialize(mResID);		
-		bSuccess		&= aSerializer.Serialize(mVersion.muEngine);
-		bSuccess		&= aSerializer.Serialize(mVersion.muMajor);
-		bSuccess		&= aSerializer.Serialize(mVersion.muMinor);		
-		bSuccess		&= aSerializer.Serialize(mExportTime);
-		return bSuccess && mVersion.IsValid(mResID.Type());
+		bSuccess		&= aSerializer.Serialize(muVersion);
+		bSuccess		&= aSerializer.Serialize(mExportTime);		
+		return bSuccess && muVersion <= sVersions[mResID.Type()];
 	}
 }

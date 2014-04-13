@@ -15,20 +15,20 @@ public:
 		keIco_Asset128,
 		keIco__Count
 	};
-							ZendoApp();
-	virtual bool			OnInit();
-	virtual int				OnExit();
+									ZendoApp();
+	virtual bool					OnInit();
+	virtual int						OnExit();
 	//virtual int				MainLoop();
 	//void onIdle(wxIdleEvent& evt);
 
-	bool					InitResources();
-	const wxIcon*			GetIcon(const zenAss::zAssetItem& _rAsset);
-	WndMain*				mpFrame;
+	bool							InitResources();
+	const wxIcon*					GetIcon(const zenAss::zAssetItem& _rAsset);
+	WndMain*						mpFrame;
 
-	wxImageList*			maIcon[keIco__Count];
+	wxImageList*					maIcon[keIco__Count];
 
 protected:
-	zMap<wxIcon*>::Key64	mdAssetIcon;	//!< Buffer asset icon so they only get built once
+	zArraySparse<wxIcon*>::Key32	mdAssetIcon;	//!< Buffer asset icon so they only get built once
 };
 
 ZendoApp& wxGetApp();

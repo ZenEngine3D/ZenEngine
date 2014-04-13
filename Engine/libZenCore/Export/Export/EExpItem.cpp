@@ -58,7 +58,7 @@ namespace EExp
 	{		
 		if( mpExportInfo->IsSuccess() )
 		{
-			mVersion		= sVersions[mResID.Type()];
+			muVersion		= sVersions[mResID.Type()];
 			mExportTime		= zenSys::GetTimeStamp();			
 			EMgr::SerialItems.SetItem(this);
 		}		

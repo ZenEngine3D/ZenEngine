@@ -5,8 +5,19 @@
 namespace zen { namespace zeAss
 {
 
-void AssetLoader::AddPackage(zeAss::Package* _pPackage)
+void AssetLoader::SavePackages()
 {
+	const zenAss::zArrayPackage& dPackages = zeMgr::Asset.PackageGet();
+	zenAss::zArrayPackage::Iterator itPkg;
+	dPackages.GetFirst(itPkg);
+	while( itPkg.IsValid() )
+	{
+		Save( itPkg.GetValue() );
+		++itPkg;
+	}
+}
+void AssetLoader::AddPackage(zeAss::Package* _pPackage)
+{	
 	zeMgr::Asset.PackageAdd(_pPackage);
 }
 

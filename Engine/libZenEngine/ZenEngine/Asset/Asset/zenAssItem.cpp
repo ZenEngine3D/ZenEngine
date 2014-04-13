@@ -40,9 +40,9 @@ zenConst::eAssetType AssetNameToType(zHash32 _hAssetName)
 	return idx < zenConst::keAssType__Count ? static_cast<zenConst::eAssetType>(idx) : zenConst::keAssType__Invalid;
 }
 
-const zAssetItem& AssetGet( zHash64 _hAssetID )
+const zAssetItem& AssetGet( zenConst::eAssetType _eAssetType, zU32 _uAssetID )
 {
-	return zeMgr::Asset.AssetGet(_hAssetID);
+	return zeMgr::Asset.AssetGet(_eAssetType, _uAssetID);
 }
 
 zAssetItem::zAssetItem()
@@ -66,7 +66,7 @@ zAssetItem& zAssetItem::operator=(const zAssetItem& _Copy)
 	return *this;
 }
 
-zHash64 zAssetItem::GetID()const								
+zU32 zAssetItem::GetID()const								
 { 
 	ZENAssert(mpReference);	
 	return mpReference->GetID(); 
@@ -86,11 +86,13 @@ const zArrayStatic<zString>& zAssetItem::GetGroupAndName()const
 	ZENAssert(mpReference);	
 	return mpReference->GetGroupAndName(); 
 }
+/*
 zHash32 zAssetItem::GetGroupID()const							
 { 
 	ZENAssert(mpReference);	
 	return mpReference->GetGroupID(); 
-}
+}*/
+
 const zString& zAssetItem::GetDescription()const				
 { 
 	ZENAssert(mpReference);	
@@ -115,7 +117,7 @@ void zAssetItem::InitDefault()
 void zAssetItem::Delete()
 {
 	ZENAssert(mpReference);
-	zeMgr::Asset.AssetRem( mpReference->GetID() );
+	zeMgr::Asset.AssetRem( mpReference->GetType(), mpReference->GetID() );
 	*this = NULL;
 }
 

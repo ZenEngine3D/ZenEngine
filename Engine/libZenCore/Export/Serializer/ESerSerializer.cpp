@@ -159,7 +159,7 @@ bool ISerializerExporter::ItemStarted(SerialItem& aItem)
 	{
 		aItem.muSize		= oGetItemSize.GetSerializeSize();			
 		aItem.mExportTime	= 0;
-		aItem.mVersion		= SerialItem::sVersions[aItem.mResID.meType];
+		aItem.muVersion		= SerialItem::sVersions[aItem.mResID.meType];
 		return true;
 	}
 	return false;

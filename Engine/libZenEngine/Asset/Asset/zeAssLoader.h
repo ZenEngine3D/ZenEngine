@@ -9,9 +9,11 @@ namespace zen { namespace zeAss
 class AssetLoader
 {
 ZENClassDeclareNoParent(AssetLoader)
-public:
-	virtual bool	Load()=0;
-	virtual bool	Save()=0;
+public:	
+	virtual bool	LoadPackages()=0;	 
+	void			SavePackages();
+	virtual bool	Save(zenAss::zPackage& _rPackage)=0;
+	
 
 protected:
 	void			AddPackage(zeAss::Package* _pPackage);

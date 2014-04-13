@@ -31,9 +31,9 @@ PropertyValue::~PropertyValue()
 //=================================================================================================
 // PROPERTY BOOL
 //=================================================================================================
-PropertyBool::PropertyBool(const char* _zName, const char* _zDisplayName, const char* _zDescription, bool _bShowInAssetDesc, bool _bDefault)
+PropertyBool::PropertyBool(const char* _zName, const char* _zDisplayName, const char* _zDescription, bool _bShowInAssetDesc, Data _Default)
 : PropertyBase(_zName, zenConst::keAssProp_Bool, _zDisplayName, _zDescription, _bShowInAssetDesc )
-, mDefault(_bDefault)
+, mDefault(_Default)
 {
 }
 
@@ -43,16 +43,34 @@ zUInt PropertyBool::ToString(const void* _pValue, zUInt _zLen, char* _zOutString
 	return ::sprintf_s(_zOutString, _zLen, "%s", zenConst::kzFalseTrue[*pValue]);
 }
 
-zUInt PropertyBool::ToXml(const void* _pValue, zUInt _zLen, char* _zOutString)const
+bool PropertyBool::IsDefault( const void* _pValue )const
 {
 	const Data* pValue = static_cast<const Data*>(_pValue);
-	return ::sprintf_s(_zOutString, _zLen, "%i", *pValue);
+	return *pValue == mDefault;
 }
 
-void PropertyBool::FromXml(const char* _zValue, void* _pOutValue)const
+//=================================================================================================
+// PROPERTY FLOAT
+//=================================================================================================
+PropertyFloat::PropertyFloat(const char* _zName, const char* _zDisplayName, const char* _zDescription, bool _bShowInAssetDesc, float _Default, float _Inc, float _Min, float _Max )
+: PropertyBase(_zName, zenConst::keAssProp_Float, _zDisplayName, _zDescription, _bShowInAssetDesc )
+, mDefault(_Default)
+, mValMin(_Min)
+, mValMax(_Max)
+, mValInc(_Inc)
 {
-	Data* pValue = static_cast<Data*>(_pOutValue);
-	*pValue = atoi(_zValue);
+}
+
+zUInt PropertyFloat::ToString(const void* _pValue, zUInt _zLen, char* _zOutString)const
+{
+	const Data* pValue = static_cast<const Data*>(_pValue);
+	return ::sprintf_s(_zOutString, _zLen, "%f", *pValue);
+}
+
+bool PropertyFloat::IsDefault( const void* _pValue )const
+{
+	const Data* pValue = static_cast<const Data*>(_pValue);
+	return *pValue == mDefault;
 }
 
 //=================================================================================================
@@ -71,16 +89,10 @@ zUInt PropertyFile::ToString(const void* _pValue, zUInt _zLen, char* _zOutString
 	return ::sprintf_s(_zOutString, _zLen, "%s", (const char*)pValue);
 }
 
-zUInt PropertyFile::ToXml(const void* _pValue, zUInt _zLen, char* _zOutString)const
+bool PropertyFile::IsDefault( const void* _pValue )const
 {
 	const Data* pValue = static_cast<const Data*>(_pValue);
-	return ::sprintf_s(_zOutString, _zLen, "%s", (const char*)pValue);
-}
-
-void PropertyFile::FromXml(const char* _zValue, void* _pOutValue)const
-{
-	Data* pValue = static_cast<Data*>(_pOutValue);
-	*pValue = _zValue;
+	return *pValue == mDefault;
 }
 
 }} //namespace zen { namespace zenAss

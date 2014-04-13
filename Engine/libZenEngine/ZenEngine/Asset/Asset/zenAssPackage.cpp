@@ -10,7 +10,7 @@ const zPackage& GetPackage( zHash64 _hPackageID )
 	return zeMgr::Asset.PackageGet(_hPackageID);
 }
 
-const zMap<zPackage>::Key64& GetPackages()
+const zArrayPackage& GetPackages()
 {
 	return zeMgr::Asset.PackageGet();
 }
@@ -36,7 +36,7 @@ zPackage& zPackage::operator=(const zPackage& _Copy)
 	return *this;
 }
 
-zHash64 zPackage::GetID()const									
+zU32 zPackage::GetID()const									
 { 
 	ZENAssert(mpReference); 
 	return mpReference->GetID(); 
@@ -51,7 +51,7 @@ const zArrayStatic<zString>& zPackage::GetGroupAndName()const
 	ZENAssert(mpReference); 
 	return mpReference->GetGroupAndName(); 
 }
-const zMap<zAssetItem>::Key64& zPackage::GetAssets(zenConst::eAssetType _eType)
+const zArrayAsset& zPackage::GetAssets(zenConst::eAssetType _eType)
 {
 	ZENAssert(mpReference); 
 	return mpReference->GetAsset(_eType); 

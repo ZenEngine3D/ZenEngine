@@ -84,6 +84,13 @@ public:
 	virtual				~wxBetlFileProperty();
 };
 
+class wxBetlFloatProperty : public wxFloatProperty
+{
+public:
+						wxBetlFloatProperty(zenAss::PropertyValue& _AssetValue);
+	virtual				~wxBetlFloatProperty();
+};
+
 
 #if 0
 class wxBetlIntProperty : public wxIntProperty
@@ -91,13 +98,6 @@ class wxBetlIntProperty : public wxIntProperty
 public:
 						wxBetlIntProperty(zeAss::PropertyDefInt::Value& _AssetValue);
 	virtual				~wxBetlIntProperty();
-};
-
-class wxBetlFloatProperty : public wxFloatProperty
-{
-public:
-						wxBetlFloatProperty(zeAss::PropertyDefFloat::Value& _AssetValue);
-	virtual				~wxBetlFloatProperty();
 };
 
 class wxBetlEnumProperty : public wxEnumProperty

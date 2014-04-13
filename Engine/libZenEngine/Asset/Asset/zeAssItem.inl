@@ -3,21 +3,14 @@
 namespace zen { namespace zeAss
 {
 
-
-
-zHash64 Asset::GetID()const
+zU32 Asset::GetID()const
 {
-	return mhID;
+	return muID;
 }
 
 const zArrayStatic<zString>& Asset::GetGroupAndName()const
 {
 	return maGroup;
-}
-
-zHash32 Asset::GetGroupID()const
-{
-	return mhGroupID;
 }
 
 const zString& Asset::GetName()const

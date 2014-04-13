@@ -11,8 +11,8 @@
 //! each supported parameter name, and then undef it.
 #define ZEN_ASSETPROPERTIES_EXPAND	ZEN_ASSETPROPERTIES_EXPAND_CODE(Bool)		\
 									ZEN_ASSETPROPERTIES_EXPAND_CODE(File)		\
+									ZEN_ASSETPROPERTIES_EXPAND_CODE(Float)		\
 //									ZEN_ASSETPROPERTIES_EXPAND_CODE(Int)		\
-//									ZEN_ASSETPROPERTIES_EXPAND_CODE(Float)		\
 //									ZEN_ASSETPROPERTIES_EXPAND_CODE(Float2)		\
 //									ZEN_ASSETPROPERTIES_EXPAND_CODE(Enum)		\									
 // 									ZEN_ASSETPROPERTIES_EXPAND_CODE(Int2)		\

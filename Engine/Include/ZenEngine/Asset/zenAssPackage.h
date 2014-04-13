@@ -12,20 +12,21 @@ namespace zen { namespace zenAss
 	{
 	ZENClassDeclare(zPackage, zRefOwner)
 	public:
+		
 											zPackage();
 											zPackage(const zPackage& _Copy);
 											zPackage(zeAss::Package* _pAsset);
 		zPackage&							operator=(const zPackage& _Copy);		
 
-		zHash64								GetID			()const;
+		zU32								GetID			()const;
 		const zArrayStatic<zString>&		GetGroupAndName	()const;
 		const zString&						GetName			()const;
-		const zMap<zAssetItem>::Key64&		GetAssets		(zenConst::eAssetType _eType);
+		const zArrayAsset&					GetAssets		(zenConst::eAssetType _eType);
 	};
 
-	const zPackage&							GetPackage		( zHash64 _hPackageID );
-	const zMap<zPackage>::Key64&			GetPackages		();
-
+	typedef zArraySparse<zenAss::zPackage>::Key32 zArrayPackage;
+	const zPackage&							GetPackage		( zU32 _hPackageID );
+	const zArrayPackage&					GetPackages		();
 }} //namespace zen { namespace zenAss
 
 #endif

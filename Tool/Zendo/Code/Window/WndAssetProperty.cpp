@@ -27,17 +27,16 @@ WndAssetProperty::~WndAssetProperty()
 {
 }
 
-void WndAssetProperty::AddAssetTab(zHash64 _hAssetID)
+void WndAssetProperty::AddAssetTab(zenAss::zAssetItem rEditItem)
 {	
-	const zenAss::zAssetItem& rEditItem = zenAss::AssetGet(_hAssetID);
 	if( rEditItem.IsValid() )
 	{
-		BCtrl::TabAssetProperty* pTabAsset	= mdTabPerAsset[_hAssetID];
+		BCtrl::TabAssetProperty* pTabAsset	= mdTabPerAsset[rEditItem.GetID()]; //!< @todo Asset: Can have same ID between different Asset type, not enough to differentiate, fix this
 		if( !pTabAsset )
 		{
 			pTabAsset = zenNewDefault BCtrl::TabAssetProperty(mpNotebook, rEditItem);
 			mpNotebook->AddPage(pTabAsset, static_cast<const char*>(rEditItem.GetName()) );
-			mdTabPerAsset.Set(_hAssetID, pTabAsset);
+			mdTabPerAsset.Set(rEditItem.GetID(), pTabAsset);
 		}
 		mpNotebook->SetSelection( mpNotebook->GetPageIndex(pTabAsset) );
 	}

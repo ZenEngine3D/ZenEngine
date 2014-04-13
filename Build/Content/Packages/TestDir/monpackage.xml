@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
-<Package Group="MonGroupe\SousGroup1" EngineVersionMaj="0" EngineVersionMin="0" />
-<Asset Name="TestName" Type="Texture2D">
+<Package ID="1" Group="MonGroupe\SousGroup1" EngineVersionMaj="0" EngineVersionMin="0" />
+<Asset ID="1" Name="TestName" Type="Texture2D">
 	<Property Name="TestBool" Type="Bool" Value="1" />
 	<Property Name="TestEnum" Type="Enum" Value="Value0" />
 	<Property Name="Source" Type="File" Value="C:\temp\test.txt" />
@@ -8,7 +8,8 @@
 	<Property Name="TestFloat" Type="Float" Value="0.500000" />
 	<Property Name="TestFloat2" Type="Float2" x="0" y="1.1" />
 </Asset>
-<Asset Name="TestName2" Type="Texture2D">
+<Asset ID="2" Name="TestName2" Type="Texture2D">
+	<Property Name="Source" Value="C:\MyFile.txt" />
 </Asset>
-<Asset Name="TestName3" Type="Texture2D">
+<Asset ID="3" Name="TestName3" Type="Texture2D">
 </Asset>

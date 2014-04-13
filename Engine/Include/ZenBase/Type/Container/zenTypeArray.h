@@ -39,7 +39,7 @@ public:
 	
 	TType&								operator[](zUInt _uIndex);
 	const TType&						operator[](zUInt _uIndex)const;
-	zArrayBase<TType>&				operator=( const zArrayBase<TType>& _aCopy );	
+	zArrayBase<TType>&					operator=( const zArrayBase<TType>& _aCopy );	
 	zUInt								Copy(const TType* _pCopy, zUInt _uCount);				//!< @brief Copy the value of a Memory area to this array
 	template<class TTypeImport> zUInt	Copy(const TTypeImport* _ImportArray, zUInt _uCount );	//!< @brief Copy the value of another Array	
 	template<class TTypeImport> zUInt	Copy(const zArrayBase<TTypeImport>& _ImportArray );	//!< @brief Copy the value of another Array	

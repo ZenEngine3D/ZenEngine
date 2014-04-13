@@ -13,9 +13,13 @@ namespace zen { namespace zeAss
 //-------------------------------------------------------------------------------------------------
 //! @return		True if init was successful
 //=================================================================================================
-void ResetAssetReference( zMap<zenAss::zAssetItem>::Key64& _dAssetKey, zenAss::zAssetItem& _rAssetDel)
+void ResetAssetReference( zenAss::zArrayAsset& _dAsset, zenAss::zAssetItem& _rAssetDel)
 {
 	_rAssetDel = NULL;
+}
+void ResetPackageReference( zenAss::zArrayPackage& _dPackage, zenAss::zPackage& _rPackageDel)
+{
+	_rPackageDel = NULL;
 }
 
 //=================================================================================================
@@ -23,11 +27,19 @@ void ResetAssetReference( zMap<zenAss::zAssetItem>::Key64& _dAssetKey, zenAss::z
 //=================================================================================================
 ManagerAsset::ManagerAsset()
 : mdPackage(50)
-, mdAsset(1000)
+, muPackageNextID(0)
 {	
 	mdPackage.SetDefaultValue(NULL);
-	mdAsset.SetDefaultValue(NULL);
-	mdAsset.SetDeleteItemCB( ResetAssetReference );
+	mdPackage.SetDeleteItemCB( ResetPackageReference );
+
+	zenMem::Zero(maAssetNextID, sizeof(maAssetNextID) );
+	for(zUInt idx(0); idx<zenConst::keAssType__Count; ++idx)
+	{
+		madAsset[idx].Init(1000);
+		madAsset[idx].SetDefaultValue(NULL);
+		madAsset[idx].SetDeleteItemCB( ResetAssetReference );			
+	}
+	
 }
 
 //=================================================================================================
@@ -56,9 +68,41 @@ bool ManagerAsset::Unload()
 void ManagerAsset::PackageAdd( Package* _pPackage )
 {
 	mdPackage.Set(_pPackage->GetID(), _pPackage);
-	// Process adding package
+	//! @todo Asset: Process adding package
 }
 
+void ManagerAsset::PackageLoad()
+{
+	zxAss::AssetLoaderXml xmlLoader;
+	mdPackage.Clear();	
+	xmlLoader.LoadPackages();
+
+	zenAss::zArrayPackage::Iterator itPackage;
+	mdPackage.GetLast(itPackage);
+	muPackageNextID = itPackage.IsValid() ? itPackage.GetKey() + 1 : 1;
+
+	zenAss::zArrayAsset::Iterator itAsset;
+	for(zUInt idx(0); idx<zenConst::keAssType__Count; ++idx)
+	{
+		madAsset[idx].GetLast(itAsset);
+		maAssetNextID[idx] = itAsset.IsValid() ? itAsset.GetKey() + 1 : 1;
+	}
+
+
+	//! @todo Clean: TEMP TEMP TEMP TEST
+	//! @todo Asset : Remove Test Asset/Property
+	//xmlLoader.SavePackages();	
+}
+
+bool ManagerAsset::PackageSave( zU32 _uPackageID )
+{
+	zxAss::AssetLoaderXml Loader;
+	zenAss::zPackage rPackage = mdPackage[_uPackageID];
+	if( rPackage.IsValid() )
+		return Loader.Save(rPackage);
+	return false;
+}
+/*
 void ManagerAsset::PackageRename( zHash64 _hOldID, zHash64 _hNewID)
 {
 	zenAss::zPackage rPackage = mdPackage[_hOldID];
@@ -68,50 +112,51 @@ void ManagerAsset::PackageRename( zHash64 _hOldID, zHash64 _hNewID)
 		mdPackage.Set(_hNewID, rPackage);
 	}	
 }
-
-void ManagerAsset::PackageRemove( zHash64 _hPackageID )	
+*/
+void ManagerAsset::PackageRemove( zU32 _uPackageID )	
 {
 	//! @todo Asset: Process removal
 	ZENAssert(0);
-	zenAss::zPackage rPackage = mdPackage[_hPackageID];
+	zenAss::zPackage rPackage = mdPackage[_uPackageID];
 	if( rPackage.IsValid() )
 	{		
-		mdPackage.Unset(_hPackageID);
+		mdPackage.Unset(_uPackageID);
 	}	
 }
 
-const zenAss::zPackage& ManagerAsset::PackageGet( zHash64 _hPackageID )
+const zenAss::zPackage& ManagerAsset::PackageGet( zU32 _uPackageID )
 {
-	return mdPackage[_hPackageID];
+	return mdPackage[_uPackageID];
 }
 
-const zenAss::zAssetItem& ManagerAsset::AssetGet( zHash64 _hAssetID )const
+const zenAss::zAssetItem& ManagerAsset::AssetGet( zenConst::eAssetType _eType, zU32 _uAssetID )const
 {
-	return mdAsset[_hAssetID];
+	ZENAssert(_eType<zenConst::keAssType__Count); 
+	return madAsset[_eType][_uAssetID];
+}
+
+const zenAss::zArrayAsset& ManagerAsset::AssetGet( zenConst::eAssetType _eType )const
+{
+	ZENAssert(_eType<zenConst::keAssType__Count); 
+	return madAsset[_eType];
 }
 
 void ManagerAsset::AssetAdd( zeAss::Asset* _pAsset )
 {
-	ZENAssert( _pAsset && mdAsset.Exist(_pAsset->GetID()) == false );
-	mdAsset.Set(_pAsset->GetID(), _pAsset);
+	ZENAssert( _pAsset && madAsset[_pAsset->GetType()].Exist(_pAsset->GetID()) == false );
+	madAsset[_pAsset->GetType()].Set(_pAsset->GetID(), _pAsset);
 }
 
-void ManagerAsset::AssetRem( zHash64 _hAssetID )
+void ManagerAsset::AssetRem( zenConst::eAssetType _eType, zU32 _uAssetID )
 {
+	ZENAssert(_eType<zenConst::keAssType__Count); 
 	zenAss::zAssetItem rAsset;
-	mdAsset.Get(_hAssetID, rAsset);
+	madAsset[_eType].Get(_uAssetID, rAsset);
 	if( rAsset.IsValid() )
 	{
 		rAsset.Get()->SetPackage(NULL);
-		mdAsset.Unset(_hAssetID);
+		madAsset[_eType].Unset(_uAssetID);
 	}
-}
-
-void ManagerAsset::PackageLoad()
-{
-	zxAss::AssetLoaderXml xmlLoader;
-	mdPackage.Clear();	
-	xmlLoader.Load();
 }
 
 }} //namespace zen { namespace zeAss

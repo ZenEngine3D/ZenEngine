@@ -31,13 +31,14 @@ wxPGProperty* CreateAssetValueControl(wxPropertyGridInterface& _GridControl, zen
 	switch( _Value.GetType() )
 	{
 	case zenConst::keAssProp_Bool:	pProperty=zenNewDefault wxBetlBoolProperty(_Value);			break;
+	case zenConst::keAssProp_Float:	pProperty=zenNewDefault wxBetlFloatProperty(_Value);		break;
 	case zenConst::keAssProp_File:	pProperty=zenNewDefault wxBetlFileProperty(_Value);			break;
 #if 0
 	case zenConst::keAssProp_Int:		pProperty=zenNewDefault wxBetlIntProperty(_Value.GetInt());				break;
 		// 		case AAss::zenConst::keAssProp_Int2:			break;
 		// 		case AAss::zenConst::keAssProp_Int3:			break;
 		// 		case AAss::zenConst::keAssProp_Int4:			break;
-	case zenConst::keAssProp_Float:		pProperty=zenNewDefault wxBetlFloatProperty(_Value.GetFloat());			break;
+
 	case zenConst::keAssProp_Float2:	pProperty=zenNewDefault wxBetlVector2fProperty(_Value.GetFloat2());		break;
 		// 		case AAss::zenConst::keAssProp_Float3:			break;
 		// 		case AAss::zenConst::keAssProp_Float4:			break;
@@ -92,6 +93,26 @@ wxBetlBoolProperty::wxBetlBoolProperty(zenAss::PropertyValue& _AssetValue)
 }
 
 wxBetlBoolProperty::~wxBetlBoolProperty()
+{
+	zenDel(GetClientData());
+}
+
+//=================================================================================================
+// PROPERTY :
+//=================================================================================================
+wxBetlFloatProperty::wxBetlFloatProperty(zenAss::PropertyValue& _AssetValue)
+{
+	const zenAss::PropertyFloat& Property	= _AssetValue.GetPropertyFloat();
+	PropertyMetaData* pMetaData				= zenNew(&sPoolMetaData)PropertyMetaData(_AssetValue, _AssetValue.GetValueFloat());
+	SetClientData		( pMetaData );
+	SetDefaultValue		( wxVariant(Property.mDefault) );
+	SetValue			( wxVariant(_AssetValue.GetValueFloat()) );
+	SetEditor			( wxPGEditor_SpinCtrl );
+	SetHelpString		( wxString::Format("%s\n(Default %.3f) (Min %.3f) (Max %.3f)", Property.mzDescription, Property.mDefault, Property.mValMin, Property.mValMax));
+	ConfigurePropertyScalar(*this, Property.mValMin, Property.mValMax, Property.mValInc);
+}
+
+wxBetlFloatProperty::~wxBetlFloatProperty()
 {
 	zenDel(GetClientData());
 }
