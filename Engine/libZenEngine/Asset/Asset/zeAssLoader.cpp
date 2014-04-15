@@ -8,8 +8,7 @@ namespace zen { namespace zeAss
 void AssetLoader::SavePackages()
 {
 	const zenAss::zArrayPackage& dPackages = zeMgr::Asset.PackageGet();
-	zenAss::zArrayPackage::Iterator itPkg;
-	dPackages.GetFirst(itPkg);
+	zenAss::zArrayPackage::Iterator itPkg(dPackages);
 	while( itPkg.IsValid() )
 	{
 		Save( itPkg.GetValue() );

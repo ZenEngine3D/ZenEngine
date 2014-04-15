@@ -5,11 +5,11 @@
 namespace zen { namespace zenAss
 {
 
-static const zStringHash32 sTypeDescription[]={
-				zStringHash32("TestProperty"),	//keType_TestProperty,
-				zStringHash32("Texture2D"),		//keType_Texture2D,
-				zStringHash32("Mesh"),			//keType_Mesh,
-};
+const zStringHash32 sTypeDescription[]={
+						zStringHash32("TestProperty"),	//keType_TestProperty,
+						zStringHash32("Texture2D"),		//keType_Texture2D,
+						zStringHash32("Mesh"),			//keType_Mesh,
+						};
 
 zAssetItem AssetCreate(zenConst::eAssetType _eAssetType)
 {
@@ -40,9 +40,9 @@ zenConst::eAssetType AssetNameToType(zHash32 _hAssetName)
 	return idx < zenConst::keAssType__Count ? static_cast<zenConst::eAssetType>(idx) : zenConst::keAssType__Invalid;
 }
 
-const zAssetItem& AssetGet( zenConst::eAssetType _eAssetType, zU32 _uAssetID )
+const zAssetItem& AssetGet( zAssetItem::ID _uAssetID )
 {
-	return zeMgr::Asset.AssetGet(_eAssetType, _uAssetID);
+	return zeMgr::Asset.AssetGet(_uAssetID.meType, _uAssetID.muIndex);
 }
 
 zAssetItem::zAssetItem()
@@ -66,10 +66,10 @@ zAssetItem& zAssetItem::operator=(const zAssetItem& _Copy)
 	return *this;
 }
 
-zU32 zAssetItem::GetID()const								
+zAssetItem::ID zAssetItem::GetID()const								
 { 
-	ZENAssert(mpReference);	
-	return mpReference->GetID(); 
+	ZENAssert(mpReference);
+	return ID(mpReference->GetType(), mpReference->GetID());
 }
 zenConst::eAssetType zAssetItem::GetType()const
 {

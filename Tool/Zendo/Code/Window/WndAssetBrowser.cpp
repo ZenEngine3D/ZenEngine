@@ -258,8 +258,7 @@ void WndAssetBrowser::UpdateAssetList()
 			zenConst::eAssetType	eTypeIdx = (zenConst::eAssetType)typIdx;
 			if( mAssetTypeMask.Any( eTypeIdx ) )
 			{
-				zenAss::zArrayAsset::Iterator it;
-				rPackage.GetAssets( eTypeIdx ).GetFirst(it);
+				zenAss::zArrayAsset::Iterator it( rPackage.GetAssets(eTypeIdx) );
 				while( it.IsValid() )
 				{
 					zenAss::zAssetItem* prItem	= zenNew(&sPoolAsset) zenAss::zAssetItem(it.GetValue());
@@ -305,11 +304,10 @@ void WndAssetBrowser::UpdateAssetList()
 void WndAssetBrowser::AddPackages()
 {
 	const zenAss::zArrayPackage& dAllPackages = zenAss::GetPackages();
-	zenAss::zArrayPackage::Iterator it;	
+	zenAss::zArrayPackage::Iterator it(dAllPackages);
 	mpTreePackage->DeleteAllItems();
 
 	zUInt packIdx(0);
-	dAllPackages.GetFirst(it);	
 	while( it.IsValid() )
 	{
 		zenAss::zPackage rPackage				= it.GetValue();

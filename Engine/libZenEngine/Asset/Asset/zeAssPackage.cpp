@@ -26,8 +26,7 @@ void Package::Unload()
 {	
 	for(zUInt typIdx(0), typCount(madAssetPerType.Count()); typIdx<typCount; ++typIdx)
 	{
-		zenAss::zArrayAsset::Iterator it;	
-		madAssetPerType[typIdx].GetFirst(it);
+		zenAss::zArrayAsset::Iterator it(madAssetPerType[typIdx]);	
 		while( it.IsValid() )
 		{
 			//! @todo Asset: Set package reference to null
