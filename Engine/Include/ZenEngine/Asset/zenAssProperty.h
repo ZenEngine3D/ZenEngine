@@ -43,7 +43,7 @@ namespace zen { namespace zenAss
 	};
 
 	//=============================================================================================
-	// Property : Bool
+	// Property : Float
 	//=============================================================================================
 	class PropertyFloat : public PropertyBase
 	{
@@ -55,6 +55,24 @@ namespace zen { namespace zenAss
 		float				mValMin;
 		float				mValMax;
 		float				mValInc;
+	protected:
+		virtual zUInt		ToString	(const void* _pValue, zUInt _uLen, char* _zOutString)const;
+		virtual bool		IsDefault	(const void* _pValue)const;	
+	};
+	
+	//=============================================================================================
+	// Property : Float2
+	//=============================================================================================
+	class PropertyFloat2 : public PropertyBase
+	{
+		ZENClassDeclare(PropertyFloat2, PropertyBase)
+	public:
+		typedef zVec2F		Data;		
+		PropertyFloat2(const char* _zName, const char* _zDisplayName, const char* _zDescription, bool _bShowInAssetDesc, zVec2F _vDefault, zVec2F _vInc=zVec2F(1.f), zVec2F _vMin=zVec2F(0.f), zVec2F _vMax=zVec2F(1.f) );
+		Data				mDefault;
+		zVec2F				mValMin;
+		zVec2F				mValMax;
+		zVec2F				mValInc;
 	protected:
 		virtual zUInt		ToString	(const void* _pValue, zUInt _uLen, char* _zOutString)const;
 		virtual bool		IsDefault	(const void* _pValue)const;	

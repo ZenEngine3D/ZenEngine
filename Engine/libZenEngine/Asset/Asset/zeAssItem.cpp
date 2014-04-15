@@ -158,11 +158,11 @@ zInt TestProperty::GetValueIndex(zHash32 _hPropertyName)const
 
 const zenAss::zArrayProperty& TestProperty::GetProperties()const
 { 	
-	//zMap<zU32>::Key32					mdPropertyIndex; todo
-	static const zenAss::PropertyBool	Property00("PropertyBool",		"", "Property test: Bool",	true,	false);		
-	static const zenAss::PropertyFloat	Property01("PropertyFloat",		"", "Property test: Float",	true,	0, 0.1, -10, 10);		
-	static const zenAss::PropertyFile	Property02("PropertyFile",		"", "Property test: File",	true,	"C:\\temp\\test.txt", "Images|*.bmp;*.png;*.jpeg;*.jpg|BMP(*.bmp)|*.bmp|PNG(*.png)|*.png|JPEG(*.jpg;*.jpeg)|*.jpg;*.jpeg");
-	static const zenAss::PropertyBase*	aPropertiesAll[] = {&Property00, &Property01, &Property02 };
+	static const zenAss::PropertyBool	PropertyBool	("PropertyBool",	"", "Property test: Bool",	true,	false);		
+	static const zenAss::PropertyFloat	PropertyFloat	("PropertyFloat",	"", "Property test: Float",	true,	0.f, 0.1f, -10.f, 10.f);		
+	static const zenAss::PropertyFloat2	PropertyFloat2	("PropertyFloat2",	"", "Property test: Float2",true,	zVec2F(0.f), zVec2F(0.1f), zVec2F(-10.f), zVec2F(10.f));		
+	static const zenAss::PropertyFile	PropertyFile	("PropertyFile",	"", "Property test: File",	true,	"C:\\temp\\test.txt", "Images|*.bmp;*.png;*.jpeg;*.jpg|BMP(*.bmp)|*.bmp|PNG(*.png)|*.png|JPEG(*.jpg;*.jpeg)|*.jpg;*.jpeg");
+	static const zenAss::PropertyBase*	aPropertiesAll[] = {&PropertyBool, &PropertyFloat, &PropertyFloat2, &PropertyFile };
 	static zenAss::zArrayProperty		saProperties( aPropertiesAll, ZENArrayCount(aPropertiesAll) );
 	return saProperties;
 }

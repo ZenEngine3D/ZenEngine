@@ -30,16 +30,17 @@ wxPGProperty* CreateAssetValueControl(wxPropertyGridInterface& _GridControl, zen
 	wxPGProperty* pProperty(NULL);
 	switch( _Value.GetType() )
 	{
-	case zenConst::keAssProp_Bool:	pProperty=zenNewDefault wxBetlBoolProperty(_Value);			break;
-	case zenConst::keAssProp_Float:	pProperty=zenNewDefault wxBetlFloatProperty(_Value);		break;
-	case zenConst::keAssProp_File:	pProperty=zenNewDefault wxBetlFileProperty(_Value);			break;
+	case zenConst::keAssProp_Bool:		pProperty=zenNewDefault wxBetlBoolProperty(_Value);			break;
+	case zenConst::keAssProp_File:		pProperty=zenNewDefault wxBetlFileProperty(_Value);			break;
+	case zenConst::keAssProp_Float:		pProperty=zenNewDefault wxBetlFloatProperty(_Value);		break;	
+	case zenConst::keAssProp_Float2:	pProperty=zenNewDefault wxBetlFloat2fProperty(_Value);		break;
 #if 0
 	case zenConst::keAssProp_Int:		pProperty=zenNewDefault wxBetlIntProperty(_Value.GetInt());				break;
 		// 		case AAss::zenConst::keAssProp_Int2:			break;
 		// 		case AAss::zenConst::keAssProp_Int3:			break;
 		// 		case AAss::zenConst::keAssProp_Int4:			break;
 
-	case zenConst::keAssProp_Float2:	pProperty=zenNewDefault wxBetlVector2fProperty(_Value.GetFloat2());		break;
+	
 		// 		case AAss::zenConst::keAssProp_Float3:			break;
 		// 		case AAss::zenConst::keAssProp_Float4:			break;
 	case zenConst::keAssProp_Enum:	pProperty=zenNewDefault wxBetlEnumProperty(_Value.GetEnum());			break;
@@ -78,7 +79,7 @@ void ConfigurePropertyScalar(wxPGProperty& _Property, const wxVariant& _Min, con
 }
 
 //=================================================================================================
-// PROPERTY :
+// PROPERTY : BOOL
 //=================================================================================================
 wxBetlBoolProperty::wxBetlBoolProperty(zenAss::PropertyValue& _AssetValue)
 {
@@ -98,7 +99,7 @@ wxBetlBoolProperty::~wxBetlBoolProperty()
 }
 
 //=================================================================================================
-// PROPERTY :
+// PROPERTY : FLOAT
 //=================================================================================================
 wxBetlFloatProperty::wxBetlFloatProperty(zenAss::PropertyValue& _AssetValue)
 {
@@ -118,7 +119,7 @@ wxBetlFloatProperty::~wxBetlFloatProperty()
 }
 
 //=================================================================================================
-// PROPERTY :
+// PROPERTY : FILE
 //=================================================================================================
 wxBetlFileProperty::wxBetlFileProperty(zenAss::PropertyValue& _AssetValue)
 {
@@ -140,6 +141,63 @@ wxBetlFileProperty::~wxBetlFileProperty()
 	zenDel(GetClientData());
 }
 
+//=================================================================================================
+// PROPERTY : FLOAT2
+//=================================================================================================
+WX_PG_IMPLEMENT_PROPERTY_CLASS(wxBetlFloat2fProperty, wxPGProperty, wxVector2f, const wxVector2f&, TextCtrl)
+wxBetlFloat2fProperty::wxBetlFloat2fProperty(zenAss::PropertyValue& _AssetValue)
+{		
+	const zenAss::PropertyFloat2&		Property	= _AssetValue.GetPropertyFloat2();
+	const zenAss::PropertyFloat2::Data& Value		= _AssetValue.GetValueFloat2();
+	
+	wxVector2f vValue(Value.x, Value.y);	
+	wxVector2f vDefault( Property.mDefault.x, Property.mDefault.y);
+	PropertyMetaData* pMetaData						= zenNew(&sPoolMetaData)PropertyMetaData(_AssetValue, WXVARIANT(vValue));
+
+	for(zUInt idx(0); idx<2; ++idx)
+	{
+		const wxString zNames[]={wxT("-->X"),wxT("-->Y")};
+		wxFloatProperty* pProp				= zenNewDefault wxFloatProperty(zNames[idx],wxPG_LABEL);
+		PropertyMetaData* pMetaDataChild	= zenNew(&sPoolMetaData)PropertyMetaData(_AssetValue, Value.xy[idx]);
+		pProp->SetClientData	( pMetaDataChild );
+		pProp->SetDefaultValue	( wxVariant(Property.mDefault.xy[idx]) );
+		pProp->SetValue			( wxVariant(Value.xy[idx]) );
+		pProp->SetHelpString	( wxString::Format("%s\n(Default %.3f)", Property.mzDescription, Property.mDefault.xy[idx]));
+		ConfigurePropertyScalar(*pProp, Property.mValMin.xy[idx], Property.mValMax.xy[idx], Property.mValInc.xy[idx]);
+		AddPrivateChild(pProp);
+	}
+	SetValue					( WXVARIANT(vValue) );
+	SetDefaultValue				( WXVARIANT(vDefault) );
+	SetHelpString				( wxString::Format("%s\n(Default [ %.3f, %.3f ])", Property.mzDescription, Property.mDefault.x, Property.mDefault.y));	
+}
+
+wxBetlFloat2fProperty::~wxBetlFloat2fProperty() 
+{
+	zenDel(GetClientData());
+}
+
+void wxBetlFloat2fProperty::RefreshChildren()
+{
+	if ( !GetChildCount() ) return;
+	const wxVector2f& vector = wxVector2fRefFromVariant(m_value);
+	Item(0)->SetValue( vector.x );
+	Item(1)->SetValue( vector.y );
+}
+
+wxVariant wxBetlFloat2fProperty::ChildChanged( wxVariant& thisValue, int childIndex, wxVariant& childValue ) const
+{
+	wxVector2f vector;
+	vector << thisValue;
+	switch ( childIndex )
+	{
+	case 0: vector.x = childValue.GetDouble(); break;
+	case 1: vector.y = childValue.GetDouble(); break;
+	}
+	wxVariant newVariant;
+	newVariant << vector;
+	return newVariant;
+}
+
 #if 0
 //=================================================================================================
 // PROPERTY :
@@ -156,26 +214,6 @@ wxBetlIntProperty::wxBetlIntProperty(zeAss::PropertyDefInt::Value& _AssetValue)
 }
 
 wxBetlIntProperty::~wxBetlIntProperty()
-{
-	zenDel(GetClientData());
-}
-
-//=================================================================================================
-// PROPERTY :
-//=================================================================================================
-wxBetlFloatProperty::wxBetlFloatProperty(zeAss::PropertyDefFloat::Value& _AssetValue)
-{
-	const zeAss::PropertyDefFloat& PropertyDef	= (const zeAss::PropertyDefFloat&)_AssetValue.mParentDef;
-	PropertyMetaData* pMetaData					= zenNew(&sPoolMetaData)PropertyMetaData(&_AssetValue, wxVariant(_AssetValue.mValue));
-	SetClientData		( pMetaData );
-	SetDefaultValue		( wxVariant(PropertyDef.mDefault) );
-	SetValue			( wxVariant(_AssetValue.mValue) );
-	SetEditor			( wxPGEditor_SpinCtrl );
-	SetHelpString		( wxString::Format("%s\n(Default %.3f) (Min %.3f) (Max %.3f)", PropertyDef.mzDescription, PropertyDef.mDefault, PropertyDef.mfMin, PropertyDef.mfMax));
-	ConfigurePropertyScalar(*this, PropertyDef.mfMin, PropertyDef.mfMax, PropertyDef.mfIncrement);
-}
-
-wxBetlFloatProperty::~wxBetlFloatProperty()
 {
 	zenDel(GetClientData());
 }
@@ -210,60 +248,7 @@ wxBetlEnumProperty::~wxBetlEnumProperty()
 	zenDel(GetClientData());
 }
 
-//=================================================================================================
-// PROPERTY :
-//=================================================================================================
-WX_PG_IMPLEMENT_PROPERTY_CLASS(wxBetlVector2fProperty, wxPGProperty, wxVector2f, const wxVector2f&, TextCtrl)
-wxBetlVector2fProperty::wxBetlVector2fProperty(zeAss::PropertyDefFloat2::Value& _AssetValue )
-{	
-	const zeAss::PropertyDefFloat2& PropertyDef	= (const zeAss::PropertyDefFloat2&)_AssetValue.mParentDef;
-	wxVector2f vValue( _AssetValue.mValue.x, _AssetValue.mValue.y);	
-	wxVector2f vDefault( PropertyDef.mDefault.x, PropertyDef.mDefault.y);
-	PropertyMetaData* pMetaData					= zenNew(&sPoolMetaData)PropertyMetaData(&_AssetValue, WXVARIANT(vValue));
-		
-	for(zUInt idx(0); idx<2; ++idx)
-	{
-		const wxString zNames[]={wxT("-->X"),wxT("-->Y")};
-		wxFloatProperty* pProp				= zenNewDefault wxFloatProperty(zNames[idx],wxPG_LABEL);
-		PropertyMetaData* pMetaDataChild	= zenNew(&sPoolMetaData)PropertyMetaData(&_AssetValue, _AssetValue.mValue.xy[idx]);
-		pProp->SetClientData	( pMetaDataChild );
-		pProp->SetDefaultValue	( wxVariant(PropertyDef.mDefault.xy[idx]) );
-		pProp->SetValue			( wxVariant(_AssetValue.mValue.xy[idx]) );
-		pProp->SetHelpString	( wxString::Format("%s\n(Default %.3f)", PropertyDef.mzDescription, PropertyDef.mDefault.xy[idx]));
-		ConfigurePropertyScalar(*pProp, PropertyDef.mvfMin.xy[idx], PropertyDef.mvfMax.xy[idx], PropertyDef.mvfIncrement.xy[idx]);
-		AddPrivateChild(pProp);
-	}
-	SetValue					( WXVARIANT(vValue) );
-	SetDefaultValue				( WXVARIANT(vDefault) );
-	SetHelpString				( wxString::Format("%s\n(Default [ %.3f, %.3f ])", PropertyDef.mzDescription, PropertyDef.mDefault.x, PropertyDef.mDefault.y));	
-}
 
-wxBetlVector2fProperty::~wxBetlVector2fProperty() 
-{
-	zenDel(GetClientData());
-}
-
-void wxBetlVector2fProperty::RefreshChildren()
-{
- 	if ( !GetChildCount() ) return;
- 	const wxVector2f& vector = wxVector2fRefFromVariant(m_value);
- 	Item(0)->SetValue( vector.x );
- 	Item(1)->SetValue( vector.y );
-}
-
-wxVariant wxBetlVector2fProperty::ChildChanged( wxVariant& thisValue, int childIndex, wxVariant& childValue ) const
-{
-	wxVector2f vector;
-	vector << thisValue;
-	switch ( childIndex )
-	{
-	case 0: vector.x = childValue.GetDouble(); break;
-	case 1: vector.y = childValue.GetDouble(); break;
-	}
-	wxVariant newVariant;
-	newVariant << vector;
-	return newVariant;
-}
 
 #endif
 
