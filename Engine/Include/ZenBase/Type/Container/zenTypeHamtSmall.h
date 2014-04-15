@@ -20,8 +20,9 @@ namespace zen { namespace zenType {
 	//! @todo Clean:		Support object better, not just pointer. At the moment, need to set a callback when removing object, to call custom destructor, not very programmer error safe
 	//! @tparam TKey		Datatype of Keys used to find/retrieve entries
 	//! @tparam TValue		Datatype of Values stored
-	//! @tparam TIndex		Datatype bitfield used to store info of each slot in a node. Must be big enough to contain TIndexBits bits.
+	//! @tparam TIndex		Datatype bitfield used to store info of each slot in a node. Must be big enough to contain 1<<TIndexBits bits.
 	//! @tparam TIndexBits	Each node level refer to subsection of TIndexBits bits of the Key entry. More bits means more slot per node, and less tree depth. 
+	//!						For exemple TIndexBits=5 means 32 slot available per node
 	//=================================================================================================
 	template<class TKey, class TValue, class TIndex, int TIndexBits>
 	class zHamt
@@ -33,7 +34,7 @@ namespace zen { namespace zenType {
 		//=================================================================================================
 		enum eConstant
 		{
-			kuKeyBits		= sizeof(TKey)*8,							//!< Bits count of the key used to store entries	
+			kuKeyBits		= sizeof(TKey)*8,						//!< Bits count of the key used to store entries	
 			kuTreeMaxDepth	= (kuKeyBits+TIndexBits-1)/TIndexBits,	//!< Maximum depth of tree (based on KeyBits/IndexBits) rounded up
 			kuSlotCount		= 1<<TIndexBits,
 			kuPoolCount		= kuSlotCount+1,
@@ -58,9 +59,9 @@ namespace zen { namespace zenType {
 			int					GetFirstUsedSlotID()const;					//! @brief Return first used slotID (-1 if none)			
 			int					GetLastUsedSlotID()const;					//! @brief Return last used slotID (-1 if none)
 
-			TIndex				mIndexUsed;									//!< Keep track of Node Index with a valid slot allocated
-			TIndex				mSlotLeaf;									//!< Keep track of Slot that are a leaf (otherwise is link to child node)
 			Slot*				mpSlots;									//!< Array of slots
+			TIndex				mIndexUsed;									//!< Keep track of Node Index with a valid slot allocated
+			TIndex				mSlotLeaf;									//!< Keep track of Slot that are a leaf (otherwise is link to child node)			
 		};	  
 		
 	public:	
@@ -77,7 +78,6 @@ namespace zen { namespace zenType {
 								Iterator();
 								Iterator(const Iterator& _Copy);
 								Iterator(const zHamt& _Parent );
-
 			
 			bool				IsValid();
 			TKey				GetKey();
@@ -173,6 +173,7 @@ namespace zen { namespace zenType {
 	{
 		typedef zHamt<zU16, _Value_, zU16, 4 >Key16;		//!< Size optimized hamt, 16bits Keys with node of 16 entries each (maximum tree depth of 4)
 		typedef zHamt<zU32, _Value_, zU32, 5> Key32;		//!< Size optimized hamt, 32bits Keys with node of 32 entries each (maximum tree depth of 7)
+		typedef zHamt<zU64, _Value_, zU64, 6> Key64;		//!< Size optimized hamt, 64bits Keys with node of 64 entries each (maximum tree depth of 11)
 	};
 
 } } //namespace zen, Type

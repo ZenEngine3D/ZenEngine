@@ -169,7 +169,7 @@ zHamt< TKey, TValue, TIndex, TIndexBits>::zHamt()
 , muCount(0)
 , mpDeleteItemCB(NULL)
 { 
-	ZENStaticAssertMsg( sizeof(TIndex)*8 >= kuSlotCount,"Size of Index not big enough to contain '1<<TIndexBits' Index, check template definition" ); 
+	ZENStaticAssertMsg( kuKeyBits >= kuSlotCount,"Size of Index not big enough to contain '1<<TIndexBits' Index, check template definition" ); 
 }
 
 //==================================================================================================
@@ -184,7 +184,7 @@ zHamt< TKey, TValue, TIndex, TIndexBits>::zHamt( zUInt _uReservePool )
 , muCount(0)
 , mpDeleteItemCB(NULL)
 {
-	ZENStaticAssertMsg( sizeof(TIndex)*8 >= kuSlotCount,"Size of Index not big enough to contain '1<<TIndexBits' Index, check template definition" ); 
+	ZENStaticAssertMsg( kuKeyBits >= kuSlotCount,"Size of Index not big enough to contain '1<<TIndexBits' Index, check template definition" ); 
 	Init(_uReservePool);
 }
 
@@ -257,7 +257,7 @@ template<class TKey, class TValue, class TIndex, int TIndexBits>
 bool zHamt< TKey, TValue, TIndex, TIndexBits>::Exist(const TKey _Key)const
 {
 	const Node**	ppParentNode;
-	zU32				uSlotID(0), uNodeIndex(0), uDepth(0);
+	zU32			uSlotID(0), uNodeIndex(0), uDepth(0);
 	return GetNode( _Key, ppParentNode, uNodeIndex, uSlotID, uDepth );
 }
 		
@@ -397,9 +397,9 @@ template<class TKey, class TValue, class TIndex, int TIndexBits>
 TValue& zHamt< TKey, TValue, TIndex, TIndexBits>::GetAdd(const TKey _Key)
 {			
 	Node**	ppParentNode;
-	zU32		uSlotID, uNodeIndex, uDepth;
+	zU32	uSlotID, uNodeIndex, uDepth;
 	bool	bFound = GetNode( _Key, ppParentNode, uNodeIndex, uSlotID, uDepth );
-	muCount		+= bFound ? 0 : 1;
+	muCount			+= bFound ? 0 : 1;
 	if( !bFound )	return *SetSlotValue( _Key, mDefault, ppParentNode, uNodeIndex, uSlotID, uDepth );	//Not found, create new entry with default value
 	else			return (*ppParentNode)->mpSlots[uSlotID].Value();									//Return found entry
 }
@@ -834,12 +834,9 @@ TValue* zHamt< TKey, TValue, TIndex, TIndexBits>::SetSlotValue(TKey _Key, const 
 	else
 	{
 		Node::Slot prevSlot	= pNode->mpSlots[_uSlotID];
-		pNode->mSlotLeaf	= pNode->mSlotLeaf & ~(TIndex(1)<<_uSlotID);	//Slot is now pointing to child node, not a leaf anymore
-				
-		pNode->mpSlots[_uSlotID].Key = 1;//temp
-
 		zUInt uNodeIndexOld	= GetNodeIndex(prevSlot.Key, ++_uDepth);
 		zUInt uNodeIndexNew	= GetNodeIndex(_Key, _uDepth);
+		pNode->mSlotLeaf	= pNode->mSlotLeaf & ~(TIndex(1)<<_uSlotID);	//Slot is now pointing to child node, not a leaf anymore
 
 		// While Node index of 2 node match, create child node
 		while( uNodeIndexOld == uNodeIndexNew )

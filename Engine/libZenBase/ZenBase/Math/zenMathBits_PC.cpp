@@ -97,38 +97,24 @@ namespace zen { namespace zenMath
 				sBitReverseTable64bits[ (_uValue>>32)&0xFF ]<<24	| sBitReverseTable64bits[ (_uValue>>40)&0xFF ]<<16 | sBitReverseTable64bits[ (_uValue>>48)&0xFF ]<<8| sBitReverseTable64bits[ (_uValue>>56)&0xFF ];
 	}
 
+	zUInt BitsCount( zU8 _uValue )
+	{
+		return __popcnt16((zU16)_uValue);
+	}
+
 	zUInt BitsCount( zU16 _uValue )
 	{
-	#if CHEAP_ASS_COMPUTER
-		int c(0);
-		for(; _uValue; ++c)
-			_uValue &= _uValue - 1; // clear the least significant bit set
-		return c;  
-	#else
 		return __popcnt16(_uValue);
-	#endif
 	}
 
 	zUInt BitsCount( zU32 _uValue )
 	{
-	#if CHEAP_ASS_COMPUTER
-		int c(0);
-		for(; _uValue; ++c)
-			_uValue &= _uValue - 1; // clear the least significant bit set
-		return c;  
-	#else
 		return __popcnt(_uValue);
-	#endif
 	}
 
 	zUInt BitsCount( zU64 _uValue )
 	{
-	#if CHEAP_ASS_COMPUTER
-		int c(0);
-		for(; _uValue; ++c)
-			_uValue &= _uValue - 1; // clear the least significant bit set
-		return c;  
-	#elif _M_AMD64
+	#if _M_AMD64
 		return static_cast<zUInt>(__popcnt64(_uValue));
 	#else
 		return static_cast<zUInt>(__popcnt(static_cast<zU32>(_uValue)) + __popcnt(static_cast<zU32>(_uValue>>32)));

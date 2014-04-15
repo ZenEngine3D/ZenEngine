@@ -84,8 +84,7 @@ bool AssetLoaderXml::Save(zenAss::zPackage& _rPackage)
 	for(zInt idxType(0); idxType<zenConst::keAssType__Count; ++idxType)
 	{
 		const zenAss::zArrayAsset& dAssets = _rPackage->GetAsset( static_cast<zenConst::eAssetType>(idxType) );
-		zenAss::zArrayAsset::Iterator itAsset;
-		dAssets.GetFirst(itAsset);
+		zenAss::zArrayAsset::Iterator itAsset(dAssets);
 		while( itAsset.IsValid() )
 		{
 			SaveAsset( itAsset.GetValue(), Doc );
@@ -149,7 +148,7 @@ bool AssetLoaderXml::SaveAsset(zenAss::zAssetItem _rAsset, pugi::xml_node& _XmlN
 	nodeAsset.append_attribute(kzXmlName_AssetAtr_Group).set_value( zGroupName );
 	for(zInt idx(0), count(_rAsset->GetValueCount()); idx<count; ++idx)
 	{
-		zenAss::PropertyValue& assetValue = _rAsset->GetValue(idx);
+		zenAss::PropertyValue& assetValue	= _rAsset->GetValue(idx);
 		if( assetValue.IsDefault() == false )
 		{
 			pugi::xml_node nodeProp			= nodeAsset.append_child(kzXmlName_Node_Property);
