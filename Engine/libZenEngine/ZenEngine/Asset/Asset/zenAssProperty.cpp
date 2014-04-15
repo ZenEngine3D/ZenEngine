@@ -74,6 +74,30 @@ bool PropertyFloat::IsDefault( const void* _pValue )const
 }
 
 //=================================================================================================
+// PROPERTY FLOAT2
+//=================================================================================================
+PropertyFloat2::PropertyFloat2(const char* _zName, const char* _zDisplayName, const char* _zDescription, bool _bShowInAssetDesc, zVec2F _vDefault, zVec2F _vInc, zVec2F _vMin, zVec2F _vMax )
+	: PropertyBase(_zName, zenConst::keAssProp_Float2, _zDisplayName, _zDescription, _bShowInAssetDesc )
+	, mDefault(_vDefault)
+	, mValMin(_vMin)
+	, mValMax(_vMax)
+	, mValInc(_vInc)
+{
+}
+
+zUInt PropertyFloat2::ToString(const void* _pValue, zUInt _zLen, char* _zOutString)const
+{
+	const Data* pValue = static_cast<const Data*>(_pValue);
+	return ::sprintf_s(_zOutString, _zLen, "(%f,%f)", pValue->x, pValue->y);
+}
+
+bool PropertyFloat2::IsDefault( const void* _pValue )const
+{
+	const Data* pValue = static_cast<const Data*>(_pValue);
+	return *pValue == mDefault;
+}
+
+//=================================================================================================
 // PROPERTY FILE
 //=================================================================================================
 PropertyFile::PropertyFile(const char* _zName, const char* _zDisplayName, const char* _zDescription, bool _bShowInAssetDesc, const char* _zDefault, const char* _zFileExt )

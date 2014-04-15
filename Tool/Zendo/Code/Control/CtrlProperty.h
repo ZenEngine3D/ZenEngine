@@ -91,6 +91,17 @@ public:
 	virtual				~wxBetlFloatProperty();
 };
 
+class wxBetlFloat2fProperty : public wxPGProperty
+{
+WX_PG_DECLARE_PROPERTY_CLASS(wxBetlFloat2fProperty)
+public:
+						wxBetlFloat2fProperty(){ZENAssertMsg(0, "Shouldn't be reaching this constructor")}
+						wxBetlFloat2fProperty(zenAss::PropertyValue& _AssetValue);
+	virtual				~wxBetlFloat2fProperty();
+	virtual wxVariant	ChildChanged( wxVariant& thisValue, int childIndex, wxVariant& childValue ) const;
+	virtual void		RefreshChildren();
+};
+
 
 #if 0
 class wxBetlIntProperty : public wxIntProperty
@@ -105,18 +116,6 @@ class wxBetlEnumProperty : public wxEnumProperty
 public:
 						wxBetlEnumProperty(zeAss::PropertyDefEnum::Value& _AssetValue);
 	virtual				~wxBetlEnumProperty();
-};
-
-
-class wxBetlVector2fProperty : public wxPGProperty
-{
-WX_PG_DECLARE_PROPERTY_CLASS(wxBetlVector2fProperty)
-public:
-						wxBetlVector2fProperty(){ZENAssertMsg(0, "Shouldn't be reaching this constructor")}
-						wxBetlVector2fProperty(zeAss::PropertyDefFloat2::Value& _AssetValue );
-	virtual				~wxBetlVector2fProperty();
-	virtual wxVariant	ChildChanged( wxVariant& thisValue, int childIndex, wxVariant& childValue ) const;
-	virtual void		RefreshChildren();
 };
 
 #endif
