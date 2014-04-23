@@ -74,24 +74,24 @@ bool PropertyFloat::IsDefault( const void* _pValue )const
 }
 
 //=================================================================================================
-// PROPERTY FLOAT2
+// PROPERTY INT
 //=================================================================================================
-PropertyFloat2::PropertyFloat2(const char* _zName, const char* _zDisplayName, const char* _zDescription, bool _bShowInAssetDesc, zVec2F _vDefault, zVec2F _vInc, zVec2F _vMin, zVec2F _vMax )
-	: PropertyBase(_zName, zenConst::keAssProp_Float2, _zDisplayName, _zDescription, _bShowInAssetDesc )
-	, mDefault(_vDefault)
-	, mValMin(_vMin)
-	, mValMax(_vMax)
-	, mValInc(_vInc)
+PropertyInt::PropertyInt(const char* _zName, const char* _zDisplayName, const char* _zDescription, bool _bShowInAssetDesc, Data _Default, Data _Inc, Data _Min, Data _Max )
+: PropertyBase(_zName, zenConst::keAssProp_Int, _zDisplayName, _zDescription, _bShowInAssetDesc )
+, mDefault(_Default)
+, mValMin(_Min)
+, mValMax(_Max)
+, mValInc(_Inc)
 {
 }
 
-zUInt PropertyFloat2::ToString(const void* _pValue, zUInt _zLen, char* _zOutString)const
+zUInt PropertyInt::ToString(const void* _pValue, zUInt _zLen, char* _zOutString)const
 {
 	const Data* pValue = static_cast<const Data*>(_pValue);
-	return ::sprintf_s(_zOutString, _zLen, "(%f,%f)", pValue->x, pValue->y);
+	return ::sprintf_s(_zOutString, _zLen, "%i", *pValue);
 }
 
-bool PropertyFloat2::IsDefault( const void* _pValue )const
+bool PropertyInt::IsDefault( const void* _pValue )const
 {
 	const Data* pValue = static_cast<const Data*>(_pValue);
 	return *pValue == mDefault;

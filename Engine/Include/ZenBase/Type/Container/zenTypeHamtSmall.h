@@ -87,8 +87,8 @@ namespace zen { namespace zenType {
 			void				operator=(const Iterator& _Copy);
 		protected:
 			Node*				mpNodeTree[kuTreeMaxDepth];	//!< void* to current node parsed in each tree depth 
-			zS8					mpSlotID[kuTreeMaxDepth];	//!< Current slot in each node being parsed
-			zS8					msDepth;					//!< Current leaf depth level
+			zI8					mpSlotID[kuTreeMaxDepth];	//!< Current slot in each node being parsed
+			zI8					msDepth;					//!< Current leaf depth level
 			friend class		zHamt;
 		};
 		

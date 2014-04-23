@@ -54,7 +54,7 @@ zGfxDepthStencil zGfxDepthStencil::Create( bool _bDepthEnable, bool _bDepthWrite
 	return EExp::CreateGfxDepthStencil(_bDepthEnable, _bDepthWrite, _bStencilEnable, _uStencilReadMask, _uStencilWriteMask, _eDepthFunc, _xFrontFace, _xBackFace);
 }
 
-zGfxRasterizer zGfxRasterizer::Create( bool _bFrontCounterClockwise, bool _bDepthClipEnable, bool _bScissorEnable, bool _bMultisampleEnable, bool _bAntialiasedLineEnable, bool _bWireFrame, zenConst::eCullMode _eCullMode, zS32 _iDepthBias, float _fDepthBiasClamp, float _fSlopeScaledDepthBias )
+zGfxRasterizer zGfxRasterizer::Create( bool _bFrontCounterClockwise, bool _bDepthClipEnable, bool _bScissorEnable, bool _bMultisampleEnable, bool _bAntialiasedLineEnable, bool _bWireFrame, zenConst::eCullMode _eCullMode, zI32 _iDepthBias, float _fDepthBiasClamp, float _fSlopeScaledDepthBias )
 {
 	return EExp::CreateGfxRasterizer(_bFrontCounterClockwise, _bDepthClipEnable, _bScissorEnable, _bMultisampleEnable, _bAntialiasedLineEnable, _bWireFrame, _eCullMode, _iDepthBias, _fDepthBiasClamp, _fSlopeScaledDepthBias);
 }

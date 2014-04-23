@@ -14,12 +14,12 @@ namespace zen { namespace zenType
 	#define FNV32_Prime					16777619u
 	#define FNV32_Prefix(_N)			((
 	#define FNV32_Postfix(_N)			^ _zStr[_N-1]) * FNV32_Prime)
-	#define FNV32_HASH_CONSTRUCTOR(_N)	AWForceInline zHash32(const char (&_zStr)[_N+1]) :  muHash( ZENRepeat(_N, FNV32_Prefix, ZENEmpty1) FNV32_Seed ZENRepeat(_N, ZENEmpty1, FNV32_Postfix) ){}
+	#define FNV32_HASH_CONSTRUCTOR(_N)	ZENInlineForce zHash32(const char (&_zStr)[_N+1]) :  muHash( ZENRepeat(_N, FNV32_Prefix, ZENEmpty1) FNV32_Seed ZENRepeat(_N, ZENEmpty1, FNV32_Postfix) ){}
 	#define FNV64_Seed					14695981039346656037ul
 	#define FNV64_Prime					1099511628211ul
 	#define FNV64_Prefix(_N)			((
 	#define FNV64_Postfix(_N)			^ _zStr[_N-1]) * FNV64_Prime)
-	#define FNV64_HASH_CONSTRUCTOR(_N)	AWForceInline zHash64(const char (&_zStr)[_N+1]) :  muHash( ZENRepeat(_N, FNV64_Prefix, ZENEmpty1) FNV64_Seed ZENRepeat(_N, ZENEmpty1, FNV64_Postfix) ){}
+	#define FNV64_HASH_CONSTRUCTOR(_N)	ZENInlineForce zHash64(const char (&_zStr)[_N+1]) :  muHash( ZENRepeat(_N, FNV64_Prefix, ZENEmpty1) FNV64_Seed ZENRepeat(_N, ZENEmpty1, FNV64_Postfix) ){}
 
 	//=================================================================================================	
 	//! @brief Structure used to trick compiler in using HashFNV32() for string pointer, 
@@ -52,10 +52,10 @@ namespace zen { namespace zenType
 		//=================================================================================================	
 		// Append new value to hash
 		//=================================================================================================	
-		AWForceInline zHash32&	Append(const char* _zString);
-		AWForceInline zHash32&	Append(const wchar_t* _zString);
-		AWForceInline zHash32&	Append(const void* _pData, zUInt _uSize);
-		AWForceInline zHash32&	Append( zHash32 _hHashToAdd);
+		ZENInlineForce zHash32&	Append(const char* _zString);
+		ZENInlineForce zHash32&	Append(const wchar_t* _zString);
+		ZENInlineForce zHash32&	Append(const void* _pData, zUInt _uSize);
+		ZENInlineForce zHash32&	Append( zHash32 _hHashToAdd);
 
 		//=================================================================================================	
 		// Comparators and assignation
@@ -69,14 +69,14 @@ namespace zen { namespace zenType
 		//=================================================================================================	
 		// Constructors
 		//=================================================================================================	
-		AWForceInline				zHash32();
-		AWForceInline				zHash32(const zHash32& _hCopy);
-		AWForceInline				zHash32(const zU32& _uCopy);
-		AWForceInline				zHash32(const zS32& _iCopy);
-		AWForceInline				zHash32(ConstCharWrapper _zStr);
-		AWForceInline				zHash32(char* _zStr);
-		AWForceInline				zHash32(const wchar_t* _zStr);
-		AWForceInline				zHash32(const void* _pData, zUInt _uSize);
+		ZENInlineForce				zHash32();
+		ZENInlineForce				zHash32(const zHash32& _hCopy);
+		ZENInlineForce				zHash32(const zU32& _uCopy);
+		ZENInlineForce				zHash32(const zI32& _iCopy);
+		ZENInlineForce				zHash32(ConstCharWrapper _zStr);
+		ZENInlineForce				zHash32(char* _zStr);
+		ZENInlineForce				zHash32(const wchar_t* _zStr);
+		ZENInlineForce				zHash32(const void* _pData, zUInt _uSize);
 
 									FNV32_HASH_CONSTRUCTOR(1)	FNV32_HASH_CONSTRUCTOR(2)	FNV32_HASH_CONSTRUCTOR(3)	FNV32_HASH_CONSTRUCTOR(4)	
 		FNV32_HASH_CONSTRUCTOR(5)	FNV32_HASH_CONSTRUCTOR(6)	FNV32_HASH_CONSTRUCTOR(7)	FNV32_HASH_CONSTRUCTOR(8)	FNV32_HASH_CONSTRUCTOR(9)		
@@ -115,10 +115,10 @@ namespace zen { namespace zenType
 		//=================================================================================================	
 		// Append new value to hash
 		//=================================================================================================	
-		AWForceInline zHash64&	Append(const char* _zString);
-		AWForceInline zHash64&	Append(const wchar_t* _zString);
-		AWForceInline zHash64&	Append(const zU8* _pData, zUInt _uSize );
-		AWForceInline zHash64&	Append(zHash64 _hHashToAdd);
+		ZENInlineForce zHash64&	Append(const char* _zString);
+		ZENInlineForce zHash64&	Append(const wchar_t* _zString);
+		ZENInlineForce zHash64&	Append(const zU8* _pData, zUInt _uSize );
+		ZENInlineForce zHash64&	Append(zHash64 _hHashToAdd);
 
 		//=================================================================================================	
 		// Comparators and assignation
@@ -132,14 +132,14 @@ namespace zen { namespace zenType
 		//=================================================================================================	
 		// Constructors
 		//=================================================================================================	
-		AWForceInline				zHash64();
-		AWForceInline				zHash64(const zHash64& _hCopy);
-		AWForceInline				zHash64(const zU64& _uCopy);
-		AWForceInline				zHash64(const zS64& _iCopy);
-		AWForceInline				zHash64(ConstCharWrapper _zStr);
-		AWForceInline				zHash64(char* _zStr);
-		AWForceInline				zHash64(wchar_t* _zStr);
-		AWForceInline				zHash64(const zU8* _pData, zUInt _uSize);
+		ZENInlineForce				zHash64();
+		ZENInlineForce				zHash64(const zHash64& _hCopy);
+		ZENInlineForce				zHash64(const zU64& _uCopy);
+		ZENInlineForce				zHash64(const zI64& _iCopy);
+		ZENInlineForce				zHash64(ConstCharWrapper _zStr);
+		ZENInlineForce				zHash64(char* _zStr);
+		ZENInlineForce				zHash64(wchar_t* _zStr);
+		ZENInlineForce				zHash64(const zU8* _pData, zUInt _uSize);
 
 									FNV64_HASH_CONSTRUCTOR(1)	FNV64_HASH_CONSTRUCTOR(2)	FNV64_HASH_CONSTRUCTOR(3)	FNV64_HASH_CONSTRUCTOR(4)	
 		FNV64_HASH_CONSTRUCTOR(5)	FNV64_HASH_CONSTRUCTOR(6)	FNV64_HASH_CONSTRUCTOR(7)	FNV64_HASH_CONSTRUCTOR(8)	FNV64_HASH_CONSTRUCTOR(9)		

@@ -235,9 +235,9 @@ template<class TKey, class TValue, class TIndex, int TIndexBits>
 void zHamt< TKey, TValue, TIndex, TIndexBits>::Init( zUInt _uReservePool )
 {	
 	ZENAssertMsg(!IsInit(),"zHamt already initialized");			
-	zS32 iPoolItemLeft(static_cast<zS32>(_uReservePool)-1);
-	zS32 iPoolItemMin	= zenMath::Max<zS32>((iPoolItemLeft / 3) / kuSlotCount, 1);	//< @Note: A 1/3 of PoolItemCount get split evenly between each Pool. Remaining assigned with 1/2 less every time. Need metric to adjust for optimal value
-	iPoolItemLeft		= zenMath::Max<zS32>(iPoolItemLeft-iPoolItemMin*kuSlotCount, 0);
+	zI32 iPoolItemLeft(static_cast<zI32>(_uReservePool)-1);
+	zI32 iPoolItemMin	= zenMath::Max<zI32>((iPoolItemLeft / 3) / kuSlotCount, 1);	//< @Note: A 1/3 of PoolItemCount get split evenly between each Pool. Remaining assigned with 1/2 less every time. Need metric to adjust for optimal value
+	iPoolItemLeft		= zenMath::Max<zI32>(iPoolItemLeft-iPoolItemMin*kuSlotCount, 0);
 	mPools[0].Init("HamtSmallPool", sizeof(Node), 1, 1 );
 	for(zUInt uPoolIndex=1; uPoolIndex<=kuSlotCount; ++uPoolIndex)
 	{
@@ -533,7 +533,7 @@ void zHamt< TKey, TValue, TIndex, TIndexBits>::DebugPrint(const TKey _First, TKe
 #if AW_DEBUGINFOON
 #define	kuSpacePerLevel	14
 	char		zSpaces[kuTreeMaxDepth*kuSpacePerLevel+1];
-	zS8			iSlotIDPrev[ kuTreeMaxDepth ];
+	zI8			iSlotIDPrev[ kuTreeMaxDepth ];
 	zenMem::Set(zSpaces, ' ', sizeof(zSpaces));
 	zenMem::Set(iSlotIDPrev, -1, sizeof(iSlotIDPrev) );
 	Iterator it;
@@ -541,8 +541,8 @@ void zHamt< TKey, TValue, TIndex, TIndexBits>::DebugPrint(const TKey _First, TKe
 	{
 		if( it.GetKey() >= _First )
 		{
-			zS8 sSharedParentDepth(0);
-			zS8 sCurrentDepth(0);
+			zI8 sSharedParentDepth(0);
+			zI8 sCurrentDepth(0);
 			while( iSlotIDPrev[sSharedParentDepth] == it.mpSlotID[sSharedParentDepth] )
 				++sSharedParentDepth;
 			zenMem::Copy(iSlotIDPrev, it.mpSlotID, sizeof(iSlotIDPrev) );

@@ -13,29 +13,29 @@ namespace zen { namespace zenType {
 		struct awRTBlendDesc
 		{
 			awRTBlendDesc(void)
-				: mbBlendEnable(false)
-				, muRenderTargetWriteMask(0xFF)
-				, meSrcBlend(zenConst::keBlend_SrcColor)
-				, meDestBlend(zenConst::keBlend_InvSrcColor)
-				, meBlendOp(zenConst::keBlendOp_Add)
-				, meSrcBlendAlpha(zenConst::keBlend_SrcColor)
-				, meDestBlendAlpha(zenConst::keBlend_InvSrcColor)
-				, meBlendOpAlpha(zenConst::keBlendOp_Add)
+			: mbBlendEnable(false)
+			, muRenderTargetWriteMask(0xFF)
+			, meSrcBlend(zenConst::keBlend_SrcColor)
+			, meDestBlend(zenConst::keBlend_InvSrcColor)
+			, meBlendOp(zenConst::keBlendOp_Add)
+			, meSrcBlendAlpha(zenConst::keBlend_SrcColor)
+			, meDestBlendAlpha(zenConst::keBlend_InvSrcColor)
+			, meBlendOpAlpha(zenConst::keBlendOp_Add)
 			{
 			}
 			bool				mbBlendEnable;
-			zU8				muRenderTargetWriteMask;
-			zenConst::eBlend		meSrcBlend;
-			zenConst::eBlend		meDestBlend;
+			zU8					muRenderTargetWriteMask;
+			zenConst::eBlend	meSrcBlend;
+			zenConst::eBlend	meDestBlend;
 			zenConst::eBlendOp	meBlendOp;
-			zenConst::eBlend		meSrcBlendAlpha;
-			zenConst::eBlend		meDestBlendAlpha;
+			zenConst::eBlend	meSrcBlendAlpha;
+			zenConst::eBlend	meDestBlendAlpha;
 			zenConst::eBlendOp	meBlendOpAlpha;
 		};
 
-		AWForceInline awBlendDesc(void)
-			: mbAlphaToCoverageEnable(false)
-			, mbIndependentBlendEnable(false)
+		ZENInlineForce awBlendDesc(void)
+		: mbAlphaToCoverageEnable(false)
+		, mbIndependentBlendEnable(false)
 		{
 		}
 
@@ -51,10 +51,10 @@ namespace zen { namespace zenType {
 		struct DepthStencilOp
 		{
 			DepthStencilOp(void)
-				: meStencilFailOp(zenConst::keStencilOp_Keep)
-				, meStencilDepthFailOp(zenConst::keStencilOp_Keep)
-				, meStencilPassOp(zenConst::keStencilOp_Keep)
-				, meStencilFunc(zenConst::keComparisonFunc_Always)
+			: meStencilFailOp(zenConst::keStencilOp_Keep)
+			, meStencilDepthFailOp(zenConst::keStencilOp_Keep)
+			, meStencilPassOp(zenConst::keStencilOp_Keep)
+			, meStencilFunc(zenConst::keComparisonFunc_Always)
 			{
 			}
 			zenConst::eStencilOp			meStencilFailOp;
@@ -64,12 +64,12 @@ namespace zen { namespace zenType {
 		};
 
 		awDepthStencilDesc(void)
-			: mbDepthEnable(false)
-			, mbDepthWrite(false)
-			, mbStencilEnable(false)
-			, muStencilReadMask(0xFF)
-			, muStencilWriteMask(0xFF)
-			, meDepthFunc(zenConst::keComparisonFunc_Always)
+		: mbDepthEnable(false)
+		, mbDepthWrite(false)
+		, mbStencilEnable(false)
+		, muStencilReadMask(0xFF)
+		, muStencilWriteMask(0xFF)
+		, meDepthFunc(zenConst::keComparisonFunc_Always)
 		{
 		}
 

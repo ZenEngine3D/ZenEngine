@@ -48,7 +48,7 @@ namespace ERes
 		ZENInline								ResourceRef(zResID _ResourceID);
 		ZENInline								ResourceRef(const TReferenceClass& _Copy);
 		ZENInline TResourceClass*				operator->();		//!< Return a pointer to resource
-		ZENInline const TResourceClass*		operator->()const;	//!< Return a const pointiner to resource
+		ZENInline const TResourceClass*			operator->()const;	//!< Return a const pointiner to resource
 	};
 }
 
@@ -60,7 +60,7 @@ namespace ERes
 {	
 	typedef ResourceRef<zGfxIndex,			zenRes::zGfxIndex>			GfxIndexRef;
 	typedef ResourceRef<zGfxVertex,			zenRes::zGfxVertex>			GfxVertexRef;
-	typedef ResourceRef<zGfxInputStream,		zenRes::zGfxInputStream>	GfxInputStreamRef;
+	typedef ResourceRef<zGfxInputStream,	zenRes::zGfxInputStream>	GfxInputStreamRef;
 	typedef ResourceRef<zGfxInputSignature,	zenRes::zGfxInputSignature>	GfxInputSignatureRef;
 	typedef ResourceRef<zGfxShaderBinding,	zenRes::zGfxShaderBinding>	GfxShaderBindingRef;
 	typedef ResourceRef<zGfxMesh,			zenRes::zGfxMesh>			GfxMeshRef;
@@ -68,13 +68,13 @@ namespace ERes
 	typedef ResourceRef<zGfxTexture2D,		zenRes::zGfxTexture2D>		GfxTexture2DRef;
 	typedef ResourceRef<zGfxRenderTarget,	zenRes::zGfxRenderTarget>	GfxRenderTargetRef;
 	typedef ResourceRef<zGfxView,			zenRes::zGfxView>			GfxViewRef;
-	typedef ResourceRef<zGfxSampler,			zenRes::zGfxSampler>		GfxSamplerRef;
+	typedef ResourceRef<zGfxSampler,		zenRes::zGfxSampler>		GfxSamplerRef;
 	typedef ResourceRef<zGfxWindow,			zenRes::zGfxWindow>			GfxWindowRef;
 	typedef ResourceRef<zGfxShaderParamDef,	zenRes::zGfxShaderParamDef>	GfxShaderParamDefRef;
 	typedef ResourceRef<zGfxShader,			zenRes::zGfxShader>			GfxShaderRef;
 	typedef ResourceRef<zGfxShaderVertex,	zenRes::zGfxShaderVertex>	GfxShaderVertexRef;
-	typedef ResourceRef<zGfxShaderPixel,		zenRes::zGfxShaderPixel>	GfxShaderPixelRef;
-	typedef ResourceRef<zGfxShaderParam,		zenRes::zGfxShaderParam>	GfxShaderParamRef;
+	typedef ResourceRef<zGfxShaderPixel,	zenRes::zGfxShaderPixel>	GfxShaderPixelRef;
+	typedef ResourceRef<zGfxShaderParam,	zenRes::zGfxShaderParam>	GfxShaderParamRef;
 }
 
 #endif

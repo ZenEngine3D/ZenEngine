@@ -64,13 +64,13 @@ void zAllocator::DebugPrint()
 	
 	! @TODO: Print informations _bout _llocations
 		char		zSpaces[kuTreeMaxDepth*kuSpacePerLevel+1];
-		zS8			sSlotIndexPrev[ sizeof(((Iterator*)NULL)->mpSlotIndex) ];	//Get size of non-instantiated member _rray
+		zI8			sSlotIndexPrev[ sizeof(((Iterator*)NULL)->mpSlotIndex) ];	//Get size of non-instantiated member _rray
 		memset(zSpaces, ' ', sizeof(zSpaces));
 		memset(sSlotIndexPrev, 0xFF, sizeof(sSlotIndexPrev) );
 		for(Iterator it=GetFirst(); it.IsValid(); ++it)
 		{
-			zS8 sSharedParentDepth(0);
-			zS8 sCurrentDepth(0);
+			zI8 sSharedParentDepth(0);
+			zI8 sCurrentDepth(0);
 			while( sSlotIndexPrev[sSharedParentDepth] == it.mpSlotIndex[sSharedParentDepth] )
 				++sSharedParentDepth;
 			zenMem::Copy(sSlotIndexPrev, it.mpSlotIndex, sizeof(sSlotIndexPrev) );

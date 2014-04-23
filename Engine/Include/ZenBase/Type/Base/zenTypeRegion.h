@@ -9,21 +9,21 @@ class zRegion
 {
 ZENClassDeclareNoParent(zRegion)
 public:
-	AWForceInline zRegion(void); //need to specialize for different types (right now there is a default implementation for zS8, zU8, zS16, zU16, zS32, zU32, zS64, zU64, float, double)
-	AWForceInline zRegion(const _Type_ inX1, const _Type_ inY1, const _Type_ inX2, const _Type_ inY2);
-	AWForceInline zRegion(const zRegion& xOther);
+	ZENInlineForce zRegion(void); //need to specialize for different types (right now there is a default implementation for zI8, zU8, zI16, zU16, zI32, zU32, zI64, zU64, float, double)
+	ZENInlineForce zRegion(const _Type_ inX1, const _Type_ inY1, const _Type_ inX2, const _Type_ inY2);
+	ZENInlineForce zRegion(const zRegion& xOther);
 
-	AWForceInline bool operator!= (const zRegion& xOther);
+	ZENInlineForce bool operator!= (const zRegion& xOther);
 
-	AWForceInline void Intersect(const zRegion& xBox1, const zRegion& xBox2);
-	AWForceInline void Intersect(const zRegion& xBox);
-	AWForceInline bool IsInside(_Type_ inX, _Type_ inY);
+	ZENInlineForce void Intersect(const zRegion& xBox1, const zRegion& xBox2);
+	ZENInlineForce void Intersect(const zRegion& xBox);
+	ZENInlineForce bool IsInside(_Type_ inX, _Type_ inY);
 
-	AWForceInline void Offset(const zVector2<_Type_>* pxOffset);
-	AWForceInline bool IsInside(const zVector2<_Type_>* pxOffset);
+	ZENInlineForce void Offset(const zVector2<_Type_>* pxOffset);
+	ZENInlineForce bool IsInside(const zVector2<_Type_>* pxOffset);
 
-	AWForceInline bool IsNull(void);
-	AWForceInline const zRegion& SetNull(void);
+	ZENInlineForce bool IsNull(void);
+	ZENInlineForce const zRegion& SetNull(void);
 
 	union
 	{
@@ -34,13 +34,13 @@ public:
 	};
 };
 
-typedef zRegion<zS8> 	zRegionS8;	ZENSupportMemcopy(zRegionS8);
+typedef zRegion<zI8> 	zRegionS8;	ZENSupportMemcopy(zRegionS8);
 typedef zRegion<zU8> 	zRegionU8;	ZENSupportMemcopy(zRegionU8);
-typedef zRegion<zS16>	zRegionS16;	ZENSupportMemcopy(zRegionS16);
+typedef zRegion<zI16>	zRegionS16;	ZENSupportMemcopy(zRegionS16);
 typedef zRegion<zU16>	zRegionU16;	ZENSupportMemcopy(zRegionU16);
-typedef zRegion<zS32>	zRegionS32;	ZENSupportMemcopy(zRegionS32);
+typedef zRegion<zI32>	zRegionS32;	ZENSupportMemcopy(zRegionS32);
 typedef zRegion<zU32>	zRegionU32;	ZENSupportMemcopy(zRegionU32);
-typedef zRegion<zS64>	zRegionS64;	ZENSupportMemcopy(zRegionS64);
+typedef zRegion<zI64>	zRegionS64;	ZENSupportMemcopy(zRegionS64);
 typedef zRegion<zU64>	zRegionU64;	ZENSupportMemcopy(zRegionU64);
 typedef zRegion<float>	zRegionF32;	ZENSupportMemcopy(zRegionF32);
 typedef zRegion<double>	zRegionF64;	ZENSupportMemcopy(zRegionF64);

@@ -140,7 +140,7 @@ const zFlag<TEnumFlag, TEnumMax, TStorage>& zFlag<TEnumFlag, TEnumMax, TStorage>
 */
 
 template<typename TEnumFlag, int TEnumMax, typename TStorage>
-AWForceInline void zFlag<TEnumFlag, TEnumMax, TStorage>::CheckValid(TStorage _Value)
+ZENInlineForce void zFlag<TEnumFlag, TEnumMax, TStorage>::CheckValid(TStorage _Value)
 {
 	ZENAssertMsg( (_Value & (~((TStorage(1)<<TEnumMax)-1)))==0, "Using an enum value higher than allowed");
 }

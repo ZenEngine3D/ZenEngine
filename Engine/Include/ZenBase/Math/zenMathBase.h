@@ -42,8 +42,8 @@ namespace zen { namespace zenMath
 
 	ZENInline bool IsPower2(zU32 x){ return ( (x > 0) && ((x & (x - 1)) == 0) ); }
 	ZENInline bool IsPower2(zU64 x){ return ( (x > 0) && ((x & (x - 1)) == 0) ); }
-	ZENInline bool IsPower2(zS32 x){ return ( (x > 0) && ((x & (x - 1)) == 0) ); }
-	ZENInline bool IsPower2(zS64 x){ return ( (x > 0) && ((x & (x - 1)) == 0) ); }
+	ZENInline bool IsPower2(zI32 x){ return ( (x > 0) && ((x & (x - 1)) == 0) ); }
+	ZENInline bool IsPower2(zI64 x){ return ( (x > 0) && ((x & (x - 1)) == 0) ); }
 
 	ZENInline zUInt RoundPow2( zUInt _Value, zUInt _Pow2Multiple )
 	{

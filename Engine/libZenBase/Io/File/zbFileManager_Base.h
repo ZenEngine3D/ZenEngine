@@ -73,13 +73,13 @@ namespace zbFile
 		const Filename&			GetFilename()const	{return mFilename;}
 		ZENInline bool			IsDir()const		{return (muFlags&keFileFlag_Dir)!=0; }
 		ZENInline bool			IsFile()const		{return (muFlags&keFileFlag_File)!=0; }
-		ZENInline zS64			GetFileSize()const	{return miFileSize;}
-		ZENInline zS64			GetFilePos()const	{return miFilePos;}
+		ZENInline zI64			GetFileSize()const	{return miFileSize;}
+		ZENInline zI64			GetFilePos()const	{return miFilePos;}
 		bool					IsEOF()const;
 
 		void					Close();
-		void					Seek(const zS64 uFilePos);
-		void					Skip(const zS32 iNumOfBytes);
+		void					Seek(const zI64 uFilePos);
+		void					Skip(const zI32 iNumOfBytes);
 		void					Read(void* pxDest, const zU32 uNumBytes);
 		void					Write(const void* pxSource, const zU32 uNumBytes);
 		void					Flush();
@@ -90,8 +90,8 @@ namespace zbFile
 		FileTime				mTimeCreated;
 		FileTime				mTimeChanged;
 		FileTime				mTimeAccess;
-		zS64					miFileSize;
-		zS64					miFilePos;
+		zI64					miFileSize;
+		zI64					miFilePos;
 		zUInt					muFlags;
 		bool					mbValidHandle;
 		
@@ -158,10 +158,10 @@ namespace zbFile
 
 					~AWStream( void )							{m_hFileHandle.Close();}
 
-		void		Seek(const zS64 uFilePos)					{m_hFileHandle.Seek(uFilePos);}
-		void		Skip(const zS32 iNumOfBytes)				{m_hFileHandle.Skip(iNumOfBytes);}
-		zS64		GetFileSize(void)							{return m_hFileHandle.GetFileSize();}
-		zS64		GetFilePosition(void)						{return m_hFileHandle.GetFilePos();}
+		void		Seek(const zI64 uFilePos)					{m_hFileHandle.Seek(uFilePos);}
+		void		Skip(const zI32 iNumOfBytes)				{m_hFileHandle.Skip(iNumOfBytes);}
+		zI64		GetFileSize(void)							{return m_hFileHandle.GetFileSize();}
+		zI64		GetFilePosition(void)						{return m_hFileHandle.GetFilePos();}
 
 		void		Flush(void)									{m_hFileHandle.Flush();}
 		bool		IsEOF(void)									{return m_hFileHandle.IsEOF();}
@@ -169,26 +169,26 @@ namespace zbFile
 		void		Read(void* pxDest, const zU32 uNumBytes)	{m_hFileHandle.Read(pxDest, uNumBytes);}
 		AWStream&	operator>>(bool& bIn)						{Read(&bIn, sizeof(bool )); return *this;}
 		AWStream&	operator>>(zU8& uIn)						{Read(&uIn, sizeof(zU8 )); return *this;}
-		AWStream&	operator>>(zS8& iIn)						{Read(&iIn, sizeof(zS8 )); return *this;}
+		AWStream&	operator>>(zI8& iIn)						{Read(&iIn, sizeof(zI8 )); return *this;}
 		AWStream&	operator>>(zU16&uIn)						{Read(&uIn, sizeof(zU16)); return *this;}
-		AWStream&	operator>>(zS16&iIn)						{Read(&iIn, sizeof(zS16)); return *this;}
+		AWStream&	operator>>(zI16&iIn)						{Read(&iIn, sizeof(zI16)); return *this;}
 		AWStream&	operator>>(zU32&uIn)						{Read(&uIn, sizeof(zU32)); return *this;}
-		AWStream&	operator>>(zS32&iIn)						{Read(&iIn, sizeof(zS32)); return *this;}
+		AWStream&	operator>>(zI32&iIn)						{Read(&iIn, sizeof(zI32)); return *this;}
 		AWStream&	operator>>(zU64&uIn)						{Read(&uIn, sizeof(zU64)); return *this;}
-		AWStream&	operator>>(zS64&iIn )						{Read(&iIn, sizeof(zS64)); return *this;}
+		AWStream&	operator>>(zI64&iIn )						{Read(&iIn, sizeof(zI64)); return *this;}
 		AWStream&	operator>>(float&fIn )						{Read(&fIn, sizeof(float)); return *this;}
 		AWStream&	operator>>(double&fIn )						{Read(&fIn, sizeof(double)); return *this;}
 
 		void		Write(const void* pxSource, const zU32 uNumBytes) { m_hFileHandle.Write(pxSource, uNumBytes);}
 		AWStream&	operator<<(const bool& bOut)				{Write(&bOut,sizeof(bool )); return *this;}
 		AWStream&	operator<<(const zU8& uOut)					{Write(&uOut,sizeof(zU8 )); return *this;}
-		AWStream&	operator<<(const zS8& iOut)					{Write(&iOut,sizeof(zS8 )); return *this;}
+		AWStream&	operator<<(const zI8& iOut)					{Write(&iOut,sizeof(zI8 )); return *this;}
 		AWStream&	operator<<(const zU16&uOut)					{Write(&uOut,sizeof(zU16)); return *this;}
-		AWStream&	operator<<(const zS16&iOut)					{Write(&iOut,sizeof(zS16)); return *this;}
+		AWStream&	operator<<(const zI16&iOut)					{Write(&iOut,sizeof(zI16)); return *this;}
 		AWStream&	operator<<(const zU32&uOut)					{Write(&uOut,sizeof(zU32)); return *this;}
-		AWStream&	operator<<(const zS32&iOut)					{Write(&iOut,sizeof(zS32)); return *this;}
+		AWStream&	operator<<(const zI32&iOut)					{Write(&iOut,sizeof(zI32)); return *this;}
 		AWStream&	operator<<(const zU64&uOut)					{Write(&uOut,sizeof(zU64)); return *this;}
-		AWStream&	operator<<(const zS64&iOut)					{Write(&iOut,sizeof(zS64)); return *this;}
+		AWStream&	operator<<(const zI64&iOut)					{Write(&iOut,sizeof(zI64)); return *this;}
 		AWStream&	operator<<(const float&fOut)				{Write(&fOut,sizeof(float)); return *this;}
 		AWStream&	operator<<(const double&fOut)				{Write(&fOut,sizeof(double)); return *this;}
 

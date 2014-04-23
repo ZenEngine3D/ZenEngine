@@ -70,7 +70,7 @@ struct ConfigDepthStencil
 	eCompare	meDepthTest;
 	eCompare	meStencilTest;
 	eStencilOp	meStencilOp;
-	zS8			muStencilRef;
+	zI8			muStencilRef;
 	bool		mbDepthWrite;
 
 	ZENInline bool operator==(const ConfigDepthStencil& _Compare)

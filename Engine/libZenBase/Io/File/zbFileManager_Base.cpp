@@ -44,12 +44,12 @@ void FileInfo::Close()
 	Super::Close(miFilePos, miFileSize, mbValidHandle);
 }
 
-void FileInfo::Seek(const zS64 iFilePos)
+void FileInfo::Seek(const zI64 iFilePos)
 {
 	Super::Seek(miFilePos, iFilePos);
 }
 
-void FileInfo::Skip(const zS32 iNumOfBytes)
+void FileInfo::Skip(const zI32 iNumOfBytes)
 {
 	Super::Skip(miFilePos, iNumOfBytes);
 }

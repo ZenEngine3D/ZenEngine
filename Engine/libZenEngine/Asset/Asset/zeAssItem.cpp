@@ -160,9 +160,17 @@ const zenAss::zArrayProperty& TestProperty::GetProperties()const
 { 	
 	static const zenAss::PropertyBool	PropertyBool	("PropertyBool",	"", "Property test: Bool",	true,	false);		
 	static const zenAss::PropertyFloat	PropertyFloat	("PropertyFloat",	"", "Property test: Float",	true,	0.f, 0.1f, -10.f, 10.f);		
-	static const zenAss::PropertyFloat2	PropertyFloat2	("PropertyFloat2",	"", "Property test: Float2",true,	zVec2F(0.f), zVec2F(0.1f), zVec2F(-10.f), zVec2F(10.f));		
+	static const zenAss::PropertyFloat2	PropertyFloat2	("PropertyFloat2",	"", "Property test: Float2",true,	zVec2F(0.f), zVec2F(0.1f), zVec2F(-10.f), zVec2F(10.f));
+	static const zenAss::PropertyFloat3	PropertyFloat3	("PropertyFloat3",	"", "Property test: Float3",true,	zVec3F(0.f), zVec3F(0.1f), zVec3F(-10.f), zVec3F(10.f));
+	static const zenAss::PropertyFloat4	PropertyFloat4	("PropertyFloat4",	"", "Property test: Float4",true,	zVec4F(0.f), zVec4F(0.1f), zVec4F(-10.f), zVec4F(10.f));
 	static const zenAss::PropertyFile	PropertyFile	("PropertyFile",	"", "Property test: File",	true,	"C:\\temp\\test.txt", "Images|*.bmp;*.png;*.jpeg;*.jpg|BMP(*.bmp)|*.bmp|PNG(*.png)|*.png|JPEG(*.jpg;*.jpeg)|*.jpg;*.jpeg");
-	static const zenAss::PropertyBase*	aPropertiesAll[] = {&PropertyBool, &PropertyFloat, &PropertyFloat2, &PropertyFile };
+	static const zenAss::PropertyFloat	PropertyInt		("PropertyInt",		"", "Property test: Int",	true,	0, 1, -10, 10);		
+	static const zenAss::PropertyInt2	PropertyInt2	("PropertyInt2",	"", "Property test: Int2",	true,	zVec2S32(0), zVec2S32(1), zVec2S32(-10), zVec2S32(10));
+	static const zenAss::PropertyInt3	PropertyInt3	("PropertyInt3",	"", "Property test: Int3",	true,	zVec3S32(0), zVec3S32(1), zVec3S32(-10), zVec3S32(10));
+	static const zenAss::PropertyInt4	PropertyInt4	("PropertyInt4",	"", "Property test: Int4",	true,	zVec4S32(0), zVec4S32(1), zVec4S32(-10), zVec4S32(10));
+	static const zenAss::PropertyBase*	aPropertiesAll[] = {&PropertyBool,	&PropertyFile,
+															&PropertyFloat,	&PropertyFloat2,	&PropertyFloat3,	&PropertyFloat4,
+															&PropertyInt,	&PropertyInt2,		&PropertyInt3,		&PropertyInt4};
 	static zenAss::zArrayProperty		saProperties( aPropertiesAll, ZENArrayCount(aPropertiesAll) );
 	return saProperties;
 }

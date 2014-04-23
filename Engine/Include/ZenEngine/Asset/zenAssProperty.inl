@@ -64,6 +64,33 @@ zUInt PropertyValue::ToString(zUInt _uLen, char* _zOutString)const
 	return mpDefinition->ToString(mpValue, _uLen, _zOutString);
 }
 
+//=============================================================================================
+// Property : Vector
+//=============================================================================================
+template<class TDataType>
+PropertyVector<TDataType>::PropertyVector(zenConst::eAssetPropertyType _eType, const char* _zFmtString, const char* _zName, const char* _zDisplayName, const char* _zDescription, bool _bShowInAssetDesc, TDataType _vDefault, TDataType _vInc, TDataType _vMin, TDataType _vMax )
+: PropertyBase(_zName, _eType, _zDisplayName, _zDescription, _bShowInAssetDesc )
+, mDefault(_vDefault)
+, mValMin(_vMin)
+, mValMax(_vMax)
+, mValInc(_vInc)
+{
+}
+
+template<class TDataType>
+zUInt PropertyVector<TDataType>::ToString(const void* _pValue, zUInt _zLen, char* _zOutString)const
+{
+	const TDataType* pValue = static_cast<const TDataType*>(_pValue);
+	return ::sprintf_s(_zOutString, _zLen, mzFmtString, pValue->values[0], pValue->values[1], pValue->values[2], pValue->values[3]);
+}
+
+template<class TDataType>
+bool PropertyVector<TDataType>::IsDefault( const void* _pValue )const
+{
+	const TDataType* pValue = static_cast<const TDataType*>(_pValue);
+	return *pValue == mDefault;
+}
+
 }} //namespace zen { namespace zenAss
 
 #endif

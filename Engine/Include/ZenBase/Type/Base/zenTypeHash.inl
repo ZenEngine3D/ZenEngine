@@ -85,7 +85,7 @@ zHash32::zHash32(const zHash32& _hCopy)
 zHash32::zHash32(const zU32& _uCopy)				
 : muHash(_uCopy){}
 
-zHash32::zHash32(const zS32& _iCopy)				
+zHash32::zHash32(const zI32& _iCopy)				
 : muHash(_iCopy){}
 
 zHash32::zHash32(ConstCharWrapper _zStr)		
@@ -201,7 +201,7 @@ zHash64::zHash64(const zU64& _uCopy)
 : muHash(_uCopy)
 {}
 
-zHash64::zHash64(const zS64& _iCopy)				
+zHash64::zHash64(const zI64& _iCopy)				
 : muHash(_iCopy)
 {}
 

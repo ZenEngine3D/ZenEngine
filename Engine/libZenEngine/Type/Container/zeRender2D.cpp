@@ -1,9 +1,9 @@
 #include "libZenEngine.h"
 /*
 namespace zen { namespace zenType {
-	zU32 zenRender2D::SFillQuad(zVec2DSimple* pxVB, zS32 x1, zS32 y1, zS32 x2, zS32 y2, zU32 z, zU32 uColour, const zRegionS32& xClipArea)
+	zU32 zenRender2D::SFillQuad(zVec2DSimple* pxVB, zI32 x1, zI32 y1, zI32 x2, zI32 y2, zU32 z, zU32 uColour, const zRegionS32& xClipArea)
 	{
-		const zS32 px1(xClipArea.mX1), py1(xClipArea.mY1), px2(xClipArea.mX2), py2(xClipArea.mY2);
+		const zI32 px1(xClipArea.mX1), py1(xClipArea.mY1), px2(xClipArea.mX2), py2(xClipArea.mY2);
 
 		if(!(x2 < px1 || y2 < py1 || x1 > px2 || y1 > py2))
 		{
@@ -21,17 +21,17 @@ namespace zen { namespace zenType {
 		return 0;
 	}
 
-	zU32 zenRender2D::SFillQuad(zVec2DFull*   pxVB, zS32 x1, zS32 y1, zS32 x2, zS32 y2, zS32 u1, zS32 v1, zS32 u2, zS32 v2, zU32 uColour, zU32 uMask, zU32 z, const zRegionS32& xClipArea)
+	zU32 zenRender2D::SFillQuad(zVec2DFull*   pxVB, zI32 x1, zI32 y1, zI32 x2, zI32 y2, zI32 u1, zI32 v1, zI32 u2, zI32 v2, zU32 uColour, zU32 uMask, zU32 z, const zRegionS32& xClipArea)
 	{
-		const zS32 px1(xClipArea.mX1), py1(xClipArea.mY1), px2(xClipArea.mX2), py2(xClipArea.mY2);
+		const zI32 px1(xClipArea.mX1), py1(xClipArea.mY1), px2(xClipArea.mX2), py2(xClipArea.mY2);
 
 		if(!(x2 < px1 || y2 < py1 || x1 > px2 || y1 > py2))
 		{
-			zS32 uw = u2 - u1, vh = v2 - v1;
-			if(x1 < px1)		{x1 = px1; zS32 w = x2 - x1; if(w < uw) u1 += uw - w;}
-			else if(x2 > px2)	{x2 = px2; zS32 w = x2 - x1; if(w < uw) u2 -= uw - w;}
-			if(y1 < py1)		{y1 = py1; zS32 h = y2 - y1; if(h < vh) v1 += vh - h;}
-			else if(y2 > py2)	{y2 = py2; zS32 h = y2 - y1; if(h < vh) v2 -= vh - h;}
+			zI32 uw = u2 - u1, vh = v2 - v1;
+			if(x1 < px1)		{x1 = px1; zI32 w = x2 - x1; if(w < uw) u1 += uw - w;}
+			else if(x2 > px2)	{x2 = px2; zI32 w = x2 - x1; if(w < uw) u2 -= uw - w;}
+			if(y1 < py1)		{y1 = py1; zI32 h = y2 - y1; if(h < vh) v1 += vh - h;}
+			else if(y2 > py2)	{y2 = py2; zI32 h = y2 - y1; if(h < vh) v2 -= vh - h;}
 			//TopLeft, TopRight, BottomRight,BottomLeft
 			pxVB[0].Set(x1, y1, z, uColour, uMask, u1, v1);
 			pxVB[1].Set(x2, y1, z, uColour, uMask, u2, v1);

@@ -15,7 +15,7 @@ namespace zen { namespace zenType {
 		ZENInline zInt		ReferenceCount();
 	protected:
 		virtual	 void		ReferenceNoneCB();	//!< Called when no reference are left on object
-		zS32				miRefCount;		
+		zI32				miRefCount;		
 	};
 	
 	class zRefCountedAutoDel : public zRefCounted

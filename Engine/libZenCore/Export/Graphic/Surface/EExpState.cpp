@@ -47,7 +47,7 @@ namespace EExp
 		return EMgr::Export.CreateItem( zResID::kePlatformType_GFX, zenConst::keResType_GfxDepthStencil, pExportInfo );
 	}
 
-	zResID CreateGfxRasterizer( bool _bFrontCounterClockwise, bool _bDepthClipEnable, bool _bScissorEnable, bool _bMultisampleEnable, bool _bAntialiasedLineEnable, bool _bWireFrame, zenConst::eCullMode _eCullMode, zS32 _iDepthBias, float _fDepthBiasClamp, float _fSlopeScaledDepthBias )
+	zResID CreateGfxRasterizer( bool _bFrontCounterClockwise, bool _bDepthClipEnable, bool _bScissorEnable, bool _bMultisampleEnable, bool _bAntialiasedLineEnable, bool _bWireFrame, zenConst::eCullMode _eCullMode, zI32 _iDepthBias, float _fDepthBiasClamp, float _fSlopeScaledDepthBias )
 	{
 		static zenMem::zAllocatorPool sMemPool("Pool CreateRasterizer", sizeof(SerialRasterizer_Base::ExportInfo), 1, 5 );
 		SerialRasterizer_Base::ExportInfo*	pExportInfo	= zenNew(&sMemPool) SerialRasterizer_Base::ExportInfo;

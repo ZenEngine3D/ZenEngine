@@ -9,7 +9,7 @@
 //=================================================================================================
 
 #define AWAlign(_VAR_,_BYTESALIGN_)	__declspec(align(_BYTESALIGN_)) _VAR_
-#define AWForceInline				__forceinline 
+#define ZENInlineForce				__forceinline 
 #ifdef _MSC_VER 
 #define AWRestrict					__restrict
 #endif

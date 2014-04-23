@@ -68,42 +68,42 @@ bool SerializerImportMem::Serialize(zU64& auValue)
 	return true;
 }
 
-bool SerializerImportMem::Serialize(zS8& aiValue)
+bool SerializerImportMem::Serialize(zI8& aiValue)
 {
 	if( mpMemoryCur + sizeof(aiValue) >= mpMemoryEnd )
 		return false;
 
-	aiValue		= *(zS8*)mpMemoryCur;
+	aiValue		= *(zI8*)mpMemoryCur;
 	mpMemoryCur += sizeof(aiValue);
 	return true;
 }
 
-bool SerializerImportMem::Serialize(zS16& aiValue)
+bool SerializerImportMem::Serialize(zI16& aiValue)
 {
 	if( mpMemoryCur + sizeof(aiValue) >= mpMemoryEnd )
 		return false;
 
-	aiValue		= *(zS16*)mpMemoryCur;
+	aiValue		= *(zI16*)mpMemoryCur;
 	mpMemoryCur += sizeof(aiValue);
 	return true;
 }
 
-bool SerializerImportMem::Serialize(zS32& aiValue)
+bool SerializerImportMem::Serialize(zI32& aiValue)
 {
 	if( mpMemoryCur + sizeof(aiValue) >= mpMemoryEnd )
 		return false;
 
-	aiValue		= *(zS32*)mpMemoryCur;
+	aiValue		= *(zI32*)mpMemoryCur;
 	mpMemoryCur += sizeof(aiValue);
 	return true;
 }
 
-bool SerializerImportMem::Serialize(zS64& aiValue)
+bool SerializerImportMem::Serialize(zI64& aiValue)
 {
 	if( mpMemoryCur + sizeof(aiValue) >= mpMemoryEnd )
 		return false;
 
-	aiValue		= *(zS64*)mpMemoryCur;
+	aiValue		= *(zI64*)mpMemoryCur;
 	mpMemoryCur += sizeof(aiValue);
 	return true;
 }
@@ -139,22 +139,22 @@ bool SerializerImportMem::Serialize(zArrayBase<zU64>& _aValues)
 	return true;
 }
 
-bool SerializerImportMem::Serialize(zArrayBase<zS8>& _aValues)
+bool SerializerImportMem::Serialize(zArrayBase<zI8>& _aValues)
 {
 	return true;
 }
 
-bool SerializerImportMem::Serialize(zArrayBase<zS16>& _aValues)
+bool SerializerImportMem::Serialize(zArrayBase<zI16>& _aValues)
 {
 	return true;
 }
 
-bool SerializerImportMem::Serialize(zArrayBase<zS32>& _aValues)
+bool SerializerImportMem::Serialize(zArrayBase<zI32>& _aValues)
 {
 	return true;
 }
 
-bool SerializerImportMem::Serialize(zArrayBase<zS64>& _aValues)
+bool SerializerImportMem::Serialize(zArrayBase<zI64>& _aValues)
 {
 	return true;
 }

@@ -33,18 +33,18 @@ public:
 	virtual bool	Serialize(zU16&						_uValue);
 	virtual bool	Serialize(zU32&						_uValue);
 	virtual bool	Serialize(zU64&						_uValue);
-	virtual bool	Serialize(zS8&						_iValue);
-	virtual bool	Serialize(zS16&						_iValue);
-	virtual bool	Serialize(zS32&						_iValue);
-	virtual bool	Serialize(zS64&						_iValue);
+	virtual bool	Serialize(zI8&						_iValue);
+	virtual bool	Serialize(zI16&						_iValue);
+	virtual bool	Serialize(zI32&						_iValue);
+	virtual bool	Serialize(zI64&						_iValue);
 	virtual bool	Serialize(zArrayBase<zU8>&	_aValues);
 	virtual bool	Serialize(zArrayBase<zU16>&	_aValues);
 	virtual bool	Serialize(zArrayBase<zU32>&	_aValues);
 	virtual bool	Serialize(zArrayBase<zU64>&	_aValues);
-	virtual bool	Serialize(zArrayBase<zS8>&	_aValues);
-	virtual bool	Serialize(zArrayBase<zS16>&	_aValues);
-	virtual bool	Serialize(zArrayBase<zS32>&	_aValues);
-	virtual bool	Serialize(zArrayBase<zS64>&	_aValues);
+	virtual bool	Serialize(zArrayBase<zI8>&	_aValues);
+	virtual bool	Serialize(zArrayBase<zI16>&	_aValues);
+	virtual bool	Serialize(zArrayBase<zI32>&	_aValues);
+	virtual bool	Serialize(zArrayBase<zI64>&	_aValues);
 protected:
 	virtual bool	ItemStarted(EExp::SerialItem& aItem);
 

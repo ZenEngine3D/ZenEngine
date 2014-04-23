@@ -94,30 +94,30 @@ bool SerializerExportMem::Serialize(zU64& _uValue)
 	return true;
 }
 
-bool SerializerExportMem::Serialize(zS8& _iValue)
+bool SerializerExportMem::Serialize(zI8& _iValue)
 {
-	zS8* pValue	= static_cast<zS8*>(GetMemory(sizeof(_iValue)));
+	zI8* pValue	= static_cast<zI8*>(GetMemory(sizeof(_iValue)));
 	*pValue		= _iValue;
 	return true;
 }
 
-bool SerializerExportMem::Serialize(zS16& _iValue)
+bool SerializerExportMem::Serialize(zI16& _iValue)
 {
-	zS16* pValue	= static_cast<zS16*>(GetMemory(sizeof(_iValue)));
+	zI16* pValue	= static_cast<zI16*>(GetMemory(sizeof(_iValue)));
 	*pValue		= _iValue;
 	return true;
 }
 
-bool SerializerExportMem::Serialize(zS32& _iValue)
+bool SerializerExportMem::Serialize(zI32& _iValue)
 {
-	zS32* pValue	= static_cast<zS32*>(GetMemory(sizeof(_iValue)));
+	zI32* pValue	= static_cast<zI32*>(GetMemory(sizeof(_iValue)));
 	*pValue		= _iValue;
 	return true;
 }
 
-bool SerializerExportMem::Serialize(zS64& _iValue)
+bool SerializerExportMem::Serialize(zI64& _iValue)
 {
-	zS64* pValue	= static_cast<zS64*>(GetMemory(sizeof(_iValue)));
+	zI64* pValue	= static_cast<zI64*>(GetMemory(sizeof(_iValue)));
 	*pValue		= _iValue;
 	return true;
 }
@@ -158,39 +158,39 @@ bool SerializerExportMem::Serialize(zArrayBase<zU64>& _aValues)
 	return true;
 }
 
-bool SerializerExportMem::Serialize(zArrayBase<zS8>& _aValues)
+bool SerializerExportMem::Serialize(zArrayBase<zI8>& _aValues)
 {
-	zS8 uSize(_aValues.Size());
+	zI8 uSize(_aValues.Size());
 	Serialize(uSize);
-	zS8* pValues = static_cast<zS8*>(GetMemory(uSize));
+	zI8* pValues = static_cast<zI8*>(GetMemory(uSize));
 	zenMem::Copy(pValues, _aValues.First(), uSize );
 	return true;
 }
 
-bool SerializerExportMem::Serialize(zArrayBase<zS16>& _aValues)
-{
-	zU32 uSize(_aValues.Size());
-	Serialize(uSize);
-	zS16* pValues = static_cast<zS16*>(GetMemory(uSize));
-	zenMem::Copy(pValues, _aValues.First(), uSize );
-	return true;
-}
-
-bool SerializerExportMem::Serialize(zArrayBase<zS32>& _aValues)
+bool SerializerExportMem::Serialize(zArrayBase<zI16>& _aValues)
 {
 	zU32 uSize(_aValues.Size());
 	Serialize(uSize);
-	zS32* pValues = static_cast<zS32*>(GetMemory(uSize));
+	zI16* pValues = static_cast<zI16*>(GetMemory(uSize));
 	zenMem::Copy(pValues, _aValues.First(), uSize );
 	return true;
 }
 
-bool SerializerExportMem::Serialize(zArrayBase<zS64>& _aValues)
+bool SerializerExportMem::Serialize(zArrayBase<zI32>& _aValues)
+{
+	zU32 uSize(_aValues.Size());
+	Serialize(uSize);
+	zI32* pValues = static_cast<zI32*>(GetMemory(uSize));
+	zenMem::Copy(pValues, _aValues.First(), uSize );
+	return true;
+}
+
+bool SerializerExportMem::Serialize(zArrayBase<zI64>& _aValues)
 {
 	zU32 uSize(_aValues.Size());
 	if( Serialize(uSize) )
 	{
-		zS64* pValues = static_cast<zS64*>(GetMemory(_aValues.Size()));
+		zI64* pValues = static_cast<zI64*>(GetMemory(_aValues.Size()));
 		zenMem::Copy(pValues, _aValues.First(), _aValues.Size() );
 		return true;
 	}
