@@ -38,6 +38,22 @@ protected:
 	zArrayDynamic<char>		maChar;
 };
 
+template<class THashType>
+struct zStringHash
+{ 		
+	ZENInline zStringHash(const char* _zString="");				
+	ZENInline const zStringHash& operator=(const zStringHash& _Copy);
+	ZENInline bool operator==(const zStringHash& _Compare)const;
+	ZENInline bool operator!=(const zStringHash& _Compare)const;
+	zString		mzName; 
+	THashType	mhName; 
+
+	static zUInt Find( THashType _HashName, const zStringHash* _pFirst, zUInt _uCount );
+};
+
+typedef zStringHash<zHash32> zStringHash32;
+typedef zStringHash<zHash64> zStringHash64;	
+
 }}  //namespace zen, Type 
 
 #include "zenTypeString.inl"

@@ -91,6 +91,7 @@ bool AssetLoaderXml::Save(zenAss::zPackage& _rPackage)
 			++itAsset;
 		}		
 	}
+	//! @todo Asset: remove this test
 	bool bResult = Doc.save_file(L"E:\\TestPackage.xml");
 	return bResult;
 }

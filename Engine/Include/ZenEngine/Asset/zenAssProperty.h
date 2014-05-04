@@ -7,7 +7,7 @@
 namespace zen { namespace zenAss 
 {
 	const char* GetPropertyTypeName(zenConst::eAssetPropertyType _eType);
-
+	
 	//=============================================================================================
 	// Property : Base
 	//=============================================================================================
@@ -162,38 +162,59 @@ namespace zen { namespace zenAss
 	//=============================================================================================
 	// Property : Enum
 	//=============================================================================================
-	/*class PropertyEnum : public PropertyBase
+	class PropertyEnum : public PropertyBase
 	{
 	ZENClassDeclare(PropertyEnum, PropertyBase)
 	public:
+		typedef zI32	Data;
 		struct Entry 
 		{ 
 			Entry(){}
-			Entry(awU32 _uValue, const char* _zName, const char* _zDescription)
-				: uValue(_uValue)
-				, hKey(_zName)
-				, zName(_zName)
-				, zDescription(_zDescription)
+			Entry(Data _iValue, const char* _zName, const char* _zDescription)
+			: miValue(_iValue)
+			, mStrValue(_zName)
+			, mzDescription(_zDescription)
 			{
 			}
-			zI32		iValue; 
-			zStringHash	
-			zHash32		hKey; 
-			const char* zName;
-			const char* zDescription; 
+			Data			miValue; 
+			zStringHash32	mStrValue;
+			zString			mzDescription;
 		};
+		
+									PropertyEnum(const char* _zName, const char* _zDisplayName, const char* _zDescription, bool _bShowInAssetDesc, Data _Default, const Entry* _pEntries, zUInt _uEntryCount );
+		Data						mDefault;
+		zArrayStatic<Entry>			maEnumValues;
+		const Entry&				GetEnumEntry(Data _Value)const;
+		const Entry&				GetEnumEntry(zHash32 _hValue)const;
+		
+	protected:
+		zMap<zUInt>::Key32			mdKeyToIndex;
+		zArraySparse<zUInt>::Key32	maValueToIndex;
+		
+		virtual zUInt				ToString	(const void* _pValue, zUInt _uLen, char* _zOutString)const;
+		virtual bool				IsDefault	(const void* _pValue)const;	
+	};
+	
+	//=============================================================================================
+	// Property : Array
+	//=============================================================================================
+	/*
+	class PropertyArray : public PropertyBase
+	{
+	ZENClassDeclare(PropertyArray, PropertyBase)
+	public:
+		typedef zArrayStatic<PropertyValue>	Data;		
+		PropertyArray(const char* _zName, const char* _zDisplayName, const char* _zDescription, bool _bShowInAssetDesc, const PropertyBase& _Property );
 
-		typedef zI32		Data;		
-		PropertyInt(const char* _zName, const char* _zDisplayName, const char* _zDescription, bool _bShowInAssetDesc, Data _Default, Data _Inc=1, Data _Min=0.f, Data _Max=1.f );
-		Data				mDefault;
-		Data				mValMin;
-		Data				mValMax;
-		Data				mValInc;
+		PropertyBase&		mProperty;
+				
 	protected:
 		virtual zUInt		ToString	(const void* _pValue, zUInt _uLen, char* _zOutString)const;
 		virtual bool		IsDefault	(const void* _pValue)const;	
 	};
+
 	*/
+	
 	//=============================================================================================
 	// Property Value
 	//=============================================================================================
@@ -201,7 +222,7 @@ namespace zen { namespace zenAss
 	{
 	public:
 		ZENInline									PropertyValue();
-													~PropertyValue();
+		~PropertyValue();
 		ZENForceInline zenConst::eAssetPropertyType	GetType		()const;
 		ZENForceInline void							Allocate	(const PropertyBase& _PropertyDef);
 		ZENForceInline void							Reset		();
@@ -210,16 +231,16 @@ namespace zen { namespace zenAss
 		ZENInline bool								IsDefault	()const;
 		void*										GetValue	(){return mpValue;}
 		const void*									GetValue	()const{return mpValue;};
-	#define ZEN_ASSETPROPERTIES_EXPAND_CODE(_TypeName_)																								\
-	ZENInline bool									Is##_TypeName_()const			{return GetType()==zenConst::keAssProp_##_TypeName_##;}			\
-	ZENInline const Property##_TypeName_##::Data&	GetValue##_TypeName_()const		{ZENAssert(Is##_TypeName_##()); return *mpValue##_TypeName_;}	\
-	ZENInline Property##_TypeName_##::Data&			GetValue##_TypeName_()			{ZENAssert(Is##_TypeName_##()); return *mpValue##_TypeName_;}	\
-	ZENInline const Property##_TypeName_&			GetProperty##_TypeName_()const	{ZENAssert(Is##_TypeName_##()); return *static_cast<const Property##_TypeName_*>(mpDefinition);}
-	ZEN_ASSETPROPERTIES_EXPAND
-	#undef	ZEN_ASSETPROPERTIES_EXPAND_CODE
+		#define ZEN_ASSETPROPERTIES_EXPAND_CODE(_TypeName_)																									\
+		ZENInline bool									Is##_TypeName_()const			{return GetType()==zenConst::keAssProp_##_TypeName_##;}			\
+		ZENInline const Property##_TypeName_##::Data&	GetValue##_TypeName_()const		{ZENAssert(Is##_TypeName_##()); return *mpValue##_TypeName_;}	\
+		ZENInline Property##_TypeName_##::Data&			GetValue##_TypeName_()			{ZENAssert(Is##_TypeName_##()); return *mpValue##_TypeName_;}	\
+		ZENInline const Property##_TypeName_&			GetProperty##_TypeName_()const	{ZENAssert(Is##_TypeName_##()); return *static_cast<const Property##_TypeName_*>(mpDefinition);}
+		ZEN_ASSETPROPERTIES_EXPAND
+		#undef	ZEN_ASSETPROPERTIES_EXPAND_CODE
 
 	protected:		
-		const PropertyBase*							mpDefinition;				
+		const PropertyBase*							mpDefinition;
 		union 
 		{
 			void*									mpValue;
@@ -227,10 +248,170 @@ namespace zen { namespace zenAss
 			ZEN_ASSETPROPERTIES_EXPAND	
 			#undef	ZEN_ASSETPROPERTIES_EXPAND_CODE
 		};
-		
+	};
+	typedef const zArrayStatic<const PropertyBase*> zArrayProperty;
+	
+
+	//################################################################################################
+	//################################################################################################
+	//################################################################################################
+	class PropertyValue2
+	{
+	public:
+												PropertyValue2();
+		virtual									~PropertyValue2();
+		const PropertyValue2&					operator=( const PropertyValue2& _Copy );
+
+		ZENInline const class PropertyDefinition* GetDefinition()const
+		{
+			return mpDefinition;
+		}
+		ZENInline const void* GetValue()const
+		{
+			return mpValue;
+		}
+		bool									IsValid()const;
+		virtual bool							IsDefault()const;
+		virtual bool							operator==(const PropertyValue2& _Cmp)const;
+	protected:
+		void									ReferenceDecrease();
+												PropertyValue2(const class PropertyDefinition* _pParentDef, void* _pValue, zU32* _pRefCount);
+
+	protected:
+		const class PropertyDefinition*			mpDefinition;
+		void*									mpValue;
+		zU32*									mpRefCount;
+		friend class PropertyDefinition;
+		//	friend class ValueCommon;		
 	};
 
-	typedef const zArrayStatic<const PropertyBase*> zArrayProperty;
+	class PropertyDefinition
+	{
+	public:
+												PropertyDefinition(){};
+		virtual zenConst::eAssetPropertyType	GetType()const=0;
+		virtual PropertyValue2					Allocate()const=0;
+	protected:
+		PropertyValue2							CreateValue(const PropertyDefinition* _pParentDef, void* _pValue, zU32* _pRefCount)const;
+	};
+	//################################################################################################
+	template<zenConst::eAssetPropertyType TPropertyType, class TClassDefinition, class TClassStorage>
+	class TPropertyValue : public PropertyValue2
+	{
+	public:
+		TPropertyValue()
+		{
+			ZENDbgCode(mpValueCast		= static_cast<TClassStorage*>(mpValue));
+			ZENDbgCode(mpDefinitionCast = static_cast<const TClassDefinition*>(mpDefinition));
+		}
+
+		TPropertyValue(const PropertyValue2& _Copy)
+		{
+			*this = _Copy;
+		}
+
+		ZENInline const TClassDefinition* GetDefinition()const
+		{
+			return static_cast<const TClassDefinition*>(mpDefinition);
+		}
+
+		ZENInline const TClassStorage* GetValue()const
+		{
+			return static_cast<const TClassStorage*>(mpValue);
+		}
+
+		ZENInline TPropertyValue& operator=( const TClassStorage& _Copy )
+		{
+			ZENAssert(IsValid());
+			*static_cast<TClassStorage*>(mpValue) = _Copy;
+			return *this;
+		}
+
+		ZENInline TPropertyValue& operator=( const PropertyValue2& _Copy )
+		{
+			ZENAssert( _Copy.GetDefinition()==NULL || _Copy.GetDefinition()->GetType() == TPropertyType );
+			*static_cast<PropertyValue2*>(this)	= _Copy;
+			ZENDbgCode(mpValueCast		= static_cast<TClassStorage*>(mpValue));
+			ZENDbgCode(mpDefinitionCast = GetDefinition() );
+			return *this;
+		}
+
+		ZENInline TPropertyValue& operator=( const TPropertyValue& _Copy )
+		{	
+			*static_cast<PropertyValue2*>(this)	= _Copy;
+			ZENDbgCode(mpValueCast		= static_cast<TClassStorage*>(mpValue));
+			ZENDbgCode(mpDefinitionCast = static_cast<const TClassDefinition*>(mpDefinition));
+			return *this;
+		}
+
+		virtual bool operator==(const PropertyValue2& _Cmp)const
+		{
+			if( !IsValid() || !_Cmp.IsValid() )
+				return IsValid() == _Cmp.IsValid();
+
+			return	(mpDefinition == _Cmp.GetDefinition()) &&
+					(*static_cast<TClassStorage*>(mpValue) == *static_cast<const TClassStorage*>(_Cmp.GetValue()));
+		}
+
+		virtual bool IsDefault() const
+		{
+			if( IsValid() )
+			{
+				const TClassDefinition*	pDefinitionCast = GetDefinition();
+				const TClassStorage* pDataCast			= GetValue();
+				return pDefinitionCast->mDefault == *pDataCast;
+			}
+			return false;		
+		}
+
+	protected:
+		ZENDbgCode(TClassStorage*			mpValueCast);		//!< Usefull for debuging
+		ZENDbgCode(const TClassDefinition*	mpDefinitionCast);	//!< Usefull for debuging
+	};
+
+	//################################################################################################
+	template<zenConst::eAssetPropertyType TPropertyType, class TClassDefinition, class TClassValue>
+	class TPropertyDefinition : public PropertyDefinition
+	{
+	public:
+		typedef TClassValue													TypeStorage;
+		typedef TPropertyValue<TPropertyType,TClassDefinition,TypeStorage>	TypeValue;
+
+		TPropertyDefinition(){}
+
+		virtual zenConst::eAssetPropertyType GetType() const
+		{
+			return TPropertyType;
+		}
+
+		PropertyValue2 Allocate() const
+		{		
+			const TClassDefinition* pDefinition = static_cast<const TClassDefinition*>(this);
+			TypeStorage* pValue					= AllocateInternal();
+			zU32* pRefCountMem					= reinterpret_cast<zU32*>(pValue + 1);
+			*pValue								= pDefinition->mDefault;
+			return CreateValue(pDefinition, pValue, pRefCountMem);
+		}
+
+	protected:
+		static TypeStorage* AllocateInternal()
+		{				
+			static zenMem::zAllocatorPool sAllocPool( "TPropertyDefinition::Allocate", sizeof(TypeStorage)+sizeof(zU32), 256, 256 );
+			return zenNew(&sAllocPool) TypeStorage();
+		}
+	};
+	//################################################################################################
+	class Property2Int : public TPropertyDefinition<zenConst::keAssProp_Int, Property2Int, int>
+	{
+	public:	
+		Property2Int(TypeStorage default)	
+		: TPropertyDefinition()
+		, mDefault(default)
+		{}
+
+		TypeStorage mDefault;
+	};
+
 }} //namespace zen { namespace zenAss
 
 #endif

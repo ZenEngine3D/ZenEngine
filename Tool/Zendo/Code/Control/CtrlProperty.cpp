@@ -39,9 +39,8 @@ void ConfigurePropertyScalar(wxPGProperty& _Property, const wxVariant& _Min, con
 wxBetlBoolProperty::wxBetlBoolProperty(zenAss::PropertyValue& _AssetValue)
 {
 	const zenAss::PropertyBool&	Property		= _AssetValue.GetPropertyBool();
-	PropertyMetaData*			pMetaData		= zenNew(&sPoolMetaData)PropertyMetaData(_AssetValue, _AssetValue.GetValueBool());
 	const wxString				zFalseTrue[2]	= {wxT("False"), wxT("True")};	
-	SetClientData	( pMetaData );
+	SetClientData	( zenNew(&sPoolMetaData)PropertyMetaData(_AssetValue, _AssetValue.GetValueBool()) );
 	SetDefaultValue	( wxVariant(Property.mDefault) );
 	SetValue		( _AssetValue.GetValueBool() );	
 	SetHelpString	( wxString::Format("%s\n(Default %s)", Property.mzDescription, zFalseTrue[Property.mDefault]));
@@ -58,9 +57,8 @@ wxBetlBoolProperty::~wxBetlBoolProperty()
 //=================================================================================================
 wxBetlFloatProperty::wxBetlFloatProperty(zenAss::PropertyValue& _AssetValue)
 {
-	const zenAss::PropertyFloat& Property	= _AssetValue.GetPropertyFloat();
-	PropertyMetaData* pMetaData				= zenNew(&sPoolMetaData)PropertyMetaData(_AssetValue, _AssetValue.GetValueFloat());
-	SetClientData		( pMetaData );
+	const zenAss::PropertyFloat& Property = _AssetValue.GetPropertyFloat();
+	SetClientData		( zenNew(&sPoolMetaData)PropertyMetaData(_AssetValue, _AssetValue.GetValueFloat()) );
 	SetDefaultValue		( wxVariant(Property.mDefault) );
 	SetValue			( wxVariant(_AssetValue.GetValueFloat()) );
 	SetEditor			( wxPGEditor_SpinCtrl );
@@ -82,9 +80,8 @@ WX_PG_IMPLEMENT_PROPERTY_CLASS(wxBetlFloat4fProperty, wxPGProperty, wxVector4f, 
 //=================================================================================================
 wxBetlIntProperty::wxBetlIntProperty(zenAss::PropertyValue& _AssetValue)
 {
-	const zenAss::PropertyInt& Property		= _AssetValue.GetPropertyInt();
-	PropertyMetaData* pMetaData				= zenNew(&sPoolMetaData)PropertyMetaData(_AssetValue, _AssetValue.GetValueInt());
-	SetClientData		( pMetaData );
+	const zenAss::PropertyInt& Property	= _AssetValue.GetPropertyInt();
+	SetClientData		( zenNew(&sPoolMetaData)PropertyMetaData(_AssetValue, _AssetValue.GetValueInt()) );
 	SetDefaultValue		( wxVariant(Property.mDefault) );
 	SetValue			( wxVariant(_AssetValue.GetValueInt()) );
 	SetEditor			( wxPGEditor_SpinCtrl );
@@ -108,8 +105,7 @@ wxBetlFileProperty::wxBetlFileProperty(zenAss::PropertyValue& _AssetValue)
 {
 	wxFileName Value((const char*)_AssetValue.GetValueFile());
 	const zenAss::PropertyFile& Property	= _AssetValue.GetPropertyFile();
-	PropertyMetaData* pMetaData				= zenNew(&sPoolMetaData)PropertyMetaData(_AssetValue, Value.GetFullPath());
-	SetClientData		( pMetaData );
+	SetClientData		( zenNew(&sPoolMetaData)PropertyMetaData(_AssetValue, Value.GetFullPath()) );
 	SetDefaultValue		( wxVariant((const char*)Property.mDefault) );
 	SetValue			( Value.GetFullPath() );
 	SetHelpString		( Property.mzDescription );
@@ -146,8 +142,8 @@ wxBetlVectorProperty<TPropertyClass, TElementCast, TWxVector, TWxProperty>::wxBe
 	{
 		const wxString zNames[]={wxT("    X"),wxT("    Y"),wxT("    Z"),wxT("    W")};
 		TWxProperty* pProp					= zenNewDefault TWxProperty( wxString::Format("%s", zNames[idx]),wxPG_LABEL);
-		PropertyMetaData* pMetaDataChild	= zenNew(&sPoolMetaData)PropertyMetaData(_AssetValue, pValue->values[idx]);
-		pProp->SetClientData	( pMetaDataChild );
+		
+		pProp->SetClientData	( zenNew(&sPoolMetaData)PropertyMetaData(_AssetValue, pValue->values[idx]) );
 		pProp->SetDefaultValue	( wxVariant(pProperty->mDefault.values[idx]) );
 		pProp->SetValue			( wxVariant(pValue->values[idx]) );
 		pProp->SetHelpString	( wxString::Format(_zTooltipElement, pProperty->mzDescription, pProperty->mDefault.values[idx]));
@@ -162,21 +158,20 @@ wxBetlVectorProperty<TPropertyClass, TElementCast, TWxVector, TWxProperty>::wxBe
 	case 2: SetHelpString( wxString::Format(_zTooltip, pProperty->mzDescription, pProperty->mDefault.values[0],pProperty->mDefault.values[1]));	break;
 	case 3: SetHelpString( wxString::Format(_zTooltip, pProperty->mzDescription, pProperty->mDefault.values[0],pProperty->mDefault.values[1],pProperty->mDefault.values[2]));	break;
 	case 4: SetHelpString( wxString::Format(_zTooltip, pProperty->mzDescription, pProperty->mDefault.values[0],pProperty->mDefault.values[1],pProperty->mDefault.values[2],pProperty->mDefault.values[3]));	break;
-	}
-	
+	}	
 }
 
 template< class TPropertyClass, class TElementCast, class TWxVector, class TWxProperty >
 wxBetlVectorProperty<TPropertyClass, TElementCast, TWxVector, TWxProperty>::~wxBetlVectorProperty() 
 {
 	zenDel(GetClientData());
+	//! @todo Asset: Delete child client data
 }
 
 template< class TPropertyClass, class TElementCast, class TWxVector, class TWxProperty >
 void wxBetlVectorProperty<TPropertyClass, TElementCast, TWxVector, TWxProperty>::RefreshChildren()
 {
 	if ( !GetChildCount() ) return;
-
 	TWxVector vector;
 	vector << m_value;
 	for( zUInt idx(0); idx<ZENArrayCount(vector.values); ++idx)
@@ -189,47 +184,35 @@ wxVariant wxBetlVectorProperty<TPropertyClass, TElementCast, TWxVector, TWxPrope
 	TWxVector vector;
 	vector << thisValue;
 	vector.values[childIndex] = (TElementCast)childValue;
-
 	wxVariant newVariant;
 	newVariant << vector;
 	return newVariant;
 }
 
-
-
-#if 0
-
-
 //=================================================================================================
 // PROPERTY :
 //=================================================================================================
-wxBetlEnumProperty::wxBetlEnumProperty(zeAss::PropertyDefEnum::Value& _AssetValue)
+wxBetlEnumProperty::wxBetlEnumProperty(zenAss::PropertyValue& _AssetValue)
 {
-	const zeAss::PropertyDefEnum& PropertyDef	= (const zeAss::PropertyDefEnum&)_AssetValue.mParentDef;
-	PropertyMetaData* pMetaData					= zenNew(&sPoolMetaData)PropertyMetaData(&_AssetValue, long(_AssetValue.mValue));
-	const char* zDefaultDesc(NULL);
-	SetClientData		( pMetaData );
-	
+	const zenAss::PropertyEnum& Property = _AssetValue.GetPropertyEnum();	
 	wxPGChoices soc;
-	for(zUInt enumIdx(0), enumCount(PropertyDef.maEntry.Count()); enumIdx<enumCount; ++enumIdx)
+	for(zUInt enumIdx(0), enumCount(Property.maEnumValues.Count()); enumIdx<enumCount; ++enumIdx)
 	{
-		soc.Add( PropertyDef.maEntry[enumIdx].zDescription, long(PropertyDef.maEntry[enumIdx].hKey) );
-		if( PropertyDef.maEntry[enumIdx].hKey == PropertyDef.mDefault )
-			zDefaultDesc = PropertyDef.maEntry[enumIdx].zDescription;
+		soc.Add( (const char*)Property.maEnumValues[enumIdx].mzDescription, Property.maEnumValues[enumIdx].miValue );
 	}
 	//soc[PropertyDef.muDefault].SetBgCol( wxColour(200,255,200,1) );
 	//soc[PropertyDef.muDefault].SetBitmap(wxArtProvider::GetBitmap(wxART_INFORMATION));
+	SetClientData		( zenNew(&sPoolMetaData)PropertyMetaData(_AssetValue, _AssetValue.GetValueEnum()) );
 	SetChoices			( soc );	
-	SetDefaultValue		( wxVariant(long(PropertyDef.mDefault)) );
-	SetValue			( long(_AssetValue.mValue) );
-	SetHelpString		( wxString::Format("%s\n(Default '%s')", PropertyDef.mzDescription, zDefaultDesc));
+	SetDefaultValue		( wxVariant(Property.mDefault) );
+	SetValue			( _AssetValue.GetValueEnum() );
+	SetHelpString		( wxString::Format("%s\n(Default '%s')", Property.mzDescription, (const char*)Property.GetEnumEntry(Property.mDefault).mzDescription) );
 }
 
 wxBetlEnumProperty::~wxBetlEnumProperty()
 {
 	zenDel(GetClientData());
 }
-#endif
 
 //=================================================================================================
 //! @brief		Common setup applied to each property control
@@ -247,6 +230,7 @@ wxPGProperty* CreateAssetValueControl(wxPropertyGridInterface& _GridControl, zen
 	switch( _Value.GetType() )
 	{
 	case zenConst::keAssProp_Bool:		pProperty=zenNewDefault wxBetlBoolProperty(_Value);			break;
+	case zenConst::keAssProp_Enum:		pProperty=zenNewDefault wxBetlEnumProperty(_Value);			break;
 	case zenConst::keAssProp_File:		pProperty=zenNewDefault wxBetlFileProperty(_Value);			break;
 	case zenConst::keAssProp_Float:		pProperty=zenNewDefault wxBetlFloatProperty(_Value);		break;	
 	case zenConst::keAssProp_Float2:	pProperty=zenNewDefault wxBetlFloat2fProperty(_Value);		break;
@@ -256,16 +240,13 @@ wxPGProperty* CreateAssetValueControl(wxPropertyGridInterface& _GridControl, zen
 	case zenConst::keAssProp_Int2:		pProperty=zenNewDefault wxBetlInt2fProperty(_Value);		break;
 	case zenConst::keAssProp_Int3:		pProperty=zenNewDefault wxBetlInt3fProperty(_Value);		break;
 	case zenConst::keAssProp_Int4:		pProperty=zenNewDefault wxBetlInt4fProperty(_Value);		break;
-#if 0
-	case zenConst::keAssProp_Enum:	pProperty=zenNewDefault wxBetlEnumProperty(_Value.GetEnum());			break;
-#endif
-	default:									ZENAssertMsg(0, "Unknown property type, implement it")			break;
+	default:							ZENAssertMsg(0, "Unknown property type, implement it.")		break;
 	}	
 
 	if( pProperty )
 	{		
 		const zenAss::PropertyBase* pPropertyDef = _Value.GetProperty();
-		pProperty->SetName				( pPropertyDef->mName.mzName );
+		pProperty->SetName				( (const char*)pPropertyDef->mName.mzName );
 		pProperty->SetLabel				( pPropertyDef->mzDisplayName );				
 		pProperty->SetModifiedStatus	( pProperty->GetValue() != pProperty->GetDefaultValue() );
 		_GridControl.Append				( pProperty );

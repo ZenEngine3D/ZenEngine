@@ -44,7 +44,7 @@ namespace zen { namespace zenAss
 	zenConst::eAssetType				AssetNameToType		(zHash32 _hAssetName);
 	const zAssetItem&					AssetGet			(zAssetItem::ID _uAssetID); //! @todo Asset: Move to an asset manager at api level?
 
-	typedef zArraySparse<zenAss::zAssetItem>::Key64 zArrayAsset;
+	typedef zArraySparse<zenAss::zAssetItem>::Key32 zArrayAsset;
 
 	class zAssetTexture2D : public zAssetItem
 	{

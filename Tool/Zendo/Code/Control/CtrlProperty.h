@@ -99,8 +99,6 @@ public:
 	virtual				~wxBetlVectorProperty();
 	virtual wxVariant	ChildChanged( wxVariant& thisValue, int childIndex, wxVariant& childValue ) const;
 	virtual void		RefreshChildren();
-protected:
-	const char*			mzTooltip;
 };
 
 class wxBetlFloat2fProperty : public wxBetlVectorProperty<zenAss::PropertyFloat2, double, wxVector2f, wxFloatProperty>
@@ -138,36 +136,32 @@ class wxBetlInt2fProperty : public wxBetlVectorProperty<zenAss::PropertyInt2, lo
 {
 	WX_PG_DECLARE_PROPERTY_CLASS( wxBetlInt2fProperty )
 public:
-	wxBetlInt2fProperty(){ZENAssertMsg(0, "Shouldn't be reaching this constructor")}
-	wxBetlInt2fProperty(zenAss::PropertyValue& _AssetValue): wxBetlVectorProperty(_AssetValue, "%s\n(Default [ %3i, %3i ])", "%s\n(Default %3i)"){};
+						wxBetlInt2fProperty(){ZENAssertMsg(0, "Shouldn't be reaching this constructor")}
+						wxBetlInt2fProperty(zenAss::PropertyValue& _AssetValue): wxBetlVectorProperty(_AssetValue, "%s\n(Default [ %3i, %3i ])", "%s\n(Default %3i)"){};
 };
 
 class wxBetlInt3fProperty : public wxBetlVectorProperty<zenAss::PropertyInt3, long, wxVector3s, wxIntProperty>
 {
 	WX_PG_DECLARE_PROPERTY_CLASS( wxBetlInt3fProperty )
 public:
-	wxBetlInt3fProperty(){ZENAssertMsg(0, "Shouldn't be reaching this constructor")}
-	wxBetlInt3fProperty(zenAss::PropertyValue& _AssetValue):wxBetlVectorProperty(_AssetValue, "%s\n(Default [ %3i, %3i, %3i ])", "%s\n(Default %3i)"){};
+						wxBetlInt3fProperty(){ZENAssertMsg(0, "Shouldn't be reaching this constructor")}
+						wxBetlInt3fProperty(zenAss::PropertyValue& _AssetValue):wxBetlVectorProperty(_AssetValue, "%s\n(Default [ %3i, %3i, %3i ])", "%s\n(Default %3i)"){};
 };
 
 class wxBetlInt4fProperty : public wxBetlVectorProperty<zenAss::PropertyInt4, long, wxVector4s, wxIntProperty>
 {
 	WX_PG_DECLARE_PROPERTY_CLASS( wxBetlInt4fProperty )
 public:
-	wxBetlInt4fProperty(){ZENAssertMsg(0, "Shouldn't be reaching this constructor")}
-	wxBetlInt4fProperty(zenAss::PropertyValue& _AssetValue):wxBetlVectorProperty(_AssetValue, "%s\n(Default [ %3i, %3i, %3i, %3i ])", "%s\n(Default %3i)"){};
+						wxBetlInt4fProperty(){ZENAssertMsg(0, "Shouldn't be reaching this constructor")}
+						wxBetlInt4fProperty(zenAss::PropertyValue& _AssetValue):wxBetlVectorProperty(_AssetValue, "%s\n(Default [ %3i, %3i, %3i, %3i ])", "%s\n(Default %3i)"){};
 };
-
-#if 0
 
 class wxBetlEnumProperty : public wxEnumProperty
 {
 public:
-						wxBetlEnumProperty(zeAss::PropertyDefEnum::Value& _AssetValue);
+						wxBetlEnumProperty(zenAss::PropertyValue& _AssetValue);
 	virtual				~wxBetlEnumProperty();
 };
-
-#endif
 
 }
 

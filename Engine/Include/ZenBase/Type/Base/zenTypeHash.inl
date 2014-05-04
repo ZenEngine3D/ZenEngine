@@ -229,23 +229,4 @@ zHash64::zHash64(const zU8* _pData, zUInt _uSize)
 	Append(_pData, _uSize); 
 }
 
-//=================================================================================================
-// STRING HASH
-//=================================================================================================		
-template<class THashType>
-zStringHash<THashType>::zStringHash(const char* _zString)
-: mzName(_zString)
-, mhName(_zString)
-{
-}
-
-template<class THashType>
-zUInt zStringHash<THashType>::Find( THashType _HashName, const zStringHash* _pFirst, zUInt _uCount )
-{
-	for(zUInt idx(0); idx<_uCount; ++idx )
-		if( _pFirst[idx].mhName == _HashName )
-			return idx;
-	return _uCount;
-}
-
 }} //namespace zen, Type 

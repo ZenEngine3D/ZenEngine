@@ -158,18 +158,6 @@ namespace zen { namespace zenType
 		zU64 muHash;
 	};
 
-	template<class THashType>
-	struct zStringHash
-	{ 
-		ZENInline zStringHash(const char* _zString);		
-		static zUInt Find( THashType _HashName, const zStringHash* _pFirst, zUInt _uCount );
-		const char* mzName; 
-		THashType	mhName; 
-	};
-
-	typedef zStringHash<zHash32> zStringHash32;
-	typedef zStringHash<zHash64> zStringHash64;	
-
 }} //namespace zen, Type 
 
 #include "zenTypeHash.inl"

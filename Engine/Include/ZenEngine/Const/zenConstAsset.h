@@ -19,12 +19,13 @@
 									ZEN_ASSETPROPERTIES_EXPAND_CODE(Int2)		\
 									ZEN_ASSETPROPERTIES_EXPAND_CODE(Int3)		\
 									ZEN_ASSETPROPERTIES_EXPAND_CODE(Int4)		\
-//									ZEN_ASSETPROPERTIES_EXPAND_CODE(Enum)		\
+									ZEN_ASSETPROPERTIES_EXPAND_CODE(Enum)		\
+									//ZEN_ASSETPROPERTIES_EXPAND_CODE(Array)		\
 // 									ZEN_ASSETPROPERTIES_EXPAND_CODE(AssetRef)	
 
 namespace zen 
 { 
-
+	
 namespace zenConst 
 {
 	enum eAssetType

@@ -87,11 +87,6 @@ void ManagerAsset::PackageLoad()
 		madAsset[idx].GetLast(itAsset);
 		maAssetNextID[idx] = itAsset.IsValid() ? itAsset.GetKey() + 1 : 1;
 	}
-
-
-	//! @todo Clean: TEMP TEMP TEMP TEST
-	//! @todo Asset : Remove Test Asset/Property
-	//xmlLoader.SavePackages();	
 }
 
 bool ManagerAsset::PackageSave( zU32 _uPackageID )

@@ -85,6 +85,45 @@ void zString::Merge(const zArrayStatic<zString>& _aStrings, char _Separator, zIn
 	Merge(_aStrings, _Separator, *this, _iMaxEntry);
 }
 
+//=================================================================================================
+// STRING HASH
+//=================================================================================================		
+template<class THashType>
+zStringHash<THashType>::zStringHash(const char* _zString)
+	: mzName(_zString)
+	, mhName(_zString)
+{
+}
+
+template<class THashType>
+const zStringHash<THashType>& zStringHash<THashType>::operator=(const zStringHash& _Copy)
+{
+	mhName = _Copy.mhName;
+	mzName = _Copy.mzName;
+	return *this;
+}
+
+template<class THashType>
+bool zStringHash<THashType>::operator==(const zStringHash& _Compare)const
+{
+	return mhName == _Compare.mhName;
+}
+
+template<class THashType>
+bool zStringHash<THashType>::operator!=(const zStringHash& _Compare)const
+{
+	return mhName != _Compare.mhName;
+}
+
+template<class THashType>
+zUInt zStringHash<THashType>::Find( THashType _HashName, const zStringHash* _pFirst, zUInt _uCount )
+{
+	for(zUInt idx(0); idx<_uCount; ++idx )
+		if( _pFirst[idx].mhName == _HashName )
+			return idx;
+	return _uCount;
+}
+
 }}  //namespace zen, Type 
 
 
