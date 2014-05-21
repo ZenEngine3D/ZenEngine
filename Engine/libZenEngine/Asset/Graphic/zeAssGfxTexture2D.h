@@ -11,7 +11,7 @@ namespace zen { namespace zeAss
 	ZENClassDeclare(GfxTexture2D, Asset)
 	public:
 		virtual zenConst::eAssetType			GetType()const{return zenConst::keAssType_Texture2D;}
-		virtual const zenAss::zArrayProperty&	GetProperties()const;
+		virtual const zenAss::zPropertyArray&	GetProperties()const;
 		virtual zInt							GetValueIndex(zHash32 _hPropertyName)const;
 	protected:
 		mutable zArrayStatic<zU32>	maIcon; //!< Store icon data

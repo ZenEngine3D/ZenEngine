@@ -19,13 +19,22 @@ zInt GfxMesh::GetValueIndex(zHash32 _hPropertyName)const
 	return sdPropertyIndex[_hPropertyName];
 }
 
-const zenAss::zArrayProperty& GfxMesh::GetProperties()const
+const zenAss::zPropertyArray& GfxMesh::GetProperties()const
 { 	
+	//! @todo Asset : TODO TODO
+#if 1
+	static const zenAss::PropertyBool	Property00("TestBool",		"", "Test Bool Field",		true,	false);		
 	//zMap<zU32>::Key32					mdPropertyIndex; todo
-	static const zenAss::PropertyFile	Property00("Source",		"", "3D Model", true,	"", "");
-	static const zenAss::PropertyBase*	aPropertiesAll[] = {&Property00};
-	static zenAss::zArrayProperty		saProperties( aPropertiesAll, ZENArrayCount(aPropertiesAll) );
+	//static const zenAss::PropertyFile	Property00("Source",		"", "3D Model", true,	"", "");
+	static const zenAss::PropertyDefinition*	aPropertiesAll[] = {&Property00};
+#else
+
+// 	static const zenAss::PropertyInt	PropertyInt		("PropertyInt",		"", "Property test: Int",	true,	0, -10, 10, 1);		
+// 	static const zenAss::PropertyDefinition*	aPropertiesAll[] = {&PropertyInt};
+#endif
+ 	static zenAss::zPropertyArray		saProperties( aPropertiesAll, ZENArrayCount(aPropertiesAll) );
 	return saProperties;
+
 }
 
 }} //namespace zen { namespace zeAss

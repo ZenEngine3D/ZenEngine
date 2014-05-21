@@ -76,14 +76,24 @@ namespace zen { namespace zeAss
 		return sdPropertyIndex[_hPropertyName];
 	}
 
-	const zenAss::zArrayProperty& GfxTexture2D::GetProperties()const
+	const zenAss::zPropertyArray& GfxTexture2D::GetProperties()const
 	{ 	
+		//! @todo Asset : TODO TODO
+	#if 1
 		//zMap<zU32>::Key32					mdPropertyIndex; todo
 		static const zenAss::PropertyBool	Property00("TestBool",		"", "Test Bool Field",		true,	false);		
-		static const zenAss::PropertyFile	Property02("Source",		"", "Texture file",			true,	"C:\\temp\\test.txt", "Images|*.bmp;*.png;*.jpeg;*.jpg|BMP(*.bmp)|*.bmp|PNG(*.png)|*.png|JPEG(*.jpg;*.jpeg)|*.jpg;*.jpeg");
-		static const zenAss::PropertyBase*	aPropertiesAll[] = {&Property00, &Property02 };
-		static zenAss::zArrayProperty		saProperties( aPropertiesAll, ZENArrayCount(aPropertiesAll) );
+		//static const zenAss::PropertyFile	Property02("Source",		"", "Texture file",			true,	"C:\\temp\\test.txt", "Images|*.bmp;*.png;*.jpeg;*.jpg|BMP(*.bmp)|*.bmp|PNG(*.png)|*.png|JPEG(*.jpg;*.jpeg)|*.jpg;*.jpeg");
+		static const zenAss::PropertyDefinition*	aPropertiesAll[] = {&Property00 };
+		//static zenAss::zPropertyArray		saProperties( aPropertiesAll, ZENArrayCount(aPropertiesAll) );
+	#else
+		//! @todo Asset : TODO TODO
+//		static const zenAss::PropertyInt	PropertyInt		("PropertyInt",		"", "Property test: Int",	true,	0, -10, 10, 1);		
+	//	static const zenAss::PropertyDefinition*	aPropertiesAll[] = {&PropertyInt};
+		
+	#endif
+		static zenAss::zPropertyArray		saProperties( aPropertiesAll, ZENArrayCount(aPropertiesAll) );
 		return saProperties;
+	
 	}
 
 }} //namespace zen { namespace zeAss

@@ -96,32 +96,17 @@ void Asset::RebuiltDescription()
 
 void Asset::InitDefault()
 {	
-	// Only need to reset value
-	if( maPropertyValue.Count() > 0 )
+	const zenAss::zPropertyArray& aProperties = GetProperties();	
+	ZENAssertMsg(aProperties.Count() > 0, "An Asset type is missing ::GetProperties() implementation" );
+	maPropertyValue.SetCount( aProperties.Count() );
+	const zenAss::PropertyDefinition* const*	pDefinitionCur	= aProperties.First();
+	zenAss::PropertyValueRef*						pValueCur		= maPropertyValue.First();
+	zenAss::PropertyValueRef*						pValueLast		= maPropertyValue.Last();
+	while( pValueCur <= pValueLast )
 	{
-		zenAss::PropertyValue* pValCur	= maPropertyValue.First();
-		zenAss::PropertyValue* pValLast = maPropertyValue.Last();
-		while( pValCur <= pValLast )
-		{
-			pValCur->Reset();
-			++pValCur;
-		}
-	}
-	// Need to allocate value (which sets it to default)
-	else
-	{
-		const zenAss::zArrayProperty& aProperties = GetProperties();	
-		ZENAssert(aProperties.Count() > 0 );
-		maPropertyValue.SetCount( aProperties.Count() );
-		const zenAss::PropertyBase* const*	pPropCur	= aProperties.First();
-		zenAss::PropertyValue*				pValCur		= maPropertyValue.First();
-		zenAss::PropertyValue*				pValLast	= maPropertyValue.Last();
-		while( pValCur <= pValLast )
-		{
-			pValCur->Allocate(**pPropCur);
-			++pValCur;
-			++pPropCur;
-		}
+		*pValueCur = (*pDefinitionCur)->Allocate();
+		++pValueCur;
+		++pDefinitionCur;
 	}
 }
 
@@ -134,7 +119,7 @@ void Asset::InitDefault()
 //=================================================================================================
 bool Asset::InitPropertyMap(zMap<zInt>::Key32& _dPropertyMap)const
 {	
-	const zenAss::zArrayProperty& aPropertyDef = GetProperties();
+	const zenAss::zPropertyArray& aPropertyDef = GetProperties();
 	_dPropertyMap.Init(aPropertyDef.Count()*2);
 	_dPropertyMap.SetDefaultValue(-1);
 	for(zInt idx(0), count(aPropertyDef.Count()); idx<count; ++idx)
@@ -156,30 +141,43 @@ zInt TestProperty::GetValueIndex(zHash32 _hPropertyName)const
 	return sdPropertyIndex[_hPropertyName];
 }
 
-const zenAss::zArrayProperty& TestProperty::GetProperties()const
+const zenAss::zPropertyArray& TestProperty::GetProperties()const
 { 	
-	const zenAss::PropertyEnum::Entry aEnumEntries[]={
-					zenAss::PropertyEnum::Entry(0, "EnumVal 0", "Description of enum0"),
-					zenAss::PropertyEnum::Entry(1, "EnumVal 1", "Description of enum1"),
-					zenAss::PropertyEnum::Entry(2, "EnumVal 2", "Description of enum2"),
-					zenAss::PropertyEnum::Entry(3, "EnumVal 3", "Description of enum3")};
+ 	const zenAss::PropertyEnum::Entry aEnumEntries[]={
+ 		zenAss::PropertyEnum::Entry(0, "Value A", "Description of 1st Entry"),
+ 		zenAss::PropertyEnum::Entry(1, "Value B", "Description of 2nd Entry"),
+ 		zenAss::PropertyEnum::Entry(2, "Value C", "Description of 3rd Entry"),
+ 		zenAss::PropertyEnum::Entry(3, "Value D", "Description of 4th Entry")};
 
-	static const zenAss::PropertyBool	PropertyBool	("PropertyBool",	"", "Property test: Bool",	true,	false);		
-	static const zenAss::PropertyEnum	PropertyEnum	("PropertyEnum",	"", "Property test: Enum",	true,	0, aEnumEntries, ZENArrayCount(aEnumEntries) );
-	static const zenAss::PropertyFile	PropertyFile	("PropertyFile",	"", "Property test: File",	true,	"C:\\temp\\test.txt", "Images|*.bmp;*.png;*.jpeg;*.jpg|BMP(*.bmp)|*.bmp|PNG(*.png)|*.png|JPEG(*.jpg;*.jpeg)|*.jpg;*.jpeg");
-	static const zenAss::PropertyFloat	PropertyFloat	("PropertyFloat",	"", "Property test: Float",	true,	0.f, 0.1f, -10.f, 10.f);		
-	static const zenAss::PropertyFloat2	PropertyFloat2	("PropertyFloat2",	"", "Property test: Float2",true,	zVec2F(0.f), zVec2F(0.1f), zVec2F(-10.f), zVec2F(10.f));
-	static const zenAss::PropertyFloat3	PropertyFloat3	("PropertyFloat3",	"", "Property test: Float3",true,	zVec3F(0.f), zVec3F(0.1f), zVec3F(-10.f), zVec3F(10.f));
-	static const zenAss::PropertyFloat4	PropertyFloat4	("PropertyFloat4",	"", "Property test: Float4",true,	zVec4F(0.f), zVec4F(0.1f), zVec4F(-10.f), zVec4F(10.f));
-	static const zenAss::PropertyFloat	PropertyInt		("PropertyInt",		"", "Property test: Int",	true,	0, 1, -10, 10);		
-	static const zenAss::PropertyInt2	PropertyInt2	("PropertyInt2",	"", "Property test: Int2",	true,	zVec2S32(0), zVec2S32(1), zVec2S32(-10), zVec2S32(10));
-	static const zenAss::PropertyInt3	PropertyInt3	("PropertyInt3",	"", "Property test: Int3",	true,	zVec3S32(0), zVec3S32(1), zVec3S32(-10), zVec3S32(10));
-	static const zenAss::PropertyInt4	PropertyInt4	("PropertyInt4",	"", "Property test: Int4",	true,	zVec4S32(0), zVec4S32(1), zVec4S32(-10), zVec4S32(10));
+	static const zenAss::PropertyBool	StructBool		("PropStructBool",	"", "Property test: Bool",	true,	false);	
+ 	static const zenAss::PropertyFloat	StructFloat		("PropStructFloat",	"", "Property test: Float",	true,	1.f, -5.f, 5.f, 0.5f);
+ 	static const zenAss::PropertyFloat2	StructFloat2	("PropStructFloat2","", "Property test: Float2",true,	zVec2F(1.f), zVec2F(-10.f), zVec2F(10.f), zVec2F(0.1f));
+ 	static const zenAss::PropertyDefinition* aPropertiesStruct[] = {&StructBool, &StructFloat, &StructFloat2};
+ 	static const zenAss::PropertyStruct PropertyStruct	("PropertyStruct",	"",	"Property test: Struct", true, aPropertiesStruct, ZENArrayCount(aPropertiesStruct) );
+ 
+ 	static const zenAss::PropertyBool	PropertyBool	("PropertyBool",	"", "Property test: Bool",	true,	false);	
+ 	static const zenAss::PropertyFloat	PropertyFloat	("PropertyFloat",	"", "Property test: Float",	true,	0.f, -10.f, 10.f, 0.5f);
+ 	static const zenAss::PropertyFloat2	PropertyFloat2	("PropertyFloat2",	"", "Property test: Float2",true,	zVec2F(1.f), zVec2F(-10.f), zVec2F(10.f), zVec2F(0.1f));
+ 	static const zenAss::PropertyFloat3	PropertyFloat3	("PropertyFloat3",	"", "Property test: Float3",true,	zVec3F(1.f), zVec3F(-10.f), zVec3F(10.f), zVec3F(0.1f));
+ 	static const zenAss::PropertyFloat4	PropertyFloat4	("PropertyFloat4",	"", "Property test: Float4",true,	zVec4F(1.f), zVec4F(-10.f), zVec4F(10.f), zVec4F(0.1f));	
+ 	static const zenAss::PropertyInt	PropertyInt		("PropertyInt",		"", "Property test: Int",	true,	0, -10, 10, 1);
+ 	static const zenAss::PropertyInt2	PropertyInt2	("PropertyInt2",	"", "Property test: Int2",	true,	zVec2S32(1), zVec2S32(-10), zVec2S32(10), zVec2S32(1));
+ 	static const zenAss::PropertyInt3	PropertyInt3	("PropertyInt3",	"", "Property test: Int3",	true,	zVec3S32(1), zVec3S32(-10), zVec3S32(10), zVec3S32(1));
+ 	static const zenAss::PropertyInt4	PropertyInt4	("PropertyInt4",	"", "Property test: Int4",	true,	zVec4S32(1), zVec4S32(-10), zVec4S32(10), zVec4S32(1));
+ 	static const zenAss::PropertyEnum	PropertyEnum	("PropertyEnum",	"", "Property test: Enum",	true,	0, aEnumEntries, ZENArrayCount(aEnumEntries) );
+ 	static const zenAss::PropertyFile	PropertyFile	("PropertyFile",	"", "Property test: File",	true,	"C:\\temp\\test.txt", "Images|*.bmp;*.png;*.jpeg;*.jpg|BMP(*.bmp)|*.bmp|PNG(*.png)|*.png|JPEG(*.jpg;*.jpeg)|*.jpg;*.jpeg");	
+
+ 	static zenAss::PropertyValueRef sTestArrayInit[]= {PropertyStruct.Allocate(),PropertyStruct.Allocate(),PropertyStruct.Allocate()};
+ 	static zArrayDynamic<zenAss::PropertyValueRef> saTestArrayInit(sTestArrayInit, ZENArrayCount(sTestArrayInit) );
+ 	static const zenAss::PropertyArray	PropertyArray	("PropertyArray",	"", "Property test: Bool",	true, saTestArrayInit, PropertyStruct);
 	
-	static const zenAss::PropertyBase*	aPropertiesAll[] = {&PropertyBool,	&PropertyEnum,		&PropertyFile,
-															&PropertyFloat,	&PropertyFloat2,	&PropertyFloat3,	&PropertyFloat4,
-															&PropertyInt,	&PropertyInt2,		&PropertyInt3,		&PropertyInt4};
-	static zenAss::zArrayProperty		saProperties( aPropertiesAll, ZENArrayCount(aPropertiesAll) );
+
+	static const zenAss::PropertyDefinition*	aPropertiesAll[] = {&PropertyBool, &PropertyEnum, &PropertyFile,
+															&PropertyFloat, &PropertyFloat2, &PropertyFloat3, &PropertyFloat4, 
+															&PropertyInt, &PropertyInt2, &PropertyInt3, &PropertyInt4,
+															&PropertyStruct, &PropertyArray, 
+															};
+	static zenAss::zPropertyArray		saProperties( aPropertiesAll, ZENArrayCount(aPropertiesAll) );
 	return saProperties;
 }
 

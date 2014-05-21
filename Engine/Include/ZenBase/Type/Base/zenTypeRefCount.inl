@@ -69,6 +69,19 @@ const zRefOwner<TRefCountedType>& zRefOwner<TRefCountedType>::operator=(TRefCoun
 }
 
 template<class TRefCountedType>
+const zRefOwner<TRefCountedType>& zRefOwner<TRefCountedType>::operator=(const zRefOwner& _Copy)
+{	
+	ZENAssert(&_Copy != this);
+	if( mpReference )
+		reinterpret_cast<zRefCounted*>(mpReference)->ReferenceRem();
+	mpReference = _Copy.mpReference;
+	if( mpReference )
+		reinterpret_cast<zRefCounted*>(mpReference)->ReferenceAdd();
+
+	return *this;
+}
+
+template<class TRefCountedType>
 bool zRefOwner<TRefCountedType>::operator==(const zRefOwner& _Cmp)
 {
 	return mpReference == _Cmp.mpReference;

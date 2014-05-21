@@ -103,7 +103,7 @@ zUInt zAssetItem::GetValueCount()const
 	ZENAssert(mpReference);	
 	return mpReference->GetValueCount(); 
 }
-zenAss::PropertyValue& zAssetItem::GetValue(zUInt _uValIndex)	
+zenAss::PropertyValueRef zAssetItem::GetValue(zUInt _uValIndex)	
 { 
 	ZENAssert(mpReference);	
 	return mpReference->GetValue(_uValIndex); 

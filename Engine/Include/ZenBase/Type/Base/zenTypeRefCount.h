@@ -35,6 +35,7 @@ namespace zen { namespace zenType {
 		ZENInline 							zRefOwner(const zRefOwner& _Copy);
 		ZENInline 							~zRefOwner();
 		ZENInline const zRefOwner&			operator=(TRefCountedType* _pReference);
+		ZENInline const zRefOwner&			operator=(const zRefOwner& _Copy);
 		ZENInline bool						operator==(const zRefOwner& _Cmp);
 		ZENInline bool						operator!=(const zRefOwner& _Cmp);
 		ZENInline bool						IsValid()const;

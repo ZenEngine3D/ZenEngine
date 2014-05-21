@@ -102,6 +102,31 @@ int zArrayBase<TType>::Find(const TType& _Value)
 }
 
 //==================================================================================================
+//! @brief		Return true if all element are the same
+//! @details	
+//--------------------------------------------------------------------------------------------------
+//! @param _Cmp		- Array to compare against
+//! @return			- true of contains sames elements
+//==================================================================================================
+template<class TType>
+bool zArrayBase<TType>::operator==(const zArrayBase& _Cmp)const
+{
+	TType* pItemSrcCur	= mpData;
+	TType* pItemSrcEnd	= mpData+muCount;
+	TType* pItemCmpCur	= _Cmp.mpData;
+
+	if( muCount != _Cmp.muCount )
+		return false;
+
+	while( pItemSrcCur < pItemSrcEnd )
+	{
+		if( (*pItemSrcCur++ == *pItemCmpCur++) == false )
+			return false;
+	}
+	return true;
+}
+
+//==================================================================================================
 //! @brief		Copy array value to this array
 //! @details	
 //--------------------------------------------------------------------------------------------------

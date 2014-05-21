@@ -111,6 +111,8 @@ bool AssetLoaderXml::LoadAsset(zeAss::Package& _Package, const pugi::xml_node& _
 			const char* zAssetGroup	= _XmlNodeAsset.attribute(kzXmlName_AssetAtr_Group).as_string();
 			pNewAsset->Init(uID, zAssetName, zAssetGroup, _Package);
 
+//! @todo Asset : TODO TODO
+#if 0
 			// Load properties values
 			for (pugi::xml_node nodeProp = _XmlNodeAsset.child(kzXmlName_Node_Property); nodeProp; nodeProp = nodeProp.next_sibling(kzXmlName_Node_Property))
 			{
@@ -119,7 +121,7 @@ bool AssetLoaderXml::LoadAsset(zeAss::Package& _Package, const pugi::xml_node& _
 				zInt valudIdx			= pNewAsset->GetValueIndex( zHash32(zPropName) );
 				if( valudIdx >= 0 )
 				{
-					zenAss::PropertyValue&	assetValue	= pNewAsset->GetValue(valudIdx);
+					zenAss::PropertyValueRef&	assetValue	= pNewAsset->GetValue(valudIdx);
 					switch( assetValue.GetType() )
 					{
 					case zenConst::keAssProp_Bool:	assetValue.GetValueBool()	= nodeProp.attribute("Value").as_bool(); break;
@@ -130,6 +132,8 @@ bool AssetLoaderXml::LoadAsset(zeAss::Package& _Package, const pugi::xml_node& _
 					}
 				}
 			}
+#endif
+//! @todo Asset : TODO TODO
 			return true;
 		}
 	}
@@ -141,7 +145,8 @@ bool AssetLoaderXml::SaveAsset(zenAss::zAssetItem _rAsset, pugi::xml_node& _XmlN
 {
 	zString zGroupName;
 	zGroupName.Merge(_rAsset->GetGroupAndName(), '\\', zGroupName, -1 );
-
+//! @todo Asset : TODO TODO
+#if 0
 	pugi::xml_node nodeAsset = _XmlNodeDoc.append_child(kzXmlName_Node_Asset);
 	nodeAsset.append_attribute(kzXmlName_AssetAtr_ID).set_value( _rAsset->GetID() );
 	nodeAsset.append_attribute(kzXmlName_AssetAtr_Name).set_value( _rAsset->GetName() );
@@ -149,7 +154,7 @@ bool AssetLoaderXml::SaveAsset(zenAss::zAssetItem _rAsset, pugi::xml_node& _XmlN
 	nodeAsset.append_attribute(kzXmlName_AssetAtr_Group).set_value( zGroupName );
 	for(zInt idx(0), count(_rAsset->GetValueCount()); idx<count; ++idx)
 	{
-		zenAss::PropertyValue& assetValue	= _rAsset->GetValue(idx);
+		zenAss::PropertyValueRef& assetValue	= _rAsset->GetValue(idx);
 		if( assetValue.IsDefault() == false )
 		{
 			pugi::xml_node nodeProp			= nodeAsset.append_child(kzXmlName_Node_Property);
@@ -164,7 +169,8 @@ bool AssetLoaderXml::SaveAsset(zenAss::zAssetItem _rAsset, pugi::xml_node& _XmlN
 			}
 		}
 	}
-
+#endif
+//! @todo Asset : TODO TODO
 	return true;
 }
 

@@ -4,25 +4,6 @@
 
 #if ZEN_ENGINETOOL
 
-//! @note: When adding support for new parameter type in assets :
-//!			1-Add name here
-//!			2-Add matching ParameterDefinition class to support it, with same ending name
-//!	To use this macro, define 'ZEN_ASSETPROPERTIES_EXPAND_CODE' to the content you want expanded with 
-//! each supported parameter name, and then undef it.
-#define ZEN_ASSETPROPERTIES_EXPAND	ZEN_ASSETPROPERTIES_EXPAND_CODE(Bool)		\
-									ZEN_ASSETPROPERTIES_EXPAND_CODE(File)		\
-									ZEN_ASSETPROPERTIES_EXPAND_CODE(Float)		\
-									ZEN_ASSETPROPERTIES_EXPAND_CODE(Float2)		\
-									ZEN_ASSETPROPERTIES_EXPAND_CODE(Float3)		\
-									ZEN_ASSETPROPERTIES_EXPAND_CODE(Float4)		\
-									ZEN_ASSETPROPERTIES_EXPAND_CODE(Int)		\
-									ZEN_ASSETPROPERTIES_EXPAND_CODE(Int2)		\
-									ZEN_ASSETPROPERTIES_EXPAND_CODE(Int3)		\
-									ZEN_ASSETPROPERTIES_EXPAND_CODE(Int4)		\
-									ZEN_ASSETPROPERTIES_EXPAND_CODE(Enum)		\
-									//ZEN_ASSETPROPERTIES_EXPAND_CODE(Array)		\
-// 									ZEN_ASSETPROPERTIES_EXPAND_CODE(AssetRef)	
-
 namespace zen 
 { 
 	
@@ -36,15 +17,28 @@ namespace zenConst
 		keAssType__Count,
 		keAssType__Invalid
 	};
-	
-	#define ZEN_ASSETPROPERTIES_EXPAND_CODE(_TypeName_)	keAssProp_##_TypeName_,
+
+	//! @note: When adding support for new parameter type in assets :
+	//!			1-Add enum value here
+	//!			2-Add matching ParameterDef class to support it (zenAssProperty.h)
 	enum eAssetPropertyType
 	{
-		ZEN_ASSETPROPERTIES_EXPAND
+		keAssProp_Bool,
+		keAssProp_File,
+		keAssProp_Float,
+		keAssProp_Float2,
+		keAssProp_Float3,
+		keAssProp_Float4,
+		keAssProp_Int,
+		keAssProp_Int2,
+		keAssProp_Int3,
+		keAssProp_Int4,
+		keAssProp_Enum,
+		keAssProp_Struct,
+		keAssProp_Array,
 		keAssProp__Count,
 		keAssProp__Invalid
 	};
-	#undef ZEN_ASSETPROPERTIES_EXPAND_CODE
 }
 
 namespace zenType

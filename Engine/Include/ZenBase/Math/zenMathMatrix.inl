@@ -38,9 +38,9 @@ namespace zen { namespace zenMath
     {
 		float fSinAngle = sinf(_fRadian);
 		float fCosAngle = cosf(_fRadian);
-		mvRows[0]	= XYZW( 1, 0, 0, 0);
-		mvRows[1]	= XYZW( 0, fCosAngle, fSinAngle, 0);
-		mvRows[2]	= XYZW( 0, -fSinAngle, fCosAngle, 0);
+		mvRows[0]	= simdXYZW( 1, 0, 0, 0);
+		mvRows[1]	= simdXYZW( 0, fCosAngle, fSinAngle, 0);
+		mvRows[2]	= simdXYZW( 0, -fSinAngle, fCosAngle, 0);
 		return *this;     
     }
 
@@ -48,9 +48,9 @@ namespace zen { namespace zenMath
     {
 		float fSinAngle = sinf(_fRadian);
 		float fCosAngle = cosf(_fRadian);
-		mvRows[0]	= XYZW( fCosAngle, 0, -fSinAngle, 0);
-		mvRows[1]	= XYZW( 0, 1, 0, 0);
-		mvRows[2]	= XYZW( fSinAngle, 0, fCosAngle, 0);
+		mvRows[0]	= simdXYZW( fCosAngle, 0, -fSinAngle, 0);
+		mvRows[1]	= simdXYZW( 0, 1, 0, 0);
+		mvRows[2]	= simdXYZW( fSinAngle, 0, fCosAngle, 0);
 		return *this;     
     }
 	
@@ -58,9 +58,9 @@ namespace zen { namespace zenMath
 	{
 		float fSinAngle = sinf(_fRadian);
 		float fCosAngle = cosf(_fRadian);
-		mvRows[0]	= XYZW( fCosAngle, fSinAngle, 0, 0);
-		mvRows[1]	= XYZW( -fSinAngle, fCosAngle, 0, 0);
-		mvRows[2]	= XYZW( 0, 0, 1, 0);
+		mvRows[0]	= simdXYZW( fCosAngle, fSinAngle, 0, 0);
+		mvRows[1]	= simdXYZW( -fSinAngle, fCosAngle, 0, 0);
+		mvRows[2]	= simdXYZW( 0, 0, 1, 0);
 		return *this;  
 	}
     
@@ -80,25 +80,25 @@ namespace zen { namespace zenMath
 	Matrix& Matrix::operator*=(const Matrix& _TransfoAdd)
 	{   
         V4 vCol;
-        vCol        = Mul(  SpreadX(mvRows[0]), _TransfoAdd.mvRows[0]);
-        vCol        = MAdd( SpreadY(mvRows[0]), _TransfoAdd.mvRows[1], vCol);
-        vCol        = MAdd( SpreadZ(mvRows[0]), _TransfoAdd.mvRows[2], vCol);
-        mvRows[0]   = MAdd( SpreadW(mvRows[0]), _TransfoAdd.mvRows[3], vCol);
+        vCol        = simdMul(  simdSpreadX(mvRows[0]), _TransfoAdd.mvRows[0]);
+        vCol        = simdMAdd( simdSpreadY(mvRows[0]), _TransfoAdd.mvRows[1], vCol);
+        vCol        = simdMAdd( simdSpreadZ(mvRows[0]), _TransfoAdd.mvRows[2], vCol);
+        mvRows[0]   = simdMAdd( simdSpreadW(mvRows[0]), _TransfoAdd.mvRows[3], vCol);
 
-        vCol        = Mul(  SpreadX(mvRows[1]), _TransfoAdd.mvRows[0]);
-        vCol        = MAdd( SpreadY(mvRows[1]), _TransfoAdd.mvRows[1], vCol);
-        vCol        = MAdd( SpreadZ(mvRows[1]), _TransfoAdd.mvRows[2], vCol);
-        mvRows[1]   = MAdd( SpreadW(mvRows[1]), _TransfoAdd.mvRows[3], vCol);
+        vCol        = simdMul(  simdSpreadX(mvRows[1]), _TransfoAdd.mvRows[0]);
+        vCol        = simdMAdd( simdSpreadY(mvRows[1]), _TransfoAdd.mvRows[1], vCol);
+        vCol        = simdMAdd( simdSpreadZ(mvRows[1]), _TransfoAdd.mvRows[2], vCol);
+        mvRows[1]   = simdMAdd( simdSpreadW(mvRows[1]), _TransfoAdd.mvRows[3], vCol);
 
-        vCol        = Mul(  SpreadX(mvRows[2]), _TransfoAdd.mvRows[0]);
-        vCol        = MAdd( SpreadY(mvRows[2]), _TransfoAdd.mvRows[1], vCol);
-        vCol        = MAdd( SpreadZ(mvRows[2]), _TransfoAdd.mvRows[2], vCol);
-        mvRows[2]   = MAdd( SpreadW(mvRows[2]), _TransfoAdd.mvRows[3], vCol);
+        vCol        = simdMul(  simdSpreadX(mvRows[2]), _TransfoAdd.mvRows[0]);
+        vCol        = simdMAdd( simdSpreadY(mvRows[2]), _TransfoAdd.mvRows[1], vCol);
+        vCol        = simdMAdd( simdSpreadZ(mvRows[2]), _TransfoAdd.mvRows[2], vCol);
+        mvRows[2]   = simdMAdd( simdSpreadW(mvRows[2]), _TransfoAdd.mvRows[3], vCol);
 
-        vCol        = Mul(  SpreadX(mvRows[3]), _TransfoAdd.mvRows[0]);
-        vCol        = MAdd( SpreadY(mvRows[3]), _TransfoAdd.mvRows[1], vCol);
-        vCol        = MAdd( SpreadZ(mvRows[3]), _TransfoAdd.mvRows[2], vCol);
-        mvRows[3]   = MAdd( SpreadW(mvRows[3]), _TransfoAdd.mvRows[3], vCol);
+        vCol        = simdMul(  simdSpreadX(mvRows[3]), _TransfoAdd.mvRows[0]);
+        vCol        = simdMAdd( simdSpreadY(mvRows[3]), _TransfoAdd.mvRows[1], vCol);
+        vCol        = simdMAdd( simdSpreadZ(mvRows[3]), _TransfoAdd.mvRows[2], vCol);
+        mvRows[3]   = simdMAdd( simdSpreadW(mvRows[3]), _TransfoAdd.mvRows[3], vCol);
 
 		return *this;
 	}
@@ -106,10 +106,10 @@ namespace zen { namespace zenMath
     V4 operator*(V4 _Vect, const Matrix& _Transfo)
     {
         V4 vResult;
-        vResult	=   Mul(  SpreadX(_Vect), _Transfo.GetRight() );
-        vResult =   MAdd( SpreadY(_Vect), _Transfo.GetUp(), vResult);
-        vResult =   MAdd( SpreadZ(_Vect), _Transfo.GetAt(), vResult);
-        return      MAdd( SpreadW(_Vect), _Transfo.GetPos(), vResult);
+        vResult	=   simdMul(  simdSpreadX(_Vect), _Transfo.GetRight() );
+        vResult =   simdMAdd( simdSpreadY(_Vect), _Transfo.GetUp(), vResult);
+        vResult =   simdMAdd( simdSpreadZ(_Vect), _Transfo.GetAt(), vResult);
+        return      simdMAdd( simdSpreadW(_Vect), _Transfo.GetPos(), vResult);
     }
 
 	//=================================================================================================
@@ -123,23 +123,23 @@ namespace zen { namespace zenMath
 	//=================================================================================================
 	ZENInline void MatrixLookToLH( Matrix& _matViewOut, V4 _vEyePos, V4 _vEyeDir, V4 _vUpDir )
 	{		
-		ZENAssert( !IsNearZero(_vEyeDir) );
-		ZENAssert( !IsNearZero(_vUpDir) );
+		ZENAssert( !simdIsNearZero(_vEyeDir) );
+		ZENAssert( !simdIsNearZero(_vUpDir) );
 				
 		//@todo Optim: optimize by just masking value		
-		_vEyePos				= Mul(_vEyePos, v4XYZ1);	//Discard w
-		_vEyeDir				= Mul(_vEyeDir, v4XYZ1);	//Discard w
-		_vUpDir					= Mul(_vUpDir, v4XYZ1);		//Discard w
-		V4 vEyePosNeg			= Mul(_vEyePos, v4OneNeg);
+		_vEyePos				= simdMul(_vEyePos, v4XYZ1);	//Discard w
+		_vEyeDir				= simdMul(_vEyeDir, v4XYZ1);	//Discard w
+		_vUpDir					= simdMul(_vUpDir, v4XYZ1);		//Discard w
+		V4 vEyePosNeg			= simdMul(_vEyePos, v4OneNeg);
 		
-		_matViewOut.mvAt		= Normalize(_vEyeDir);
-		_matViewOut.mvRight		= Normalize( Cross( _vUpDir, _matViewOut.mvAt ) );
-		_matViewOut.mvUp		= Cross( _matViewOut.mvAt, _matViewOut.mvRight ); 
+		_matViewOut.mvAt		= simdNormalize(_vEyeDir);
+		_matViewOut.mvRight		= simdNormalize( simdCross( _vUpDir, _matViewOut.mvAt ) );
+		_matViewOut.mvUp		= simdCross( _matViewOut.mvAt, _matViewOut.mvRight ); 
 
-		float TransX			= -Dot(_matViewOut.mvRight, _vEyePos);
-		float TransY			= -Dot(_matViewOut.mvUp, _vEyePos);
-		float TransZ			= -Dot(_matViewOut.mvAt, _vEyePos);
-		_matViewOut.mvPos		= zenMath::XYZW(TransX, TransY, TransZ, 1);
+		float TransX			= -simdDot(_matViewOut.mvRight, _vEyePos);
+		float TransY			= -simdDot(_matViewOut.mvUp, _vEyePos);
+		float TransZ			= -simdDot(_matViewOut.mvAt, _vEyePos);
+		_matViewOut.mvPos		= zenMath::simdXYZW(TransX, TransY, TransZ, 1);
 
 		//Matrix matTranslation( v4X1, v4Y1, v4Z1, Add( vEyePosNeg, v4W1) );
 		//_matViewOut.Transpose();//Invert rotation matrix
@@ -181,7 +181,7 @@ namespace zen { namespace zenMath
 	//=================================================================================================
 	ZENInline void MatrixLookAtLH( Matrix& _matViewOut, V4 _vEyePos, V4 _vTargetPos, V4 _vUpDir )
 	{
-		MatrixLookToLH(_matViewOut, _vEyePos, Sub(_vTargetPos, _vEyePos ), _vUpDir );
+		MatrixLookToLH(_matViewOut, _vEyePos, simdSub(_vTargetPos, _vEyePos ), _vUpDir );
 	}
 
 	//=================================================================================================
@@ -201,10 +201,10 @@ namespace zen { namespace zenMath
 		ZENAssert( _fNearZ > zenConst::kfSmallNumber && _fFarZ > _fNearZ )
 		
 		float ScaleX			= 1.f / tanf(_fFovDegreeWidth/180.0f*zenMath::kfPI);		
-		_matProjectionOut.mvRows[0]	= XYZW( ScaleX,		0,						0,									0);
-		_matProjectionOut.mvRows[1]	= XYZW( 0,			ScaleX/_fAspectRatio,	0,									0);
-		_matProjectionOut.mvRows[2]	= XYZW( 0,			0,						_fFarZ/(_fFarZ-_fNearZ),			1);
-		_matProjectionOut.mvRows[3]	= XYZW( 0,			0,						-_fFarZ/(_fFarZ-_fNearZ)*_fNearZ,	0);
+		_matProjectionOut.mvRows[0]	= simdXYZW( ScaleX,		0,						0,									0);
+		_matProjectionOut.mvRows[1]	= simdXYZW( 0,			ScaleX/_fAspectRatio,	0,									0);
+		_matProjectionOut.mvRows[2]	= simdXYZW( 0,			0,						_fFarZ/(_fFarZ-_fNearZ),			1);
+		_matProjectionOut.mvRows[3]	= simdXYZW( 0,			0,						-_fFarZ/(_fFarZ-_fNearZ)*_fNearZ,	0);
 		//_matProjectionOut.Transpose();
 	}
 }  } // namespace zen, zenMath

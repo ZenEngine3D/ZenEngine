@@ -2,10 +2,10 @@
 
 namespace zen { namespace zenMath 
 {
-const Matrix Matrix::sIdentity( XYZW(1.0f, 0.0f, 0.0f, 0.0f), 
-								XYZW(0.0f, 1.0f, 0.0f, 0.0f), 
-								XYZW(0.0f, 0.0f, 1.0f, 0.0f),
-								XYZW(0.0f, 0.0f, 0.0f, 1.0f) );
+const Matrix Matrix::sIdentity( simdXYZW(1.0f, 0.0f, 0.0f, 0.0f), 
+								simdXYZW(0.0f, 1.0f, 0.0f, 0.0f), 
+								simdXYZW(0.0f, 0.0f, 1.0f, 0.0f),
+								simdXYZW(0.0f, 0.0f, 0.0f, 1.0f) );
 
 
 Matrix::Matrix(const Matrix& _Copy)

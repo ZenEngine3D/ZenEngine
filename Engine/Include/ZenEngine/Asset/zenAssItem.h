@@ -32,7 +32,8 @@ namespace zen { namespace zenAss
 		zUInt							GetValueCount()const;
 		zenConst::eAssetType			GetType()const;
 		zPackage						GetPackage();
-		zenAss::PropertyValue&			GetValue(zUInt _uValIndex);
+//		zenAss::PropertyValueRef&			GetValue(zUInt _uValIndex);
+		zenAss::PropertyValueRef			GetValue(zUInt _uValIndex);
 		void							InitDefault();
 
 		void							Delete();

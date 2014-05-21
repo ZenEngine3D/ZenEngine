@@ -30,9 +30,12 @@ public:
 protected:
 };
 
+
 ZendoApp::ZendoApp()
 {
 }
+
+
 
 bool ZendoApp::OnInit()
 {
@@ -40,22 +43,6 @@ bool ZendoApp::OnInit()
 	// few common command-line options but it could be do more in the future
 	if ( !wxApp::OnInit() )
 		return false;
-
-	//! @todo Asset : Remove Test Asset/Property
-	char zBuffer[256];
-	/*
-	zeAss::TestProperty Test;
-	Test.InitDefault();
-	Test.GetValue(0).ToString( sizeof(zBuffer), zBuffer);
-	Test.GetValue(0).ToXml( sizeof(zBuffer), zBuffer);
-	Test.GetValue(1).ToString( sizeof(zBuffer), zBuffer);
-	Test.GetValue(1).ToXml( sizeof(zBuffer), zBuffer);
-	*/
-	zenAss::zAssetItem rTest = zenAss::AssetCreate(zenConst::keAssType_Texture2D);
-	zenAss::zAssetItem rTest2;
-	rTest2 = rTest;
-	rTest.GetValue(0).ToString( sizeof(zBuffer), zBuffer);
-	rTest.GetValue(1).ToString( sizeof(zBuffer), zBuffer);
 	
 	wxInitAllImageHandlers();
 	static EngineInstance Engine;
