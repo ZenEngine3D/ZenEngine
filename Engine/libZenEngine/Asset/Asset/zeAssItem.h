@@ -7,6 +7,9 @@
 namespace zen { namespace zeAss
 {
 
+//=================================================================================================
+// CLASS: Asset
+//=================================================================================================
 class Asset : public zRefCountedAutoDel
 {
 ZENClassDeclareNoParent(Asset)
@@ -26,12 +29,12 @@ public:
 	ZENForceInline zenAss::PropertyValueRef		GetValue(zUInt _uValIndex){ ZENAssert( _uValIndex< maPropertyValue.Count()); return maPropertyValue[_uValIndex];}
 	
 	virtual zenConst::eAssetType				GetType()const=0;										//!< Child class return the Asset type they represent
-	virtual const zenAss::zPropertyArray&		GetProperties()const=0;									//!< Child class return the list of property definition they are made of
+	virtual const zenAss::PropertyDefArray&	GetProperties()const=0;									//!< Child class return the list of property definition they are made of
 	virtual zInt								GetValueIndex(zHash32 _hPropertyName)const=0;
 protected:										
 												Asset();
 	void										RebuiltDescription();
-	bool										InitPropertyMap(zMap<zInt>::Key32& _dPropertyMap)const;
+
 	
 	zenAss::zPackage							mrPackage;					//!< Parent package this asset is kept inside
 	zU32										muID;						//!< Unique ID for this Asset instance
@@ -46,13 +49,27 @@ public:
 	static Asset*								CreateItem		(zenConst::eAssetType _eAssetType);
 };
 
-class TestProperty : public Asset
+//=================================================================================================
+// CLASS: TAsset
+//=================================================================================================
+template <zenConst::eAssetType TAssetType>
+class TAsset : public Asset
+{
+ZENClassDeclare(TAsset, Asset)
+public:
+	enum { kAssetType = TAssetType };
+	virtual zenConst::eAssetType				GetType()const{return TAssetType;}	
+	virtual zInt								GetValueIndex(zHash32 _hPropertyName)const;	
+};
+
+//=================================================================================================
+// CLASS: TestProperty
+//=================================================================================================
+class TestProperty : public TAsset<zenConst::keAssType_TestProperty>
 {
 ZENClassDeclare(TestProperty, Asset)
-public:
-	virtual zenConst::eAssetType				GetType()const{return zenConst::keAssType_TestProperty;}
-	virtual const zenAss::zPropertyArray&		GetProperties()const;
-	virtual zInt								GetValueIndex(zHash32 _hPropertyName)const;
+public:	
+	virtual const zenAss::PropertyDefArray&	GetProperties()const;	
 };	
 
 }} //namespace zen { namespace zeAss

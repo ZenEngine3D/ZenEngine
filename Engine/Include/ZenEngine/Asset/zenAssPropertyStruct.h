@@ -9,7 +9,6 @@ namespace zen { namespace zenAss
 
 class PropertyStruct : public TPropertyDefinition<zenConst::keAssProp_Struct, PropertyStruct, zArrayStatic<PropertyValueRef>>
 {
-ZENClassDeclare(PropertyStruct, TPropertyDefinition);	
 public:	
 	class ValueRef : public TPropertyDefinition::ValueRef
 	{
@@ -31,24 +30,29 @@ public:
 		}*/
 	};
 
-	PropertyStruct(const char* _zName, const char* _zDisplayName, const char* _zDescription, bool _bShowInAssetDesc, const PropertyDefinition** _pPropertyDef, zUInt _uPropertyDefCount)
-	: TPropertyDefinition(_zName, _zDisplayName, _zDescription, _bShowInAssetDesc)
-	, mdPropertyDefIndex(16)
-	{
-		ZENAssert(_pPropertyDef && _uPropertyDefCount>0);
-		maPropertyDef.Copy(_pPropertyDef, _uPropertyDefCount);
-		mDefault.SetCount(_uPropertyDefCount);
-		mdPropertyDefIndex.SetDefaultValue(0xFFFFFFFF);
+	ZENPropertyDefinitionDeclare( PropertyStruct )
+
+	static PropertyDefRef Create( const char* _zName, const char* _zDisplayName, const char* _zDescription, bool _bShowInAssetDesc, const PropertyDefRef* _prPropertyDef, zUInt _uPropertyDefCount )
+	{	
+		ZENAssert(_prPropertyDef && _uPropertyDefCount>0);
+		static zenMem::zAllocatorPool sAllocPool( "PropertyDefinition::Create", sizeof(PropertyStruct), 256, 256 );
+		PropertyStruct* pNewDefinition		= zenNew(&sAllocPool) zenAss::PropertyStruct(_zName, _zDisplayName, _zDescription, _bShowInAssetDesc);
+		pNewDefinition->maPropertyDef.Copy(_prPropertyDef, _uPropertyDefCount);
+		pNewDefinition->mDefault.SetCount(_uPropertyDefCount);
+		pNewDefinition->mdPropertyDefIndex.Init(16);
+		pNewDefinition->mdPropertyDefIndex.SetDefaultValue(0xFFFFFFFF);
 		for(zUInt idx(0); idx<_uPropertyDefCount; ++idx)
 		{
-			mDefault[idx] = maPropertyDef[idx]->Allocate();				
-			mdPropertyDefIndex.Set(_pPropertyDef[idx]->mName.mhName, idx);
+			ZENAssert( _prPropertyDef[idx].IsValid() );
+			pNewDefinition->mDefault[idx] = pNewDefinition->maPropertyDef[idx]->Allocate();				
+			pNewDefinition->mdPropertyDefIndex.Set(_prPropertyDef[idx]->mName.mhName, idx);
 		}
+
+		return pNewDefinition;
 	}
 
-	ValueStorage							mDefault;
-	zArrayStatic<const PropertyDefinition*>	maPropertyDef;
-	zMap<zUInt>::Key32						mdPropertyDefIndex;
+	zArrayStatic<PropertyDefRef>	maPropertyDef;
+	zMap<zUInt>::Key32				mdPropertyDefIndex;
 };
 
 }} //namespace zen { namespace zenAss

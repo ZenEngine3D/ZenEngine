@@ -6,15 +6,11 @@
 
 namespace zen { namespace zeAss
 {
-	class GfxMesh : public Asset
+	class GfxMesh : public TAsset<zenConst::keAssType_Mesh>
 	{
 	ZENClassDeclare(GfxMesh, Asset)
 	public:
-		virtual zenConst::eAssetType			GetType()const{return zenConst::keAssType_Mesh;}
-		virtual const zenAss::zPropertyArray&	GetProperties()const;
-		virtual zInt							GetValueIndex(zHash32 _hPropertyName)const;
-	protected:
-		static zArrayStatic<zU32>	saIcon;		//!< All mesh share the same icon @todo Missing: Keep this?
+		virtual const zenAss::PropertyDefArray&	GetProperties()const;
 	};
 }} //namespace zen { namespace zeAss
 

@@ -36,6 +36,13 @@ ZendoApp::ZendoApp()
 }
 
 
+class test : public zRefCountedAutoDel
+{
+public:
+	int val;
+	test(){val = 0;}
+	bool operator==(const test& cmp){return val == cmp.val;}
+};
 
 bool ZendoApp::OnInit()
 {

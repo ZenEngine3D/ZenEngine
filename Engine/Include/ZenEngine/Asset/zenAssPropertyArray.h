@@ -9,50 +9,21 @@ namespace zen { namespace zenAss
 	
 class PropertyArray : public TPropertyDefinition<zenConst::keAssProp_Array, PropertyArray, zArrayDynamic<PropertyValueRef> >
 {
-ZENClassDeclare(PropertyArray, TPropertyDefinition);	
-public:			
+	ZENPropertyDefinitionDeclare( PropertyArray )
+
 	class ValueRef : public TPropertyDefinition::ValueRef
 	{	
 	ZENClassDeclare(ValueRef, TPropertyDefinition::ValueRef);
 	public:
-		ValueRef():TPropertyDefinition::ValueRef(){};
-		ValueRef(const PropertyValueRef& _Copy):TPropertyDefinition::ValueRef(_Copy){};
-
-		PropertyValueRef AddEntry()
-		{
-			ZENAssert( IsValid() );
-			const PropertyArray& Definition		= GetDefinition();
-			PropertyValueRef newValue			= Definition.mArrayPropertyDef.Allocate();
-			ValueStorage& arrayValue			= Get();
-			arrayValue.Append(newValue);
-			return newValue;
-		}
-
-		void RemEntry(const PropertyValueRef& _ToRemove)
-		{
-			ZENAssert( IsValid() );
-			ValueStorage& arrayValue = Get();
-			for( zUInt idx(0), count(arrayValue.Count()); idx<count; ++idx)
-			{
-				if( arrayValue[idx] == _ToRemove )
-				{
-					for(zUInt idxCopy(idx); idxCopy+1<count; ++idxCopy)
-						arrayValue[idxCopy] = arrayValue[idxCopy+1];
-					arrayValue.Pop();
-					break;
-				}
-			}
-		}
+							ValueRef():TPropertyDefinition::ValueRef(){};
+							ValueRef(const PropertyValueRef& _Copy):TPropertyDefinition::ValueRef(_Copy){};
+		PropertyValueRef	AddEntry();
+		void				RemEntry(const PropertyValueRef& _ToRemove);
 	};
 
-	PropertyArray(const char* _zName, const char* _zDisplayName, const char* _zDescription, bool _bShowInAssetDesc, ValueStorage _Default, const PropertyDefinition& _PropertyDef)
-	: TPropertyDefinition(_zName, _zDisplayName, _zDescription, _bShowInAssetDesc)
-	, mDefault(_Default)
-	, mArrayPropertyDef(_PropertyDef)
-	{}
-
-	ValueStorage				mDefault;
-	const PropertyDefinition&	mArrayPropertyDef;
+	static PropertyDefRef	Create( const char* _zName, const char* _zDisplayName, const char* _zDescription, bool _bShowInAssetDesc, 
+									const PropertyDefRef& _rPropertyDef, zUInt _uEntryCountMin=0, zUInt _uEntryCountMax=9999 );
+	PropertyDefRef	mrArrayPropertyDef;
 };
 
 }} //namespace zen { namespace zenAss

@@ -96,89 +96,53 @@ void Asset::RebuiltDescription()
 
 void Asset::InitDefault()
 {	
-	const zenAss::zPropertyArray& aProperties = GetProperties();	
+	const zenAss::PropertyDefArray& aProperties = GetProperties();	
 	ZENAssertMsg(aProperties.Count() > 0, "An Asset type is missing ::GetProperties() implementation" );
 	maPropertyValue.SetCount( aProperties.Count() );
-	const zenAss::PropertyDefinition* const*	pDefinitionCur	= aProperties.First();
-	zenAss::PropertyValueRef*						pValueCur		= maPropertyValue.First();
-	zenAss::PropertyValueRef*						pValueLast		= maPropertyValue.Last();
+	const zenAss::PropertyDefRef*	prDefinitionCur	= aProperties.First();
+	zenAss::PropertyValueRef*		pValueCur		= maPropertyValue.First();
+	zenAss::PropertyValueRef*		pValueLast		= maPropertyValue.Last();
 	while( pValueCur <= pValueLast )
 	{
-		*pValueCur = (*pDefinitionCur)->Allocate();
+		*pValueCur = (*prDefinitionCur)->Allocate();
 		++pValueCur;
-		++pDefinitionCur;
+		++prDefinitionCur;
 	}
 }
 
-//=================================================================================================
-//! @brief		Construct a dictionary mapping Properties name to index in the property/value array
-//! @details	Used by child class to initialize their static dictionary
-//-------------------------------------------------------------------------------------------------
-//! @param		_dPropertyMap - Dictionary to initialize with Property's Name / Index infos
-//! @return		
-//=================================================================================================
-bool Asset::InitPropertyMap(zMap<zInt>::Key32& _dPropertyMap)const
-{	
-	const zenAss::zPropertyArray& aPropertyDef = GetProperties();
-	_dPropertyMap.Init(aPropertyDef.Count()*2);
-	_dPropertyMap.SetDefaultValue(-1);
-	for(zInt idx(0), count(aPropertyDef.Count()); idx<count; ++idx)
-		_dPropertyMap.Set( aPropertyDef[idx]->mName.mhName, idx );
-	return _dPropertyMap.Count() > 0;
-}
-
-//=================================================================================================
-//! @brief		
-//! @details	
-//-------------------------------------------------------------------------------------------------
-//! @param hPropertyName	- Name of property to look for
-//! @return					- Index of found item (-1 if not found)
-//=================================================================================================
-zInt TestProperty::GetValueIndex(zHash32 _hPropertyName)const	
-{
-	static zMap<zInt>::Key32 sdPropertyIndex;
-	static bool sbInit = InitPropertyMap(sdPropertyIndex);	//!< suEntryCount only used to init hashtable once
-	return sdPropertyIndex[_hPropertyName];
-}
-
-const zenAss::zPropertyArray& TestProperty::GetProperties()const
+const zenAss::PropertyDefArray& TestProperty::GetProperties()const
 { 	
  	const zenAss::PropertyEnum::Entry aEnumEntries[]={
  		zenAss::PropertyEnum::Entry(0, "Value A", "Description of 1st Entry"),
  		zenAss::PropertyEnum::Entry(1, "Value B", "Description of 2nd Entry"),
  		zenAss::PropertyEnum::Entry(2, "Value C", "Description of 3rd Entry"),
  		zenAss::PropertyEnum::Entry(3, "Value D", "Description of 4th Entry")};
-
-	static const zenAss::PropertyBool	StructBool		("PropStructBool",	"", "Property test: Bool",	true,	false);	
- 	static const zenAss::PropertyFloat	StructFloat		("PropStructFloat",	"", "Property test: Float",	true,	1.f, -5.f, 5.f, 0.5f);
- 	static const zenAss::PropertyFloat2	StructFloat2	("PropStructFloat2","", "Property test: Float2",true,	zVec2F(1.f), zVec2F(-10.f), zVec2F(10.f), zVec2F(0.1f));
- 	static const zenAss::PropertyDefinition* aPropertiesStruct[] = {&StructBool, &StructFloat, &StructFloat2};
- 	static const zenAss::PropertyStruct PropertyStruct	("PropertyStruct",	"",	"Property test: Struct", true, aPropertiesStruct, ZENArrayCount(aPropertiesStruct) );
- 
- 	static const zenAss::PropertyBool	PropertyBool	("PropertyBool",	"", "Property test: Bool",	true,	false);	
- 	static const zenAss::PropertyFloat	PropertyFloat	("PropertyFloat",	"", "Property test: Float",	true,	0.f, -10.f, 10.f, 0.5f);
- 	static const zenAss::PropertyFloat2	PropertyFloat2	("PropertyFloat2",	"", "Property test: Float2",true,	zVec2F(1.f), zVec2F(-10.f), zVec2F(10.f), zVec2F(0.1f));
- 	static const zenAss::PropertyFloat3	PropertyFloat3	("PropertyFloat3",	"", "Property test: Float3",true,	zVec3F(1.f), zVec3F(-10.f), zVec3F(10.f), zVec3F(0.1f));
- 	static const zenAss::PropertyFloat4	PropertyFloat4	("PropertyFloat4",	"", "Property test: Float4",true,	zVec4F(1.f), zVec4F(-10.f), zVec4F(10.f), zVec4F(0.1f));	
- 	static const zenAss::PropertyInt	PropertyInt		("PropertyInt",		"", "Property test: Int",	true,	0, -10, 10, 1);
- 	static const zenAss::PropertyInt2	PropertyInt2	("PropertyInt2",	"", "Property test: Int2",	true,	zVec2S32(1), zVec2S32(-10), zVec2S32(10), zVec2S32(1));
- 	static const zenAss::PropertyInt3	PropertyInt3	("PropertyInt3",	"", "Property test: Int3",	true,	zVec3S32(1), zVec3S32(-10), zVec3S32(10), zVec3S32(1));
- 	static const zenAss::PropertyInt4	PropertyInt4	("PropertyInt4",	"", "Property test: Int4",	true,	zVec4S32(1), zVec4S32(-10), zVec4S32(10), zVec4S32(1));
- 	static const zenAss::PropertyEnum	PropertyEnum	("PropertyEnum",	"", "Property test: Enum",	true,	0, aEnumEntries, ZENArrayCount(aEnumEntries) );
- 	static const zenAss::PropertyFile	PropertyFile	("PropertyFile",	"", "Property test: File",	true,	"C:\\temp\\test.txt", "Images|*.bmp;*.png;*.jpeg;*.jpg|BMP(*.bmp)|*.bmp|PNG(*.png)|*.png|JPEG(*.jpg;*.jpeg)|*.jpg;*.jpeg");	
-
- 	static zenAss::PropertyValueRef sTestArrayInit[]= {PropertyStruct.Allocate(),PropertyStruct.Allocate(),PropertyStruct.Allocate()};
- 	static zArrayDynamic<zenAss::PropertyValueRef> saTestArrayInit(sTestArrayInit, ZENArrayCount(sTestArrayInit) );
- 	static const zenAss::PropertyArray	PropertyArray	("PropertyArray",	"", "Property test: Bool",	true, saTestArrayInit, PropertyStruct);
 	
+ 	static const zenAss::PropertyDefRef aPropertiesStruct[] =	{
+		zenAss::PropertyBool::Create	("StructBool",	"", "Struct Test: Bool",	true,	false),
+		zenAss::PropertyFloat::Create	("StructFloat",	"", "Struct Test: Float",	true,	1.f, -5.f, 5.f, 0.5f),
+		zenAss::PropertyFloat2::Create	("StructFloat2","", "Struct Test: Float2",	true,	zVec2F(1.f), zVec2F(-10.f), zVec2F(10.f), zVec2F(0.1f))
+	};
 
-	static const zenAss::PropertyDefinition*	aPropertiesAll[] = {&PropertyBool, &PropertyEnum, &PropertyFile,
-															&PropertyFloat, &PropertyFloat2, &PropertyFloat3, &PropertyFloat4, 
-															&PropertyInt, &PropertyInt2, &PropertyInt3, &PropertyInt4,
-															&PropertyStruct, &PropertyArray, 
-															};
-	static zenAss::zPropertyArray		saProperties( aPropertiesAll, ZENArrayCount(aPropertiesAll) );
-	return saProperties;
+	static zenAss::PropertyDefRef rPropertyArrayStruct = zenAss::PropertyStruct::Create("PropertyStruct",	"",	"Test: Struct in Array", true, aPropertiesStruct, ZENArrayCount(aPropertiesStruct) );
+
+	static const zenAss::PropertyDefRef aPropertiesAll[] = {
+		zenAss::PropertyBool::Create	("Bool",	"", "Test: Bool",	true,	false),
+		zenAss::PropertyFloat::Create	("Float",	"", "Test: Float",	true,	0.f, -10.f, 10.f, 0.5f),
+		zenAss::PropertyFloat2::Create	("Float2",	"", "Test: Float2",	true,	zVec2F(1.f), zVec2F(-10.f), zVec2F(10.f), zVec2F(0.1f)),
+		zenAss::PropertyFloat3::Create	("Float3",	"", "Test: Float3",	true,	zVec3F(1.f), zVec3F(-10.f), zVec3F(10.f), zVec3F(0.1f)),
+		zenAss::PropertyFloat4::Create	("Float4",	"", "Test: Float4",	true,	zVec4F(1.f), zVec4F(-10.f), zVec4F(10.f), zVec4F(0.1f)),	
+		zenAss::PropertyInt::Create		("Int",		"", "Test: Int",	true,	0, -10, 10, 1),
+		zenAss::PropertyInt2::Create	("Int2",	"", "Test: Int2",	true,	zVec2S32(1), zVec2S32(-10), zVec2S32(10), zVec2S32(1)),
+		zenAss::PropertyInt3::Create	("Int3",	"", "Test: Int3",	true,	zVec3S32(1), zVec3S32(-10), zVec3S32(10), zVec3S32(1)),
+		zenAss::PropertyInt4::Create	("Int4",	"", "Test: Int4",	true,	zVec4S32(1), zVec4S32(-10), zVec4S32(10), zVec4S32(1)),
+		zenAss::PropertyEnum::Create	("Enum",	"", "Test: Enum",	true,	0, aEnumEntries, ZENArrayCount(aEnumEntries) ),
+		zenAss::PropertyFile::Create	("File",	"", "Test: File",	true,	"C:\\temp\\test.txt", "Images|*.bmp;*.png;*.jpeg;*.jpg|BMP(*.bmp)|*.bmp|PNG(*.png)|*.png|JPEG(*.jpg;*.jpeg)|*.jpg;*.jpeg"),
+		zenAss::PropertyStruct::Create	("Struct",	"",	"Test: Struct", true,	aPropertiesStruct, ZENArrayCount(aPropertiesStruct) ),
+		zenAss::PropertyArray::Create	("Array",	"", "Test: Array",	true,	rPropertyArrayStruct, 1),
+	};
+	static zenAss::PropertyDefArray		sarProperties( aPropertiesAll, ZENArrayCount(aPropertiesAll) );
+	return sarProperties;
 }
 
 }} //namespace zen { namespace zeAss

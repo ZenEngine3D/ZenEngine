@@ -2,6 +2,8 @@
 
 #if ZEN_ENGINETOOL
 
+namespace zen { namespace zenAss
+{
 static const zStringHash32 saPropertyName[]={ 
 	"Bool",		// keAssProp_Bool,
 	"File",		// keAssProp_File,
@@ -18,22 +20,13 @@ static const zStringHash32 saPropertyName[]={
 	"Array",	// keAssProp_Array,
 };
 
-namespace zen { namespace zenAss
-{
-
-const char* GetPropertyTypeName(zenConst::eAssetPropertyType _eType)
-{
-	ZENStaticAssert( ZENArrayCount(saPropertyName)==zenConst::keAssProp__Count );
-	ZENAssert( _eType < zenConst::keAssProp__Count);
-	return saPropertyName[_eType].mzName;
-}
-
 //=============================================================================
 // PropertyValue
 //=============================================================================
-PropertyValue::PropertyValue(const class PropertyDefinition& _Parent)
-: mDefinition(_Parent)
+PropertyValue::PropertyValue(const PropertyDefRef& _rParent)
+: mrDefinition(_rParent)
 {
+	ZENAssert(mrDefinition.IsValid());
 }
 
 //=============================================================================
@@ -41,18 +34,18 @@ PropertyValue::PropertyValue(const class PropertyDefinition& _Parent)
 //=============================================================================
 zenConst::eAssetPropertyType PropertyValueRef::GetType() const
 {
-	return IsValid() ? mpReference->mDefinition.GetType() : zenConst::keAssProp__Invalid;
+	return IsValid() ? zGameRefConst::Get()->mrDefinition->GetType() : zenConst::keAssProp__Invalid;
 }
 
 bool PropertyValueRef::IsDefault()const
 {
-	return mpReference->mDefinition.IsDefault( *this );
+	return IsValid() ? zGameRefConst::Get()->mrDefinition->IsDefault( *this ) : false;
 }
 
 const PropertyDefinition& PropertyValueRef::GetDefinition() const
 {
 	ZENAssert(IsValid());
-	return mpReference->mDefinition;
+	return *zGameRefConst::Get()->mrDefinition.Get();
 }
 
 //=============================================================================
@@ -64,6 +57,24 @@ PropertyDefinition::PropertyDefinition(const char* _zName, const char* _zDisplay
 , mzDescription(_zDescription)
 , mbShowInAssetDesc(_bShowInAssetDesc)
 {
+}
+
+const zString& PropertyDefinition::GetTypeName()const
+{
+	return GetTypeName( GetType() );
+}
+
+const zString& PropertyDefinition::GetTypeName(zenConst::eAssetPropertyType _eType)
+{
+	ZENStaticAssert( ZENArrayCount(saPropertyName)==zenConst::keAssProp__Count );
+	ZENAssert( _eType < zenConst::keAssProp__Count);
+	return saPropertyName[_eType].mzName;
+}
+
+zenConst::eAssetPropertyType PropertyDefinition::GetTypeFromName(const char* _zName)
+{
+	zUInt uFoundIdx = zStringHash32::Find( zHash32(_zName), saPropertyName, ZENArrayCount(saPropertyName) );
+	return uFoundIdx < zenConst::keAssProp__Count ? static_cast<zenConst::eAssetPropertyType>(uFoundIdx) : zenConst::keAssProp__Invalid;
 }
 
 }} //namespace zen { namespace zenAss

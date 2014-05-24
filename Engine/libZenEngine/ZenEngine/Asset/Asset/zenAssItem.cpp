@@ -51,7 +51,7 @@ zAssetItem::zAssetItem()
 }
 
 zAssetItem::zAssetItem(const zAssetItem& _Copy)
-: Super(_Copy.mpReference)
+: Super(_Copy)
 {
 }
 
@@ -62,62 +62,62 @@ zAssetItem::zAssetItem(zeAss::Asset* _pAsset)
 
 zAssetItem& zAssetItem::operator=(const zAssetItem& _Copy)
 {
-	Super::operator=(_Copy.mpReference);
+	Super::operator=(_Copy);
 	return *this;
 }
 
 zAssetItem::ID zAssetItem::GetID()const								
 { 
-	ZENAssert(mpReference);
-	return ID(mpReference->GetType(), mpReference->GetID());
+	ZENAssert(IsValid());
+	return ID(zEngineRefConst::Get()->GetType(), zEngineRefConst::Get()->GetID());
 }
 zenConst::eAssetType zAssetItem::GetType()const
 {
-	ZENAssert(mpReference);	
-	return mpReference->GetType(); 
+	ZENAssert(IsValid());
+	return zEngineRefConst::Get()->GetType(); 
 }
 const zString& zAssetItem::GetName()const						
 { 
-	ZENAssert(mpReference);	
-	return mpReference->GetName(); 
+	ZENAssert(IsValid());
+	return zEngineRefConst::Get()->GetName(); 
 }
 const zArrayStatic<zString>& zAssetItem::GetGroupAndName()const 
 { 
-	ZENAssert(mpReference);	
-	return mpReference->GetGroupAndName(); 
+	ZENAssert(IsValid());
+	return zEngineRefConst::Get()->GetGroupAndName(); 
 }
 /*
 zHash32 zAssetItem::GetGroupID()const							
 { 
-	ZENAssert(mpReference);	
+	ZENAssert(IsValid());
 	return mpReference->GetGroupID(); 
 }*/
 
 const zString& zAssetItem::GetDescription()const				
 { 
-	ZENAssert(mpReference);	
-	return mpReference->GetDescription(); 
+	ZENAssert(IsValid());
+	return zEngineRefConst::Get()->GetDescription(); 
 }
 zUInt zAssetItem::GetValueCount()const							
 { 
-	ZENAssert(mpReference);	
-	return mpReference->GetValueCount(); 
+	ZENAssert(IsValid());
+	return zEngineRefConst::Get()->GetValueCount(); 
 }
 zenAss::PropertyValueRef zAssetItem::GetValue(zUInt _uValIndex)	
 { 
-	ZENAssert(mpReference);	
-	return mpReference->GetValue(_uValIndex); 
+	ZENAssert(IsValid());
+	return Get()->GetValue(_uValIndex); 
 }
 void zAssetItem::InitDefault()									
 { 
-	ZENAssert(mpReference);	
-	return mpReference->InitDefault(); 
+	ZENAssert(IsValid());
+	return Get()->InitDefault(); 
 }
 
 void zAssetItem::Delete()
 {
-	ZENAssert(mpReference);
-	zeMgr::Asset.AssetRem( mpReference->GetType(), mpReference->GetID() );
+	ZENAssert(IsValid());
+	zeMgr::Asset.AssetRem( Get()->GetType(), Get()->GetID() );
 	*this = NULL;
 }
 

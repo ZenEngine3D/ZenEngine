@@ -269,12 +269,13 @@ wxBetlArrayProperty::wxBetlArrayProperty(const zenAss::PropertyValueRef& _rAsset
 	const zenAss::PropertyArray&	AssetProp			= rAssetVal.GetDefinition();	
 	zArrayDynamic<zenAss::PropertyValueRef>& valueArray	= rAssetVal.Get();
 	SetClientData	( zenNew(&sPoolMetaData)PropertyMetaData(_rAssetValue, 0) );
+	SetHelpString	( wxString::Format("%s", (const char*)AssetProp.mzDescription) );
 	ChangeFlag		( wxPG_PROP_NOEDITOR, true );	
 	ChangeFlag		( wxPG_PROP_COLLAPSED, true );		
 	for(zUInt idx(0), count(valueArray.Count()); idx<count; ++idx)
 	{
 		wxPGProperty* pProperty = CreateAssetValueControl(valueArray[idx]);	
-		pProperty->SetLabel( wxString::Format("[%i]", idx) );
+		pProperty->SetLabel( wxString::Format("%s[%i]", (const char*)AssetProp.mzDisplayName, idx) );
 		AppendChild(pProperty);
 	}
 }
@@ -294,6 +295,7 @@ wxBetlStructProperty::wxBetlStructProperty(const zenAss::PropertyValueRef& _rAss
 	const zenAss::PropertyStruct&		AssetProp			= rAssetVal.GetDefinition();	
 	zArrayStatic<zenAss::PropertyValueRef>& aStructValue	= rAssetVal.Get();
 	SetClientData	( zenNew(&sPoolMetaData)PropertyMetaData(_rAssetValue, 0) );
+	SetHelpString	( wxString::Format("%s", (const char*)AssetProp.mzDescription) );
 	ChangeFlag		( wxPG_PROP_NOEDITOR, true );
 	ChangeFlag		( wxPG_PROP_COLLAPSED, true );		
 	for(zUInt idx(0), count(aStructValue.Count()); idx<count; ++idx)

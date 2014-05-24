@@ -6,7 +6,8 @@
 
 namespace zen { namespace zenAss 
 {
-	const char* GetPropertyTypeName(zenConst::eAssetPropertyType _eType);
+	typedef zGameRefConst<class PropertyDefinition>		PropertyDefRef;
+	typedef const zArrayStatic<PropertyDefRef>			PropertyDefArray;
 
 	//=============================================================================
 	// PropertyValue 
@@ -16,9 +17,9 @@ namespace zen { namespace zenAss
 	{
 	ZENClassDeclare(PropertyValue, zRefCountedAutoDel);
 	public:
-												PropertyValue(const class PropertyDefinition& _Parent);
+												PropertyValue(const PropertyDefRef& _rParent);
 	//protected:
-		const class PropertyDefinition&			mDefinition;
+		PropertyDefRef							mrDefinition;
 	};
 	
 	//=============================================================================
@@ -29,16 +30,16 @@ namespace zen { namespace zenAss
 	{
 	ZENClassDeclare(TPropertyValue, PropertyValue);
 	public:
-												TPropertyValue(const PropertyDefinition& _Parent);
+												TPropertyValue(const PropertyDefRef&);
 		TClassValueStorage						mValue;
 	};
 
 	//=============================================================================
 	// PropertyValueRef
 	//=============================================================================
-	class PropertyValueRef : public zRefOwner<PropertyValue>
+	class PropertyValueRef : public zGameRef<PropertyValue>
 	{
-	ZENClassDeclare(PropertyValueRef, zRefOwner<PropertyValue>);
+	ZENClassDeclare(PropertyValueRef, zGameRef<PropertyValue>);
 	public:
 												PropertyValueRef(){}
 												PropertyValueRef(PropertyValue* _pReference ):Super(_pReference){}
@@ -54,15 +55,20 @@ namespace zen { namespace zenAss
 	class PropertyDefinition : public zRefCountedAutoDel
 	{
 	ZENClassDeclare(PropertyDefinition, zRefCountedAutoDel);
-	public:
-												PropertyDefinition(const char* _zName, const char* _zDisplayName, const char* _zDescription, bool _bShowInAssetDesc);
+	public:												
 		virtual PropertyValueRef				Allocate()const=0;
 		virtual zenConst::eAssetPropertyType	GetType()const=0;
+		const zString&							GetTypeName()const;
+		static const zString&					GetTypeName(zenConst::eAssetPropertyType _eType);
+		static zenConst::eAssetPropertyType		GetTypeFromName(const char* _zName);
 		virtual bool							IsDefault(const class PropertyValueRef& _ValueRef)const=0;
 		zStringHash32							mName;
 		zString									mzDisplayName;
 		zString									mzDescription;		
 		bool									mbShowInAssetDesc;
+
+	protected:
+		PropertyDefinition(const char* _zName, const char* _zDisplayName, const char* _zDescription, bool _bShowInAssetDesc);
 	};
 
 
@@ -78,8 +84,7 @@ namespace zen { namespace zenAss
 
 												TPropertyValueRef(){}			
 												TPropertyValueRef( const PropertyValueRef& _Copy );
-		TPropertyValueRef&						operator=( const TPropertyValueRef& _Copy );
-		
+		TPropertyValueRef&						operator=( const TPropertyValueRef& _Copy );		
 		TClassValueStorage&						Get();		
 		const TClassValueStorage&				Get()const;
 		const TClassDefinition&					GetDefinition() const;
@@ -96,14 +101,25 @@ namespace zen { namespace zenAss
 		typedef TPropertyValueRef<TClassDefinition, TClassValue>	ValueRef;
 		typedef TClassValue											ValueStorage;
 		enum { kPropertyType = TPropertyType };
-
-												TPropertyDefinition(const char* _zName, const char* _zDisplayName, const char* _zDescription, bool _bShowInAssetDesc);
+												
  		virtual PropertyValueRef				Allocate() const;
 		virtual bool							IsDefault(const PropertyValueRef& _rValueRef)const;		
 		virtual zenConst::eAssetPropertyType	GetType()const;
+	
+	protected:
+		TPropertyDefinition(const char* _zName, const char* _zDisplayName, const char* _zDescription, bool _bShowInAssetDesc);
  	};
 
-	typedef const zArrayStatic<const PropertyDefinition*> zPropertyArray;
+#define ZENPropertyDefinitionDeclare( ClassName, ... )																	\
+	ZENClassDeclare(ClassName, TPropertyDefinition);																	\
+	private:																											\
+		ClassName(const char* _zName, const char* _zDisplayName, const char* _zDescription, bool _bShowInAssetDesc )	\
+		: TPropertyDefinition(_zName, _zDisplayName, _zDescription, _bShowInAssetDesc){}								\
+	public:																												\
+		ValueStorage mDefault;																							\
+		//static PropertyDefRef Create( const char* _zName, const char* _zDisplayName, const char* _zDescription, bool _bShowInAssetDesc, __VA_ARGS__ )
+
+	
 }} //namespace zen { namespace zenAss
 
 #endif

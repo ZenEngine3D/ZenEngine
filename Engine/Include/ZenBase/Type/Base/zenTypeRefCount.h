@@ -25,43 +25,84 @@ namespace zen { namespace zenType {
 		virtual	 void		ReferenceNoneCB();
 	};
 
-	template<class TRefCountedType>
-	class zRefOwner
+	class zReference
 	{
-	ZENClassDeclareNoParent(zRefOwner)
+	ZENClassDeclareNoParent(zReference)
 	public:
-		ZENInline 							zRefOwner();
-		ZENInline 							zRefOwner(TRefCountedType* _pReference);
-		ZENInline 							zRefOwner(const zRefOwner& _Copy);
-		ZENInline 							~zRefOwner();
-		ZENInline const zRefOwner&			operator=(TRefCountedType* _pReference);
-		ZENInline const zRefOwner&			operator=(const zRefOwner& _Copy);
-		ZENInline bool						operator==(const zRefOwner& _Cmp);
-		ZENInline bool						operator!=(const zRefOwner& _Cmp);
+		 									zReference();
+		 									zReference(zRefCounted* _pReference);
+		 									zReference(const zReference& _Copy);
+		 									~zReference();
+		 const zReference&					operator=(zRefCounted* _pReference);
+		 const zReference&					operator=(const zReference& _Copy);
+		ZENInline bool						operator==(const zReference& _Cmp);
+		ZENInline bool						operator!=(const zReference& _Cmp);
 		ZENInline bool						IsValid()const;
-	#if ZEN_ENGINELIB
-		ZENInline TRefCountedType*			Get();				//!< @note Only use on engine side, else won't compile
-		ZENInline const TRefCountedType*	Get()const;			//!< @note Only use on engine side, else won't compile
-		ZENInline TRefCountedType*			operator->();		//!< @note Only use on engine side, else won't compile
-		ZENInline const TRefCountedType*	operator->()const;	//!< @note Only use on engine side, else won't compile
-	#endif
 	protected:
-		TRefCountedType*					mpReference;
+		zRefCounted*						mpReference;
 	};
 
 	template<class TRefCountedType>
-	class zSharedPtr : public zRefOwner<TRefCountedType>
+	class zEngineRefConst : public zReference
 	{
-	ZENClassDeclare(zSharedPtr, zRefOwner )
+	ZENClassDeclare(zEngineRef, zReference)
 	public:
-		ZENInline 							zSharedPtr();
-		ZENInline 							zSharedPtr(TRefCountedType* _pReference);
-		ZENInline 							zSharedPtr(const zRefOwner<TRefCountedType>& _Copy);
+		ZENInline 							zEngineRefConst();
+		ZENInline 							zEngineRefConst(TRefCountedType* _pReference);
+		ZENInline 							zEngineRefConst(const zEngineRefConst& _Copy);
+		ZENInline const zEngineRefConst&	operator=(TRefCountedType* _pReference);
+		ZENInline const zEngineRefConst&	operator=(const zEngineRefConst& _Copy);
+		
+#if ZEN_ENGINELIB
+		ZENInline const TRefCountedType*	Get()const;			//!< @note Only use on engine side, else won't compile
+		ZENInline const TRefCountedType*	operator->()const;	//!< @note Only use on engine side, else won't compile
+#endif
+	};
+
+	template<class TRefCountedType>
+	class zEngineRef : public zEngineRefConst<TRefCountedType>
+	{
+	ZENClassDeclare(zEngineRef, zEngineRefConst)
+	public:
+		ZENInline 							zEngineRef();
+		ZENInline 							zEngineRef(TRefCountedType* _pReference);
+		ZENInline 							zEngineRef(const zEngineRef& _Copy);		
+		ZENInline const zEngineRef&			operator=(TRefCountedType* _pReference);
+		ZENInline const zEngineRef&			operator=(const zEngineRef& _Copy);
+	#if ZEN_ENGINELIB
+		ZENInline TRefCountedType*			Get();				//!< @note Only use on engine side, else won't compile
+		ZENInline TRefCountedType*			operator->();		//!< @note Only use on engine side, else won't compile
+	#endif		
+	};
+
+	template<class TRefCountedType>
+	class zGameRefConst : public zEngineRefConst<TRefCountedType>
+	{
+	ZENClassDeclare(zGameRefConst, zEngineRefConst)
+	public:
+		ZENInline 							zGameRefConst();
+		ZENInline 							zGameRefConst(TRefCountedType* _pReference);
+		ZENInline 							zGameRefConst(const zGameRefConst<TRefCountedType>& _Copy);
+		ZENInline const zGameRefConst&		operator=(TRefCountedType* _pReference);
+		ZENInline const zGameRefConst&		operator=(const zGameRefConst& _Copy);
+
+		ZENInline const TRefCountedType*	Get()const;			//!< Return a const pointer to resource
+		ZENInline const TRefCountedType*	operator->()const;	//!< Return a const pointer to resource
+	};
+
+	template<class TRefCountedType>
+	class zGameRef : public zGameRefConst<TRefCountedType>
+	{
+	ZENClassDeclare(zGameRef, zGameRefConst)
+	public:
+		ZENInline 							zGameRef();
+		ZENInline 							zGameRef(TRefCountedType* _pReference);
+		ZENInline 							zGameRef(const zEngineRef<TRefCountedType>& _Copy);
+		ZENInline const zGameRef&			operator=(TRefCountedType* _pReference);
+		ZENInline const zGameRef&			operator=(const zGameRef& _Copy);
 
 		ZENInline TRefCountedType*			Get();				//!< Return a pointer to resource
-		ZENInline const TRefCountedType*	Get()const;			//!< Return a const pointer to resource
 		ZENInline TRefCountedType*			operator->();		//!< Return a pointer to resource
-		ZENInline const TRefCountedType*	operator->()const;	//!< Return a const pointer to resource
 	};
 	
 }} // namespace zen, zenType

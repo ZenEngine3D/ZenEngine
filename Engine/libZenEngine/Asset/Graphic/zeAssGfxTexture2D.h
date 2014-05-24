@@ -6,15 +6,11 @@
 
 namespace zen { namespace zeAss
 {
-	class GfxTexture2D : public Asset
+	class GfxTexture2D : public TAsset<zenConst::keAssType_Texture2D>
 	{
 	ZENClassDeclare(GfxTexture2D, Asset)
 	public:
-		virtual zenConst::eAssetType			GetType()const{return zenConst::keAssType_Texture2D;}
-		virtual const zenAss::zPropertyArray&	GetProperties()const;
-		virtual zInt							GetValueIndex(zHash32 _hPropertyName)const;
-	protected:
-		mutable zArrayStatic<zU32>	maIcon; //!< Store icon data
+		virtual const zenAss::PropertyDefArray&	GetProperties()const;
 	};	
 
 }} //namespace zen { namespace zeAss

@@ -10,17 +10,18 @@ namespace zen { namespace zenAss
 template<zenConst::eAssetPropertyType TPropertyType, class TClassStorage>
 class PropertyNumerical : public TPropertyDefinition<TPropertyType, PropertyNumerical<TPropertyType,TClassStorage>, TClassStorage>
 {
-ZENClassDeclare(PropertyNumerical, TPropertyDefinition);	
-public:	
-	PropertyNumerical(const char* _zName, const char* _zDisplayName, const char* _zDescription, bool _bShowInAssetDesc, ValueStorage _Default, ValueStorage _Min=0.f, ValueStorage _Max=1.f, ValueStorage _Inc=1)
-	: TPropertyDefinition(_zName, _zDisplayName, _zDescription, _bShowInAssetDesc)
-	, mDefault(_Default)
-	, mValMin(_Min)
-	, mValMax(_Max)
-	, mValInc(_Inc)
-	{}
-
-	ValueStorage	mDefault;
+	ZENPropertyDefinitionDeclare( PropertyNumerical )	
+	static PropertyDefRef Create( const char* _zName, const char* _zDisplayName, const char* _zDescription, bool _bShowInAssetDesc, ValueStorage _Default, ValueStorage _Min=0.f, ValueStorage _Max=1.f, ValueStorage _Inc=1  )
+	{		
+		typedef PropertyNumerical<TPropertyType, TClassStorage> TPropertyNumerical;
+		static zenMem::zAllocatorPool sAllocPool( "PropertyDefinition::Create", sizeof(TPropertyNumerical), 256, 256 );
+		TPropertyNumerical* pNewDefinition	= zenNew(&sAllocPool) TPropertyNumerical(_zName, _zDisplayName, _zDescription, _bShowInAssetDesc);
+		pNewDefinition->mDefault			= _Default;
+		pNewDefinition->mValMin				= _Min;
+		pNewDefinition->mValMax				= _Max;
+		pNewDefinition->mValInc				= _Inc;
+		return pNewDefinition;
+	}
 	ValueStorage	mValMin;
 	ValueStorage	mValMax;
 	ValueStorage	mValInc;	

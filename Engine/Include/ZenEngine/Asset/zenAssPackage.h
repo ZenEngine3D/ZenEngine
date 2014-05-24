@@ -8,9 +8,9 @@ namespace zen { namespace zeAss  { class Package; } }	//Forward declare
 
 namespace zen { namespace zenAss 
 {
-	class zPackage : public zRefOwner<zeAss::Package>
+	class zPackage : public zEngineRef<zeAss::Package>
 	{
-	ZENClassDeclare(zPackage, zRefOwner)
+	ZENClassDeclare(zPackage, zEngineRef)
 	public:
 		
 											zPackage();

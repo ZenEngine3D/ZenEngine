@@ -9,14 +9,10 @@ namespace zen { namespace zenAss
 	
 class PropertyFile : public TPropertyDefinition<zenConst::keAssProp_File, PropertyFile, zString>
 {
-ZENClassDeclare(PropertyFile, TPropertyDefinition);	
-public:
-						PropertyFile(const char* _zName, const char* _zDisplayName, const char* _zDescription, bool _bShowInAssetDesc, const char* _zDefault, const char* _zFileExt="Any(*.*)|*.*" )
-						: TPropertyDefinition(_zName, _zDisplayName, _zDescription, _bShowInAssetDesc)
-						, mDefault(_zDefault)
-						, mzFileExt(_zFileExt)
-						{}
-	ValueStorage		mDefault;
+	ZENPropertyDefinitionDeclare( PropertyFile )
+	static PropertyDefRef Create( const char* _zName, const char* _zDisplayName, const char* _zDescription, bool _bShowInAssetDesc, 
+									const char* _zDefault, const char* _zFileExt="Any(*.*)|*.*" );
+	
 	zString				mzFileExt;	//!< List of supported files extensions to display in file dialog
 };
 	

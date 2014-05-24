@@ -9,9 +9,9 @@ namespace zen { namespace zenAss { class zPackage; } }
 
 namespace zen { namespace zenAss 
 {
-	class zAssetItem : public zRefOwner<zeAss::Asset>
+	class zAssetItem : public zEngineRef<zeAss::Asset>
 	{
-	ZENClassDeclare(zAssetItem, zRefOwner)
+	ZENClassDeclare(zAssetItem, zEngineRef)
 	public:
 		struct ID
 		{
@@ -32,8 +32,7 @@ namespace zen { namespace zenAss
 		zUInt							GetValueCount()const;
 		zenConst::eAssetType			GetType()const;
 		zPackage						GetPackage();
-//		zenAss::PropertyValueRef&			GetValue(zUInt _uValIndex);
-		zenAss::PropertyValueRef			GetValue(zUInt _uValIndex);
+		zenAss::PropertyValueRef		GetValue(zUInt _uValIndex);
 		void							InitDefault();
 
 		void							Delete();
@@ -46,13 +45,6 @@ namespace zen { namespace zenAss
 	const zAssetItem&					AssetGet			(zAssetItem::ID _uAssetID); //! @todo Asset: Move to an asset manager at api level?
 
 	typedef zArraySparse<zenAss::zAssetItem>::Key32 zArrayAsset;
-
-	class zAssetTexture2D : public zAssetItem
-	{
-	ZENClassDeclare(zAssetTexture2D, zAssetItem)
-	};
-
-	
 
 }} //namespace zen { namespace zenAss
 

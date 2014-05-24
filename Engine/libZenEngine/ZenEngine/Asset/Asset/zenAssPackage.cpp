@@ -21,7 +21,7 @@ zPackage::zPackage()
 }
 
 zPackage::zPackage(const zPackage& _Copy)
-: Super(_Copy.mpReference)
+: Super(_Copy)
 {
 }
 
@@ -32,29 +32,29 @@ zPackage::zPackage(zeAss::Package* _pAsset)
 
 zPackage& zPackage::operator=(const zPackage& _Copy)
 {
-	Super::operator=(_Copy.mpReference);
+	Super::operator=(_Copy);
 	return *this;
 }
 
 zU32 zPackage::GetID()const									
 { 
-	ZENAssert(mpReference); 
-	return mpReference->GetID(); 
+	ZENAssert(IsValid());
+	return zEngineRefConst::Get()->GetID(); 
 }
 const zString& zPackage::GetName()const							
 { 
-	ZENAssert(mpReference); 
-	return mpReference->GetName(); 
+	ZENAssert(IsValid());
+	return zEngineRefConst::Get()->GetName(); 
 }
 const zArrayStatic<zString>& zPackage::GetGroupAndName()const	
 { 
-	ZENAssert(mpReference); 
-	return mpReference->GetGroupAndName(); 
+	ZENAssert(IsValid());
+	return zEngineRefConst::Get()->GetGroupAndName(); 
 }
 const zArrayAsset& zPackage::GetAssets(zenConst::eAssetType _eType)
 {
-	ZENAssert(mpReference); 
-	return mpReference->GetAsset(_eType); 
+	ZENAssert(IsValid());
+	return Get()->GetAsset(_eType); 
 }
 
 }} //namespace zen { namespace zenAss

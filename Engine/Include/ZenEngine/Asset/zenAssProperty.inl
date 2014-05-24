@@ -10,10 +10,10 @@ namespace zen { namespace zenAss
 // Templated Value
 //=============================================================================
 template<class TClassDefinition, class TClassValueStorage>
-TPropertyValue<TClassDefinition,TClassValueStorage>::TPropertyValue(const PropertyDefinition& _Parent) 
-: Super(_Parent)
+TPropertyValue<TClassDefinition,TClassValueStorage>::TPropertyValue(const PropertyDefRef& _rParent) 
+: Super(_rParent)
 {	
-	ZENAssert( _Parent.GetType() == TClassDefinition::kPropertyType);
+	ZENAssert( _rParent->GetType() == TClassDefinition::kPropertyType);
 }
 
 
@@ -47,14 +47,14 @@ template<class TClassDefinition, class TClassValueStorage>
 const TClassValueStorage& TPropertyValueRef<TClassDefinition, TClassValueStorage>::Get()const
 {
 	ZENAssert(IsValid());
-	return static_cast<const Value*>(mpReference)->mValue;
+	return static_cast<const Value*>(zGameRefConst::Get())->mValue;
 }
 
 template<class TClassDefinition, class TClassValueStorage>
 const TClassDefinition& TPropertyValueRef<TClassDefinition, TClassValueStorage>::GetDefinition() const
 {
 	ZENAssert(IsValid());
-	return *static_cast<const TClassDefinition*>(&mpReference->mDefinition);
+	return *static_cast<const TClassDefinition*>( zGameRefConst::Get()->mrDefinition.Get() );
 }
 
 //=============================================================================
@@ -71,7 +71,9 @@ PropertyValueRef TPropertyDefinition<TPropertyType, TClassDefinition, TClassValu
 {
 	typedef TPropertyValue<TClassDefinition, TClassValue> Value;
 	static zenMem::zAllocatorPool sAllocPool( "TPropertyDefinition::Allocate", sizeof(Value), 256, 256 );
-	return zenNew(&sAllocPool) Value(*this);
+	//! @todo Clean : Removing const qualifier, since 'zGameRefConst' doesn't take a const reference at the moment...
+	//					We know that all accessor won't modify the object, except for ReferenceAdd/Rem with mRerCount needing to be mutable.
+	return zenNew(&sAllocPool) Value((PropertyDefinition*)this); 
 }
 
 template<zenConst::eAssetPropertyType TPropertyType, class TClassDefinition, class TClassValue>
@@ -86,7 +88,6 @@ zenConst::eAssetPropertyType TPropertyDefinition<TPropertyType, TClassDefinition
 {
 	return TPropertyType;
 }
-
 
 
 }} //namespace zen { namespace zenAss

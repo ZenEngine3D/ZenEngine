@@ -28,75 +28,88 @@ zInt zRefCounted::ReferenceCount()
 }
 
 //=================================================================================================
-// zREF OWNER
+// zREFERENCE
 //=================================================================================================
-template<class TRefCountedType>
-zRefOwner<TRefCountedType>::zRefOwner()
-: mpReference(NULL)
+bool zReference::IsValid()const
 {
+	return mpReference != NULL;
 }
 
-template<class TRefCountedType>
-zRefOwner<TRefCountedType>::zRefOwner(TRefCountedType* _pReference)
-: mpReference(NULL)
-{
-	*this = _pReference;	
-}
-
-template<class TRefCountedType>
-zRefOwner<TRefCountedType>::zRefOwner(const zRefOwner& _Copy)
-: mpReference(NULL)
-{
-	*this = _Copy.mpReference;
-}
-
-template<class TRefCountedType>
-zRefOwner<TRefCountedType>::~zRefOwner()
-{
-	*this = NULL;
-}
-
-template<class TRefCountedType>
-const zRefOwner<TRefCountedType>& zRefOwner<TRefCountedType>::operator=(TRefCountedType* _pReference)
-{	
-	if( mpReference )
-		reinterpret_cast<zRefCounted*>(mpReference)->ReferenceRem();
-	mpReference = _pReference;
-	if( mpReference )
-		reinterpret_cast<zRefCounted*>(mpReference)->ReferenceAdd();
-	
-	return *this;
-}
-
-template<class TRefCountedType>
-const zRefOwner<TRefCountedType>& zRefOwner<TRefCountedType>::operator=(const zRefOwner& _Copy)
-{	
-	ZENAssert(&_Copy != this);
-	if( mpReference )
-		reinterpret_cast<zRefCounted*>(mpReference)->ReferenceRem();
-	mpReference = _Copy.mpReference;
-	if( mpReference )
-		reinterpret_cast<zRefCounted*>(mpReference)->ReferenceAdd();
-
-	return *this;
-}
-
-template<class TRefCountedType>
-bool zRefOwner<TRefCountedType>::operator==(const zRefOwner& _Cmp)
+bool zReference::operator==(const zReference& _Cmp)
 {
 	return mpReference == _Cmp.mpReference;
 }
 
-template<class TRefCountedType>
-bool zRefOwner<TRefCountedType>::operator!=(const zRefOwner& _Cmp)
+bool zReference::operator!=(const zReference& _Cmp)
 {
 	return mpReference != _Cmp.mpReference;
 }
 
+//=================================================================================================
+// zREF OWNER
+//=================================================================================================
 template<class TRefCountedType>
-bool zRefOwner<TRefCountedType>::IsValid()const
+zEngineRefConst<TRefCountedType>::zEngineRefConst()
+: Super(NULL)
 {
-	return mpReference != NULL;
+}
+
+template<class TRefCountedType>
+zEngineRefConst<TRefCountedType>::zEngineRefConst(TRefCountedType* _pReference)
+: Super(_pReference)
+{
+}
+
+template<class TRefCountedType>
+zEngineRefConst<TRefCountedType>::zEngineRefConst(const zEngineRefConst& _Copy)
+: Super(_Copy)
+{
+}
+
+template<class TRefCountedType>
+const zEngineRefConst<TRefCountedType>& zEngineRefConst<TRefCountedType>::operator=(TRefCountedType* _pReference)
+{	
+	zReference::operator=(_pReference);
+	return *this;
+}
+
+template<class TRefCountedType>
+const zEngineRefConst<TRefCountedType>& zEngineRefConst<TRefCountedType>::operator=(const zEngineRefConst& _Copy)
+{	
+	zReference::operator=(_Copy);
+	return *this;
+}
+
+template<class TRefCountedType>
+zEngineRef<TRefCountedType>::zEngineRef()
+: Super()
+{
+}
+
+template<class TRefCountedType>
+zEngineRef<TRefCountedType>::zEngineRef(TRefCountedType* _pReference)
+: Super(_pReference)
+{
+}
+
+template<class TRefCountedType>
+zEngineRef<TRefCountedType>::zEngineRef(const zEngineRef& _Copy)
+: Super(_Copy)
+{
+}
+
+template<class TRefCountedType>
+const zEngineRef<TRefCountedType>& zEngineRef<TRefCountedType>::operator=(TRefCountedType* _pReference)
+{	
+	zReference::operator=(_pReference);
+	return *this;
+}
+
+template<class TRefCountedType>
+const zEngineRef<TRefCountedType>& zEngineRef<TRefCountedType>::operator=(const zEngineRef& _Copy)
+{	
+	zReference::operator=(_Copy);
+	return *this;
 }
 
 #if ZEN_ENGINELIB
@@ -108,9 +121,9 @@ bool zRefOwner<TRefCountedType>::IsValid()const
 	//! @return		Object reference
 	//=================================================================================================
 	template<class TRefCountedType>
-	TRefCountedType* zRefOwner<TRefCountedType>::Get()
+	TRefCountedType* zEngineRef<TRefCountedType>::Get()
 	{
-		return mpReference;
+		return static_cast<TRefCountedType*>(mpReference);
 	}
 
 	//=================================================================================================
@@ -121,9 +134,9 @@ bool zRefOwner<TRefCountedType>::IsValid()const
 	//! @return		Object reference
 	//=================================================================================================
 	template<class TRefCountedType>
-	const TRefCountedType* zRefOwner<TRefCountedType>::Get()const
+	const TRefCountedType* zEngineRefConst<TRefCountedType>::Get()const
 	{
-		return mpReference;
+		return static_cast<const TRefCountedType*>(mpReference);
 	}
 
 	//=================================================================================================
@@ -134,9 +147,9 @@ bool zRefOwner<TRefCountedType>::IsValid()const
 	//! @return		Object reference
 	//=================================================================================================
 	template<class TRefCountedType>
-	TRefCountedType* zRefOwner<TRefCountedType>::operator->()
+	TRefCountedType* zEngineRef<TRefCountedType>::operator->()
 	{
-		return mpReference;
+		return static_cast<TRefCountedType*>(mpReference);;
 	}
 
 	//=================================================================================================
@@ -147,60 +160,105 @@ bool zRefOwner<TRefCountedType>::IsValid()const
 	//! @return		Object reference
 	//=================================================================================================
 	template<class TRefCountedType>
-	const TRefCountedType* zRefOwner<TRefCountedType>::operator->()const
+	const TRefCountedType* zEngineRefConst<TRefCountedType>::operator->()const
 	{
-		return mpReference;
+		return static_cast<const TRefCountedType*>(mpReference);;
 	}
 #endif //ZEN_ENGINELIB
+
 
 //=================================================================================================
 // zSHARED POINTER
 //=================================================================================================
 template<class TRefCountedType>
-zSharedPtr<TRefCountedType>::zSharedPtr()
+zGameRefConst<TRefCountedType>::zGameRefConst()
 : Super()
 {
 }
 
 template<class TRefCountedType>
-zSharedPtr<TRefCountedType>::zSharedPtr(TRefCountedType* _pReference)
+zGameRefConst<TRefCountedType>::zGameRefConst(TRefCountedType* _pReference)
 : Super(_pReference)
 {
-	if( mpReference )
-		mpReference->ReferenceAdd();
 }
 
 template<class TRefCountedType>
-zSharedPtr<TRefCountedType>::zSharedPtr(const zRefOwner<TRefCountedType>& _Copy)
+zGameRefConst<TRefCountedType>::zGameRefConst(const zGameRefConst<TRefCountedType>& _Copy)
 : Super(_Copy)
 {
 }
 
 template<class TRefCountedType>
-TRefCountedType* zSharedPtr<TRefCountedType>::Get()
+const TRefCountedType* zGameRefConst<TRefCountedType>::Get()const
 {
-	ZENAssert(mpReference);
-	return mpReference;
+	return static_cast<const TRefCountedType*>(mpReference);
 }
 
 template<class TRefCountedType>
-const TRefCountedType* zSharedPtr<TRefCountedType>::Get()const
-{
-	ZENAssert(mpReference);
-	return mpReference;
-}
-
-template<class TRefCountedType>
-TRefCountedType* zSharedPtr<TRefCountedType>::operator->()
+const TRefCountedType* zGameRefConst<TRefCountedType>::operator->()const
 {
 	return Get();
 }
 
 template<class TRefCountedType>
-const TRefCountedType* zSharedPtr<TRefCountedType>::operator->()const
-{
-	return Get();
+const zGameRefConst<TRefCountedType>& zGameRefConst<TRefCountedType>::operator=(TRefCountedType* _pReference)
+{	
+	zReference::operator=(_pReference);
+	return *this;
 }
+
+template<class TRefCountedType>
+const zGameRefConst<TRefCountedType>& zGameRefConst<TRefCountedType>::operator=(const zGameRefConst& _Copy)
+{	
+	zReference::operator=(_Copy);
+	return *this;
+}
+
+template<class TRefCountedType>
+zGameRef<TRefCountedType>::zGameRef()
+: Super()
+{
+}
+
+template<class TRefCountedType>
+zGameRef<TRefCountedType>::zGameRef(TRefCountedType* _pReference)
+: Super(_pReference)
+{
+}
+
+template<class TRefCountedType>
+zGameRef<TRefCountedType>::zGameRef(const zEngineRef<TRefCountedType>& _Copy)
+: Super(_Copy)
+{
+}
+
+template<class TRefCountedType>
+const zGameRef<TRefCountedType>& zGameRef<TRefCountedType>::operator=(TRefCountedType* _pReference)
+{	
+	zReference::operator=(_pReference);
+	return *this;
+}
+
+template<class TRefCountedType>
+const zGameRef<TRefCountedType>& zGameRef<TRefCountedType>::operator=(const zGameRef& _Copy)
+{	
+	zReference::operator=(_Copy);
+	return *this;
+}
+
+template<class TRefCountedType>
+TRefCountedType* zGameRef<TRefCountedType>::Get()
+{
+	return static_cast<TRefCountedType*>(mpReference);
+}
+
+
+template<class TRefCountedType>
+TRefCountedType* zGameRef<TRefCountedType>::operator->()
+{
+	return static_cast<TRefCountedType*>(mpReference);
+}
+
 
 }} // namespace zen, zenType
 

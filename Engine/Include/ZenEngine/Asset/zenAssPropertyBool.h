@@ -9,14 +9,10 @@ namespace zen { namespace zenAss
 
 class PropertyBool : public TPropertyDefinition<zenConst::keAssProp_Bool, PropertyBool, bool>
 {
-ZENClassDeclare(PropertyBool, TPropertyDefinition);	
-public:	
-	PropertyBool(const char* _zName, const char* _zDisplayName, const char* _zDescription, bool _bShowInAssetDesc, ValueStorage _Default)
-	: TPropertyDefinition(_zName, _zDisplayName, _zDescription, _bShowInAssetDesc)
-	, mDefault(_Default)
-	{}
+	ZENPropertyDefinitionDeclare( PropertyBool  )
+	static PropertyDefRef Create( const char* _zName, const char* _zDisplayName, const char* _zDescription, bool _bShowInAssetDesc, 
+									ValueStorage _Default );
 
-	ValueStorage mDefault;
 };
 
 }} //namespace zen { namespace zenAss
