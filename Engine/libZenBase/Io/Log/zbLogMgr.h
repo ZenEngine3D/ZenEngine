@@ -77,7 +77,7 @@ protected:
 
 }   
 
-namespace CMgr { extern zbLog::ManagerLog Log; }
+namespace zbMgr { extern zbLog::ManagerLog Log; }
 
 #include "zbLogMgr.inl"
 

@@ -1,6 +1,9 @@
 #include "libZenBase.h"
 
-namespace CMgr { zbFile::ManagerFile File; }
+namespace zbMgr 
+{ 
+	zbFile::ManagerFile File; 
+}
 
 namespace zbFile
 {
@@ -345,6 +348,16 @@ void Filename::SplitFolder(zArrayDynamic<zArrayStatic<wchar_t>>& _aFolderOut)con
 		_aFolderOut[uPos][uCount-1] = L'';
 		++uPos;
 	}
+}
+
+void ManagerFile_Base::InitPath(const zWString& _zRootPath)
+{
+	mzRootPath		= _zRootPath;
+	mzRootPath.Replace(zenT("\\"), zenT("/"));
+	if( mzRootPath[mzRootPath.length()-1] != zenT("/")[0] )
+		mzRootPath += zenT("/");
+	
+	mzRootPackage	= mzRootPath + zenT("Package");	//! @todo Clean: Should be outside of base logic
 }
 
 }

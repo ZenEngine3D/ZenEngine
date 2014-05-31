@@ -3,9 +3,9 @@
 namespace zen { namespace zeAss
 {
 
-zU32 Asset::GetID()const
+zenAss::zAssetItem::ID Asset::GetID()const
 {
-	return muID;
+	return mID;
 }
 
 const zArrayStatic<zString>& Asset::GetGroupAndName()const
@@ -21,6 +21,17 @@ const zString& Asset::GetName()const
 const zString& Asset::GetDescription()const
 {
 	return mzDescription;
+}
+
+zenConst::eAssetType Asset::GetType()const
+{
+	return mID.meType;
+}
+
+template <zenConst::eAssetType TAssetType>
+TAsset<TAssetType>::TAsset()
+{
+	mID.meType = static_cast<zenConst::eAssetType>(kAssetType);
 }
 
 //=================================================================================================

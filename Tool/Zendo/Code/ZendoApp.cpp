@@ -56,8 +56,7 @@ bool ZendoApp::OnInit()
 
 	//Connect( wxID_ANY, wxEVT_IDLE, wxIdleEventHandler(ZendoApp::onIdle) );
 	if( Engine.Init() )
-	{
-		zenSys::SetEngine(&Engine);
+	{		
 		/*
 		AAss::Package testPackage;				
 		testPackage.SetFilename( "TestDir/monpackage.xml" );

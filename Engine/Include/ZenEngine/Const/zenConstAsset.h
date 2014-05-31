@@ -21,6 +21,7 @@ namespace zenConst
 	//! @note: When adding support for new parameter type in assets :
 	//!			1-Add enum value here
 	//!			2-Add matching ParameterDef class to support it (zenAssProperty.h)
+	//!			3-Add serialization support (zxAddLoaderXml, ...)
 	enum eAssetPropertyType
 	{
 		keAssProp_Bool,

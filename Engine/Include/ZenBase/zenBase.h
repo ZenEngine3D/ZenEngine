@@ -13,5 +13,6 @@ using namespace zen::zenType;
 #include <ZenBase/zenBaseMath.h>
 #include <ZenBase/zenBaseType2.h>
 #include <ZenBase/zenBaseSystem.h>
+#include <ZenBase/zenBaseIO.h>
 
 #endif

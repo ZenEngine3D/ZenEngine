@@ -1,4 +1,6 @@
 #include "ZendoPCH.h"
+#include "../ZendoApp.h"
+#include "../Window/WndAssetProperty.h"
 #include "CtrlAssetPropertyTab.h"
 #include "CtrlProperty.h"
 
@@ -12,12 +14,13 @@ enum CONTROLID
 {
 	CtrlId_Toolbar_Default = wxID_HIGHEST,
 	CtrlId_Toolbar_Original,
-
+	CtrlId_Toolbar_Apply,
 };
 
 BEGIN_EVENT_TABLE(TabAssetProperty, wxPanel)
 	EVT_TOOL(CtrlId_Toolbar_Default,	TabAssetProperty::OnToolbarDefault)
 	EVT_TOOL(CtrlId_Toolbar_Original,	TabAssetProperty::OnToolbarOriginal)
+	EVT_TOOL(CtrlId_Toolbar_Apply,	TabAssetProperty::OnToolbarApply)
 END_EVENT_TABLE()
 
 BEGIN_EVENT_TABLE(TabAssetPropertyGridPage, wxPropertyGridPage)
@@ -37,15 +40,7 @@ END_EVENT_TABLE()
 //=================================================================================================
 void TabAssetPropertyGridPage::OnPropertyChange( wxPropertyGridEvent& event )
 {
-	wxPGProperty*	pPropChanged	= event.GetProperty();
-	bool			bModified		= pPropChanged->GetValue() != pPropChanged->GetDefaultValue();
-
-	wxVariant val = pPropChanged->GetValue();
-	wxVariant def = pPropChanged->GetDefaultValue();
-	bool			bModified2		= !(val == def);
-	bool			bModified3		= val != def;
-	if( (pPropChanged->GetFlags() & wxPG_PROP_MODIFIED) && !bModified )
-		RefreshModifiedItems();
+	RefreshModifiedItems();
 }
 
 //=================================================================================================
@@ -59,14 +54,14 @@ void TabAssetPropertyGridPage::OnPropertyChange( wxPropertyGridEvent& event )
 //=================================================================================================
 void TabAssetPropertyGridPage::RefreshModifiedItems()
 {
-	ClearModifiedStatus();
-	wxPropertyGridIterator it =	GetIterator();
-	while( !it.AtEnd() )
+	wxPropertyGridIterator itProperty = GetIterator(wxPG_ITERATE_PROPERTIES);	
+	while( !itProperty.AtEnd() )
 	{
-		wxPGProperty* pProp = it.GetProperty();
-		bool bModified		= pProp->GetValue() != pProp->GetDefaultValue();
-		pProp->SetModifiedStatus( bModified );
-		it.Next();
+		wxPGProperty* pProperty		= *itProperty;
+		PropertyMetaData* pMetaData = static_cast<PropertyMetaData*>( (*itProperty)->GetClientData() );
+		if( pMetaData )
+			pMetaData->SetControlState();	
+		itProperty++;
 	}
 }
 
@@ -112,9 +107,10 @@ TabAssetProperty::TabAssetProperty(wxWindow *_pParent, const zenAss::zAssetItem&
 	TabAssetPropertyGridPage* pPage = zenNewDefault TabAssetPropertyGridPage();
 	for(zUInt propIdx(0), propCount(mrAsset.GetValueCount()); propIdx<propCount; ++propIdx)
 		CreateAssetValueControl(*pPage, mrAsset.GetValue(propIdx));
-
+		
 	mpPropertyGrid->AddPage("All", wxNullBitmap, pPage);
-	
+	pPage->RefreshModifiedItems();
+
 	// Add top PropertyEditor toolbar
 	wxToolBar* pToolbar = mpPropertyGrid->GetToolBar();
  	if( pToolbar )
@@ -122,6 +118,7 @@ TabAssetProperty::TabAssetProperty(wxWindow *_pParent, const zenAss::zAssetItem&
 		pToolbar->AddSeparator();
 		pToolbar->AddTool(CtrlId_Toolbar_Default, wxT(""), wxArtProvider::GetBitmap(wxART_GOTO_FIRST),	wxT("Reset default values of selected items"));
 		pToolbar->AddTool(CtrlId_Toolbar_Original, wxT(""), wxArtProvider::GetBitmap(wxART_GO_BACK),	wxT("Restore saved values of selected items"));
+		pToolbar->AddTool(CtrlId_Toolbar_Apply, wxT(""), wxArtProvider::GetBitmap(wxART_TICK_MARK),		wxT("Apply settings"));
 		pToolbar->Realize();
 	}
 
@@ -129,8 +126,35 @@ TabAssetProperty::TabAssetProperty(wxWindow *_pParent, const zenAss::zAssetItem&
 	SetSizer( sizer );
 }
 
+
 TabAssetProperty::~TabAssetProperty()
 {
+	wxGetApp().mpFrame->GetWndAssetProperty()->AssetTabRemoved(*this);
+}
+
+const zenAss::zAssetItem& TabAssetProperty::GetAsset()
+{
+	return mrAsset;
+}
+
+void TabAssetProperty::ApplyChanges()
+{	
+	bool bChanged(false);
+	TabAssetPropertyGridPage* pPage		= static_cast<TabAssetPropertyGridPage*>(mpPropertyGrid->GetCurrentPage());	
+	wxPropertyGridIterator itProperty	= pPage->GetIterator(wxPG_ITERATE_PROPERTIES);
+	while( !itProperty.AtEnd() )
+	{
+		wxPGProperty* pProperty		= *itProperty;
+		PropertyMetaData* pMetaData = static_cast<PropertyMetaData*>(pProperty->GetClientData());
+		bChanged					|= pMetaData->Save();
+		itProperty++;
+	}
+
+	if( bChanged )
+	{
+		mrAsset.GetPackage().SetDirty();
+		pPage->RefreshModifiedItems();
+	}	
 }
 
 void TabAssetProperty::OnToolbarDefault( wxCommandEvent& event )
@@ -156,6 +180,11 @@ void TabAssetProperty::OnToolbarOriginal( wxCommandEvent& event )
 		pProp->SetValue( pMetaData->mOriginalValue );
 	}
 	pPage->RefreshModifiedItems();
+}
+
+void TabAssetProperty::OnToolbarApply( wxCommandEvent& event )
+{
+	ApplyChanges();
 }
 
 }

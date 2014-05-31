@@ -87,27 +87,31 @@ void ManagerAsset::PackageLoad()
 		madAsset[idx].GetLast(itAsset);
 		maAssetNextID[idx] = itAsset.IsValid() ? itAsset.GetKey() + 1 : 1;
 	}
+	/*
+	//! @todo Asset : REMOVE THIS TEST
+	zenAss::zArrayPackage::Iterator itPackage2;
+	mdPackage.GetFirst(itPackage2);
+	while( itPackage2.IsValid() )
+	{
+		PackageSave( itPackage2.GetValue().GetID() );
+		++itPackage2;
+	}
+	//! Asset : REMOVE THIS TEST
+	*/
 }
 
 bool ManagerAsset::PackageSave( zU32 _uPackageID )
 {
 	zxAss::AssetLoaderXml Loader;
 	zenAss::zPackage rPackage = mdPackage[_uPackageID];
-	if( rPackage.IsValid() )
-		return Loader.Save(rPackage);
+	if( rPackage.IsValid() && Loader.Save(rPackage) )
+	{
+		rPackage->SetDirty(false);
+		return true;
+	}
 	return false;
 }
-/*
-void ManagerAsset::PackageRename( zHash64 _hOldID, zHash64 _hNewID)
-{
-	zenAss::zPackage rPackage = mdPackage[_hOldID];
-	if( rPackage.IsValid() )
-	{		
-		mdPackage.Unset(_hOldID);
-		mdPackage.Set(_hNewID, rPackage);
-	}	
-}
-*/
+
 void ManagerAsset::PackageRemove( zU32 _uPackageID )	
 {
 	//! @todo Asset: Process removal
@@ -138,19 +142,19 @@ const zenAss::zArrayAsset& ManagerAsset::AssetGet( zenConst::eAssetType _eType )
 
 void ManagerAsset::AssetAdd( zeAss::Asset* _pAsset )
 {
-	ZENAssert( _pAsset && madAsset[_pAsset->GetType()].Exist(_pAsset->GetID()) == false );
-	madAsset[_pAsset->GetType()].Set(_pAsset->GetID(), _pAsset);
+	ZENAssert( _pAsset && madAsset[_pAsset->GetType()].Exist(_pAsset->GetID().muIndex) == false );
+	madAsset[_pAsset->GetType()].Set(_pAsset->GetID().muIndex, _pAsset);
 }
 
-void ManagerAsset::AssetRem( zenConst::eAssetType _eType, zU32 _uAssetID )
+void ManagerAsset::AssetRem( zenAss::zAssetItem::ID _AssetID )
 {
-	ZENAssert(_eType<zenConst::keAssType__Count); 
+	ZENAssert(_AssetID.meType<zenConst::keAssType__Count); 
 	zenAss::zAssetItem rAsset;
-	madAsset[_eType].Get(_uAssetID, rAsset);
+	madAsset[_AssetID.meType].Get(_AssetID.muIndex, rAsset);
 	if( rAsset.IsValid() )
 	{
 		rAsset.Get()->SetPackage(NULL);
-		madAsset[_eType].Unset(_uAssetID);
+		madAsset[_AssetID.meType].Unset(_AssetID.muIndex);
 	}
 }
 

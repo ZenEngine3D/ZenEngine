@@ -11,21 +11,19 @@ const zStringHash32 sTypeDescription[]={
 						zStringHash32("Mesh"),			//keType_Mesh,
 						};
 
-zAssetItem AssetCreate(zenConst::eAssetType _eAssetType)
+zAssetItem AssetCreate( zenConst::eAssetType _eAssetType, zPackage& _rPackage, const char* _zGroup )
 {
-	zeAss::Asset* pNewItem(NULL);
-	switch( _eAssetType )
-	{
-	case zenConst::keAssType_TestProperty:	pNewItem = zenNewDefault zeAss::TestProperty();	break;
-	case zenConst::keAssType_Texture2D:		pNewItem = zenNewDefault zeAss::GfxTexture2D();	break;
-	case zenConst::keAssType_Mesh:			pNewItem = zenNewDefault zeAss::GfxMesh();		break;
-	default:								ZENAssertMsg(0, "Unsupported Asset Type");	break;
-	}
-
+	ZENAssert( _rPackage.IsValid() );
+	zeAss::Asset* pNewItem = zeAss::Asset::CreateItem(_eAssetType);
 	if( pNewItem )
-		pNewItem->InitDefault();
-
-	return pNewItem;
+	{
+		char zName[256];
+		zAssetItem::ID id = zeMgr::Asset.GetAssetNextID(_eAssetType);
+		sprintf_s(zName, sizeof(zName), "New %s %i", zenAss::AssetTypeToString(_eAssetType), id.muIndex );
+		pNewItem->Init( id, zName, _zGroup, *_rPackage.Get() );
+		return pNewItem;
+	}
+	return NULL;
 }
 
 const char* AssetTypeToString(zenConst::eAssetType _eAssetType)
@@ -69,22 +67,22 @@ zAssetItem& zAssetItem::operator=(const zAssetItem& _Copy)
 zAssetItem::ID zAssetItem::GetID()const								
 { 
 	ZENAssert(IsValid());
-	return ID(zEngineRefConst::Get()->GetType(), zEngineRefConst::Get()->GetID());
+	return Get()->GetID();
 }
 zenConst::eAssetType zAssetItem::GetType()const
 {
 	ZENAssert(IsValid());
-	return zEngineRefConst::Get()->GetType(); 
+	return Get()->GetType(); 
 }
 const zString& zAssetItem::GetName()const						
 { 
 	ZENAssert(IsValid());
-	return zEngineRefConst::Get()->GetName(); 
+	return Get()->GetName(); 
 }
 const zArrayStatic<zString>& zAssetItem::GetGroupAndName()const 
 { 
 	ZENAssert(IsValid());
-	return zEngineRefConst::Get()->GetGroupAndName(); 
+	return Get()->GetGroupAndName(); 
 }
 /*
 zHash32 zAssetItem::GetGroupID()const							
@@ -96,12 +94,12 @@ zHash32 zAssetItem::GetGroupID()const
 const zString& zAssetItem::GetDescription()const				
 { 
 	ZENAssert(IsValid());
-	return zEngineRefConst::Get()->GetDescription(); 
+	return Get()->GetDescription(); 
 }
 zUInt zAssetItem::GetValueCount()const							
 { 
 	ZENAssert(IsValid());
-	return zEngineRefConst::Get()->GetValueCount(); 
+	return Get()->GetValueCount(); 
 }
 zenAss::PropertyValueRef zAssetItem::GetValue(zUInt _uValIndex)	
 { 
@@ -117,10 +115,26 @@ void zAssetItem::InitDefault()
 void zAssetItem::Delete()
 {
 	ZENAssert(IsValid());
-	zeMgr::Asset.AssetRem( Get()->GetType(), Get()->GetID() );
+	zeMgr::Asset.AssetRem( Get()->GetID() );
 	*this = NULL;
 }
 
+zPackage zAssetItem::GetPackage()
+{
+	ZENAssert(IsValid());
+	return Get()->GetPackage();
+}
+
+void zAssetItem::SetPackage(zPackage _rPackage)
+{
+	ZENAssert(IsValid());
+	Get()->SetPackage( _rPackage.Get() );
+}
+void zAssetItem::SetName(const char* _zName)
+{
+	ZENAssert(IsValid());
+	Get()->SetName(_zName);
+}
 }} //namespace zen { namespace zenAss
 
 #endif //ZEN_ENGINETOOL

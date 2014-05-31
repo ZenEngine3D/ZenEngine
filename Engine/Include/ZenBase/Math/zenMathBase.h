@@ -25,6 +25,12 @@ namespace zen { namespace zenMath
 	}
 		
 	template<class _Type_>
+	_Type_ Clamp( const _Type_& _Value, const _Type_& _Min, const _Type_& _Max ) 
+	{
+		return (_Value >= _Max) ? _Max : (_Value <= _Min) ? _Min : _Value; 
+	}
+
+	template<class _Type_>
 	_Type_ Lerp( const _Type_& _Value1, const _Type_& _Value2, float _fRatio ) 
 	{
 		return _Value1*Min<float>(_fRatio,1.f) + _Value2*(1.0f-Max<float>(_fRatio,0.f) ); 

@@ -497,7 +497,7 @@ void zHamt< TKey, TValue, TIndex, TIndexBits>::GetFirst(Iterator& _It) const
 }
 
 //==================================================================================================
-//! @details	Initialize iteator to last element of the hamt
+//! @details	Initialize iterator to last element of the hamt
 //--------------------------------------------------------------------------------------------------
 //! @param[out]	_It - Iterator pointing to last element
 //==================================================================================================
@@ -519,6 +519,26 @@ void zHamt< TKey, TValue, TIndex, TIndexBits>::GetLast(Iterator& _It) const
 		_It.mpNodeTree[++_It.msDepth]	= pNode;
 		_It.mpSlotID[_It.msDepth]		= pNode->GetLastUsedSlotID();
 	}
+}
+
+//==================================================================================================
+//! @details	
+//--------------------------------------------------------------------------------------------------
+//! @return First Unused key
+//==================================================================================================
+template<class TKey, class TValue, class TIndex, int TIndexBits>
+TKey zHamt< TKey, TValue, TIndex, TIndexBits>::GetFirstUnusedKey()const
+{
+	Iterator It;
+	GetFirst(It);
+	zUInt currentKey(0);	
+	while( currentKey == It.GetKey() )
+	{
+		currentKey += 1;
+		++It;
+	}
+	
+	return currentKey;	
 }
 
 //==================================================================================================

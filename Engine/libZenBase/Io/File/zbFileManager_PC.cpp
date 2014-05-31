@@ -21,9 +21,10 @@ bool ManagerFile_PC::Load()
 			bValid = (FileInfo.dwFileAttributes&FILE_ATTRIBUTE_DIRECTORY) != 0;
 			if( bValid )
 			{
-				mzRoot.SetCount( static_cast<zUInt>(wcslen(zWorkingDir) + 1) );
-				_snwprintf_s( mzRoot.First(), mzRoot.Count(), _TRUNCATE, zWorkingDir);
-				SetCurrentDirectory( mzRoot.First() );
+				//mzRoot.SetCount( static_cast<zUInt>(wcslen(zWorkingDir) + 1) );
+				//_snwprintf_s( mzRoot.First(), mzRoot.Count(), _TRUNCATE, zWorkingDir);
+				InitPath(zWorkingDir);
+				SetCurrentDirectory( mzRootPath.c_str() );				
 			}
 		}
 

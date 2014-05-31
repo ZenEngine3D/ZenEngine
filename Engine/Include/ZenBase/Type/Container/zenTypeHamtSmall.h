@@ -123,7 +123,7 @@ namespace zen { namespace zenType {
 																														    																														    
 		void					GetFirst(Iterator& _It) const;													//!< @brief Initialize iteator to first element of the hamt
 		void					GetLast(Iterator& _It) const;													//!< @brief Initialize iterator to last element of the hamt
-																														    
+		TKey					GetFirstUnusedKey()const;														//!< @brief Find the first available key in the hashmap
 		void					DebugPrint(const TKey _First, TKey _Last) const;								//!< @brief Print structure of the tree
 		size_t					GetMemoryFootprint();															//!< @brief Return the amount of memory used by this structure		
 		void					SetDeleteItemCB(DeleteItemCB _pCallback){mpDeleteItemCB = _pCallback;}

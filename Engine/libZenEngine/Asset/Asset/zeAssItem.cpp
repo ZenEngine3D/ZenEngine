@@ -15,28 +15,20 @@ namespace zen { namespace zeAss
 //=================================================================================================
 Asset* Asset::CreateItem( zenConst::eAssetType _eAssetType )
 {
-	Asset* pNewItem(NULL);
 	switch( _eAssetType )
 	{
-	case zenConst::keAssType_TestProperty:	pNewItem = zenNewDefault TestProperty();	break;
-	case zenConst::keAssType_Texture2D:		pNewItem = zenNewDefault GfxTexture2D();	break;
-	case zenConst::keAssType_Mesh:			pNewItem = zenNewDefault GfxMesh();			break;
-	default:								ZENAssertMsg(0, "Unsupported Asset Type");	break;
+	case zenConst::keAssType_TestProperty:	return zenNewDefault TestProperty();
+	case zenConst::keAssType_Texture2D:		return zenNewDefault GfxTexture2D();
+	case zenConst::keAssType_Mesh:			return zenNewDefault GfxMesh();
+	default:								ZENAssertMsg(0, "Unsupported Asset Type");
 	}
-
-	if( pNewItem )
-	{
-		pNewItem->InitDefault();
-	}
-	return pNewItem;
+	return NULL;
 }
 
 Asset::Asset()	
 : mrPackage(NULL)
-, muID(0)
+, mID(zenConst::keAssType__Invalid, 0)
 {
-	static zU32 sCounter(1);
-	muID = sCounter++; //! @todo Asset: fix this (HACK)	
 }
 
 Asset::~Asset()	
@@ -47,10 +39,8 @@ void Asset::Init(zU32 _uID, const char* _zName, const char* _zGroup, Package& _P
 {	
 	zString::Split(_zGroup, '\\', maGroup, 1);
 	*maGroup.Last() = _zName;
-
-	muID		= _uID != 0 ? _uID :  zeMgr::Asset.GetAssetNextID( GetType() ); 
-	mrPackage	= &_ParentPkg;
-
+	mID.muIndex		= (_uID != 0) ? _uID :  zeMgr::Asset.GetAssetNextID( GetType() );
+	InitDefault();	
 	SetPackage( &_ParentPkg );
 	zeMgr::Asset.AssetAdd(this);
 	//! @todo Asset : description init
@@ -65,6 +55,11 @@ void Asset::SetPackage(Package* _pParentPkg)
 	mrPackage = _pParentPkg;
 	if( _pParentPkg )
 		_pParentPkg->AssetAdd(*this);
+}
+
+void Asset::SetName(const char* _zName)
+{
+	*maGroup.Last() = _zName;
 }
 
 //=================================================================================================
@@ -113,18 +108,19 @@ void Asset::InitDefault()
 const zenAss::PropertyDefArray& TestProperty::GetProperties()const
 { 	
  	const zenAss::PropertyEnum::Entry aEnumEntries[]={
- 		zenAss::PropertyEnum::Entry(0, "Value A", "Description of 1st Entry"),
- 		zenAss::PropertyEnum::Entry(1, "Value B", "Description of 2nd Entry"),
- 		zenAss::PropertyEnum::Entry(2, "Value C", "Description of 3rd Entry"),
- 		zenAss::PropertyEnum::Entry(3, "Value D", "Description of 4th Entry")};
+ 		zenAss::PropertyEnum::Entry(10, "Value A", "Description of 1st Entry"),
+ 		zenAss::PropertyEnum::Entry(20, "Value B", "Description of 2nd Entry"),
+ 		zenAss::PropertyEnum::Entry(30, "Value C", "Description of 3rd Entry"),
+ 		zenAss::PropertyEnum::Entry(40, "Value D", "Description of 4th Entry")};
 	
  	static const zenAss::PropertyDefRef aPropertiesStruct[] =	{
-		zenAss::PropertyBool::Create	("StructBool",	"", "Struct Test: Bool",	true,	false),
+		//zenAss::PropertyBool::Create	("StructBool",	"", "Struct Test: Bool",	true,	false),
 		zenAss::PropertyFloat::Create	("StructFloat",	"", "Struct Test: Float",	true,	1.f, -5.f, 5.f, 0.5f),
 		zenAss::PropertyFloat2::Create	("StructFloat2","", "Struct Test: Float2",	true,	zVec2F(1.f), zVec2F(-10.f), zVec2F(10.f), zVec2F(0.1f))
 	};
 
 	static zenAss::PropertyDefRef rPropertyArrayStruct = zenAss::PropertyStruct::Create("PropertyStruct",	"",	"Test: Struct in Array", true, aPropertiesStruct, ZENArrayCount(aPropertiesStruct) );
+	static zenAss::PropertyDefRef rPropertyArrayFloat2 = zenAss::PropertyFloat2::Create	("ArrayFloat2",	"", "Test: Float2 in Array",	true,	zVec2F(1.f), zVec2F(-10.f), zVec2F(10.f), zVec2F(0.1f));
 
 	static const zenAss::PropertyDefRef aPropertiesAll[] = {
 		zenAss::PropertyBool::Create	("Bool",	"", "Test: Bool",	true,	false),
@@ -136,10 +132,11 @@ const zenAss::PropertyDefArray& TestProperty::GetProperties()const
 		zenAss::PropertyInt2::Create	("Int2",	"", "Test: Int2",	true,	zVec2S32(1), zVec2S32(-10), zVec2S32(10), zVec2S32(1)),
 		zenAss::PropertyInt3::Create	("Int3",	"", "Test: Int3",	true,	zVec3S32(1), zVec3S32(-10), zVec3S32(10), zVec3S32(1)),
 		zenAss::PropertyInt4::Create	("Int4",	"", "Test: Int4",	true,	zVec4S32(1), zVec4S32(-10), zVec4S32(10), zVec4S32(1)),
-		zenAss::PropertyEnum::Create	("Enum",	"", "Test: Enum",	true,	0, aEnumEntries, ZENArrayCount(aEnumEntries) ),
-		zenAss::PropertyFile::Create	("File",	"", "Test: File",	true,	"C:\\temp\\test.txt", "Images|*.bmp;*.png;*.jpeg;*.jpg|BMP(*.bmp)|*.bmp|PNG(*.png)|*.png|JPEG(*.jpg;*.jpeg)|*.jpg;*.jpeg"),
+		zenAss::PropertyEnum::Create	("Enum",	"", "Test: Enum",	true,	10, aEnumEntries, ZENArrayCount(aEnumEntries) ),
+		zenAss::PropertyFile::Create	("File",	"", "Test: File",	true,	zenT("test.txt"), zenT("Images|*.bmp;*.png;*.jpeg;*.jpg|BMP(*.bmp)|*.bmp|PNG(*.png)|*.png|JPEG(*.jpg;*.jpeg)|*.jpg;*.jpeg")),
 		zenAss::PropertyStruct::Create	("Struct",	"",	"Test: Struct", true,	aPropertiesStruct, ZENArrayCount(aPropertiesStruct) ),
-		zenAss::PropertyArray::Create	("Array",	"", "Test: Array",	true,	rPropertyArrayStruct, 1),
+		zenAss::PropertyArray::Create	("Array1",	"", "Test: Array Float2",	true,	rPropertyArrayFloat2, 1),
+		zenAss::PropertyArray::Create	("Array2",	"", "Test: Array Struct",	true,	rPropertyArrayStruct, 1),
 	};
 	static zenAss::PropertyDefArray		sarProperties( aPropertiesAll, ZENArrayCount(aPropertiesAll) );
 	return sarProperties;

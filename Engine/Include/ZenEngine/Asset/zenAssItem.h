@@ -5,7 +5,6 @@
 #if ZEN_ENGINETOOL
 
 namespace zen { namespace zeAss { class Asset; } }
-namespace zen { namespace zenAss { class zPackage; } }
 
 namespace zen { namespace zenAss 
 {
@@ -18,6 +17,8 @@ namespace zen { namespace zenAss
 			zenConst::eAssetType	meType;
 			zU32					muIndex;
 			ZENInline				ID(zenConst::eAssetType _eType, zU32 _uIndex):meType(_eType), muIndex(_uIndex){};
+			ZENInline 				ID(const ID& _Copy):meType(_Copy.meType), muIndex(_Copy.muIndex){}
+			ZENInline ID&			operator=(const ID& _Copy){meType = _Copy.meType; muIndex = _Copy.muIndex; return *this;}
 			ZENInline 				operator const zU64() const{return *reinterpret_cast<const zU64*>(this);}
 		};
 	
@@ -31,15 +32,18 @@ namespace zen { namespace zenAss
 		const zString&					GetDescription()const;
 		zUInt							GetValueCount()const;
 		zenConst::eAssetType			GetType()const;
-		zPackage						GetPackage();
+		class zPackage					GetPackage();
 		zenAss::PropertyValueRef		GetValue(zUInt _uValIndex);
 		void							InitDefault();
+		
+		void							SetPackage(zPackage _rPackage);
+		void							SetName(const char* _zName);
 
 		void							Delete();
 		zAssetItem&						operator=(const zAssetItem& _Copy);		
 	};
 	
-	zAssetItem							AssetCreate			(zenConst::eAssetType _eAssetType);
+	zAssetItem							AssetCreate			(zenConst::eAssetType _eAssetType, zPackage& _rPackage, const char* _zGroup);
 	const char*							AssetTypeToString	(zenConst::eAssetType _ePropertyType);
 	zenConst::eAssetType				AssetNameToType		(zHash32 _hAssetName);
 	const zAssetItem&					AssetGet			(zAssetItem::ID _uAssetID); //! @todo Asset: Move to an asset manager at api level?

@@ -59,12 +59,17 @@ namespace BCtrl
 
 struct PropertyMetaData
 {
-	PropertyMetaData(const zenAss::PropertyValueRef& _rAssetValue, const wxVariant& _OriginalValue)
-	: mrAssetValue(_rAssetValue)
+	PropertyMetaData(wxPGProperty* _pOwner, const zenAss::PropertyValueRef& _rAssetValue, const wxVariant& _OriginalValue)
+	: mpOwner(_pOwner)
+	, mrAssetValue(_rAssetValue)
 	, mOriginalValue(_OriginalValue)
 	{}
+	virtual void SetControlState();
+	virtual bool Save(){return false;}
+
+	wxPGProperty*				mpOwner;
 	zenAss::PropertyValueRef	mrAssetValue;
-	wxVariant				mOriginalValue;
+	wxVariant					mOriginalValue;	
 };
 
 wxPGProperty* CreateAssetValueControl(wxPropertyGridInterface& _GridControl, zenAss::PropertyValueRef& _Value);
@@ -72,13 +77,27 @@ wxPGProperty* CreateAssetValueControl(wxPropertyGridInterface& _GridControl, zen
 class wxBetlBoolProperty : public wxBoolProperty
 {
 public:
-	wxBetlBoolProperty(const zenAss::PropertyValueRef& _rAssetValue);
+	struct TypedMetaData : public PropertyMetaData
+	{
+		TypedMetaData( wxBetlBoolProperty* _pOwner, const zenAss::PropertyValueRef& _rAssetValue, const wxVariant& _OriginalValue)
+		: PropertyMetaData(_pOwner, _rAssetValue, _OriginalValue){}
+		virtual bool Save();
+	};
+
+	wxBetlBoolProperty(zenAss::PropertyValueRef& _rAssetValue);
 	virtual ~wxBetlBoolProperty();
 };
 
 class wxBetlFloatProperty : public wxFloatProperty
 {
 public:
+	struct TypedMetaData : public PropertyMetaData
+	{
+		TypedMetaData( wxBetlFloatProperty* _pOwner, const zenAss::PropertyValueRef& _rAssetValue, const wxVariant& _OriginalValue)
+		: PropertyMetaData(_pOwner, _rAssetValue, _OriginalValue){}
+		virtual bool Save();
+	};
+
 	wxBetlFloatProperty(const zenAss::PropertyValueRef& _rAssetValue);
 	virtual	~wxBetlFloatProperty();
 };
@@ -86,6 +105,13 @@ public:
 class wxBetlIntProperty : public wxIntProperty
 {
 public:
+	struct TypedMetaData : public PropertyMetaData
+	{
+		TypedMetaData( wxBetlIntProperty* _pOwner, const zenAss::PropertyValueRef& _rAssetValue, const wxVariant& _OriginalValue)
+		: PropertyMetaData(_pOwner, _rAssetValue, _OriginalValue){}
+		virtual bool Save();
+	};
+
 	wxBetlIntProperty(const zenAss::PropertyValueRef& _rAssetValue);
 	virtual ~wxBetlIntProperty();
 };
@@ -94,6 +120,13 @@ template< class TPropertyClass, class TElementCast, class TWxVector, class TWxPr
 class wxBetlVectorProperty : public wxPGProperty
 { 
 public:						
+	struct TypedMetaData : public PropertyMetaData
+	{
+		TypedMetaData( wxBetlVectorProperty<TPropertyClass, TElementCast, TWxVector, TWxProperty>* _pOwner, const zenAss::PropertyValueRef& _rAssetValue, const wxVariant& _OriginalValue)
+		: PropertyMetaData(_pOwner, _rAssetValue, _OriginalValue){}
+		virtual bool Save();
+		virtual void SetControlState();
+	};
 	wxBetlVectorProperty(){}
 	wxBetlVectorProperty(const zenAss::PropertyValueRef& _rAssetValue, const char* _zTooltip, const char* _zTooltipElement);
 	virtual	~wxBetlVectorProperty();
@@ -152,6 +185,12 @@ public:
 class wxBetlEnumProperty : public wxEnumProperty
 {
 public:
+	struct TypedMetaData : public PropertyMetaData
+	{
+		TypedMetaData( wxBetlEnumProperty* _pOwner, const zenAss::PropertyValueRef& _rAssetValue, const wxVariant& _OriginalValue)
+		: PropertyMetaData(_pOwner, _rAssetValue, _OriginalValue){}
+		virtual bool Save();
+	};
 	wxBetlEnumProperty(const zenAss::PropertyValueRef& _rAssetValue);
 	virtual	~wxBetlEnumProperty();
 };
@@ -159,21 +198,41 @@ public:
 class wxBetlFileProperty : public wxFileProperty
 {
 public:
-	//wxBetlFileProperty(){ZENAssertMsg(0, "Shouldn't be reaching this constructor")}
+	struct TypedMetaData : public PropertyMetaData
+	{
+		TypedMetaData( wxBetlFileProperty* _pOwner, const zenAss::PropertyValueRef& _rAssetValue, const wxVariant& _OriginalValue)
+		: PropertyMetaData(_pOwner, _rAssetValue, _OriginalValue){}
+		virtual bool Save();
+	};
+
 	wxBetlFileProperty(const zenAss::PropertyValueRef& _rAssetValue);
 	virtual ~wxBetlFileProperty();
 };
 
 class wxBetlArrayProperty : public wxPGProperty
 { 
-public:					
+public:	
+	struct TypedMetaData : public PropertyMetaData
+	{
+		TypedMetaData( wxBetlArrayProperty* _pOwner, const zenAss::PropertyValueRef& _rAssetValue, const wxVariant& _OriginalValue)
+		: PropertyMetaData(_pOwner, _rAssetValue, _OriginalValue){}
+		virtual bool Save();
+		virtual void SetControlState();
+	};
 	wxBetlArrayProperty(const zenAss::PropertyValueRef& _rAssetValue);
 	virtual	~wxBetlArrayProperty();
 };
 
 class wxBetlStructProperty : public wxPGProperty
 { 
-public:					
+public:
+	struct TypedMetaData : public PropertyMetaData
+	{
+		TypedMetaData( wxBetlStructProperty* _pOwner, const zenAss::PropertyValueRef& _rAssetValue, const wxVariant& _OriginalValue)
+		: PropertyMetaData(_pOwner, _rAssetValue, _OriginalValue){}
+		virtual bool Save();
+		virtual void SetControlState();
+	};
 	wxBetlStructProperty(const zenAss::PropertyValueRef& _rAssetValue);
 	virtual	~wxBetlStructProperty();
 };

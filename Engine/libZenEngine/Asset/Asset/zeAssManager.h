@@ -13,7 +13,6 @@ public:
 											ManagerAsset	();
 	void									PackageLoad		();
 	
-	//void									PackageRename	( zHash64 _hOldID, zHash64 _hNewID);
 	void									PackageRemove	( zU32 _uPackageID );	
 	const zenAss::zPackage&					PackageGet		( zU32 _uPackageID );
 	bool									PackageSave		( zU32 _uPackageID );
@@ -23,8 +22,8 @@ public:
 	const zenAss::zArrayAsset&				AssetGet		( zenConst::eAssetType _eType )const;
 	
 	void									AssetAdd		( zeAss::Asset* _pAsset );
-	void									AssetRem		( zenConst::eAssetType _eType, zU32 _uAssetID );
-	ZENInline zU32							GetAssetNextID(zenConst::eAssetType _eType){ ZENAssert(_eType < zenConst::keAssType__Count); return maAssetNextID[_eType]++;};
+	void									AssetRem		( zenAss::zAssetItem::ID _AssetID );
+	ZENInline zenAss::zAssetItem::ID		GetAssetNextID	( zenConst::eAssetType _eType){ ZENAssert(_eType < zenConst::keAssType__Count); return zenAss::zAssetItem::ID(_eType, maAssetNextID[_eType]++);};
 	ZENInline zU32							GetPackageNextID(){return muPackageNextID++;};
 protected:
 	void									PackageAdd		( zeAss::Package* _pPackage );

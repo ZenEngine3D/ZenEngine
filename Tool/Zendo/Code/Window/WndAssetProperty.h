@@ -10,11 +10,11 @@ public:
 										WndAssetProperty(wxWindow *parent, const wxString& title);
 										~WndAssetProperty();
 	void								AddAssetTab(zenAss::zAssetItem rEditItem);
-protected:
-	
+	void								AssetTabRemoved(BCtrl::TabAssetProperty& _AssetTab);
+protected:	
 	DECLARE_EVENT_TABLE()
 	wxAuiNotebook*									mpNotebook;
-	zArraySparse<BCtrl::TabAssetProperty*>::Key32	mdTabPerAsset;
+	zArraySparse<BCtrl::TabAssetProperty*>::Key64	mdTabPerAsset;
 };
 
 #endif

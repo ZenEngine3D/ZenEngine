@@ -44,13 +44,6 @@ namespace zbFile
 		zU16							muOffsetExt;		//!< Offset to extension
 	};
 
-	class File
-	{
-		ZENClassDeclareNoParent(File);
-	public:
-		Filename mzFilename;
-		Filename mzFilenameStage;
-	};
 }
 
 #include ZENHeaderPlatform( zbFileInfo )
@@ -102,6 +95,14 @@ namespace zbFile
 	class ManagerFile_Base : public zbType::Manager
 	{
 	ZENClassDeclare(ManagerFile_Base, zbType::Manager);
+	public:
+		ZENInline const zWString&	GetRoot()const {return mzRootPath;}
+		ZENInline const zWString&	GetRootPackage()const {return mzRootPackage;}
+	
+	protected:
+		void						InitPath(const zWString& _zRootPath);
+		zWString					mzRootPath;
+		zWString					mzRootPackage;
 	};
 }  
 
@@ -137,13 +138,10 @@ namespace zbFile
 			}
 			return false;
 		}
-
-	protected:
 	};
-
 }
 
-namespace CMgr { extern zbFile::ManagerFile File; }
+namespace zbMgr { extern zbFile::ManagerFile File; }
 
 namespace zbFile
 {
@@ -152,8 +150,8 @@ namespace zbFile
 	public:
 					AWStream( const Filename& szFileName, bool bOpenForWrite = false )
 					{
-						if( bOpenForWrite ) CMgr::File.OpenFileForWrite( szFileName, &m_hFileHandle );
-						else CMgr::File.OpenFile( szFileName, &m_hFileHandle );
+						if( bOpenForWrite ) zbMgr::File.OpenFileForWrite( szFileName, &m_hFileHandle );
+						else zbMgr::File.OpenFile( szFileName, &m_hFileHandle );
 					}
 
 					~AWStream( void )							{m_hFileHandle.Close();}

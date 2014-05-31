@@ -1,6 +1,9 @@
 #include "libZenCore.h"
 
-namespace CMgr { CJob::ManagerJob Job; }
+namespace zcMgr 
+{ 
+	CJob::ManagerJob Job; 
+}
 
 namespace CJob
 {
@@ -9,8 +12,8 @@ DWORD WINAPI ExecuteThreadTask( LPVOID lpParam )
 {
 	while(1)
 	{
-		zList2xNode* pItem = CMgr::Job.GetTaskReady().GetHead();
-		while( pItem != CMgr::Job.GetTaskReady().GetInvalid() )
+		zList2xNode* pItem = zcMgr::Job.GetTaskReady().GetHead();
+		while( pItem != zcMgr::Job.GetTaskReady().GetInvalid() )
 		{
 			JobItem* pTask = static_cast<JobItem*>(pItem);
 			pItem = pItem->LstNext();

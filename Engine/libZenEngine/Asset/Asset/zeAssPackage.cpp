@@ -7,7 +7,8 @@ namespace zen { namespace zeAss
 
 Package::Package()
 : madAssetPerType(zenConst::keAssType__Count)
-, mzStorageName("")
+, mzStorageName(zenT(""))
+, mbIsDirty(false)
 {
 	for(zUInt typIdx(0), typCount(madAssetPerType.Count()); typIdx<typCount; ++typIdx)
 	{
@@ -35,7 +36,7 @@ void Package::Unload()
 		}			
 		madAssetPerType[typIdx].Clear();
 	}
-	mzStorageName = "";
+	mzStorageName = zenT("");
 	maGroup.SetCount(0);
 }
 
@@ -47,7 +48,7 @@ void Package::Unload()
 //! @param _zGroup			- Group to put package under (separated by '\')
 //! @param _zStorageName	- Source of the package	
 //=================================================================================================
-bool Package::Init(zU32 _uID, const char* _zName, const char* _zGroup, const char* _zStorageName, zU32 _uEngineVersion)
+bool Package::Init(zU32 _uID, const char* _zName, const char* _zGroup, const zChar* _zStorageName, zU32 _uEngineVersion)
 {
 	zString::Split(_zGroup, '\\', maGroup, 1);
 	mID				= _uID != 0 ? _uID :  zeMgr::Asset.GetPackageNextID(); 
@@ -55,6 +56,11 @@ bool Package::Init(zU32 _uID, const char* _zName, const char* _zGroup, const cha
 	mzStorageName	= _zStorageName;	
 	muEngineVersion	= _uEngineVersion;
 	return true;
+}
+
+bool Package::Save()
+{
+	return zeMgr::Asset.PackageSave( mID );
 }
 
 }} //namespace zen { namespace zeAss

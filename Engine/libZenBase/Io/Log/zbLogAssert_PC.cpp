@@ -24,13 +24,13 @@ void Assert( const char* _zCond, const char* _zFilename, unsigned int _uLine, eE
 	va_list pArgList;
 	va_start(pArgList, _zMessage);
 	char Buffer[1024];
-	sprintf_s(Buffer, "\n%s Infos     : %s",	CMgr::Log.GetEmptyStamp(), _zMessage);
+	sprintf_s(Buffer, "\n%s Infos     : %s",	zbMgr::Log.GetEmptyStamp(), _zMessage);
 	
 
-	CMgr::Log.Printf(eLog, "\n%s Condition : %s",		CMgr::Log.GetTypeStamp(eLog), _zCond);
-	CMgr::Log.Printf(eLog, "\n%s Location  : %s:%i",	CMgr::Log.GetEmptyStamp(), _zFilename, _uLine);
-	//CMgr::Log.Printf(eLog, "\n%s Infos     : %s",		CMgr::Log.GetEmptyStamp(), _zMessage);
-	CMgr::Log.Printf(eLog, Buffer, pArgList);
+	zbMgr::Log.Printf(eLog, "\n%s Condition : %s",		zbMgr::Log.GetTypeStamp(eLog), _zCond);
+	zbMgr::Log.Printf(eLog, "\n%s Location  : %s:%i",	zbMgr::Log.GetEmptyStamp(), _zFilename, _uLine);
+	//zbMgr::Log.Printf(eLog, "\n%s Infos     : %s",		zbMgr::Log.GetEmptyStamp(), _zMessage);
+	zbMgr::Log.Printf(eLog, Buffer, pArgList);
 	va_end(pArgList);
 
 	if( _eErrorType == keErrorLevel_AssertBreak )

@@ -34,18 +34,30 @@ PropertyValue::PropertyValue(const PropertyDefRef& _rParent)
 //=============================================================================
 zenConst::eAssetPropertyType PropertyValueRef::GetType() const
 {
-	return IsValid() ? zGameRefConst::Get()->mrDefinition->GetType() : zenConst::keAssProp__Invalid;
+	return IsValid() ? Get()->mrDefinition->GetType() : zenConst::keAssProp__Invalid;
 }
 
 bool PropertyValueRef::IsDefault()const
 {
-	return IsValid() ? zGameRefConst::Get()->mrDefinition->IsDefault( *this ) : false;
+	return IsValid() ? Get()->mrDefinition->IsDefault( *this ) : false;
 }
 
 const PropertyDefinition& PropertyValueRef::GetDefinition() const
 {
 	ZENAssert(IsValid());
-	return *zGameRefConst::Get()->mrDefinition.Get();
+	return *(Get()->mrDefinition.Get());
+}
+
+PropertyValueRef PropertyValueRef::Clone()const
+{
+	ZENAssert(IsValid());
+	return Get()->mrDefinition->Clone( *this );
+}
+
+bool PropertyValueRef::operator==(const PropertyValueRef& _rCmp)const
+{
+	ZENAssert(IsValid());	
+	return Get()->mrDefinition->IsEqual( *this, _rCmp);
 }
 
 //=============================================================================

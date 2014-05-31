@@ -10,7 +10,7 @@ namespace zen { namespace zenType {
 //! @brief		Very primitive implementation at the moment, will grow with need
 //! @todo Optim: Support datasharing with same strings, format, etc...
 //=================================================================================================
-class zString
+class zString 
 {
 ZENClassDeclareNoParent(zString)
 public:

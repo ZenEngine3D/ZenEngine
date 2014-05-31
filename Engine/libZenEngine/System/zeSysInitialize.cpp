@@ -12,9 +12,9 @@ bool StartupEngine()
 {
 	bool bResult(true);
 
-	bResult &= CMgr::Log.Startup();
-	bResult &= CMgr::Job.Startup();	
-	bResult &= CMgr::File.Startup();
+	bResult &= zbMgr::Log.Startup();
+	bResult &= zcMgr::Job.Startup();	
+	bResult &= zbMgr::File.Startup();
 	bResult &= EMgr::Export.Startup();
 	bResult	&= EMgr::Resources.Startup();
 	bResult &= EMgr::SerialItems.Startup();	
@@ -45,9 +45,9 @@ bool ShutdownEngine()
 	bResult &= EMgr::SerialItems.Shutdown();
 	bResult &= EMgr::Resources.Shutdown();
 	bResult &= EMgr::Export.Shutdown();
-	bResult &= CMgr::Job.Shutdown();
-	bResult &= CMgr::File.Shutdown();
-	bResult &= CMgr::Log.Shutdown();
+	bResult &= zcMgr::Job.Shutdown();
+	bResult &= zbMgr::File.Shutdown();
+	bResult &= zbMgr::Log.Shutdown();
 
 	return bResult;
 }

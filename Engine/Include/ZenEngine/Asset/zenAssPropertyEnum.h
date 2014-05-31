@@ -19,6 +19,18 @@ class PropertyEnum : public TPropertyDefinition<zenConst::keAssProp_Enum, Proper
 		zString					mzDescription;
 	};
 
+	class ValueRef : public TPropertyDefinition::ValueRef
+	{	
+	ZENClassDeclare(ValueRef, TPropertyDefinition::ValueRef);
+	public:
+								ValueRef():TPropertyDefinition::ValueRef(){};
+								ValueRef(const PropertyValueRef& _Copy):TPropertyDefinition::ValueRef(_Copy){};
+		const Entry&			GetEnumEntry()const;
+		const ValueRef&			operator=(PropertyEnum::ValueStorage _uEnumValue);
+		const ValueRef&			operator=(zHash32 _hEnumName);
+		const ValueRef&			operator=(const char* _zEnumName);
+	};
+
 	const Entry&				GetEnumEntry(ValueStorage _Value)const;
 	const Entry&				GetEnumEntry(zHash32 _hValue)const;	
 	static PropertyDefRef		Create( const char* _zName, const char* _zDisplayName, const char* _zDescription, bool _bShowInAssetDesc, 

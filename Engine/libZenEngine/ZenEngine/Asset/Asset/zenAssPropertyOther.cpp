@@ -13,7 +13,7 @@ PropertyDefRef PropertyBool::Create( const char* _zName, const char* _zDisplayNa
 	return pNewDefinition;
 }
 
-PropertyDefRef PropertyFile::Create( const char* _zName, const char* _zDisplayName, const char* _zDescription, bool _bShowInAssetDesc, const char* _zDefault, const char* _zFileExt )
+PropertyDefRef PropertyFile::Create( const char* _zName, const char* _zDisplayName, const char* _zDescription, bool _bShowInAssetDesc, const zChar* _zDefault, const zChar* _zFileExt )
 {		
 	static zenMem::zAllocatorPool sAllocPool( "PropertyDefinition::Create", sizeof(PropertyFile), 256, 256 );
 	PropertyFile* pNewDefinition	= zenNew(&sAllocPool) zenAss::PropertyFile(_zName, _zDisplayName, _zDescription, _bShowInAssetDesc);

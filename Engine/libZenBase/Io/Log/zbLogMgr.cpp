@@ -1,6 +1,9 @@
 #include "libZenBase.h"
 
-namespace CMgr { zbLog::ManagerLog Log; }
+namespace zbMgr 
+{ 
+	zbLog::ManagerLog Log; 
+}
 
 namespace zbLog
 {

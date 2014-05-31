@@ -123,7 +123,7 @@ void ManagerExport::WaitExportDone() const
 {
 	while( HasPendingTask() )
 	{
-		CMgr::Job.Update();
+		zcMgr::Job.Update();
 		Sleep(1);
 	}
 }

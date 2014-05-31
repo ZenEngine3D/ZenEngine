@@ -7,5 +7,6 @@
 #include <ZenBase/Type/Container/zenTypeArrayDynamic.h>
 #include <ZenBase/Type/Container/zenTypeHamtSmall.h>
 #include <ZenBase/Type/Base/zenTypeString.h>
+#include <ZenBase/Type/Base/zenTypeWString.h>
 
 #endif

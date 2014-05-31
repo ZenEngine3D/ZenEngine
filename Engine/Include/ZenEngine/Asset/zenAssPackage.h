@@ -22,6 +22,10 @@ namespace zen { namespace zenAss
 		const zArrayStatic<zString>&		GetGroupAndName	()const;
 		const zString&						GetName			()const;
 		const zArrayAsset&					GetAssets		(zenConst::eAssetType _eType);
+		
+		bool								Save			();
+		void								SetDirty		();
+		bool								IsDirty			();
 	};
 
 	typedef zArraySparse<zenAss::zPackage>::Key32 zArrayPackage;

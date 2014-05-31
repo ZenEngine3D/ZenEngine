@@ -2,8 +2,6 @@
 #ifndef __BetlTabAssetProperty_h__
 #define __BetlTabAssetProperty_h__ 
 
-//#include <AWFramework/Asset/FrameworkAssetBase.h>
-
 namespace BCtrl
 {
 
@@ -16,7 +14,7 @@ public:
 	void					RefreshModifiedItems();
 protected:
 	void					OnPropertyChange( wxPropertyGridEvent& event );
-
+	
 private:
 	DECLARE_EVENT_TABLE()
 };
@@ -25,11 +23,15 @@ private:
 class TabAssetProperty : public wxPanel
 {
 public:
-							TabAssetProperty(wxWindow* _pParent, const zenAss::zAssetItem& _rEditAsset);
-							~TabAssetProperty();
+								TabAssetProperty(wxWindow* _pParent, const zenAss::zAssetItem& _rEditAsset);
+								~TabAssetProperty();
+	void						ApplyChanges();
+	const zenAss::zAssetItem&	GetAsset();
 protected:
-	void					OnToolbarDefault	( wxCommandEvent& event );
-	void					OnToolbarOriginal	( wxCommandEvent& event );
+	//void						UpdatePropertiesState();
+	void						OnToolbarDefault	( wxCommandEvent& event );
+	void						OnToolbarOriginal	( wxCommandEvent& event );
+	void						OnToolbarApply		( wxCommandEvent& event );
 	
 	zenAss::zAssetItem		mrAsset;
 	wxPropertyGridManager*	mpPropertyGrid;

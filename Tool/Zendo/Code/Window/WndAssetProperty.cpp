@@ -42,3 +42,8 @@ void WndAssetProperty::AddAssetTab(zenAss::zAssetItem rEditItem)
 	}
 }
 
+void WndAssetProperty::AssetTabRemoved(BCtrl::TabAssetProperty& _AssetTab)
+{
+	mdTabPerAsset.Unset( _AssetTab.GetAsset().GetID() );
+}
+

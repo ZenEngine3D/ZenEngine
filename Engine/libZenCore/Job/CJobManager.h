@@ -2,6 +2,7 @@
 #ifndef __LibZenBase_Task_Manager_h__
 #define __LibZenBase_Task_Manager_h__
 
+//! @todo Clean: rename namespace
 namespace CJob
 {
 
@@ -24,6 +25,9 @@ protected:
 
 #include ZENHeaderPlatform( CJobManager )
 
-namespace CMgr { extern CJob::ManagerJob Job; }
+namespace zcMgr 
+{ 
+	extern CJob::ManagerJob Job; 
+}
 
 #endif

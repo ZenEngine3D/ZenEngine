@@ -41,7 +41,7 @@ void zEngineInstance::Destroy()
 
 void zEngineInstance::Update()
 {
-	CMgr::Job.Update();
+	zcMgr::Job.Update();
 }
 
 void zEngineInstance::CreateGfxWindow(const zVec2U16& _vDim, const zVec2U16& _vPos)

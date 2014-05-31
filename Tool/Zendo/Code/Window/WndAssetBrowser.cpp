@@ -513,9 +513,12 @@ void WndAssetBrowser::OnPackageItemContextMenu(wxTreeListEvent& event)
 		ID_Menu_PackageAdd,
 		ID_Menu_PackageDel,
 		ID_Menu_PackageRen,
+		ID_Menu_PackageSave,
 		ID_Menu_PackageGroupAdd,
 		ID_Menu_PackageGroupDel,
 		ID_Menu_PackageGroupRen,
+		ID_Menu_PackageNewAssetFirst,
+		ID_Menu_PackageNewAssetLast = ID_Menu_PackageNewAssetFirst + zenConst::keAssType__Count,
 		ID_Menu_AssetGroupAdd,
 		ID_Menu_AssetGroupDel,
 		ID_Menu_AssetGroupRen,
@@ -528,36 +531,71 @@ void WndAssetBrowser::OnPackageItemContextMenu(wxTreeListEvent& event)
 	wxPackageClientData* pClientData	= static_cast<wxPackageClientData*>(mpTreePackage->GetItemData(item));
 	
 	// Element is a package
-	if( pClientData->mrPackage.IsValid() )
-	{		
+	if( pClientData && pClientData->mrPackage.IsValid() )
+	{				
+		menu.Append(ID_Menu_PackageSave,		"&Save Package");
 		menu.Append(ID_Menu_PackageRen,			"&Rename Package");
-		menu.Append(ID_Menu_PackageDel,			"&Delete Package");
-		menu.AppendSeparator();
+		menu.Append(ID_Menu_PackageDel,			"&Delete Package");		
 		menu.Append(ID_Menu_AssetGroupAdd,		"&Create Asset Group");
+		menu.AppendSeparator();
+		for(zUInt idx(0); idx<zenConst::keAssType__Count; ++idx)
+		{		
+			wxString zItemDesc = "New asset ";
+			zItemDesc += zenAss::AssetTypeToString( (zenConst::eAssetType)idx );
+			menu.Append(ID_Menu_PackageNewAssetFirst+idx, zItemDesc);
+		}
 	}
-	// Element is a folder
+	// Element is a folder or empty
 	else
 	{
 		wxTreeListItem children = mpTreePackage->GetFirstChild(item);
+		menu.Append(ID_Menu_PackageSave,		"&Save Packages");
 		menu.Append(ID_Menu_PackageGroupAdd,	"&Create Package Group");
 		menu.Append(ID_Menu_PackageGroupRen,	"&Rename Package Group");
-		menu.Append(ID_Menu_PackageGroupDel,	"&Delete Package Group");		
+		menu.Append(ID_Menu_PackageGroupDel,	"&Delete Package Group");				
 		menu.AppendSeparator();
-		menu.Append(ID_Menu_PackageAdd,			"&Create new Package");
+		menu.Append(ID_Menu_PackageAdd,			"New &Package");
 	}
 
-	switch ( mpTreePackage->GetPopupMenuSelectionFromUser(menu) )
+	int IDSelected = mpTreePackage->GetPopupMenuSelectionFromUser(menu);
+	if( IDSelected >= ID_Menu_PackageNewAssetFirst && IDSelected <= ID_Menu_PackageNewAssetLast)
 	{
-	case ID_Menu_PackageAdd:		OnPackageItemContextMenu_PackageAdd(item);		break;
-	case ID_Menu_PackageDel:		OnPackageItemContextMenu_PackageDel(item);		break;
-	case ID_Menu_PackageRen:		OnPackageItemContextMenu_PackageRen(item);		break;
-	case ID_Menu_PackageGroupAdd:	OnPackageItemContextMenu_PackageGroupAdd(item);	break;
-	case ID_Menu_PackageGroupDel:	OnPackageItemContextMenu_PackageGroupDel(item);	break;
-	case ID_Menu_PackageGroupRen:	OnPackageItemContextMenu_PackageGroupRen(item);	break;
-	case ID_Menu_AssetGroupAdd:		OnPackageItemContextMenu_AssetGroupAdd(item);	break;
-	case ID_Menu_AssetGroupDel:		OnPackageItemContextMenu_AssetGroupDel(item);	break;
-	case ID_Menu_AssetGroupRen:		OnPackageItemContextMenu_AssetGroupRen(item);	break;
-	default:																		break;
+		OnPackageItemContextMenu_PackageNewAsset((zenConst::eAssetType)(IDSelected-ID_Menu_PackageNewAssetFirst), item);
+	}
+	else
+	{
+		switch ( IDSelected )
+		{
+		case ID_Menu_PackageSave:		OnPackageItemContextMenu_PackageSave(item);		break;
+		case ID_Menu_PackageAdd:		OnPackageItemContextMenu_PackageAdd(item);		break;
+		case ID_Menu_PackageDel:		OnPackageItemContextMenu_PackageDel(item);		break;
+		case ID_Menu_PackageRen:		OnPackageItemContextMenu_PackageRen(item);		break;
+		case ID_Menu_PackageGroupAdd:	OnPackageItemContextMenu_PackageGroupAdd(item);	break;
+		case ID_Menu_PackageGroupDel:	OnPackageItemContextMenu_PackageGroupDel(item);	break;
+		case ID_Menu_PackageGroupRen:	OnPackageItemContextMenu_PackageGroupRen(item);	break;
+		case ID_Menu_AssetGroupAdd:		OnPackageItemContextMenu_AssetGroupAdd(item);	break;
+		case ID_Menu_AssetGroupDel:		OnPackageItemContextMenu_AssetGroupDel(item);	break;
+		case ID_Menu_AssetGroupRen:		OnPackageItemContextMenu_AssetGroupRen(item);	break;
+		default:																		break;
+		}
+	}
+}
+
+void WndAssetBrowser::OnPackageItemContextMenu_PackageSave(const wxTreeListItem& _PackageItem)
+{
+	wxPackageClientData* pClientData = static_cast<wxPackageClientData*>(mpTreePackage->GetItemData(_PackageItem));
+	if( pClientData && pClientData->mrPackage.IsValid() )
+	{
+		pClientData->mrPackage.Save();
+	}
+	else
+	{
+		wxTreeListItem children = mpTreePackage->GetFirstChild(_PackageItem);
+		while( children.IsOk() )
+		{
+			OnPackageItemContextMenu_PackageSave( children );
+			children = mpTreePackage->GetNextSibling(children);
+		}
 	}
 }
 
@@ -589,6 +627,17 @@ void WndAssetBrowser::OnPackageItemContextMenu_PackageGroupDel(const wxTreeListI
 void WndAssetBrowser::OnPackageItemContextMenu_PackageGroupRen(const wxTreeListItem& _PackageItem)
 {
 
+}
+
+void WndAssetBrowser::OnPackageItemContextMenu_PackageNewAsset(zenConst::eAssetType _eType, const wxTreeListItem& _PackageItem)
+{
+	wxPackageClientData* pClientData	= static_cast<wxPackageClientData*>(mpTreePackage->GetItemData(_PackageItem));
+	if( pClientData )
+	{	
+		//! @todo Asset: Set the asset group
+		zenAss::zAssetItem rNewAsset = zenAss::AssetCreate(_eType, pClientData->mrPackage, "");
+		UpdateAssetList();		
+	}
 }
 
 void WndAssetBrowser::OnPackageItemContextMenu_AssetGroupAdd(const wxTreeListItem& _PackageItem)

@@ -31,12 +31,14 @@ protected:
 	void			OnPackageItemChecked(wxTreeListEvent& event);
 	void			OnPackageItemActivated(wxTreeListEvent& event);
 	void			OnPackageItemContextMenu(wxTreeListEvent& event);
+	void			OnPackageItemContextMenu_PackageSave(const wxTreeListItem& _PackageItem);
 	void			OnPackageItemContextMenu_PackageAdd(const wxTreeListItem& _PackageItem);
 	void			OnPackageItemContextMenu_PackageDel(const wxTreeListItem& _PackageItem);
 	void			OnPackageItemContextMenu_PackageRen(const wxTreeListItem& _PackageItem);
 	void			OnPackageItemContextMenu_PackageGroupAdd(const wxTreeListItem& _PackageItem);
 	void			OnPackageItemContextMenu_PackageGroupDel(const wxTreeListItem& _PackageItem);
 	void			OnPackageItemContextMenu_PackageGroupRen(const wxTreeListItem& _PackageItem);
+	void			OnPackageItemContextMenu_PackageNewAsset(zenConst::eAssetType _eType, const wxTreeListItem& _PackageItem);
 	void			OnPackageItemContextMenu_AssetGroupAdd(const wxTreeListItem& _PackageItem);
 	void			OnPackageItemContextMenu_AssetGroupDel(const wxTreeListItem& _PackageItem);
 	void			OnPackageItemContextMenu_AssetGroupRen(const wxTreeListItem& _PackageItem);

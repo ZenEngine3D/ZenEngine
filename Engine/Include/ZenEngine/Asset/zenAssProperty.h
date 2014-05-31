@@ -18,19 +18,15 @@ namespace zen { namespace zenAss
 	ZENClassDeclare(PropertyValue, zRefCountedAutoDel);
 	public:
 												PropertyValue(const PropertyDefRef& _rParent);
-	//protected:
 		PropertyDefRef							mrDefinition;
 	};
 	
-	//=============================================================================
-	// Templated PropertyValue
-	//=============================================================================
 	template<class TClassDefinition, class TClassValueStorage>
 	class TPropertyValue : public PropertyValue
 	{
 	ZENClassDeclare(TPropertyValue, PropertyValue);
 	public:
-												TPropertyValue(const PropertyDefRef&);
+												TPropertyValue(const PropertyDefRef& _rParent);
 		TClassValueStorage						mValue;
 	};
 
@@ -43,10 +39,28 @@ namespace zen { namespace zenAss
 	public:
 												PropertyValueRef(){}
 												PropertyValueRef(PropertyValue* _pReference ):Super(_pReference){}
-												PropertyValueRef(const PropertyValueRef& _Copy):Super(_Copy){}
+												PropertyValueRef(const PropertyValueRef& _rCopy):Super(_rCopy){}
+		bool									operator==(const PropertyValueRef& _rCmp)const;
 		bool									IsDefault()const;
+		PropertyValueRef						Clone()const;
 		zenConst::eAssetPropertyType			GetType() const;	
 		const PropertyDefinition&				GetDefinition()const;
+	};
+	
+	template<class TClassDefinition, class TClassValueStorage>
+	class TPropertyValueRef : public PropertyValueRef
+	{
+		ZENClassDeclare(TPropertyValueRef, PropertyValueRef);	
+	public:
+		typedef TPropertyValue<TClassDefinition, TClassValueStorage> Value;
+
+		TPropertyValueRef(){}			
+		TPropertyValueRef( const PropertyValueRef& _Copy );
+		TPropertyValueRef&						operator=( const TPropertyValueRef& _Copy );		
+		TPropertyValueRef&						operator=( const TClassValueStorage& _Assign );
+		TClassValueStorage&						GetValue();		
+		const TClassValueStorage&				GetValue()const;
+		const TClassDefinition&					GetDefinition() const;
 	};
 
 	//=============================================================================
@@ -60,53 +74,36 @@ namespace zen { namespace zenAss
 		virtual zenConst::eAssetPropertyType	GetType()const=0;
 		const zString&							GetTypeName()const;
 		static const zString&					GetTypeName(zenConst::eAssetPropertyType _eType);
-		static zenConst::eAssetPropertyType		GetTypeFromName(const char* _zName);
-		virtual bool							IsDefault(const class PropertyValueRef& _ValueRef)const=0;
+		static zenConst::eAssetPropertyType		GetTypeFromName(const char* _zName);		
 		zStringHash32							mName;
 		zString									mzDisplayName;
 		zString									mzDescription;		
 		bool									mbShowInAssetDesc;
 
 	protected:
+		virtual PropertyValueRef				Clone(const PropertyValueRef& _rValue)const=0;
+		virtual bool							IsDefault(const PropertyValueRef& _rValue)const=0;
+		virtual bool							IsEqual(const PropertyValueRef& _rValue1, const PropertyValueRef& _rValue2) const=0;
 		PropertyDefinition(const char* _zName, const char* _zDisplayName, const char* _zDescription, bool _bShowInAssetDesc);
+		friend PropertyValueRef;
 	};
 
-
-	//=============================================================================
-	// Templated Value Reference
-	//=============================================================================
-	template<class TClassDefinition, class TClassValueStorage>
-	class TPropertyValueRef : public PropertyValueRef
-	{
-	ZENClassDeclare(TPropertyValueRef, PropertyValueRef);	
-	public:
-		typedef TPropertyValue<TClassDefinition, TClassValueStorage> Value;
-
-												TPropertyValueRef(){}			
-												TPropertyValueRef( const PropertyValueRef& _Copy );
-		TPropertyValueRef&						operator=( const TPropertyValueRef& _Copy );		
-		TClassValueStorage&						Get();		
-		const TClassValueStorage&				Get()const;
-		const TClassDefinition&					GetDefinition() const;
-	};
-	
-	//=============================================================================
-	// Templated PropertyDefinition
-	//=============================================================================
  	template<zenConst::eAssetPropertyType TPropertyType, class TClassDefinition, class TClassValue>
  	class TPropertyDefinition : public PropertyDefinition
  	{
 	ZENClassDeclare(TPropertyDefinition, PropertyDefinition);	
 	public:		
-		typedef TPropertyValueRef<TClassDefinition, TClassValue>	ValueRef;
-		typedef TClassValue											ValueStorage;
+		typedef TPropertyValue<TClassDefinition, TClassValue>		ValueProperty;	//!< Wrapper around Propertvalue (Definition+RefCount+Value)
+		typedef TPropertyValueRef<TClassDefinition, TClassValue>	ValueRef;		//!< PropertyRef to access the value
+		typedef TClassValue											ValueStorage;	//!< Type of Data value stored for this property
 		enum { kPropertyType = TPropertyType };
 												
  		virtual PropertyValueRef				Allocate() const;
-		virtual bool							IsDefault(const PropertyValueRef& _rValueRef)const;		
 		virtual zenConst::eAssetPropertyType	GetType()const;
-	
 	protected:
+		virtual PropertyValueRef				Clone(const PropertyValueRef& _rValue)const;
+		virtual bool							IsDefault(const PropertyValueRef& _rValueRef)const;		
+		virtual bool							IsEqual(const PropertyValueRef& _rValue1, const PropertyValueRef& _rValue2)const;
 		TPropertyDefinition(const char* _zName, const char* _zDisplayName, const char* _zDescription, bool _bShowInAssetDesc);
  	};
 
@@ -117,8 +114,6 @@ namespace zen { namespace zenAss
 		: TPropertyDefinition(_zName, _zDisplayName, _zDescription, _bShowInAssetDesc){}								\
 	public:																												\
 		ValueStorage mDefault;																							\
-		//static PropertyDefRef Create( const char* _zName, const char* _zDisplayName, const char* _zDescription, bool _bShowInAssetDesc, __VA_ARGS__ )
-
 	
 }} //namespace zen { namespace zenAss
 

@@ -7,13 +7,13 @@
 namespace zen { namespace zenAss 
 {
 	
-class PropertyFile : public TPropertyDefinition<zenConst::keAssProp_File, PropertyFile, zString>
+class PropertyFile : public TPropertyDefinition<zenConst::keAssProp_File, PropertyFile, zWString>
 {
 	ZENPropertyDefinitionDeclare( PropertyFile )
 	static PropertyDefRef Create( const char* _zName, const char* _zDisplayName, const char* _zDescription, bool _bShowInAssetDesc, 
-									const char* _zDefault, const char* _zFileExt="Any(*.*)|*.*" );
+									const zChar* _zDefault, const zChar* _zFileExt=zenT("Any(*.*)|*.*") );
 	
-	zString				mzFileExt;	//!< List of supported files extensions to display in file dialog
+	zWString mzFileExt;	//!< List of supported files extensions to display in file dialog
 };
 	
 }} //namespace zen { namespace zenAss

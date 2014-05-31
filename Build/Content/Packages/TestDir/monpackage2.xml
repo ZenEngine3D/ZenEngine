@@ -1,18 +1,24 @@
 <?xml version="1.0"?>
-<Package ID="2" Group="MonGroupe\" EngineVersionMaj="0" EngineVersionMin="0" />
-<Asset ID="4" Name="TestName2" Group="AssetGroup\" Type="Texture2D">
-	<Property Name="TestBool" Type="Bool" Value="0" />
-	<Property Name="TestEnum" Type="Enum" Value="Value0" />
-	<Property Name="Source" Type="File" Value="C:\temp\test.txt" />
-	<Property Name="TestIntA" Type="Int" Value="0" />
-	<Property Name="TestFloat" Type="Float" Value="0.500000" />
-	<Property Name="TestFloat2" Type="Float2" x="0" y="1.1" />
+<Package ID="1" Group="MonGroupe" EngineVersion="1" />
+<Asset ID="6" Name="TestProperty" Type="TestProperty" Group="AssetGroup">
+	<Property Name="Float" Type="Float" Value="1" />
+	<Property Name="Float4" Type="Float4" X="1" Y="2" Z="3" W="4" />
+	<Property Name="Int" Type="Int" Value="5" />
+	<Property Name="Int2" Type="Int2" X="1" Y="2" />
+	<Property Name="Int3" Type="Int3" X="1" Y="2" Z="3" />
+	<Property Name="Int4" Type="Int4" X="1" Y="2" Z="3" W="4" />
+	<Property Name="File" Type="File" Value="Packagetest222.txt" />
+	<Property Name="Struct" Type="Struct">
+		<Property Name="StructFloat" Type="Float" Value="5" />
+	</Property>
+	<Property Name="Array1" Type="Array" Num="1" ElementType="Float2">
+		<Property Index="1" X="2" Y="3" />
+	</Property>
+	<Property Name="Array2" Type="Array" Num="1" ElementType="Struct">
+		<Property Index="1">
+			<Property Name="StructFloat" Type="Float" Value="4" />
+			<Property Name="StructFloat2" Type="Float2" X="1" Y="2" />
+		</Property>
+	</Property>
 </Asset>
-<Asset ID="6" Name="TestProperty" Group="AssetGroup\" Type="TestProperty">
-	<Property Name="PropertyBool" Type="Bool" Value="0" />
-	<Property Name="TestEnum" Type="Enum" Value="Value0" />
-	<Property Name="PropertyFile" Type="File" Value="C:\temp\test.txt" />
-	<Property Name="TestIntA" Type="Int" Value="0" />
-	<Property Name="PropertyFloat" Type="Float" Value="0.500000" />
-	<Property Name="TestFloat2" Type="Float2" x="0" y="1.1" />
-</Asset>
+<Asset ID="4" Name="TestName2" Type="Texture2D" Group="AssetGroup" />

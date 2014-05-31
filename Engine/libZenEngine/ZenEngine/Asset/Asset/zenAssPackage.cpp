@@ -39,18 +39,39 @@ zPackage& zPackage::operator=(const zPackage& _Copy)
 zU32 zPackage::GetID()const									
 { 
 	ZENAssert(IsValid());
-	return zEngineRefConst::Get()->GetID(); 
+	return Get()->GetID(); 
 }
+
 const zString& zPackage::GetName()const							
 { 
 	ZENAssert(IsValid());
-	return zEngineRefConst::Get()->GetName(); 
+	return Get()->GetName(); 
 }
+
 const zArrayStatic<zString>& zPackage::GetGroupAndName()const	
 { 
 	ZENAssert(IsValid());
-	return zEngineRefConst::Get()->GetGroupAndName(); 
+	return Get()->GetGroupAndName(); 
 }
+
+void zPackage::SetDirty()
+{
+	ZENAssert(IsValid());
+	Get()->SetDirty(true);
+}
+
+bool zPackage::IsDirty()
+{
+	ZENAssert(IsValid());
+	return Get()->IsDirty();
+}
+
+bool zPackage::Save()
+{
+	ZENAssert(IsValid());
+	return Get()->Save();
+}
+
 const zArrayAsset& zPackage::GetAssets(zenConst::eAssetType _eType)
 {
 	ZENAssert(IsValid());
