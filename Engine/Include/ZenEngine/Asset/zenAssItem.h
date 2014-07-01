@@ -12,21 +12,10 @@ namespace zen { namespace zenAss
 	{
 	ZENClassDeclare(zAssetItem, zEngineRef)
 	public:
-		struct ID
-		{
-			zenConst::eAssetType	meType;
-			zU32					muIndex;
-			ZENInline				ID(zenConst::eAssetType _eType, zU32 _uIndex):meType(_eType), muIndex(_uIndex){};
-			ZENInline 				ID(const ID& _Copy):meType(_Copy.meType), muIndex(_Copy.muIndex){}
-			ZENInline ID&			operator=(const ID& _Copy){meType = _Copy.meType; muIndex = _Copy.muIndex; return *this;}
-			ZENInline 				operator const zU64() const{return *reinterpret_cast<const zU64*>(this);}
-		};
-	
-	public:
 										zAssetItem();
 										zAssetItem(const zAssetItem& _Copy);
 										zAssetItem(zeAss::Asset* _pAsset);
-		ID								GetID()const;
+		const zAssetID&					GetID()const;
 		const zString&					GetName()const;
 		const zArrayStatic<zString>&	GetGroupAndName()const;
 		const zString&					GetDescription()const;
@@ -46,9 +35,10 @@ namespace zen { namespace zenAss
 	zAssetItem							AssetCreate			(zenConst::eAssetType _eAssetType, zPackage& _rPackage, const char* _zGroup);
 	const char*							AssetTypeToString	(zenConst::eAssetType _ePropertyType);
 	zenConst::eAssetType				AssetNameToType		(zHash32 _hAssetName);
-	const zAssetItem&					AssetGet			(zAssetItem::ID _uAssetID); //! @todo Asset: Move to an asset manager at api level?
+	const zAssetItem&					AssetGet			(const zAssetID& _uAssetID); //! @todo Asset: Move to an asset manager at api level?
 
 	typedef zArraySparse<zenAss::zAssetItem>::Key32 zArrayAsset;
+	
 
 }} //namespace zen { namespace zenAss
 

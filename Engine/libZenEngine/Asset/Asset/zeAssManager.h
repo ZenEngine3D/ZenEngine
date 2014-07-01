@@ -22,8 +22,8 @@ public:
 	const zenAss::zArrayAsset&				AssetGet		( zenConst::eAssetType _eType )const;
 	
 	void									AssetAdd		( zeAss::Asset* _pAsset );
-	void									AssetRem		( zenAss::zAssetItem::ID _AssetID );
-	ZENInline zenAss::zAssetItem::ID		GetAssetNextID	( zenConst::eAssetType _eType){ ZENAssert(_eType < zenConst::keAssType__Count); return zenAss::zAssetItem::ID(_eType, maAssetNextID[_eType]++);};
+	void									AssetRem		( zenAss::zAssetID _AssetID );
+	ZENInline zenAss::zAssetID				GetAssetNextID	( zenConst::eAssetType _eType){ ZENAssert(_eType < zenConst::keAssType__Count); return zenAss::zAssetID(_eType, maAssetNextID[_eType]++);};
 	ZENInline zU32							GetPackageNextID(){return muPackageNextID++;};
 protected:
 	void									PackageAdd		( zeAss::Package* _pPackage );

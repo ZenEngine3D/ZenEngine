@@ -21,7 +21,10 @@ namespace zenConst
 	//! @note: When adding support for new parameter type in assets :
 	//!			1-Add enum value here
 	//!			2-Add matching ParameterDef class to support it (zenAssProperty.h)
-	//!			3-Add serialization support (zxAddLoaderXml, ...)
+	//!			3-Add description (saPropertyName in zenAssProperty.h)
+	//!			4-Add the property in test Asset (zeAssItem.cpp:GetProperties() )
+	//!			5-Add serialization support (zxAddLoaderXml, ...)
+
 	enum eAssetPropertyType
 	{
 		keAssProp_Bool,
@@ -35,6 +38,7 @@ namespace zenConst
 		keAssProp_Int3,
 		keAssProp_Int4,
 		keAssProp_Enum,
+		keAssProp_Asset,
 		keAssProp_Struct,
 		keAssProp_Array,
 		keAssProp__Count,
@@ -44,7 +48,7 @@ namespace zenConst
 
 namespace zenType
 {
-	typedef zFlag<zenConst::eAssetType,zenConst::keAssType__Count, zU64>	zenFlagAssetType;
+	typedef zFlag<zenConst::eAssetType,zenConst::keAssType__Count, zU64>	zFlagAssetType;
 }
 
 } //namespace zen

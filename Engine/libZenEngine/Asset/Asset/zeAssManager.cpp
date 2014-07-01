@@ -130,13 +130,16 @@ const zenAss::zPackage& ManagerAsset::PackageGet( zU32 _uPackageID )
 
 const zenAss::zAssetItem& ManagerAsset::AssetGet( zenConst::eAssetType _eType, zU32 _uAssetID )const
 {
-	ZENAssert(_eType<zenConst::keAssType__Count); 
-	return madAsset[_eType][_uAssetID];
+	static const zenAss::zAssetItem sInvalid;
+	if( _eType<zenConst::keAssType__Count )
+		return madAsset[_eType][_uAssetID];
+	else
+		return sInvalid;
 }
 
 const zenAss::zArrayAsset& ManagerAsset::AssetGet( zenConst::eAssetType _eType )const
 {
-	ZENAssert(_eType<zenConst::keAssType__Count); 
+	ZENAssert( _eType < zenConst::keAssType__Count );
 	return madAsset[_eType];
 }
 
@@ -146,7 +149,7 @@ void ManagerAsset::AssetAdd( zeAss::Asset* _pAsset )
 	madAsset[_pAsset->GetType()].Set(_pAsset->GetID().muIndex, _pAsset);
 }
 
-void ManagerAsset::AssetRem( zenAss::zAssetItem::ID _AssetID )
+void ManagerAsset::AssetRem( zenAss::zAssetID _AssetID )
 {
 	ZENAssert(_AssetID.meType<zenConst::keAssType__Count); 
 	zenAss::zAssetItem rAsset;

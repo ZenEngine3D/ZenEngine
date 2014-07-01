@@ -3,7 +3,7 @@
 namespace zen { namespace zeAss
 {
 
-zenAss::zAssetItem::ID Asset::GetID()const
+const zenAss::zAssetID& Asset::GetID()const
 {
 	return mID;
 }

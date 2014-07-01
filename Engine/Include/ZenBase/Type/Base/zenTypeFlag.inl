@@ -8,6 +8,15 @@ zFlag<TEnumFlag, TEnumMax, TStorage>::zFlag()
 };
 
 template<typename TEnumFlag, int TEnumMax, typename TStorage> 
+zFlag<TEnumFlag, TEnumMax, TStorage>::zFlag(bool _bInitAllActive) 
+: muFlags(0)
+{
+	ZENStaticAssertMsg( sizeof(TStorage)*8>=TEnumMax, StorageContainerTooSmallForMaxValue );
+	if( _bInitAllActive )
+		Invert();
+};
+
+template<typename TEnumFlag, int TEnumMax, typename TStorage> 
 zFlag<TEnumFlag, TEnumMax, TStorage>::zFlag(TStorage _Mask) 
 : muFlags(_Mask)
 {

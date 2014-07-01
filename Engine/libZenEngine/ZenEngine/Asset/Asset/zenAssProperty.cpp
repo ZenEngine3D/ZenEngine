@@ -16,6 +16,7 @@ static const zStringHash32 saPropertyName[]={
 	"Int3",		// keAssProp_Int3,
 	"Int4",		// keAssProp_Int4,
 	"Enum",		// keAssProp_Enum,
+	"Asset",	// keAssProp_Asset
 	"Struct",	// keAssProp_Struct
 	"Array",	// keAssProp_Array,
 };

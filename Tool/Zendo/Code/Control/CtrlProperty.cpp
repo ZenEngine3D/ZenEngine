@@ -37,6 +37,7 @@ wxPGProperty* CreateAssetValueControl(zenAss::PropertyValueRef& _Value)
  	case zenConst::keAssProp_Int2:		pProperty=zenNewDefault wxBetlInt2fProperty(_Value);		break;
  	case zenConst::keAssProp_Int3:		pProperty=zenNewDefault wxBetlInt3fProperty(_Value);		break;
  	case zenConst::keAssProp_Int4:		pProperty=zenNewDefault wxBetlInt4fProperty(_Value);		break;
+	case zenConst::keAssProp_Asset:		pProperty=zenNewDefault wxBetlAssetProperty(_Value);		break;
  	case zenConst::keAssProp_Array:		pProperty=zenNewDefault wxBetlArrayProperty(_Value);		break;
  	case zenConst::keAssProp_Struct:	pProperty=zenNewDefault wxBetlStructProperty(_Value);		break;
 	default:							ZENAssertMsg(0, "Unknown property type, implement it.")		break;
@@ -330,6 +331,99 @@ bool wxBetlEnumProperty::TypedMetaData::Save()
 }
 
 //=================================================================================================
+// PROPERTY : ASSET
+//=================================================================================================
+wxBetlAssetProperty::wxBetlAssetProperty(const zenAss::PropertyValueRef& _rAssetValue)
+{
+	static zenMem::zAllocatorPool sPoolMetaData("Betl::TypedMetaData Pool", sizeof(TypedMetaData), 100, 100);
+	ZENAssert( _rAssetValue.IsValid() );
+	zenAss::PropertyAsset::ValueRef	rAssetVal	= _rAssetValue;
+	const zenAss::PropertyAsset&	AssetProp	= rAssetVal.GetDefinition();	
+	
+	wxString zTextValue("None");
+	zenAss::zAssetItem rAsset = zenAss::AssetGet( rAssetVal.GetValue() );
+	if( rAsset.IsValid() )
+	{
+		zTextValue = "";
+		zenAss::zPackage rPackage			= rAsset.GetPackage();
+		if( rPackage.IsValid() )
+		{
+			zArrayStatic<zString> aGroupName	= rPackage.GetGroupAndName();		
+			for(zUInt idx(0), count(aGroupName.Count()); idx<count; ++idx)
+				zTextValue += aGroupName[idx] + "/";
+
+			aGroupName	= rAsset.GetGroupAndName();		
+			for(zUInt idx(0), count(aGroupName.Count()); idx<count; ++idx)
+				zTextValue += aGroupName[idx] + "/";
+		}
+		
+	}
+		
+	SetClientData		( zenNew(&sPoolMetaData)TypedMetaData(this, _rAssetValue, (wxLongLong)rAssetVal.GetValue()) );
+	SetDefaultValue		( wxVariant((wxLongLong)AssetProp.mDefault) );
+	SetValue			( wxString(zTextValue) );
+
+	wxString zHelp = wxString::Format("%s\nSupported Asset(s) : ", (const char*)AssetProp.mzDescription);
+	if( AssetProp.mSupportedType == zFlagAssetType(true) )
+	{
+		SetHelpString( zHelp + "All" );
+	}
+	else
+	{
+		for( zUInt idx(0); idx< zenConst::keAssType__Count; ++idx)
+		{
+			if( AssetProp.mSupportedType.Any( (zenConst::eAssetType)idx) )
+			{
+				zHelp += zenAss::AssetTypeToString( (zenConst::eAssetType)idx);
+				zHelp += ", ";
+			}
+		}
+		SetHelpString( zHelp.Left(zHelp.Len()-2) );
+	}		
+}
+
+wxBetlAssetProperty::~wxBetlAssetProperty()
+{
+	zenDel(GetClientData());
+}
+
+void wxBetlAssetProperty::OnSetValue()
+{
+	//! @todo Asset: 
+	int i = 0;
+}
+
+wxBetlAssetProperty::TypedMetaData::TypedMetaData( wxBetlAssetProperty* _pOwner, const zenAss::PropertyValueRef& _rAssetValue, const wxVariant& _OriginalValue)
+: PropertyMetaData(_pOwner, _rAssetValue, _OriginalValue)
+{
+	ZENAssert( mpOwner != NULL && mrAssetValue.IsValid() );
+	zenAss::PropertyAsset::ValueRef rValue = _rAssetValue;
+	mAssetIDValue			= rValue.GetValue();
+	mAssetIDOriginalValue	= mAssetIDValue;
+}
+
+void wxBetlAssetProperty::TypedMetaData::SetControlState()
+{
+	ZENAssert( mpOwner != NULL && mrAssetValue.IsValid() );
+	mpOwner->SetBackgroundColour( ControlBGColor[ mrAssetValue.IsDefault() ], 0 );
+	mpOwner->SetModifiedStatus	( mAssetIDValue != mAssetIDOriginalValue );	
+}
+
+bool wxBetlAssetProperty::TypedMetaData::Save()
+{
+ 	ZENAssert( mpOwner != NULL && mrAssetValue.IsValid() );	
+ 	if( mAssetIDValue != mAssetIDOriginalValue )
+ 	{
+ 		zenAss::PropertyAsset::ValueRef rPropertyVal(mrAssetValue);
+ 		rPropertyVal			= mAssetIDValue;
+ 		mAssetIDOriginalValue	= mAssetIDValue;
+ 		return true;
+ 	}	
+	return false;
+}
+
+
+//=================================================================================================
 // PROPERTY : FILE
 //=================================================================================================
 wxBetlFileProperty::wxBetlFileProperty(const zenAss::PropertyValueRef& _rAssetValue)
@@ -389,7 +483,6 @@ wxBetlArrayProperty::wxBetlArrayProperty(const zenAss::PropertyValueRef& _rAsset
 		wxPGProperty* pProperty = CreateAssetValueControl(valueArray[idx]);	
 		pProperty->SetLabel( wxString::Format("%s[%i]", (const char*)AssetProp.mzDisplayName, idx) );
 		AppendChild(pProperty);
-		//pProperty->SetBackgroundColour	( bgColors[ valueArray[idx].IsDefault() ],0 );
 	}
 }
 

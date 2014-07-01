@@ -16,7 +16,7 @@ ZENClassDeclareNoParent(Asset)
 public:
 	virtual										~Asset();	
 
-	ZENInline zenAss::zAssetItem::ID			GetID()const;
+	ZENInline const zenAss::zAssetID&			GetID()const;
 	ZENInline const zArrayStatic<zString>&		GetGroupAndName()const;
 	ZENInline const zString&					GetName()const;
 	ZENInline const zString&					GetDescription()const;
@@ -39,7 +39,7 @@ protected:
 	void										RebuiltDescription();
 	
 	zenAss::zPackage							mrPackage;					//!< Parent package this asset is kept inside
-	zenAss::zAssetItem::ID						mID;						//!< Unique ID for this Asset instance
+	zenAss::zAssetID							mID;						//!< Unique ID for this Asset instance
 	zString										mzDescription;				//!< Asset description, built from propertydef/values
 	zArrayStatic<zString>						maGroup;					//!< Asset belongs to a group hierarchy for easier finding of asset, like package (last element is asset name)	
 	zArrayStatic<zenAss::PropertyValueRef>		maPropertyValue;			//!< List of values pointer for this asset	

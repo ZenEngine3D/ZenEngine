@@ -18,7 +18,8 @@ template<typename TEnumFlag, int TEnumMax, typename TStorage=zU32>
 class zFlag
 {
 public:
-	ZENInline					zFlag();
+	ZENInline				zFlag();
+	ZENInline				zFlag(bool _bInitAllActive);
 
 	FLAG_CONSTRUCTOR(0);	FLAG_CONSTRUCTOR(1);	FLAG_CONSTRUCTOR(2);	FLAG_CONSTRUCTOR(3);	FLAG_CONSTRUCTOR(4);
 	FLAG_CONSTRUCTOR(5);	FLAG_CONSTRUCTOR(6);	FLAG_CONSTRUCTOR(7);	FLAG_CONSTRUCTOR(8);	FLAG_CONSTRUCTOR(9);
@@ -42,7 +43,6 @@ public:
 	
 	ZENInline const zFlag&	Reset()	;
 	ZENInline const zFlag&	Invert();
-	//ZENInline const zFlag&	ForceSet(TStorage _FlagValues);
 
 	ZENInline bool			Any( )const						;
 	ZENInline bool			Any( const zFlag& _Cmp )const	;
@@ -52,7 +52,7 @@ public:
 
 	ZENInline bool			operator==( const zFlag& _Cmp )const;
 	ZENInline bool			operator!=( const zFlag& _Cmp )const;
-
+	
 protected:
 	ZENInline				zFlag(TStorage _Mask);
 	ZENInlineForce void		CheckValid(TStorage _Value);

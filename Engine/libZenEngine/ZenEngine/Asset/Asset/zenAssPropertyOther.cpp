@@ -22,6 +22,16 @@ PropertyDefRef PropertyFile::Create( const char* _zName, const char* _zDisplayNa
 	return pNewDefinition;
 }
 
+PropertyDefRef PropertyAsset::Create( const char* _zName, const char* _zDisplayName, const char* _zDescription, bool _bShowInAssetDesc, ValueStorage _Default, zFlagAssetType _TypeMask )
+{
+	static zenMem::zAllocatorPool sAllocPool( "PropertyDefinition::Create", sizeof(PropertyAsset), 256, 256 );
+	PropertyAsset* pNewDefinition	= zenNew(&sAllocPool) zenAss::PropertyAsset(_zName, _zDisplayName, _zDescription, _bShowInAssetDesc);
+	pNewDefinition->mDefault		= _Default;
+	pNewDefinition->mSupportedType	= _TypeMask;
+	return pNewDefinition;
+}
+
+
 }} //namespace zen { namespace zenAss
 
 #endif //ZEN_ENGINETOOL

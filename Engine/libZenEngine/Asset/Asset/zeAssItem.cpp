@@ -134,6 +134,8 @@ const zenAss::PropertyDefArray& TestProperty::GetProperties()const
 		zenAss::PropertyInt4::Create	("Int4",	"", "Test: Int4",	true,	zVec4S32(1), zVec4S32(-10), zVec4S32(10), zVec4S32(1)),
 		zenAss::PropertyEnum::Create	("Enum",	"", "Test: Enum",	true,	10, aEnumEntries, ZENArrayCount(aEnumEntries) ),
 		zenAss::PropertyFile::Create	("File",	"", "Test: File",	true,	zenT("test.txt"), zenT("Images|*.bmp;*.png;*.jpeg;*.jpg|BMP(*.bmp)|*.bmp|PNG(*.png)|*.png|JPEG(*.jpg;*.jpeg)|*.jpg;*.jpeg")),
+		zenAss::PropertyAsset::Create	("AssetA",	"", "Test: Asset all type",	true,	zenAss::zAssetID()),
+		zenAss::PropertyAsset::Create	("AssetB",	"", "Test: Asset only TestProperty",	true,	zenAss::zAssetID(), zFlagAssetType(zenConst::keAssType_TestProperty)),
 		zenAss::PropertyStruct::Create	("Struct",	"",	"Test: Struct", true,	aPropertiesStruct, ZENArrayCount(aPropertiesStruct) ),
 		zenAss::PropertyArray::Create	("Array1",	"", "Test: Array Float2",	true,	rPropertyArrayFloat2, 1),
 		zenAss::PropertyArray::Create	("Array2",	"", "Test: Array Struct",	true,	rPropertyArrayStruct, 1),

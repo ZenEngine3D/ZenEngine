@@ -18,7 +18,7 @@ zAssetItem AssetCreate( zenConst::eAssetType _eAssetType, zPackage& _rPackage, c
 	if( pNewItem )
 	{
 		char zName[256];
-		zAssetItem::ID id = zeMgr::Asset.GetAssetNextID(_eAssetType);
+		zAssetID id = zeMgr::Asset.GetAssetNextID(_eAssetType);
 		sprintf_s(zName, sizeof(zName), "New %s %i", zenAss::AssetTypeToString(_eAssetType), id.muIndex );
 		pNewItem->Init( id, zName, _zGroup, *_rPackage.Get() );
 		return pNewItem;
@@ -38,7 +38,7 @@ zenConst::eAssetType AssetNameToType(zHash32 _hAssetName)
 	return idx < zenConst::keAssType__Count ? static_cast<zenConst::eAssetType>(idx) : zenConst::keAssType__Invalid;
 }
 
-const zAssetItem& AssetGet( zAssetItem::ID _uAssetID )
+const zAssetItem& AssetGet( const zAssetID& _uAssetID )
 {
 	return zeMgr::Asset.AssetGet(_uAssetID.meType, _uAssetID.muIndex);
 }
@@ -64,7 +64,7 @@ zAssetItem& zAssetItem::operator=(const zAssetItem& _Copy)
 	return *this;
 }
 
-zAssetItem::ID zAssetItem::GetID()const								
+const zAssetID& zAssetItem::GetID()const								
 { 
 	ZENAssert(IsValid());
 	return Get()->GetID();

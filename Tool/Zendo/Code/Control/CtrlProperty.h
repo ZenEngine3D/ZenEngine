@@ -209,7 +209,24 @@ public:
 	virtual ~wxBetlFileProperty();
 };
 
-class wxBetlArrayProperty : public wxPGProperty
+class wxBetlAssetProperty : public wxStringProperty
+{
+public:
+	struct TypedMetaData : public PropertyMetaData
+	{
+		TypedMetaData( wxBetlAssetProperty* _pOwner, const zenAss::PropertyValueRef& _rAssetValue, const wxVariant& _OriginalValue);
+		virtual void SetControlState();
+		virtual bool Save();
+		zenAss::zAssetID mAssetIDValue;
+		zenAss::zAssetID mAssetIDOriginalValue;
+	};
+
+	wxBetlAssetProperty(const zenAss::PropertyValueRef& _rAssetValue);
+	virtual ~wxBetlAssetProperty();
+	virtual void OnSetValue();
+};
+
+class wxBetlArrayProperty : public wxPGProperty //wxPropertyCategory?
 { 
 public:	
 	struct TypedMetaData : public PropertyMetaData
