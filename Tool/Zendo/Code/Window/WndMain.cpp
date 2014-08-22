@@ -106,12 +106,12 @@ bool WndMain::Initialize()
 
 	// add the panes to the manager
 	panelInfo.Caption(wxT("Browser"));
-	mpWndAssetBrowser	= zenNewDefault WndAssetBrowser(this, "Main Asset Browser");
+	mpWndAssetBrowser = zenNewDefault WndAssetBrowser(this, "Main Asset Browser");
 	mLayoutMgr.AddPane(mpWndAssetBrowser, panelInfo );
 	
 	panelInfo.Caption(wxT("Properties"));
 	panelInfo.Right();
-	mpWndAssetProperty	= zenNewDefault WndAssetProperty(this, "Properties");
+	mpWndAssetProperty = zenNewDefault WndAssetProperty(this, "Properties");
 	mLayoutMgr.AddPane(mpWndAssetProperty, panelInfo);	
 	
 	panelInfo.Caption(wxT("Rendering"));

@@ -24,9 +24,9 @@ void TestSimd(zU32 auCount)
 	volatile float AWAlign(volVal2[4],16)	= {10.0f,10.0f,10.0f,10.0f};
 	volatile float AWAlign(volVal3[4],16)	= {1.0f,2.0f,3.0f,4.0f};
 
-	zenMath::V4 vVal1       = zenMath::XYZW(uVal1);
-	zenMath::V4 vVal2       = zenMath::XYZW(uVal2);
-	zenMath::V4 vVal3       = zenMath::XYZW(uVal3);
+	zenMath::V4 vVal1		= zenMath::simdXYZW(uVal1);
+	zenMath::V4 vVal2       = zenMath::simdXYZW(uVal2);
+	zenMath::V4 vVal3       = zenMath::simdXYZW(uVal3);
 	zenMath::V4 vResult     = zenMath::v4Zero;
 
 	//---------------------------------------------------------------
@@ -45,11 +45,11 @@ void TestSimd(zU32 auCount)
 		uStartB = zenSys::GetTimeUSec();
 		for(zU32 i=0; i<auCount; ++i)
 		{
-			vResult = zenMath::Add(vVal1, vResult);
+			vResult = zenMath::simdAdd(vVal1, vResult);
 		}
 		uStopB = zenSys::GetTimeUSec();
 
-		zenMath::XYZW(vResult,  uResult2);
+		zenMath::simdXYZW(vResult,  uResult2);
 		zbMgr::Log.Printf(zbLog::keLog_Game, "\n%15s Cpu:%5i vs Sse:%5i ", "Add", zU32(uStopA - uStartA), zU32(uStopB - uStartB), uResult[0], uResult[1], uResult[2], uResult[3], uResult2[0], uResult2[1], uResult2[2], uResult2[3] );
 	}
 	//---------------------------------------------------------------
@@ -69,11 +69,11 @@ void TestSimd(zU32 auCount)
 		zenMath::V4 vResult1 = zenMath::v4Zero;
 		for(zU32 i=0; i<auCount; ++i)
 		{
-			vResult1 = zenMath::MAdd(vVal1, vVal2, vResult1);
+			vResult1 = zenMath::simdMAdd(vVal1, vVal2, vResult1);
 		}
 		uStopB = zenSys::GetTimeUSec();
 
-		zenMath::XYZW(vResult1,  uResult2);
+		zenMath::simdXYZW(vResult1,  uResult2);
 		zbMgr::Log.Printf(zbLog::keLog_Game, "\n%15s Cpu:%5i vs Sse:%5i ", "Mult+Add", zU32(uStopA - uStartA), zU32(uStopB - uStartB), uResult[0], uResult[1], uResult[2], uResult[3], uResult2[0], uResult2[1], uResult2[2], uResult2[3] );
 	}
 	//---------------------------------------------------------------
@@ -94,10 +94,10 @@ void TestSimd(zU32 auCount)
 		float fResB = 0;
 		for(zU32 i=0; i<auCount; ++i)
 		{
-			vResult = zenMath::LengthV(vVal1);
-			vVal1 = zenMath::Add(vVal1, vVal2);
+			vResult = zenMath::simdLengthV(vVal1);
+			vVal1 = zenMath::simdAdd(vVal1, vVal2);
 		} 
-		zenMath::XYZW(vResult,  uResult);
+		zenMath::simdXYZW(vResult, uResult);
 		uStopB = zenSys::GetTimeUSec();
 		zbMgr::Log.Printf(zbLog::keLog_Game, "\n%15s Cpu:%5i vs Sse:%5i ", "Magnitude", zU32(uStopA - uStartA), zU32(uStopB - uStartB), fResA, uResult );
 	}
@@ -124,11 +124,11 @@ void TestSimd(zU32 auCount)
 		vResult = vVal3;
 		for(zU32 i=0; i<auCount; ++i)
 		{
-			vResult = zenMath::Normalize(vResult);
+			vResult = zenMath::simdNormalize(vResult);
 		}
 		uStopB = zenSys::GetTimeUSec();
 
-		zenMath::XYZW(vResult,  uResult2);
+		zenMath::simdXYZW(vResult, uResult2);
 		zbMgr::Log.Printf(zbLog::keLog_Game, "\n%15s Cpu:%5i vs Sse:%5i ", "Normalize", zU32(uStopA - uStartA), zU32(uStopB - uStartB), uResult[0], uResult[1], uResult[2], uResult[3], uResult2[0], uResult2[1], uResult2[2], uResult2[3] );
 	}
 }
@@ -141,19 +141,19 @@ void SampleVector()
 	float AWAlign(uVal1[4], 16)  = {0.0f,1.0f,2.0f,3.0f};
 
 	zenMath::V4 vTestRes;
-	zenMath::V4 vTestVal	= zenMath::XYZW(1,2,3,4);	
+	zenMath::V4 vTestVal		= zenMath::simdXYZW(1, 2, 3, 4);
 	zenMath::Matrix matTest1	= zenMath::Matrix::sIdentity;
 	zenMath::Matrix matTest2	= zenMath::Matrix::sIdentity;
 	vTestRes				= vTestVal*matTest1;
 
 	matTest1 *= matTest2;
 
-	vTestRes = zenMath::XYZW(uVal1);
-	vTestRes = zenMath::SpreadX(vTestVal);
-	vTestRes = zenMath::SpreadY(vTestVal);
-	vTestRes = zenMath::SpreadZ(vTestVal);
-	vTestRes = zenMath::SpreadW(vTestVal);    
-	std::cout << "\n" << zenMath::X(vTestRes);
+	vTestRes = zenMath::simdXYZW(uVal1);
+	vTestRes = zenMath::simdSpreadX(vTestVal);
+	vTestRes = zenMath::simdSpreadY(vTestVal);
+	vTestRes = zenMath::simdSpreadZ(vTestVal);
+	vTestRes = zenMath::simdSpreadW(vTestVal);
+	std::cout << "\n" << zenMath::simdX(vTestRes);
 
 	const zU32 uValue=16;
 	volatile zU32 uAdd(3);

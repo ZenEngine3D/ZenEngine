@@ -1,8 +1,12 @@
+include "Extensions/QtVS/qt.lua"
+
 vSourceFiles			= {"**.h", "**.inl", "**.cpp", "**.ui"}
 vLibEngineGame 			= {"libZenBase", "libZenCore", "libZenEngine", "libZenExternal"  }
 vLibEngineTool 			= {"libZenBase", "libZenCore", "libZenEngine", "libZenExternal", "libThirdParty" }
 bLibEngineGameRender	= {"d3d11", "d3dcompiler", "dxguid"}	--TODO per platform config
 bLibEngineToolRender	= {"d3d11", "d3dcompiler", "dxguid"}
+
+local qt 				= premake.extensions.qt
 
 --[[ Useful bit of code 
 if vPath:sub(vPath,-1) ~= '/' then
@@ -132,9 +136,8 @@ function Orion_AddProjectWxWidget()
 	vLibsRelease = {"wxmsw29u_core", "wxbase29u", "wxmsw29u_aui", "wxmsw29u_propgrid", "wxmsw29u_adv", "wxjpeg", "wxpng", "wxzlib", "wxregexu", "wxexpat", "wxtiff"}
 	
 	configuration		( {} )
-		includedirs( {vSourceRoot .. "/Engine/ThirdParty/[wxWidgets]/include"} )
-		includedirs( {vSourceRoot .. "/Engine/ThirdParty/[wxWidgets]/include/msvc"} )
-	
+		includedirs		( {vSourceRoot .. "/Engine/ThirdParty/[wxWidgets]/include"} )
+		includedirs		( {vSourceRoot .. "/Engine/ThirdParty/[wxWidgets]/include/msvc"} )	
 	configuration		( "*32")
 		libdirs 		(vSourceRoot .. "/Engine/ThirdParty/[wxWidgets]/wxWidgets-2_9_4(x32)/lib/vc_lib")
 	configuration		( "*64")
@@ -144,6 +147,37 @@ function Orion_AddProjectWxWidget()
 	configuration 		( "Release" )
 		links			( vLibsRelease )
 	configuration 		( "Final" )
-		links			( vLibsRelease )
+		links			( vLibsRelease )	
+end
+
+-- ============================================================================
+-- 	Add support for Qt, to a particular project
+-- ============================================================================
+function Orion_AddProjectQt()
+	
+	qt.enable()
+
+	-- Setup the Qt path. This apply to the current configuration, so
+	-- if you handle x32 and x64, you can specify a different path
+	-- for both configurations.
+	qtpath (os.getenv("QTDIR"))
+
+	-- Setup which Qt modules will be used. This also apply to the
+	-- current configuration, so you choose to deactivate a module
+	-- for a specific configuration.
+	qtmodules { "core", "gui", "widgets" }
+
+	-- Setup the prefix of the Qt libraries. Usually it's Qt4 for Qt 4.x
+	-- versions and Qt5 for Qt 5.x ones. Again, this apply to the current
+	-- configuration. So if you want to have a configuration which uses
+	-- Qt4 and one that uses Qt5, you can do it.
+	qtprefix "Qt5"
+
+	-- Setup the suffix for the Qt libraries. The debug versions of the
+	-- Qt libraries usually have a "d" suffix. If you compiled your own
+	-- version, you could also have suffixes for x64 libraries, etc.
+	configuration { "Debug" }
+		qtsuffix "d"
+	configuration { }
 	
 end

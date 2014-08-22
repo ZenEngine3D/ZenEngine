@@ -135,9 +135,9 @@ bool SampleRendererInstance::Init()
 	for(int i=0; i<ZENArrayCount(matWorld); ++i)
 		matWorld[i].SetIdentity();
 
-	zenMath::V4 vEye	= zenMath::XYZW( 0.0f, 0.0f, -2.0f, 0.0f );
-	zenMath::V4 vAt	= zenMath::XYZW( 0.0f, 0.0f, 0.0f, 0.0f );
-	zenMath::V4 vUp	= zenMath::XYZW( 0.0f, 1.0f, 0.0f, 0.0f );
+	zenMath::V4 vEye	= zenMath::simdXYZW( 0.0f, 0.0f, -2.0f, 0.0f );
+	zenMath::V4 vAt		= zenMath::simdXYZW( 0.0f, 0.0f, 0.0f, 0.0f );
+	zenMath::V4 vUp		= zenMath::simdXYZW( 0.0f, 1.0f, 0.0f, 0.0f );
 	zenMath::MatrixLookAtLH(matView, vEye, vAt, vUp );
 	zenMath::MatrixProjectionLH( matProjectionRT, 60, float(rRenderColor.GetDim().y)/float(rRenderColor.GetDim().x), 0.01f, 100.f );
 	rCube1MeshStrip.SetValue( aParamAll );
@@ -146,9 +146,9 @@ bool SampleRendererInstance::Init()
 	rCube1MeshStrip.SetValue( zHash32("Projection"),	matProjectionRT );
 	rCube1MeshStrip.SetValue( zHash32("txColor"),		rTexture, rSampler);
 
-	vEye	= zenMath::XYZW( 0.0f, 0.0f, -5.0f, 0.0f );
+	vEye	= zenMath::simdXYZW( 0.0f, 0.0f, -5.0f, 0.0f );
 	zenMath::MatrixLookAtLH(matView, vEye, vAt, vUp );		
-	matWorld[1].SetPos(zenMath::XYZW(-3.0f, 0.0f, 0.0f, 1.0f));
+	matWorld[1].SetPos(zenMath::simdXYZW(-3.0f, 0.0f, 0.0f, 1.0f));
 	matWorld[1].SetRotationY( zenMath::kfPI2x );		
 	rCube2MeshStrip.SetValue( aParamAll );		
 	rCube2MeshStrip.SetValue( zHash32("View"),		matView );				
@@ -156,7 +156,7 @@ bool SampleRendererInstance::Init()
 	rCube2MeshStrip.SetValue( zHash32("txColor"),		rRenderColor.GetTexture2D(), rSampler);
 	rCube2MeshStrip.SetValue( zHash32("vColor"),		zVec4F(1,0,1,1));
 
-	matWorld[2].SetPos(zenMath::XYZW(3.0f, 0.0f, 0.0f, 1.0f));
+	matWorld[2].SetPos(zenMath::simdXYZW(3.0f, 0.0f, 0.0f, 1.0f));
 	rCube3MeshStrip.SetValue( aParamAll );
 	rCube3MeshStrip.SetValue( zHash32("View"),		matView );
 	rCube3MeshStrip.SetValue( zHash32("Projection"),	matProjection );		
@@ -165,7 +165,7 @@ bool SampleRendererInstance::Init()
 	rCube3MeshStrip.SetValue( zHash32("vColor"),		zVec4F(1,1,1,1));
 
 
-	matWorld[3].SetPos(zenMath::XYZW(0.0f, 0.0f, 0.0f, 1.0f));
+	matWorld[3].SetPos(zenMath::simdXYZW(0.0f, 0.0f, 0.0f, 1.0f));
 	rCube4Mesh.SetValue(aParamAll);
 	rCube4Mesh.SetValue( zHash32("View"),				matView );
 	rCube4Mesh.SetValue( zHash32("Projection"),		matProjection );		

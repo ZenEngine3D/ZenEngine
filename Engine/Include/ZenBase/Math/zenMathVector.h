@@ -61,16 +61,16 @@ namespace zen { namespace zenMath
 
 	ZENInline bool		simdIsNearZero	( V4 _Vect );
 
-    extern const V4 v4Zero;
-    extern const V4 v4One;
-	extern const V4 v4OneNeg;
-	extern const V4 v4X1;
-	extern const V4 v4Y1;
-	extern const V4 v4Z1;
-	extern const V4 v4W1;
-	extern const V4 v4XYZ1;
-	extern const V4 v4Mask3;
-	extern const V4 v4MaskW;
+    extern const V4		v4Zero;
+    extern const V4		v4One;
+	extern const V4		v4OneNeg;
+	extern const V4		v4X1;
+	extern const V4		v4Y1;
+	extern const V4		v4Z1;
+	extern const V4		v4W1;
+	extern const V4		v4XYZ1;
+	extern const V4		v4Mask3;
+	extern const V4		v4MaskW;
 }  } // namespace zen, zenMath
 
 #include ZENInlinePlatform( zenMathVector )

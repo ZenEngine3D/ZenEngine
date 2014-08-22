@@ -24,6 +24,6 @@ namespace EExp
 		bSuccess		&= aSerializer.Serialize(mResID);		
 		bSuccess		&= aSerializer.Serialize(muVersion);
 		bSuccess		&= aSerializer.Serialize(mExportTime);		
-		return bSuccess && muVersion <= sVersions[mResID.Type()];
+		return bSuccess && muVersion <= zUInt(sVersions[mResID.Type()]);
 	}
 }

@@ -45,7 +45,7 @@
 template<typename T> struct ZenIsPointer					{ enum {value = false}; };	
 template<typename T> struct ZenIsPointer<T*>				{ enum {value = true};	};	//!< @brief Template specialization detecting pointers
 
-//! @brief	Template magic to determining if parameter type/class supports memcopy
+//! @brief	Template magic to determine if parameter type/class supports memcopy
 //! @detail We can safely do memcopy on builtin type and pointers without problem.
 //!			Classes that contains more than builtin type (int, float, ...) are not able to
 //!			use memcopy for assignment, since their operator= might be doing some more complex work.

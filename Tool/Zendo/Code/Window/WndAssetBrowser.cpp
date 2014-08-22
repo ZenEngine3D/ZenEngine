@@ -306,8 +306,6 @@ void WndAssetBrowser::AddPackages()
 	const zenAss::zArrayPackage& dAllPackages = zenAss::GetPackages();
 	zenAss::zArrayPackage::Iterator it(dAllPackages);
 	mpTreePackage->DeleteAllItems();
-
-	zUInt packIdx(0);
 	while( it.IsValid() )
 	{
 		zenAss::zPackage rPackage				= it.GetValue();

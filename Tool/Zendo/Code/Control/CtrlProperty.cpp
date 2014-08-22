@@ -389,8 +389,63 @@ wxBetlAssetProperty::~wxBetlAssetProperty()
 
 void wxBetlAssetProperty::OnSetValue()
 {
-	//! @todo Asset: 
-	int i = 0;
+	wxString			zValue			= GetValue();
+	TypedMetaData*		pMeta			= static_cast<TypedMetaData*>(GetClientData());
+	if( zValue == wxT("None") )
+	{
+		//SF pMeta->mrAssetValue = zenAss::zAssetID();
+	}
+	//Try to locate Asset in packages
+	else
+	{
+		//SF 0
+		/*
+		zUInt idx(0);
+		wxStringTokenizer tokenenizer(zValue, ".");
+		zArrayStatic<wxString> aGroupAndName( tokenizer.CountTokens() );
+		while( tokenizer.HasMoreTokens() )
+			aGroupAndName[idx++] = tokenizer.GetNextToken();
+
+		const zenAss::zArrayPackage& dAllPackages = zenAss::GetPackages();
+		zenAss::zArrayPackage::Iterator it(dAllPackages);
+		while( it.IsValid() )
+		{
+			zenAss::zPackage rPackage				= it.GetValue();
+			const zArrayStatic<zString> aGroupName	= rPackage.GetGroupAndName();		
+			wxString zGroups						= "";
+
+			// Look for folder under which package should be added (and create it if needed)
+			wxTreeListItem treeParentID			= mpTreePackage->GetRootItem();
+			for(zUInt idx(0), count(aGroupName.Count()-1); idx<count; ++idx)
+			{
+				const zString& zGroupName	= aGroupName[idx];
+				wxTreeListItem treeID		= mpTreePackage->GetFirstChild(treeParentID);
+				zGroups						+= static_cast<const char*>(zGroupName);
+				zGroups						+= wxT("\\");
+				while( treeID.IsOk() && strcmp(zGroupName, mpTreePackage->GetItemText(treeID))!=0 )
+				{
+					treeID = mpTreePackage->GetNextSibling(treeID);
+				}
+
+				if( !treeID.IsOk() )
+				{
+					treeID = mpTreePackage->AppendItem(treeParentID, (const char*)zGroupName, IcoPkg_Folder, IcoPkg_FolderOpen); 	
+					mpTreePackage->SetItemData(treeID, zenNewDefault wxPackageClientData(zenAss::zPackage(), zGroups));
+				}
+				treeParentID = treeID;
+			}
+
+			// Add the package if we've found the tree id
+			wxTreeListItem newItemID = mpTreePackage->AppendItem(treeParentID, (const char*)*aGroupName.Last(), IcoPkg_Package, IcoPkg_Package);
+			zGroups						+= static_cast<const char*>(*aGroupName.Last());
+			zGroups						+= wxT("\\");
+			mpTreePackage->SetItemData(newItemID, zenNewDefault wxPackageClientData(rPackage, zGroups));
+
+			++it;
+		}
+		UpdateAssetList();
+		*/
+	}	
 }
 
 wxBetlAssetProperty::TypedMetaData::TypedMetaData( wxBetlAssetProperty* _pOwner, const zenAss::PropertyValueRef& _rAssetValue, const wxVariant& _OriginalValue)
