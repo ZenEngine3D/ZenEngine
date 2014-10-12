@@ -5,7 +5,7 @@
 // the application object during program execution (it's better than using a
 // static object for many reasons) and also implements the accessor function
 // wxGetApp() which will return the reference of the right type (i.e. ZendoApp and not wxApp)
-IMPLEMENT_APP_CONSOLE(ZendoApp)
+wxIMPLEMENT_APP_CONSOLE(ZendoApp);
 
 class EngineInstance : public zenSys::zEngineInstance
 {

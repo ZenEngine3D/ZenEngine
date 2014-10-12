@@ -238,19 +238,19 @@ void SampleRendererInstance::Update()
 
 	// Render the cube with rendertarget as texture
 	rCube2MeshStrip.SetValue( zHash32("World"),			matWorld[1] );
-	rCube2MeshStrip.SetValue( zHash32("Projection"),		matProjection );
+	rCube2MeshStrip.SetValue( zHash32("Projection"),	matProjection );
 	rCube2MeshStrip.RenderMeshStrip();
 
 	// Render the cube with point sampling
-	matWorld[2].SetRotationY( t );							// Rotate cube around the origin 				
+	matWorld[2].SetRotationY( t );						// Rotate cube around the origin 				
 	rCube3MeshStrip.SetValue( zHash32("World"),			matWorld[2] );
-	rCube3MeshStrip.SetValue( zHash32("Projection"),		matProjection );
+	rCube3MeshStrip.SetValue( zHash32("Projection"),	matProjection );
 	rCube3MeshStrip.RenderMeshStrip();
 
-	matWorld[3].SetRotationX( t );							// Rotate cube around the origin 				
-	rCube4Mesh.SetValue( zHash32("World"),					matWorld[3] );
+	matWorld[3].SetRotationX( t );						// Rotate cube around the origin 				
+	rCube4Mesh.SetValue( zHash32("World"),				matWorld[3] );
 	rCube4Mesh.SetValue( zHash32("Projection"),			matProjection );
-	rCube4Mesh.SetValue( zHash32("World"),					matWorld[3] );
+	rCube4Mesh.SetValue( zHash32("World"),				matWorld[3] );
 	rCube4Mesh.SetValue( zHash32("Projection"),			matProjection );
 	rCube4Mesh.RenderMesh();
 

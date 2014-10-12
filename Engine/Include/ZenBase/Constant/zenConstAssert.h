@@ -23,8 +23,8 @@ namespace zbLog
 //=================================================================================================
 // ASSERT Enabled or ASSERT Message only
 //=================================================================================================
-#if AW_ASSERTON
-	#if AW_ASSERT_BREAKON
+#if ZEN_ASSERT_ON
+	#if ZEN_ASSERT_BREAK_ON
 		#define ASSERT_BREAKTYPE (zbLog::keErrorLevel_AssertBreak)
 	#else
 		#define ASSERT_BREAKTYPE (zbLog::keErrorLevel_AssertMsg)

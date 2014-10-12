@@ -550,7 +550,7 @@ TKey zHamt< TKey, TValue, TIndex, TIndexBits>::GetFirstUnusedKey()const
 template<class TKey, class TValue, class TIndex, int TIndexBits>
 void zHamt< TKey, TValue, TIndex, TIndexBits>::DebugPrint(const TKey _First, TKey _Last) const
 {
-#if AW_DEBUGINFOON
+#if ZEN_DEBUGINFO_ON
 #define	kuSpacePerLevel	14
 	char		zSpaces[kuTreeMaxDepth*kuSpacePerLevel+1];
 	zI8			iSlotIDPrev[ kuTreeMaxDepth ];

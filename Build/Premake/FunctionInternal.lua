@@ -1,12 +1,10 @@
 include "Extensions/QtVS/qt.lua"
 
-vSourceFiles			= {"**.h", "**.inl", "**.cpp", "**.ui"}
+vDefaultCppExt			= {"**.h", "**.inl", "**.cpp"}
 vLibEngineGame 			= {"libZenBase", "libZenCore", "libZenEngine", "libZenExternal"  }
 vLibEngineTool 			= {"libZenBase", "libZenCore", "libZenEngine", "libZenExternal", "libThirdParty" }
 bLibEngineGameRender	= {"d3d11", "d3dcompiler", "dxguid"}	--TODO per platform config
 bLibEngineToolRender	= {"d3d11", "d3dcompiler", "dxguid"}
-
-local qt 				= premake.extensions.qt
 
 --[[ Useful bit of code 
 if vPath:sub(vPath,-1) ~= '/' then
@@ -23,23 +21,23 @@ function Orion_ConfigureBuild()
 	
 	--[[ Build version config ]]--
 	configuration		( "Debug" )
-		defines			( {"DEBUG", "_DEBUG", "AW_BUILD_DEBUG"} )
+		defines			( {"DEBUG", "_DEBUG", "ZEN_BUILD_DEBUG"} )
 		flags 			( {"Symbols"} )
 		optimize		( "Off" )
 		targetsuffix 	( "_Deb" )
 	configuration 		( "Release" )
-		defines			( {"NDEBUG", "AW_BUILD_RELEASE"} )
+		defines			( {"NDEBUG", "ZEN_BUILD_RELEASE"} )
 		flags 			( {"Symbols"} )
 		optimize		( "On" )
 		targetsuffix 	( "_Rel")
 	configuration 		( "Final" )
-		defines			( {"NDEBUG", "AW_BUILD_FINAL"} )
+		defines			( {"NDEBUG", "ZEN_BUILD_FINAL"} )
 		optimize		( "Full" )
 	
 	--[[ Platform ]]--
 	configuration		( "PC*")
 		system 			( "Windows")
-		defines			( {"WIN32","_WINDOWS", "AW_PLATFORM=PC", "AW_PLATFORM_PC=1", "AW_RENDERER=DX11", "AW_RENDERER_DX11=1"})
+		defines			( {"WIN32","_WINDOWS", "ZEN_PLATFORM=PC", "ZEN_PLATFORM_PC=1", "ZEN_RENDERER=DX11", "ZEN_RENDERER_DX11=1"})
 		debugdir		( vSourceRoot .. "/Build/Content")
 		
 	configuration		( "PCGame32")
@@ -91,7 +89,7 @@ function Orion_ConfigurePCH(aPathList, aPchFile)
 	if vPlatform == "Window" then
 		vPchNameSource = string.gsub(vPchNameSource, "/", "\\")
 	end		
-	vCppFile 		= io.open (vPchNameSource, "w+")
+	vCppFile 	= io.open (vPchNameSource, "w+")
 	vCppFile:write	( "#include \"" .. vPchNameHeader .. "\"" )	
 	vCppFile:close 	( )
 	
@@ -106,20 +104,22 @@ end
 -- 	Common project creation code
 -- 		aPathList		: List of root path of library
 -- 		aPchFile		: Name of PCH header filename ("" if none is used)
+-- 		aFilesExt		: List of supported files extensions to add
 -- ============================================================================
-function Orion_AddProjectCommon(aPathList, aPchFile)			
-	os.mkdir			( vOutputRoot .. "/" .. project().name )
-	location 			( vOutputRoot .. "/" .. project().name )
+function Orion_AddProjectCommon(aFilesExt, aPathList, aPchFile )			
+	os.mkdir		( vOutputRoot .. "/" .. project().name ) -- Needed for pch file creation
+	location 		( vOutputRoot .. "/" .. project().name )
+	objdir			( vOutputRoot .. "/" .. project().name .. "/obj" )
 	includedirs 		( {vSourceRoot, vSourceRoot .. "/Engine/Include"} )
-	vpaths 				( {["*"] = "../../../Engine/Include" } )
-	vpaths 				( {["*"] = "../../../Engine/libZenBase"} )
-	vpaths 				( {["*"] = "../../../Engine/libZenCore"} )
-	vpaths 				( {["*"] = "../../../Engine/libZenEngine"} )
-	language 			( "C++" )	
+	vpaths 			( {["*"] = "../../../Engine/Include" } )
+	vpaths 			( {["*"] = "../../../Engine/libZenBase"} )
+	vpaths 			( {["*"] = "../../../Engine/libZenCore"} )
+	vpaths 			( {["*"] = "../../../Engine/libZenEngine"} )
+	language 		( "C++" )	
 	Orion_ConfigurePCH	( aPathList, aPchFile )
 	
 	for i, vPath in ipairs(aPathList) do 
-		for j, vExt in ipairs(vSourceFiles) do 
+		for j, vExt in ipairs(aFilesExt) do 
 			files( vSourceRoot .. "/" .. vPath .. vExt )
 			--print("[" .. project().name .. "] Adding : " .. vPath .. vExt)
 		end
@@ -130,54 +130,27 @@ end
 
 -- ============================================================================
 -- 	Add support for WxWidget, to a particular project
+--  Needs to get those file from "http://sourceforge.net/projects/wxwindows/files/3.0.2/" : 
+--		wxMSW-3.0.2_vc120_x64_ReleaseDLL.7z
+--		wxMSW-3.0.2_vc120_x64_Dev.7z
+--		wxWidgets-3.0.2_headers.7z
 -- ============================================================================
 function Orion_AddProjectWxWidget()
-	vLibsDebug = {"wxmsw29ud_core", "wxbase29ud", "wxmsw29ud_aui", "wxmsw29ud_propgrid", "wxmsw29ud_adv", "wxjpegd", "wxpngd", "wxzlibd", "wxregexud", "wxexpatd", "wxtiffd"}
-	vLibsRelease = {"wxmsw29u_core", "wxbase29u", "wxmsw29u_aui", "wxmsw29u_propgrid", "wxmsw29u_adv", "wxjpeg", "wxpng", "wxzlib", "wxregexu", "wxexpat", "wxtiff"}
+	vLibsDebug = {"wxmsw30ud_core", "wxbase30ud", "wxmsw30ud_aui", "wxmsw30ud_propgrid", "wxmsw30ud_adv", "wxjpegd", "wxpngd", "wxzlibd", "wxregexud", "wxexpatd", "wxtiffd"}
+	vLibsRelease = {"wxmsw30u_core", "wxbase30u", "wxmsw30u_aui", "wxmsw30u_propgrid", "wxmsw30u_adv", "wxjpeg", "wxpng", "wxzlib", "wxregexu", "wxexpat", "wxtiff"}
 	
 	configuration		( {} )
 		includedirs		( {vSourceRoot .. "/Engine/ThirdParty/[wxWidgets]/include"} )
 		includedirs		( {vSourceRoot .. "/Engine/ThirdParty/[wxWidgets]/include/msvc"} )	
-	configuration		( "*32")
-		libdirs 		(vSourceRoot .. "/Engine/ThirdParty/[wxWidgets]/wxWidgets-2_9_4(x32)/lib/vc_lib")
+		defines			( {"WXUSINGDLL=1", "wxMSVC_VERSION=120"} )		
 	configuration		( "*64")
-		libdirs 		(vSourceRoot .. "/Engine/ThirdParty/[wxWidgets]/wxWidgets-2_9_4(x64)/lib/vc_lib")
+		libdirs 		(vSourceRoot .. "/Engine/ThirdParty/[wxWidgets]/lib/vc120_x64_dll")
+	configuration( "PC*" )	
+		postbuildcommands { "xcopy \"" .. vSourceRoot .. "/Engine/ThirdParty/[wxWidgets]/lib/vc120_x64_dll\\*.dll\" \"$(TargetDir)\" /Y /D" } --xcopy doesn't support '/' with wirldcard, so last one is a '\'
 	configuration		( "Debug" )
 		links			( vLibsDebug )
 	configuration 		( "Release" )
 		links			( vLibsRelease )
 	configuration 		( "Final" )
 		links			( vLibsRelease )	
-end
-
--- ============================================================================
--- 	Add support for Qt, to a particular project
--- ============================================================================
-function Orion_AddProjectQt()
-	
-	qt.enable()
-
-	-- Setup the Qt path. This apply to the current configuration, so
-	-- if you handle x32 and x64, you can specify a different path
-	-- for both configurations.
-	qtpath (os.getenv("QTDIR"))
-
-	-- Setup which Qt modules will be used. This also apply to the
-	-- current configuration, so you choose to deactivate a module
-	-- for a specific configuration.
-	qtmodules { "core", "gui", "widgets" }
-
-	-- Setup the prefix of the Qt libraries. Usually it's Qt4 for Qt 4.x
-	-- versions and Qt5 for Qt 5.x ones. Again, this apply to the current
-	-- configuration. So if you want to have a configuration which uses
-	-- Qt4 and one that uses Qt5, you can do it.
-	qtprefix "Qt5"
-
-	-- Setup the suffix for the Qt libraries. The debug versions of the
-	-- Qt libraries usually have a "d" suffix. If you compiled your own
-	-- version, you could also have suffixes for x64 libraries, etc.
-	configuration { "Debug" }
-		qtsuffix "d"
-	configuration { }
-	
 end

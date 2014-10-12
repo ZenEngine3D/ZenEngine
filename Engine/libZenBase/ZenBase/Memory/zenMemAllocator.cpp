@@ -52,7 +52,7 @@ zAllocator::~zAllocator()
 /*
 void zAllocator::DebugPrint()
 {
-#if AW_MEMORYDEBUG
+#if ZEN_MEMORYDEBUG_ON
 	zbLog::Log( zbLog::keLog_DebugInfo, zenConst::kzLineA60 );
 	zbLog::Log( zbLog::keLog_DebugInfo, "Memory" );
 	zbLog::Log( zbLog::keLog_DebugInfo, zenConst::kzLineA60 );
@@ -105,7 +105,7 @@ void* zAllocator::AddAlloc( size_t _uWantedSize, size_t _uExtraSize, zU32 _uAlig
 	pHeader->Set(this, (zU32)((zU8*)pAllocAligned-(zU8*)_pAllocation), _uWantedSize, _bIsArray);
 	muTotalAllocSize						+= _uWantedSize;
 	muTotalAllocCount						+= 1;
-#if AW_MEMORYDEBUG
+#if ZEN_MEMORYDEBUG_ON
 	pHeader->LstReset();
 	mlstAllocations.AddHead( pHeader );
 #endif
@@ -117,7 +117,7 @@ void zAllocator::RemAlloc(void* _pAlloc)
 	zbMem::AllocHeader* pAlloc	= static_cast<zbMem::AllocHeader*>(_pAlloc);
 	muTotalAllocSize			-= pAlloc->muWantedSize;
 	muTotalAllocCount			-= 1;
-#if AW_MEMORYDEBUG
+#if ZEN_MEMORYDEBUG_ON
 	pAlloc->LstRemove();
 #endif
 }

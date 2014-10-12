@@ -11,7 +11,7 @@ function Orion_AddGameLib(aLibName, aPrjGroup, aPathList, aPchFile)
 	project					( aLibName )
 	removeplatforms 		( vPlatformTool )
 	kind 					( "StaticLib" )
-	Orion_AddProjectCommon	( aPathList, aPchFile )
+	Orion_AddProjectCommon	( vDefaultCppExt, aPathList, aPchFile )
 end
 
 -- ============================================================================
@@ -26,7 +26,7 @@ function Orion_AddToolLib(aLibName, aPrjGroup, aPathList, aPchFile)
 	project					( aLibName )
 	removeplatforms 		( vPlatformGame )
 	kind 					( "StaticLib" )
-	Orion_AddProjectCommon	( aPathList, aPchFile )
+	Orion_AddProjectCommon	( vDefaultCppExt, aPathList, aPchFile )
 end
 
 -- ============================================================================
@@ -40,7 +40,7 @@ function Orion_AddGameAndToolLib(aLibName, aPrjGroup, aPathList, aPchFile)
 	group					( aPrjGroup )
 	project					( aLibName )
 	kind 					( "StaticLib" )
-	Orion_AddProjectCommon	( aPathList, aPchFile )
+	Orion_AddProjectCommon	( vDefaultCppExt, aPathList, aPchFile )
 end
 
 -- ============================================================================
@@ -57,7 +57,7 @@ function Orion_AddGameExe(aExeName, aPrjGroup, aPathList, aPchFile, aLibs)
 	removeplatforms 		( vPlatformTool )
 	kind 					( "ConsoleApp" )
 	links					( {vLibEngineGame, bLibEngineGameRender, aLibs} )
-	Orion_AddProjectCommon	( aPathList, aPchFile )
+	Orion_AddProjectCommon	( vDefaultCppExt, aPathList, aPchFile )
 end
 
 -- ============================================================================
@@ -68,17 +68,15 @@ end
 -- 		aPchName	: Name of PCH header filename ("" if none is used)
 -- 		aLibs		: Array of additional libs to include
 -- ============================================================================
-function Orion_AddToolExe(aExeName, aPrjGroup, aPathList, aPchFile, aLibs)
+function Orion_AddToolUIExe(aExeName, aPrjGroup, aPathList, aPchFile, aLibs)
 	group					( aPrjGroup )
 	project					( aExeName )
 	removeplatforms 		( vPlatformGame )
 	kind 					( "ConsoleApp" )
 	links					( {vLibEngineTool, bLibEngineToolRender, aLibs} )
-	Orion_AddProjectCommon	( aPathList, aPchFile )
+	Orion_AddProjectCommon	(  vDefaultCppExt, aPathList, aPchFile )
 	Orion_AddProjectWxWidget()	
-end
-
-		
+end		
 		
 	
 		

@@ -1,7 +1,6 @@
 -------------------------------------------------------------------------------
 -- Zendo Editor
 -------------------------------------------------------------------------------
-Orion_AddToolExe("Zendo",		"Tool", 	{"Tool/Zendo/Code"},		"ZendoPCH.h", {}) 
-	project( "Zendo" )
+Orion_AddToolUIExe("Zendo",		"Tool", 	{"Tool/Zendo/Code"},						"ZendoPCH.h", {})  
 	
 	

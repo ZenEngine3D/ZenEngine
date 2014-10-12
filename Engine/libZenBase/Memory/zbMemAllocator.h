@@ -17,7 +17,7 @@ namespace zbMem
 	//! @todo Optim:	Reduce memory footprint by packing together infos and removing debug only infos 
 	//=================================================================================================
 	class AllocHeader
-#if AW_MEMORYDEBUG
+#if ZEN_MEMORYDEBUG_ON
 	: public zList2xNode
 	{
 	ZENClassDeclare(AllocHeader, zList2xNode);

@@ -11,19 +11,19 @@
 //-------------------------------------------------------------------------------------------------
 //! @brief Some build defines config
 //-------------------------------------------------------------------------------------------------
-#define AW_MEMORYDEBUG					0
+#define ZEN_MEMORYDEBUG_ON				0
 
 //-------------------------------------------------------------------------------------------------
 //! @brief Define configurations not currently built
 //-------------------------------------------------------------------------------------------------
-#ifndef AW_BUILD_DEBUG
-	#define AW_BUILD_DEBUG				0
+#ifndef ZEN_BUILD_DEBUG
+	#define ZEN_BUILD_DEBUG				0
 #endif
-#ifndef AW_BUILD_RELEASE
-	#define AW_BUILD_RELEASE			0
+#ifndef ZEN_BUILD_RELEASE
+	#define ZEN_BUILD_RELEASE			0
 #endif
-#ifndef AW_BUILD_FINAL
-	#define	AW_BUILD_FINAL				0
+#ifndef ZEN_BUILD_FINAL
+	#define	ZEN_BUILD_FINAL				0
 #endif
 #ifndef ZEN_ENGINEGAME
 	#define ZEN_ENGINEGAME				0
@@ -31,11 +31,11 @@
 #ifndef ZEN_ENGINETOOL
 	#define ZEN_ENGINETOOL				0
 #endif
-#ifndef AW_PLATFORM_PC
-	#define AW_PLATFORM_PC				0
+#ifndef ZEN_PLATFORM_PC
+	#define ZEN_PLATFORM_PC				0
 #endif
-#ifndef AW_RENDERER_DX11
-	#define AW_RENDERER_DX11			0
+#ifndef ZEN_RENDERER_DX11
+	#define ZEN_RENDERER_DX11			0
 #endif
 
 #ifndef ZEN_ENGINELIB
@@ -45,22 +45,22 @@
 //-------------------------------------------------------------------------------------------------
 //! @brief Debuging settings
 //-------------------------------------------------------------------------------------------------
-#if defined( AW_BUILD_DEBUG )
-	#define AW_DEBUGINFOON		1
-	#define AW_ASSERT_BREAKON	1
-	#define AWASSERT_MSG_ON		0
-#elif defined( AW_BUILD_RELEASE )
-	#define AW_DEBUGINFOON		1
-	#define AW_ASSERT_BREAKON	0
-	#define AWASSERT_MSG_ON		0
-#elif defined( AW_BUILD_FINAL )
-	#define AW_DEBUGINFOON		0
-	#define AW_ASSERT_BREAKON	0
-	#define AWASSERT_MSG_ON		0
+#if defined( ZEN_BUILD_DEBUG )
+	#define ZEN_DEBUGINFO_ON		1
+	#define ZEN_ASSERT_BREAK_ON		1
+	#define ZEN_ASSERT_MSG_ON		0
+#elif defined( ZEN_BUILD_RELEASE )
+	#define ZEN_DEBUGINFO_ON		1
+	#define ZEN_ASSERT_BREAK_ON		0
+	#define ZEN_ASSERT_MSG_ON		0
+#elif defined( ZEN_BUILD_FINAL )
+	#define ZEN_DEBUGINFO_ON		0
+	#define ZEN_ASSERT_BREAK_ON		0
+	#define ZEN_ASSERT_MSG_ON		0
 #endif
-#define AW_ASSERTON (AW_ASSERT_BREAKON || AWASSERT_MSG_ON)
+#define ZEN_ASSERT_ON (ZEN_ASSERT_BREAK_ON || ZEN_ASSERT_MSG_ON)
 
-#if AW_DEBUGINFOON || AW_ASSERTON
+#if ZEN_DEBUGINFO_ON || ZEN_ASSERT_ON
 	#define ZENDbgCode( _Code_ )			_Code_
 #else
 	#define ZENDbgCode( _Code_ )
@@ -78,13 +78,13 @@
 #define ZENHeaderFile(HEADERNAME, DEFINE)		ZENStringDefine( ZENFilename(HEADERNAME, DEFINE, .h) )		//!< AllocHeader filename for current Platform type
 #define ZENInlineFile(HEADERNAME, DEFINE)		ZENStringDefine( ZENFilename(HEADERNAME, DEFINE, .inl) )		//!< AllocHeader filename for current Platform type
 
-#define ZENHeaderPlatform(HEADERNAME)			ZENHeaderFile(HEADERNAME,	AW_PLATFORM)					//!< AllocHeader filename for current Platform type
-#define ZENInlinePlatform(HEADERNAME)			ZENInlineFile(HEADERNAME,	AW_PLATFORM)					//!< Inline filename for current Platform type
-#define ZENClassPlatform(CLASSNAME)				ZENDefineStich3(CLASSNAME, _, AW_PLATFORM)					//!< AllocHeader filename for current Platform type
+#define ZENHeaderPlatform(HEADERNAME)			ZENHeaderFile(HEADERNAME,	ZEN_PLATFORM)					//!< AllocHeader filename for current Platform type
+#define ZENInlinePlatform(HEADERNAME)			ZENInlineFile(HEADERNAME,	ZEN_PLATFORM)					//!< Inline filename for current Platform type
+#define ZENClassPlatform(CLASSNAME)				ZENDefineStich3(CLASSNAME, _, ZEN_PLATFORM)					//!< AllocHeader filename for current Platform type
 
-#define ZENHeaderRenderer(HEADERNAME)			ZENHeaderFile(HEADERNAME, AW_RENDERER)						//!< AllocHeader filename for current Renderer type
-#define ZENInlineRenderer(HEADERNAME)			ZENInlineFile(HEADERNAME, AW_RENDERER)						//!< Inline filename for current Renderer type
-#define ZENClassRenderer(CLASSNAME)				ZENDefineStich3(CLASSNAME, _, AW_RENDERER)					//!< AllocHeader filename for current Platform type
+#define ZENHeaderRenderer(HEADERNAME)			ZENHeaderFile(HEADERNAME, ZEN_RENDERER)						//!< AllocHeader filename for current Renderer type
+#define ZENInlineRenderer(HEADERNAME)			ZENInlineFile(HEADERNAME, ZEN_RENDERER)						//!< Inline filename for current Renderer type
+#define ZENClassRenderer(CLASSNAME)				ZENDefineStich3(CLASSNAME, _, ZEN_RENDERER)					//!< AllocHeader filename for current Platform type
 
 #include ZENHeaderPlatform(zenConstBuildDefines)
 #include ZENHeaderRenderer(zenConstBuildDefines)
