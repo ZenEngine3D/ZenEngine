@@ -15,7 +15,6 @@ WndAssetProperty::WndAssetProperty(wxWindow *parent, const wxString& title)
 	mdTabPerAsset.Init(50);
 	mdTabPerAsset.SetDefaultValue(NULL);
 
-
 	wxBoxSizer* sizer		= zenNewDefault wxBoxSizer(wxVERTICAL);
 	mpNotebook				= zenNewDefault wxAuiNotebook(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxAUI_NB_DEFAULT_STYLE | wxAUI_NB_TAB_EXTERNAL_MOVE | wxNO_BORDER);
 	sizer->Add(mpNotebook, 100,	wxGROW | wxALL, 0);
@@ -27,16 +26,16 @@ WndAssetProperty::~WndAssetProperty()
 {
 }
 
-void WndAssetProperty::AddAssetTab(zenAss::zAssetItem rEditItem)
+void WndAssetProperty::AddAssetTab(zenAss::zAssetItemRef rEditItem)
 {	
 	if( rEditItem.IsValid() )
 	{
-		BCtrl::TabAssetProperty* pTabAsset	= mdTabPerAsset[rEditItem.GetID()]; //!< @todo Asset: Can have same ID between different Asset type, not enough to differentiate, fix this
+		BCtrl::TabAssetProperty* pTabAsset	= mdTabPerAsset[rEditItem.GetIDUInt()];
 		if( !pTabAsset )
 		{
 			pTabAsset = zenNewDefault BCtrl::TabAssetProperty(mpNotebook, rEditItem);
 			mpNotebook->AddPage(pTabAsset, static_cast<const char*>(rEditItem.GetName()) );
-			mdTabPerAsset.Set(rEditItem.GetID(), pTabAsset);
+			mdTabPerAsset.Set(rEditItem.GetIDUInt(), pTabAsset);
 		}
 		mpNotebook->SetSelection( mpNotebook->GetPageIndex(pTabAsset) );
 	}
@@ -44,6 +43,6 @@ void WndAssetProperty::AddAssetTab(zenAss::zAssetItem rEditItem)
 
 void WndAssetProperty::AssetTabRemoved(BCtrl::TabAssetProperty& _AssetTab)
 {
-	mdTabPerAsset.Unset( _AssetTab.GetAsset().GetID() );
+	mdTabPerAsset.Unset( _AssetTab.GetAsset().GetIDUInt() );
 }
 

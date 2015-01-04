@@ -136,8 +136,8 @@ void ManagerExport::ExportDone(ExportItem* _pExportItem)
 		--muExportPending;	
 	}
 
-	if( _pExportItem->mpExportInfo->IsSuccess() )	maExportSuccess.Append(_pExportItem);
-	else											maExportFail.Append(_pExportItem);	
+	if( _pExportItem->mpExportInfo->IsSuccess() )	maExportSuccess.Push(_pExportItem);
+	else											maExportFail.Push(_pExportItem);	
 }
 
 //=================================================================================================

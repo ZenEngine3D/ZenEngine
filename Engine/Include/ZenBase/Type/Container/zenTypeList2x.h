@@ -2,6 +2,8 @@
 #ifndef __zenBase_Type_List2x_h__
 #define __zenBase_Type_List2x_h__
 
+//!< @todo Cleanup Remove this and only uses zList
+
 namespace zen { namespace zenType {
 
 class zList2xNode
@@ -27,16 +29,16 @@ protected:
 //! @n			Non intrusive class can use this for adding themselves to a list.
 //! @n			Ownership of the object can be given to it, making sure the object will be deleted alongside the ListItem.
 //=================================================================================================
+template<class TItem, bool TAutoDel=false>
 class zList2xItem : public zList2xNode
 {
 ZENClassDeclare(zList2xItem, zList2xNode)
 public:
-							zList2xItem	( void* apObject, bool abAutoDelete=false );
-	virtual					~zList2xItem	( void );
-
+							zList2xItem		( TItem* _pObject );
+	virtual					~zList2xItem	( );
+	TItem*					Get				( )const;
 protected:
-	void*					mpObject;
-	bool					mbAutoDel;
+	TItem*					mpObject;
 };
  
 //=================================================================================================
@@ -51,28 +53,28 @@ class zList2x
 {
 ZENClassDeclareNoParent(zList2x)
 public:
-							zList2x	( 											);
-							~zList2x	( 											);
+						zList2x		( 											);
+						~zList2x	( 											);
     
-	void					Clear       ( bool _bDelete=false						);
-	zList2xNode*			GetHead     ( 											)const;
-	zList2xNode*			GetTail     ( 											)const;
-	zList2xNode*			PopHead		( void										);
-	zList2xNode*			PopTail		( void										);
+	void				Clear       ( bool _bDelete=false						);
+	zList2xNode*		GetHead     ( 											)const;
+	zList2xNode*		GetTail     ( 											)const;
+	zList2xNode*		PopHead		( 											);
+	zList2xNode*		PopTail		( 											);
 	const zList2xNode*	GetInvalid	(											)const;
-	bool					IsEmpty		(											)const;
-	void					AddHead     ( zList2xNode* _pAdd						);
-	void					AddTail     ( zList2xNode* _pAdd						);
+	bool				IsEmpty		(											)const;
+	void				AddHead     ( zList2xNode* _pAdd						);
+	void				AddTail     ( zList2xNode* _pAdd						);
 	
-template<class _Type_> void	AddSort		( zList2xNode* _pAdd,  _Type_* _pReference	);
-	void					InsertBefore( zList2xNode* AWRestrict _pAdd, zList2xNode* AWRestrict _pItem		);
-	void					InsertAfter ( zList2xNode* AWRestrict _pAdd, zList2xNode* AWRestrict _pItem		); 
+	template<class _Type_> 
+	void				AddSort		( zList2xNode* _pAdd,  _Type_* _pReference	);
+
+	void				InsertBefore( zList2xNode* AWRestrict _pAdd, zList2xNode* AWRestrict _pItem		);
+	void				InsertAfter ( zList2xNode* AWRestrict _pAdd, zList2xNode* AWRestrict _pItem		); 
 
 protected:
 	zList2xNode			moRoot;		//!< Store reference to first(moRoot.mpLstNext) and last item(moRoot.mpLstPrev) of the list.
 };
-
-#include "zenTypeList2x.inl"
 
 } } //namespace zen, Type
 

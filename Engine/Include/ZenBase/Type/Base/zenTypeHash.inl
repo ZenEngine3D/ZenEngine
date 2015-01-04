@@ -31,7 +31,7 @@ zHash32& zHash32::Append(const wchar_t* _zString)
 
 zHash32& zHash32::Append(const void* _pData, zUInt _uSize)
 {	
-	const zU8* pDataCur = static_cast<const zU8*>(_pData);	
+	const zU8* pDataCur = reinterpret_cast<const zU8*>(_pData);	
 	const zU8* pDataEnd = pDataCur + _uSize;
 	while( pDataCur < pDataEnd )
 	{
@@ -41,6 +41,7 @@ zHash32& zHash32::Append(const void* _pData, zUInt _uSize)
 	return *this;
 }
 		
+/*
 zHash32& zHash32::Append( zHash32 _hHashToAdd)
 {	
 	zU8* pData = reinterpret_cast<zU8*>(&_hHashToAdd);
@@ -50,6 +51,7 @@ zHash32& zHash32::Append( zHash32 _hHashToAdd)
 	muHash ^= pData[3];	muHash *= FNV32_Prime;
 	return *this;
 }
+*/
 
 bool zHash32::operator==(const zHash32& _hCmpr)	
 { 
@@ -139,17 +141,18 @@ zHash64& zHash64::Append(const wchar_t* _zString)
 	return *this;
 }
 
-zHash64& zHash64::Append(const zU8* _pData, zUInt _uSize )
+zHash64& zHash64::Append(const void* _pData, zUInt _uSize )
 {		
-	const zU8* pDataEnd = _pData+_uSize;
-	while( _pData < pDataEnd )
+	const zU8* pDataCur	= reinterpret_cast<const zU8*>(_pData);
+	const zU8* pDataEnd = pDataCur+_uSize;
+	while( pDataCur < pDataEnd )
 	{
-		muHash ^= *_pData++;
+		muHash ^= *pDataCur++;
 		muHash *= FNV64_Prime;
 	}
 	return *this;
 }
-
+/*
 zHash64& zHash64::Append(zHash64 _hHashToAdd)
 {	
 	zU8* pData = reinterpret_cast<zU8*>(&_hHashToAdd);
@@ -162,7 +165,7 @@ zHash64& zHash64::Append(zHash64 _hHashToAdd)
 	muHash ^= pData[6];	muHash *= FNV64_Prime;
 	muHash ^= pData[7];	muHash *= FNV64_Prime;
 	return *this;
-}
+}*/
 
 bool zHash64::operator==(const zHash64& _hCmpr)	
 { 
@@ -217,13 +220,13 @@ zHash64::zHash64(char* _zStr)
 	Append(_zStr);			
 }
 
-zHash64::zHash64(wchar_t* _zStr)				
+zHash64::zHash64(const wchar_t* _zStr)				
 : muHash(FNV64_Seed)
 { 
 	Append(_zStr);			
 }
 
-zHash64::zHash64(const zU8* _pData, zUInt _uSize)	
+zHash64::zHash64(const void* _pData, zUInt _uSize)	
 : muHash(FNV64_Seed)
 { 
 	Append(_pData, _uSize); 

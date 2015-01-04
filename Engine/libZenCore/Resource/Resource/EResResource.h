@@ -7,7 +7,7 @@ namespace ERes
 	//=============================================================================================
 	//! @class	Base class for all resources that can be created and used
 	//=============================================================================================
-	class Resource: public zenRes::zResource, public zList2xNode
+	class Resource: public zenRes::zResource
 	{
 	ZENClassDeclare(Resource, zenRes::zResource)
 	public:									
@@ -15,14 +15,11 @@ namespace ERes
 		virtual bool						ResourceInit();
 		virtual bool						ResourceCreate( EExp::ExportItem& _SerialItem, EExp::ExportInfoBase& _ExportInfo );
 		bool								ResourceCreateRuntime(); //!< @todo Clean: Get rid of this
+		zList<Resource>::Link				mlnkList;
 	protected:			
 											Resource();
-		static zList2x						spResourceActive[zenConst::keResType__Count];	//!< List of all actives resources created, per type
-		static zList2x						spActiveToDelete[3];							//!< List of resources to delete (with 1 frame delay to make sure GPU are done with them)
-		static zUInt						suDeleteIndex;									//!< Current active ToDelete list
 	};
 	
-
 	//=============================================================================================
 	//! @class	When a platform doesn't support a resource type, we use this in the typedef.
 	//!			The code will compile, but gives an error if someone try to use it

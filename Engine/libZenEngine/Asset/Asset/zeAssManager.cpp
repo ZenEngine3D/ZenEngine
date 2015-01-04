@@ -9,15 +9,15 @@ namespace zen { namespace zeAss
 //=================================================================================================
 //! @brief		Called by AssetMap, when asset is removed from it
 //! @details	Since no destructor is called on item removed from map, need to 
-//!				decrement refcount manually, makifn sure there's no resource leak
+//!				decrement refcount manually, making sure there's no resource leak
 //-------------------------------------------------------------------------------------------------
 //! @return		True if init was successful
 //=================================================================================================
-void ResetAssetReference( zenAss::zArrayAsset& _dAsset, zenAss::zAssetItem& _rAssetDel)
+void ResetAssetReference( zenAss::zArrayAsset& _dAsset, zenAss::zAssetItemRef& _rAssetDel)
 {
 	_rAssetDel = NULL;
 }
-void ResetPackageReference( zenAss::zArrayPackage& _dPackage, zenAss::zPackage& _rPackageDel)
+void ResetPackageReference( zenAss::zArrayPackage& _dPackage, zenAss::zPackageRef& _rPackageDel)
 {
 	_rPackageDel = NULL;
 }
@@ -28,6 +28,7 @@ void ResetPackageReference( zenAss::zArrayPackage& _dPackage, zenAss::zPackage& 
 ManagerAsset::ManagerAsset()
 : mdPackage(50)
 , muPackageNextID(0)
+, mbLoading(false)
 {	
 	mdPackage.SetDefaultValue(NULL);
 	mdPackage.SetDeleteItemCB( ResetPackageReference );
@@ -50,6 +51,7 @@ ManagerAsset::ManagerAsset()
 //=================================================================================================
 bool ManagerAsset::Load()
 {		
+	mrGroupRoot	= zenNewDefault zeAss::PackageGroup(zenT("Root"), NULL );
 	PackageLoad();
 	return true;
 }
@@ -65,14 +67,36 @@ bool ManagerAsset::Unload()
 	return true;
 } 
 
-void ManagerAsset::PackageAdd( Package* _pPackage )
+//=================================================================================================
+//! @brief		Add a new Package Group
+//! @details	Create a new Group, where we'll be able to store child packages 
+//!				and other subgroups
+//-------------------------------------------------------------------------------------------------
+//! @param _rParent	-	Parent of the group to create (Root if none specified)
+//! @param _zName -		Names assigned to group
+//! @return				Group created
+//=================================================================================================
+zenAss::zPackageGroupRef ManagerAsset::GroupCreate( const zWString& _zName, const zenAss::zPackageGroupRef& _rParent )
 {
-	mdPackage.Set(_pPackage->GetID(), _pPackage);
+	zenAss::zPackageGroupRef rParent = _rParent.IsValid() ? _rParent : mrGroupRoot;
+	return zenNewDefault zeAss::PackageGroup(_zName, _rParent);
+}
+
+void ManagerAsset::GroupDelete( const zenAss::zPackageGroupRef& _rGroup )
+{
+	zxAss::AssetLoaderXml xmlLoader;
+	xmlLoader.Delete(_rGroup);
+}
+
+void ManagerAsset::PackageAdd( const zenAss::zPackageRef& _rPackage )
+{
+	mdPackage.Set(_rPackage.GetID(), _rPackage);
 	//! @todo Asset: Process adding package
 }
 
 void ManagerAsset::PackageLoad()
 {
+	mbLoading = true;
 	zxAss::AssetLoaderXml xmlLoader;
 	mdPackage.Clear();	
 	xmlLoader.LoadPackages();
@@ -85,52 +109,30 @@ void ManagerAsset::PackageLoad()
 	for(zUInt idx(0); idx<zenConst::keAssType__Count; ++idx)
 	{
 		madAsset[idx].GetLast(itAsset);
-		maAssetNextID[idx] = itAsset.IsValid() ? itAsset.GetKey() + 1 : 1;
+		maAssetNextID[idx] = itAsset.IsValid() ? itAsset.GetValue().GetID().muIndex + 1 : 1;
 	}
-	/*
-	//! @todo Asset : REMOVE THIS TEST
-	zenAss::zArrayPackage::Iterator itPackage2;
-	mdPackage.GetFirst(itPackage2);
-	while( itPackage2.IsValid() )
-	{
-		PackageSave( itPackage2.GetValue().GetID() );
-		++itPackage2;
-	}
-	//! Asset : REMOVE THIS TEST
-	*/
+	mbLoading = false;
 }
 
-bool ManagerAsset::PackageSave( zU32 _uPackageID )
+void ManagerAsset::PackageDelete( const zenAss::zPackageRef& _rPackage )	
 {
 	zxAss::AssetLoaderXml Loader;
-	zenAss::zPackage rPackage = mdPackage[_uPackageID];
-	if( rPackage.IsValid() && Loader.Save(rPackage) )
+	if( _rPackage.IsValid() )
 	{
-		rPackage->SetDirty(false);
-		return true;
+		Loader.Delete( _rPackage );
+		_rPackage->Unload();		
+		mdPackage.Unset(_rPackage.GetID());		
 	}
-	return false;
 }
 
-void ManagerAsset::PackageRemove( zU32 _uPackageID )	
-{
-	//! @todo Asset: Process removal
-	ZENAssert(0);
-	zenAss::zPackage rPackage = mdPackage[_uPackageID];
-	if( rPackage.IsValid() )
-	{		
-		mdPackage.Unset(_uPackageID);
-	}	
-}
-
-const zenAss::zPackage& ManagerAsset::PackageGet( zU32 _uPackageID )
+const zenAss::zPackageRef& ManagerAsset::PackageGet( zU32 _uPackageID )
 {
 	return mdPackage[_uPackageID];
 }
 
-const zenAss::zAssetItem& ManagerAsset::AssetGet( zenConst::eAssetType _eType, zU32 _uAssetID )const
+const zenAss::zAssetItemRef& ManagerAsset::AssetGet( zenConst::eAssetType _eType, zU32 _uAssetID )const
 {
-	static const zenAss::zAssetItem sInvalid;
+	static const zenAss::zAssetItemRef sInvalid;
 	if( _eType<zenConst::keAssType__Count )
 		return madAsset[_eType][_uAssetID];
 	else
@@ -143,22 +145,29 @@ const zenAss::zArrayAsset& ManagerAsset::AssetGet( zenConst::eAssetType _eType )
 	return madAsset[_eType];
 }
 
-void ManagerAsset::AssetAdd( zeAss::Asset* _pAsset )
+void ManagerAsset::AssetAdd( const zenAss::zAssetItemRef& _rAsset )
 {
-	ZENAssert( _pAsset && madAsset[_pAsset->GetType()].Exist(_pAsset->GetID().muIndex) == false );
-	madAsset[_pAsset->GetType()].Set(_pAsset->GetID().muIndex, _pAsset);
+	if( _rAsset.IsValid() )
+	{
+		ZENAssert( madAsset[_rAsset->GetType()].Exist(_rAsset->GetID().muIndex) == false );
+		madAsset[_rAsset->GetType()].Set(_rAsset->GetIDUInt(), _rAsset);
+	}	
 }
 
-void ManagerAsset::AssetRem( zenAss::zAssetID _AssetID )
+//! @note Not using a const zAssetItemRef&, to prevent issue if it points to the madAsset entry we're deleting
+void ManagerAsset::AssetDelete( zenAss::zAssetItemRef _rAsset )
 {
-	ZENAssert(_AssetID.meType<zenConst::keAssType__Count); 
-	zenAss::zAssetItem rAsset;
-	madAsset[_AssetID.meType].Get(_AssetID.muIndex, rAsset);
-	if( rAsset.IsValid() )
+	if( _rAsset.IsValid() )
 	{
-		rAsset.Get()->SetPackage(NULL);
-		madAsset[_AssetID.meType].Unset(_AssetID.muIndex);
+		_rAsset->SetPackage( zenAss::zPackageRef(NULL) );
+		madAsset[_rAsset.GetType()].Unset(_rAsset.GetIDUInt());
 	}
+}
+
+bool ManagerAsset::SaveAll()
+{
+	zxAss::AssetLoaderXml xmlLoader;	
+	return mrGroupRoot->Save(xmlLoader, false);
 }
 
 }} //namespace zen { namespace zeAss

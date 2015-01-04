@@ -12,5 +12,6 @@
 #include <ZenBase/Type/Base/zenTypeRegion.h>
 #include <ZenBase/Type/Container/zenTypeList1x.h>
 #include <ZenBase/Type/Container/zenTypeList2x.h>
+#include <ZenBase/Type/Container/zenTypeListIntrusive.h>
 
 #endif

@@ -36,14 +36,6 @@ ZendoApp::ZendoApp()
 }
 
 
-class test : public zRefCountedAutoDel
-{
-public:
-	int val;
-	test(){val = 0;}
-	bool operator==(const test& cmp){return val == cmp.val;}
-};
-
 bool ZendoApp::OnInit()
 {
 	// call the base class initialization method, currently it only parses a
@@ -119,15 +111,15 @@ bool ZendoApp::InitResources()
 	return true;
 }
 
-const wxIcon* ZendoApp::GetIcon(const zenAss::zAssetItem& _rAsset)
+const wxIcon* ZendoApp::GetIcon(const zenAss::zAssetItemRef& _rAsset)
 {
-	wxIcon* pIcon = mdAssetIcon[_rAsset.GetID()];
+	wxIcon* pIcon = mdAssetIcon[_rAsset.GetIDUInt()];
 	zUInt size(128);
 	if( !pIcon )
 	{	
 		pIcon = zenNewDefault wxIcon();
 		*pIcon = wxArtProvider::GetIcon(wxART_INFORMATION,wxART_LIST, wxSize(size,size));
-		mdAssetIcon.Set(_rAsset.GetID(), pIcon);		
+		mdAssetIcon.Set(_rAsset.GetIDUInt(), pIcon);		
 	}
 	return pIcon;
 }

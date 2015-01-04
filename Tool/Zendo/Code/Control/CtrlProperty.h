@@ -59,199 +59,214 @@ namespace BCtrl
 
 struct PropertyMetaData
 {
-	PropertyMetaData(wxPGProperty* _pOwner, const zenAss::PropertyValueRef& _rAssetValue, const wxVariant& _OriginalValue)
+	PropertyMetaData(wxPGProperty* _pOwner, const zenAss::zAssetItemRef& _rAsset, const zenAss::PropertyValueRef& _rAssetValue, const wxVariant& _OriginalValue)
 	: mpOwner(_pOwner)
+	, mrAsset(_rAsset)
 	, mrAssetValue(_rAssetValue)
 	, mOriginalValue(_OriginalValue)
 	{}
+
 	virtual void SetControlState();
 	virtual bool Save(){return false;}
+	virtual void SetDefaultValue()
+	{
+		mpOwner->SetValue(mpOwner->GetDefaultValue());
+	}
+	virtual void SetOriginalValue()
+	{
+		mpOwner->SetValue( mOriginalValue );
+	}
 
 	wxPGProperty*				mpOwner;
+	zenAss::zAssetItemRef		mrAsset;
 	zenAss::PropertyValueRef	mrAssetValue;
 	wxVariant					mOriginalValue;	
 };
 
-wxPGProperty* CreateAssetValueControl(wxPropertyGridInterface& _GridControl, zenAss::PropertyValueRef& _Value);
+wxPGProperty* CreateAssetValueControl(wxPropertyGridInterface& _GridControl, const zenAss::zAssetItemRef& _rAsset, zenAss::PropertyValueRef& _Value);
 
-class wxBetlBoolProperty : public wxBoolProperty
+class wxZenBoolProperty : public wxBoolProperty
 {
 public:
 	struct TypedMetaData : public PropertyMetaData
 	{
-		TypedMetaData( wxBetlBoolProperty* _pOwner, const zenAss::PropertyValueRef& _rAssetValue, const wxVariant& _OriginalValue)
-		: PropertyMetaData(_pOwner, _rAssetValue, _OriginalValue){}
+		TypedMetaData( wxZenBoolProperty* _pOwner, const zenAss::zAssetItemRef& _rAsset, const zenAss::PropertyValueRef& _rAssetValue, const wxVariant& _OriginalValue)
+		: PropertyMetaData(_pOwner, _rAsset, _rAssetValue, _OriginalValue){}
 		virtual bool Save();
 	};
 
-	wxBetlBoolProperty(zenAss::PropertyValueRef& _rAssetValue);
-	virtual ~wxBetlBoolProperty();
+	wxZenBoolProperty(const zenAss::zAssetItemRef& _rAsset, zenAss::PropertyValueRef& _rAssetValue);
+	virtual ~wxZenBoolProperty();
 };
 
-class wxBetlFloatProperty : public wxFloatProperty
+class wxZenFloatProperty : public wxFloatProperty
 {
 public:
 	struct TypedMetaData : public PropertyMetaData
 	{
-		TypedMetaData( wxBetlFloatProperty* _pOwner, const zenAss::PropertyValueRef& _rAssetValue, const wxVariant& _OriginalValue)
-		: PropertyMetaData(_pOwner, _rAssetValue, _OriginalValue){}
+		TypedMetaData( wxZenFloatProperty* _pOwner, const zenAss::zAssetItemRef& _rAsset, const zenAss::PropertyValueRef& _rAssetValue, const wxVariant& _OriginalValue)
+		: PropertyMetaData(_pOwner, _rAsset, _rAssetValue, _OriginalValue){}
 		virtual bool Save();
 	};
 
-	wxBetlFloatProperty(const zenAss::PropertyValueRef& _rAssetValue);
-	virtual	~wxBetlFloatProperty();
+	wxZenFloatProperty(const zenAss::zAssetItemRef& _rAsset, const zenAss::PropertyValueRef& _rAssetValue);
+	virtual	~wxZenFloatProperty();
 };
 
-class wxBetlIntProperty : public wxIntProperty
+class wxZenIntProperty : public wxIntProperty
 {
 public:
 	struct TypedMetaData : public PropertyMetaData
 	{
-		TypedMetaData( wxBetlIntProperty* _pOwner, const zenAss::PropertyValueRef& _rAssetValue, const wxVariant& _OriginalValue)
-		: PropertyMetaData(_pOwner, _rAssetValue, _OriginalValue){}
+		TypedMetaData( wxZenIntProperty* _pOwner, const zenAss::zAssetItemRef& _rAsset, const zenAss::PropertyValueRef& _rAssetValue, const wxVariant& _OriginalValue)
+		: PropertyMetaData(_pOwner, _rAsset, _rAssetValue, _OriginalValue){}
 		virtual bool Save();
 	};
 
-	wxBetlIntProperty(const zenAss::PropertyValueRef& _rAssetValue);
-	virtual ~wxBetlIntProperty();
+	wxZenIntProperty(const zenAss::zAssetItemRef& _rAsset, const zenAss::PropertyValueRef& _rAssetValue);
+	virtual ~wxZenIntProperty();
 };
 
 template< class TPropertyClass, class TElementCast, class TWxVector, class TWxProperty >
-class wxBetlVectorProperty : public wxPGProperty
+class wxZenVectorProperty : public wxPGProperty
 { 
 public:						
 	struct TypedMetaData : public PropertyMetaData
 	{
-		TypedMetaData( wxBetlVectorProperty<TPropertyClass, TElementCast, TWxVector, TWxProperty>* _pOwner, const zenAss::PropertyValueRef& _rAssetValue, const wxVariant& _OriginalValue)
-		: PropertyMetaData(_pOwner, _rAssetValue, _OriginalValue){}
+		TypedMetaData( wxZenVectorProperty<TPropertyClass, TElementCast, TWxVector, TWxProperty>* _pOwner, const zenAss::zAssetItemRef& _rAsset, const zenAss::PropertyValueRef& _rAssetValue, const wxVariant& _OriginalValue)
+		: PropertyMetaData(_pOwner, _rAsset, _rAssetValue, _OriginalValue){}
 		virtual bool Save();
 		virtual void SetControlState();
 	};
-	wxBetlVectorProperty(){}
-	wxBetlVectorProperty(const zenAss::PropertyValueRef& _rAssetValue, const char* _zTooltip, const char* _zTooltipElement);
-	virtual	~wxBetlVectorProperty();
+	wxZenVectorProperty(){}
+	wxZenVectorProperty(const zenAss::zAssetItemRef& _rAsset, const zenAss::PropertyValueRef& _rAssetValue, const char* _zTooltip, const char* _zTooltipElement);
+	virtual	~wxZenVectorProperty();
 	virtual wxVariant	ChildChanged( wxVariant& thisValue, int childIndex, wxVariant& childValue ) const;
-	virtual void		RefreshChildren();
+	virtual void		RefreshChildren();	
 };
 
-class wxBetlFloat2fProperty : public wxBetlVectorProperty<zenAss::PropertyFloat2, double, wxVector2f, wxFloatProperty>
+class wxZenFloat2fProperty : public wxZenVectorProperty<zenAss::PropertyFloat2, double, wxVector2f, wxFloatProperty>
 {
-WX_PG_DECLARE_PROPERTY_CLASS( wxBetlFloat2fProperty )
+WX_PG_DECLARE_PROPERTY_CLASS( wxZenFloat2fProperty )
 public:
-	wxBetlFloat2fProperty(){ZENAssertMsg(0, "Shouldn't be reaching this constructor")}
-	wxBetlFloat2fProperty(const zenAss::PropertyValueRef& _rAssetValue): wxBetlVectorProperty(_rAssetValue, "%s\n(Default [ %.3f, %.3f ])", "%s\n(Default %.3f)"){};
+	wxZenFloat2fProperty(){ZENAssertMsg(0, "Shouldn't be reaching this constructor")}
+	wxZenFloat2fProperty(const zenAss::zAssetItemRef& _rAsset, const zenAss::PropertyValueRef& _rAssetValue): wxZenVectorProperty(_rAsset, _rAssetValue, "%s\n(Default [ %.3f, %.3f ])", "%s\n(Default %.3f)"){};
 };
 
-class wxBetlFloat3fProperty : public wxBetlVectorProperty<zenAss::PropertyFloat3, double, wxVector3f, wxFloatProperty>
+class wxZenFloat3fProperty : public wxZenVectorProperty<zenAss::PropertyFloat3, double, wxVector3f, wxFloatProperty>
 {
-WX_PG_DECLARE_PROPERTY_CLASS( wxBetlFloat3fProperty )
+WX_PG_DECLARE_PROPERTY_CLASS( wxZenFloat3fProperty )
 public:
-	wxBetlFloat3fProperty(){ZENAssertMsg(0, "Shouldn't be reaching this constructor")}
-	wxBetlFloat3fProperty(const zenAss::PropertyValueRef& _rAssetValue):wxBetlVectorProperty(_rAssetValue, "%s\n(Default [ %.3f, %.3f, %.3f ])", "%s\n(Default %.3f)"){};
+	wxZenFloat3fProperty(){ZENAssertMsg(0, "Shouldn't be reaching this constructor")}
+	wxZenFloat3fProperty(const zenAss::zAssetItemRef& _rAsset, const zenAss::PropertyValueRef& _rAssetValue):wxZenVectorProperty(_rAsset, _rAssetValue, "%s\n(Default [ %.3f, %.3f, %.3f ])", "%s\n(Default %.3f)"){};
 };
 
-class wxBetlFloat4fProperty : public wxBetlVectorProperty<zenAss::PropertyFloat4, double, wxVector4f, wxFloatProperty>
+class wxZenFloat4fProperty : public wxZenVectorProperty<zenAss::PropertyFloat4, double, wxVector4f, wxFloatProperty>
 {
-WX_PG_DECLARE_PROPERTY_CLASS( wxBetlFloat4fProperty )
+WX_PG_DECLARE_PROPERTY_CLASS( wxZenFloat4fProperty )
 public:
-	wxBetlFloat4fProperty(){ZENAssertMsg(0, "Shouldn't be reaching this constructor")}
-	wxBetlFloat4fProperty(const zenAss::PropertyValueRef& _rAssetValue):wxBetlVectorProperty(_rAssetValue, "%s\n(Default [ %.3f, %.3f, %.3f, %.3f ])", "%s\n(Default %.3f)"){};
+	wxZenFloat4fProperty(){ZENAssertMsg(0, "Shouldn't be reaching this constructor")}
+	wxZenFloat4fProperty(const zenAss::zAssetItemRef& _rAsset, const zenAss::PropertyValueRef& _rAssetValue):wxZenVectorProperty(_rAsset, _rAssetValue, "%s\n(Default [ %.3f, %.3f, %.3f, %.3f ])", "%s\n(Default %.3f)"){};
 };
 
-class wxBetlInt2fProperty : public wxBetlVectorProperty<zenAss::PropertyInt2, long, wxVector2s, wxIntProperty>
+class wxZenInt2fProperty : public wxZenVectorProperty<zenAss::PropertyInt2, long, wxVector2s, wxIntProperty>
 {
-WX_PG_DECLARE_PROPERTY_CLASS( wxBetlInt2fProperty )
+WX_PG_DECLARE_PROPERTY_CLASS( wxZenInt2fProperty )
 public:
-	wxBetlInt2fProperty(){ZENAssertMsg(0, "Shouldn't be reaching this constructor")}
-	wxBetlInt2fProperty(const zenAss::PropertyValueRef& _rAssetValue): wxBetlVectorProperty(_rAssetValue, "%s\n(Default [ %3i, %3i ])", "%s\n(Default %3i)"){};
+	wxZenInt2fProperty(){ZENAssertMsg(0, "Shouldn't be reaching this constructor")}
+	wxZenInt2fProperty(const zenAss::zAssetItemRef& _rAsset, const zenAss::PropertyValueRef& _rAssetValue): wxZenVectorProperty(_rAsset, _rAssetValue, "%s\n(Default [ %3i, %3i ])", "%s\n(Default %3i)"){};
 };
 
-class wxBetlInt3fProperty : public wxBetlVectorProperty<zenAss::PropertyInt3, long, wxVector3s, wxIntProperty>
+class wxZenInt3fProperty : public wxZenVectorProperty<zenAss::PropertyInt3, long, wxVector3s, wxIntProperty>
 {
-WX_PG_DECLARE_PROPERTY_CLASS( wxBetlInt3fProperty )
+WX_PG_DECLARE_PROPERTY_CLASS( wxZenInt3fProperty )
 public:
-	wxBetlInt3fProperty(){ZENAssertMsg(0, "Shouldn't be reaching this constructor")}
-	wxBetlInt3fProperty(const zenAss::PropertyValueRef& _rAssetValue):wxBetlVectorProperty(_rAssetValue, "%s\n(Default [ %3i, %3i, %3i ])", "%s\n(Default %3i)"){};
+	wxZenInt3fProperty(){ZENAssertMsg(0, "Shouldn't be reaching this constructor")}
+	wxZenInt3fProperty(const zenAss::zAssetItemRef& _rAsset, const zenAss::PropertyValueRef& _rAssetValue):wxZenVectorProperty(_rAsset, _rAssetValue, "%s\n(Default [ %3i, %3i, %3i ])", "%s\n(Default %3i)"){};
 };
 
-class wxBetlInt4fProperty : public wxBetlVectorProperty<zenAss::PropertyInt4, long, wxVector4s, wxIntProperty>
+class wxZenInt4fProperty : public wxZenVectorProperty<zenAss::PropertyInt4, long, wxVector4s, wxIntProperty>
 {
-WX_PG_DECLARE_PROPERTY_CLASS( wxBetlInt4fProperty )
+WX_PG_DECLARE_PROPERTY_CLASS( wxZenInt4fProperty )
 public:
-	wxBetlInt4fProperty(){ZENAssertMsg(0, "Shouldn't be reaching this constructor")}
-	wxBetlInt4fProperty(const zenAss::PropertyValueRef& _rAssetValue):wxBetlVectorProperty(_rAssetValue, "%s\n(Default [ %3i, %3i, %3i, %3i ])", "%s\n(Default %3i)"){};
+	wxZenInt4fProperty(){ZENAssertMsg(0, "Shouldn't be reaching this constructor")}
+	wxZenInt4fProperty(const zenAss::zAssetItemRef& _rAsset, const zenAss::PropertyValueRef& _rAssetValue):wxZenVectorProperty(_rAsset, _rAssetValue, "%s\n(Default [ %3i, %3i, %3i, %3i ])", "%s\n(Default %3i)"){};
 };
 
-class wxBetlEnumProperty : public wxEnumProperty
+class wxZenEnumProperty : public wxEnumProperty
 {
 public:
 	struct TypedMetaData : public PropertyMetaData
 	{
-		TypedMetaData( wxBetlEnumProperty* _pOwner, const zenAss::PropertyValueRef& _rAssetValue, const wxVariant& _OriginalValue)
-		: PropertyMetaData(_pOwner, _rAssetValue, _OriginalValue){}
+		TypedMetaData( wxZenEnumProperty* _pOwner, const zenAss::zAssetItemRef& _rAsset, const zenAss::PropertyValueRef& _rAssetValue, const wxVariant& _OriginalValue)
+		: PropertyMetaData(_pOwner, _rAsset, _rAssetValue, _OriginalValue){}
 		virtual bool Save();
 	};
-	wxBetlEnumProperty(const zenAss::PropertyValueRef& _rAssetValue);
-	virtual	~wxBetlEnumProperty();
+	wxZenEnumProperty(const zenAss::zAssetItemRef& _rAsset, const zenAss::PropertyValueRef& _rAssetValue);
+	virtual	~wxZenEnumProperty();
 };
 
-class wxBetlFileProperty : public wxFileProperty
+class wxZenFileProperty : public wxFileProperty
 {
 public:
 	struct TypedMetaData : public PropertyMetaData
 	{
-		TypedMetaData( wxBetlFileProperty* _pOwner, const zenAss::PropertyValueRef& _rAssetValue, const wxVariant& _OriginalValue)
-		: PropertyMetaData(_pOwner, _rAssetValue, _OriginalValue){}
+		TypedMetaData( wxZenFileProperty* _pOwner, const zenAss::zAssetItemRef& _rAsset, const zenAss::PropertyValueRef& _rAssetValue, const wxVariant& _OriginalValue)
+		: PropertyMetaData(_pOwner, _rAsset, _rAssetValue, _OriginalValue){}
 		virtual bool Save();
 	};
 
-	wxBetlFileProperty(const zenAss::PropertyValueRef& _rAssetValue);
-	virtual ~wxBetlFileProperty();
+	wxZenFileProperty(const zenAss::zAssetItemRef& _rAsset, const zenAss::PropertyValueRef& _rAssetValue);
+	virtual ~wxZenFileProperty();
 };
 
-class wxBetlAssetProperty : public wxStringProperty
+class wxZenAssetProperty : public wxStringProperty
 {
 public:
 	struct TypedMetaData : public PropertyMetaData
 	{
-		TypedMetaData( wxBetlAssetProperty* _pOwner, const zenAss::PropertyValueRef& _rAssetValue, const wxVariant& _OriginalValue);
+		TypedMetaData( wxZenAssetProperty* _pOwner, const zenAss::zAssetItemRef& _rAsset, const zenAss::PropertyValueRef& _rAssetValue);
 		virtual void SetControlState();
+		virtual void SetDefaultValue();
+		virtual void SetOriginalValue();
 		virtual bool Save();
 		zenAss::zAssetID mAssetIDValue;
 		zenAss::zAssetID mAssetIDOriginalValue;
 	};
 
-	wxBetlAssetProperty(const zenAss::PropertyValueRef& _rAssetValue);
-	virtual ~wxBetlAssetProperty();
-	virtual void OnSetValue();
+					wxZenAssetProperty(const zenAss::zAssetItemRef& _rAsset, const zenAss::PropertyValueRef& _rAssetValue);
+	virtual			~wxZenAssetProperty();
+	virtual bool	OnEvent(wxPropertyGrid* propgrid, wxWindow* wnd_primary, wxEvent& event);
+protected:
+	void			SetAssetValue(zenAss::zAssetID _AssetID);
 };
 
-class wxBetlArrayProperty : public wxPGProperty //wxPropertyCategory?
+class wxZenArrayProperty : public wxPGProperty //wxPropertyCategory?
 { 
 public:	
 	struct TypedMetaData : public PropertyMetaData
 	{
-		TypedMetaData( wxBetlArrayProperty* _pOwner, const zenAss::PropertyValueRef& _rAssetValue, const wxVariant& _OriginalValue)
-		: PropertyMetaData(_pOwner, _rAssetValue, _OriginalValue){}
+		TypedMetaData( wxZenArrayProperty* _pOwner, const zenAss::zAssetItemRef& _rAsset, const zenAss::PropertyValueRef& _rAssetValue, const wxVariant& _OriginalValue)
+		: PropertyMetaData(_pOwner, _rAsset, _rAssetValue, _OriginalValue){}
 		virtual bool Save();
 		virtual void SetControlState();
 	};
-	wxBetlArrayProperty(const zenAss::PropertyValueRef& _rAssetValue);
-	virtual	~wxBetlArrayProperty();
+	wxZenArrayProperty(const zenAss::zAssetItemRef& _rAsset, const zenAss::PropertyValueRef& _rAssetValue);
+	virtual	~wxZenArrayProperty();
 };
 
-class wxBetlStructProperty : public wxPGProperty
+class wxZenStructProperty : public wxPGProperty
 { 
 public:
 	struct TypedMetaData : public PropertyMetaData
 	{
-		TypedMetaData( wxBetlStructProperty* _pOwner, const zenAss::PropertyValueRef& _rAssetValue, const wxVariant& _OriginalValue)
-		: PropertyMetaData(_pOwner, _rAssetValue, _OriginalValue){}
+		TypedMetaData( wxZenStructProperty* _pOwner, const zenAss::zAssetItemRef& _rAsset, const zenAss::PropertyValueRef& _rAssetValue, const wxVariant& _OriginalValue)
+		: PropertyMetaData(_pOwner, _rAsset, _rAssetValue, _OriginalValue){}
 		virtual bool Save();
 		virtual void SetControlState();
 	};
-	wxBetlStructProperty(const zenAss::PropertyValueRef& _rAssetValue);
-	virtual	~wxBetlStructProperty();
+	wxZenStructProperty(const zenAss::zAssetItemRef& _rAsset, const zenAss::PropertyValueRef& _rAssetValue);
+	virtual	~wxZenStructProperty();
 };
 
 }

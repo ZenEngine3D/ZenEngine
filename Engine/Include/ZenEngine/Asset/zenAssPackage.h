@@ -8,29 +8,38 @@ namespace zen { namespace zeAss  { class Package; } }	//Forward declare
 
 namespace zen { namespace zenAss 
 {
-	class zPackage : public zEngineRef<zeAss::Package>
+	typedef zArraySparse<zenAss::zPackageRef>::Key32 zArrayPackage;
+
+	class zPackageRef : public zEngineRef<zeAss::Package>
 	{
-	ZENClassDeclare(zPackage, zEngineRef)
-	public:
-		
-											zPackage();
-											zPackage(const zPackage& _Copy);
-											zPackage(zeAss::Package* _pAsset);
-		zPackage&							operator=(const zPackage& _Copy);		
+	ZENClassDeclare(zPackageRef, zEngineRef)
+	public:		
+											zPackageRef();
+											zPackageRef(const zPackageRef& _Copy);
+											zPackageRef(zeAss::Package* _pPackage);
 
 		zU32								GetID			()const;
-		const zArrayStatic<zString>&		GetGroupAndName	()const;
-		const zString&						GetName			()const;
-		const zArrayAsset&					GetAssets		(zenConst::eAssetType _eType);
-		
-		bool								Save			();
+		const zWString&						GetName			()const;
+		const zArrayAsset&					GetAssets		(zenConst::eAssetType _eType)const;
+		const class zPackageGroupRef&		GetParentGroup	()const;
+		bool								GetDirty		()const;
+
+		void								SetParentGroup	(const zPackageGroupRef& _rParent);
+		void								SetName			(const zWString& _Name);
 		void								SetDirty		();
-		bool								IsDirty			();
+
+		void								Delete			();
+
+		//-----------------------------------------------------------------------------------------
+		static const zPackageRef&			sGetPackage		(zU32 _PackageID);
+		static const zArrayPackage&			sGetPackages	();
+		static zPackageRef					sCreate			(const zWString& _zName, const zPackageGroupRef& _rParent);		
+		//-----------------------------------------------------------------------------------------
 	};
 
-	typedef zArraySparse<zenAss::zPackage>::Key32 zArrayPackage;
-	const zPackage&							GetPackage		( zU32 _hPackageID );
-	const zArrayPackage&					GetPackages		();
+	
+	
+	
 }} //namespace zen { namespace zenAss
 
 #endif

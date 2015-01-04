@@ -14,5 +14,6 @@ using namespace zen::zenType;
 #include <ZenBase/zenBaseType2.h>
 #include <ZenBase/zenBaseSystem.h>
 #include <ZenBase/zenBaseIO.h>
+#include <ZenBase/zenBaseSignal.h>
 
 #endif

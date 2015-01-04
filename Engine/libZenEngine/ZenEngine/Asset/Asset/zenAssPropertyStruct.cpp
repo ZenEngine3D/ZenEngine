@@ -5,11 +5,11 @@
 namespace zen { namespace zenAss
 {
 
-PropertyDefRef PropertyStruct::Create( const char* _zName, const char* _zDisplayName, const char* _zDescription, bool _bShowInAssetDesc, const PropertyDefRef* _prPropertyDef, zUInt _uPropertyDefCount )
+PropertyDefRef PropertyStruct::Create( const char* _zName, const char* _zDisplayName, const char* _zDescription, bool _bShowInAssetDesc, bool _bIsEditable, const PropertyDefRef* _prPropertyDef, zUInt _uPropertyDefCount )
 {	
 	ZENAssert(_prPropertyDef && _uPropertyDefCount>0);
 	static zenMem::zAllocatorPool sAllocPool( "PropertyDefinition::Create", sizeof(PropertyStruct), 256, 256 );
-	PropertyStruct* pNewDefinition		= zenNew(&sAllocPool) zenAss::PropertyStruct(_zName, _zDisplayName, _zDescription, _bShowInAssetDesc);
+	PropertyStruct* pNewDefinition = zenNew(&sAllocPool) zenAss::PropertyStruct(_zName, _zDisplayName, _zDescription, _bShowInAssetDesc, _bIsEditable);
 	pNewDefinition->maPropertyDef.Copy(_prPropertyDef, _uPropertyDefCount);
 	pNewDefinition->mDefault.SetCount(_uPropertyDefCount);
 	pNewDefinition->mdPropertyDefIndex.Init(16);

@@ -5,24 +5,14 @@
 namespace zen { namespace zeAss
 {
 
-void AssetLoader::SavePackages()
-{
-	const zenAss::zArrayPackage& dPackages = zeMgr::Asset.PackageGet();
-	zenAss::zArrayPackage::Iterator itPkg(dPackages);
-	while( itPkg.IsValid() )
-	{
-		Save( itPkg.GetValue() );
-		++itPkg;
-	}
-}
-void AssetLoader::AddPackage(zeAss::Package* _pPackage)
+void AssetSerializer::AddPackage(const zenAss::zPackageRef& _rPackage)
 {	
-	zeMgr::Asset.PackageAdd(_pPackage);
+	zeMgr::Asset.PackageAdd(_rPackage);
 }
 
-void AssetLoader::AddAsset(zeAss::Asset* _pAsset)
+void AssetSerializer::AddAsset(const zenAss::zAssetItemRef& _rAsset)
 {
-	zeMgr::Asset.AssetAdd(_pAsset);
+	zeMgr::Asset.AssetAdd(_rAsset);
 }
 
 }} //namespace zen { namespace zeAss

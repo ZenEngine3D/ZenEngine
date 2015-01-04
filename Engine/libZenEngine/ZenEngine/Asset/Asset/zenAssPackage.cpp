@@ -5,77 +5,89 @@
 namespace zen { namespace zenAss
 {
 
-const zPackage& GetPackage( zHash64 _hPackageID )
+const zPackageRef& zPackageRef::sGetPackage( zU32 _hPackageID )
 {
 	return zeMgr::Asset.PackageGet(_hPackageID);
 }
 
-const zArrayPackage& GetPackages()
+const zArrayPackage& zPackageRef::sGetPackages()
 {
 	return zeMgr::Asset.PackageGet();
 }
 
-zPackage::zPackage()
+zPackageRef zPackageRef::sCreate(const zWString& _zName, const zPackageGroupRef& _rParent)
+{
+	if( _rParent.IsValid() )
+	{
+		zenAss::zPackageRef rNewPackage = zenNewDefault zeAss::Package;
+		if( rNewPackage->Init(zeMgr::Asset.GetPackageNextID(), _zName, _rParent, zenConst::keEngineVersion__Current) )
+		{
+			zeMgr::Asset.PackageAdd(rNewPackage);
+			return rNewPackage;
+		}
+	}
+	return NULL;
+}
+
+zPackageRef::zPackageRef()
 :Super()
 {
 }
 
-zPackage::zPackage(const zPackage& _Copy)
+zPackageRef::zPackageRef(const zPackageRef& _Copy)
 : Super(_Copy)
 {
 }
 
-zPackage::zPackage(zeAss::Package* _pAsset)
-: Super(_pAsset)
+zPackageRef::zPackageRef(zeAss::Package* _pPackage)
+: Super(_pPackage)
 {
 }
 
-zPackage& zPackage::operator=(const zPackage& _Copy)
-{
-	Super::operator=(_Copy);
-	return *this;
-}
-
-zU32 zPackage::GetID()const									
+zU32 zPackageRef::GetID()const									
 { 
-	ZENAssert(IsValid());
-	return Get()->GetID(); 
+	return GetSafe()->GetID(); 
 }
 
-const zString& zPackage::GetName()const							
+const zWString& zPackageRef::GetName()const							
 { 
-	ZENAssert(IsValid());
-	return Get()->GetName(); 
+	return GetSafe()->GetName(); 
 }
 
-const zArrayStatic<zString>& zPackage::GetGroupAndName()const	
-{ 
-	ZENAssert(IsValid());
-	return Get()->GetGroupAndName(); 
-}
-
-void zPackage::SetDirty()
+void zPackageRef::SetParentGroup(const zPackageGroupRef& _rParent)
 {
-	ZENAssert(IsValid());
-	Get()->SetDirty(true);
+	GetSafe()->SetParentGroup(_rParent);
 }
 
-bool zPackage::IsDirty()
+void zPackageRef::SetName(const zWString& _zName)
 {
-	ZENAssert(IsValid());
-	return Get()->IsDirty();
+	return GetSafe()->SetName(_zName);
 }
 
-bool zPackage::Save()
+void zPackageRef::SetDirty()
 {
-	ZENAssert(IsValid());
-	return Get()->Save();
+ 	GetSafe()->SetDirty();
 }
 
-const zArrayAsset& zPackage::GetAssets(zenConst::eAssetType _eType)
+
+bool zPackageRef::GetDirty()const
 {
-	ZENAssert(IsValid());
-	return Get()->GetAsset(_eType); 
+	return GetSafe()->GetDirty();
+}
+
+const zArrayAsset& zPackageRef::GetAssets(zenConst::eAssetType _eType) const
+{
+	return GetSafe()->GetAsset(_eType); 
+}
+
+const zPackageGroupRef& zPackageRef::GetParentGroup()const
+{
+	return GetSafe()->GetParentGroup();
+}
+
+void zPackageRef::Delete()
+{
+	GetSafe()->Delete();
 }
 
 }} //namespace zen { namespace zenAss

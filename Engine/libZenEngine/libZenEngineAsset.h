@@ -18,6 +18,7 @@
 
 #include <Engine/libZenEngine/Asset/Asset/zeAssItem.h>
 #include <Engine/libZenEngine/Asset/Asset/zeAssPackage.h>
+#include <Engine/libZenEngine/Asset/Asset/zeAssPackageGroup.h>
 #include <Engine/libZenEngine/Asset/Asset/zeAssManager.h>
 #include <Engine/libZenEngine/Asset/Asset/zeAssLoader.h>
 #include <Engine/libZenEngine/Asset/Graphic/zeAssGfxMesh.h>

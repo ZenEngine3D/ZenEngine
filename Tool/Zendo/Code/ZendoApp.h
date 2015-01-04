@@ -22,7 +22,7 @@ public:
 	//void onIdle(wxIdleEvent& evt);
 
 	bool							InitResources();
-	const wxIcon*					GetIcon(const zenAss::zAssetItem& _rAsset);
+	const wxIcon*					GetIcon(const zenAss::zAssetItemRef& _rAsset);
 	WndMain*						mpFrame;
 
 	wxImageList*					maIcon[keIco__Count];

@@ -43,6 +43,33 @@ zWString::operator const zChar*() const
 	return c_str();
 }
 
+bool zWString::operator==(const zWString& _zCmp)const
+{
+	return compare( _zCmp ) == 0;
+}
+
+bool zWString::operator!=(const zWString& _zCmp)const
+{
+	return !(*this == _zCmp);
+}
+
+bool zWString::operator==(const wchar_t* _zCmp)const
+{
+	return compare(_zCmp) == 0;
+}
+
+bool zWString::operator!=(const wchar_t* _zCmp)const
+{
+	return !(*this == _zCmp);
+}
+
+const zWString&	zWString::Prepend(const zWString& _Copy)
+{
+	this->insert(0, _Copy);
+	return *this;
+}
+
+
 }}  //namespace zen, Type 
 
 

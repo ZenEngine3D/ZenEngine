@@ -17,31 +17,34 @@ public:
 	virtual										~Asset();	
 
 	ZENInline const zenAss::zAssetID&			GetID()const;
-	ZENInline const zArrayStatic<zString>&		GetGroupAndName()const;
+	ZENInline zU64								GetIDUInt()const;
 	ZENInline const zString&					GetName()const;
 	ZENInline const zString&					GetDescription()const;
 	ZENInline zenConst::eAssetType				GetType()const;
 
 	void										InitDefault();	
-	void										Init(zU32 _uID, const char* _zName, const char* _zGroup, Package& _ParentPkg);
-	void										SetPackage(Package* _pParentPkg);
-	ZENForceInline const zenAss::zPackage&		GetPackage(){return mrPackage;}
+	void										Init(zenAss::zAssetID _AssetID, const char* _zName, const zenAss::zPackageRef& _ParentPkg);
+	void										SetPackage(const zenAss::zPackageRef& _rParentPkg);
+	ZENForceInline const zenAss::zPackageRef&	GetPackage(){return mrPackage;}
 
-	ZENForceInline zUInt						GetValueCount()const {	return maPropertyValue.Count(); }
-	ZENForceInline zenAss::PropertyValueRef		GetValue(zUInt _uValIndex){ ZENAssert( _uValIndex< maPropertyValue.Count()); return maPropertyValue[_uValIndex];}
+	ZENForceInline zUInt						GetValueCount()const;
+	ZENForceInline zenAss::PropertyValueRef		GetValue(zUInt _uValIndex);
+	ZENForceInline zenAss::PropertyValueRef		GetValue(zHash32 _hPropertyName);
 	
 	virtual const zenAss::PropertyDefArray&		GetProperties()const=0;								//!< Child class return the list of property definition they are made of
 	virtual zInt								GetValueIndex(zHash32 _hPropertyName)const=0;
-
+	
 	void										SetName(const char* _zName);
+	virtual bool								UpdatedProperties();								//!< Called when properties have been updated, if asset need to reprocess some local infos
+
 protected:										
 												Asset();
 	void										RebuiltDescription();
 	
-	zenAss::zPackage							mrPackage;					//!< Parent package this asset is kept inside
+	zenAss::zPackageRef							mrPackage;					//!< Parent package this asset is kept inside
 	zenAss::zAssetID							mID;						//!< Unique ID for this Asset instance
-	zString										mzDescription;				//!< Asset description, built from propertydef/values
-	zArrayStatic<zString>						maGroup;					//!< Asset belongs to a group hierarchy for easier finding of asset, like package (last element is asset name)	
+	zString										mzName;						//!< Asset name
+	zString										mzDescription;				//!< Asset description, built from propertydef/values //! @todo Asset	
 	zArrayStatic<zenAss::PropertyValueRef>		maPropertyValue;			//!< List of values pointer for this asset	
 
 //-----------------------------------------------------------------------------
@@ -52,27 +55,28 @@ public:
 };
 
 //=================================================================================================
-// CLASS: TAsset
+// CLASS: AssetTyped
 //=================================================================================================
-template <zenConst::eAssetType TAssetType>
-class TAsset : public Asset
+template <zenConst::eAssetType AssetTypedType>
+class AssetTyped : public Asset
 {
-ZENClassDeclare(TAsset, Asset)
+ZENClassDeclare(AssetTyped, Asset)
 public:
-	enum { kAssetType = TAssetType };
+	enum { kAssetType = AssetTypedType };
 	virtual zInt								GetValueIndex(zHash32 _hPropertyName)const;	
 protected:
-												TAsset();
+												AssetTyped();
 };
 
 //=================================================================================================
 // CLASS: TestProperty
 //=================================================================================================
-class TestProperty : public TAsset<zenConst::keAssType_TestProperty>
+class TestProperty : public AssetTyped<zenConst::keAssType_TestProperty>
 {
 ZENClassDeclare(TestProperty, Asset)
 public:	
 	virtual const zenAss::PropertyDefArray&		GetProperties()const;	
+	virtual bool								UpdatedProperties();
 };	
 
 }} //namespace zen { namespace zeAss

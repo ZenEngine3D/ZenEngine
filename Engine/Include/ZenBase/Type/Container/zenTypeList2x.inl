@@ -1,3 +1,9 @@
+#pragma once
+#ifndef __zenBase_Type_List2x_inl__
+#define __zenBase_Type_List2x_inl__
+
+namespace zen { namespace zenType 
+{
 
 //==================================================================================================
 //! @brief		Add new items to the list, sorted by a reference value
@@ -26,4 +32,25 @@ void zList2x::AddSort( zList2xNode* _pAdd,  _Type_* _pReference )
 }
 
   
+template<class TItem, bool TAutoDel>
+zList2xItem<TItem, TAutoDel>::zList2xItem(TItem* _pObject)
+: mpObject( _pObject )
+{
+}
 
+template<class TItem, bool TAutoDel>
+zList2xItem<TItem, TAutoDel>::~zList2xItem(void)
+{
+	if( TAutoDel )
+		zenDel( mpObject );
+}
+
+template<class TItem, bool TAutoDel>
+TItem* zList2xItem<TItem, TAutoDel>::Get()const	
+{ 
+	return mpObject; 
+}
+
+} } //namespace zen, Type
+
+#endif

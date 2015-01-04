@@ -8,36 +8,38 @@ namespace zen { namespace zeAss { class Asset; } }
 
 namespace zen { namespace zenAss 
 {
-	class zAssetItem : public zEngineRef<zeAss::Asset>
+	class zAssetItemRef : public zEngineRef<zeAss::Asset>
 	{
-	ZENClassDeclare(zAssetItem, zEngineRef)
+	ZENClassDeclare(zAssetItemRef, zEngineRef)
 	public:
-										zAssetItem();
-										zAssetItem(const zAssetItem& _Copy);
-										zAssetItem(zeAss::Asset* _pAsset);
+										zAssetItemRef();
+										zAssetItemRef(const zAssetItemRef& _Copy);
+										zAssetItemRef(zeAss::Asset* _pAsset);
 		const zAssetID&					GetID()const;
+		zU64							GetIDUInt()const;
 		const zString&					GetName()const;
-		const zArrayStatic<zString>&	GetGroupAndName()const;
 		const zString&					GetDescription()const;
 		zUInt							GetValueCount()const;
 		zenConst::eAssetType			GetType()const;
-		class zPackage					GetPackage();
+		class zPackageRef				GetPackage();
 		zenAss::PropertyValueRef		GetValue(zUInt _uValIndex);
-		void							InitDefault();
 		
-		void							SetPackage(zPackage _rPackage);
+		void							InitDefault();
+		bool							UpdateProperties();		//!< Tell asset its properties have been modified
+
+		void							SetPackage(zPackageRef& _rPackage);
 		void							SetName(const char* _zName);
 
 		void							Delete();
-		zAssetItem&						operator=(const zAssetItem& _Copy);		
+		zAssetItemRef&					operator=(const zAssetItemRef& _Copy);		
 	};
 	
-	zAssetItem							AssetCreate			(zenConst::eAssetType _eAssetType, zPackage& _rPackage, const char* _zGroup);
+	zAssetItemRef						AssetCreate			(zenConst::eAssetType _eAssetType, zPackageRef& _rPackage);
 	const char*							AssetTypeToString	(zenConst::eAssetType _ePropertyType);
 	zenConst::eAssetType				AssetNameToType		(zHash32 _hAssetName);
-	const zAssetItem&					AssetGet			(const zAssetID& _uAssetID); //! @todo Asset: Move to an asset manager at api level?
+	const zAssetItemRef&				AssetGet			(const zAssetID& _uAssetID); //! @todo Asset: Move to an asset manager at api level?
 
-	typedef zArraySparse<zenAss::zAssetItem>::Key32 zArrayAsset;
+	typedef zArraySparse<zenAss::zAssetItemRef>::Key64 zArrayAsset;
 	
 
 }} //namespace zen { namespace zenAss

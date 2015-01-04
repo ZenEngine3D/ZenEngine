@@ -9,7 +9,7 @@ class WndAssetProperty : public wxPanel
 public:
 										WndAssetProperty(wxWindow *parent, const wxString& title);
 										~WndAssetProperty();
-	void								AddAssetTab(zenAss::zAssetItem rEditItem);
+	void								AddAssetTab(zenAss::zAssetItemRef rEditItem);
 	void								AssetTabRemoved(BCtrl::TabAssetProperty& _AssetTab);
 protected:	
 	DECLARE_EVENT_TABLE()

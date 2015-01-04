@@ -68,7 +68,7 @@ void TabAssetPropertyGridPage::RefreshModifiedItems()
 //=================================================================================================
 // ASSET PROPERTIES TABS
 //=================================================================================================
-TabAssetProperty::TabAssetProperty(wxWindow *_pParent, const zenAss::zAssetItem& _rEditAsset)
+TabAssetProperty::TabAssetProperty(wxWindow *_pParent, const zenAss::zAssetItemRef& _rEditAsset)
 : wxPanel(_pParent, wxID_ANY)
 , mrAsset(_rEditAsset)
 {
@@ -106,7 +106,7 @@ TabAssetProperty::TabAssetProperty(wxWindow *_pParent, const zenAss::zAssetItem&
 	// Add every property of this asset
 	TabAssetPropertyGridPage* pPage = zenNewDefault TabAssetPropertyGridPage();
 	for(zUInt propIdx(0), propCount(mrAsset.GetValueCount()); propIdx<propCount; ++propIdx)
-		CreateAssetValueControl(*pPage, mrAsset.GetValue(propIdx));
+		CreateAssetValueControl(*pPage, mrAsset, mrAsset.GetValue(propIdx));
 		
 	mpPropertyGrid->AddPage("All", wxNullBitmap, pPage);
 	pPage->RefreshModifiedItems();
@@ -132,7 +132,7 @@ TabAssetProperty::~TabAssetProperty()
 	wxGetApp().mpFrame->GetWndAssetProperty()->AssetTabRemoved(*this);
 }
 
-const zenAss::zAssetItem& TabAssetProperty::GetAsset()
+const zenAss::zAssetItemRef& TabAssetProperty::GetAsset()
 {
 	return mrAsset;
 }
@@ -151,8 +151,9 @@ void TabAssetProperty::ApplyChanges()
 	}
 
 	if( bChanged )
-	{
+	{		
 		mrAsset.GetPackage().SetDirty();
+		mrAsset.UpdateProperties();	//! @todo Asset : detect and update changes to properties values (or use signals)
 		pPage->RefreshModifiedItems();
 	}	
 }
@@ -163,8 +164,10 @@ void TabAssetProperty::OnToolbarDefault( wxCommandEvent& event )
 	const wxArrayPGProperty&	aSelected 	= pPage->GetSelectedProperties();
 	for(zUInt propIdx(0), propCount(aSelected.Count()); propIdx<propCount; ++propIdx)
 	{
-		wxPGProperty* pProp = aSelected[propIdx];
-		pProp->SetValue( pProp->GetDefaultValue() );
+		wxPGProperty* pProp			= aSelected[propIdx];
+		PropertyMetaData* pMetaData = (PropertyMetaData*)pProp->GetClientData();
+		if ( pMetaData )
+			pMetaData->SetDefaultValue();
 	}
 	pPage->RefreshModifiedItems();
 }
@@ -177,7 +180,8 @@ void TabAssetProperty::OnToolbarOriginal( wxCommandEvent& event )
 	{
 		wxPGProperty* pProp			= aSelected[propIdx];
 		PropertyMetaData* pMetaData = (PropertyMetaData*)pProp->GetClientData();
-		pProp->SetValue( pMetaData->mOriginalValue );
+		if (pMetaData)
+			pMetaData->SetOriginalValue();		
 	}
 	pPage->RefreshModifiedItems();
 }

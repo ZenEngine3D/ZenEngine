@@ -356,8 +356,6 @@ void ManagerFile_Base::InitPath(const zWString& _zRootPath)
 	mzRootPath.Replace(zenT("\\"), zenT("/"));
 	if( mzRootPath[mzRootPath.length()-1] != zenT("/")[0] )
 		mzRootPath += zenT("/");
-	
-	mzRootPackage	= mzRootPath + zenT("Package");	//! @todo Clean: Should be outside of base logic
 }
 
 }

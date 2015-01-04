@@ -200,7 +200,7 @@ void zList2x::AddTail( zList2xNode* _pAdd	)
 //--------------------------------------------------------------------------------------------------
 //! @return		- First item in the list
 //==================================================================================================
-zList2xNode*	zList2x::PopHead( void )
+zList2xNode* zList2x::PopHead( void )
 {
 	ZENAssert(!IsEmpty());
 	zList2xNode* pItem = moRoot.mpLstNext;
@@ -214,7 +214,7 @@ zList2xNode*	zList2x::PopHead( void )
 //--------------------------------------------------------------------------------------------------
 //! @return		- Last item in the list
 //==================================================================================================
-zList2xNode*	zList2x::PopTail( void )
+zList2xNode* zList2x::PopTail( void )
 {
 	ZENAssert(!IsEmpty());
 	zList2xNode* pItem = moRoot.mpLstPrev;

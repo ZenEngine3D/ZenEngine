@@ -4,18 +4,17 @@
 
 namespace zen { namespace zxAss
 {
+const wchar_t kzPackagePath[]			= zenT("Package");
+
 const char* kzXmlName_Node_Package		= "Package";
 const char* kzXmlName_PkgAtr_ID			= "ID";
-const char* kzXmlName_PkgAtr_Group		= "Group";
 const char* kzXmlName_PkgAtr_Version	= "EngineVersion";
 
 const char* kzXmlName_Node_Asset		= "Asset";
 const char* kzXmlName_AssetAtr_ID		= "ID";
 const char* kzXmlName_AssetAtr_Name		= "Name";
-const char* kzXmlName_AssetAtr_Group	= "Group";
 const char* kzXmlName_AssetAtr_Type		= "Type";
 const char* kzXmlName_AssetAtr_Version	= "Version";
-
 
 const char* kzXmlName_Node_Property		= "Property";
 const char* kzXmlName_PropAtr_Name		= "Name";
@@ -25,6 +24,10 @@ const char* kzXmlName_PropAtr_Value		= "Value";
 
 void LoadPropertyValue( const zenAss::PropertyValueRef& _rValue, const pugi::xml_node& _Node )
 {
+	//Makes sure saved property is of expected type
+	if( strcmp(_rValue.GetDefinition().GetTypeName(), _Node.attribute(kzXmlName_PropAtr_Type).as_string()) != 0 )
+		return;
+
 	switch( _rValue.GetType() )
 	{
 	case zenConst::keAssProp_Bool:	{	
@@ -36,7 +39,7 @@ void LoadPropertyValue( const zenAss::PropertyValueRef& _rValue, const pugi::xml
 		//! @todo Asset: Finalize string handling
 		zChar zFilename[1024];
 		mbstowcs_s(NULL, zFilename, ZENArrayCount(zFilename), _Node.attribute("Value").as_string(), ZENArrayCount(zFilename));
-		rValueTyped = zFilename;	
+		rValueTyped = zFilename;			
 	}break;
 	case zenConst::keAssProp_Float:	{	
 		zenAss::PropertyFloat::ValueRef rValueTyped(_rValue);
@@ -85,6 +88,14 @@ void LoadPropertyValue( const zenAss::PropertyValueRef& _rValue, const pugi::xml
  	case zenConst::keAssProp_Enum:	{	
 		zenAss::PropertyEnum::ValueRef rValueTyped(_rValue);
 		rValueTyped = _Node.attribute("Value").as_string();
+	}break;
+	case zenConst::keAssProp_Asset:	{
+		zenAss::PropertyAsset::ValueRef rValueTyped(_rValue);
+		//unsigned int typeVal			= _Node.attribute("AssetType").as_uint();
+		//rValueTyped.GetValue().meType	= typeVal < zenConst::keAssType__Count ? (zenConst::eAssetType)typeVal : zenConst::keAssType__Invalid;
+		const char* zAssetType			= _Node.attribute("AssetType").as_string();
+		rValueTyped.GetValue().meType	= zenAss::AssetNameToType(zHash32(zAssetType));
+		rValueTyped.GetValue().muIndex	= _Node.attribute("AssetID").as_uint();
 	}break;
 	case zenConst::keAssProp_Struct:{	
 		zenAss::PropertyStruct::ValueRef rValueTyped(_rValue);
@@ -176,6 +187,11 @@ void SavePropertyValue(const zenAss::PropertyValueRef& _rValue, pugi::xml_node& 
 		zenAss::PropertyEnum::ValueRef rValueTyped(_rValue);
 		const zenAss::PropertyEnum::Entry& enumEntry = rValueTyped.GetEnumEntry();
 	}break;
+	case zenConst::keAssProp_Asset:	{
+		zenAss::PropertyAsset::ValueRef rValueTyped(_rValue);
+		_Node.append_attribute("AssetType").set_value( zenAss::AssetTypeToString(rValueTyped.GetValue().meType) );
+		_Node.append_attribute("AssetID").set_value( (unsigned int)rValueTyped.GetValue().muIndex );
+	}break;
 	case zenConst::keAssProp_Struct:{	
 		zenAss::PropertyStruct::ValueRef rValueTyped(_rValue);
 		zenAss::PropertyStruct::ValueStorage& aValues = rValueTyped.GetValue();
@@ -210,25 +226,37 @@ void SavePropertyValue(const zenAss::PropertyValueRef& _rValue, pugi::xml_node& 
 	}
 }
 
+
 bool AssetLoaderXml::LoadPackages()
 {
 	bool bResult(true);
-	const zbFile::FileInfo* pFileInfo;
-	zbMgr::File.Search( zbFile::keFileFlag_File, L"Packages", L"*.xml",  true);
-	while( zbMgr::File.SearchNext(pFileInfo) )
+	//zbFile::Filename file = kzPackagePath;
+	return LoadGroup(zeMgr::Asset.GroupGetRoot(), kzPackagePath);
+}
+
+bool AssetLoaderXml::LoadGroup(const zenAss::zPackageGroupRef& _rParent, const zbFile::Filename& _Filename)
+{
+	bool bResult(true);
+	zArrayDynamic<zbFile::FileInfo> dirList;
+	zArrayDynamic<zbFile::FileInfo> fileList;
+	
+	zbMgr::File.Search(dirList, zbFile::keFileFlag_Dir, _Filename.GetNameFull(), zenT("*"), false);	
+	for( zUInt idx(0), count(dirList.Count()); idx<count; ++idx)
 	{
-		bResult &= LoadPackage(pFileInfo->GetFilename());
+		zenAss::zPackageGroupRef rNewParent	= zeMgr::Asset.GroupCreate(dirList[idx].GetFilename().GetName(), _rParent );		
+		bResult								&= LoadGroup(rNewParent, dirList[idx].GetFilename());
+		rNewParent->SetStorageInfo( dirList[idx].GetFilename().GetNameFull() );
 	}
+
+	zbMgr::File.Search(fileList, zbFile::keFileFlag_File, _Filename.GetNameFull(), zenT("*.xml"), false);
+	for (zUInt idx(0), count(fileList.Count()); idx < count; ++idx)
+		bResult &= LoadPackage(_rParent, fileList[idx].GetFilename());
+
 	return bResult;
 }
 
-bool AssetLoaderXml::LoadPackage(const zbFile::Filename& _Filename)
+bool AssetLoaderXml::LoadPackage(const zenAss::zPackageGroupRef& _rParent, const zbFile::Filename& _Filename)
 {
-	char zName[128];
-	//char zStorageName[256];
-	wcstombs_s(NULL, zName, ZENArrayCount(zName), _Filename.GetNameNoExt(), ZENArrayCount(zName));
-	//wcstombs_s(NULL, zStorageName, ZENArrayCount(zStorageName), _Filename.GetNameFull(), ZENArrayCount(zStorageName));	//! @todo Clean : Baaadddddd, need to fully use wchar (or not at all)
-	 
 	pugi::xml_document Doc;	
 	pugi::xml_parse_result result = Doc.load_file(_Filename.GetNameFull());
 	if( result )
@@ -237,22 +265,21 @@ bool AssetLoaderXml::LoadPackage(const zbFile::Filename& _Filename)
 		pugi::xml_node nodePackage	= Doc.child(kzXmlName_Node_Package);
 		if( nodePackage )
 		{
-			zeAss::Package* pNewPackage = zenNewDefault zeAss::Package;
-			zU32 uPkgID					= nodePackage.attribute(kzXmlName_PkgAtr_ID).as_uint();
-			const char* zGroup			= nodePackage.attribute(kzXmlName_PkgAtr_Group).as_string();
-			zU32 uEngineVer				= nodePackage.attribute(kzXmlName_PkgAtr_Version).as_uint();
+			zenAss::zPackageRef rNewPackage	= zenNewDefault zeAss::Package;
+			zU32 uPkgID						= nodePackage.attribute(kzXmlName_PkgAtr_ID).as_uint();
+			zU32 uEngineVer					= nodePackage.attribute(kzXmlName_PkgAtr_Version).as_uint();
 			if( uEngineVer<=zenConst::keEngineVersion__Current		&& 
 				zeMgr::Asset.PackageGet(uPkgID).IsValid() == false	&& 
-				pNewPackage->Init(uPkgID, zName, zGroup, _Filename.GetNameFull(), uEngineVer ) )
+				rNewPackage->Init(uPkgID, _Filename.GetNameNoExt(), _rParent, uEngineVer ) )
 			{
-				AddPackage(pNewPackage);
+				rNewPackage->SetStorageInfo(_Filename.GetNameFull());
+				AddPackage(rNewPackage);
 				for(pugi::xml_node nodeAsset = Doc.child(kzXmlName_Node_Asset); nodeAsset; nodeAsset = nodeAsset.next_sibling(kzXmlName_Node_Asset))
-					LoadAsset(*pNewPackage, nodeAsset);
+					LoadAsset( rNewPackage, nodeAsset);
 				return true;
 			}
 			else
 			{
-				zenDel( pNewPackage );
 				//! @todo Log: Warning about package load failure
 			}
 		}
@@ -260,15 +287,11 @@ bool AssetLoaderXml::LoadPackage(const zbFile::Filename& _Filename)
 	return false;
 }
 
-bool AssetLoaderXml::Save(zenAss::zPackage& _rPackage)
+bool AssetLoaderXml::Save(const zenAss::zPackageRef& _rPackage)
 {
-	zString zGroupName;
-	zGroupName.Merge(_rPackage->GetGroupAndName(), '\\', zGroupName, -1 );
-	
 	pugi::xml_document Doc;	
 	pugi::xml_node nodePackage = Doc.append_child(kzXmlName_Node_Package);
 	nodePackage.append_attribute(kzXmlName_PkgAtr_ID).set_value( _rPackage->GetID() );
-	nodePackage.append_attribute(kzXmlName_PkgAtr_Group).set_value( zGroupName );
 	nodePackage.append_attribute(kzXmlName_PkgAtr_Version).set_value( zenConst::keEngineVersion__Current );
 	for(zInt idxType(0); idxType<zenConst::keAssType__Count; ++idxType)
 	{
@@ -281,15 +304,70 @@ bool AssetLoaderXml::Save(zenAss::zPackage& _rPackage)
 		}		
 	}
 	
-	//! @todo Clean : Baaadddddd, need to fully use wchar (or not at all)
-	//! @todo Asset : Use temp file writing destination before overwriting	
-//	wchar_t zStorageName[256];
-//	mbstowcs_s(NULL, zStorageName, ZENArrayCount(zStorageName), _rPackage->GetStorageName(), _rPackage->GetStorageName().Len() );
-	bool bResult = Doc.save_file( _rPackage->GetStorageName() );
-	return bResult;
+	// Find path to package file (based on group name hierarchy)
+	zWString zNewFilename;
+	GetGroupFilename(zNewFilename, _rPackage.GetParentGroup());
+	zNewFilename					+= zenT("/");
+	zNewFilename					+= _rPackage->GetName();
+	zNewFilename					+= zenT(".xml");
+	zWString zTempFilename			= zNewFilename;
+	zTempFilename					+= L".tmp";
+	zbFile::Filename tempFilename	= zTempFilename;
+	zbFile::Filename oldFilename	= _rPackage->GetStorageInfo();
+	zbFile::Filename newFilename	=  zNewFilename;
+	
+	// Save the package (and remove previous file)	
+	zbMgr::File.Delete( tempFilename );
+	zbMgr::File.CreateDir( tempFilename, true );
+	if( Doc.save_file( tempFilename.GetNameFull() ) )
+	{
+		zbMgr::File.Delete( oldFilename );
+		if( zbMgr::File.Rename(tempFilename, newFilename) )
+		{
+			_rPackage->SetStorageInfo(zNewFilename);
+			return true;
+		}			
+	}
+	return false;
 }
 
-bool AssetLoaderXml::LoadAsset(zeAss::Package& _Package, const pugi::xml_node& _XmlNodeAsset)
+bool AssetLoaderXml::Save(const zenAss::zPackageGroupRef& _rGroup)
+{
+	zWString zGroupFilename;
+	GetGroupFilename(zGroupFilename, _rGroup);
+	zbFile::Filename groupFilename = zGroupFilename;
+	
+	if( groupFilename.GetNameFull() != _rGroup->GetStorageInfo() )
+	{
+		if( _rGroup->GetStorageInfo() != zenT("") )
+		{
+			zbFile::Filename oldDirName = _rGroup->GetStorageInfo();
+			zbMgr::File.Delete( oldDirName );
+		}
+		zbMgr::File.CreateDir( groupFilename, false );
+		_rGroup->SetStorageInfo(zGroupFilename);
+	}
+	
+	return true;
+}
+
+bool AssetLoaderXml::Delete(const zenAss::zPackageGroupRef& _rGroup)
+{
+	if( _rGroup.IsValid() && _rGroup->GetStorageInfo() != zenT(""))
+		return zbMgr::File.Delete( zbFile::Filename(_rGroup->GetStorageInfo()) );
+	
+	return true;
+}
+
+bool AssetLoaderXml::Delete(const zenAss::zPackageRef& _rPackage)
+{
+	if( _rPackage.IsValid() )
+		return zbMgr::File.Delete(zbFile::Filename(_rPackage->GetStorageInfo()));
+
+	return true;
+}
+
+bool AssetLoaderXml::LoadAsset(const zenAss::zPackageRef& _rPackage, const pugi::xml_node& _XmlNodeAsset)
 {
 	const char* zAssetType			= _XmlNodeAsset.attribute(kzXmlName_AssetAtr_Type).as_string();
 	zU32 uID						= _XmlNodeAsset.attribute(kzXmlName_AssetAtr_ID).as_uint();
@@ -299,11 +377,9 @@ bool AssetLoaderXml::LoadAsset(zeAss::Package& _Package, const pugi::xml_node& _
 		zeAss::Asset* pNewAsset = zeAss::Asset::CreateItem( eAssetType );
 		if( pNewAsset )
 		{
-			// Load base asset infos
-			
+			// Load base asset infos			
 			const char* zAssetName	= _XmlNodeAsset.attribute(kzXmlName_AssetAtr_Name).as_string();
-			const char* zAssetGroup	= _XmlNodeAsset.attribute(kzXmlName_AssetAtr_Group).as_string();
-			pNewAsset->Init(uID, zAssetName, zAssetGroup, _Package);
+			pNewAsset->Init(zenAss::zAssetID(eAssetType, uID), zAssetName, _rPackage);
 
 			// Load properties values
 			for (pugi::xml_node nodeProp = _XmlNodeAsset.child(kzXmlName_Node_Property); nodeProp; nodeProp = nodeProp.next_sibling(kzXmlName_Node_Property))
@@ -321,16 +397,12 @@ bool AssetLoaderXml::LoadAsset(zeAss::Package& _Package, const pugi::xml_node& _
 	return false;
 }
 
-bool AssetLoaderXml::SaveAsset(zenAss::zAssetItem _rAsset, pugi::xml_node& _XmlNodeDoc)
+bool AssetLoaderXml::SaveAsset( const zenAss::zAssetItemRef& _rAsset, pugi::xml_node& _XmlNodeDoc)
 {
-	zString zGroupName;
-	zGroupName.Merge(_rAsset->GetGroupAndName(), '\\', zGroupName, -1 );
-
 	pugi::xml_node nodeAsset = _XmlNodeDoc.append_child(kzXmlName_Node_Asset);
 	nodeAsset.append_attribute(kzXmlName_AssetAtr_ID).set_value( _rAsset->GetID().muIndex );
 	nodeAsset.append_attribute(kzXmlName_AssetAtr_Name).set_value( _rAsset->GetName() );
 	nodeAsset.append_attribute(kzXmlName_AssetAtr_Type).set_value( zenAss::AssetTypeToString(_rAsset->GetType()) );		
-	nodeAsset.append_attribute(kzXmlName_AssetAtr_Group).set_value( zGroupName );
 	for(zInt idx(0), count(_rAsset->GetValueCount()); idx<count; ++idx)
 	{
 		zenAss::PropertyValueRef rPropertyValue = _rAsset->GetValue(idx);
@@ -338,12 +410,28 @@ bool AssetLoaderXml::SaveAsset(zenAss::zAssetItem _rAsset, pugi::xml_node& _XmlN
 		{
 			pugi::xml_node nodeProp	= nodeAsset.append_child(kzXmlName_Node_Property);
 			nodeProp.append_attribute(kzXmlName_PropAtr_Name).set_value(rPropertyValue.GetDefinition().mName.mzName);
-			nodeProp.append_attribute(kzXmlName_PropAtr_Type).set_value(rPropertyValue.GetDefinition().GetTypeName() );
+			nodeProp.append_attribute(kzXmlName_PropAtr_Type).set_value(rPropertyValue.GetDefinition().GetTypeName());
 			SavePropertyValue(rPropertyValue, nodeProp);
 		}
 	}
 
 	return true;
+}
+
+void AssetLoaderXml::GetGroupFilename(zWString& _zFilenameOut, const zenAss::zPackageGroupRef& _rGroup)
+{
+	zWString zTemp;
+	zenAss::zPackageGroupRef rGroupCur			= _rGroup;
+	const zenAss::zPackageGroupRef& rGroupRoot	= zeMgr::Asset.GroupGetRoot();
+	_zFilenameOut								= zenT("");
+	while (rGroupCur.IsValid() && rGroupCur != rGroupRoot)
+	{
+		zTemp = zenT("/");
+		zTemp += rGroupCur.GetName();
+		_zFilenameOut.Prepend( zTemp  );
+		rGroupCur = rGroupCur.GetParentGroup();
+	}
+	_zFilenameOut.Prepend(kzPackagePath);
 }
 
 }} //namespace zen { namespace zxAss

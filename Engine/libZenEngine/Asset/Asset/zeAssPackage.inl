@@ -7,50 +7,45 @@ zU32 Package::GetID()const
 	return mID;
 }
 
-const zArrayStatic<zString>& Package::GetGroupAndName()const
+const zWString& Package::GetName()const
 {
-	return maGroup;
+	return mzName;
 }
 
-const zString& Package::GetName()const
+const zenAss::zPackageGroupRef&	Package::GetParentGroup()const
 {
-	return *maGroup.Last();
+	return mrGroupParent;
 }
 
-const zWString& Package::GetStorageName()const
+const zWString& Package::GetStorageInfo()const
 {
-	return mzStorageName;
+	return mzStorageInfo;
 }
 
-const zenAss::zAssetItem& Package::GetAsset(zenConst::eAssetType _eType, zU32 _uAssetID)
+const zenAss::zAssetItemRef& Package::GetAsset(zenConst::eAssetType _eType, zU32 _uAssetID)const
 {
 	return madAssetPerType[_eType][_uAssetID];
 }
 
-const zenAss::zArrayAsset& Package::GetAsset(zenConst::eAssetType _eType)
+const zenAss::zArrayAsset& Package::GetAsset(zenConst::eAssetType _eType)const
 {
 	return madAssetPerType[_eType];
 }
 
-void Package::AssetAdd(zeAss::Asset& _Asset)
+void Package::AssetAdd(const zenAss::zAssetItemRef& _rAsset)
 {
-	ZENAssert( madAssetPerType[_Asset.GetType()].Exist(_Asset.GetID().muIndex) == false );
-	madAssetPerType[_Asset.GetType()].Set( _Asset.GetID().muIndex, &_Asset);
+	ZENAssert( madAssetPerType[_rAsset.GetType()].Exist(_rAsset.GetIDUInt()) == false );
+	madAssetPerType[_rAsset.GetType()].Set( _rAsset.GetIDUInt(), _rAsset);
 }
 
-void Package::AssetRem(zeAss::Asset& _Asset)
+void Package::AssetRem(const zenAss::zAssetItemRef& _rAsset)
 {
-	madAssetPerType[_Asset.GetType()].Unset( _Asset.GetID().muIndex );
+	madAssetPerType[_rAsset.GetType()].Unset( _rAsset.GetIDUInt() );
 }
 
-void Package::SetDirty(bool _bDirty)
+bool Package::GetDirty()const
 {
-	mbIsDirty = _bDirty;
-}
-
-bool Package::IsDirty()const
-{
-	return mbIsDirty;
+	return mbDirty;
 }
 
 

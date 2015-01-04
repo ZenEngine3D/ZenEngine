@@ -1,5 +1,3 @@
-include "Extensions/QtVS/qt.lua"
-
 vDefaultCppExt			= {"**.h", "**.inl", "**.cpp"}
 vLibEngineGame 			= {"libZenBase", "libZenCore", "libZenEngine", "libZenExternal"  }
 vLibEngineTool 			= {"libZenBase", "libZenCore", "libZenEngine", "libZenExternal", "libThirdParty" }

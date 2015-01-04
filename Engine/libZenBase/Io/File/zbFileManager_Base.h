@@ -29,6 +29,8 @@ namespace zbFile
 		const Filename&					operator=(const Filename& _Copy);
 		void							operator+=(const wchar_t* _zFilename);
 		void							Clear();
+		ZENInline bool					IsValid()const;
+
 		const wchar_t*					GetName()const;
 		const wchar_t*					GetNameNoExt()const;
 		const wchar_t*					GetNameFull()const;
@@ -36,6 +38,7 @@ namespace zbFile
 		const wchar_t*					GetPathFull()const;
 		const wchar_t*					GetExt()const;
 		void							SplitFolder(zArrayDynamic<zArrayStatic<wchar_t>>& _aFolder)const;
+		
 	protected:	
 		ZENInline void					FindOffsets();
 		mutable zArrayDynamic<wchar_t>	mzFilename;			//!< Contains filename string, +2 chars to handle no offset for some filename component (ext, parentdir, ...)
@@ -97,14 +100,14 @@ namespace zbFile
 	ZENClassDeclare(ManagerFile_Base, zbType::Manager);
 	public:
 		ZENInline const zWString&	GetRoot()const {return mzRootPath;}
-		ZENInline const zWString&	GetRootPackage()const {return mzRootPackage;}
 	
 	protected:
 		void						InitPath(const zWString& _zRootPath);
 		zWString					mzRootPath;
-		zWString					mzRootPackage;
 	};
 }  
+
+
 
 #include ZENHeaderPlatform( zbFileManager )
 
@@ -129,11 +132,11 @@ namespace zbFile
 
 		bool GetFileInfo( const Filename& _filename, FileInfo& _outFileInfo )
 		{
-			const FileInfo* pInfo;
-			Search( keFileFlag__Any, L"", _filename.GetNameFull(), false);
-			if( SearchNext( pInfo ) )
+			zArrayDynamic<FileInfo> fileList;
+			Search( fileList, keFileFlag__Any, L"", _filename.GetNameFull(), false);
+			if( fileList.Count() > 0 )
 			{
-				_outFileInfo = *pInfo;
+				_outFileInfo = fileList[0];
 				return true;
 			}
 			return false;
@@ -197,5 +200,7 @@ namespace zbFile
 					AWStream& operator= ( const AWStream& xOther );
 	};
 }
+
+#include "zbFileManager_Base.inl"
 
 #endif

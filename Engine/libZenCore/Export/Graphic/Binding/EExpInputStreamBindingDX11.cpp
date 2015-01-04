@@ -15,7 +15,7 @@ namespace EExp
 		const ExportInfo* pExportInfo = static_cast<const ExportInfo*>(_pExportInfo);
 
 		zResID::NameHash hName = pExportInfo->mVertexBufferID.Name();	//! @todo Optim: Different buffer with same format should return same id, saving a lot of binding
-		hName.Append( pExportInfo->mShaderInputSignatureID.Name() );
+		hName.Append( &pExportInfo->mShaderInputSignatureID.Name(), sizeof(zResID::NameHash) );
 		return EExp::ValidateItemID(_ePlatform, _eType, _eSource, hName, _bExistOut);
 	}
 

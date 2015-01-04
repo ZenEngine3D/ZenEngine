@@ -37,8 +37,8 @@ public:
 	zUInt								Size()const;									//!< @brief Size taken up by all elements
 	zUInt								SizeElement()const;								//!< @brief Size of 1 element in array
 	
-	TType&								operator[](zUInt _uIndex);
-	const TType&						operator[](zUInt _uIndex)const;
+	TType&								operator[](zInt _uIndex);
+	const TType&						operator[](zInt _uIndex)const;
 	zArrayBase<TType>&					operator=( const zArrayBase<TType>& _aCopy );
 	bool								operator==(const zArrayBase& _Cmp)const;
 	zUInt								Copy(const TType* _pCopy, zUInt _uCount);				//!< @brief Copy the value of a Memory area to this array

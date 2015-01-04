@@ -5,20 +5,23 @@
 #if ZEN_ENGINETOOL
 
 namespace zen { namespace zenAss 
-{
-	
+{	
 	struct zAssetID
 	{
-		ZENInline				zAssetID():meType(zenConst::keAssType__Invalid),muIndex(0){}
-		ZENInline				zAssetID(zenConst::eAssetType _eType, zU32 _uIndex):meType(_eType), muIndex(_uIndex){};
-		ZENInline 				zAssetID(const zAssetID& _Copy):meType(_Copy.meType), muIndex(_Copy.muIndex){}
-		ZENInline zAssetID&		operator=(const zAssetID& _Copy){meType = _Copy.meType; muIndex = _Copy.muIndex; return *this;}
-		ZENInline 				operator const zU64() const{return *reinterpret_cast<const zU64*>(this);}
+		ZENInline 				zAssetID();
+		ZENInline  				zAssetID(zenConst::eAssetType _eType, zU32 _uIndex);
+		ZENInline  				zAssetID(const zAssetID& _Copy);
+		ZENInline zAssetID&		operator=(const zAssetID& _Copy);
+		ZENInline bool			operator==(const zAssetID& _Copy)const;
+		ZENInline bool			operator!=(const zAssetID& _Copy)const;
+		ZENInline bool			IsValid()const;
+		ZENInline zU64			ToUInt()const;
 		zenConst::eAssetType	meType;
 		zU32					muIndex;
 	};
-
 }} //namespace zen { namespace zenAss
+
+#include "zenAssItemID.inl"
 
 #endif
 #endif

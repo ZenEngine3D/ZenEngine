@@ -35,12 +35,12 @@ bool zReference::IsValid()const
 	return mpReference != NULL;
 }
 
-bool zReference::operator==(const zReference& _Cmp)
+bool zReference::operator==(const zReference& _Cmp)const
 {
 	return mpReference == _Cmp.mpReference;
 }
 
-bool zReference::operator!=(const zReference& _Cmp)
+bool zReference::operator!=(const zReference& _Cmp)const
 {
 	return mpReference != _Cmp.mpReference;
 }
@@ -89,27 +89,22 @@ const zEngineRef<TRefCountedType>& zEngineRef<TRefCountedType>::operator=(const 
 	//! @return		Object reference
 	//=================================================================================================
 	template<class TRefCountedType>
-	TRefCountedType* zEngineRef<TRefCountedType>::Get()
+	TRefCountedType* zEngineRef<TRefCountedType>::Get()const
 	{
+		return static_cast<TRefCountedType*>(mpReference);
+	}
+	
+	template<class TRefCountedType>
+	TRefCountedType* zEngineRef<TRefCountedType>::GetSafe()const
+	{
+		ZENAssert(IsValid());
 		return static_cast<TRefCountedType*>(mpReference);
 	}
 
 	template<class TRefCountedType>
-	const TRefCountedType* zEngineRef<TRefCountedType>::Get()const
+	TRefCountedType* zEngineRef<TRefCountedType>::operator->()const
 	{
-		return static_cast<const TRefCountedType*>(mpReference);
-	}
-
-	template<class TRefCountedType>
-	const TRefCountedType* zEngineRef<TRefCountedType>::operator->()const
-	{
-		return static_cast<TRefCountedType*>(mpReference);;
-	}
-
-	template<class TRefCountedType>
-	TRefCountedType* zEngineRef<TRefCountedType>::operator->()
-	{
-		return static_cast<TRefCountedType*>(mpReference);;
+		return static_cast<TRefCountedType*>(mpReference);
 	}
 #endif //ZEN_ENGINELIB
 
@@ -177,10 +172,18 @@ const zEngineRefConst<TRefCountedType>& zEngineRefConst<TRefCountedType>::operat
 	}
 
 	template<class TRefCountedType>
+	const TRefCountedType* zEngineRefConst<TRefCountedType>::GetSafe()const
+	{
+		ZENAssert(IsValid());
+		return static_cast<const TRefCountedType*>(mpReference);
+	}
+
+	template<class TRefCountedType>
 	const TRefCountedType* zEngineRefConst<TRefCountedType>::operator->()const
 	{
 		return static_cast<const TRefCountedType*>(mpReference);;
 	}
+
 #endif //ZEN_ENGINELIB
 
 //=================================================================================================
@@ -219,30 +222,42 @@ const zGameRef<TRefCountedType>& zGameRef<TRefCountedType>::operator=(const zGam
 }
 
 template<class TRefCountedType>
-TRefCountedType* zGameRef<TRefCountedType>::Get()
+TRefCountedType* zGameRef<TRefCountedType>::Get()const
 {
 	return static_cast<TRefCountedType*>(mpReference);
 }
-
 
 template<class TRefCountedType>
-TRefCountedType* zGameRef<TRefCountedType>::operator->()
+TRefCountedType* zGameRef<TRefCountedType>::GetSafe()const
 {
+	ZENAssert(IsValid());
 	return static_cast<TRefCountedType*>(mpReference);
 }
 
+template<class TRefCountedType>
+TRefCountedType* zGameRef<TRefCountedType>::operator->()const
+{
+	return static_cast<TRefCountedType*>(mpReference);
+}
+/*
 template<class TRefCountedType>
 const TRefCountedType* zGameRef<TRefCountedType>::Get()const
 {
 	return static_cast<TRefCountedType*>(mpReference);
 }
 
+template<class TRefCountedType>
+const TRefCountedType* zGameRef<TRefCountedType>::GetSafe()const
+{
+	ZENAssert(IsValid());
+	return static_cast<TRefCountedType*>(mpReference);
+}
 
 template<class TRefCountedType>
 const TRefCountedType* zGameRef<TRefCountedType>::operator->()const
 {
 	return static_cast<TRefCountedType*>(mpReference);
-}
+}*/
 
 //=================================================================================================
 // CLASS: zGameRefConst
@@ -292,10 +307,16 @@ const zGameRefConst<TRefCountedType>& zGameRefConst<TRefCountedType>::operator=(
 	return *this;
 }
 
-
 template<class TRefCountedType>
 const TRefCountedType* zGameRefConst<TRefCountedType>::Get()const
 {
+	return static_cast<const TRefCountedType*>(mpReference);
+}
+
+template<class TRefCountedType>
+const TRefCountedType* zGameRefConst<TRefCountedType>::GetSafe()const
+{
+	ZENAssert(IsValid());
 	return static_cast<const TRefCountedType*>(mpReference);
 }
 

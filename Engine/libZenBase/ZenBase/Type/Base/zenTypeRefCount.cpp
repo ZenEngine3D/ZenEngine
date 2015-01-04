@@ -52,15 +52,16 @@ const zReference& zReference::operator=(zRefCounted* _pReference)
 
 const zReference& zReference::operator=(const zReference& _Copy)
 {	
-	ZENAssert(&_Copy != this);
-	if( mpReference )
-		mpReference->ReferenceRem();
+	if( &_Copy != this )
+	{
+		if (mpReference)
+			mpReference->ReferenceRem();
 
-	mpReference = _Copy.mpReference;
+		mpReference = _Copy.mpReference;
 
-	if( mpReference )
-		mpReference->ReferenceAdd();
-
+		if (mpReference)
+			mpReference->ReferenceAdd();
+	}
 	return *this;
 }
 

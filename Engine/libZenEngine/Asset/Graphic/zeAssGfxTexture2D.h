@@ -6,7 +6,7 @@
 
 namespace zen { namespace zeAss
 {
-	class GfxTexture2D : public TAsset<zenConst::keAssType_Texture2D>
+	class GfxTexture2D : public AssetTyped<zenConst::keAssType_Texture2D>
 	{
 	ZENClassDeclare(GfxTexture2D, Asset)
 	public:

@@ -8,14 +8,14 @@ const zenAss::zAssetID& Asset::GetID()const
 	return mID;
 }
 
-const zArrayStatic<zString>& Asset::GetGroupAndName()const
+zU64 Asset::GetIDUInt()const
 {
-	return maGroup;
+	return mID.ToUInt();
 }
 
 const zString& Asset::GetName()const
 {
-	return *maGroup.Last();
+	return mzName;
 }
 
 const zString& Asset::GetDescription()const
@@ -28,8 +28,27 @@ zenConst::eAssetType Asset::GetType()const
 	return mID.meType;
 }
 
-template <zenConst::eAssetType TAssetType>
-TAsset<TAssetType>::TAsset()
+zUInt Asset::GetValueCount()const 
+{ 
+	return maPropertyValue.Count(); 
+}
+
+zenAss::PropertyValueRef Asset::GetValue(zUInt _uValIndex)
+{ 
+	ZENAssert(_uValIndex < maPropertyValue.Count()); 
+	return maPropertyValue[_uValIndex]; 
+}
+
+zenAss::PropertyValueRef Asset::GetValue(zHash32 _hPropertyName)
+{
+	zInt iIndex = GetValueIndex(_hPropertyName);
+	if( iIndex >= 0 )
+		return GetValue(iIndex);
+	return zenAss::PropertyValueRef();
+}
+
+template <zenConst::eAssetType AssetTypedType>
+AssetTyped<AssetTypedType>::AssetTyped()
 {
 	mID.meType = static_cast<zenConst::eAssetType>(kAssetType);
 }
@@ -41,8 +60,8 @@ TAsset<TAssetType>::TAsset()
 //! @param hPropertyName	- Name of property to look for
 //! @return					- Index of found item (-1 if not found)
 //=================================================================================================
-template <zenConst::eAssetType TAssetType>
-zInt TAsset<TAssetType>::GetValueIndex(zHash32 _hPropertyName)const
+template <zenConst::eAssetType AssetTypedType>
+zInt AssetTyped<AssetTypedType>::GetValueIndex(zHash32 _hPropertyName)const
 {
 	static zMap<zInt>::Key32 sdPropertyIndex;
 	static bool sbInit(false);

@@ -56,7 +56,7 @@ void zString::Merge(const zArrayStatic<zString>& _aStrings, char _Separator, zSt
 	{
 		_zStringOut.maChar.SetCount(len+1);
 		len = 0;
-		for(zUInt idx(0); idx<_iMaxEntry; ++idx)
+		for(zInt idx(0); idx<_iMaxEntry; ++idx)
 		{
 			len = _aStrings[idx].Len();
 			zenMem::Copy( &_zStringOut.maChar[pos], (const char*)_aStrings[idx], len);

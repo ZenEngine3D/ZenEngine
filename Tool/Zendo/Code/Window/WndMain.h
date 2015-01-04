@@ -2,6 +2,9 @@
 #ifndef __BetlWndMain_h__
 #define __BetlWndMain_h__ 
 
+#include "WndAssetBrowser.h"
+#include "WndAssetProperty.h"
+
 class WndMain : public wxFrame
 {
 public:
@@ -9,8 +12,8 @@ public:
 								~WndMain();
 	bool						Initialize();
 	class MyRenderWindow*		GetRenderPanel(){return mpWndRenderPanel;}
-	class WndAssetBrowser*		GetWndAssetBrowser(){return mpWndAssetBrowser;}
-	class WndAssetProperty*		GetWndAssetProperty(){return mpWndAssetProperty;}
+	WndAssetBrowser*			GetWndAssetBrowser(){return mpWndAssetBrowser;}
+	WndAssetProperty*			GetWndAssetProperty(){return mpWndAssetProperty;}
 
 	// event handlers (these functions should _not_ be virtual)
 	void						OnQuit(wxCommandEvent& event);

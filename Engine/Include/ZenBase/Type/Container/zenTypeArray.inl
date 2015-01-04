@@ -68,17 +68,17 @@ void zArrayBase<TType>::SetAll(const TType& _Value)
 }
 
 template<class TType>
-TType& zArrayBase<TType>::operator[](zUInt _uIndex)
+TType& zArrayBase<TType>::operator[](zInt _sIndex)
 {
-	ZENAssert(_uIndex<muCount);
-	return mpData[_uIndex];
+	ZENAssert( (_sIndex>=0 && zUInt(_sIndex)<muCount) || (_sIndex<0 && zUInt(-_sIndex) <= muCount) );
+	return _sIndex >= 0 ? mpData[_sIndex] : mpData[muCount+_sIndex];
 }
 
 template<class TType>
-const TType& zArrayBase<TType>::operator[](zUInt _uIndex)const
+const TType& zArrayBase<TType>::operator[](zInt _sIndex)const
 {
-	ZENAssert(_uIndex<muCount);
-	return mpData[_uIndex];
+	ZENAssert( (_sIndex>=0 && zUInt(_sIndex)<muCount) || (_sIndex<0 && zUInt(-_sIndex) <= muCount) );
+	return _sIndex >= 0 ? mpData[_sIndex] : mpData[muCount+_sIndex];
 }
 
 //==================================================================================================

@@ -34,49 +34,6 @@ bool ManagerFile_PC::Load()
 			--uPosEnd;
 	}
 	
-
-#if 0
- 	const FileInfo*	pFile(NULL);
- 	Search( keFileFlag_File, L"", L"*.xml", true );
- 	while( SearchNext(pFile) )
- 	{
- 		wprintf(L"NameFull  : %s\n", pFile->GetFilename().GetNameFull() );
-		wprintf(L"Name      : %s\n", pFile->GetFilename().GetName() );
-		wprintf(L"NameNoExt : %s\n", pFile->GetFilename().GetNameNoExt() );
-		wprintf(L"PathFull  : %s\n", pFile->GetFilename().GetPathFull() );
-		wprintf(L"PathParent: %s\n\n", pFile->GetFilename().GetPathParent() );		
- 	}
-
-	Filename filenameTest[4];
-	filenameTest[0].Set(L"Packages/SubDir/",L"testfile.xml");
-	
-	filenameTest[1].Set(L"Packages",L"testfile.xml");
-	
-	filenameTest[2].Set(L"Packages/");
-	filenameTest[2] += L"testFile.xml";
-
-	filenameTest[3].Set(L"Packages");
-	filenameTest[3] += L"testFile.xml";
-	for(zUInt idx(0); idx<ZENArrayCount(filenameTest); ++idx)
-	{
-		wprintf(L"FILENAME %i\n", idx );
-		wprintf(L"NameFull  : %s\n", filenameTest[idx].GetNameFull() );
-		wprintf(L"Name      : %s\n", filenameTest[idx].GetName() );
-		wprintf(L"NameNoExt : %s\n", filenameTest[idx].GetNameNoExt() );
-		wprintf(L"PathFull  : %s\n", filenameTest[idx].GetPathFull() );
-		wprintf(L"PathParent: %s\n\n", filenameTest[idx].GetPathParent() );		
-	}
-
-	zArrayDynamic<zArrayStatic<wchar_t>> aFolderName;
-	filenameTest[0].SplitFolder(aFolderName);
-	wprintf(L"SPLIT Filename: " );
-	for(zUInt idx(0); idx<aFolderName.Count(); ++idx)
-		wprintf(L"%s ", aFolderName[idx].First() );
-
-	CreateDir( L"Packages" );
-	CreateDir( L"Packages/Test" );
-#endif
-
 	return bValid;
 }
 
@@ -85,48 +42,37 @@ bool ManagerFile_PC::Unload()
 	return true;
 }
 
-bool ManagerFile_PC::SearchNext( const FileInfo*& _pOutFile )
-{	
-	if( muSearchIndex < maSearchResult.Count() )
-	{
-		_pOutFile = &maSearchResult[muSearchIndex++];
-		return true;
-	}
-	_pOutFile = NULL;		
-	return false;
-}
-
-bool ManagerFile_PC::Search(zUInt _uWantedFlag, const wchar_t* _zDirName, const wchar_t* _zFilePatern, bool bRecursive)
+bool ManagerFile_PC::Search(zArrayDynamic<FileInfo>& _ResultOut, zUInt _uWantedFlag, const wchar_t* _zDirName, const wchar_t* _zFilePatern, bool bRecursive)
 {
 	ZENAssert(_zDirName );
 	ZENAssert(_zFilePatern );
-	ZENAssertMsg(_zDirName[wcslen(_zDirName)-1] != L'\\' && _zDirName[wcslen(_zDirName)-1] != L'/', "Directory name shouldn't end with '\\' or '/'");
-	ZENAssertMsg(_zFilePatern[0] != L'\\' && _zFilePatern[0] != L'/', "Filename patern shouldn't start with '\\' or '/'");
-		
-	muSearchIndex = 0;
-	maSearchResult.Clear();
-	maSearchResult.Reserve(32);
+			
+	_ResultOut.Clear();
+	_ResultOut.Reserve(32);
 	
 	_zDirName	= (_zDirName[0] == L'') ? L"." : _zDirName;
 	zUInt len	= static_cast<zUInt>(wcslen(_zDirName));
 	zArrayDynamic<wchar_t> zPath;
 	zPath.Reserve(1024);
 	zPath.Copy(_zDirName, len + 1);
-	zPath.SetCount(static_cast<zUInt>(zPath.Count() + 1));		
-	zPath[zPath.Count()-2] = L'/';
-	zPath[zPath.Count()-1] = L'';
-	
-	LoadDirectory(_uWantedFlag, zPath, _zFilePatern, static_cast<zUInt>(wcslen(_zFilePatern)), bRecursive);
-	return maSearchResult.Count() > 0;
+	wchar_t test =  zPath[-2];
+	if( zPath[-2] != L'/' && zPath[-2] != L'\\'  )
+	{
+		zPath.SetCount(static_cast<zUInt>(zPath.Count() + 1));
+		zPath[-2] = L'/';
+		zPath[-1] = L'';
+	}
+	LoadDirectory(_ResultOut, _uWantedFlag, zPath, _zFilePatern, static_cast<zUInt>(wcslen(_zFilePatern)), bRecursive);
+	return _ResultOut.Count() > 0;
 }
 
-void ManagerFile_PC::LoadDirectory( zUInt _uWantedFlag, zArrayDynamic<wchar_t>& _zDirName, const wchar_t* _zFilePatern, const zUInt _uFilePaternLen, bool bRecursive)
+void ManagerFile_PC::LoadDirectory(zArrayDynamic<FileInfo>& _ResultOut, zUInt _uWantedFlag, zArrayDynamic<wchar_t>& _zDirName, const wchar_t* _zFilePatern, const zUInt _uFilePaternLen, bool bRecursive)
 {
 	WIN32_FIND_DATA	sysFileInfo;
 	zUInt uPathSizeInitial(_zDirName.Count());	
 
 	//-------------------------------------------------------------------------
-	// Look inside each directory when resursice is enabled
+	// Look inside each directory when recursive is enabled
 	//-------------------------------------------------------------------------
 	if( bRecursive )
 	{
@@ -149,7 +95,7 @@ void ManagerFile_PC::LoadDirectory( zUInt _uWantedFlag, zArrayDynamic<wchar_t>& 
 					wcsncpy_s( &_zDirName[uPathSizeInitial-1], len+1, sysFileInfo.cFileName, _TRUNCATE );
 					_zDirName[uPathSizeInitial+len-1]	= L'/';
 					_zDirName[uPathSizeInitial+len]		= L'';
-					LoadDirectory(_uWantedFlag, _zDirName, _zFilePatern, _uFilePaternLen, bRecursive);
+					LoadDirectory(_ResultOut, _uWantedFlag, _zDirName, _zFilePatern, _uFilePaternLen, bRecursive);
 				}
 
 			}
@@ -159,7 +105,7 @@ void ManagerFile_PC::LoadDirectory( zUInt _uWantedFlag, zArrayDynamic<wchar_t>& 
 	}
 
 	//-------------------------------------------------------------------------
-	// Look for all files/dir matching patern in current directory
+	// Look for all files/dir matching pattern in current directory
 	//-------------------------------------------------------------------------
 	_zDirName.SetCount( uPathSizeInitial + _uFilePaternLen );	//Append search pattern	
 	wcsncpy_s( &_zDirName[uPathSizeInitial-1], _uFilePaternLen+1, _zFilePatern, _TRUNCATE );	
@@ -178,16 +124,18 @@ void ManagerFile_PC::LoadDirectory( zUInt _uWantedFlag, zArrayDynamic<wchar_t>& 
 			bValid	=	(_uWantedFlag&uFileFlag&keFileFlag_Dir)!=0 || (_uWantedFlag&uFileFlag&keFileFlag_File)!=0;
 			bValid &=	(_uWantedFlag&keFileFlag_ReadOnly)==0	|| (uFileFlag&keFileFlag_ReadOnly)!=0;
 			bValid &=	(_uWantedFlag&keFileFlag_Writeable)==0	|| (uFileFlag&keFileFlag_Writeable)!=0;
-			bValid &=	(_uWantedFlag&keFileFlag_Hidden)==0		|| (uFileFlag&keFileFlag_Hidden)!=0;
+			bValid &=	(uFileFlag&keFileFlag_Hidden)==0		|| (_uWantedFlag&keFileFlag_Hidden)!=0;
+			bValid &=	!(sysFileInfo.cFileName[0] == L'.' && sysFileInfo.cFileName[1] == L'');
+			bValid &=	!(sysFileInfo.cFileName[0] == L'.' && sysFileInfo.cFileName[1] == L'.' || sysFileInfo.cFileName[2] == L'');
 
 			if( bValid )
 			{
 				SYSTEMTIME	Time;
 				zUInt		len(static_cast<zUInt>(wcslen(sysFileInfo.cFileName)));
-				zUInt		idx(maSearchResult.Count());
+				zUInt		idx(_ResultOut.Count());
 				
-				maSearchResult.SetCount(idx+1);
-				FileInfo& fileInfo	= maSearchResult[idx];
+				_ResultOut.SetCount(idx+1);
+				FileInfo& fileInfo	= _ResultOut[idx];
 				fileInfo.mFilename.Set(_zDirName.First(), sysFileInfo.cFileName);
 				if( FileTimeToSystemTime( &sysFileInfo.ftCreationTime, &Time ) )
 				{
@@ -218,16 +166,19 @@ void ManagerFile_PC::LoadDirectory( zUInt _uWantedFlag, zArrayDynamic<wchar_t>& 
 //! @brief		Create a directory path 
 //! @details	
 //-------------------------------------------------------------------------------------------------
-//! @param	_zFilename	- Directory filename (will try to create entire path hierarchy)
-//! @return				- True if sucessfull or path already existed
+//! @param	_zFilename		- Directory filename (will try to create entire path hierarchy)
+//! @param _bLastItemIsFile	- If last item should be ignore because it's the name of a file
+//! @return					- True if successful or path already existed
 //=================================================================================================
-bool ManagerFile_PC::CreateDir( const Filename& _Filename )
+bool ManagerFile_PC::CreateDir( const Filename& _Filename, bool _bLastItemIsFile )
 {
 	bool bOk(true);
 	Filename nameDir;
 	zArrayDynamic<zArrayStatic<wchar_t>> aFolderNames;
 	_Filename.SplitFolder(aFolderNames);
-	for(zUInt idx(0), count(aFolderNames.Count()); idx<count && bOk; ++idx)
+	zUInt count(aFolderNames.Count());
+	count -= _bLastItemIsFile ? 1 : 0;
+	for(zUInt idx(0); idx<count && bOk; ++idx)
 	{
 		nameDir += aFolderNames[idx].First();
 		if( !CreateDirectory( nameDir.GetNameFull(), NULL ) )
@@ -291,6 +242,32 @@ bool ManagerFile_PC::OpenFileForWrite( const Filename& _Filename, FileInfo* _pOu
 		}
 	}
 	return false;
+}
+
+bool ManagerFile_PC::Delete( const Filename& _Filename, bool _bRecursive )
+{	
+	if( _Filename.IsValid() )
+	{
+		if (DeleteFile(_Filename.GetNameFull()) == FALSE)
+		{
+			zArrayDynamic<FileInfo> fileAndDirList;
+			Search(fileAndDirList, keFileFlag__Any, _Filename.GetNameFull(), L"*", true);
+			for (int idx(0), count(fileAndDirList.Count()); idx < count; ++idx)
+			{
+				if (fileAndDirList[idx].IsFile())
+					DeleteFile(fileAndDirList[idx].GetFilename().GetNameFull());
+				else
+					RemoveDirectory(fileAndDirList[idx].GetFilename().GetNameFull());
+			}
+			return RemoveDirectory(_Filename.GetNameFull()) == TRUE;
+		}
+	}
+	return true;
+}
+
+bool ManagerFile_PC::Rename( const Filename& _OldFilename, const Filename& _NewFilename )
+{
+	return MoveFile( _OldFilename.GetNameFull(), _NewFilename.GetNameFull() ) == TRUE;
 }
 
 }

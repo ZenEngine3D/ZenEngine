@@ -25,6 +25,8 @@ public:
 	ZENInline 				operator const char*() const;
 	ZENInline bool			operator==(const zString& _zString)const;
 	ZENInline bool			operator==(const char* _zString)const;	
+	ZENInline bool			operator!=(const zString& _zString)const;
+	ZENInline bool			operator!=(const char* _zString)const;
 
 	ZENInline const char*	Last(zUInt index=0)const;
 	ZENInline void			Split(char _Separator, zArrayStatic<zString>& _aStringOut, zUInt _uAdditionalArraySize=0 )const;

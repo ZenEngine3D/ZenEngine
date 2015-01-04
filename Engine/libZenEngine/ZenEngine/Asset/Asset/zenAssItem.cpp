@@ -11,16 +11,16 @@ const zStringHash32 sTypeDescription[]={
 						zStringHash32("Mesh"),			//keType_Mesh,
 						};
 
-zAssetItem AssetCreate( zenConst::eAssetType _eAssetType, zPackage& _rPackage, const char* _zGroup )
+zAssetItemRef AssetCreate( zenConst::eAssetType _eAssetType, zPackageRef& _rPackage )
 {
-	ZENAssert( _rPackage.IsValid() );
-	zeAss::Asset* pNewItem = zeAss::Asset::CreateItem(_eAssetType);
+	ZENAssert( _rPackage.IsValid() );	
+	zeAss::Asset* pNewItem	= zeAss::Asset::CreateItem(_eAssetType);
 	if( pNewItem )
 	{
 		char zName[256];
-		zAssetID id = zeMgr::Asset.GetAssetNextID(_eAssetType);
-		sprintf_s(zName, sizeof(zName), "New %s %i", zenAss::AssetTypeToString(_eAssetType), id.muIndex );
-		pNewItem->Init( id, zName, _zGroup, *_rPackage.Get() );
+		zAssetID assetID = zeMgr::Asset.GetAssetNextID(_eAssetType);
+		sprintf_s(zName, sizeof(zName), "%s_%06i", zenAss::AssetTypeToString(_eAssetType), assetID.muIndex );
+		pNewItem->Init( assetID, zName, _rPackage );
 		return pNewItem;
 	}
 	return NULL;
@@ -38,103 +38,95 @@ zenConst::eAssetType AssetNameToType(zHash32 _hAssetName)
 	return idx < zenConst::keAssType__Count ? static_cast<zenConst::eAssetType>(idx) : zenConst::keAssType__Invalid;
 }
 
-const zAssetItem& AssetGet( const zAssetID& _uAssetID )
+const zAssetItemRef& AssetGet( const zAssetID& _uAssetID )
 {
 	return zeMgr::Asset.AssetGet(_uAssetID.meType, _uAssetID.muIndex);
 }
 
-zAssetItem::zAssetItem()
+zAssetItemRef::zAssetItemRef()
 :Super()
 {
 }
 
-zAssetItem::zAssetItem(const zAssetItem& _Copy)
+zAssetItemRef::zAssetItemRef(const zAssetItemRef& _Copy)
 : Super(_Copy)
 {
 }
 
-zAssetItem::zAssetItem(zeAss::Asset* _pAsset)
+zAssetItemRef::zAssetItemRef(zeAss::Asset* _pAsset)
 : Super(_pAsset)
 {
 }
 
-zAssetItem& zAssetItem::operator=(const zAssetItem& _Copy)
+zAssetItemRef& zAssetItemRef::operator=(const zAssetItemRef& _Copy)
 {
 	Super::operator=(_Copy);
 	return *this;
 }
 
-const zAssetID& zAssetItem::GetID()const								
+const zAssetID& zAssetItemRef::GetID()const								
 { 
-	ZENAssert(IsValid());
-	return Get()->GetID();
-}
-zenConst::eAssetType zAssetItem::GetType()const
-{
-	ZENAssert(IsValid());
-	return Get()->GetType(); 
-}
-const zString& zAssetItem::GetName()const						
-{ 
-	ZENAssert(IsValid());
-	return Get()->GetName(); 
-}
-const zArrayStatic<zString>& zAssetItem::GetGroupAndName()const 
-{ 
-	ZENAssert(IsValid());
-	return Get()->GetGroupAndName(); 
-}
-/*
-zHash32 zAssetItem::GetGroupID()const							
-{ 
-	ZENAssert(IsValid());
-	return mpReference->GetGroupID(); 
-}*/
-
-const zString& zAssetItem::GetDescription()const				
-{ 
-	ZENAssert(IsValid());
-	return Get()->GetDescription(); 
-}
-zUInt zAssetItem::GetValueCount()const							
-{ 
-	ZENAssert(IsValid());
-	return Get()->GetValueCount(); 
-}
-zenAss::PropertyValueRef zAssetItem::GetValue(zUInt _uValIndex)	
-{ 
-	ZENAssert(IsValid());
-	return Get()->GetValue(_uValIndex); 
-}
-void zAssetItem::InitDefault()									
-{ 
-	ZENAssert(IsValid());
-	return Get()->InitDefault(); 
+	return GetSafe()->GetID();
 }
 
-void zAssetItem::Delete()
+zU64 zAssetItemRef::GetIDUInt()const
 {
-	ZENAssert(IsValid());
-	zeMgr::Asset.AssetRem( Get()->GetID() );
+	return GetSafe()->GetID().ToUInt();
+}
+
+zenConst::eAssetType zAssetItemRef::GetType()const
+{
+	return GetSafe()->GetType(); 
+}
+
+const zString& zAssetItemRef::GetName()const						
+{ 
+	return GetSafe()->GetName(); 
+}
+
+const zString& zAssetItemRef::GetDescription()const				
+{ 
+	return GetSafe()->GetDescription(); 
+}
+zUInt zAssetItemRef::GetValueCount()const							
+{ 
+	return GetSafe()->GetValueCount(); 
+}
+zenAss::PropertyValueRef zAssetItemRef::GetValue(zUInt _uValIndex)	
+{ 
+	return GetSafe()->GetValue(_uValIndex); 
+}
+void zAssetItemRef::InitDefault()									
+{ 
+	return GetSafe()->InitDefault(); 
+}
+
+void zAssetItemRef::Delete()
+{
+	zeMgr::Asset.AssetDelete( *this );
 	*this = NULL;
 }
 
-zPackage zAssetItem::GetPackage()
+zPackageRef zAssetItemRef::GetPackage()
 {
-	ZENAssert(IsValid());
-	return Get()->GetPackage();
+	return GetSafe()->GetPackage();
 }
 
-void zAssetItem::SetPackage(zPackage _rPackage)
+void zAssetItemRef::SetPackage(zPackageRef& _rPackage)
 {
-	ZENAssert(IsValid());
-	Get()->SetPackage( _rPackage.Get() );
+	GetSafe()->SetPackage( _rPackage );
 }
-void zAssetItem::SetName(const char* _zName)
+
+void zAssetItemRef::SetName(const char* _zName)
 {
-	ZENAssert(IsValid());
-	Get()->SetName(_zName);
+	GetSafe()->SetName(_zName);
 }
+
+bool zAssetItemRef::UpdateProperties()
+{
+	return GetSafe()->UpdatedProperties();
+}
+
 }} //namespace zen { namespace zenAss
 
 #endif //ZEN_ENGINETOOL

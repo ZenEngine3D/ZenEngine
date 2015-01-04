@@ -5,7 +5,6 @@
 namespace zen { namespace zenIO
 {
 	const zWString& GetRoot();
-	const zWString& GetRootPackage();
 }} // namespace zen { namespace zenMem
 
 #endif

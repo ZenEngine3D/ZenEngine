@@ -76,8 +76,8 @@ namespace zen { namespace zenType {
 		bool						mbDepthEnable;
 		bool						mbDepthWrite;
 		bool						mbStencilEnable;
-		zU8						muStencilReadMask;
-		zU8						muStencilWriteMask;
+		zU8							muStencilReadMask;
+		zU8							muStencilWriteMask;
 		zenConst::eComparisonFunc	meDepthFunc;
 		DepthStencilOp				mxFrontFace;
 		DepthStencilOp				mxBackFace;
@@ -89,7 +89,7 @@ namespace zen { namespace zenType {
 	{
 	ZENClassDeclareNoParent(zResID)
 	public:
-		typedef zHash32	NameHash;
+		typedef zHash32	NameHash; //! @todo system hash64 for collision safety?
 
 		enum ePlatformType
 		{

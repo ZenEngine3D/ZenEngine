@@ -21,9 +21,15 @@ public:
 	ZENInline					zWString(const wchar_t* _pCopy);
 	ZENInline const zWString&	operator=(const zWString& _Copy);
 	ZENInline const zWString&	operator=(const std::wstring& _Copy);
-	ZENInline const zWString&	operator=(const wchar_t* _pCopy);
+	ZENInline const zWString&	operator=(const wchar_t* _pCopy);	
+	ZENInline bool				operator==(const zWString& _zCmp)const;
+	ZENInline bool				operator!=(const zWString& _zCmp)const;
+	ZENInline bool				operator==(const wchar_t* _zCmp)const;
+	ZENInline bool				operator!=(const wchar_t* _zCmp)const;
 	ZENInline 					operator const zChar*() const;
+	ZENInline const zWString&	Prepend(const zWString& _Copy);
 	void						Replace(wchar_t* _zSource, wchar_t* _zReplace, zUInt _uPos=0);
+
 };
 
 }}  //namespace zen, Type 

@@ -45,30 +45,28 @@ bool PropertyValueRef::IsDefault()const
 
 const PropertyDefinition& PropertyValueRef::GetDefinition() const
 {
-	ZENAssert(IsValid());
-	return *(Get()->mrDefinition.Get());
+	return *(GetSafe()->mrDefinition.Get());
 }
 
 PropertyValueRef PropertyValueRef::Clone()const
 {
-	ZENAssert(IsValid());
-	return Get()->mrDefinition->Clone( *this );
+	return GetSafe()->mrDefinition->Clone( *this );
 }
 
 bool PropertyValueRef::operator==(const PropertyValueRef& _rCmp)const
 {
-	ZENAssert(IsValid());	
-	return Get()->mrDefinition->IsEqual( *this, _rCmp);
+	return GetSafe()->mrDefinition->IsEqual( *this, _rCmp);
 }
 
 //=============================================================================
 // PropertyDefinition
 //=============================================================================
-PropertyDefinition::PropertyDefinition(const char* _zName, const char* _zDisplayName, const char* _zDescription, bool _bShowInAssetDesc)
+PropertyDefinition::PropertyDefinition(const char* _zName, const char* _zDisplayName, const char* _zDescription, bool _bShowInAssetDesc, bool _bIsEditable)
 : mName(_zName)
 , mzDisplayName( (_zDisplayName && _zDisplayName[0]!=0) ? _zDisplayName : _zName)
 , mzDescription(_zDescription)
 , mbShowInAssetDesc(_bShowInAssetDesc)
+, mbIsEditable(_bIsEditable)
 {
 }
 

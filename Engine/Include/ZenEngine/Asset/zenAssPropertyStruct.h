@@ -21,7 +21,7 @@ class PropertyStruct : public TPropertyDefinition<zenConst::keAssProp_Struct, Pr
 	};
 
 	virtual PropertyValueRef		Allocate()const;
-	static PropertyDefRef			Create( const char* _zName, const char* _zDisplayName, const char* _zDescription, bool _bShowInAssetDesc, const PropertyDefRef* _prPropertyDef, zUInt _uPropertyDefCount );
+	static PropertyDefRef			Create( const char* _zName, const char* _zDisplayName, const char* _zDescription, bool _bShowInAssetDesc, bool _bIsEditable, const PropertyDefRef* _prPropertyDef, zUInt _uPropertyDefCount );
 	zArrayStatic<PropertyDefRef>	maPropertyDef;
 	zMap<zUInt>::Key32				mdPropertyDefIndex;
 

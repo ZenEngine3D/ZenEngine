@@ -4,6 +4,7 @@ namespace sample
 {	
 	void SampleList1x();
 	void SampleList2x();
+	void SampleListIntrusive();
 	void SampleHash();
 	void SampleHamt();
 	void SampleArray();
@@ -18,6 +19,7 @@ int main (int argc, char * const argv[])
 		sample::SampleFlags();
 		sample::SampleList1x();
 		sample::SampleList2x(); 
+		sample::SampleListIntrusive();
 		sample::SampleHash();
 		sample::SampleHamt();
 		sample::SampleArray();

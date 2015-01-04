@@ -21,11 +21,14 @@ namespace zen { namespace zenType {
 		virtual zUInt				SetCount(zUInt _uCount);
 		
 		void						operator+=( const zArrayBase<TType>& _ArrayAdd );
-		void						Append(const TType& _Copy);
-		void						Append(const TType* _Copy, zUInt _uCount);
-
-		void						Reserve(zUInt _uCount);
+		void						Push(const TType& _Copy);
+		void						Push(const TType* _Copy, zUInt _uCount);
 		TType						Pop();
+
+		void						RemoveSwap( zUInt _uIndex );
+		void						RemoveSwap( const TType& _Item );
+
+		void						Reserve(zUInt _uCount);		
 		zUInt						ReservedCount()const;
 		zUInt						ReservedSize()const;
 	protected:
@@ -45,3 +48,4 @@ namespace zen { namespace zenType {
 #include "zenTypeArrayDynamic.inl"
 
 #endif	
+

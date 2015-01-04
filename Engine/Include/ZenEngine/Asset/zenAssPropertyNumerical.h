@@ -11,11 +11,11 @@ template<zenConst::eAssetPropertyType TPropertyType, class TClassStorage>
 class PropertyNumerical : public TPropertyDefinition<TPropertyType, PropertyNumerical<TPropertyType,TClassStorage>, TClassStorage>
 {
 	ZENPropertyDefinitionDeclare( PropertyNumerical )	
-	static PropertyDefRef Create( const char* _zName, const char* _zDisplayName, const char* _zDescription, bool _bShowInAssetDesc, ValueStorage _Default, ValueStorage _Min=0.f, ValueStorage _Max=1.f, ValueStorage _Inc=1  )
+	static PropertyDefRef Create( const char* _zName, const char* _zDisplayName, const char* _zDescription, bool _bShowInAssetDesc, bool _bIsEditable, ValueStorage _Default, ValueStorage _Min=0.f, ValueStorage _Max=1.f, ValueStorage _Inc=1  )
 	{		
 		typedef PropertyNumerical<TPropertyType, TClassStorage> TPropertyNumerical;
 		static zenMem::zAllocatorPool sAllocPool( "PropertyDefinition::Create", sizeof(TPropertyNumerical), 256, 256 );
-		TPropertyNumerical* pNewDefinition	= zenNew(&sAllocPool) TPropertyNumerical(_zName, _zDisplayName, _zDescription, _bShowInAssetDesc);
+		TPropertyNumerical* pNewDefinition	= zenNew(&sAllocPool) TPropertyNumerical(_zName, _zDisplayName, _zDescription, _bShowInAssetDesc, _bIsEditable);
 		pNewDefinition->mDefault			= _Default;
 		pNewDefinition->mValMin				= _Min;
 		pNewDefinition->mValMax				= _Max;

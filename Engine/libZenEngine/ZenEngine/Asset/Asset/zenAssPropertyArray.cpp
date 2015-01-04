@@ -5,12 +5,12 @@
 namespace zen { namespace zenAss
 {
 
-PropertyDefRef PropertyArray::Create( const char* _zName, const char* _zDisplayName, const char* _zDescription, bool _bShowInAssetDesc, const PropertyDefRef& _rPropertyDef, zUInt _uEntryCountMin, zUInt _uEntryCountMax )
+PropertyDefRef PropertyArray::Create( const char* _zName, const char* _zDisplayName, const char* _zDescription, bool _bShowInAssetDesc, bool _bIsEditable, const PropertyDefRef& _rPropertyDef, zUInt _uEntryCountMin, zUInt _uEntryCountMax )
 {		
 	static zenMem::zAllocatorPool sAllocPool( "PropertyDefinition::Create", sizeof(PropertyArray), 256, 256 );
 	ZENAssert( _rPropertyDef.IsValid() );
 	ZENAssert( _uEntryCountMin <= _uEntryCountMax);
-	PropertyArray* pNewDefinition		= zenNew(&sAllocPool) zenAss::PropertyArray(_zName, _zDisplayName, _zDescription, _bShowInAssetDesc);
+	PropertyArray* pNewDefinition		= zenNew(&sAllocPool) zenAss::PropertyArray(_zName, _zDisplayName, _zDescription, _bShowInAssetDesc, _bIsEditable);
 	pNewDefinition->mrArrayPropertyDef	= _rPropertyDef;	
 	pNewDefinition->muEntryCountMin		= _uEntryCountMin;
 	pNewDefinition->muEntryCountMax		= _uEntryCountMax;
@@ -86,7 +86,7 @@ PropertyValueRef PropertyArray::ValueRef::AddEntry()
 	const PropertyArray& Definition		= GetDefinition();
 	PropertyValueRef newValue			= Definition.mrArrayPropertyDef->Allocate();
 	ValueStorage& arrayValue			= GetValue();
-	arrayValue.Append(newValue);
+	arrayValue.Push(newValue);
 	return newValue;
 }
 

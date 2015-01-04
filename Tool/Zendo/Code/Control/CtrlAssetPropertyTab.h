@@ -23,18 +23,18 @@ private:
 class TabAssetProperty : public wxPanel
 {
 public:
-								TabAssetProperty(wxWindow* _pParent, const zenAss::zAssetItem& _rEditAsset);
-								~TabAssetProperty();
-	void						ApplyChanges();
-	const zenAss::zAssetItem&	GetAsset();
+									TabAssetProperty(wxWindow* _pParent, const zenAss::zAssetItemRef& _rEditAsset);
+									~TabAssetProperty();
+	void							ApplyChanges();
+	const zenAss::zAssetItemRef&	GetAsset();
 protected:
-	//void						UpdatePropertiesState();
-	void						OnToolbarDefault	( wxCommandEvent& event );
-	void						OnToolbarOriginal	( wxCommandEvent& event );
-	void						OnToolbarApply		( wxCommandEvent& event );
+	//void							UpdatePropertiesState();
+	void							OnToolbarDefault	( wxCommandEvent& event );
+	void							OnToolbarOriginal	( wxCommandEvent& event );
+	void							OnToolbarApply		( wxCommandEvent& event );
 	
-	zenAss::zAssetItem		mrAsset;
-	wxPropertyGridManager*	mpPropertyGrid;
+	zenAss::zAssetItemRef			mrAsset;
+	wxPropertyGridManager*			mpPropertyGrid;
 	DECLARE_EVENT_TABLE()
 };
 

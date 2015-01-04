@@ -1,3 +1,9 @@
+#pragma once
+#ifndef __zenBase_Type_List1x_inl__
+#define __zenBase_Type_List1x_inl__
+
+namespace zen {	namespace zenType 
+{
 
 //==================================================================================================
 //! @brief		Add new items to the list, sorted by a reference value
@@ -24,6 +30,9 @@ void zList1x::AddSort( zList1xNode* _pAdd,  _Type_* _pReference )
 	}    
 	InsertAfter(_pAdd, pItemPrev);
 }
-
   
+#include "zenTypeList1x.inl"
 
+} } //namespace zen, Type
+
+#endif

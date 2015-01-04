@@ -22,6 +22,7 @@ Orion_AddGameExe("SampleBaseType",		"Samples", 	{"Engine/Samples/Core/Type"},		"
 Orion_AddGameExe("SampleBaseMem",		"Samples", 	{"Engine/Samples/Core/Mem"},		"Engine/libZenEngine/libZenEngine.h", {}) 
 Orion_AddGameExe("SampleBaseLog",		"Samples", 	{"Engine/Samples/Core/Log"},		"Engine/libZenEngine/libZenEngine.h", {}) 
 Orion_AddGameExe("SampleBaseMath",		"Samples", 	{"Engine/Samples/Core/Math"},		"Engine/libZenEngine/libZenEngine.h", {}) 
+Orion_AddGameExe("SampleBaseSignal",	"Samples", 	{"Engine/Samples/Core/Signal"},		"Engine/libZenEngine/libZenEngine.h", {}) 
 Orion_AddGameExe("SampleBaseSystem",	"Samples", 	{"Engine/Samples/Core/System"},		"Engine/libZenEngine/libZenEngine.h", {}) 
 
 -- SAMPLE GFX --

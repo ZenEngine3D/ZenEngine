@@ -10,8 +10,8 @@ AllocHeader* GetHeader( void* _pAlloc, bool _bIsArray )
 	AllocHeader* pHeader = ((AllocHeader*)( _pAlloc ))-1;
 	if( pHeader->IsValid() )
 	{
-		ZENCriticalMsg( pHeader->mpAllocator->GetValidityStamp()				== kh32AllocatorStamp, "Data corruption occurred, invalid memory allocator pointer" );	
-		ZENAssertMsg(*(zHash64*)((zU8*)_pAlloc+pHeader->muWantedSize)== kh64AllocationStamp, "Data corruption occured, footer memory was trashed. Buffer overrun?" );	
+		ZENCriticalMsg( pHeader->mpAllocator->GetValidityStamp()		== kh32AllocatorStamp, "Data corruption occurred, invalid memory allocator pointer" );	
+		ZENAssertMsg(*(zHash64*)((zU8*)_pAlloc+pHeader->muWantedSize)	== kh64AllocationStamp, "Data corruption occured, footer memory was trashed. Buffer overrun?" );	
 		ZENAssertMsg( pHeader->IsArray() == _bIsArray, "Free 'new' with 'delete' and 'new[]' with 'delete[]', do not mismatch." );
 		return pHeader;
 	}

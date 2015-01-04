@@ -96,7 +96,7 @@ void zArrayDynamic<TType, TGrowthPolicy>::operator+=( const zArrayBase<TType>& _
 }
 
 template<class TType, GrowthPolicyFunction TGrowthPolicy>
-void zArrayDynamic<TType, TGrowthPolicy>::Append(const TType& _Copy)
+void zArrayDynamic<TType, TGrowthPolicy>::Push(const TType& _Copy)
 {
 	if(muCount+1>=muCountReserved)
 		Grow(muCount+1);
@@ -104,7 +104,7 @@ void zArrayDynamic<TType, TGrowthPolicy>::Append(const TType& _Copy)
 }
 
 template<class TType, GrowthPolicyFunction TGrowthPolicy>
-void zArrayDynamic<TType, TGrowthPolicy>::Append(const TType* _Copy, zUInt _uCount)
+void zArrayDynamic<TType, TGrowthPolicy>::Push(const TType* _Copy, zUInt _uCount)
 {			
 	if(muCount+_uCount>=muCountReserved)
 		Grow(muCount+_uCount);
@@ -128,6 +128,29 @@ TType zArrayDynamic<TType, TGrowthPolicy>::Pop()
 	TType value = mpData[--muCount];
 	Shrink();			
 	return value;
+}
+
+template<class TType, GrowthPolicyFunction TGrowthPolicy>
+void zArrayDynamic<TType, TGrowthPolicy>::RemoveSwap(zUInt _uIndex)
+{
+	ZENAssert( _uIndex < muCount );
+	mpData[_uIndex] = mpData[--muCount];
+	Shrink();
+}
+
+template<class TType, GrowthPolicyFunction TGrowthPolicy>
+void zArrayDynamic<TType, TGrowthPolicy>::RemoveSwap(const TType& _Item)
+{
+	zUInt uIndex(0);
+	while( uIndex < muCount )
+	{
+		if( mpData[uIndex] == _Item )
+		{
+			RemoveSwap( uIndex );
+			break;
+		}
+		++uIndex;
+	}
 }
 
 template<class TType, GrowthPolicyFunction TGrowthPolicy>

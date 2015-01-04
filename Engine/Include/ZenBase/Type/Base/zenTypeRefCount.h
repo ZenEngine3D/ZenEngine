@@ -35,8 +35,8 @@ namespace zen { namespace zenType {
 		 									~zReference();
 		 const zReference&					operator=(zRefCounted* _pReference);
 		 const zReference&					operator=(const zReference& _Copy);
-		ZENInline bool						operator==(const zReference& _Cmp);
-		ZENInline bool						operator!=(const zReference& _Cmp);
+		ZENInline bool						operator==(const zReference& _Cmp)const;
+		ZENInline bool						operator!=(const zReference& _Cmp)const;
 		ZENInline bool						IsValid()const;
 	protected:
 		zRefCounted*						mpReference;
@@ -53,10 +53,10 @@ namespace zen { namespace zenType {
 		ZENInline const zEngineRef&			operator=(TRefCountedType* _pReference);
 		ZENInline const zEngineRef&			operator=(const zEngineRef& _Copy);
 	#if ZEN_ENGINELIB
-		ZENInline TRefCountedType*			Get();				//!< @note Only use on engine side, else won't compile
-		ZENInline TRefCountedType*			operator->();		//!< @note Only use on engine side, else won't compile
-		ZENInline const TRefCountedType*	Get()const;			//!< @note Only use on engine side, else won't compile
-		ZENInline const TRefCountedType*	operator->()const;	//!< @note Only use on engine side, else won't compile
+		ZENInline TRefCountedType*			Get()const;				//!< @note Only use on engine side, else won't compile
+		ZENInline TRefCountedType*			GetSafe()const;			//!< @note Only use on engine side, else won't compile
+		ZENInline TRefCountedType*			operator->()const;		//!< @note Only use on engine side, else won't compile
+		//! @todo Test operator== directly with pointer
 	#endif		
 	};
 	
@@ -74,6 +74,7 @@ namespace zen { namespace zenType {
 		ZENInline const zEngineRefConst&	operator=(const zEngineRef<TRefCountedType>& _Copy);
 	#if ZEN_ENGINELIB
 		ZENInline const TRefCountedType*	Get()const;			//!< @note Only use on engine side, else won't compile
+		ZENInline const TRefCountedType*	GetSafe()const;		//!< @note Only use on engine side, else won't compile
 		ZENInline const TRefCountedType*	operator->()const;	//!< @note Only use on engine side, else won't compile
 	#endif
 	};
@@ -89,10 +90,9 @@ namespace zen { namespace zenType {
 		ZENInline const zGameRef&			operator=(TRefCountedType* _pReference);
 		ZENInline const zGameRef&			operator=(const zGameRef& _Copy);
 
-		ZENInline TRefCountedType*			Get();				//!< Return a pointer to resource
-		ZENInline TRefCountedType*			operator->();		//!< Return a pointer to resource
-		ZENInline const TRefCountedType*	Get()const;			//!< Return a const pointer to resource
-		ZENInline const TRefCountedType*	operator->()const;	//!< Return a const pointer to resource
+		ZENInline TRefCountedType*			Get()const;				//!< Return a pointer to resource
+		ZENInline TRefCountedType*			GetSafe()const;			//!< Return a pointer to resource and do null check first
+		ZENInline TRefCountedType*			operator->()const;		//!< Return a pointer to resource
 	};
 	
 	template<class TRefCountedType>
@@ -109,6 +109,7 @@ namespace zen { namespace zenType {
 		ZENInline const zGameRefConst&		operator=(const zGameRef<TRefCountedType>& _Copy);
 
 		ZENInline const TRefCountedType*	Get()const;			//!< Return a const pointer to resource
+		ZENInline const TRefCountedType*	GetSafe()const;		//!< Return a const pointer to resource and do null check first
 		ZENInline const TRefCountedType*	operator->()const;	//!< Return a const pointer to resource
 	};
 

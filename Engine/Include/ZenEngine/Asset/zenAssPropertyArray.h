@@ -22,7 +22,7 @@ class PropertyArray : public TPropertyDefinition<zenConst::keAssProp_Array, Prop
 	};
 
 	virtual PropertyValueRef	Allocate()const;
-	static PropertyDefRef		Create( const char* _zName, const char* _zDisplayName, const char* _zDescription, bool _bShowInAssetDesc, 
+	static PropertyDefRef		Create( const char* _zName, const char* _zDisplayName, const char* _zDescription, bool _bShowInAssetDesc, bool _bIsEditable, 
 										const PropertyDefRef& _rPropertyDef, zUInt _uEntryCountMin=0, zUInt _uEntryCountMax=9999 );
 	
 	PropertyDefRef				mrArrayPropertyDef;

@@ -79,12 +79,12 @@ namespace zen { namespace zenAss
 		zString									mzDisplayName;
 		zString									mzDescription;		
 		bool									mbShowInAssetDesc;
-
+		bool									mbIsEditable;		
 	protected:
 		virtual PropertyValueRef				Clone(const PropertyValueRef& _rValue)const=0;
 		virtual bool							IsDefault(const PropertyValueRef& _rValue)const=0;
 		virtual bool							IsEqual(const PropertyValueRef& _rValue1, const PropertyValueRef& _rValue2) const=0;
-		PropertyDefinition(const char* _zName, const char* _zDisplayName, const char* _zDescription, bool _bShowInAssetDesc);
+		PropertyDefinition(const char* _zName, const char* _zDisplayName, const char* _zDescription, bool _bShowInAssetDesc, bool _bIsEditable);
 		friend PropertyValueRef;
 	};
 
@@ -93,7 +93,7 @@ namespace zen { namespace zenAss
  	{
 	ZENClassDeclare(TPropertyDefinition, PropertyDefinition);	
 	public:		
-		typedef TPropertyValue<TClassDefinition, TClassValue>		ValueProperty;	//!< Wrapper around Propertvalue (Definition+RefCount+Value)
+		typedef TPropertyValue<TClassDefinition, TClassValue>		ValueProperty;	//!< Wrapper around PropertyValue (Definition+RefCount+Value)
 		typedef TPropertyValueRef<TClassDefinition, TClassValue>	ValueRef;		//!< PropertyRef to access the value
 		typedef TClassValue											ValueStorage;	//!< Type of Data value stored for this property
 		enum { kPropertyType = TPropertyType };
@@ -104,14 +104,14 @@ namespace zen { namespace zenAss
 		virtual PropertyValueRef				Clone(const PropertyValueRef& _rValue)const;
 		virtual bool							IsDefault(const PropertyValueRef& _rValueRef)const;		
 		virtual bool							IsEqual(const PropertyValueRef& _rValue1, const PropertyValueRef& _rValue2)const;
-		TPropertyDefinition(const char* _zName, const char* _zDisplayName, const char* _zDescription, bool _bShowInAssetDesc);
+		TPropertyDefinition(const char* _zName, const char* _zDisplayName, const char* _zDescription, bool _bShowInAssetDesc, bool _bIsEditable);
  	};
 
 #define ZENPropertyDefinitionDeclare( ClassName, ... )																	\
 	ZENClassDeclare(ClassName, TPropertyDefinition);																	\
 	private:																											\
-		ClassName(const char* _zName, const char* _zDisplayName, const char* _zDescription, bool _bShowInAssetDesc )	\
-		: TPropertyDefinition(_zName, _zDisplayName, _zDescription, _bShowInAssetDesc){}								\
+		ClassName(const char* _zName, const char* _zDisplayName, const char* _zDescription, bool _bShowInAssetDesc, bool _bIsEditable )	\
+		: TPropertyDefinition(_zName, _zDisplayName, _zDescription, _bShowInAssetDesc, _bIsEditable){}					\
 	public:																												\
 		ValueStorage mDefault;																							\
 	

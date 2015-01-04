@@ -52,19 +52,19 @@ namespace zen { namespace zenType
 		//=================================================================================================	
 		// Append new value to hash
 		//=================================================================================================	
-		ZENInlineForce zHash32&	Append(const char* _zString);
-		ZENInlineForce zHash32&	Append(const wchar_t* _zString);
-		ZENInlineForce zHash32&	Append(const void* _pData, zUInt _uSize);
-		ZENInlineForce zHash32&	Append( zHash32 _hHashToAdd);
+		ZENInlineForce zHash32&		Append(const char* _zString);
+		ZENInlineForce zHash32&		Append(const wchar_t* _zString);
+		ZENInlineForce zHash32&		Append(const void* _pData, zUInt _uSize);
+		//ZENInlineForce zHash32&		Append(zHash32 _hHashToAdd); //! @todo need to test if we can really append another hash (same seed used twice?)
 
 		//=================================================================================================	
 		// Comparators and assignation
 		//=================================================================================================	
-		ZENInline bool					operator==(const zHash32& _hCmpr);
-		ZENInline bool					operator!=(const zHash32& _hCmpr);
+		ZENInline bool				operator==(const zHash32& _hCmpr);
+		ZENInline bool				operator!=(const zHash32& _hCmpr);
 		ZENInline zHash32&			operator=(const zHash32& _hCopy);
 		ZENInline zHash32&			operator=(const zU32& _uCopy);
-		ZENInline operator const		zU32&()const;
+		ZENInline operator const	zU32&()const;
 
 		//=================================================================================================	
 		// Constructors
@@ -115,19 +115,19 @@ namespace zen { namespace zenType
 		//=================================================================================================	
 		// Append new value to hash
 		//=================================================================================================	
-		ZENInlineForce zHash64&	Append(const char* _zString);
-		ZENInlineForce zHash64&	Append(const wchar_t* _zString);
-		ZENInlineForce zHash64&	Append(const zU8* _pData, zUInt _uSize );
-		ZENInlineForce zHash64&	Append(zHash64 _hHashToAdd);
+		ZENInlineForce zHash64&		Append(const char* _zString);
+		ZENInlineForce zHash64&		Append(const wchar_t* _zString);
+		ZENInlineForce zHash64&		Append(const void* _pData, zUInt _uSize);
+		//ZENInlineForce zHash64&		Append(zHash64 _hHashToAdd);
 
 		//=================================================================================================	
 		// Comparators and assignation
 		//=================================================================================================	
-		ZENInline bool					operator==(const zHash64& _hCmpr);
-		ZENInline bool					operator!=(const zHash64& _hCmpr);
+		ZENInline bool				operator==(const zHash64& _hCmpr);
+		ZENInline bool				operator!=(const zHash64& _hCmpr);
 		ZENInline zHash64&			operator=(const zHash64& _hCopy);
 		ZENInline zHash64&			operator=(const zU64& _uCopy);
-		ZENInline						operator const zU64&()const;
+		ZENInline					operator const zU64&()const;
 
 		//=================================================================================================	
 		// Constructors
@@ -138,8 +138,8 @@ namespace zen { namespace zenType
 		ZENInlineForce				zHash64(const zI64& _iCopy);
 		ZENInlineForce				zHash64(ConstCharWrapper _zStr);
 		ZENInlineForce				zHash64(char* _zStr);
-		ZENInlineForce				zHash64(wchar_t* _zStr);
-		ZENInlineForce				zHash64(const zU8* _pData, zUInt _uSize);
+		ZENInlineForce				zHash64(const wchar_t* _zStr);
+		ZENInlineForce				zHash64(const void* _pData, zUInt _uSize);
 
 									FNV64_HASH_CONSTRUCTOR(1)	FNV64_HASH_CONSTRUCTOR(2)	FNV64_HASH_CONSTRUCTOR(3)	FNV64_HASH_CONSTRUCTOR(4)	
 		FNV64_HASH_CONSTRUCTOR(5)	FNV64_HASH_CONSTRUCTOR(6)	FNV64_HASH_CONSTRUCTOR(7)	FNV64_HASH_CONSTRUCTOR(8)	FNV64_HASH_CONSTRUCTOR(9)		

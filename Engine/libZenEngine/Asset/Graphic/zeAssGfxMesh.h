@@ -6,7 +6,7 @@
 
 namespace zen { namespace zeAss
 {
-	class GfxMesh : public TAsset<zenConst::keAssType_Mesh>
+	class GfxMesh : public AssetTyped<zenConst::keAssType_Mesh>
 	{
 	ZENClassDeclare(GfxMesh, Asset)
 	public:

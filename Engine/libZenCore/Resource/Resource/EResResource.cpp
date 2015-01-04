@@ -4,9 +4,9 @@ namespace ERes
 {	
 
 //! @todo Missing: keep track of this
-zList2x Resource::spResourceActive[zenConst::keResType__Count];
-zList2x Resource::spActiveToDelete[3];
-zUInt Resource::suDeleteIndex(0);
+static zListDeclare(Resource, mlnkList) glstResourceActive[zenConst::keResType__Count];
+static zListDeclare(Resource, mlnkList) glstActiveToDelete[3];
+static zUInt guDeleteIndex(0);
 
 //=================================================================================
 Resource::Resource()
@@ -16,7 +16,6 @@ Resource::Resource()
 
 Resource::~Resource()
 {
-	//LstRemove();
 }
 
 bool Resource::ResourceInit()		
@@ -35,7 +34,7 @@ bool Resource::ResourceCreate( EExp::ExportItem& _SerialItem, EExp::ExportInfoBa
 		mResID = _SerialItem.mResID;
 		if( ResourceInit() && EMgr::Resources.Add(this).IsValid() )
 		{
-			//spResourceActive[mResID.Type()].AddHead(this);
+			glstResourceActive[mResID.Type()].PushHead(*this);
 			return true;
 		}
 	}
@@ -47,7 +46,7 @@ bool Resource::ResourceCreateRuntime()
 {
 	if( EMgr::Resources.Add(this).IsValid() )
 	{
-		//spResourceActive[mResID.Type()].AddHead(this);
+		glstResourceActive[mResID.Type()].PushHead(*this);
 		return true;
 	}
 	return false;

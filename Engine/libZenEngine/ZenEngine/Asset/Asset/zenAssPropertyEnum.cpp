@@ -5,10 +5,10 @@
 namespace zen { namespace zenAss
 {
 
-PropertyDefRef PropertyEnum::Create( const char* _zName, const char* _zDisplayName, const char* _zDescription, bool _bShowInAssetDesc, ValueStorage _Default, const Entry* _pEntries, zUInt _uEntryCount )
+PropertyDefRef PropertyEnum::Create( const char* _zName, const char* _zDisplayName, const char* _zDescription, bool _bShowInAssetDesc, bool _bIsEditable, ValueStorage _Default, const Entry* _pEntries, zUInt _uEntryCount )
 {		
 	static zenMem::zAllocatorPool sAllocPool( "PropertyDefinition::Create", sizeof(PropertyEnum), 256, 256 );
-	PropertyEnum* pNewDefinition	= zenNew(&sAllocPool) zenAss::PropertyEnum(_zName, _zDisplayName, _zDescription, _bShowInAssetDesc);
+	PropertyEnum* pNewDefinition	= zenNew(&sAllocPool) zenAss::PropertyEnum(_zName, _zDisplayName, _zDescription, _bShowInAssetDesc, _bIsEditable);
 	pNewDefinition->mDefault		= _Default;
 	pNewDefinition->maEnumValues.Copy(_pEntries, _uEntryCount);
 	pNewDefinition->mdKeyToIndex.Init(_uEntryCount*2);

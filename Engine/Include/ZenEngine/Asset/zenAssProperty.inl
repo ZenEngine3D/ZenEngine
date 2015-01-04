@@ -68,8 +68,9 @@ const TClassDefinition& TPropertyValueRef<TClassDefinition, TClassValueStorage>:
 // Templated PropertyDefinition
 //=============================================================================
 template<zenConst::eAssetPropertyType TPropertyType, class TClassDefinition, class TClassValue>
-TPropertyDefinition<TPropertyType, TClassDefinition, TClassValue>::TPropertyDefinition(const char* _zName, const char* _zDisplayName, const char* _zDescription, bool _bShowInAssetDesc)
-: PropertyDefinition(_zName, _zDisplayName, _zDescription, _bShowInAssetDesc)
+TPropertyDefinition<TPropertyType, TClassDefinition, TClassValue>::TPropertyDefinition(const char* _zName, const char* _zDisplayName, const char* _zDescription, bool _bShowInAssetDesc, bool _bIsEditable)
+: PropertyDefinition(_zName, _zDisplayName, _zDescription, _bShowInAssetDesc, _bIsEditable)
+//, mpValueChangedCB(NULL)
 {
 }
 
@@ -78,7 +79,7 @@ PropertyValueRef TPropertyDefinition<TPropertyType, TClassDefinition, TClassValu
 {	
 	static zenMem::zAllocatorPool sAllocPool( "TPropertyDefinition::Allocate", sizeof(ValueProperty), 256, 256 );
 	//! @todo Clean : Removing const qualifier, since 'zGameRefConst' doesn't take a const reference at the moment...
-	//					We know that all accessor won't modify the object, except for ReferenceAdd/Rem with mRerCount needing to be mutable.
+	//					We know that all accessor won't modify the object, except for ReferenceAdd/Rem with mRefCount needing to be mutable.
 	ValueProperty* pValue	= zenNew(&sAllocPool) ValueProperty((PropertyDefinition*)this); 
 	pValue->mValue			= static_cast<const TClassDefinition*>(this)->mDefault;
 	return pValue;

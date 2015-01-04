@@ -35,10 +35,10 @@ zString& zString::operator+=(const zString& _zString)
 
 zString& zString::operator+=(const char* _zString)
 {
-	zUInt uLen			= static_cast<zUInt>(strlen(_zString));
+	zUInt uLen		= static_cast<zUInt>(strlen(_zString));
 	zUInt uOldCount	= maChar.Count();
 	maChar.SetCount(uOldCount + uLen);
-	zenMem::Copy(&maChar[uOldCount-1], _zString, uLen+1);
+	zenMem::Copy(&maChar[uOldCount-2], _zString, uLen+1);
 	return *this;
 }
 
@@ -58,6 +58,16 @@ bool zString::operator==(const zString& _zString)const
 {	
 	return	(maChar.Count() == _zString.maChar.Count()) &&
 			(*this == _zString.maChar.First());
+}
+
+bool zString::operator!=(const zString& _zString)const
+{
+	return !( *this==_zString);
+}
+
+bool zString::operator!=(const char* _zString)const
+{
+	return !( *this==_zString);
 }
 
 zUInt zString::Len()const

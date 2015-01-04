@@ -13,5 +13,5 @@
 #include <ZenEngine/Asset/zenAssPropertyArray.h>
 #include <ZenEngine/Asset/zenAssItem.h>
 #include <ZenEngine/Asset/zenAssPackage.h>
-
+#include <ZenEngine/Asset/zenAssPackageGroup.h>
 #endif

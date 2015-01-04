@@ -72,8 +72,6 @@ protected:
 	zList1xNode			moFirst;	//!< Store reference to first(moRoot.mpLstNext) of the list.
 };
 
-#include "zenTypeList1x.inl"
-
 } } //namespace zen, Type
 
 #endif	
