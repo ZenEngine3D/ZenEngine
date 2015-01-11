@@ -19,9 +19,10 @@ class PropertyArray : public TPropertyDefinition<zenConst::keAssProp_Array, Prop
 								ValueRef(const PropertyValueRef& _Copy):TPropertyDefinition::ValueRef(_Copy){};
 		PropertyValueRef		AddEntry();
 		void					RemEntry(const PropertyValueRef& _ToRemove);
+		using Super::operator=;
 	};
 
-	virtual PropertyValueRef	Allocate()const;
+	virtual PropertyValueRef	Allocate(const zAssetItemRef& _rOwnerAsset)const;
 	static PropertyDefRef		Create( const char* _zName, const char* _zDisplayName, const char* _zDescription, bool _bShowInAssetDesc, bool _bIsEditable, 
 										const PropertyDefRef& _rPropertyDef, zUInt _uEntryCountMin=0, zUInt _uEntryCountMax=9999 );
 	
@@ -30,7 +31,7 @@ class PropertyArray : public TPropertyDefinition<zenConst::keAssProp_Array, Prop
 	zUInt						muEntryCountMax;
 
 protected:
-	virtual PropertyValueRef	Clone(const PropertyValueRef& _rValue)const;
+	virtual PropertyValueRef	Clone(const zAssetItemRef& _rOwnerAsset, const PropertyValueRef& _rValue)const;
 	virtual bool				IsDefault(const class PropertyValueRef& _ValueRef)const;
 	virtual bool				IsEqual(const PropertyValueRef& _rValue1, const PropertyValueRef& _rValue2)const;
 };

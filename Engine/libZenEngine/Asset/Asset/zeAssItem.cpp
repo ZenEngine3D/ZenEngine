@@ -29,6 +29,7 @@ Asset::Asset()
 : mrPackage(NULL)
 , mID(zenConst::keAssType__Invalid, 0)
 {
+	msigPropertyUpdate.Connect(*this, &Asset::slotPropertyUpdate);
 }
 
 Asset::~Asset()	
@@ -43,8 +44,6 @@ void Asset::Init(zenAss::zAssetID _AssetID, const char* _zName, const zenAss::zP
 	InitDefault();	
 	SetPackage( _rParentPkg );
 	zeMgr::Asset.AssetAdd(this);
-	//! @todo Asset : description init
-	//RebuiltDescription();
 }
 
 void Asset::SetPackage(const zenAss::zPackageRef& _rParentPkg)
@@ -63,10 +62,10 @@ void Asset::SetName(const char* _zName)
 	mzName = _zName;
 }
 
-bool Asset::UpdatedProperties()
+void Asset::slotPropertyUpdate( zenAss::PropertyValueRef _rUpdated )
 {
-	RebuiltDescription();
-	return false;
+	if( _rUpdated.GetDefinition().mbShowInAssetDesc )
+		RebuiltDescription();
 }
 
 //=================================================================================================
@@ -78,22 +77,15 @@ bool Asset::UpdatedProperties()
 //=================================================================================================
 void Asset::RebuiltDescription()
 {	
-	mzDescription = "";
-	//! @TODO
-	/*
-	for(zUInt idx(0), count(maPropertyValueOld.Count()); idx<count; ++idx)
+	for(zUInt idx(0), count(maPropertyValue.Count()); idx<count; ++idx)
 	{
-		const PropertyDefBase& propDef = maPropertyValueOld[idx].GetBase()->mParentDef;
-		if( propDef.mbShowInAssetDesc )
+		zenAss::PropertyValueRef rValue = maPropertyValue[idx];
+		if( rValue.IsValid() && rValue.GetDefinition().mbShowInAssetDesc )
 		{
-			char zBuffer[128];			
-			char zValue[64];
-			maPropertyValueOld[idx].GetBase()->ValueToString( zValue, sizeof(zValue) );
-			sprintf(zBuffer, "(%s : %s) ", propDef.mzDisplayName, zValue);
-			mzDescription += zBuffer;
-		}		
-	}
-	*/
+			//! @todo Asset : Add ValueToString to properties
+			mzDescription += rValue.GetDefinition().mzDisplayName;	
+		}
+	}	
 }
 
 void Asset::InitDefault()
@@ -106,12 +98,10 @@ void Asset::InitDefault()
 	zenAss::PropertyValueRef*		pValueLast		= maPropertyValue.Last();
 	while( pValueCur <= pValueLast )
 	{
-		*pValueCur = (*prDefinitionCur)->Allocate();
+		*pValueCur = (*prDefinitionCur)->Allocate(this);
 		++pValueCur;
 		++prDefinitionCur;
 	}
-
-	UpdatedProperties();
 }
 
 const zenAss::PropertyDefArray& TestProperty::GetProperties()const
@@ -129,8 +119,7 @@ const zenAss::PropertyDefArray& TestProperty::GetProperties()const
 	};
 
 	static zenAss::PropertyDefRef rPropertyArrayStruct = zenAss::PropertyStruct::Create("PropertyStruct",	"",	"Test: Struct in Array", true,	true,	aPropertiesStruct, ZENArrayCount(aPropertiesStruct) );
-	static zenAss::PropertyDefRef rPropertyArrayFloat2 = zenAss::PropertyFloat2::Create	("ArrayFloat2",	"", "Test: Float2 in Array",	true,	true,	zVec2F(1.f), zVec2F(-10.f), zVec2F(10.f), zVec2F(0.1f));
-
+	static zenAss::PropertyDefRef rPropertyArrayFloat2 = zenAss::PropertyFloat2::Create	("ArrayFloat2",	"", "Test: Float2 in Array",	true,	true,	zVec2F(1.f), zVec2F(-10.f), zVec2F(10.f), zVec2F(0.1f));	
 	static const zenAss::PropertyDefRef aPropertiesAll[] = {
 		zenAss::PropertyBool::Create	("Bool",	"", "Def: Bool",					true,	true,	false),
 		zenAss::PropertyFloat::Create	("Float",	"", "Def: Float",					true,	true,	0.f, -10.f, 10.f, 0.5f),
@@ -152,21 +141,24 @@ const zenAss::PropertyDefArray& TestProperty::GetProperties()const
 		zenAss::PropertyInt::Create		("ReadOnlyInt",	"", "Def: Read CopyInt value",	true,	false,	0, -10, 10, 1),
 		zenAss::PropertyInt2::Create	("ReadOnlyInt2","", "Def: Int2",				true,	false,	zVec2S32(2), zVec2S32(-10), zVec2S32(10), zVec2S32(1)),
 	};
+
 	static zenAss::PropertyDefArray		sarProperties( aPropertiesAll, ZENArrayCount(aPropertiesAll) );
 	return sarProperties;
 }
 
-bool TestProperty::UpdatedProperties()
+TestProperty::TestProperty()
 {
-	Super::UpdatedProperties();
-	zenAss::PropertyInt::ValueRef rValueSrc			= GetValue("CopyInt");
-	zenAss::PropertyInt::ValueRef rValueReadonly	= GetValue("ReadOnlyInt");
-	if( rValueSrc.IsValid() && rValueReadonly.IsValid() && rValueSrc.GetValue() != rValueReadonly.GetValue() )
+	msigPropertyUpdate.Connect(*this, &TestProperty::slotPropertyUpdate);
+}
+
+void TestProperty::slotPropertyUpdate(zenAss::PropertyValueRef _rUpdated)
+{	
+	if( _rUpdated.GetDefinition().mName == zHash32("CopyInt") )
 	{
-		rValueReadonly = rValueSrc.GetValue();
-		return true;
+		zenAss::PropertyInt::ValueRef rValueReadonly	= GetValue("ReadOnlyInt");
+		zenAss::PropertyInt::ValueRef rValueUpdated		= _rUpdated;
+		rValueReadonly									= rValueUpdated.GetValue();
 	}
-	return false;
 }
 
 }} //namespace zen { namespace zeAss

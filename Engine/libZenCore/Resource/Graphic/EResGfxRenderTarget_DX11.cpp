@@ -64,7 +64,7 @@ namespace ERes
 	//! @param _eFormat -		Backbuffer texture format
 	//! @param _vDim -			Dimensions of the rendertarget
 	//=================================================================================================
-	//SF TODO Cleanup this recource creation process 
+	//SF @todo Cleanup this ressource creation process 
 	GfxRenderTargetRef GfxRenderTarget_DX11::CreateFromBackuffer(IDXGISwapChain* _pSwapchain, zenConst::eTextureFormat _eFormat, const zVec2U16& _vDim)
 	{
 		ID3D11Texture2D*		pColorTexture(NULL);

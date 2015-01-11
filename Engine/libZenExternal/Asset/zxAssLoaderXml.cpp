@@ -91,11 +91,11 @@ void LoadPropertyValue( const zenAss::PropertyValueRef& _rValue, const pugi::xml
 	}break;
 	case zenConst::keAssProp_Asset:	{
 		zenAss::PropertyAsset::ValueRef rValueTyped(_rValue);
-		//unsigned int typeVal			= _Node.attribute("AssetType").as_uint();
-		//rValueTyped.GetValue().meType	= typeVal < zenConst::keAssType__Count ? (zenConst::eAssetType)typeVal : zenConst::keAssType__Invalid;
+		zenAss::PropertyAsset::ValueStorage	AssignValue;
 		const char* zAssetType			= _Node.attribute("AssetType").as_string();
-		rValueTyped.GetValue().meType	= zenAss::AssetNameToType(zHash32(zAssetType));
-		rValueTyped.GetValue().muIndex	= _Node.attribute("AssetID").as_uint();
+		AssignValue.meType				= zenAss::AssetNameToType(zHash32(zAssetType));
+		AssignValue.muIndex				= _Node.attribute("AssetID").as_uint();
+		rValueTyped						= AssignValue;
 	}break;
 	case zenConst::keAssProp_Struct:{	
 		zenAss::PropertyStruct::ValueRef rValueTyped(_rValue);
@@ -110,14 +110,15 @@ void LoadPropertyValue( const zenAss::PropertyValueRef& _rValue, const pugi::xml
 	case zenConst::keAssProp_Array:	{	
 		zenAss::PropertyArray::ValueRef rValueTyped(_rValue);
 		zUInt uCount	= _Node.attribute("Num").as_uint();
-		uCount			= zenMath::Clamp( uCount, rValueTyped.GetDefinition().muEntryCountMin, rValueTyped.GetDefinition().muEntryCountMax );
-		rValueTyped.GetValue().SetCount( uCount );
+		uCount			= zenMath::Clamp( uCount, rValueTyped.GetDefinition().muEntryCountMin, rValueTyped.GetDefinition().muEntryCountMax );				
+		zenAss::PropertyArray::ValueStorage aArrayVal( uCount );
 		for (pugi::xml_node _NodeChild = _Node.child(kzXmlName_Node_Property); _NodeChild; _NodeChild = _NodeChild.next_sibling(kzXmlName_Node_Property))
 		{
 			zInt idx = _NodeChild.attribute("Index").as_int()-1;
 			if( idx >= 0 && idx < zInt(uCount) )
-				LoadPropertyValue( rValueTyped.GetValue()[idx], _NodeChild);
+				LoadPropertyValue( aArrayVal[idx], _NodeChild);
 		}
+		rValueTyped = aArrayVal;
 	}break;
 	default:
 		ZENAssertMsg(0, "Unsupported Asset Property type while loading.");
@@ -194,7 +195,7 @@ void SavePropertyValue(const zenAss::PropertyValueRef& _rValue, pugi::xml_node& 
 	}break;
 	case zenConst::keAssProp_Struct:{	
 		zenAss::PropertyStruct::ValueRef rValueTyped(_rValue);
-		zenAss::PropertyStruct::ValueStorage& aValues = rValueTyped.GetValue();
+		const zenAss::PropertyStruct::ValueStorage& aValues = rValueTyped.GetValue();
 		for(zUInt idx(0), count(aValues.Count()); idx<count; ++idx)
 		{
 			if( !aValues[idx].IsDefault() )
@@ -208,7 +209,7 @@ void SavePropertyValue(const zenAss::PropertyValueRef& _rValue, pugi::xml_node& 
 	}break;
 	case zenConst::keAssProp_Array:	{	
 		zenAss::PropertyArray::ValueRef rValueTyped(_rValue);
-		zenAss::PropertyArray::ValueStorage& aValues = rValueTyped.GetValue();
+		const zenAss::PropertyArray::ValueStorage& aValues = rValueTyped.GetValue();
 		_Node.append_attribute("Num").set_value( aValues.Count() );
 		_Node.append_attribute("ElementType").set_value( rValueTyped.GetDefinition().mrArrayPropertyDef->GetTypeName() );
 		for(zUInt idx(0), count(aValues.Count()); idx<count; ++idx)

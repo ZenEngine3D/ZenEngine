@@ -102,7 +102,6 @@ int zArrayBase<TType>::Find(const TType& _Value)
 }
 
 //==================================================================================================
-//! @brief		Return true if all element are the same
 //! @details	
 //--------------------------------------------------------------------------------------------------
 //! @param _Cmp		- Array to compare against
@@ -124,6 +123,18 @@ bool zArrayBase<TType>::operator==(const zArrayBase& _Cmp)const
 			return false;
 	}
 	return true;
+}
+
+//==================================================================================================
+//! @details	
+//--------------------------------------------------------------------------------------------------
+//! @param _Cmp		- Array to compare against
+//! @return			- true of contains sames elements
+//==================================================================================================
+template<class TType>
+bool zArrayBase<TType>::operator!=(const zArrayBase& _Cmp)const
+{
+	return !(*this == _Cmp);
 }
 
 //==================================================================================================

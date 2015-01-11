@@ -50,14 +50,14 @@ const PropertyEnum::ValueRef& PropertyEnum::ValueRef::operator=(PropertyEnum::Va
 {
 	if( !GetDefinition().maValueToIndex.Exist(_uEnumValue)  )
 		_uEnumValue = GetDefinition().mDefault;
-	GetValue() = _uEnumValue;
+	Super::operator=( _uEnumValue);
 	return *this;
 }
 
 const PropertyEnum::ValueRef& PropertyEnum::ValueRef::operator=(zHash32 _hEnumName)
 {
 	const zenAss::PropertyEnum::Entry& enumEntry = GetDefinition().GetEnumEntry(_hEnumName);
-	GetValue() = enumEntry.mValue;
+	operator=(enumEntry.mValue);
 	return *this;
 }
 

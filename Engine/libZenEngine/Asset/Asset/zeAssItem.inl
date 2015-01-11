@@ -47,6 +47,11 @@ zenAss::PropertyValueRef Asset::GetValue(zHash32 _hPropertyName)
 	return zenAss::PropertyValueRef();
 }
 
+zenSig::zSignal1<zenAss::PropertyValueRef>& Asset::GetSignalPropertyUpdate()
+{
+	return msigPropertyUpdate;
+}
+
 template <zenConst::eAssetType AssetTypedType>
 AssetTyped<AssetTypedType>::AssetTyped()
 {

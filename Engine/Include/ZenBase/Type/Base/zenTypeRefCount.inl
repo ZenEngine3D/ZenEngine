@@ -45,6 +45,16 @@ bool zReference::operator!=(const zReference& _Cmp)const
 	return mpReference != _Cmp.mpReference;
 }
 
+bool zReference::operator==(const zRefCounted* _pCmp)const
+{	
+	return mpReference == _pCmp;
+}
+
+bool zReference::operator!=(const zRefCounted* _pCmp)const
+{
+	return mpReference != _pCmp;
+}
+
 //=================================================================================================
 // CLASS: zEngineRef
 //=================================================================================================
@@ -118,8 +128,8 @@ zEngineRefConst<TRefCountedType>::zEngineRefConst()
 }
 
 template<class TRefCountedType>
-zEngineRefConst<TRefCountedType>::zEngineRefConst(TRefCountedType* _pReference)
-: Super(_pReference)
+zEngineRefConst<TRefCountedType>::zEngineRefConst(const TRefCountedType* _pReference)
+: Super(const_cast<TRefCountedType*>(_pReference))
 {
 }
 
@@ -136,7 +146,7 @@ zEngineRefConst<TRefCountedType>::zEngineRefConst(const zEngineRef<TRefCountedTy
 }
 
 template<class TRefCountedType>
-const zEngineRefConst<TRefCountedType>& zEngineRefConst<TRefCountedType>::operator=(TRefCountedType* _pReference)
+const zEngineRefConst<TRefCountedType>& zEngineRefConst<TRefCountedType>::operator=(const TRefCountedType* _pReference)
 {	
 	Super::operator=(_pReference);
 	return *this;
@@ -269,8 +279,8 @@ zGameRefConst<TRefCountedType>::zGameRefConst()
 }
 
 template<class TRefCountedType>
-zGameRefConst<TRefCountedType>::zGameRefConst(TRefCountedType* _pReference)
-: Super(_pReference)
+zGameRefConst<TRefCountedType>::zGameRefConst(const TRefCountedType* _pReference)
+: Super( const_cast<TRefCountedType*>(_pReference) )
 {
 }
 
@@ -287,7 +297,7 @@ zGameRefConst<TRefCountedType>::zGameRefConst(const zGameRef<TRefCountedType>& _
 }
 
 template<class TRefCountedType>
-const zGameRefConst<TRefCountedType>& zGameRefConst<TRefCountedType>::operator=(TRefCountedType* _pReference)
+const zGameRefConst<TRefCountedType>& zGameRefConst<TRefCountedType>::operator=(const TRefCountedType* _pReference)
 {	
 	Super::operator=(_pReference);
 	return *this;

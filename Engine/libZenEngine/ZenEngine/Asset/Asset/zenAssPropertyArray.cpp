@@ -16,38 +16,38 @@ PropertyDefRef PropertyArray::Create( const char* _zName, const char* _zDisplayN
 	pNewDefinition->muEntryCountMax		= _uEntryCountMax;
 	pNewDefinition->mDefault.SetCount(_uEntryCountMin);
 	for(zUInt idx(0); idx<_uEntryCountMin; ++idx)
-		pNewDefinition->mDefault[idx] = _rPropertyDef->Allocate();
+		pNewDefinition->mDefault[idx] = _rPropertyDef->Allocate(NULL);
 	return pNewDefinition;
 }
 
 //! @detail Mostly the same logic as base class, but must assign default values 
 //!			differently since the array contains ValueRef.
-PropertyValueRef PropertyArray::Allocate()const
+PropertyValueRef PropertyArray::Allocate(const zAssetItemRef& _rOwnerAsset)const
 {	
 	static zenMem::zAllocatorPool sAllocPool( "PropertyArray::Allocate", sizeof(ValueProperty), 256, 256 );
 	//! @todo Clean : Removing const qualifier, since 'zGameRefConst' doesn't take a const reference at the moment...
-	//					We know that all accessor won't modify the object, except for ReferenceAdd/Rem with mRerCount needing to be mutable.
-	ValueRef rArrayVal		= zenNew(&sAllocPool) ValueProperty((PropertyDefinition*)this);
-	ValueStorage& aArrayVal = rArrayVal.GetValue();
-	aArrayVal.SetCount( mDefault.Count() );
+	//					We know that all accessors won't modify the object, except for ReferenceAdd/Rem with mRerCount needing to be mutable.
+	ValueRef rArrayVal = zenNew(&sAllocPool) ValueProperty(_rOwnerAsset, this);
+	ValueStorage aArrayVal( mDefault.Count() );
 	for(zUInt idx(0), count(mDefault.Count()); idx<count; ++idx)
-		aArrayVal[idx] = mDefault[idx].Clone();
+		aArrayVal[idx] = mDefault[idx].Clone(_rOwnerAsset);
 
+	rArrayVal = aArrayVal;
 	return rArrayVal;
 }
 
-PropertyValueRef PropertyArray::Clone(const PropertyValueRef& _rValue)const
+PropertyValueRef PropertyArray::Clone(const zAssetItemRef& _rOwnerAsset, const PropertyValueRef& _rValue)const
 {
 	ZENAssert( _rValue.GetType() == kPropertyType );
 	static zenMem::zAllocatorPool sAllocPool( "PropertyArray::Clone", sizeof(ValueProperty), 256, 256 );	
-	ValueRef rValueCloned 				= zenNew(&sAllocPool) ValueProperty((PropertyDefinition*)this);
 	ValueRef rValueToClone				= _rValue;	
+	ValueRef rValueCloned 				= zenNew(&sAllocPool) ValueProperty(rValueToClone->mrOwnerAsset, this);	
 	const ValueStorage& aArrayToClone	= rValueToClone.GetValue();	
-	ValueStorage& aArrayCloned			= rValueCloned.GetValue();
-	aArrayCloned.SetCount( aArrayToClone.Count() );
+	ValueStorage aArrayCloned(aArrayToClone.Count());	
 	for(zUInt idx(0), count(aArrayToClone.Count()); idx<count; ++idx)
-		aArrayCloned[idx] = aArrayToClone[idx].Clone();
+		aArrayCloned[idx] = aArrayToClone[idx].Clone(_rValue->mrOwnerAsset);
 	
+	rValueCloned = aArrayCloned;
 	return rValueCloned;
 }
 
@@ -84,8 +84,8 @@ PropertyValueRef PropertyArray::ValueRef::AddEntry()
 {
 	ZENAssert( IsValid() );
 	const PropertyArray& Definition		= GetDefinition();
-	PropertyValueRef newValue			= Definition.mrArrayPropertyDef->Allocate();
-	ValueStorage& arrayValue			= GetValue();
+	PropertyValueRef newValue			= Definition.mrArrayPropertyDef->Allocate((*this)->mrOwnerAsset);
+	ValueStorage& arrayValue			= static_cast<Value*>(GetSafe())->mValue;
 	arrayValue.Push(newValue);
 	return newValue;
 }
@@ -93,7 +93,7 @@ PropertyValueRef PropertyArray::ValueRef::AddEntry()
 void PropertyArray::ValueRef::RemEntry(const PropertyValueRef& _ToRemove)
 {
 	ZENAssert( IsValid() );
-	ValueStorage& arrayValue = GetValue();
+	ValueStorage& arrayValue = static_cast<Value*>(GetSafe())->mValue;
 	for( zUInt idx(0), count(arrayValue.Count()); idx<count; ++idx)
 	{
 		if( arrayValue[idx] == _ToRemove )

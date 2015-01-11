@@ -57,33 +57,22 @@ WX_PG_DECLARE_VARIANT_DATA(wxVector4f)
 namespace BCtrl
 {
 
-struct PropertyMetaData
+struct PropertyMetaData : public zenSig::zSlot
 {
-	PropertyMetaData(wxPGProperty* _pOwner, const zenAss::zAssetItemRef& _rAsset, const zenAss::PropertyValueRef& _rAssetValue, const wxVariant& _OriginalValue)
-	: mpOwner(_pOwner)
-	, mrAsset(_rAsset)
-	, mrAssetValue(_rAssetValue)
-	, mOriginalValue(_OriginalValue)
-	{}
-
-	virtual void SetControlState();
-	virtual bool Save(){return false;}
-	virtual void SetDefaultValue()
-	{
-		mpOwner->SetValue(mpOwner->GetDefaultValue());
-	}
-	virtual void SetOriginalValue()
-	{
-		mpOwner->SetValue( mOriginalValue );
-	}
-
+								PropertyMetaData(wxPGProperty* _pOwner, const zenAss::zAssetItemRef& _rAsset, const zenAss::PropertyValueRef& _rAssetValue, const wxVariant& _OriginalValue);
+	virtual void				UpdateControl(){}
+	virtual void				UpdateControlState();
+	virtual bool				Save();
+	virtual void				SetDefaultValue();
+	virtual void				SetOriginalValue();
+	void						slotUpdateProperty(zenAss::PropertyValueRef _rPropertyUpdated);
 	wxPGProperty*				mpOwner;
 	zenAss::zAssetItemRef		mrAsset;
-	zenAss::PropertyValueRef	mrAssetValue;
+	zenAss::PropertyValueRef	mrPropertyValue;
 	wxVariant					mOriginalValue;	
 };
 
-wxPGProperty* CreateAssetValueControl(wxPropertyGridInterface& _GridControl, const zenAss::zAssetItemRef& _rAsset, zenAss::PropertyValueRef& _Value);
+wxPGProperty* CreateAssetValueControl(wxPropertyGridInterface& _GridControl, const zenAss::zAssetItemRef& _rAsset, const zenAss::PropertyValueRef& _Value);
 
 class wxZenBoolProperty : public wxBoolProperty
 {
@@ -92,10 +81,11 @@ public:
 	{
 		TypedMetaData( wxZenBoolProperty* _pOwner, const zenAss::zAssetItemRef& _rAsset, const zenAss::PropertyValueRef& _rAssetValue, const wxVariant& _OriginalValue)
 		: PropertyMetaData(_pOwner, _rAsset, _rAssetValue, _OriginalValue){}
-		virtual bool Save();
+		virtual void UpdateControl();
+		virtual bool Save();		
 	};
 
-	wxZenBoolProperty(const zenAss::zAssetItemRef& _rAsset, zenAss::PropertyValueRef& _rAssetValue);
+	wxZenBoolProperty(const zenAss::zAssetItemRef& _rAsset, const zenAss::PropertyValueRef& _rAssetValue);
 	virtual ~wxZenBoolProperty();
 };
 
@@ -106,6 +96,7 @@ public:
 	{
 		TypedMetaData( wxZenFloatProperty* _pOwner, const zenAss::zAssetItemRef& _rAsset, const zenAss::PropertyValueRef& _rAssetValue, const wxVariant& _OriginalValue)
 		: PropertyMetaData(_pOwner, _rAsset, _rAssetValue, _OriginalValue){}
+		virtual void UpdateControl();
 		virtual bool Save();
 	};
 
@@ -121,6 +112,7 @@ public:
 		TypedMetaData( wxZenIntProperty* _pOwner, const zenAss::zAssetItemRef& _rAsset, const zenAss::PropertyValueRef& _rAssetValue, const wxVariant& _OriginalValue)
 		: PropertyMetaData(_pOwner, _rAsset, _rAssetValue, _OriginalValue){}
 		virtual bool Save();
+		virtual void UpdateControl();
 	};
 
 	wxZenIntProperty(const zenAss::zAssetItemRef& _rAsset, const zenAss::PropertyValueRef& _rAssetValue);
@@ -135,8 +127,9 @@ public:
 	{
 		TypedMetaData( wxZenVectorProperty<TPropertyClass, TElementCast, TWxVector, TWxProperty>* _pOwner, const zenAss::zAssetItemRef& _rAsset, const zenAss::PropertyValueRef& _rAssetValue, const wxVariant& _OriginalValue)
 		: PropertyMetaData(_pOwner, _rAsset, _rAssetValue, _OriginalValue){}
-		virtual bool Save();
-		virtual void SetControlState();
+		virtual void UpdateControl();
+		virtual void UpdateControlState();
+		virtual bool Save();		
 	};
 	wxZenVectorProperty(){}
 	wxZenVectorProperty(const zenAss::zAssetItemRef& _rAsset, const zenAss::PropertyValueRef& _rAssetValue, const char* _zTooltip, const char* _zTooltipElement);
@@ -200,6 +193,7 @@ public:
 	{
 		TypedMetaData( wxZenEnumProperty* _pOwner, const zenAss::zAssetItemRef& _rAsset, const zenAss::PropertyValueRef& _rAssetValue, const wxVariant& _OriginalValue)
 		: PropertyMetaData(_pOwner, _rAsset, _rAssetValue, _OriginalValue){}
+		virtual void UpdateControl();
 		virtual bool Save();
 	};
 	wxZenEnumProperty(const zenAss::zAssetItemRef& _rAsset, const zenAss::PropertyValueRef& _rAssetValue);
@@ -213,6 +207,7 @@ public:
 	{
 		TypedMetaData( wxZenFileProperty* _pOwner, const zenAss::zAssetItemRef& _rAsset, const zenAss::PropertyValueRef& _rAssetValue, const wxVariant& _OriginalValue)
 		: PropertyMetaData(_pOwner, _rAsset, _rAssetValue, _OriginalValue){}
+		virtual void UpdateControl();
 		virtual bool Save();
 	};
 
@@ -226,10 +221,12 @@ public:
 	struct TypedMetaData : public PropertyMetaData
 	{
 		TypedMetaData( wxZenAssetProperty* _pOwner, const zenAss::zAssetItemRef& _rAsset, const zenAss::PropertyValueRef& _rAssetValue);
-		virtual void SetControlState();
+		virtual void UpdateControl();
+		virtual void UpdateControlState();
 		virtual void SetDefaultValue();
 		virtual void SetOriginalValue();
 		virtual bool Save();
+		void AssignValue(zenAss::zAssetID _AssetID);
 		zenAss::zAssetID mAssetIDValue;
 		zenAss::zAssetID mAssetIDOriginalValue;
 	};
@@ -238,7 +235,7 @@ public:
 	virtual			~wxZenAssetProperty();
 	virtual bool	OnEvent(wxPropertyGrid* propgrid, wxWindow* wnd_primary, wxEvent& event);
 protected:
-	void			SetAssetValue(zenAss::zAssetID _AssetID);
+	//void			SetAssetValue(zenAss::zAssetID _AssetID);
 };
 
 class wxZenArrayProperty : public wxPGProperty //wxPropertyCategory?
@@ -248,8 +245,9 @@ public:
 	{
 		TypedMetaData( wxZenArrayProperty* _pOwner, const zenAss::zAssetItemRef& _rAsset, const zenAss::PropertyValueRef& _rAssetValue, const wxVariant& _OriginalValue)
 		: PropertyMetaData(_pOwner, _rAsset, _rAssetValue, _OriginalValue){}
-		virtual bool Save();
-		virtual void SetControlState();
+		virtual void UpdateControl();
+		virtual void UpdateControlState();
+		virtual bool Save();		
 	};
 	wxZenArrayProperty(const zenAss::zAssetItemRef& _rAsset, const zenAss::PropertyValueRef& _rAssetValue);
 	virtual	~wxZenArrayProperty();
@@ -262,8 +260,9 @@ public:
 	{
 		TypedMetaData( wxZenStructProperty* _pOwner, const zenAss::zAssetItemRef& _rAsset, const zenAss::PropertyValueRef& _rAssetValue, const wxVariant& _OriginalValue)
 		: PropertyMetaData(_pOwner, _rAsset, _rAssetValue, _OriginalValue){}
+		virtual void UpdateControl();
 		virtual bool Save();
-		virtual void SetControlState();
+		virtual void UpdateControlState();
 	};
 	wxZenStructProperty(const zenAss::zAssetItemRef& _rAsset, const zenAss::PropertyValueRef& _rAssetValue);
 	virtual	~wxZenStructProperty();

@@ -47,6 +47,8 @@ struct zStringHash
 	ZENInline const zStringHash& operator=(const zStringHash& _Copy);
 	ZENInline bool operator==(const zStringHash& _Compare)const;
 	ZENInline bool operator!=(const zStringHash& _Compare)const;
+	ZENInline bool operator==(const THashType& _hCompare)const;
+	ZENInline bool operator!=(const THashType& _hCompare)const;
 	zString		mzName; 
 	THashType	mhName; 
 

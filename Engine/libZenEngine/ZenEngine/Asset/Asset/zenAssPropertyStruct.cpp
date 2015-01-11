@@ -17,7 +17,7 @@ PropertyDefRef PropertyStruct::Create( const char* _zName, const char* _zDisplay
 	for(zUInt idx(0); idx<_uPropertyDefCount; ++idx)
 	{
 		ZENAssert( _prPropertyDef[idx].IsValid() );
-		pNewDefinition->mDefault[idx] = pNewDefinition->maPropertyDef[idx]->Allocate();				
+		pNewDefinition->mDefault[idx] = pNewDefinition->maPropertyDef[idx]->Allocate(NULL);				
 		pNewDefinition->mdPropertyDefIndex.Set(_prPropertyDef[idx]->mName.mhName, idx);
 	}
 
@@ -26,32 +26,34 @@ PropertyDefRef PropertyStruct::Create( const char* _zName, const char* _zDisplay
 
 //! @detail Mostly the same logic as base class, but must assign default values 
 //!			differently since the array contains ValueRef.
-PropertyValueRef PropertyStruct::Allocate()const
+PropertyValueRef PropertyStruct::Allocate(const zAssetItemRef& _rOwnerAsset)const
 {	
 	static zenMem::zAllocatorPool sAllocPool( "PropertyArray::Allocate", sizeof(ValueProperty), 256, 256 );
 	//! @todo Clean : Removing const qualifier, since 'zGameRefConst' doesn't take a const reference at the moment...
-	//					We know that all accessor won't modify the object, except for ReferenceAdd/Rem with mRerCount needing to be mutable.
-	ValueRef rArrayVal		= zenNew(&sAllocPool) ValueProperty((PropertyDefinition*)this);
-	ValueStorage& aArrayVal = rArrayVal.GetValue();
-	aArrayVal.SetCount( mDefault.Count() );
+	//					We know that all accessors won't modify the object, except for ReferenceAdd/Rem with mRefCount needing to be mutable.
+	ValueRef rStructVal = zenNew(&sAllocPool) ValueProperty(_rOwnerAsset, this);
+	ValueStorage aStructVal;
+	aStructVal.SetCount( mDefault.Count() );
 	for(zUInt idx(0), count(mDefault.Count()); idx<count; ++idx)
-		aArrayVal[idx] = mDefault[idx].Clone();
-
-	return rArrayVal;
+		aStructVal[idx] = mDefault[idx].Clone(_rOwnerAsset);
+	
+	rStructVal = aStructVal;
+	return rStructVal;
 }
 
 PropertyValueRef PropertyStruct::Clone(const PropertyValueRef& _rValue)const
 {
 	ZENAssert( _rValue.GetType() == kPropertyType );
 	static zenMem::zAllocatorPool sAllocPool( "PropertyArray::Clone", sizeof(ValueProperty), 256, 256 );	
-	ValueRef rValueCloned 				= zenNew(&sAllocPool) ValueProperty((PropertyDefinition*)this);
 	ValueRef rValueToClone				= _rValue;	
-	const ValueStorage& aArrayToClone	= rValueToClone.GetValue();	
-	ValueStorage& aArrayCloned			= rValueCloned.GetValue();
-	aArrayCloned.SetCount( aArrayToClone.Count() );
-	for(zUInt idx(0), count(aArrayToClone.Count()); idx<count; ++idx)
-		aArrayCloned[idx] = aArrayToClone[idx].Clone();
-
+	ValueRef rValueCloned 				= zenNew(&sAllocPool) ValueProperty(rValueToClone->mrOwnerAsset, this);	
+	const ValueStorage& aStructToClone	= rValueToClone.GetValue();	
+	ValueStorage aStructCloned;
+	aStructCloned.SetCount( aStructToClone.Count() );
+	for(zUInt idx(0), count(aStructToClone.Count()); idx<count; ++idx)
+		aStructCloned[idx] = aStructToClone[idx].Clone(_rValue->mrOwnerAsset);
+	
+	rValueCloned = aStructCloned;
 	return rValueCloned;
 }
 
@@ -94,7 +96,6 @@ PropertyValueRef PropertyStruct::ValueRef::GetStructValue(zHash32 _hPropertyName
 	
 	return NULL;
 }
-
 
 }} //namespace zen { namespace zenAss
 

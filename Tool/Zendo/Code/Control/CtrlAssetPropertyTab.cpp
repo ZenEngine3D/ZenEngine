@@ -60,7 +60,7 @@ void TabAssetPropertyGridPage::RefreshModifiedItems()
 		wxPGProperty* pProperty		= *itProperty;
 		PropertyMetaData* pMetaData = static_cast<PropertyMetaData*>( (*itProperty)->GetClientData() );
 		if( pMetaData )
-			pMetaData->SetControlState();	
+			pMetaData->UpdateControlState();	
 		itProperty++;
 	}
 }
@@ -139,23 +139,15 @@ const zenAss::zAssetItemRef& TabAssetProperty::GetAsset()
 
 void TabAssetProperty::ApplyChanges()
 {	
-	bool bChanged(false);
 	TabAssetPropertyGridPage* pPage		= static_cast<TabAssetPropertyGridPage*>(mpPropertyGrid->GetCurrentPage());	
 	wxPropertyGridIterator itProperty	= pPage->GetIterator(wxPG_ITERATE_PROPERTIES);
 	while( !itProperty.AtEnd() )
 	{
 		wxPGProperty* pProperty		= *itProperty;
 		PropertyMetaData* pMetaData = static_cast<PropertyMetaData*>(pProperty->GetClientData());
-		bChanged					|= pMetaData->Save();
+		pMetaData->Save();
 		itProperty++;
 	}
-
-	if( bChanged )
-	{		
-		mrAsset.GetPackage().SetDirty();
-		mrAsset.UpdateProperties();	//! @todo Asset : detect and update changes to properties values (or use signals)
-		pPage->RefreshModifiedItems();
-	}	
 }
 
 void TabAssetProperty::OnToolbarDefault( wxCommandEvent& event )

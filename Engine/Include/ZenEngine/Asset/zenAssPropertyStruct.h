@@ -18,9 +18,10 @@ class PropertyStruct : public TPropertyDefinition<zenConst::keAssProp_Struct, Pr
 									ValueRef():TPropertyDefinition::ValueRef(){};
 									ValueRef(const PropertyValueRef& _Copy):TPropertyDefinition::ValueRef(_Copy){};		
 		PropertyValueRef			GetStructValue(zHash32 _hPropertyName);
+		using Super::operator=;
 	};
 
-	virtual PropertyValueRef		Allocate()const;
+	virtual PropertyValueRef		Allocate(const zAssetItemRef& _rOwnerAsset)const;
 	static PropertyDefRef			Create( const char* _zName, const char* _zDisplayName, const char* _zDescription, bool _bShowInAssetDesc, bool _bIsEditable, const PropertyDefRef* _prPropertyDef, zUInt _uPropertyDefCount );
 	zArrayStatic<PropertyDefRef>	maPropertyDef;
 	zMap<zUInt>::Key32				mdPropertyDefIndex;

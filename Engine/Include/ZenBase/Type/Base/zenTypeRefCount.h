@@ -37,6 +37,8 @@ namespace zen { namespace zenType {
 		 const zReference&					operator=(const zReference& _Copy);
 		ZENInline bool						operator==(const zReference& _Cmp)const;
 		ZENInline bool						operator!=(const zReference& _Cmp)const;
+		ZENInline bool						operator==(const zRefCounted* _pCmp)const;
+		ZENInline bool						operator!=(const zRefCounted* _pCmp)const;
 		ZENInline bool						IsValid()const;
 	protected:
 		zRefCounted*						mpReference;
@@ -55,9 +57,10 @@ namespace zen { namespace zenType {
 	#if ZEN_ENGINELIB
 		ZENInline TRefCountedType*			Get()const;				//!< @note Only use on engine side, else won't compile
 		ZENInline TRefCountedType*			GetSafe()const;			//!< @note Only use on engine side, else won't compile
-		ZENInline TRefCountedType*			operator->()const;		//!< @note Only use on engine side, else won't compile
-		//! @todo Test operator== directly with pointer
-	#endif		
+		ZENInline TRefCountedType*			operator->()const;		//!< @note Only use on engine side, else won't compile				
+	#endif
+		using Super::operator==;
+		using Super::operator!=;
 	};
 	
 	template<class TRefCountedType>
@@ -66,10 +69,10 @@ namespace zen { namespace zenType {
 	ZENClassDeclare(zEngineRef, zReference)
 	public:
 		ZENInline 							zEngineRefConst();
-		ZENInline 							zEngineRefConst(TRefCountedType* _pReference);
+		ZENInline 							zEngineRefConst(const TRefCountedType* _pReference);
 		ZENInline 							zEngineRefConst(const zEngineRefConst& _Copy);
 		ZENInline 							zEngineRefConst(const zEngineRef<TRefCountedType>& _Copy);
-		ZENInline const zEngineRefConst&	operator=(TRefCountedType* _pReference);
+		ZENInline const zEngineRefConst&	operator=(const TRefCountedType* _pReference);
 		ZENInline const zEngineRefConst&	operator=(const zEngineRefConst& _Copy);
 		ZENInline const zEngineRefConst&	operator=(const zEngineRef<TRefCountedType>& _Copy);
 	#if ZEN_ENGINELIB
@@ -77,6 +80,8 @@ namespace zen { namespace zenType {
 		ZENInline const TRefCountedType*	GetSafe()const;		//!< @note Only use on engine side, else won't compile
 		ZENInline const TRefCountedType*	operator->()const;	//!< @note Only use on engine side, else won't compile
 	#endif
+		using Super::operator==;
+		using Super::operator!=;
 	};
 	
 	template<class TRefCountedType>
@@ -93,6 +98,8 @@ namespace zen { namespace zenType {
 		ZENInline TRefCountedType*			Get()const;				//!< Return a pointer to resource
 		ZENInline TRefCountedType*			GetSafe()const;			//!< Return a pointer to resource and do null check first
 		ZENInline TRefCountedType*			operator->()const;		//!< Return a pointer to resource
+		using Super::operator==;
+		using Super::operator!=;
 	};
 	
 	template<class TRefCountedType>
@@ -101,16 +108,18 @@ namespace zen { namespace zenType {
 	ZENClassDeclare(zGameRefConst, zReference)
 	public:
 		ZENInline 							zGameRefConst();
-		ZENInline 							zGameRefConst(TRefCountedType* _pReference);
+		ZENInline 							zGameRefConst(const TRefCountedType* _pReference);
 		ZENInline 							zGameRefConst(const zGameRefConst& _Copy);
 		ZENInline 							zGameRefConst(const zGameRef<TRefCountedType>& _Copy);
-		ZENInline const zGameRefConst&		operator=(TRefCountedType* _pReference);
+		ZENInline const zGameRefConst&		operator=(const TRefCountedType* _pReference);
 		ZENInline const zGameRefConst&		operator=(const zGameRefConst& _Copy);
 		ZENInline const zGameRefConst&		operator=(const zGameRef<TRefCountedType>& _Copy);
 
 		ZENInline const TRefCountedType*	Get()const;			//!< Return a const pointer to resource
 		ZENInline const TRefCountedType*	GetSafe()const;		//!< Return a const pointer to resource and do null check first
 		ZENInline const TRefCountedType*	operator->()const;	//!< Return a const pointer to resource
+		using Super::operator==;
+		using Super::operator!=;
 	};
 
 }} // namespace zen, zenType

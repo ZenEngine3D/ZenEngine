@@ -15,7 +15,7 @@ V4 simdVector( const float* _pValues )												{ return _mm_set_ps(0.0f, _pVa
 V4 simdVector( float _fValue )														{ return _mm_set_ps(0.0f, _fValue, _fValue, _fValue); }
 V4 simdVector( const float _fX, const float _fY, const float _fZ)					{ return _mm_set_ps(0.0f, _fZ, _fY, _fX); }	
 
-V4 simdXYZW( const float* _pValues )												{ return _mm_load_ps(_pValues); }//@TODO: Add Assert alignement 
+V4 simdXYZW( const float* _pValues )												{ return _mm_load_ps(_pValues); }//! @todo Add Assert alignement 
 V4 simdXYZW( float _fValue )														{ return _mm_set_ps(_fValue, _fValue, _fValue, _fValue); }
 V4 simdXYZW( float _fX, float _fY, float _fZ, float _fW)							{ return _mm_set_ps(_fW, _fZ, _fY, _fX); }
 
@@ -32,7 +32,7 @@ V4 simdSpreadW( V4 _Vect )															{ return _mm_shuffle_ps(_Vect, _Vect, S
 //=================================================================================================
 void simdXYZW( V4 _Vect, float* _pValuesOut ) 
 { 
-    //@TODO: Add Assert alignement
+    //! @todo Add Assert alignement
     _mm_store_ps(_pValuesOut, _Vect); 
 }
 

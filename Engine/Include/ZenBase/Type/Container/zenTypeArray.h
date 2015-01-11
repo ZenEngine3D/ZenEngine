@@ -40,10 +40,11 @@ public:
 	TType&								operator[](zInt _uIndex);
 	const TType&						operator[](zInt _uIndex)const;
 	zArrayBase<TType>&					operator=( const zArrayBase<TType>& _aCopy );
-	bool								operator==(const zArrayBase& _Cmp)const;
+	bool								operator==(const zArrayBase& _Cmp)const;				//!< @brief	True if all element are the same
+	ZENInline bool						operator!=(const zArrayBase& _Cmp)const;				//!< @brief	True if any element is different
 	zUInt								Copy(const TType* _pCopy, zUInt _uCount);				//!< @brief Copy the value of a Memory area to this array
 	template<class TTypeImport> zUInt	Copy(const TTypeImport* _ImportArray, zUInt _uCount );	//!< @brief Copy the value of another Array	
-	template<class TTypeImport> zUInt	Copy(const zArrayBase<TTypeImport>& _ImportArray );	//!< @brief Copy the value of another Array	
+	template<class TTypeImport> zUInt	Copy(const zArrayBase<TTypeImport>& _ImportArray );		//!< @brief Copy the value of another Array	
 	void								SetRange(const TType& _Value, zUInt _uFirst=0, zUInt _uLast=0xFFFFFFFF);	//!< @brief Set a range of array elements, to a specific value
 
 protected:

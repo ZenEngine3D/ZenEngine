@@ -10,10 +10,10 @@ namespace zen { namespace zenAss
 // Templated Value
 //=============================================================================
 template<class TClassDefinition, class TClassValueStorage>
-TPropertyValue<TClassDefinition,TClassValueStorage>::TPropertyValue(const PropertyDefRef& _rParent) 
-: Super(_rParent)
+TPropertyValue<TClassDefinition,TClassValueStorage>::TPropertyValue(const zAssetItemRef& _rOwnerAsset, const PropertyDefRef& _rOwnerDefinition) 
+: Super( _rOwnerAsset, _rOwnerDefinition)
 {	
-	ZENAssert( _rParent->GetType() == TClassDefinition::kPropertyType);
+	ZENAssert( _rOwnerDefinition->GetType() == TClassDefinition::kPropertyType);
 }
 
 
@@ -38,30 +38,25 @@ TPropertyValueRef<TClassDefinition, TClassValueStorage>& TPropertyValueRef<TClas
 template<class TClassDefinition, class TClassValueStorage>
 TPropertyValueRef<TClassDefinition, TClassValueStorage>& TPropertyValueRef<TClassDefinition, TClassValueStorage>::operator=( const TClassValueStorage& _Assign )
 {
-	ZENAssert( IsValid() );
-	GetValue() = _Assign;
-	return *this;
-}
-
-template<class TClassDefinition, class TClassValueStorage>
-TClassValueStorage& TPropertyValueRef<TClassDefinition, TClassValueStorage>::GetValue()
-{
 	ZENAssert(IsValid());
-	return static_cast<Value*>(mpReference)->mValue;
+	if( GetValue() != _Assign )
+	{
+		static_cast<Value*>(GetSafe())->mValue = _Assign;
+		EmitPropertyChanged();			
+	}	
+	return *this;
 }
 
 template<class TClassDefinition, class TClassValueStorage>
 const TClassValueStorage& TPropertyValueRef<TClassDefinition, TClassValueStorage>::GetValue()const
 {
-	ZENAssert(IsValid());
-	return static_cast<const Value*>(Get())->mValue;
+	return static_cast<const Value*>(GetSafe())->mValue;
 }
 
 template<class TClassDefinition, class TClassValueStorage>
 const TClassDefinition& TPropertyValueRef<TClassDefinition, TClassValueStorage>::GetDefinition() const
 {
-	ZENAssert(IsValid());
-	return *static_cast<const TClassDefinition*>( Get()->mrDefinition.Get() );
+	return *static_cast<const TClassDefinition*>( GetSafe()->mrOwnerDefinition.Get() );
 }
 
 //=============================================================================
@@ -70,17 +65,14 @@ const TClassDefinition& TPropertyValueRef<TClassDefinition, TClassValueStorage>:
 template<zenConst::eAssetPropertyType TPropertyType, class TClassDefinition, class TClassValue>
 TPropertyDefinition<TPropertyType, TClassDefinition, TClassValue>::TPropertyDefinition(const char* _zName, const char* _zDisplayName, const char* _zDescription, bool _bShowInAssetDesc, bool _bIsEditable)
 : PropertyDefinition(_zName, _zDisplayName, _zDescription, _bShowInAssetDesc, _bIsEditable)
-//, mpValueChangedCB(NULL)
 {
 }
 
 template<zenConst::eAssetPropertyType TPropertyType, class TClassDefinition, class TClassValue>
-PropertyValueRef TPropertyDefinition<TPropertyType, TClassDefinition, TClassValue>::Allocate() const
+PropertyValueRef TPropertyDefinition<TPropertyType, TClassDefinition, TClassValue>::Allocate(const zAssetItemRef& _rOwnerAsset) const
 {	
 	static zenMem::zAllocatorPool sAllocPool( "TPropertyDefinition::Allocate", sizeof(ValueProperty), 256, 256 );
-	//! @todo Clean : Removing const qualifier, since 'zGameRefConst' doesn't take a const reference at the moment...
-	//					We know that all accessor won't modify the object, except for ReferenceAdd/Rem with mRefCount needing to be mutable.
-	ValueProperty* pValue	= zenNew(&sAllocPool) ValueProperty((PropertyDefinition*)this); 
+	ValueProperty* pValue	= zenNew(&sAllocPool) ValueProperty(_rOwnerAsset, this); 
 	pValue->mValue			= static_cast<const TClassDefinition*>(this)->mDefault;
 	return pValue;
 }
@@ -90,8 +82,8 @@ PropertyValueRef TPropertyDefinition<TPropertyType, TClassDefinition, TClassValu
 {
 	ZENAssert( _rValue.GetType() == kPropertyType );
 	ValueRef rValueToClone	= _rValue;
-	ValueRef rValueCloned	= Allocate();
-	rValueCloned.GetValue()	= rValueToClone.GetValue();
+	ValueRef rValueCloned	= Allocate( rValueToClone->mrOwnerAsset );
+	rValueCloned			= rValueToClone.GetValue();
 	return rValueCloned;
 }
 
@@ -109,8 +101,8 @@ bool TPropertyDefinition<TPropertyType, TClassDefinition, TClassValue>::IsEqual(
 	ZENAssert( _rValue1.GetType() == kPropertyType );
 	if( _rValue1.GetType() == _rValue2.GetType() )
 	{
-		ValueRef rValue1 = _rValue1;
-		ValueRef rValue2 = _rValue2;
+		const ValueRef rValue1	= _rValue1;
+		const ValueRef rValue2	= _rValue2;
 		return rValue1.GetValue() == rValue2.GetValue();
 	}
 	return false;

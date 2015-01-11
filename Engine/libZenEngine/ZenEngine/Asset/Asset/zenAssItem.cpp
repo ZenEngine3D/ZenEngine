@@ -88,14 +88,17 @@ const zString& zAssetItemRef::GetDescription()const
 { 
 	return GetSafe()->GetDescription(); 
 }
+
 zUInt zAssetItemRef::GetValueCount()const							
 { 
 	return GetSafe()->GetValueCount(); 
 }
+
 zenAss::PropertyValueRef zAssetItemRef::GetValue(zUInt _uValIndex)	
 { 
 	return GetSafe()->GetValue(_uValIndex); 
 }
+
 void zAssetItemRef::InitDefault()									
 { 
 	return GetSafe()->InitDefault(); 
@@ -122,10 +125,11 @@ void zAssetItemRef::SetName(const char* _zName)
 	GetSafe()->SetName(_zName);
 }
 
-bool zAssetItemRef::UpdateProperties()
+zenSig::zSignal1<zenAss::PropertyValueRef>& zAssetItemRef::GetSignalPropertyUpdate()
 {
-	return GetSafe()->UpdatedProperties();
+	return GetSafe()->GetSignalPropertyUpdate();
 }
+
 
 }} //namespace zen { namespace zenAss
 

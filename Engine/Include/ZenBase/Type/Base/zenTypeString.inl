@@ -120,9 +120,21 @@ bool zStringHash<THashType>::operator==(const zStringHash& _Compare)const
 }
 
 template<class THashType>
-bool zStringHash<THashType>::operator!=(const zStringHash& _Compare)const
+bool zStringHash<THashType>::operator!=(const THashType& _Compare)const
 {
 	return mhName != _Compare.mhName;
+}
+
+template<class THashType>
+bool zStringHash<THashType>::operator==(const THashType& _hCompare)const
+{
+	return mhName == _hCompare;
+}
+
+template<class THashType>
+bool zStringHash<THashType>::operator!=(const zStringHash& _hCompare)const
+{
+	return mhName != _hCompare;
 }
 
 template<class THashType>
@@ -133,6 +145,7 @@ zUInt zStringHash<THashType>::Find( THashType _HashName, const zStringHash* _pFi
 			return idx;
 	return _uCount;
 }
+
 
 }}  //namespace zen, Type 
 

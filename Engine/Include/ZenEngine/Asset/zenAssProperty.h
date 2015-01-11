@@ -17,8 +17,10 @@ namespace zen { namespace zenAss
 	{
 	ZENClassDeclare(PropertyValue, zRefCountedAutoDel);
 	public:
-												PropertyValue(const PropertyDefRef& _rParent);
-		PropertyDefRef							mrDefinition;
+							PropertyValue(const zAssetItemRef& _rOwnerAsset, const PropertyDefRef& _rOwnerDefinition);
+												//!< @todo Cleanup : Asset ptr really needed? Pointer to signal object instead?
+		zAssetItemRef		mrOwnerAsset;		//!< Asset property belongs to (null if this is a default property value) 
+		PropertyDefRef		mrOwnerDefinition;	//!< Property Definition describing value
 	};
 	
 	template<class TClassDefinition, class TClassValueStorage>
@@ -26,8 +28,8 @@ namespace zen { namespace zenAss
 	{
 	ZENClassDeclare(TPropertyValue, PropertyValue);
 	public:
-												TPropertyValue(const PropertyDefRef& _rParent);
-		TClassValueStorage						mValue;
+							TPropertyValue(const zAssetItemRef& _rOwnerAsset, const PropertyDefRef& _rOwnerDefinition);
+		TClassValueStorage	mValue;
 	};
 
 	//=============================================================================
@@ -42,9 +44,12 @@ namespace zen { namespace zenAss
 												PropertyValueRef(const PropertyValueRef& _rCopy):Super(_rCopy){}
 		bool									operator==(const PropertyValueRef& _rCmp)const;
 		bool									IsDefault()const;
-		PropertyValueRef						Clone()const;
+		PropertyValueRef						Clone(const zAssetItemRef& _rOwnerAsset)const;
 		zenConst::eAssetPropertyType			GetType() const;	
 		const PropertyDefinition&				GetDefinition()const;
+		const PropertyValue&					GetValueProperty()const;
+	protected:
+		void									EmitPropertyChanged();
 	};
 	
 	template<class TClassDefinition, class TClassValueStorage>
@@ -56,11 +61,11 @@ namespace zen { namespace zenAss
 
 		TPropertyValueRef(){}			
 		TPropertyValueRef( const PropertyValueRef& _Copy );
-		TPropertyValueRef&						operator=( const TPropertyValueRef& _Copy );		
+		TPropertyValueRef&						operator=( const TPropertyValueRef& _Copy );
 		TPropertyValueRef&						operator=( const TClassValueStorage& _Assign );
-		TClassValueStorage&						GetValue();		
+
 		const TClassValueStorage&				GetValue()const;
-		const TClassDefinition&					GetDefinition() const;
+		const TClassDefinition&					GetDefinition()const;
 	};
 
 	//=============================================================================
@@ -70,7 +75,7 @@ namespace zen { namespace zenAss
 	{
 	ZENClassDeclare(PropertyDefinition, zRefCountedAutoDel);
 	public:												
-		virtual PropertyValueRef				Allocate()const=0;
+		virtual PropertyValueRef				Allocate(const zAssetItemRef& _rOwnerAsset)const=0;
 		virtual zenConst::eAssetPropertyType	GetType()const=0;
 		const zString&							GetTypeName()const;
 		static const zString&					GetTypeName(zenConst::eAssetPropertyType _eType);
@@ -98,7 +103,7 @@ namespace zen { namespace zenAss
 		typedef TClassValue											ValueStorage;	//!< Type of Data value stored for this property
 		enum { kPropertyType = TPropertyType };
 												
- 		virtual PropertyValueRef				Allocate() const;
+ 		virtual PropertyValueRef				Allocate(const zAssetItemRef& _rOwnerAsset) const;
 		virtual zenConst::eAssetPropertyType	GetType()const;
 	protected:
 		virtual PropertyValueRef				Clone(const PropertyValueRef& _rValue)const;

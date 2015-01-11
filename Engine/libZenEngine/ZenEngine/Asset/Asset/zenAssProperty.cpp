@@ -24,10 +24,11 @@ static const zStringHash32 saPropertyName[]={
 //=============================================================================
 // PropertyValue
 //=============================================================================
-PropertyValue::PropertyValue(const PropertyDefRef& _rParent)
-: mrDefinition(_rParent)
-{
-	ZENAssert(mrDefinition.IsValid());
+PropertyValue::PropertyValue(const zAssetItemRef& _rOwnerAsset, const PropertyDefRef& _rOwnerDefinition)
+: mrOwnerAsset(_rOwnerAsset)
+, mrOwnerDefinition(_rOwnerDefinition)
+{	
+	ZENAssert(mrOwnerDefinition.IsValid());
 }
 
 //=============================================================================
@@ -35,28 +36,42 @@ PropertyValue::PropertyValue(const PropertyDefRef& _rParent)
 //=============================================================================
 zenConst::eAssetPropertyType PropertyValueRef::GetType() const
 {
-	return IsValid() ? Get()->mrDefinition->GetType() : zenConst::keAssProp__Invalid;
+	return IsValid() ? Get()->mrOwnerDefinition->GetType() : zenConst::keAssProp__Invalid;
 }
 
 bool PropertyValueRef::IsDefault()const
 {
-	return IsValid() ? Get()->mrDefinition->IsDefault( *this ) : false;
+	return IsValid() ? Get()->mrOwnerDefinition->IsDefault( *this ) : false;
 }
 
 const PropertyDefinition& PropertyValueRef::GetDefinition() const
 {
-	return *(GetSafe()->mrDefinition.Get());
+	return *(GetSafe()->mrOwnerDefinition.Get());
 }
 
-PropertyValueRef PropertyValueRef::Clone()const
+const PropertyValue& PropertyValueRef::GetValueProperty()const
 {
-	return GetSafe()->mrDefinition->Clone( *this );
+	return *GetSafe();
+}
+
+PropertyValueRef PropertyValueRef::Clone(const zAssetItemRef& _rOwnerAsset)const
+{
+	PropertyValueRef rClone = GetSafe()->mrOwnerDefinition->Clone( *this );
+	rClone->mrOwnerAsset	= _rOwnerAsset;
+	return rClone;
 }
 
 bool PropertyValueRef::operator==(const PropertyValueRef& _rCmp)const
 {
-	return GetSafe()->mrDefinition->IsEqual( *this, _rCmp);
+	return GetSafe()->mrOwnerDefinition->IsEqual( *this, _rCmp);
 }
+
+void PropertyValueRef::EmitPropertyChanged()
+{
+	if( GetSafe()->mrOwnerAsset.IsValid() )
+		GetSafe()->mrOwnerAsset->msigPropertyUpdate.Emit( *this );
+}
+
 
 //=============================================================================
 // PropertyDefinition

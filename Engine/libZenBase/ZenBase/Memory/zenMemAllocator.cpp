@@ -62,7 +62,7 @@ void zAllocator::DebugPrint()
 		pAlloc = pAlloc->LstNext();
 	}
 	
-	! @TODO: Print informations _bout _llocations
+	//! @todo Print informations about allocations
 		char		zSpaces[kuTreeMaxDepth*kuSpacePerLevel+1];
 		zI8			sSlotIndexPrev[ sizeof(((Iterator*)NULL)->mpSlotIndex) ];	//Get size of non-instantiated member _rray
 		memset(zSpaces, ' ', sizeof(zSpaces));
