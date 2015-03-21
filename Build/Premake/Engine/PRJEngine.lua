@@ -1,16 +1,16 @@
-vPCHEngineBase 		= "Engine/Include/ZenBase/zenBase.h"
-vPCHEngineCore 		= "Engine/Include/ZenCore/zenCore.h"
-vPCHEngineEngine 	= "Engine/Include/ZenEngine/zenEngine.h"
+vPCHEngineBase 		= "Engine/ZenApi/ZenBase/zenBase.h"
+vPCHEngineCore 		= "Engine/ZenApi/ZenCore/zenCore.h"
+vPCHEngineEngine 	= "Engine/ZenApi/ZenEngine/zenEngine.h"
 
 -------------------------------------------------------------------------------
 -- Engine Libraries 
 -------------------------------------------------------------------------------
 vThirdPartySrc = {"Engine/ThirdParty/pugixml/src"}
-Orion_AddGameAndToolLib("libZenBase", 		"ZenEngine", 	{"Engine/libZenBase", 		"Engine/Include/ZenBase"}, 		"libZenBase.h")
-Orion_AddGameAndToolLib("libZenCore", 		"ZenEngine",	{"Engine/libZenCore", 		"Engine/Include/ZenCore"}, 		"libZenCore.h")
-Orion_AddGameAndToolLib("libZenEngine", 	"ZenEngine",	{"Engine/libZenEngine", 	"Engine/Include/ZenEngine"}, 	"libZenEngine.h")
-Orion_AddGameAndToolLib("libZenExternal",	"ZenEngine",	{"Engine/libZenExternal", 	"Engine/Include/ZenExternal"},	"libZenExternal.h")
-Orion_AddGameAndToolLib("libThirdParty",	"ZenEngine",	vThirdPartySrc,												"")
+Orion_AddGameAndToolLib("libZenBase", 		"ZenEngine", 	{"Engine/ZenBase", 		"Engine/ZenApi/ZenBase"},		"zbBase.h")
+Orion_AddGameAndToolLib("libZenCore", 		"ZenEngine",	{"Engine/ZenCore", 		"Engine/ZenApi/ZenCore"}, 		"zcCore.h")
+Orion_AddGameAndToolLib("libZenEngine", 	"ZenEngine",	{"Engine/ZenEngine", 	"Engine/ZenApi/ZenEngine"}, 	"zeEngine.h")
+Orion_AddGameAndToolLib("libZenExternal",	"ZenEngine",	{"Engine/ZenExternal", 	"Engine/ZenApi/ZenExternal"},	"zxExternal.h")
+Orion_AddGameAndToolLib("libThirdParty",	"ZenEngine",	vThirdPartySrc,											"")
 
 -------------------------------------------------------------------------------
 -- Engine Samples
@@ -18,12 +18,12 @@ Orion_AddGameAndToolLib("libThirdParty",	"ZenEngine",	vThirdPartySrc,											
 
 -- SAMPLE CORE --
 --TODO change to api pch and not whole engine
-Orion_AddGameExe("SampleBaseType",		"Samples", 	{"Engine/Samples/Core/Type"},		"Engine/libZenEngine/libZenEngine.h", {}) 
-Orion_AddGameExe("SampleBaseMem",		"Samples", 	{"Engine/Samples/Core/Mem"},		"Engine/libZenEngine/libZenEngine.h", {}) 
-Orion_AddGameExe("SampleBaseLog",		"Samples", 	{"Engine/Samples/Core/Log"},		"Engine/libZenEngine/libZenEngine.h", {}) 
-Orion_AddGameExe("SampleBaseMath",		"Samples", 	{"Engine/Samples/Core/Math"},		"Engine/libZenEngine/libZenEngine.h", {}) 
-Orion_AddGameExe("SampleBaseSignal",	"Samples", 	{"Engine/Samples/Core/Signal"},		"Engine/libZenEngine/libZenEngine.h", {}) 
-Orion_AddGameExe("SampleBaseSystem",	"Samples", 	{"Engine/Samples/Core/System"},		"Engine/libZenEngine/libZenEngine.h", {}) 
+Orion_AddGameExe("SampleBaseType",		"Samples", 	{"Engine/Samples/Core/Type"},		vPCHEngineEngine, {}) 
+Orion_AddGameExe("SampleBaseMem",		"Samples", 	{"Engine/Samples/Core/Mem"},		vPCHEngineEngine, {}) 
+Orion_AddGameExe("SampleBaseLog",		"Samples", 	{"Engine/Samples/Core/Log"},		vPCHEngineEngine, {}) 
+Orion_AddGameExe("SampleBaseMath",		"Samples", 	{"Engine/Samples/Core/Math"},		vPCHEngineEngine, {}) 
+Orion_AddGameExe("SampleBaseSignal",	"Samples", 	{"Engine/Samples/Core/Signal"},		vPCHEngineEngine, {}) 
+Orion_AddGameExe("SampleBaseSystem",	"Samples", 	{"Engine/Samples/Core/System"},		vPCHEngineEngine, {}) 
 
 -- SAMPLE GFX --
 Orion_AddGameExe("SampleGfxBasic",		"Samples",	{"Engine/Samples/Gfx/Renderer"},	vPCHEngineEngine, {})

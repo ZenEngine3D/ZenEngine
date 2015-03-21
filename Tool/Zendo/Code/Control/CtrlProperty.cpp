@@ -99,7 +99,7 @@ PropertyMetaData::PropertyMetaData(wxPGProperty* _pOwner, const zenAss::zAssetIt
 , mrPropertyValue(_rPropertyValue)
 , mOriginalValue(_OriginalValue)
 {
-	mrAsset.GetSignalPropertyUpdate().Connect(*this, &PropertyMetaData::slotUpdateProperty);
+	mrAsset.GetSignalUpdatedProperty().Connect(*this, &PropertyMetaData::slotUpdateProperty);
 }
 
 void PropertyMetaData::SetDefaultValue()

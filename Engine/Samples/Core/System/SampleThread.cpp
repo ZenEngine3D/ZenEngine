@@ -1,11 +1,9 @@
-#include "libZenEngine.h"
-#include <Engine/libZenBase/libZenBase.h>
+#include "zenEngine.h"
 
 //=================================================================================================
 //! @example SampleThread.cpp
 //! Informations on the usage of how to use AWThreads
 //=================================================================================================
-
 
 // main.cpp    
 #include <iostream>
@@ -26,7 +24,7 @@ namespace sample
 			return 0;
 		}
 	};
-
+	/*
 	void Create_PC_Thread()
 	{
 		// Random object with DWORD method (void)
@@ -96,9 +94,11 @@ namespace sample
 			std::cout << "Couldn't interrupt the Thread \n" << std::endl;
 		}
 	}
-
+	*/
 	void SampleThread()
 	{	
+	//! @todo Look at this and make threading system
+	/*
 		Create_PC_Thread();
 		//Create_Base_Thread();
 
@@ -108,7 +108,7 @@ namespace sample
 		{
 			std::cout << "MAIN THREAD! (" << i << ")\n" << std::endl;
 		}
-		
+		*/
 	}
 
 }

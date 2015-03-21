@@ -1,4 +1,4 @@
-#include "libZenEngine.h"
+#include "zenEngine.h"
 
 //=================================================================================================
 //! @example SampleHash.cpp
@@ -13,18 +13,18 @@ namespace sample
 		TestAlloc()
 		: mValue(0)
 		{
-			zbMgr::Log.Log(zbLog::keLog_Game, "Constructor");
+			zenIO::Log(zenConst::keLog_Game, "Constructor");
 		}
 		
 		TestAlloc(int value)
 		: mValue(value)
 		{			
-			zbMgr::Log.Log(zbLog::keLog_Game, "Constructor %i", mValue);
+			zenIO::Log(zenConst::keLog_Game, "Constructor %i", mValue);
 		}
 		
 		~TestAlloc()
 		{
-			zbMgr::Log.Log(zbLog::keLog_Game, "Destructor %i", mValue);
+			zenIO::Log(zenConst::keLog_Game, "Destructor %i", mValue);
 		}
 		int mValue;
 	};
@@ -35,9 +35,9 @@ namespace sample
 	//==================================================================================================
 	void SampleMalloc()
 	{	
-		zbMgr::Log.Log(zbLog::keLog_Game, zenConst::kzLineA40);
-		zbMgr::Log.Log(zbLog::keLog_Game, " MALLOC");
-		zbMgr::Log.Log(zbLog::keLog_Game, zenConst::kzLineA40);
+		zenIO::Log(zenConst::keLog_Game, zenConst::kzLineA40);
+		zenIO::Log(zenConst::keLog_Game, " MALLOC");
+		zenIO::Log(zenConst::keLog_Game, zenConst::kzLineA40);
 
 		zU32 size1 = sizeof(int);
 		zU32 size2 = sizeof(TestAlloc);

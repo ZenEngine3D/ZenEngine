@@ -1,0 +1,56 @@
+#pragma once
+#ifndef __zCore_Res_Gfx_GfxSampler_DX11_h__
+#define __zCore_Res_Gfx_GfxSampler_DX11_h__
+
+namespace zcRes
+{
+	class GfxSampler_DX11 : public Resource
+	{
+	struct InstanceInfo : public zcExp::SerialGfxSampler_DX11
+	{
+		ID3D11SamplerState*		mpSamplerState;
+	};
+	ZENResourceDeclare(GfxSampler_DX11, InstanceInfo, zenConst::keResType_GfxSampler)
+	public:
+		virtual					~GfxSampler_DX11();
+		virtual bool			ResourceInit();		
+	};
+
+	class GfxBlend_DX11 : public Resource
+	{
+		struct InstanceInfo : public zcExp::SerialGfxBlend_DX11
+		{
+			ID3D11BlendState*		mpBlendState;
+		};
+		ZENResourceDeclare(GfxBlend_DX11, InstanceInfo, zenConst::keResType_GfxBlend)
+	public:
+		virtual					~GfxBlend_DX11();
+		virtual bool			ResourceInit();		
+	};
+
+	class GfxDepthStencil_DX11 : public Resource
+	{
+		struct InstanceInfo : public zcExp::SerialGfxDepthStencil_DX11
+		{
+			ID3D11DepthStencilState*		mpDepthStencilState;
+		};
+		ZENResourceDeclare(GfxDepthStencil_DX11, InstanceInfo, zenConst::keResType_GfxDepthStencil)
+	public:
+		virtual					~GfxDepthStencil_DX11();
+		virtual bool			ResourceInit();		
+	};
+
+	class GfxRasterizer_DX11 : public Resource
+	{
+		struct InstanceInfo : public zcExp::SerialGfxRasterizer_DX11
+		{
+			ID3D11RasterizerState*		mpRasterizerState;
+		};
+		ZENResourceDeclare(GfxRasterizer_DX11, InstanceInfo, zenConst::keResType_GfxRasterizer)
+	public:
+		virtual					~GfxRasterizer_DX11();
+		virtual bool			ResourceInit();		
+	};
+}
+
+#endif

@@ -1,4 +1,4 @@
-#include "libZenEngine.h"
+#include "zenEngine.h"
 #include <stdio.h>//test
 #include <stdlib.h>
 #include <time.h>
@@ -122,9 +122,9 @@ namespace sample
 	{
 		#define kuTestCount (10000)
 		#define	kuPoolSize	1024
-		zbMgr::Log.Log(zbLog::keLog_Game, zenConst::kzLineA40);
-		zbMgr::Log.Log(zbLog::keLog_Game, " HASH TABLE (%i entries tested)", kuTestCount);
-		zbMgr::Log.Log(zbLog::keLog_Game, zenConst::kzLineA40);
+		zenIO::Log(zenConst::keLog_Game, zenConst::kzLineA40);
+		zenIO::Log(zenConst::keLog_Game, " HASH TABLE (%i entries tested)", kuTestCount);
+		zenIO::Log(zenConst::keLog_Game, zenConst::kzLineA40);
 
 		zU32 uValKey(0);
 		zU64 uTimeStartGet,uTimeStartSet;
@@ -152,7 +152,7 @@ namespace sample
 			uTemp += dArraySize[uValKey];
 		}
 		uTimeStopGet = zenSys::GetTimeUSec();
-		zbMgr::Log.Log(zbLog::keLog_Game, "SparseArray:small32 Set(%7ius) Get(%7ius) Mem(%6iKb) Overhead(%6iKb)", 
+		zenIO::Log(zenConst::keLog_Game, "SparseArray:small32 Set(%7ius) Get(%7ius) Mem(%6iKb) Overhead(%6iKb)", 
 			zU32(uTimeStopSet-uTimeStartSet), 
 			zU32(uTimeStopGet-uTimeStartGet),
 			zU32(dArraySize.GetMemoryFootprint())/1024, 
@@ -181,7 +181,7 @@ namespace sample
 			uTemp += dArraySpeed[uValKey];
 		}
 		uTimeStopGet = zenSys::GetTimeUSec();
-		zbMgr::Log.Log(zbLog::keLog_Game, "SparseArray:fast32  Set(%7ius) Get(%7ius) Mem(%6iKb) Overhead(%6iKb)", 
+		zenIO::Log(zenConst::keLog_Game, "SparseArray:fast32  Set(%7ius) Get(%7ius) Mem(%6iKb) Overhead(%6iKb)", 
 			zU32(uTimeStopSet-uTimeStartSet), 
 			zU32(uTimeStopGet-uTimeStartGet),
 			zU32(dArraySpeed.GetMemoryFootprint())/1024, 
@@ -209,7 +209,7 @@ namespace sample
 			uTemp += hashset[uValKey];
 		}
 		uTimeStopGet = zenSys::GetTimeUSec();
-		zbMgr::Log.Log(zbLog::keLog_Game, "std::unordered_map  Set(%7ius) Get(%7ius) Mem(%6iKb) Overhead(%6iKb)", 
+		zenIO::Log(zenConst::keLog_Game, "std::unordered_map  Set(%7ius) Get(%7ius) Mem(%6iKb) Overhead(%6iKb)", 
 			zU32(uTimeStopSet-uTimeStartSet), 
 			zU32(uTimeStopGet-uTimeStartGet),
 			zU32(tracking_allocator::g_bytesAllocated)/1024, 
@@ -236,14 +236,14 @@ namespace sample
 			uTemp += hashmaptest[uValKey];
 		}
 		uTimeStopGet = zenSys::GetTimeUSec();
-		zbMgr::Log.Log(zbLog::keLog_Game, "std::map            Set(%7ius) Get(%7ius) Mem(%6iKb) Overhead(%6iKb)", 
+		zenIO::Log(zenConst::keLog_Game, "std::map            Set(%7ius) Get(%7ius) Mem(%6iKb) Overhead(%6iKb)", 
 			zU32(uTimeStopSet-uTimeStartSet), 
 			zU32(uTimeStopGet-uTimeStartGet),
 			zU32(tracking_allocator::g_bytesAllocated-AllocSizeStart)/1024, 
 			zU32(tracking_allocator::g_bytesAllocated-AllocSizeStart-kuTestCount*sizeof(zU32))/1024 );
 
 		//dArraySpeed.Clear();
-		zbMgr::Log.Log(zbLog::keLog_Game, ".... Cleared", uTemp);		
+		zenIO::Log(zenConst::keLog_Game, ".... Cleared", uTemp);		
 
 		//---------------------------------------------------------------------------
 		// Find First Unused
@@ -255,7 +255,7 @@ namespace sample
 		hashIndex.Set(4, 'e');
 		hashIndex.Set(5, 'f');
 		zHash32 firstUnused = hashIndex.GetFirstUnusedKey();
-		zbMgr::Log.Log(zbLog::keLog_Game, "Hashmap Find first Unused value OK? : %s", zenConst::kzFalseTrue[(zUInt)firstUnused==3] );
+		zenIO::Log(zenConst::keLog_Game, "Hashmap Find first Unused value OK? : %s", zenConst::kzFalseTrue[(zUInt)firstUnused==3] );
 	}
 
 }

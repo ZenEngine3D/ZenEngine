@@ -1,4 +1,4 @@
-#include "libZenEngine.h"
+#include "zenEngine.h"
 #include <iostream>
 
 //=================================================================================================
@@ -10,6 +10,8 @@ namespace sample
 {
 void SampleLog()
 {	
+//! @todo ReImplement this
+/*
 	zbMgr::Log.SetActive(zbLog::keLogOut_StdOut, zbLog::keLog_Assert );
 	zbMgr::Log.SetActive(zbLog::keLogOut_StdOut, zbLog::keLog_FileIO );
 	zbMgr::Log.SetActive(zbLog::keLogOut_Screen, zbLog::keLog_Assert );
@@ -21,7 +23,8 @@ void SampleLog()
 	bool bVal2 = zbMgr::Log.IsActive(zbLog::keLogOut_Screen, zbLog::keLog_Assert);
 
 	zbMgr::Log.Log(zbLog::keLog_ResTexture, "Test des erreurs" );
-	zbMgr::Log.Log(zbLog::keLog_Game, "Printf test %i %i", 1, 2);
+	zenIO::Log(zenConst::keLog_Game, "Printf test %i %i", 1, 2);
+*/
 }
 
 }

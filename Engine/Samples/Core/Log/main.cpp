@@ -1,20 +1,20 @@
-#include "libZenEngine.h"
+#include "zenEngine.h"
 
 namespace sample
 {	
 	void SampleLog();
 	void SampleAssert();
+
+	void RunSamples()
+	{
+		SampleLog();
+		SampleAssert();
+	}
 }
 
 int main (int argc, char * const argv[])
 {	
-	if( FSys::EngineStart() )
-	{
-		sample::SampleLog();
-		sample::SampleAssert();
-
-		while( zbSys::IsSystemActive() );
-	}
-	FSys::EngineStop();
+	zenSys::zSampleEngineInstance SampleEngine( &sample::RunSamples );
+	zenSys::LaunchEngine(&SampleEngine, argc,argv);
 	return 0;
 }

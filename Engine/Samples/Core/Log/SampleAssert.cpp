@@ -1,4 +1,4 @@
-#include "libZenEngine.h"
+#include "zenEngine.h"
 
 //=================================================================================================
 //! @example SampleAssert.cpp
@@ -13,10 +13,10 @@ void SampleAssert()
 	bool bTestAssert(false);	bool bTestAssertMsg(false);		bool bTestAssertOnce(false);	bool bTestAssertOnceMsg(false);
 	bool bTestCriticalMsg(false);
 
-	zbMgr::Log.Reset();
-	zbMgr::Log.Log(zbLog::keLog_Game, zenConst::kzLineA40);
-	zbMgr::Log.Log(zbLog::keLog_Game, " Assert test");
-	zbMgr::Log.Log(zbLog::keLog_Game, zenConst::kzLineA40);
+//	zbMgr::Log.Reset();
+	zenIO::Log(zenConst::keLog_Game, zenConst::kzLineA40);
+	zenIO::Log(zenConst::keLog_Game, " Assert test");
+	zenIO::Log(zenConst::keLog_Game, zenConst::kzLineA40);
 	
 	ZENWarning(bTestWarning);
 	ZENWarningMsg(bTestWarningMsg, "Warning with message" );

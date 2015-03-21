@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<Package ID="1" EngineVersion="1" />
+<Asset ID="6" Name="TestProperty" Type="TestProperty">
+	<Property Name="Float" Type="Float" Value="1" />
+	<Property Name="Float4" Type="Float4" X="1" Y="2" Z="3" W="4" />
+	<Property Name="Int" Type="Int" Value="5" />
+	<Property Name="Int2" Type="Int2" X="1" Y="2" />
+	<Property Name="Int3" Type="Int3" X="1" Y="2" Z="3" />
+	<Property Name="Int4" Type="Int4" X="1" Y="2" Z="3" W="4" />
+	<Property Name="File" Type="File" Value="Packagetest222.txt" />
+	<Property Name="Struct" Type="Struct">
+		<Property Name="StructFloat" Type="Float" Value="5" />
+	</Property>
+</Asset>
+<Asset ID="4" Name="TestName2" Type="Texture2D" />
