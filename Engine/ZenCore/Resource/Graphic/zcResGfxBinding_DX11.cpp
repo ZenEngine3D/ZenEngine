@@ -17,16 +17,16 @@ GfxInputStreamProxy_DX11::~GfxInputStreamProxy_DX11()
 
 bool GfxInputStreamProxy_DX11::Initialize(class GfxInputStream& _Owner)
 {
-	const GfxInputStream::ExportDataRef& rExportData = _Owner.GetExportData();
-	ZENAssert(rExportData.IsValid());
+	const GfxInputStream::ResDataRef& rResData = _Owner.GetResData();
+	ZENAssert(rResData.IsValid());
 	ZENDbgCode(mpOwner = &_Owner);
 
 	bool bSuccess(FALSE);
-	mrVertexProxy	= GetResourceProxy<GfxVertexRef>(rExportData->mVertexBufferID);
+	mrVertexProxy	= GetResourceProxy<GfxVertexRef>(rResData->mVertexBufferID);
 	if( mrVertexProxy.IsValid() )
 	{
 		
-		mrSignatureProxy		= GetResourceProxy<GfxInputSignatureRef>(rExportData->mShaderInputSignatureID);
+		mrSignatureProxy		= GetResourceProxy<GfxInputSignatureRef>(rResData->mShaderInputSignatureID);
 		if( mrSignatureProxy.IsValid() )
 		{
 			//! @todo make sure proxy not accessed gamethread
@@ -51,13 +51,13 @@ GfxMeshProxy_DX11::~GfxMeshProxy_DX11()
 
 bool GfxMeshProxy_DX11::Initialize(class GfxMesh& _Owner)
 {
-	const GfxMesh::ExportDataRef& rExportData = _Owner.GetExportData();
-	ZENAssert(rExportData.IsValid());
+	const GfxMesh::ResDataRef& rResData = _Owner.GetResData();
+	ZENAssert(rResData.IsValid());
 	ZENDbgCode(mpOwner = &_Owner);
 
-	marProxGfxMeshStrip.SetCount( rExportData->maMeshStripID.Count() );
+	marProxGfxMeshStrip.SetCount( rResData->maMeshStripID.Count() );
 	for(zUInt stripIdx(0), stripCount(marProxGfxMeshStrip.Count()); stripIdx<stripCount; ++stripIdx)
-		marProxGfxMeshStrip[stripIdx] = GetResourceProxy<GfxMeshStripRef>(rExportData->maMeshStripID[stripIdx]);
+		marProxGfxMeshStrip[stripIdx] = GetResourceProxy<GfxMeshStripRef>(rResData->maMeshStripID[stripIdx]);
 		
 	return true;
 }
@@ -125,30 +125,30 @@ GfxMeshStripProxy_DX11::~GfxMeshStripProxy_DX11()
 
 bool GfxMeshStripProxy_DX11::Initialize(class GfxMeshStrip& _Owner)
 {
-	const GfxMeshStrip::ExportDataRef& rExportData = _Owner.GetExportData();
-	ZENAssert(rExportData.IsValid());
+	const GfxMeshStrip::ResDataRef& rResData = _Owner.GetResData();
+	ZENAssert(rResData.IsValid());
 	ZENDbgCode(mpOwner = &_Owner);
 
-	mrIndexBufferProxy		= GetResourceProxy<GfxIndexRef>(rExportData->mIndexBufferID);
-	mrInputStreamProxy		= GetResourceProxy<GfxInputStreamRef>(rExportData->mStreamBindingID);
-	mrShaderBindingProxy		= GetResourceProxy<GfxShaderBindingRef>(rExportData->mShaderBindingID);
-	muIndexFirst		= rExportData->muIndexFirst;
-	muIndexCount		= rExportData->muIndexCount;
-	marShaderParamProxy.SetCount(rExportData->maShaderParamID.Count());
+	mrIndexBufferProxy		= GetResourceProxy<GfxIndexRef>(rResData->mIndexBufferID);
+	mrInputStreamProxy		= GetResourceProxy<GfxInputStreamRef>(rResData->mStreamBindingID);
+	mrShaderBindingProxy		= GetResourceProxy<GfxShaderBindingRef>(rResData->mShaderBindingID);
+	muIndexFirst		= rResData->muIndexFirst;
+	muIndexCount		= rResData->muIndexCount;
+	marShaderParamProxy.SetCount(rResData->maShaderParamID.Count());
 	for(zUInt idx(0), count(marShaderParamProxy.Count()); idx<count; ++idx)
-		marShaderParamProxy[idx] = GetResourceProxy<GfxShaderParamRef>(rExportData->maShaderParamID[idx]);
+		marShaderParamProxy[idx] = GetResourceProxy<GfxShaderParamRef>(rResData->maShaderParamID[idx]);
 		
 	marTextureProxy.SetCount( zenConst::keShaderStage__Count );
 	marGfxSamplerProxy.SetCount( zenConst::keShaderStage__Count );	
-	for(zUInt stageIdx(0), stageCount(rExportData->maTextureID.Count()); stageIdx<stageCount; ++stageIdx )
+	for(zUInt stageIdx(0), stageCount(rResData->maTextureID.Count()); stageIdx<stageCount; ++stageIdx )
 	{	
-		ZENAssert( rExportData->maTextureID[stageIdx].Count() == rExportData->maSamplerID[stageIdx].Count() );
-		marTextureProxy[stageIdx].SetCount(rExportData->maTextureID[stageIdx].Count());
-		marGfxSamplerProxy[stageIdx].SetCount(rExportData->maTextureID[stageIdx].Count());
+		ZENAssert( rResData->maTextureID[stageIdx].Count() == rResData->maSamplerID[stageIdx].Count() );
+		marTextureProxy[stageIdx].SetCount(rResData->maTextureID[stageIdx].Count());
+		marGfxSamplerProxy[stageIdx].SetCount(rResData->maTextureID[stageIdx].Count());
 		for(zUInt idx(0), count(marTextureProxy[stageIdx].Count()); idx<count; ++idx)
 		{
-			marTextureProxy[stageIdx][idx]		= GetResourceProxy<GfxTexture2dRef>(rExportData->maTextureID[stageIdx][idx]);
-			marGfxSamplerProxy[stageIdx][idx]	= GetResourceProxy<GfxSamplerRef>(rExportData->maSamplerID[stageIdx][idx]);
+			marTextureProxy[stageIdx][idx]		= GetResourceProxy<GfxTexture2dRef>(rResData->maTextureID[stageIdx][idx]);
+			marGfxSamplerProxy[stageIdx][idx]	= GetResourceProxy<GfxSamplerRef>(rResData->maSamplerID[stageIdx][idx]);
 		}
 	}
 	//! @todo Missing: assign default texture for the one not assigned
@@ -260,7 +260,7 @@ void GfxMeshStripProxy_DX11::SetValue(const zHash32& _hParamName, const zenMath:
 
 void GfxMeshStripProxy_DX11::SetValue(const zHash32& _hTextureName, GfxTexture2dProxyRef _rTexture )
 {		
-	GfxShaderBindingExportData::TextureSlot SlotInfos;
+	GfxShaderBindingResData::TextureSlot SlotInfos;
 	if( mrShaderBindingProxy->mdStageSlotPerTexture.Get(_hTextureName, SlotInfos) )
 	{
 		for(zUInt stageIdx(0); stageIdx<zenConst::keShaderStage__Count; ++stageIdx)
@@ -274,7 +274,7 @@ void GfxMeshStripProxy_DX11::SetValue(const zHash32& _hTextureName, GfxTexture2d
 
 void GfxMeshStripProxy_DX11::SetValue(const zHash32& _hTextureName, GfxSamplerProxyRef _rSampler )
 {
-	GfxShaderBindingExportData::TextureSlot SlotInfos;
+	GfxShaderBindingResData::TextureSlot SlotInfos;
 	if( mrShaderBindingProxy->mdStageSlotPerTexture.Get(_hTextureName, SlotInfos) )
 	{
 		for(zUInt stageIdx(0); stageIdx<zenConst::keShaderStage__Count; ++stageIdx)
@@ -288,7 +288,7 @@ void GfxMeshStripProxy_DX11::SetValue(const zHash32& _hTextureName, GfxSamplerPr
 
 void GfxMeshStripProxy_DX11::SetValue(const zHash32& _hTextureName, GfxTexture2dProxyRef _rTexture, GfxSamplerProxyRef _rSampler )
 {
-	GfxShaderBindingExportData::TextureSlot SlotInfos;
+	GfxShaderBindingResData::TextureSlot SlotInfos;
 	if( mrShaderBindingProxy->mdStageSlotPerTexture.Get(_hTextureName, SlotInfos) )
 	{
 		for(zUInt stageIdx(0); stageIdx<zenConst::keShaderStage__Count; ++stageIdx)
@@ -315,23 +315,23 @@ GfxShaderBindingProxy_DX11::~GfxShaderBindingProxy_DX11()
 
 bool GfxShaderBindingProxy_DX11::Initialize(class GfxShaderBinding& _Owner)
 {
-	const GfxShaderBinding::ExportDataRef& rExportData = _Owner.GetExportData();
-	ZENAssert(rExportData.IsValid());
+	const GfxShaderBinding::ResDataRef& rResData = _Owner.GetResData();
+	ZENAssert(rResData.IsValid());
 	ZENDbgCode(mpOwner = &_Owner);
 
-	mrProxShaderVertex	= GetResourceProxy<GfxShaderVertexRef>(rExportData->maShaderID[zenConst::keShaderStage_Vertex]);
-	mrProxShaderPixel	= GetResourceProxy<GfxShaderPixelRef>(rExportData->maShaderID[zenConst::keShaderStage_Pixel]);
+	mrProxShaderVertex	= GetResourceProxy<GfxShaderVertexRef>(rResData->maShaderID[zenConst::keShaderStage_Vertex]);
+	mrProxShaderPixel	= GetResourceProxy<GfxShaderPixelRef>(rResData->maShaderID[zenConst::keShaderStage_Pixel]);
 	
-	GfxShaderBindingExportData::TextureSlot emptySlot;
-	mdStageSlotPerTexture.Init(rExportData->maTextureName.Count()*2);
+	GfxShaderBindingResData::TextureSlot emptySlot;
+	mdStageSlotPerTexture.Init(rResData->maTextureName.Count()*2);
 	mdStageSlotPerTexture.SetDefaultValue(emptySlot);
-	mdStageSlotPerTexture.Import( rExportData->maTextureName, rExportData->maTextureBind );
+	mdStageSlotPerTexture.Import( rResData->maTextureName, rResData->maTextureBind );
 
-	mdBufferPerParam.Init(rExportData->maParameterName.Count()*2);
+	mdBufferPerParam.Init(rResData->maParameterName.Count()*2);
 	mdBufferPerParam.SetDefaultValue(0);
-	mdBufferPerParam.Import( rExportData->maParameterName, rExportData->maParameterMask );
+	mdBufferPerParam.Import( rResData->maParameterName, rResData->maParameterMask );
 
-	maStagePerParamDef = rExportData->maStagePerParamDef;
+	maStagePerParamDef = rResData->maStagePerParamDef;
 	return true;
 }
 

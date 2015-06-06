@@ -5,9 +5,9 @@
 namespace zcExp
 {	
 
-class ExportDataGfxInputStreamDX11 : public ExportDataBase
+class ResDataGfxInputStreamDX11 : public ResDataBase
 {
-ZENClassDeclare(ExportDataGfxInputStreamDX11, ExportDataBase)
+ZENClassDeclare(ResDataGfxInputStreamDX11, ResDataBase)
 public:
 	virtual bool	Serialize( zcExp::Serializer_Base& _Serializer ){return true;}
 	zResID			mVertexBufferID;

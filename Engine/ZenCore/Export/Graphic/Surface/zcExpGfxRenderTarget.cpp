@@ -2,9 +2,9 @@
 
 namespace zcExp
 {
-	ExporterGfxRenderTarget::ExporterGfxRenderTarget(const ExportDataRef& _rExportData)
-	: Super(_rExportData.GetSafe())
-	, mrExportData(_rExportData)
+	ExporterGfxRenderTarget::ExporterGfxRenderTarget(const ResDataRef& _rResData)
+	: Super(_rResData.GetSafe())
+	, mrResData(_rResData)
 	{
 	}
 
@@ -14,9 +14,9 @@ namespace zcExp
 		if( Super::ExportStart() )
 		{
 			ExportInfoGfxRendertarget* pExportInfo	= static_cast<ExportInfoGfxRendertarget*>(mpExportInfo);		
-			mrExportData->meFormat						= pExportInfo->meFormat;
-			mrExportData->mvDim							= pExportInfo->mvDim;
-			mrExportData->mbSRGB						= pExportInfo->mbSRGB;
+			mrResData->meFormat						= pExportInfo->meFormat;
+			mrResData->mvDim							= pExportInfo->mvDim;
+			mrResData->mbSRGB						= pExportInfo->mbSRGB;
 			return true;
 		}
 		return false;

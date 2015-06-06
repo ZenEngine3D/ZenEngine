@@ -2,37 +2,37 @@
 
 namespace zcExp
 {
-	ExporterGfxMeshStripDX11_DX11::ExporterGfxMeshStripDX11_DX11(const ExportDataRef& _rExportData)
-	: Super(_rExportData.GetSafe())
-	, mrExportData(_rExportData)
+	ExporterGfxMeshStripDX11_DX11::ExporterGfxMeshStripDX11_DX11(const ResDataRef& _rResData)
+	: Super(_rResData.GetSafe())
+	, mrResData(_rResData)
 	{
 	}
 
 	bool ExporterGfxMeshStripDX11_DX11::ExportWork(bool _bIsTHRTask)
 	{
-		ZENAssert(mrExportData.IsValid());	
+		ZENAssert(mrResData.IsValid());	
 		ExportInfoGfxMeshStrip* pExportInfo	= static_cast<ExportInfoGfxMeshStrip*>(mpExportInfo);
-		mrExportData->mIndexBufferID			= pExportInfo->mIndexBufferID;				
-		mrExportData->mShaderBindingID			= pExportInfo->mShaderBindingID;
-		mrExportData->muIndexFirst				= pExportInfo->muIndexFirst;
-		mrExportData->muIndexCount				= pExportInfo->muIndexCount;
+		mrResData->mIndexBufferID			= pExportInfo->mIndexBufferID;				
+		mrResData->mShaderBindingID			= pExportInfo->mShaderBindingID;
+		mrResData->muIndexFirst				= pExportInfo->muIndexFirst;
+		mrResData->muIndexCount				= pExportInfo->muIndexCount;
 		return TRUE;
 	}
 
 	bool ExporterGfxMeshStripDX11_DX11::ExportEnd()
 	{
 		ExportInfoGfxMeshStrip*	pExportInfo		= static_cast<ExportInfoGfxMeshStrip*>(mpExportInfo);
-		ExportDataGfxShaderBinding*	pShaderBinding	= EMgr::SerialItems.GetItem<ExportDataGfxShaderBinding>(pExportInfo->mShaderBindingID);
-		ExportDataGfxShaderDX11*	pVertexShader	= pShaderBinding ? EMgr::SerialItems.GetItem<ExportDataGfxShaderDX11>(pShaderBinding->maShaderID[zenConst::keShaderStage_Vertex]) : NULL;
-		ExportDataGfxIndexDX11*		pIndexBuffer	= EMgr::SerialItems.GetItem<ExportDataGfxIndexDX11>(pExportInfo->mIndexBufferID);
+		ResDataGfxShaderBinding*	pShaderBinding	= EMgr::SerialItems.GetItem<ResDataGfxShaderBinding>(pExportInfo->mShaderBindingID);
+		ResDataGfxShaderDX11*	pVertexShader	= pShaderBinding ? EMgr::SerialItems.GetItem<ResDataGfxShaderDX11>(pShaderBinding->maShaderID[zenConst::keShaderStage_Vertex]) : NULL;
+		ResDataGfxIndexDX11*		pIndexBuffer	= EMgr::SerialItems.GetItem<ResDataGfxIndexDX11>(pExportInfo->mIndexBufferID);
 
 		if( mpExportInfo->IsSuccess() && Super::ExportEnd() && pIndexBuffer && pShaderBinding && pVertexShader )
 		{			
 			//-----------------------------------------------------------------
 			// Create all needed InputStream binding
 			//-----------------------------------------------------------------
-			mrExportData->muIndexCount		= zenMath::Min( mrExportData->muIndexCount, pIndexBuffer->muIndiceCount-mrExportData->muIndexFirst );
-			mrExportData->mStreamBindingID	= CreateGfxInputStream(pExportInfo->mVertexBufferID, pVertexShader->mShaderInputSignatureID);
+			mrResData->muIndexCount		= zenMath::Min( mrResData->muIndexCount, pIndexBuffer->muIndiceCount-mrResData->muIndexFirst );
+			mrResData->mStreamBindingID	= CreateGfxInputStream(pExportInfo->mVertexBufferID, pVertexShader->mShaderInputSignatureID);
 
 			//---------------------------------------------------------------------
 			// Make sure there's a ShaderParam for each ShaderParamDef needed
@@ -40,17 +40,17 @@ namespace zcExp
 			//	associated as we find them. Then create the one missing.
 			//---------------------------------------------------------------------
 			// Assign all ParameterInstance provided
-			mrExportData->maShaderParamID	= pShaderBinding->maParamDefID;
-			zUInt paramDefCount				= mrExportData->maShaderParamID.Count();
+			mrResData->maShaderParamID	= pShaderBinding->maParamDefID;
+			zUInt paramDefCount				= mrResData->maShaderParamID.Count();
 			for(zUInt paramInstIdx(0), paramInstCount(pExportInfo->maShaderParamID.Count()); paramInstIdx<paramInstCount; ++paramInstIdx )
 			{
-				ExportDataGfxShaderParamDX11* pParamInst = EMgr::SerialItems.GetItem<ExportDataGfxShaderParamDX11>(pExportInfo->maShaderParamID[paramInstIdx]);
+				ResDataGfxShaderParamDX11* pParamInst = EMgr::SerialItems.GetItem<ResDataGfxShaderParamDX11>(pExportInfo->maShaderParamID[paramInstIdx]);
 				if( pParamInst )
 				{
 					for(zUInt paramDefIdx(0); paramDefIdx<paramDefCount; ++paramDefIdx)
 					{					
-						if( mrExportData->maShaderParamID[paramDefIdx] == pParamInst->mParentParamDefID )
-							mrExportData->maShaderParamID[paramDefIdx] = pParamInst->mResID;
+						if( mrResData->maShaderParamID[paramDefIdx] == pParamInst->mParentParamDefID )
+							mrResData->maShaderParamID[paramDefIdx] = pParamInst->mResID;
 					}
 				}
 			}
@@ -58,41 +58,41 @@ namespace zcExp
 			//zArrayStatic<const zcExp::ParameterBase*> aEmptyParamValues;
 			for(zUInt paramDefIdx(0); paramDefIdx<paramDefCount; ++paramDefIdx)
 			{					
-				if( mrExportData->maShaderParamID[paramDefIdx].Type() == zenConst::keResType_GfxShaderParamDef )
-					mrExportData->maShaderParamID[paramDefIdx] = zcExp::CreateGfxShaderParam( mrExportData->maShaderParamID[paramDefIdx]/*, aEmptyParamValues*/);					
+				if( mrResData->maShaderParamID[paramDefIdx].Type() == zenConst::keResType_GfxShaderParamDef )
+					mrResData->maShaderParamID[paramDefIdx] = zcExp::CreateGfxShaderParam( mrResData->maShaderParamID[paramDefIdx]/*, aEmptyParamValues*/);					
 			}
 			
 			//---------------------------------------------------------------------
 			// Make sure we have all texture assigned
 			//---------------------------------------------------------------------
 			// Assign default invalid value to all needed texture slot
-			mrExportData->maTextureID.SetCount( zenConst::keShaderStage__Count );
-			mrExportData->maSamplerID.SetCount( zenConst::keShaderStage__Count );
+			mrResData->maTextureID.SetCount( zenConst::keShaderStage__Count );
+			mrResData->maSamplerID.SetCount( zenConst::keShaderStage__Count );
 			for( zUInt stageIdx(0); stageIdx<zenConst::keShaderStage__Count; ++stageIdx)
 			{
 				zUInt textureCount = pShaderBinding->maTextureBind.Count();
-				mrExportData->maTextureID[stageIdx].SetCount( textureCount );
-				mrExportData->maSamplerID[stageIdx].SetCount( textureCount );
+				mrResData->maTextureID[stageIdx].SetCount( textureCount );
+				mrResData->maSamplerID[stageIdx].SetCount( textureCount );
 				for( zUInt textureIdx(0); textureIdx<textureCount; ++textureIdx )
 				{
-					mrExportData->maTextureID[stageIdx][textureIdx] = zResID();
-					mrExportData->maSamplerID[stageIdx][textureIdx] = zResID();
+					mrResData->maTextureID[stageIdx][textureIdx] = zResID();
+					mrResData->maSamplerID[stageIdx][textureIdx] = zResID();
 				}
 			}
 				
 			// Now assign provided texture value
-			zMap<ExportDataGfxShaderBinding::TextureSlot>::Key32 dTextureBindInfo(16);
+			zMap<ResDataGfxShaderBinding::TextureSlot>::Key32 dTextureBindInfo(16);
 			dTextureBindInfo.Import( pShaderBinding->maTextureName, pShaderBinding->maTextureBind );
-			dTextureBindInfo.SetDefaultValue(ExportDataGfxShaderBinding::TextureSlot());
+			dTextureBindInfo.SetDefaultValue(ResDataGfxShaderBinding::TextureSlot());
 			for( zUInt textureIdx(0), textureCount(pExportInfo->maTexture.Count()); textureIdx<textureCount; ++textureIdx)
 			{
-				const ExportDataGfxShaderBinding::TextureSlot& slotInfo = dTextureBindInfo[ pExportInfo->maTexture[textureIdx].mhTextureName ];
+				const ResDataGfxShaderBinding::TextureSlot& slotInfo = dTextureBindInfo[ pExportInfo->maTexture[textureIdx].mhTextureName ];
 				for(zUInt stageIdx(0); stageIdx<zenConst::keShaderStage__Count; ++stageIdx )
 				{
 					if( slotInfo.muCount[stageIdx] > 0 )
 					{
-						mrExportData->maTextureID[stageIdx][slotInfo.muSlot[stageIdx]] = pExportInfo->maTexture[textureIdx].mTextureID;
-						mrExportData->maSamplerID[stageIdx][slotInfo.muSlot[stageIdx]] = pExportInfo->maTexture[textureIdx].mSamplerID;
+						mrResData->maTextureID[stageIdx][slotInfo.muSlot[stageIdx]] = pExportInfo->maTexture[textureIdx].mTextureID;
+						mrResData->maSamplerID[stageIdx][slotInfo.muSlot[stageIdx]] = pExportInfo->maTexture[textureIdx].mSamplerID;
 					}
 				}
 			}

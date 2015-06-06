@@ -8,14 +8,14 @@ namespace zcExp
 	{
 	ZENClassDeclare(ExporterGfxMeshStripDX11_DX11, ExporterBase)
 	public:				
-	typedef ExportDataGfxMeshStripDX11		ExportData;
-	typedef zGameRef<ExportData>			ExportDataRef;
-											ExporterGfxMeshStripDX11_DX11(const ExportDataRef& _rExportData);
+	typedef ResDataGfxMeshStripDX11		ResData;
+	typedef zGameRef<ResData>			ResDataRef;
+											ExporterGfxMeshStripDX11_DX11(const ResDataRef& _rResData);
 
 	protected:	
 		virtual bool						ExportWork(bool _bIsTHRTask);
 		virtual bool						ExportEnd();
-		ExportDataRef						mrExportData;
+		ResDataRef						mrResData;
 	};
 }
 

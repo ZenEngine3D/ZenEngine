@@ -95,7 +95,7 @@ namespace zcRes
 		GfxShaderVertexProxyRef									mrProxShaderVertex;	//! @todo clean have common interface to shader stage again? Pointer to proxy instead?
 		GfxShaderPixelProxyRef									mrProxShaderPixel;			
 		zMap<zU32>::Key32										mdBufferPerParam;		//!< Bitmask of each ShaderParam containing this parameter name
-		zMap<GfxShaderBindingExportData::TextureSlot>::Key32	mdStageSlotPerTexture;	//!< Texture Index of each Shader stage using this parameter name
+		zMap<GfxShaderBindingResData::TextureSlot>::Key32	mdStageSlotPerTexture;	//!< Texture Index of each Shader stage using this parameter name
 		zArrayStatic<zU32>										maStagePerParamDef;		//!< Array of Bitfield of valid shader stage per ShaderParam (match mSerial.maParamDef)
 		ZENDbgCode(class GfxShaderBinding*				mpOwner);
 	};

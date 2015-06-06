@@ -8,7 +8,7 @@ namespace zcRes
 	//! @class	Binding between a vertex shader and a VertexBuffer.
 	//!			Needed for proper mapping of vertex stream into Shader.	
 	//=============================================================================================
-	class GfxInputStream : public TResource<GfxInputStream, GfxInputStreamExportData, GfxInputStreamProxy, GfxInputStreamExporterRuntime>
+	class GfxInputStream : public TResource<GfxInputStream, GfxInputStreamResData, GfxInputStreamProxy, GfxInputStreamExporterRuntime>
 	{
 	ZENClassDeclare(GfxInputStream, TResource)
 	};
@@ -16,7 +16,7 @@ namespace zcRes
 	//=============================================================================================
 	//! @class	Binding geometry to shader
 	//=============================================================================================
-	class GfxMeshStrip : public TResource<GfxMeshStrip, GfxMeshStripExportData, GfxMeshStripProxy, GfxMeshStripExporterRuntime>
+	class GfxMeshStrip : public TResource<GfxMeshStrip, GfxMeshStripResData, GfxMeshStripProxy, GfxMeshStripExporterRuntime>
 	{
 	ZENClassDeclare(GfxMeshStrip, TResource)
 	public:
@@ -36,7 +36,7 @@ namespace zcRes
 	//=============================================================================================
 	//! @class	List of MeshStrip resource to generate entire mesh
 	//=============================================================================================
-	class GfxMesh : public TResource<GfxMesh, GfxMeshExportData, GfxMeshProxy, GfxMeshExporterRuntime>
+	class GfxMesh : public TResource<GfxMesh, GfxMeshResData, GfxMeshProxy, GfxMeshExporterRuntime>
 	{
 	ZENClassDeclare(GfxMesh, TResource)
 	public:
@@ -53,7 +53,7 @@ namespace zcRes
 		void			SetValue(const zHash32& _hTextureName, GfxTexture2dRef _rTexture, GfxSamplerRef _rSampler ){mrProxy->SetValue(_hTextureName, _rTexture->GetProxy(), _rSampler->GetProxy());}
 	};
 
-	class GfxShaderBinding : public TResource<GfxShaderBinding, GfxShaderBindingExportData, GfxShaderBindingProxy, GfxShaderBindingExporterRuntime>
+	class GfxShaderBinding : public TResource<GfxShaderBinding, GfxShaderBindingResData, GfxShaderBindingProxy, GfxShaderBindingExporterRuntime>
 	{
 	ZENClassDeclare(GfxShaderBinding, TResource)
 	};

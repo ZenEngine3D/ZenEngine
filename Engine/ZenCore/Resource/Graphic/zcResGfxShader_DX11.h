@@ -8,7 +8,7 @@ struct ID3D11InputLayout;
 
 namespace zcRes
 {
-	typedef zMap<zcExp::ExportDataGfxShaderDX11::BindInfo>::Key32	MapBindInfo;
+	typedef zMap<zcExp::ResDataGfxShaderDX11::BindInfo>::Key32	MapBindInfo;
 
 	//=================================================================================================
 	class GfxInputSignatureProxy_DX11 : public zRefCountedAutoDel

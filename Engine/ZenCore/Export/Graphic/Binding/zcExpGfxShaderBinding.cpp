@@ -23,8 +23,8 @@ namespace zcExp
 		return zcExp::ValidateItemID(_ePlatform, _eType, _eSource, hName, _bExistOut);
 	}
 
-	ExporterGfxShaderBinding::ExporterGfxShaderBinding(const ExportDataRef& _rExportData)
-	: Super(_rExportData)
+	ExporterGfxShaderBinding::ExporterGfxShaderBinding(const ResDataRef& _rResData)
+	: Super(_rResData)
 	{
 	}
 
@@ -53,7 +53,7 @@ namespace zcExp
 		mdStagePerParamDef.SetDefaultValue(0);
 		for(zUInt idx=0; idx<pExport->maShaderID.Count(); ++idx)
 		{
-			zcRes::GfxShaderExportData* pShader = EMgr::SerialItems.GetItem<zcRes::GfxShaderExportData>( pExport->maShaderID[idx] );
+			zcRes::GfxShaderResData* pShader = EMgr::SerialItems.GetItem<zcRes::GfxShaderResData>( pExport->maShaderID[idx] );
 			if( pShader )
 			{
 				ZENAssertMsg(!aShaderID[pShader->meShaderStage].IsValid(), "Should only specify 1 shader per shader stage");	//! @todo Missing: error output

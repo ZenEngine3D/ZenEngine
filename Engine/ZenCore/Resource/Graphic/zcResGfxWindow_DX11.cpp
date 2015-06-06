@@ -19,14 +19,14 @@ namespace zcRes
 
 	bool GfxWindowProxy_DX11::Initialize(class GfxWindow& _Owner)
 	{
-		const GfxWindow::ExportDataRef& rExportData = _Owner.GetExportData();
-		ZENAssert(rExportData.IsValid());
+		const GfxWindow::ResDataRef& rResData = _Owner.GetResData();
+		ZENAssert(rResData.IsValid());
 		ZENDbgCode(mpOwner = &_Owner);
 
 		RECT rc;
-		GetClientRect( rExportData->mhWindow, &rc );
+		GetClientRect( rResData->mhWindow, &rc );
 		mvSize					= zVec2U16(zU16(rc.right-rc.left), zU16(rc.bottom-rc.top));
-		meBackbufferColorFormat	= zenConst::keTexFormat_RGBA8;	//! @todo feature expose desired format in ExportData
+		meBackbufferColorFormat	= zenConst::keTexFormat_RGBA8;	//! @todo feature expose desired format in ResData
 		meBackbufferDepthFormat	= zenConst::keTexFormat_D24S8;
 
 		DXGI_SWAP_CHAIN_DESC swapDesc;
@@ -38,7 +38,7 @@ namespace zcRes
 		swapDesc.BufferDesc.RefreshRate.Numerator	= 60;
 		swapDesc.BufferDesc.RefreshRate.Denominator	= 1;
 		swapDesc.BufferUsage						= DXGI_USAGE_RENDER_TARGET_OUTPUT;
-		swapDesc.OutputWindow						= rExportData->mhWindow;
+		swapDesc.OutputWindow						= rResData->mhWindow;
 		swapDesc.SampleDesc.Count					= 1;
 		swapDesc.SampleDesc.Quality					= 0;
 		swapDesc.Windowed							= TRUE;
@@ -55,14 +55,14 @@ namespace zcRes
 					{
 						//! @todo can't allow access to owner in renderthread, fix this
 						//! @todo clean move code to resize and avoid duplicate
-						GfxRenderTargetExportDataRef rExportData	= zenNewDefault GfxRenderTargetExportData();
-						rExportData->mResID							= EMgr::Export.GetNewResourceID( zenConst::keResType_GfxRenderTarget );
-						rExportData->mbSRGB							= TRUE;
-						rExportData->meFormat						= meBackbufferColorFormat;
-						rExportData->mvDim							= mvSize;
-						rExportData->mpBackbuffer					= mDX11pSwapChain;
+						GfxRenderTargetResDataRef rResData	= zenNewDefault GfxRenderTargetResData();
+						rResData->mResID							= EMgr::Export.GetNewResourceID( zenConst::keResType_GfxRenderTarget );
+						rResData->mbSRGB							= TRUE;
+						rResData->meFormat						= meBackbufferColorFormat;
+						rResData->mvDim							= mvSize;
+						rResData->mpBackbuffer					= mDX11pSwapChain;
 						
-						GfxRenderTargetRef rBackbufferColor			= GfxRenderTarget::RuntimeCreate(rExportData);
+						GfxRenderTargetRef rBackbufferColor			= GfxRenderTarget::RuntimeCreate(rResData);
 						GfxRenderTargetRef rBackbufferDepth			= zcExp::CreateGfxRenderTarget( meBackbufferDepthFormat, mvSize);						
 						GfxViewRef rView							= zcExp::CreateGfxView( rBackbufferColor.GetResID(), rBackbufferDepth.GetResID() );
 						
@@ -96,14 +96,14 @@ namespace zcRes
 			mrProxBackbufferColor->ReleaseBackbuffer();
 			mDX11pSwapChain->ResizeBuffers(0, mvPendingResize.x, mvPendingResize.y, DXGI_FORMAT_UNKNOWN, 0);
 
-			GfxRenderTargetExportDataRef rExportData	= zenNewDefault GfxRenderTargetExportData();
-			rExportData->mResID							= EMgr::Export.GetNewResourceID( zenConst::keResType_GfxRenderTarget );
-			rExportData->mbSRGB							= TRUE;
-			rExportData->meFormat						= meBackbufferColorFormat;
-			rExportData->mvDim							= mvSize;
-			rExportData->mpBackbuffer					= mDX11pSwapChain;
+			GfxRenderTargetResDataRef rResData	= zenNewDefault GfxRenderTargetResData();
+			rResData->mResID							= EMgr::Export.GetNewResourceID( zenConst::keResType_GfxRenderTarget );
+			rResData->mbSRGB							= TRUE;
+			rResData->meFormat						= meBackbufferColorFormat;
+			rResData->mvDim							= mvSize;
+			rResData->mpBackbuffer					= mDX11pSwapChain;
 			
-			GfxRenderTargetRef rBackbufferColor			= GfxRenderTarget::RuntimeCreate(rExportData);
+			GfxRenderTargetRef rBackbufferColor			= GfxRenderTarget::RuntimeCreate(rResData);
 			GfxRenderTargetRef rBackbufferDepth			= zcExp::CreateGfxRenderTarget( meBackbufferDepthFormat, mvSize);						
 			GfxViewRef rView							= zcExp::CreateGfxView( rBackbufferColor.GetResID(), rBackbufferDepth.GetResID() );
 						

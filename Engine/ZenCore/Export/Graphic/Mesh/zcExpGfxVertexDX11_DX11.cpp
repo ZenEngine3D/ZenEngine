@@ -3,15 +3,15 @@
 namespace zcExp
 {
 
-ExporterGfxVertexDX11_DX11::ExporterGfxVertexDX11_DX11(const ExportDataRef& _rExportData)
-: ExporterBase(_rExportData.GetSafe())
-, mrExportData(_rExportData)
+ExporterGfxVertexDX11_DX11::ExporterGfxVertexDX11_DX11(const ResDataRef& _rResData)
+: ExporterBase(_rResData.GetSafe())
+, mrResData(_rResData)
 {
 }
 
 bool ExporterGfxVertexDX11_DX11::ExportWork(bool _bIsTHRTask)
 {
-	ZENAssert(mrExportData.IsValid());	
+	ZENAssert(mrResData.IsValid());	
 	ExportInfoGfxVertex* pExportInfo = static_cast<ExportInfoGfxVertex*>(mpExportInfo);
 	zUInt uSemanticIndex[]	= {	0,0,0,0,0,0,0,0 };
 	const DXGI_FORMAT eFormats[zenConst::keShaderElemType__Count][4]= {
@@ -26,14 +26,14 @@ bool ExporterGfxVertexDX11_DX11::ExportWork(bool _bIsTHRTask)
 	for(zUInt i=0; i<pExportInfo->maStreams.Count(); ++i)
 		uElementTotal += pExportInfo->maStreams[i].maElements.Count();
 
-	mrExportData->mResourceUse			= pExportInfo->mResourceUse;
-	mrExportData->maStream.SetCount(pExportInfo->maStreams.Count());
-	mrExportData->maElementDef.SetCount(sizeof(D3D11_INPUT_ELEMENT_DESC)*uElementTotal);	
-	D3D11_INPUT_ELEMENT_DESC* pElemDX11	= (D3D11_INPUT_ELEMENT_DESC*)mrExportData->maElementDef.First();
-	for( zUInt stream=0; stream<mrExportData->maStream.Count(); ++stream )
+	mrResData->mResourceUse			= pExportInfo->mResourceUse;
+	mrResData->maStream.SetCount(pExportInfo->maStreams.Count());
+	mrResData->maElementDef.SetCount(sizeof(D3D11_INPUT_ELEMENT_DESC)*uElementTotal);	
+	D3D11_INPUT_ELEMENT_DESC* pElemDX11	= (D3D11_INPUT_ELEMENT_DESC*)mrResData->maElementDef.First();
+	for( zUInt stream=0; stream<mrResData->maStream.Count(); ++stream )
 	{
 		const zenRes::zGfxVertex::Stream& StreamIn		= pExportInfo->maStreams[stream];
-		ExportData::Stream& StreamOut					= mrExportData->maStream[stream];
+		ResData::Stream& StreamOut					= mrResData->maStream[stream];
 		StreamOut.maData								= StreamIn.maData;
 		StreamOut.muStride								= StreamIn.muStride;
 		StreamOut.muElementStart						= uElementCur;

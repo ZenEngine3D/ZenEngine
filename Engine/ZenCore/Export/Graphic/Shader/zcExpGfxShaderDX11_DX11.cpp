@@ -36,7 +36,7 @@ ZENInline void ProcessShaderParamDef(ID3D11ShaderReflection& _GfxShaderReflectio
 //! @brief		Process the shader texture infos
 //! @details	
 //=================================================================================================
-ZENInline void ProcessTexture(ID3D11ShaderReflection& _GfxShaderReflection, const D3D11_SHADER_INPUT_BIND_DESC& _InputDesc, ExportDataGfxShaderDX11::BindInfo& _BindingOut, zHash32& _TextureNameOut)
+ZENInline void ProcessTexture(ID3D11ShaderReflection& _GfxShaderReflection, const D3D11_SHADER_INPUT_BIND_DESC& _InputDesc, ResDataGfxShaderDX11::BindInfo& _BindingOut, zHash32& _TextureNameOut)
 {
 	char zName[128];
 	// We package texture access inside a structure that contains bother Texture Buffer and Sampler,
@@ -54,9 +54,9 @@ ZENInline void ProcessTexture(ID3D11ShaderReflection& _GfxShaderReflection, cons
 	_TextureNameOut		= zHash32(zName);
 }
 
-ExporterGfxShaderDX11_DX11::ExporterGfxShaderDX11_DX11(const ExportDataRef& _rExportData)
-: ExporterBase(_rExportData.GetSafe())
-, mrExportData(_rExportData)
+ExporterGfxShaderDX11_DX11::ExporterGfxShaderDX11_DX11(const ResDataRef& _rResData)
+: ExporterBase(_rResData.GetSafe())
+, mrResData(_rResData)
 {
 }
 	
@@ -111,7 +111,7 @@ bool ExporterGfxShaderDX11_DX11::ExportWorkCompile()
 	dwShaderFlags |= D3DCOMPILE_DEBUG;
 #endif
 	
-	mrExportData->maCompiledShader.Clear();
+	mrResData->maCompiledShader.Clear();
 	hr = D3DCompileFromFile( 
 		zFilename, 
 		pDefines, 
@@ -132,12 +132,12 @@ bool ExporterGfxShaderDX11_DX11::ExportWorkCompile()
 	{
 		if( SUCCEEDED(hr) )
 		{
-			mrExportData->maCompiledShader.Copy( static_cast<zU8*>(pCompiledBlob->GetBufferPointer()), zUInt(pCompiledBlob->GetBufferSize()) );
+			mrResData->maCompiledShader.Copy( static_cast<zU8*>(pCompiledBlob->GetBufferPointer()), zUInt(pCompiledBlob->GetBufferSize()) );
 		}
 		pCompiledBlob->Release();
 	}
 	
-	return mrExportData->maCompiledShader.Count() > 0;
+	return mrResData->maCompiledShader.Count() > 0;
 }
 
 //=================================================================================================
@@ -148,7 +148,7 @@ bool ExporterGfxShaderDX11_DX11::ExportWorkCompile()
 bool ExporterGfxShaderDX11_DX11::ExportWorkExtractResources()
 {
 	ExportInfoGfxShader*					pExportInfo = static_cast<ExportInfoGfxShader*>(mpExportInfo);
-	ExportDataGfxShaderDX11::BindInfo		aTextureBind[zcExp::kuDX11_TexturePerStageMax];
+	ResDataGfxShaderDX11::BindInfo		aTextureBind[zcExp::kuDX11_TexturePerStageMax];
 	zHash32									aTextureName[zcExp::kuDX11_TexturePerStageMax];
 	zUInt									uTextureCount(0);
 	ID3D11ShaderReflection*					pGfxShaderReflection(NULL);
@@ -156,10 +156,10 @@ bool ExporterGfxShaderDX11_DX11::ExportWorkExtractResources()
 	D3D11_SHADER_DESC						shaderDesc;	
 	D3D11_SHADER_INPUT_BIND_DESC			resourceDesc;			
 	
-	mrExportData->meShaderStage			= pExportInfo->mExportResID.meType == zenConst::keResType_GfxShaderPixel ? zenConst::keShaderStage_Pixel : zenConst::keShaderStage_Vertex;
-	mrExportData->muTextureSlotCount	= 0;
-	mrExportData->maParamDefID.SetCount(zcExp::keShaderParamFreq__Count);
-	if( SUCCEEDED( D3DReflect( mrExportData->maCompiledShader.First(), mrExportData->maCompiledShader.Size(), IID_ID3D11ShaderReflection, (void**) &pGfxShaderReflection ) ) )
+	mrResData->meShaderStage			= pExportInfo->mExportResID.meType == zenConst::keResType_GfxShaderPixel ? zenConst::keShaderStage_Pixel : zenConst::keShaderStage_Vertex;
+	mrResData->muTextureSlotCount	= 0;
+	mrResData->maParamDefID.SetCount(zcExp::keShaderParamFreq__Count);
+	if( SUCCEEDED( D3DReflect( mrResData->maCompiledShader.First(), mrResData->maCompiledShader.Size(), IID_ID3D11ShaderReflection, (void**) &pGfxShaderReflection ) ) )
 	{
 		pGfxShaderReflection->GetDesc( &shaderDesc );
 		for( zUInt uResIdx=0; uResIdx<shaderDesc.BoundResources; ++uResIdx )
@@ -170,20 +170,20 @@ bool ExporterGfxShaderDX11_DX11::ExportWorkExtractResources()
 				{
 					ZENAssert( uTextureCount < kuDX11_TexturePerStageMax );
 					ProcessTexture( *pGfxShaderReflection, resourceDesc, aTextureBind[uTextureCount], aTextureName[uTextureCount] );
-					mrExportData->muTextureSlotCount = zenMath::Max(UINT(mrExportData->muTextureSlotCount), resourceDesc.BindPoint+resourceDesc.BindCount);	
+					mrResData->muTextureSlotCount = zenMath::Max(UINT(mrResData->muTextureSlotCount), resourceDesc.BindPoint+resourceDesc.BindCount);	
 					++uTextureCount;
 				}
 				else if( resourceDesc.Type == D3D_SIT_CBUFFER )
 				{
 					ZENAssert(resourceDesc.BindPoint<zcExp::keShaderParamFreq__Count);
-					ProcessShaderParamDef( *pGfxShaderReflection, resourceDesc, mrExportData->mResID.Source(), mrExportData->maParamDefID[resourceDesc.BindPoint] );
+					ProcessShaderParamDef( *pGfxShaderReflection, resourceDesc, mrResData->mResID.Source(), mrResData->maParamDefID[resourceDesc.BindPoint] );
 				}
 			}			
 		}
 		pGfxShaderReflection->Release();
 
-		mrExportData->maTextureSamplerName.Copy( aTextureName, uTextureCount );
-		mrExportData->maTextureSamplerSlot.Copy( aTextureBind, uTextureCount );		
+		mrResData->maTextureSamplerName.Copy( aTextureName, uTextureCount );
+		mrResData->maTextureSamplerSlot.Copy( aTextureBind, uTextureCount );		
 		return TRUE;
 	}
 
@@ -192,7 +192,7 @@ bool ExporterGfxShaderDX11_DX11::ExportWorkExtractResources()
 
 bool ExporterGfxShaderDX11_DX11::ExportWork(bool _bIsTHRTask)
 {
-	ZENAssert(mrExportData.IsValid());
+	ZENAssert(mrResData.IsValid());
 	return ExportWorkCompile() && ExportWorkExtractResources();
 }
 
@@ -205,14 +205,14 @@ bool ExporterGfxShaderDX11_DX11::ExportEnd()
 {
 	if( mpExportInfo->IsSuccess() && Super::ExportEnd() )	
 	{
-		for(zUInt idx=0; idx<mrExportData->maParamDefID.Count(); ++idx)
+		for(zUInt idx=0; idx<mrResData->maParamDefID.Count(); ++idx)
 		{
-			if( mrExportData->maParamDefID[idx].IsValid() )
-				mrExportData->maParamDefID[idx] = zcExp::CreateGfxShaderParamDef(mrExportData->mResID, static_cast<eShaderParamFreq>(idx));
+			if( mrResData->maParamDefID[idx].IsValid() )
+				mrResData->maParamDefID[idx] = zcExp::CreateGfxShaderParamDef(mrResData->mResID, static_cast<eShaderParamFreq>(idx));
 		}
 
-		if( mrExportData->meShaderStage == zenConst::keShaderStage_Vertex )
-			mrExportData->mShaderInputSignatureID = zcExp::CreateGfxInputSignature(mrExportData->mResID);
+		if( mrResData->meShaderStage == zenConst::keShaderStage_Vertex )
+			mrResData->mShaderInputSignatureID = zcExp::CreateGfxInputSignature(mrResData->mResID);
 
 		return true;
 	}	

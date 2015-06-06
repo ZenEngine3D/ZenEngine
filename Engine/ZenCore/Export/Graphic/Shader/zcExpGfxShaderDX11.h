@@ -4,9 +4,9 @@
 
 namespace zcExp
 {	
-	class ExportDataGfxShaderDX11 : public ExportDataBase
+	class ResDataGfxShaderDX11 : public ResDataBase
 	{
-	ZENClassDeclare(ExportDataGfxShaderDX11, ExportDataBase)
+	ZENClassDeclare(ResDataGfxShaderDX11, ResDataBase)
 	public:
 		virtual bool				Serialize( zcExp::Serializer_Base& _Serializer );
 		struct BindInfo{ zU8 uSlot;	zU8 uCount;	};

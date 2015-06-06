@@ -19,10 +19,10 @@ namespace zcRes
 	
 	bool GfxSamplerProxy_DX11::Initialize(class GfxSampler& _Owner)
 	{	
-		const GfxSampler::ExportDataRef& rExportData = _Owner.GetExportData();
-		ZENAssert(rExportData.IsValid());
+		const GfxSampler::ResDataRef& rResData = _Owner.GetResData();
+		ZENAssert(rResData.IsValid());
 		ZENDbgCode(mpOwner = &_Owner);
-		HRESULT hr = EMgr::GfxRender.DX11GetDevice()->CreateSamplerState( &rExportData->mSamplerDesc, &mpSamplerState );
+		HRESULT hr = EMgr::GfxRender.DX11GetDevice()->CreateSamplerState( &rResData->mSamplerDesc, &mpSamplerState );
 		return SUCCEEDED(hr);
 	}
 	
@@ -44,10 +44,10 @@ namespace zcRes
 
 	bool GfxStateBlendProxy_DX11::Initialize(class GfxStateBlend& _Owner)
 	{
-		const GfxStateBlend::ExportDataRef& rExportData = _Owner.GetExportData();
-		ZENAssert(rExportData.IsValid());
+		const GfxStateBlend::ResDataRef& rResData = _Owner.GetResData();
+		ZENAssert(rResData.IsValid());
 		ZENDbgCode(mpOwner = &_Owner);
-		HRESULT hr = EMgr::GfxRender.DX11GetDevice()->CreateBlendState( &rExportData->mBlendDesc, &mpBlendState );
+		HRESULT hr = EMgr::GfxRender.DX11GetDevice()->CreateBlendState( &rResData->mBlendDesc, &mpBlendState );
 		return SUCCEEDED(hr);
 	}
 
@@ -68,10 +68,10 @@ namespace zcRes
 
 	bool GfxStateDepthStencilProxy_DX11::Initialize(class GfxStateDepthStencil& _Owner)
 	{
-		const GfxStateDepthStencil::ExportDataRef& rExportData = _Owner.GetExportData();
-		ZENAssert(rExportData.IsValid());
+		const GfxStateDepthStencil::ResDataRef& rResData = _Owner.GetResData();
+		ZENAssert(rResData.IsValid());
 		ZENDbgCode(mpOwner = &_Owner);
-		HRESULT hr = EMgr::GfxRender.DX11GetDevice()->CreateDepthStencilState( &rExportData->mDepthStencilDesc, &mpDepthStencilState );
+		HRESULT hr = EMgr::GfxRender.DX11GetDevice()->CreateDepthStencilState( &rResData->mDepthStencilDesc, &mpDepthStencilState );
 		return SUCCEEDED(hr);
 	}
 
@@ -92,10 +92,10 @@ namespace zcRes
 
 	bool GfxStateRasterizerProxy_DX11::Initialize(class GfxStateRasterizer& _Owner)
 	{
-		const GfxStateRasterizer::ExportDataRef& rExportData = _Owner.GetExportData();
-		ZENAssert(rExportData.IsValid());
+		const GfxStateRasterizer::ResDataRef& rResData = _Owner.GetResData();
+		ZENAssert(rResData.IsValid());
 		ZENDbgCode(mpOwner = &_Owner);
-		HRESULT hr = EMgr::GfxRender.DX11GetDevice()->CreateRasterizerState( &rExportData->mRasterizerDesc, &mpRasterizerState );
+		HRESULT hr = EMgr::GfxRender.DX11GetDevice()->CreateRasterizerState( &rResData->mRasterizerDesc, &mpRasterizerState );
 		return SUCCEEDED(hr);
 	}
 }

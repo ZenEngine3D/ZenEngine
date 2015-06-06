@@ -4,9 +4,9 @@
 
 namespace zcExp
 {	
-	class ExportDataGfxMeshDX11 : public ExportDataBase
+	class ResDataGfxMeshDX11 : public ResDataBase
 	{
-	ZENClassDeclare(ExportDataGfxMeshDX11, ExportDataBase)
+	ZENClassDeclare(ResDataGfxMeshDX11, ResDataBase)
 	public:
 		virtual bool			Serialize( zcExp::Serializer_Base& _Serializer ){return true;}		
 		zArrayStatic<zResID>	maMeshStripID;			//!< List of Mesh strips used this Mesh

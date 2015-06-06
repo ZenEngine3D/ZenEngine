@@ -9,12 +9,12 @@ class ExporterGfxVertexDX11_DX11 : public ExporterBase
 {
 ZENClassDeclare(ExporterGfxVertexDX11_DX11, ExporterBase)
 public:				
-typedef ExportDataGfxVertexDX11	ExportData;
-typedef zGameRef<ExportData>	ExportDataRef;
-								ExporterGfxVertexDX11_DX11(const ExportDataRef& _rExportData);
+typedef ResDataGfxVertexDX11	ResData;
+typedef zGameRef<ResData>	ResDataRef;
+								ExporterGfxVertexDX11_DX11(const ResDataRef& _rResData);
 protected:	
 	virtual bool				ExportWork(bool _bIsTHRTask);
-	ExportDataRef				mrExportData;
+	ResDataRef				mrResData;
 };
 
 }

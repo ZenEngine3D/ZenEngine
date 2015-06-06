@@ -33,7 +33,7 @@ zResID CreateGfxShaderParam(zResID _ParentParamDefID)
 zResID CreateGfxShaderParam(zResID _ParentShaderID, zcExp::eShaderParamFreq _eShaderParamIndex)
 {
 	ZENAssert( zenConst::kFlagResShaders.Any(_ParentShaderID.Type()) );
-	zcRes::GfxShaderExportDataRef rShaderData = EMgr::SerialItems.GetItem<zcRes::GfxShaderExportData>(_ParentShaderID); 
+	zcRes::GfxShaderResDataRef rShaderData = EMgr::SerialItems.GetItem<zcRes::GfxShaderResData>(_ParentShaderID); 
 	if( rShaderData.IsValid() && rShaderData->maParamDefID[_eShaderParamIndex].IsValid() )
 	return CreateGfxShaderParam( rShaderData->maParamDefID[_eShaderParamIndex]);	
 	return zResID();

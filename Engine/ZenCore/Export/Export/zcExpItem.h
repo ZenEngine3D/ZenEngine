@@ -17,19 +17,19 @@ struct ExportInfoBase
 	bool						IsSuccess(){return mbSuccessStart && mbSuccessWork && mbSuccessEnd; }
 };
 
-class ExportDataBase : public SerialItem, public zRefCounted
+class ResDataBase : public SerialItem, public zRefCounted
 {
-ZENClassDeclare(ExportDataBase, zcExp::ISerialize)
+ZENClassDeclare(ResDataBase, zcExp::ISerialize)
 public:
-										ExportDataBase();
+										ResDataBase();
 };
 
-typedef zEngineRef<class ExportDataBase> ExportDataRef;
+typedef zEngineRef<class ResDataBase> ResDataRef;
 
 class ExporterBase
 {
 public:
-								ExporterBase(const ExportDataRef& _rExportData);
+								ExporterBase(const ResDataRef& _rResData);
 
 	bool						Export( zcExp::ExportInfoBase& _ExportInfo );	//!< @brief	Export this item, from current thread
 	//! @todo urgent remove this, move this to exporter class?
@@ -40,7 +40,7 @@ protected:
 	virtual bool				ExportWork(bool _bIsTHRTask){return TRUE;};		//!< @brief Called from Thread:Main or Thread:Task for main export operation (must be threadsafe)
 	virtual bool				ExportEnd();									//!< @brief Called from Thread:Main, for some post export task 
 	ZENInline	void			ExportSkipWork();								//!< @brief Call in ExportStart to avoid launching a job for this
-	ExportDataRef				mrExportData;
+	ResDataRef				mrResData;
 	friend class ExportTask;
 	friend class ManagerExport;
 };

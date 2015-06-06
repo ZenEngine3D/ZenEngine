@@ -13,13 +13,13 @@ namespace zcRes
 //!			Also remove the need to keep the vertex shader code loaded, after creating 
 //!			it's shader, since the signature contain the relevant part.
 //=============================================================================================
-class GfxInputSignature : public TResource<GfxInputSignature, GfxInputSignatureExportData, GfxInputSignatureProxy, GfxInputSignatureExporterRuntime>
+class GfxInputSignature : public TResource<GfxInputSignature, GfxInputSignatureResData, GfxInputSignatureProxy, GfxInputSignatureExporterRuntime>
 {
 ZENClassDeclare(GfxInputSignature, TResource)
 };
 
 //! @todo move shader param infos common object
-class GfxShaderVertex : public TResource<GfxShaderVertex, GfxShaderExportData, GfxShaderVertexProxy, GfxShaderExporterRuntime>
+class GfxShaderVertex : public TResource<GfxShaderVertex, GfxShaderResData, GfxShaderVertexProxy, GfxShaderExporterRuntime>
 {
 ZENClassDeclare(GfxShaderVertex, TResource)
 public:
@@ -28,7 +28,7 @@ protected:
 	GfxInputSignatureRef						mrGfxInputSignature;	//!< Input signature associated with this vertex shader
 };
 
-class GfxShaderPixel : public TResource<GfxShaderPixel, GfxShaderExportData, GfxShaderPixelProxy, GfxShaderExporterRuntime>
+class GfxShaderPixel : public TResource<GfxShaderPixel, GfxShaderResData, GfxShaderPixelProxy, GfxShaderExporterRuntime>
 {
 ZENClassDeclare(GfxShaderPixel, TResource)
 };

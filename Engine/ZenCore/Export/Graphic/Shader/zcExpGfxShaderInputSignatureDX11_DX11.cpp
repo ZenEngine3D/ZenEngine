@@ -15,7 +15,7 @@ zResID ExporterGfxInputSignatureDX11_DX11::CallbackGetItemID(zenConst::eResPlatf
 	const ExportInfoGfxInputSignature* pExportInfo = static_cast<const ExportInfoGfxInputSignature*>(_pExportInfo);
 	
 	zResID::NameHash hName;
-	const ExportDataGfxShaderDX11* pParentShader = EMgr::SerialItems.GetItem<ExportDataGfxShaderDX11>( pExportInfo->mParentShaderID );
+	const ResDataGfxShaderDX11* pParentShader = EMgr::SerialItems.GetItem<ResDataGfxShaderDX11>( pExportInfo->mParentShaderID );
 	if( pParentShader )
 	{
 		ID3D11ShaderReflection* pGfxShaderReflection = NULL;	
@@ -43,9 +43,9 @@ zResID ExporterGfxInputSignatureDX11_DX11::CallbackGetItemID(zenConst::eResPlatf
 	return zcExp::ValidateItemID(_ePlatform, _eType, _eSource, hName, _bExistOut);
 }
 
-ExporterGfxInputSignatureDX11_DX11::ExporterGfxInputSignatureDX11_DX11(const ExportDataRef& _rExportData)
-: ExporterBase(_rExportData.GetSafe())
-, mrExportData(_rExportData)
+ExporterGfxInputSignatureDX11_DX11::ExporterGfxInputSignatureDX11_DX11(const ResDataRef& _rResData)
+: ExporterBase(_rResData.GetSafe())
+, mrResData(_rResData)
 {
 }
 
@@ -61,7 +61,7 @@ bool ExporterGfxInputSignatureDX11_DX11::ExportStart()
 		return false;
 
 	ExportInfoGfxInputSignature* pExportInfo		= static_cast<ExportInfoGfxInputSignature*>(mpExportInfo);
-	zcExp::ExportDataGfxShaderDX11* pShaderParent	= EMgr::SerialItems.GetItem<zcExp::ExportDataGfxShaderDX11>( pExportInfo->mParentShaderID);
+	zcExp::ResDataGfxShaderDX11* pShaderParent	= EMgr::SerialItems.GetItem<zcExp::ResDataGfxShaderDX11>( pExportInfo->mParentShaderID);
 	if( pShaderParent )
 		maParentCompiledShader = pShaderParent->maCompiledShader;
 	
@@ -115,7 +115,7 @@ bool ExporterGfxInputSignatureDX11_DX11::ExportWork(bool _bIsTHRTask)
 		ID3DBlob*	pShaderCompiled;
 		if( SUCCEEDED(D3DCompile( zShaderText, strlen(zShaderText), NULL, NULL, NULL, "main", "vs_5_0", dwShaderFlags, 0, &pShaderCompiled, &pErrorBlob) ) )
 		{
-			mrExportData->maDummyShaderCode.Copy( (zU8*)pShaderCompiled->GetBufferPointer(), zUInt(pShaderCompiled->GetBufferSize())  );
+			mrResData->maDummyShaderCode.Copy( (zU8*)pShaderCompiled->GetBufferPointer(), zUInt(pShaderCompiled->GetBufferSize())  );
 			bSuccess = TRUE;
 		}
 		

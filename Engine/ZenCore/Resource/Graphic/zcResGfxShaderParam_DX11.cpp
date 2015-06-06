@@ -13,13 +13,13 @@ GfxShaderParamDefProxy_DX11::~GfxShaderParamDefProxy_DX11()
 
 bool GfxShaderParamDefProxy_DX11::Initialize(class GfxShaderParamDef& _Owner)
 {
-	const GfxShaderParamDef::ExportDataRef& rExportData = _Owner.GetExportData();
-	ZENAssert(rExportData.IsValid());
+	const GfxShaderParamDef::ResDataRef& rResData = _Owner.GetResData();
+	ZENAssert(rResData.IsValid());
 	ZENDbgCode(mpOwner = &_Owner);
 
-	meFrequence			= rExportData->meFrequence;
-	mdParameters		= rExportData->mdParameters;
-	maParameterDefaults	= rExportData->maParameterDefaults;
+	meFrequence			= rResData->meFrequence;
+	mdParameters		= rResData->mdParameters;
+	maParameterDefaults	= rResData->maParameterDefaults;
 	return TRUE;
 }
 
@@ -44,12 +44,12 @@ bool GfxShaderParamProxy_DX11::Initialize(class GfxShaderParam& _Owner)
 	D3D11_SUBRESOURCE_DATA	initData;
 	ZeroMemory( &bufferDesc, sizeof(bufferDesc) );
 
-	const GfxShaderParam::ExportDataRef& rExportData = _Owner.GetExportData();
-	ZENAssert(rExportData.IsValid());
+	const GfxShaderParam::ResDataRef& rResData = _Owner.GetResData();
+	ZENAssert(rResData.IsValid());
 	ZENDbgCode(mpOwner = &_Owner);
 
-	maParameterValues			= rExportData->maParameterValues;
-	mrProxShaderParamDef		= GetResourceProxy<GfxShaderParamDefRef>(rExportData->mParentParamDefID);
+	maParameterValues			= rResData->maParameterValues;
+	mrProxShaderParamDef		= GetResourceProxy<GfxShaderParamDefRef>(rResData->mParentParamDefID);
 	bufferDesc.Usage			= D3D11_USAGE_DEFAULT;		
 	bufferDesc.BindFlags		= D3D11_BIND_CONSTANT_BUFFER;
 	bufferDesc.CPUAccessFlags	= 0;

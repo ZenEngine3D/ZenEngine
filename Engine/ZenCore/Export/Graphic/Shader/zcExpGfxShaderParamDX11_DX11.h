@@ -8,12 +8,12 @@ namespace zcExp
 	{
 	ZENClassDeclare(ExporterGfxShaderParamDX11_DX11, ExporterBase)
 	public:				
-	typedef ExportDataGfxShaderParamDX11	ExportData;
-	typedef zGameRef<ExportData>			ExportDataRef;
-											ExporterGfxShaderParamDX11_DX11(const ExportDataRef& _rExportData);
+	typedef ResDataGfxShaderParamDX11	ResData;
+	typedef zGameRef<ResData>			ResDataRef;
+											ExporterGfxShaderParamDX11_DX11(const ResDataRef& _rResData);
 	protected:	
 		virtual bool						ExportStart();
-		ExportDataRef						mrExportData;
+		ResDataRef						mrResData;
 	};
 }
 

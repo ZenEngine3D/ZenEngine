@@ -13,14 +13,14 @@ GfxViewProxy_DX11::~GfxViewProxy_DX11()
 
 bool GfxViewProxy_DX11::Initialize(class GfxView& _Owner)
 {
-	const GfxView::ExportDataRef& rExportData = _Owner.GetExportData();
-	ZENAssert(rExportData.IsValid());
+	const GfxView::ResDataRef& rResData = _Owner.GetResData();
+	ZENAssert(rResData.IsValid());
 	ZENDbgCode(mpOwner = &_Owner);
 
-	marProxTargetColor.SetCount( rExportData->maTargetColorID.Count() );
+	marProxTargetColor.SetCount( rResData->maTargetColorID.Count() );
 	for(int idx(0), count(marProxTargetColor.Count()); idx<count; ++idx)
-		marProxTargetColor[idx] = GetResourceProxy<GfxRenderTargetRef>(rExportData->maTargetColorID[idx]);
-	mrProxTargetDepth =  GetResourceProxy<GfxRenderTargetRef>(rExportData->mTargetDepthID);
+		marProxTargetColor[idx] = GetResourceProxy<GfxRenderTargetRef>(rResData->maTargetColorID[idx]);
+	mrProxTargetDepth =  GetResourceProxy<GfxRenderTargetRef>(rResData->mTargetDepthID);
 	return true;
 }
 

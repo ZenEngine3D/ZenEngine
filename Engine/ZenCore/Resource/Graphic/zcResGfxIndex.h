@@ -5,7 +5,7 @@
 namespace zcRes
 {
 
-class GfxIndex : public TResource<GfxIndex, GfxIndexExportData, GfxIndexProxy, GfxIndexExporterRuntime>
+class GfxIndex : public TResource<GfxIndex, GfxIndexResData, GfxIndexProxy, GfxIndexExporterRuntime>
 {
 ZENClassDeclare(GfxIndex, TResource)
 public:

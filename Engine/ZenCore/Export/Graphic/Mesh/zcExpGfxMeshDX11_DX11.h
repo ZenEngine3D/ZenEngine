@@ -8,12 +8,12 @@ namespace zcExp
 	{
 	ZENClassDeclare(ExporterGfxMeshDX11_DX11, ExporterBase)
 	public:				
-	typedef ExportDataGfxMeshDX11			ExportData;
-	typedef zGameRef<ExportData>			ExportDataRef;
-											ExporterGfxMeshDX11_DX11(const ExportDataRef& _rExportData);
+	typedef ResDataGfxMeshDX11			ResData;
+	typedef zGameRef<ResData>			ResDataRef;
+											ExporterGfxMeshDX11_DX11(const ResDataRef& _rResData);
 	protected:	
 		virtual bool						ExportStart();		
-		ExportDataRef						mrExportData;
+		ResDataRef						mrResData;
 	};
 }
 

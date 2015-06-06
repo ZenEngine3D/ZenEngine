@@ -4,13 +4,13 @@
 
 namespace zcRes
 {
-	class GfxShaderParamDef : public TResource<GfxShaderParamDef, GfxShaderParamDefExportData, GfxShaderParamDefProxy, GfxShaderParamDefExporterRuntime>
+	class GfxShaderParamDef : public TResource<GfxShaderParamDef, GfxShaderParamDefResData, GfxShaderParamDefProxy, GfxShaderParamDefExporterRuntime>
 	{
 	ZENClassDeclare(GfxShaderParamDef, TResource)
 	public:
 	};
 
-	class GfxShaderParam : public TResource<GfxShaderParam, GfxShaderParamExportData, GfxShaderParamProxy, GfxShaderParamExporterRuntime>
+	class GfxShaderParam : public TResource<GfxShaderParam, GfxShaderParamResData, GfxShaderParamProxy, GfxShaderParamExporterRuntime>
 	{
 	ZENClassDeclare(GfxShaderParam, TResource)
 	public:

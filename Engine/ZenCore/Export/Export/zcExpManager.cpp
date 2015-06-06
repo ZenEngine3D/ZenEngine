@@ -151,17 +151,17 @@ void ManagerExport::ExportDone(ExportItem* _pExportItem)
 	else											maExportFailOld.Push(_pExportItem);	
 }
 */
-void ManagerExport::ExportDone(const ExportDataRef& _rExportData)
+void ManagerExport::ExportDone(const ResDataRef& _rResData)
 {
-	if( _rExportData->mResID.IsExport() )
+	if( _rResData->mResID.IsExport() )
 	{
 		ZENAssert(muExportPending>0);
 		--muExportPending;	
 	}
 
 //! @todo cleanup revisit this (used to be in export/serial item class, but now split in 2
-//	if( _rExportData->mpExportInfo->IsSuccess() )	maExportSuccess.Push(_rExportData);
-//	else											maExportFail.Push(_rExportData);	
+//	if( _rResData->mpExportInfo->IsSuccess() )	maExportSuccess.Push(_rResData);
+//	else											maExportFail.Push(_rResData);	
 }
 
 //=================================================================================================

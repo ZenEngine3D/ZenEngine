@@ -10,25 +10,25 @@ namespace zcExp
 	//////////////////////////////////////////////////////////////////////////
 	//ExporterGfxSamplerDX11_DX11
 	//////////////////////////////////////////////////////////////////////////
-	ExporterGfxSamplerDX11_DX11::ExporterGfxSamplerDX11_DX11(const ExportDataRef& _rExportData)
-	: ExporterBase(_rExportData.GetSafe())
-	, mrExportData(_rExportData)
+	ExporterGfxSamplerDX11_DX11::ExporterGfxSamplerDX11_DX11(const ResDataRef& _rResData)
+	: ExporterBase(_rResData.GetSafe())
+	, mrResData(_rResData)
 	{
 	}
 
 	bool ExporterGfxSamplerDX11_DX11::ExportWork(bool _bIsTHRTask)
 	{
-		ZENAssert(mrExportData.IsValid());
+		ZENAssert(mrResData.IsValid());
 		ExportInfoGfxSampler* pExportInfo = static_cast<ExportInfoGfxSampler*>(mpExportInfo);
-		ZeroMemory( &mrExportData->mSamplerDesc, sizeof(mrExportData->mSamplerDesc) );
-		mrExportData->mSamplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_POINT;
+		ZeroMemory( &mrResData->mSamplerDesc, sizeof(mrResData->mSamplerDesc) );
+		mrResData->mSamplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_POINT;
 		if( pExportInfo->meFilterMin == zenConst::keTexFilter_Anisotropic || pExportInfo->meFilterMag == zenConst::keTexFilter_Anisotropic )
 		{
-			mrExportData->mSamplerDesc.Filter = D3D11_FILTER_ANISOTROPIC;
+			mrResData->mSamplerDesc.Filter = D3D11_FILTER_ANISOTROPIC;
 		}
 		else if( pExportInfo->meFilterMin == zenConst::keTexFilter_Trilinear || pExportInfo->meFilterMag == zenConst::keTexFilter_Trilinear )
 		{
-			mrExportData->mSamplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+			mrResData->mSamplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
 		}
 		else
 		{
@@ -38,16 +38,16 @@ namespace zcExp
 			{
 				switch( pExportInfo->meFilterMin )
 				{
-				case zenConst::keTexFilter_Point:		mrExportData->mSamplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_POINT;				break;
-				case zenConst::keTexFilter_Bilinear:	mrExportData->mSamplerDesc.Filter = D3D11_FILTER_MIN_LINEAR_MAG_MIP_POINT;		break;		
+				case zenConst::keTexFilter_Point:		mrResData->mSamplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_POINT;				break;
+				case zenConst::keTexFilter_Bilinear:	mrResData->mSamplerDesc.Filter = D3D11_FILTER_MIN_LINEAR_MAG_MIP_POINT;		break;		
 				}break;
 			}
 			case zenConst::keTexFilter_Bilinear:
 			{
 				switch( pExportInfo->meFilterMin )
 				{
-				case zenConst::keTexFilter_Point:		mrExportData->mSamplerDesc.Filter = D3D11_FILTER_MIN_POINT_MAG_LINEAR_MIP_POINT;	break;
-				case zenConst::keTexFilter_Bilinear:	mrExportData->mSamplerDesc.Filter = D3D11_FILTER_MIN_MAG_LINEAR_MIP_POINT;		break;		
+				case zenConst::keTexFilter_Point:		mrResData->mSamplerDesc.Filter = D3D11_FILTER_MIN_POINT_MAG_LINEAR_MIP_POINT;	break;
+				case zenConst::keTexFilter_Bilinear:	mrResData->mSamplerDesc.Filter = D3D11_FILTER_MIN_MAG_LINEAR_MIP_POINT;		break;		
 				}break;
 			}
 			}
@@ -56,18 +56,18 @@ namespace zcExp
 		const D3D11_TEXTURE_ADDRESS_MODE cWrapTranslate[]= { D3D11_TEXTURE_ADDRESS_CLAMP, D3D11_TEXTURE_ADDRESS_WRAP, D3D11_TEXTURE_ADDRESS_MIRROR, D3D11_TEXTURE_ADDRESS_BORDER };
 		ZENStaticAssert( ZENArrayCount(cWrapTranslate)==zenConst::keTexWrap__Count );
 
-		mrExportData->mSamplerDesc.AddressU			= cWrapTranslate[pExportInfo->meWrapU];
-		mrExportData->mSamplerDesc.AddressV			= cWrapTranslate[pExportInfo->meWrapV];
-		mrExportData->mSamplerDesc.AddressW			= D3D11_TEXTURE_ADDRESS_CLAMP;
-		mrExportData->mSamplerDesc.MipLODBias		= pExportInfo->mfLodBias;
-		mrExportData->mSamplerDesc.BorderColor[0]	= pExportInfo->mvBorderColor.r * 0xFF;
-		mrExportData->mSamplerDesc.BorderColor[1]	= pExportInfo->mvBorderColor.g * 0xFF;
-		mrExportData->mSamplerDesc.BorderColor[2]	= pExportInfo->mvBorderColor.b * 0xFF;
-		mrExportData->mSamplerDesc.BorderColor[3]	= pExportInfo->mvBorderColor.a * 0xFF;
-		mrExportData->mSamplerDesc.MaxAnisotropy	= 16;
-		mrExportData->mSamplerDesc.ComparisonFunc	= D3D11_COMPARISON_ALWAYS;		
-		mrExportData->mSamplerDesc.MinLOD			= 0;
-		mrExportData->mSamplerDesc.MaxLOD			= D3D11_FLOAT32_MAX;
+		mrResData->mSamplerDesc.AddressU			= cWrapTranslate[pExportInfo->meWrapU];
+		mrResData->mSamplerDesc.AddressV			= cWrapTranslate[pExportInfo->meWrapV];
+		mrResData->mSamplerDesc.AddressW			= D3D11_TEXTURE_ADDRESS_CLAMP;
+		mrResData->mSamplerDesc.MipLODBias		= pExportInfo->mfLodBias;
+		mrResData->mSamplerDesc.BorderColor[0]	= pExportInfo->mvBorderColor.r * 0xFF;
+		mrResData->mSamplerDesc.BorderColor[1]	= pExportInfo->mvBorderColor.g * 0xFF;
+		mrResData->mSamplerDesc.BorderColor[2]	= pExportInfo->mvBorderColor.b * 0xFF;
+		mrResData->mSamplerDesc.BorderColor[3]	= pExportInfo->mvBorderColor.a * 0xFF;
+		mrResData->mSamplerDesc.MaxAnisotropy	= 16;
+		mrResData->mSamplerDesc.ComparisonFunc	= D3D11_COMPARISON_ALWAYS;		
+		mrResData->mSamplerDesc.MinLOD			= 0;
+		mrResData->mSamplerDesc.MaxLOD			= D3D11_FLOAT32_MAX;
 		return TRUE;
 	}
 
@@ -84,9 +84,9 @@ namespace zcExp
 	//////////////////////////////////////////////////////////////////////////
 	//SerialGfxBlend_DX11
 	//////////////////////////////////////////////////////////////////////////
-	ExporterGfxStateBlendDX11_DX11::ExporterGfxStateBlendDX11_DX11(const ExportDataRef& _rExportData)
-	: ExporterBase(_rExportData.GetSafe())
-	, mrExportData(_rExportData)
+	ExporterGfxStateBlendDX11_DX11::ExporterGfxStateBlendDX11_DX11(const ResDataRef& _rResData)
+	: ExporterBase(_rResData.GetSafe())
+	, mrResData(_rResData)
 	{
 	}
 
@@ -108,12 +108,12 @@ namespace zcExp
 	}
 	bool ExporterGfxStateBlendDX11_DX11::ExportWork(bool _bIsTHRTask)
 	{
-		ZENAssert(mrExportData.IsValid());
+		ZENAssert(mrResData.IsValid());
 		ExportInfoGfxStateBlend* pExportInfo = static_cast<ExportInfoGfxStateBlend*>(mpExportInfo);
-		mrExportData->mBlendDesc.AlphaToCoverageEnable = pExportInfo->mBlendDesc.mbAlphaToCoverageEnable;
-		mrExportData->mBlendDesc.IndependentBlendEnable= pExportInfo->mBlendDesc.mbIndependentBlendEnable;
+		mrResData->mBlendDesc.AlphaToCoverageEnable = pExportInfo->mBlendDesc.mbAlphaToCoverageEnable;
+		mrResData->mBlendDesc.IndependentBlendEnable= pExportInfo->mBlendDesc.mbIndependentBlendEnable;
 		for(zUInt u(0); u < 8; ++u)
-			SetRenderTargetBlendDesc(mrExportData->mBlendDesc.RenderTarget[u], pExportInfo->mBlendDesc.mxRenderTarget[u]);
+			SetRenderTargetBlendDesc(mrResData->mBlendDesc.RenderTarget[u], pExportInfo->mBlendDesc.mxRenderTarget[u]);
 
 		return TRUE;
 	}
@@ -131,9 +131,9 @@ namespace zcExp
 	//////////////////////////////////////////////////////////////////////////
 	//SerialGfxDepthStencil_DX11
 	//////////////////////////////////////////////////////////////////////////
-	ExporterGfxStateDepthStencilDX11_DX11::ExporterGfxStateDepthStencilDX11_DX11(const ExportDataRef& _rExportData)
-	: ExporterBase(_rExportData.GetSafe())
-	, mrExportData(_rExportData)
+	ExporterGfxStateDepthStencilDX11_DX11::ExporterGfxStateDepthStencilDX11_DX11(const ResDataRef& _rResData)
+	: ExporterBase(_rResData.GetSafe())
+	, mrResData(_rResData)
 	{
 	}
 
@@ -149,16 +149,16 @@ namespace zcExp
 	}
 	bool ExporterGfxStateDepthStencilDX11_DX11::ExportWork(bool _bIsTHRTask)
 	{
-		ZENAssert(mrExportData.IsValid());
+		ZENAssert(mrResData.IsValid());
 		ExportInfoGfxStateDepthStencil* pExportInfo		= static_cast<ExportInfoGfxStateDepthStencil*>(mpExportInfo);
-		mrExportData->mDepthStencilDesc.DepthEnable			= pExportInfo->mDepthStencilDesc.mbDepthEnable ? TRUE : FALSE;
-		mrExportData->mDepthStencilDesc.DepthWriteMask		= pExportInfo->mDepthStencilDesc.mbDepthWrite ? D3D11_DEPTH_WRITE_MASK_ALL : D3D11_DEPTH_WRITE_MASK_ZERO;
-		mrExportData->mDepthStencilDesc.StencilEnable		= pExportInfo->mDepthStencilDesc.mbStencilEnable ? TRUE : FALSE;
-		mrExportData->mDepthStencilDesc.DepthFunc			= eComparisonFuncTranslator[pExportInfo->mDepthStencilDesc.meDepthFunc];
-		mrExportData->mDepthStencilDesc.StencilReadMask		= pExportInfo->mDepthStencilDesc.muStencilReadMask;
-		mrExportData->mDepthStencilDesc.StencilWriteMask	= pExportInfo->mDepthStencilDesc.muStencilWriteMask;
-		SetDepthStencilOpDesc(mrExportData->mDepthStencilDesc.FrontFace, pExportInfo->mDepthStencilDesc.mxFrontFace);
-		SetDepthStencilOpDesc(mrExportData->mDepthStencilDesc.BackFace,  pExportInfo->mDepthStencilDesc.mxBackFace );
+		mrResData->mDepthStencilDesc.DepthEnable			= pExportInfo->mDepthStencilDesc.mbDepthEnable ? TRUE : FALSE;
+		mrResData->mDepthStencilDesc.DepthWriteMask		= pExportInfo->mDepthStencilDesc.mbDepthWrite ? D3D11_DEPTH_WRITE_MASK_ALL : D3D11_DEPTH_WRITE_MASK_ZERO;
+		mrResData->mDepthStencilDesc.StencilEnable		= pExportInfo->mDepthStencilDesc.mbStencilEnable ? TRUE : FALSE;
+		mrResData->mDepthStencilDesc.DepthFunc			= eComparisonFuncTranslator[pExportInfo->mDepthStencilDesc.meDepthFunc];
+		mrResData->mDepthStencilDesc.StencilReadMask		= pExportInfo->mDepthStencilDesc.muStencilReadMask;
+		mrResData->mDepthStencilDesc.StencilWriteMask	= pExportInfo->mDepthStencilDesc.muStencilWriteMask;
+		SetDepthStencilOpDesc(mrResData->mDepthStencilDesc.FrontFace, pExportInfo->mDepthStencilDesc.mxFrontFace);
+		SetDepthStencilOpDesc(mrResData->mDepthStencilDesc.BackFace,  pExportInfo->mDepthStencilDesc.mxBackFace );
 		return TRUE;
 	}
 
@@ -175,27 +175,27 @@ namespace zcExp
 	//////////////////////////////////////////////////////////////////////////
 	//SerialGfxRasterizer_DX11
 	//////////////////////////////////////////////////////////////////////////
-	ExporterGfxStateRasterizerDX11_DX11::ExporterGfxStateRasterizerDX11_DX11(const ExportDataRef& _rExportData)
-	: ExporterBase(_rExportData.GetSafe())
-	, mrExportData(_rExportData)
+	ExporterGfxStateRasterizerDX11_DX11::ExporterGfxStateRasterizerDX11_DX11(const ResDataRef& _rResData)
+	: ExporterBase(_rResData.GetSafe())
+	, mrResData(_rResData)
 	{
 	}
 
 	bool ExporterGfxStateRasterizerDX11_DX11::ExportWork(bool _bIsTHRTask)
 	{
 		static D3D11_CULL_MODE eCullModeTranslator[] = {D3D11_CULL_NONE, D3D11_CULL_FRONT, D3D11_CULL_BACK};
-		ZENAssert(mrExportData.IsValid());
+		ZENAssert(mrResData.IsValid());
 		ExportInfoGfxStateRasterizer* pExportInfo			= static_cast<ExportInfoGfxStateRasterizer*>(mpExportInfo);
-		mrExportData->mRasterizerDesc.AntialiasedLineEnable	= pExportInfo->mbAntialiasedLineEnable ? TRUE : FALSE;
-		mrExportData->mRasterizerDesc.CullMode				= eCullModeTranslator[pExportInfo->meCullMode];
-		mrExportData->mRasterizerDesc.DepthBias				= pExportInfo->miDepthBias;
-		mrExportData->mRasterizerDesc.DepthBiasClamp		= pExportInfo->mfDepthBiasClamp;
-		mrExportData->mRasterizerDesc.DepthClipEnable		= pExportInfo->mbDepthClipEnable ? TRUE : FALSE;
-		mrExportData->mRasterizerDesc.FillMode				= pExportInfo->mbWireFrame ? D3D11_FILL_WIREFRAME : D3D11_FILL_SOLID;
-		mrExportData->mRasterizerDesc.FrontCounterClockwise	= pExportInfo->mbFrontCounterClockwise ? TRUE : FALSE;
-		mrExportData->mRasterizerDesc.MultisampleEnable		= pExportInfo->mbMultisampleEnable ? TRUE : FALSE;
-		mrExportData->mRasterizerDesc.ScissorEnable			= pExportInfo->mbScissorEnable ? TRUE : FALSE;
-		mrExportData->mRasterizerDesc.SlopeScaledDepthBias	= pExportInfo->mfSlopeScaledDepthBias;
+		mrResData->mRasterizerDesc.AntialiasedLineEnable	= pExportInfo->mbAntialiasedLineEnable ? TRUE : FALSE;
+		mrResData->mRasterizerDesc.CullMode				= eCullModeTranslator[pExportInfo->meCullMode];
+		mrResData->mRasterizerDesc.DepthBias				= pExportInfo->miDepthBias;
+		mrResData->mRasterizerDesc.DepthBiasClamp		= pExportInfo->mfDepthBiasClamp;
+		mrResData->mRasterizerDesc.DepthClipEnable		= pExportInfo->mbDepthClipEnable ? TRUE : FALSE;
+		mrResData->mRasterizerDesc.FillMode				= pExportInfo->mbWireFrame ? D3D11_FILL_WIREFRAME : D3D11_FILL_SOLID;
+		mrResData->mRasterizerDesc.FrontCounterClockwise	= pExportInfo->mbFrontCounterClockwise ? TRUE : FALSE;
+		mrResData->mRasterizerDesc.MultisampleEnable		= pExportInfo->mbMultisampleEnable ? TRUE : FALSE;
+		mrResData->mRasterizerDesc.ScissorEnable			= pExportInfo->mbScissorEnable ? TRUE : FALSE;
+		mrResData->mRasterizerDesc.SlopeScaledDepthBias	= pExportInfo->mfSlopeScaledDepthBias;
 		return TRUE;
 	}
 

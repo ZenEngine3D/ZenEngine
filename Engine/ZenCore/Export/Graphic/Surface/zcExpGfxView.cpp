@@ -18,9 +18,9 @@ namespace zcExp
 		return zcExp::ValidateItemID(_ePlatform, _eType, _eSource, hName, _bExistOut);
 	}
 
-	ExporterGfxView::ExporterGfxView(const ExportDataRef& _rExportData)
-	: Super(_rExportData.GetSafe())
-	, mrExportData(_rExportData)
+	ExporterGfxView::ExporterGfxView(const ResDataRef& _rResData)
+	: Super(_rResData.GetSafe())
+	, mrResData(_rResData)
 	{
 	}
 
@@ -31,7 +31,7 @@ namespace zcExp
 			return false;		
 
 		zVec2U16 vDim	= pExportInfo->mvDim;
-		const ExportDataGfxRenderTarget* pParamRender = EMgr::SerialItems.GetItem<const ExportDataGfxRenderTarget>( pExportInfo->mTargetDepthID );
+		const ResDataGfxRenderTarget* pParamRender = EMgr::SerialItems.GetItem<const ResDataGfxRenderTarget>( pExportInfo->mTargetDepthID );
 		if( pParamRender )	
 		{
 			vDim.x = zenMath::Min<zU16>(vDim.x, pParamRender->mvDim.x-pExportInfo->mvOrigin.x );
@@ -40,7 +40,7 @@ namespace zcExp
 
 		for(zUInt rtIdx(0), rtCount(pExportInfo->maTargetColorID.Count()); rtIdx<rtCount; ++rtIdx)
 		{
-			pParamRender = EMgr::SerialItems.GetItem<const ExportDataGfxRenderTarget>( pExportInfo->maTargetColorID[rtIdx] );
+			pParamRender = EMgr::SerialItems.GetItem<const ResDataGfxRenderTarget>( pExportInfo->maTargetColorID[rtIdx] );
 			//! @todo Missing: error if mismatch size
 			if( pParamRender )
 			{
@@ -49,10 +49,10 @@ namespace zcExp
 			}			
 		}
 		
-		mrExportData->maTargetColorID	= pExportInfo->maTargetColorID;
-		mrExportData->mTargetDepthID	= pExportInfo->mTargetDepthID;
-		mrExportData->mvDim				= vDim;
-		mrExportData->mvOrigin			= pExportInfo->mvOrigin;
+		mrResData->maTargetColorID	= pExportInfo->maTargetColorID;
+		mrResData->mTargetDepthID	= pExportInfo->mTargetDepthID;
+		mrResData->mvDim				= vDim;
+		mrResData->mvOrigin			= pExportInfo->mvOrigin;
 		ExportSkipWork();
 		return true;
 	}

@@ -5,7 +5,7 @@ namespace zcRes
 
 bool GfxShaderVertex::Initialize()
 {
-	mrGfxInputSignature = mrExportData->mShaderInputSignatureID;
+	mrGfxInputSignature = mrResData->mShaderInputSignatureID;
 	return Super::Initialize();
 }
 

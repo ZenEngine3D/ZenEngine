@@ -30,16 +30,16 @@ namespace zcRes
 	{
 		HRESULT hr(S_FALSE);
 		ZENDbgCode(mpOwner = &_Owner);
-		const GfxRenderTargetExportDataRef& rExportData	= _Owner.GetExportData();
-		ZENAssert(rExportData.IsValid());
+		const GfxRenderTargetResDataRef& rResData	= _Owner.GetResData();
+		ZENAssert(rResData.IsValid());
 		ID3D11Texture2D* pTexture(NULL);
 
 		mrProxParentTexture	= _Owner.GetTexture2D().IsValid() ? _Owner.GetTexture2D()->GetProxy() : NULL;
-		meFormat				= rExportData->meFormat;
-		mvDim					= rExportData->mvDim;
+		meFormat				= rResData->meFormat;
+		mvDim					= rResData->mvDim;
 
-		if( rExportData->mpBackbuffer )
-			rExportData->mpBackbuffer->GetBuffer( 0, __uuidof(ID3D11Texture2D), (LPVOID*)&pTexture );
+		if( rResData->mpBackbuffer )
+			rResData->mpBackbuffer->GetBuffer( 0, __uuidof(ID3D11Texture2D), (LPVOID*)&pTexture );
 		else if(mrProxParentTexture.IsValid() )
 			pTexture = mrProxParentTexture->mpTextureBuffer;
 

@@ -73,10 +73,10 @@ zGfxView zGfxView::Create( const zArrayBase<zGfxRenderTarget>& _aRTColor, const 
 
 zGfxWindow zGfxWindow::Create( HWND _WindowHandle )
 {
-	zcRes::GfxWindowExportDataRef rExportData	= zenNewDefault zcRes::GfxWindowExportData();
-	rExportData->mResID							= EMgr::Export.GetNewResourceID( zenConst::keResType_GfxWindow );
-	rExportData->mhWindow						= _WindowHandle;
-	return zcRes::GfxWindow::RuntimeCreate(rExportData);
+	zcRes::GfxWindowResDataRef rResData	= zenNewDefault zcRes::GfxWindowResData();
+	rResData->mResID							= EMgr::Export.GetNewResourceID( zenConst::keResType_GfxWindow );
+	rResData->mhWindow						= _WindowHandle;
+	return zcRes::GfxWindow::RuntimeCreate(rResData);
 }
 
 zGfxShaderBinding zGfxShaderBinding::Create(const zArrayBase<zenRes::zGfxShader>& _aShaderID)

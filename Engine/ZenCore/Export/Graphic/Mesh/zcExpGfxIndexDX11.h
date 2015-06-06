@@ -5,9 +5,9 @@
 namespace zcExp
 {	
 
-class ExportDataGfxIndexDX11 : public ExportDataBase
+class ResDataGfxIndexDX11 : public ResDataBase
 {
-ZENClassDeclare(ExportDataGfxIndexDX11, ExportDataBase)
+ZENClassDeclare(ResDataGfxIndexDX11, ResDataBase)
 public:
 	virtual bool				Serialize( zcExp::Serializer_Base& _Serializer ){return true;}
 	zArrayStatic<zU8>			maIndices;			//!< array of indices (packing either 16bits or 32bits index)

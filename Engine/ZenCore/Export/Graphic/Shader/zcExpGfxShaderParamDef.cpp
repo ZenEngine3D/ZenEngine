@@ -23,7 +23,7 @@ zResID ExportInfoGfxShaderParamDef::CallbackGetItemID(zenConst::eResPlatform _eP
 	ZENAssert(_ePlatform==zenConst::keResPlatform_DX11 && _eType==zenConst::keResType_GfxShaderParamDef);
 	ZENAssert( _pExportInfo );
 	const ExportInfoGfxShaderParamDef*	pExportInfo		= static_cast<const ExportInfoGfxShaderParamDef*>(_pExportInfo);
-	const ExportDataGfxShaderDX11*			pParentShader	= EMgr::SerialItems.GetItem<ExportDataGfxShaderDX11>( pExportInfo->mParentShaderID );	
+	const ResDataGfxShaderDX11*			pParentShader	= EMgr::SerialItems.GetItem<ResDataGfxShaderDX11>( pExportInfo->mParentShaderID );	
 	if( pParentShader && pParentShader->maParamDefID.Count() > (zUInt)pExportInfo->meBufferIndex )
 	{
 		zResID pPreProcessId = pParentShader->maParamDefID[pExportInfo->meBufferIndex]; //Re-use already processed ID (from shader creation)

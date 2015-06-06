@@ -3,9 +3,9 @@
 namespace zcExp
 {
 
-ExporterGfxShaderParamDX11_DX11::ExporterGfxShaderParamDX11_DX11(const ExportDataRef& _rExportData)
-: Super(_rExportData.GetSafe())
-, mrExportData(_rExportData)
+ExporterGfxShaderParamDX11_DX11::ExporterGfxShaderParamDX11_DX11(const ResDataRef& _rResData)
+: Super(_rResData.GetSafe())
+, mrResData(_rResData)
 {
 }
 
@@ -15,11 +15,11 @@ bool ExporterGfxShaderParamDX11_DX11::ExportStart()
 	if( Super::ExportStart() )
 	{
 		ExportInfoGfxShaderParam* pExportInfo		= static_cast<ExportInfoGfxShaderParam*>(mpExportInfo);
-		mrExportData->mParentParamDefID				= pExportInfo->mParentParamDefID;	
-		ExportDataGfxShaderParamDefDX11* pParent	= EMgr::SerialItems.GetItem<ExportDataGfxShaderParamDefDX11>(pExportInfo->mParentParamDefID);
+		mrResData->mParentParamDefID				= pExportInfo->mParentParamDefID;	
+		ResDataGfxShaderParamDefDX11* pParent	= EMgr::SerialItems.GetItem<ResDataGfxShaderParamDefDX11>(pExportInfo->mParentParamDefID);
 		if( pParent )
 		{
-			mrExportData->maParameterValues			= pParent->maParameterDefaults;
+			mrResData->maParameterValues			= pParent->maParameterDefaults;
 			return TRUE;
 		}
 	}

@@ -4,22 +4,22 @@
 
 namespace zcRes
 {
-	class GfxSampler : public TResource<GfxSampler, GfxSamplerExportData, GfxSamplerProxy, GfxSamplerExporterRuntime>
+	class GfxSampler : public TResource<GfxSampler, GfxSamplerResData, GfxSamplerProxy, GfxSamplerExporterRuntime>
 	{
 	ZENClassDeclare(GfxSampler, TResource)		
 	};
 
-	class GfxStateBlend : public TResource<GfxStateBlend, GfxStateBlendExportData, GfxStateBlendProxy, GfxStateBlendExporterRuntime>
+	class GfxStateBlend : public TResource<GfxStateBlend, GfxStateBlendResData, GfxStateBlendProxy, GfxStateBlendExporterRuntime>
 	{
 	ZENClassDeclare(GfxStateBlend, TResource)		
 	};
 
-	class GfxStateDepthStencil : public TResource<GfxStateDepthStencil, GfxStateDepthStencilExportData, GfxStateDepthStencilProxy, GfxStateDepthStencilExporterRuntime>
+	class GfxStateDepthStencil : public TResource<GfxStateDepthStencil, GfxStateDepthStencilResData, GfxStateDepthStencilProxy, GfxStateDepthStencilExporterRuntime>
 	{
 	ZENClassDeclare(GfxStateDepthStencil, TResource)		
 	};
 
-	class GfxStateRasterizer : public TResource<GfxStateRasterizer, GfxStateRasterizerExportData, GfxStateRasterizerProxy, GfxStateRasterizerExporterRuntime>
+	class GfxStateRasterizer : public TResource<GfxStateRasterizer, GfxStateRasterizerResData, GfxStateRasterizerProxy, GfxStateRasterizerExporterRuntime>
 	{
 	ZENClassDeclare(GfxStateRasterizer, TResource)		
 	};

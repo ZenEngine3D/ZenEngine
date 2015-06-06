@@ -10,12 +10,12 @@ void GfxView::Clear( bool _bClearColor, const zVec4F& _vRGBA, bool _bClearDepth,
 
 const zVec2S16& GfxView::GetOrigin()const
 {
-	return mrExportData->mvOrigin;
+	return mrResData->mvOrigin;
 }
 
 const zVec2U16& GfxView::GetDim()const
 {
-	return mrExportData->mvDim;
+	return mrResData->mvDim;
 }
 
 }

@@ -21,12 +21,12 @@ public:
 	zResID							GetNewResourceID(zenConst::eResPlatform _ePlatform, zenConst::eResType _eType, zenConst::eResSource _eSource, const ExportInfoBase* _pExportInfo, bool& _bExistOut);
 	zResID							GetNewResourceID(zenConst::eResType _eType);
 protected:
-	void							ExportDone(const ExportDataRef& _rExportData);
+	void							ExportDone(const ResDataRef& _rResData);
 
 	zenConst::eResPlatform			maPlatforms[zenConst::keResPlatform__Count];	//!< Current platform renderer we're exporting for (only 1 per export program execution)
 	zenConst::eResSource			meSource;										//!< Source exported item will be configured to be (runtime/offline)
-	zArrayDynamic<ExportDataRef>	maExportSuccess;								//!< List of successfully exported tasks
-	zArrayDynamic<ExportDataRef>	maExportFail;									//!< List of failed exported tasks
+	zArrayDynamic<ResDataRef>	maExportSuccess;								//!< List of successfully exported tasks
+	zArrayDynamic<ResDataRef>	maExportFail;									//!< List of failed exported tasks
 	zU32							muExportPending;								//!< Number of pending export tasks
 	CBCreateItem					mpCallbackCreateItem;															//!< Callback to create new resource
 	CBGetItemID						mpCallbackGetItemID[zenConst::keResPlatform__Count][zenConst::keResType__Count];	//!< Callback to find name assigned to new resource to exporte

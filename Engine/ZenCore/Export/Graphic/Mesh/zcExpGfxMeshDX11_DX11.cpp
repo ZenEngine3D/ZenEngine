@@ -2,9 +2,9 @@
 
 namespace zcExp
 {
-	ExporterGfxMeshDX11_DX11::ExporterGfxMeshDX11_DX11(const ExportDataRef& _rExportData)
-	: Super(_rExportData.GetSafe())
-	, mrExportData(_rExportData)
+	ExporterGfxMeshDX11_DX11::ExporterGfxMeshDX11_DX11(const ResDataRef& _rResData)
+	: Super(_rResData.GetSafe())
+	, mrResData(_rResData)
 	{
 	}
 
@@ -14,13 +14,13 @@ namespace zcExp
 			return false;
 	
 		ExportInfoGfxMesh* pExportInfo	= static_cast<ExportInfoGfxMesh*>(mpExportInfo);
-		mrExportData->maMeshStripID			= pExportInfo->maMeshStripID;
+		mrResData->maMeshStripID			= pExportInfo->maMeshStripID;
 
 		// Make sure all MeshStrip are valid
-		for(zUInt stripIdx(0), stripCount(mrExportData->maMeshStripID.Count()); stripIdx<stripCount; ++stripIdx)
+		for(zUInt stripIdx(0), stripCount(mrResData->maMeshStripID.Count()); stripIdx<stripCount; ++stripIdx)
 		{
-			zResID resID = mrExportData->maMeshStripID[stripIdx];
-			if( resID.Type()!=zenConst::keResType_GfxMeshStrip || !EMgr::SerialItems.GetItem<ExportDataGfxMeshStripDX11>(resID) )
+			zResID resID = mrResData->maMeshStripID[stripIdx];
+			if( resID.Type()!=zenConst::keResType_GfxMeshStrip || !EMgr::SerialItems.GetItem<ResDataGfxMeshStripDX11>(resID) )
 				return false;
 		}
 

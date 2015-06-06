@@ -10,9 +10,9 @@ namespace zcExp
 		static zResID			CallbackGetItemID(zenConst::eResPlatform _ePlatform, zenConst::eResType _eType, zenConst::eResSource _eSource, const zcExp::ExportInfoBase* _pExportInfo, bool& _bExistOut);
 	};
 
-	class ExportDataGfxShaderBinding : public ExportDataBase
+	class ResDataGfxShaderBinding : public ResDataBase
 	{
-	ZENClassDeclare(ExportDataGfxShaderBinding, ExportDataBase)
+	ZENClassDeclare(ResDataGfxShaderBinding, ResDataBase)
 	public:
 		//! @class Used to track texture SlotIndex and SlotCount
 		struct TextureSlot : public zcExp::ISerialize
@@ -43,7 +43,7 @@ namespace zcExp
 	{
 	ZENClassDeclare(ExporterGfxShaderBinding, ExporterBase)
 	public:											
-											ExporterGfxShaderBinding(const ExportDataRef& _rExportData);
+											ExporterGfxShaderBinding(const ResDataRef& _rResData);
 	protected:	
 		virtual bool						ExportStart();		
 		zMap<zU32>::Key64					mdStagePerParamDef;		//!< ParamDef needed for this binding, with stage mask they applied to (automatically computed at export)

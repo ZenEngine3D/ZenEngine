@@ -4,7 +4,7 @@
 
 namespace zcRes
 {
-	class GfxWindow : public TResource<GfxWindow, GfxWindowExportData, GfxWindowProxy, zcExp::ExporterNone>
+	class GfxWindow : public TResource<GfxWindow, GfxWindowResData, GfxWindowProxy, zcExp::ExporterNone>
 	{
 	ZENClassDeclare(GfxWindow, TResource)
 	public:

@@ -29,8 +29,8 @@ bool GfxVertexProxy_DX11::Initialize(class GfxVertex& _Owner)
 	};
 	ZENStaticAssert( ZENArrayCount(zSemanticNames)==zenConst::keShaderSemantic__Count );
 	
-	const GfxVertex::ExportDataRef& rExportData = _Owner.GetExportData();
-	ZENAssert(rExportData.IsValid());
+	const GfxVertex::ResDataRef& rResData = _Owner.GetResData();
+	ZENAssert(rResData.IsValid());
 	ZENDbgCode(mpOwner = &_Owner);
 
 	//! @todo Missing: configure resource creations flags
@@ -40,12 +40,12 @@ bool GfxVertexProxy_DX11::Initialize(class GfxVertex& _Owner)
 	UINT uCpuAccess(D3D11_CPU_ACCESS_WRITE);
 
 	// Vertex Streams buffer init
-	zUInt uStreamCount = maStreamBuffer.SetCount( rExportData->maStream.Count() );
-	maStreamInfo.SetCount( rExportData->maStream.Count() );
-	maStreamStride.SetCount( rExportData->maStream.Count() );
+	zUInt uStreamCount = maStreamBuffer.SetCount( rResData->maStream.Count() );
+	maStreamInfo.SetCount( rResData->maStream.Count() );
+	maStreamStride.SetCount( rResData->maStream.Count() );
 	for(zUInt streamIdx=0; streamIdx<uStreamCount; ++streamIdx)
 	{
-		const GfxVertexExportData::Stream& stream		= rExportData->maStream[streamIdx];			
+		const GfxVertexResData::Stream& stream		= rResData->maStream[streamIdx];			
 		maStreamStride[streamIdx]						= stream.muStride;
 		maStreamInfo[streamIdx].muElementStartIndex		= stream.muElementStart;
 		maStreamInfo[streamIdx].muElementCount			= stream.muElementCount;
@@ -72,7 +72,7 @@ bool GfxVertexProxy_DX11::Initialize(class GfxVertex& _Owner)
 	}	
 		
 	// Vertex element Definitions
-	zUInt uElemDefCount = maElementDef.Copy( (D3D11_INPUT_ELEMENT_DESC*)rExportData->maElementDef.First(), rExportData->maElementDef.Size() / sizeof(D3D11_INPUT_ELEMENT_DESC) );
+	zUInt uElemDefCount = maElementDef.Copy( (D3D11_INPUT_ELEMENT_DESC*)rResData->maElementDef.First(), rResData->maElementDef.Size() / sizeof(D3D11_INPUT_ELEMENT_DESC) );
 	for(zUInt elemIdx=0; elemIdx<uElemDefCount; ++elemIdx)
 		maElementDef[elemIdx].SemanticName = zSemanticNames[(zUInt)maElementDef[elemIdx].SemanticName];	//Convert Semantic Name index to string		
 		

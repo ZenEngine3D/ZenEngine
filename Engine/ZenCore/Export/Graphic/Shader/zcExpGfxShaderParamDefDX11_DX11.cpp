@@ -7,9 +7,9 @@
 namespace zcExp
 {
 
-ExporterGfxShaderParamDefDX11_DX11::ExporterGfxShaderParamDefDX11_DX11(const ExportDataRef& _rExportData)
-: Super(_rExportData.GetSafe())
-, mrExportData(_rExportData)
+ExporterGfxShaderParamDefDX11_DX11::ExporterGfxShaderParamDefDX11_DX11(const ResDataRef& _rResData)
+: Super(_rResData.GetSafe())
+, mrResData(_rResData)
 {
 }
 
@@ -25,7 +25,7 @@ bool ExporterGfxShaderParamDefDX11_DX11::ExportStart()
 		return false;
 
 	ExportInfoGfxShaderParamDef*	pExportInfo = static_cast<ExportInfoGfxShaderParamDef*>(mpExportInfo);	
-	ExportDataGfxShaderDX11*		pShaderItem	= EMgr::SerialItems.GetItem<ExportDataGfxShaderDX11>(pExportInfo->mParentShaderID);
+	ResDataGfxShaderDX11*		pShaderItem	= EMgr::SerialItems.GetItem<ResDataGfxShaderDX11>(pExportInfo->mParentShaderID);
 	if( pShaderItem )
 	{
 		maCompiledShader = pShaderItem->maCompiledShader;
@@ -69,11 +69,11 @@ bool ExporterGfxShaderParamDefDX11_DX11::ExportWork(bool _bIsTHRTask)
 		{
 			bValid = true;
 			pConstBuffer->GetDesc( &bufferDesc );
-			mrExportData->meFrequence = pExportInfo->meBufferIndex;
+			mrResData->meFrequence = pExportInfo->meBufferIndex;
 			
 			// Load the description of each variable for use later on when binding a buffer
-			mrExportData->mdParameters.Init(32);
-			mrExportData->maParameterDefaults.SetCount( bufferDesc.Size );
+			mrResData->mdParameters.Init(32);
+			mrResData->maParameterDefaults.SetCount( bufferDesc.Size );
 			for( UINT j = 0; bValid && j < bufferDesc.Variables; j++ )
 			{
 				// Get the variable description and store it
@@ -106,9 +106,9 @@ bool ExporterGfxShaderParamDefDX11_DX11::ExportWork(bool _bIsTHRTask)
 				Param.mbInUse				= (VarDesc.uFlags & D3D_SVF_USED) != 0;
 
 				// Copy default value
-				if(VarDesc.DefaultValue)	zenMem::Copy(&mrExportData->maParameterDefaults[VarDesc.StartOffset], VarDesc.DefaultValue, VarDesc.Size); 
-				else						zenMem::Set(&mrExportData->maParameterDefaults[VarDesc.StartOffset], 0, VarDesc.Size); 
-				mrExportData->mdParameters.GetAdd( zHash32(VarDesc.Name) ) = Param;
+				if(VarDesc.DefaultValue)	zenMem::Copy(&mrResData->maParameterDefaults[VarDesc.StartOffset], VarDesc.DefaultValue, VarDesc.Size); 
+				else						zenMem::Set(&mrResData->maParameterDefaults[VarDesc.StartOffset], 0, VarDesc.Size); 
+				mrResData->mdParameters.GetAdd( zHash32(VarDesc.Name) ) = Param;
 			}
 			
 		}

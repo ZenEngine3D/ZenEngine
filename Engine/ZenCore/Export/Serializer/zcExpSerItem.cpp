@@ -29,7 +29,7 @@ namespace zcExp
 	}
 
 	
-	ExportDataBase::ExportDataBase()
+	ResDataBase::ResDataBase()
 	/*: muSize(0)
 	, mExportTime(0)	
 	, muVersion(zenConst::keEngineVersion__Current)*/

@@ -22,8 +22,8 @@ GfxTexture2dProxy_DX11::~GfxTexture2dProxy_DX11()
 
 bool GfxTexture2dProxy_DX11::Initialize(class GfxTexture2d& _Owner)
 {
-	const GfxTexture2d::ExportDataRef& rExportData = _Owner.GetExportData();
-	ZENAssert(rExportData.IsValid());
+	const GfxTexture2d::ResDataRef& rResData = _Owner.GetResData();
+	ZENAssert(rResData.IsValid());
 	ZENDbgCode(mpOwner = &_Owner);
 
 	D3D11_TEXTURE2D_DESC bufferDesc;
@@ -32,18 +32,18 @@ bool GfxTexture2dProxy_DX11::Initialize(class GfxTexture2d& _Owner)
 	ZeroMemory( &bufferDesc, sizeof(bufferDesc) );
 	ZeroMemory( &viewDesc, sizeof(viewDesc) );
 	ZeroMemory( aInitData, sizeof(aInitData) );		
-	bool bIsDepth							= EMgr::GfxRender.IsDepth(rExportData->meFormat);
-	bufferDesc.Width						= rExportData->maMipData[0].mvDim.x;
-	bufferDesc.Height						= rExportData->maMipData[0].mvDim.y;
-	bufferDesc.MipLevels					= rExportData->maMipData.Count();
+	bool bIsDepth							= EMgr::GfxRender.IsDepth(rResData->meFormat);
+	bufferDesc.Width						= rResData->maMipData[0].mvDim.x;
+	bufferDesc.Height						= rResData->maMipData[0].mvDim.y;
+	bufferDesc.MipLevels					= rResData->maMipData.Count();
 	bufferDesc.ArraySize					= 1;
-	bufferDesc.Format						= EMgr::GfxRender.ZenFormatToNative(rExportData->meFormat);
+	bufferDesc.Format						= EMgr::GfxRender.ZenFormatToNative(rResData->meFormat);
 	bufferDesc.SampleDesc.Count				= 1;
 	bufferDesc.SampleDesc.Quality			= 0;
 	bufferDesc.CPUAccessFlags				= 0;
 	bufferDesc.MiscFlags					= 0;
 
-	if( rExportData->mCreationFlags.All(zenConst::keTexCreate_RenderTarget) )
+	if( rResData->mCreationFlags.All(zenConst::keTexCreate_RenderTarget) )
 	{			
 		bufferDesc.Usage					= D3D11_USAGE_DEFAULT;
 		bufferDesc.BindFlags				= bIsDepth ? D3D11_BIND_DEPTH_STENCIL : D3D11_BIND_SHADER_RESOURCE|D3D11_BIND_RENDER_TARGET;
@@ -59,11 +59,11 @@ bool GfxTexture2dProxy_DX11::Initialize(class GfxTexture2d& _Owner)
 	for(zUInt mipIdx(0); mipIdx<bufferDesc.MipLevels; ++mipIdx)
 	{
 		ZENAssert(mipIdx < ZENArrayCount(aInitData));			
-		if( rExportData->maMipData[mipIdx].maData.Count() > 0 )
+		if( rResData->maMipData[mipIdx].maData.Count() > 0 )
 		{
 			bValidInitData					= true;
-			aInitData[mipIdx].pSysMem		= rExportData->maMipData[mipIdx].maData.First();
-			aInitData[mipIdx].SysMemPitch	= zcExp::GetTextureBlockInfo(rExportData->meFormat).muSize*rExportData->maMipData[mipIdx].mvDim.x;
+			aInitData[mipIdx].pSysMem		= rResData->maMipData[mipIdx].maData.First();
+			aInitData[mipIdx].SysMemPitch	= zcExp::GetTextureBlockInfo(rResData->meFormat).muSize*rResData->maMipData[mipIdx].mvDim.x;
 		}			
 	}
 

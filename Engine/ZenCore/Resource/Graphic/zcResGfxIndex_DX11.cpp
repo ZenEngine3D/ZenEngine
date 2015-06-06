@@ -17,8 +17,8 @@ GfxIndexProxy_DX11::~GfxIndexProxy_DX11()
 
 bool GfxIndexProxy_DX11::Initialize(class GfxIndex& _Owner)
 {
-	const GfxIndex::ExportDataRef& rExportData = _Owner.GetExportData();
-	ZENAssert(rExportData.IsValid());
+	const GfxIndex::ResDataRef& rResData = _Owner.GetResData();
+	ZENAssert(rResData.IsValid());
 	ZENDbgCode(mpOwner = &_Owner);
 
 	//! @todo Missing: configure resource creations flags
@@ -27,7 +27,7 @@ bool GfxIndexProxy_DX11::Initialize(class GfxIndex& _Owner)
 	D3D11_USAGE eUsage(D3D11_USAGE_DYNAMIC);
 	UINT uCpuAccess(D3D11_CPU_ACCESS_WRITE);
 	D3D11_BUFFER_DESC IndexDesc;
-	IndexDesc.ByteWidth				= rExportData->maIndices.Size();
+	IndexDesc.ByteWidth				= rResData->maIndices.Size();
 	IndexDesc.Usage					= eUsage;						
 	IndexDesc.BindFlags				= D3D11_BIND_INDEX_BUFFER;		
 	IndexDesc.CPUAccessFlags		= uCpuAccess;					
@@ -35,16 +35,16 @@ bool GfxIndexProxy_DX11::Initialize(class GfxIndex& _Owner)
 	IndexDesc.StructureByteStride	= 0;
 
 	D3D11_SUBRESOURCE_DATA InitData;
-	InitData.pSysMem				= rExportData->maIndices.First();
+	InitData.pSysMem				= rResData->maIndices.First();
 	InitData.SysMemPitch			= 0;
 	InitData.SysMemSlicePitch		= 0;
 	HRESULT hr						= EMgr::GfxRender.DX11GetDevice()->CreateBuffer( &IndexDesc, &InitData, &mpIndiceBuffer );
 
-	mePrimitiveType					= rExportData->mePrimitiveType;
-	meIndiceFormat					= rExportData->meIndiceFormat;	
-	muIndiceCount					= rExportData->muIndiceCount;	
-	muIndiceSize					= rExportData->muIndiceSize;	
-	muPrimitiveCount				= rExportData->muPrimitiveCount;
+	mePrimitiveType					= rResData->mePrimitiveType;
+	meIndiceFormat					= rResData->meIndiceFormat;	
+	muIndiceCount					= rResData->muIndiceCount;	
+	muIndiceSize					= rResData->muIndiceSize;	
+	muPrimitiveCount				= rResData->muPrimitiveCount;
 
 	return SUCCEEDED(hr);
 }

@@ -11,11 +11,11 @@ namespace zcExp
 		bool								mbSRGB;
 	};
 
-	class ExportDataGfxRenderTarget : public ExportDataBase
+	class ResDataGfxRenderTarget : public ResDataBase
 	{
-	ZENClassDeclare(ExportDataGfxRenderTarget, ExportDataBase)
+	ZENClassDeclare(ResDataGfxRenderTarget, ResDataBase)
 	public:
-											ExportDataGfxRenderTarget(){mpBackbuffer=NULL;}
+											ResDataGfxRenderTarget(){mpBackbuffer=NULL;}
 		virtual bool						Serialize( zcExp::Serializer_Base& _Serializer ){return true;}		
 		IDXGISwapChain*						mpBackbuffer; //! @todo Change to windows res pointer
 		zenConst::eTextureFormat			meFormat;	
@@ -27,12 +27,12 @@ namespace zcExp
 	{
 	ZENClassDeclare(ExporterGfxRenderTarget, ExporterBase)
 	public:				
-	typedef ExportDataGfxRenderTarget		ExportData;
-	typedef zGameRef<ExportData>			ExportDataRef;
-											ExporterGfxRenderTarget(const ExportDataRef& _rExportData);
+	typedef ResDataGfxRenderTarget		ResData;
+	typedef zGameRef<ResData>			ResDataRef;
+											ExporterGfxRenderTarget(const ResDataRef& _rResData);
 	protected:	
 		virtual bool						ExportStart();		
-		ExportDataRef						mrExportData;
+		ResDataRef						mrResData;
 	};
 
 	zResID CreateGfxRenderTarget(zenConst::eTextureFormat _eFormat, zVec2U16 _vDim, bool _bSrgb=true);

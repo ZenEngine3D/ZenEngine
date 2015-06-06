@@ -14,9 +14,9 @@ zResID ExporterGfxInputStreamDX11_DX11::CallbackGetItemID(zenConst::eResPlatform
 	return zcExp::ValidateItemID(_ePlatform, _eType, _eSource, hName, _bExistOut);
 }
 
-ExporterGfxInputStreamDX11_DX11::ExporterGfxInputStreamDX11_DX11(const ExportDataRef& _rExportData)
-: ExporterBase(_rExportData.GetSafe())
-, mrExportData(_rExportData)
+ExporterGfxInputStreamDX11_DX11::ExporterGfxInputStreamDX11_DX11(const ResDataRef& _rResData)
+: ExporterBase(_rResData.GetSafe())
+, mrResData(_rResData)
 {
 }
 
@@ -33,8 +33,8 @@ bool ExporterGfxInputStreamDX11_DX11::ExportWork(bool _bIsTHRTask)
 {
 	bool bSuccess(FALSE);
 	ExportInfoGfxInputStream* pExportInfo	= static_cast<ExportInfoGfxInputStream*>(mpExportInfo);				
-	mrExportData->mVertexBufferID			= pExportInfo->mVertexBufferID;
-	mrExportData->mShaderInputSignatureID	= pExportInfo->mShaderInputSignatureID;
+	mrResData->mVertexBufferID			= pExportInfo->mVertexBufferID;
+	mrResData->mShaderInputSignatureID	= pExportInfo->mShaderInputSignatureID;
 	return true;
 }
 

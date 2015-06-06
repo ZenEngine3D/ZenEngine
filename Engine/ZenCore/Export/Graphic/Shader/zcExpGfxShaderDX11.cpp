@@ -5,7 +5,7 @@
 namespace zcExp
 {
 
-bool ExportDataGfxShaderDX11::Serialize( zcExp::Serializer_Base& _Serializer )
+bool ResDataGfxShaderDX11::Serialize( zcExp::Serializer_Base& _Serializer )
 {
 	return FALSE;
 }

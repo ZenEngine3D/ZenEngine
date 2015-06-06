@@ -4,7 +4,7 @@
 
 namespace zcRes
 {
-	class GfxView : public TResource<GfxView, GfxViewExportData, GfxViewProxy, GfxViewExporterRuntime>
+	class GfxView : public TResource<GfxView, GfxViewResData, GfxViewProxy, GfxViewExporterRuntime>
 	{
 	ZENClassDeclare(GfxView, TResource)
 	public:

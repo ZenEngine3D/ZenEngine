@@ -17,9 +17,9 @@ namespace zcExp
 	}
 
 	//=================================================================
-	ExporterBase::ExporterBase(const ExportDataRef& _rExportData)
+	ExporterBase::ExporterBase(const ResDataRef& _rResData)
 	: mpExportInfo(NULL)
-	, mrExportData(_rExportData)
+	, mrResData(_rResData)
 	{		
 	}
 
@@ -39,7 +39,7 @@ namespace zcExp
 			_ExportInfo.mbSuccessWork	= ExportWork(FALSE);
 		_ExportInfo.mbSuccessEnd		= ExportEnd();
 		mpExportInfo					= NULL;
-		return _ExportInfo.IsSuccess() && mrExportData->mResID.IsValid();
+		return _ExportInfo.IsSuccess() && mrResData->mResID.IsValid();
 	}
 
 	//=============================================================================================
@@ -48,8 +48,8 @@ namespace zcExp
 	//=============================================================================================
 	bool ExporterBase::ExportStart()
 	{ 
-		mrExportData->mResID = mpExportInfo ? mpExportInfo->mExportResID : zResID(); 		
-		return mrExportData->mResID.IsValid();
+		mrResData->mResID = mpExportInfo ? mpExportInfo->mExportResID : zResID(); 		
+		return mrResData->mResID.IsValid();
 	}
 
 	//=============================================================================================
@@ -60,11 +60,11 @@ namespace zcExp
 	{	
 		if( mpExportInfo->IsSuccess() )
 		{
-			mrExportData->muVersion		= SerialItem::sVersions[mpExportInfo->mExportResID.Type()];
-			mrExportData->mExportTime	= zenSys::GetTimeStamp();			
-			EMgr::SerialItems.SetItem(mrExportData.Get()); //! @todo urgent transform SerialItem manager to use refcount
+			mrResData->muVersion		= SerialItem::sVersions[mpExportInfo->mExportResID.Type()];
+			mrResData->mExportTime	= zenSys::GetTimeStamp();			
+			EMgr::SerialItems.SetItem(mrResData.Get()); //! @todo urgent transform SerialItem manager to use refcount
 		}		
-		EMgr::Export.ExportDone(mrExportData.Get()); //! @todo replug this with new system
+		EMgr::Export.ExportDone(mrResData.Get()); //! @todo replug this with new system
 		return true;
 	/*	
 		if( mpExportInfo->IsSuccess() )

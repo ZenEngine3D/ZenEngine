@@ -4,9 +4,9 @@
 
 namespace zcExp
 {
-	class ExportDataGfxShaderParamDX11 : public ExportDataBase
+	class ResDataGfxShaderParamDX11 : public ResDataBase
 	{
-	ZENClassDeclare(ExportDataGfxShaderParamDX11, ExportDataBase)
+	ZENClassDeclare(ResDataGfxShaderParamDX11, ResDataBase)
 	public:
 		virtual bool			Serialize( zcExp::Serializer_Base& _Serializer ){return true;}
 		zResID					mParentParamDefID;	//!< Parent ShaderParam definition

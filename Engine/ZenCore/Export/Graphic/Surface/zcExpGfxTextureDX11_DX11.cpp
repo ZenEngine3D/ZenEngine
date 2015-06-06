@@ -4,29 +4,29 @@
 namespace zcExp
 {
 
-ExporterGfxTexture2dDX11_DX11::ExporterGfxTexture2dDX11_DX11(const ExportDataRef& _rExportData)
-: ExporterBase(_rExportData.GetSafe())
-, mrExportData(_rExportData)
+ExporterGfxTexture2dDX11_DX11::ExporterGfxTexture2dDX11_DX11(const ResDataRef& _rResData)
+: ExporterBase(_rResData.GetSafe())
+, mrResData(_rResData)
 {
 }
 
 bool ExporterGfxTexture2dDX11_DX11::ExportWork(bool _bIsTHRTask)
 {
 	ExportInfoGfxTexture2d* pExportInfo	= static_cast<ExportInfoGfxTexture2d*>(mpExportInfo);		
-	mrExportData->meFormat					= pExportInfo->meFormatOutput;
-	mrExportData->mCreationFlags			= pExportInfo->mCreationFlags;
+	mrResData->meFormat					= pExportInfo->meFormatOutput;
+	mrResData->mCreationFlags			= pExportInfo->mCreationFlags;
 	if( pExportInfo->mbGenerateMip )
 	{
 		//! @todo Missing: Mipmap creation
-		ZENAssert(	(mrExportData->maMipData.Count()==1) && 
-					zenMath::IsPower2(mrExportData->maMipData[0].mvDim.x) && 
-					zenMath::IsPower2(mrExportData->maMipData[0].mvDim.y) );
+		ZENAssert(	(mrResData->maMipData.Count()==1) && 
+					zenMath::IsPower2(mrResData->maMipData[0].mvDim.x) && 
+					zenMath::IsPower2(mrResData->maMipData[0].mvDim.y) );
 	}
 		
 	if( pExportInfo->meFormatInput != pExportInfo->meFormatOutput )
 	{
 		//! @todo Missing: Image conversion
-		zUInt uMipCount = mrExportData->maMipData.SetCount( pExportInfo->maMipData.Count() );
+		zUInt uMipCount = mrResData->maMipData.SetCount( pExportInfo->maMipData.Count() );
 		for( zUInt mipIdx=0; mipIdx<uMipCount; ++mipIdx)
 		{
 			//..
@@ -34,12 +34,12 @@ bool ExporterGfxTexture2dDX11_DX11::ExportWork(bool _bIsTHRTask)
 	}
 	else
 	{
-		zUInt uMipCount = mrExportData->maMipData.SetCount( pExportInfo->maMipData.Count() );
+		zUInt uMipCount = mrResData->maMipData.SetCount( pExportInfo->maMipData.Count() );
 		for(zUInt mipIdx(0); mipIdx<uMipCount; ++mipIdx)
 		{
-			mrExportData->maMipData[mipIdx].maData		= pExportInfo->maMipData[mipIdx].maData;
-			mrExportData->maMipData[mipIdx].mvDim		= pExportInfo->maMipData[mipIdx].mvDim;
-			mrExportData->maMipData[mipIdx].muStride	= pExportInfo->maMipData[mipIdx].muStride;
+			mrResData->maMipData[mipIdx].maData		= pExportInfo->maMipData[mipIdx].maData;
+			mrResData->maMipData[mipIdx].mvDim		= pExportInfo->maMipData[mipIdx].mvDim;
+			mrResData->maMipData[mipIdx].muStride	= pExportInfo->maMipData[mipIdx].muStride;
 		}
 	}
 		

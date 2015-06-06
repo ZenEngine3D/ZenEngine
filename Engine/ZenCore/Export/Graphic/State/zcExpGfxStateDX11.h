@@ -4,33 +4,33 @@
 
 namespace zcExp
 {	
-	class ExportDataGfxSamplerDX11 : public ExportDataBase
+	class ResDataGfxSamplerDX11 : public ResDataBase
 	{
-	ZENClassDeclare(ExportDataGfxSamplerDX11, ExportDataBase)
+	ZENClassDeclare(ResDataGfxSamplerDX11, ResDataBase)
 	public:
 		virtual bool				Serialize( zcExp::Serializer_Base& _Serializer ){return true;}
 		D3D11_SAMPLER_DESC			mSamplerDesc;
 	};
 
-	class ExportDataGfxStateBlendDX11 : public ExportDataBase
+	class ResDataGfxStateBlendDX11 : public ResDataBase
 	{
-	ZENClassDeclare(ExportDataGfxStateBlendDX11, ExportDataBase)
+	ZENClassDeclare(ResDataGfxStateBlendDX11, ResDataBase)
 	public:
 		virtual bool				Serialize( zcExp::Serializer_Base& _Serializer ){return true;}
 		D3D11_BLEND_DESC			mBlendDesc;
 	};
 
-	class ExportDataGfxStateDepthStencilDX11 : public ExportDataBase
+	class ResDataGfxStateDepthStencilDX11 : public ResDataBase
 	{
-	ZENClassDeclare(ExportDataGfxStateDepthStencilDX11, ExportDataBase)
+	ZENClassDeclare(ResDataGfxStateDepthStencilDX11, ResDataBase)
 	public:
 		virtual bool				Serialize( zcExp::Serializer_Base& _Serializer ){return true;}
 		D3D11_DEPTH_STENCIL_DESC	mDepthStencilDesc;
 	};
 
-	class ExportDataGfxStateRasterizerDX11 : public ExportDataBase
+	class ResDataGfxStateRasterizerDX11 : public ResDataBase
 	{
-	ZENClassDeclare(ExportDataGfxStateRasterizerDX11, ExportDataBase)
+	ZENClassDeclare(ResDataGfxStateRasterizerDX11, ResDataBase)
 	public:
 		virtual bool				Serialize( zcExp::Serializer_Base& _Serializer ){return true;}
 		D3D11_RASTERIZER_DESC		mRasterizerDesc;
