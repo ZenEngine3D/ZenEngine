@@ -13,7 +13,8 @@ namespace zcExp
 		virtual				~ISerialize(){}
 		virtual bool		Serialize( Serializer_Base& aSerializer )=0;
 	};
-
+	
+	//! @todo cleanup delete this
 	class SerialItem : public zcExp::ISerialize
 	{
 	ZENClassDeclare(SerialItem, zcExp::ISerialize)
@@ -23,10 +24,12 @@ namespace zcExp
 
 		zU32									muSize;
 		zU32									muVersion;
-		zTimeStamp								mExportTime;		
-		zResID									mResID;				
+		zTimeStamp								mExportTime;
+		zResID									mResID;
 		static const zenConst::eEngineVersion	sVersions[zenConst::keResType__Count];
 	};
+	
+
 }
 
 #endif

@@ -22,8 +22,8 @@ namespace zen { namespace zeAss
 		ZENInline bool												GetDirtyChild	()const;
 		zUInt														GetPackageCount	()const;
 
-		ZENInline bool												IsParentOf		(const zenAss::zPackageGroupRef& _Child)const;
-		ZENInline bool												IsParentOf		(const zenAss::zPackageRef& _Child)const;
+		bool														IsParentOf		(const zenAss::zPackageGroupRef& _Child)const;
+		bool														IsParentOf		(const zenAss::zPackageRef& _Child)const;
 
 		void														SetParentGroup	(const zenAss::zPackageGroupRef& _rParent);
 		void														SetName			(const zWString& _zName);

@@ -4,27 +4,24 @@ namespace zen { namespace zenSys {
 
 static zEngineInstance*		gpActiveEngine(NULL);
 static FWnd::Window*		gpMainWindow;			//! @todo Clean: Wrap this inside EngineInstance
+
 void LaunchEngine(zEngineInstance* _pEngineInstance, int argc, const char* const* argv)
 {	
 	if( _pEngineInstance->Init() )
 	{
-		SetEngine(_pEngineInstance);
+		ZENAssert(!gpActiveEngine);
+		gpActiveEngine = _pEngineInstance;
 		while( !gpActiveEngine->IsDone() && zbSys::IsSystemActive() )
 		{
-			gpActiveEngine->Update();
+			gpActiveEngine->MainLoop();
 		}
 	}	
 	gpActiveEngine->Destroy();
 }
 
-void SetEngine(zEngineInstance* _pEngineInstance)
-{
-	ZENAssert(!gpActiveEngine);
-	gpActiveEngine = _pEngineInstance;
-}
-
 zEngineInstance* GetEngineInstance()
 {
+	ZENAssert(gpActiveEngine);
 	return gpActiveEngine;
 }
 
@@ -39,9 +36,20 @@ void zEngineInstance::Destroy()
 	gpActiveEngine = NULL;
 }
 
+void zEngineInstance::MainLoop()
+{
+	zcMgr::Job.Update();	
+	zcMgr::Updater.Update(zenConst::keUpdt_FrameStart);
+	msigUpdate.Emit(zenConst::keUpdt_FrameStart);
+
+	zcMgr::Updater.Update(zenConst::keUpdt_FrameEnd);
+	msigUpdate.Emit(zenConst::keUpdt_FrameEnd);
+
+	Update(); //! @todo Clean remove this and use signals
+}
+
 void zEngineInstance::Update()
 {
-	zcMgr::Job.Update();
 }
 
 void zEngineInstance::CreateGfxWindow(const zVec2U16& _vDim, const zVec2U16& _vPos)

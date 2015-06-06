@@ -11,29 +11,26 @@ namespace zcExp
 		zU16	muSize;			// Bytes size of a block
 	};
 
-	class SerialTexture2D_Base : public zcExp::ExportItem
+	//! @todo find better location for class
+	struct MipInfo
 	{
-	ZENClassDeclare(SerialTexture2D_Base, zcExp::ExportItem)
-	public:
-		struct MipInfo
-		{
-			MipInfo()
-			: mvDim(0,0)
-			, muStride(0)
-			{}
+		MipInfo()
+		: mvDim(0,0)
+		, muStride(0)
+		{}
 			
-			zArrayStatic<zU8>			maData;
-			zVec2U16					mvDim;
-			zU32						muStride;			
-		};
-		struct ExportInfo : public zcExp::ExportInfoBase
-		{				
-			zArrayStatic<MipInfo>		maMipData;
-			zenConst::eTextureFormat	meFormatInput;	
-			zenConst::eTextureFormat	meFormatOutput;
-			zFlagResTexUse			mCreationFlags;
-			zU8							mbGenerateMip;
-		};
+		zArrayStatic<zU8>		maData;
+		zVec2U16				mvDim;
+		zU32					muStride;			
+	};
+
+	struct ExportInfoGfxTexture2d : public ExportInfoBase
+	{	
+		zArrayStatic<MipInfo>		maMipData;
+		zenConst::eTextureFormat	meFormatInput;	
+		zenConst::eTextureFormat	meFormatOutput;
+		zFlagResTexUse				mCreationFlags;
+		zU8							mbGenerateMip;
 	};
 
 	const TextureBlockInfo& GetTextureBlockInfo( zenConst::eTextureFormat _eFormat );	

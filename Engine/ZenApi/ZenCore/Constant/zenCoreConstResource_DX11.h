@@ -4,7 +4,7 @@
 
 namespace zen { namespace zenConst {
 
-const eResPlatform kAWCurrentPlatformGfx	= zenConst::keResPlatform_DX11;
+const eResPlatform kCurrentPlatformGfx	= zenConst::keResPlatform_DX11;
 
 } }  //namespace zen, Const 
 

@@ -37,8 +37,8 @@ public:
 		const TListItem*	GetNext()const;						//!< @brief Get next item tied to this list Link
 		const TListItem*	GetPrev()const;						//!< @brief Get previous item tied to this list Link
 		void				Unlink();							//!< @brief Remove item from the list this Link belongs to
-		void				InsertBefore(TListItem& _Item);		//!< @brief Insert a new item before this Link
-		void				InsertAfter(TListItem& _Item);		//!< @brief Insert a new item after this Link
+		void				InsertBefore(TListItem& _NewItem);	//!< @brief Insert a new item before this Link
+		void				InsertAfter(TListItem& _NewItem);	//!< @brief Insert a new item after this Link
 		bool				IsLinked()const;					//!< @brief True if this link has been added to a list
 
 	protected:
@@ -62,6 +62,7 @@ public:
 							Iterator(Iterator& _Copy);
 							Iterator(Link* _Current);
 		
+		bool				IsValid();							//!< @brief Return true if pointing to valid data
 		TListItem*			Get();								//!< @brief Get current item (NULL if none)
 		const TListItem*	Get()const;							//!< @brief Get current item (NULL if none)
 		TListItem*			operator*();						//!< @brief Get current item (NULL if none)
@@ -73,10 +74,13 @@ public:
 		const Iterator&		operator=(Iterator& _Copy);			//!< @brief Assign iterator current location
 		const Iterator&		operator=(Link* _Current);			//!< @brief Assign iterator current location
 		TListItem*			GoNext();							//!< @brief Move iterator forward and return value found
-		TListItem*			GoPrevious();						//!< @brief Move iterator backwrd and return value found
+		TListItem*			GoPrevious();						//!< @brief Move iterator backward and return value found
+		void				InsertBefore(TListItem& _NewItem);	//!< @brief Insert a new item before this Link
+		void				InsertAfter(TListItem& _NewItem);	//!< @brief Insert a new item after this Link
 		TListItem*			Unlink();							//!< @brief Unlink current item and return value (iterator invalid afterward)
 		TListItem*			UnlinkGoNext();						//!< @brief Unlink current item and go to next value
 		TListItem*			UnlinkGoPrev();						//!< @brief Unlink current item and go to previous value
+		
 	protected:
 		Link*				mpLink;
 	};

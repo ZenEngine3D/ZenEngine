@@ -13,10 +13,10 @@ namespace zcExp
 //=================================================================================================
 zResID CreateGfxVertex(const zArrayBase<zenRes::zGfxVertex::Stream>& _aStreams, zFlagResUse _ResourceUse)
 {	
-	static zenMem::zAllocatorPool sMemPool("Pool CreateVertexBuffer", sizeof(SerialVertex_Base::ExportInfo), 1, 5 );
-	SerialVertex_Base::ExportInfo* pExportInfo	= zenNew(&sMemPool) SerialVertex_Base::ExportInfo;
-	pExportInfo->maStreams						= _aStreams;
-	pExportInfo->mResourceUse					= _ResourceUse;
+	static zenMem::zAllocatorPool sMemPool("Pool CreateVertexBuffer", sizeof(ExportInfoGfxVertex), 1, 5 );
+	ExportInfoGfxVertex* pExportInfo	= zenNew(&sMemPool) ExportInfoGfxVertex;
+	pExportInfo->maStreams				= _aStreams;
+	pExportInfo->mResourceUse			= _ResourceUse;
 	return EMgr::Export.CreateItem( zResID::kePlatformType_GFX, zenConst::keResType_GfxVertex, pExportInfo );
 }
 

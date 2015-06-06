@@ -4,15 +4,14 @@
 
 namespace zen { namespace zenType {
 
-	//! @todo Clean: Move this to state files
-
-	class awBlendDesc
+	
+	class zBlendDesc
 	{
-	ZENClassDeclareNoParent(awBlendDesc)
+	ZENClassDeclareNoParent(zBlendDesc)
 	public:
-		struct awRTBlendDesc
+		struct zRTBlendDesc
 		{
-			awRTBlendDesc(void)
+			zRTBlendDesc(void)
 			: mbBlendEnable(false)
 			, muRenderTargetWriteMask(0xFF)
 			, meSrcBlend(zenConst::keBlend_SrcColor)
@@ -33,7 +32,7 @@ namespace zen { namespace zenType {
 			zenConst::eBlendOp	meBlendOpAlpha;
 		};
 
-		ZENInlineForce awBlendDesc(void)
+		ZENInlineForce zBlendDesc(void)
 		: mbAlphaToCoverageEnable(false)
 		, mbIndependentBlendEnable(false)
 		{
@@ -41,12 +40,13 @@ namespace zen { namespace zenType {
 
 		bool			mbAlphaToCoverageEnable;
 		bool			mbIndependentBlendEnable;
-		awRTBlendDesc	mxRenderTarget[ 8 ];
+		zRTBlendDesc	mxRenderTarget[ 8 ];
 	};
-	ZENSupportMemcopy(awBlendDesc);
-	class awDepthStencilDesc
+	ZENSupportMemcopy(zBlendDesc);
+
+	class zDepthStencilDesc
 	{
-	ZENClassDeclareNoParent(awDepthStencilDesc)
+	ZENClassDeclareNoParent(zDepthStencilDesc)
 	public:
 		struct DepthStencilOp
 		{
@@ -57,13 +57,13 @@ namespace zen { namespace zenType {
 			, meStencilFunc(zenConst::keComparisonFunc_Always)
 			{
 			}
-			zenConst::eStencilOp			meStencilFailOp;
-			zenConst::eStencilOp			meStencilDepthFailOp;
-			zenConst::eStencilOp			meStencilPassOp;
+			zenConst::eStencilOp		meStencilFailOp;
+			zenConst::eStencilOp		meStencilDepthFailOp;
+			zenConst::eStencilOp		meStencilPassOp;
 			zenConst::eComparisonFunc	meStencilFunc;
 		};
 
-		awDepthStencilDesc(void)
+		zDepthStencilDesc(void)
 		: mbDepthEnable(false)
 		, mbDepthWrite(false)
 		, mbStencilEnable(false)
@@ -82,7 +82,7 @@ namespace zen { namespace zenType {
 		DepthStencilOp				mxFrontFace;
 		DepthStencilOp				mxBackFace;
 	};
-	ZENSupportMemcopy(awDepthStencilDesc);
+	ZENSupportMemcopy(zDepthStencilDesc);
 
 
 	class zResID

@@ -4,37 +4,28 @@
 
 namespace zcRes
 {
-	class GfxRenderTarget_DX11 : public Resource
+	class GfxRenderTargetProxy_DX11 : public zRefCountedAutoDel
 	{
-		struct InstanceInfo : public zcExp::SerialRenderTarget_Base
-		{
-			ID3D11RenderTargetView* mpTargetColorView;
-			ID3D11DepthStencilView*	mpTargetDepthView;			
-			GfxTexture2DRef			mrTargetTexture;			
-		};
-	ZENResourceDeclare(GfxRenderTarget_DX11, InstanceInfo, zenConst::keResType_GfxRenderTarget)
-	//---------------------------------------------------------
-	// Common to all RenderTarget
-	//---------------------------------------------------------
+	ZENClassDeclare(GfxRenderTargetProxy_DX11, zRefCountedAutoDel)
 	public:
-		ZENInline bool					IsDepth()	{ return mInstanceInfo.mpTargetDepthView != NULL; }
-		ZENInline zVec2U16			GetDim()	{ return Get().mvDim; }
-		void						Clear(const zVec4F& _vRGBA);
-		void						Clear(float _fDepth=1, zU8 _uStencil=0, bool _bClearDepth=true, bool _bClearStencil=false);
-		GfxTexture2DRef				GetTexture2D();
-	
-	//---------------------------------------------------------
-	// Platform implementation
-	//---------------------------------------------------------
-	public:
-		virtual						~GfxRenderTarget_DX11();
-		virtual bool				ResourceInit();
-		void						ReleaseBackbuffer();
-		static GfxRenderTargetRef	CreateFromBackuffer(IDXGISwapChain* _pSwapchain, zenConst::eTextureFormat _eFormat, const zVec2U16& _vDim);
+										GfxRenderTargetProxy_DX11();
+		virtual							~GfxRenderTargetProxy_DX11();												
+		bool							Initialize(class GfxRenderTarget& _Owner);
 
-	protected:
-		ID3D11Texture2D*			mpSwapchainBackbuffer;	//!< Only set when create with CreateFromBackuffer 
-		bool						mbNeedResolve;
+		ZENInline bool					IsDepth()	{ return mpTargetDepthView != NULL; }
+		void							Clear(const zVec4F& _vRGBA);
+		void							Clear(float _fDepth=1, zU8 _uStencil=0, bool _bClearDepth=true, bool _bClearStencil=false);
+		void							ReleaseBackbuffer();
+	
+	//protected:
+		ID3D11Texture2D*				mpSwapchainBackbuffer;	//!< Only set when create with CreateFromBackuffer 		
+		ID3D11RenderTargetView*			mpTargetColorView;
+		ID3D11DepthStencilView*			mpTargetDepthView;
+		zenConst::eTextureFormat		meFormat;
+		zVec2U16						mvDim;
+		bool							mbNeedResolve;
+		GfxTexture2dProxyRef			mrProxParentTexture;
+		ZENDbgCode(class GfxRenderTarget*	mpOwner);
 	};
 }
 

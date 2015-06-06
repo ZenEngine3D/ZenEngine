@@ -4,6 +4,12 @@
 
 namespace zcExp
 {
+	struct ExportInfoGfxVertex : public ExportInfoBase
+	{
+		zArrayStatic<zenRes::zGfxVertex::Stream>	maStreams;
+		zFlagResUse									mResourceUse;
+	};
+	/*
 	class SerialVertex_Base : public zcExp::ExportItem
 	{
 	ZENClassDeclare(SerialVertex_Base,zcExp::ExportItem)
@@ -14,7 +20,7 @@ namespace zcExp
 			zFlagResUse									mResourceUse;
 		};
 	};
-	
+	*/
 	zResID CreateGfxVertex(const zArrayBase<zenRes::zGfxVertex::Stream>& _aStreams, zFlagResUse _ResourceUse);
 }
 

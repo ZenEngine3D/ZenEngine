@@ -6,13 +6,13 @@ namespace zen{ namespace zenType{} };
 using namespace zen;
 using namespace zen::zenType;
 
-#include <zenBase/Constant/zenBaseConst.h>
-#include <zenBase/Type/zenBaseType1.h>
-#include <zenBase/Memory/zenBaseMem.h>
-#include <zenBase/Math/zenBaseMath.h>
-#include <zenBase/Type/zenBaseType2.h>
-#include <zenBase/System/zenBaseSys.h>
-#include <zenBase/IO/zenBaseIO.h>
-#include <zenBase/Signal/zenBaseSig.h>
+#include "Constant/zenBaseConst.h"
+#include "Type/zenBaseType1.h"
+#include "Memory/zenBaseMem.h"
+#include "Math/zenBaseMath.h"
+#include "Type/zenBaseType2.h"
+#include "System/zenBaseSys.h"
+#include "IO/zenBaseIO.h"
+#include "Signal/zenBaseSig.h"
 
 #endif

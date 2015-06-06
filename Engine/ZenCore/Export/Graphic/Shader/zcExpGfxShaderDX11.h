@@ -4,62 +4,20 @@
 
 namespace zcExp
 {	
-	//! @todo Clean: Move ShaderParamDef here instead of ShaderBinding?
-	class SerialShader_DX11 : public SerialShader_Base
+	class ExportDataGfxShaderDX11 : public ExportDataBase
 	{
-	ZENClassDeclare(SerialShader_DX11, SerialShader_Base)
+	ZENClassDeclare(ExportDataGfxShaderDX11, ExportDataBase)
 	public:
-		struct SerialUseOnly
-		{
-			zArrayStatic<zU8>	maCompiledShader;			
-		};
-		SerialUseOnly	mSerialCommon;
-	protected:
-		bool			ExportWorkCompile();
-		bool			ExportWorkExtractResources();		
-		virtual bool	ExportEnd();
+		virtual bool				Serialize( zcExp::Serializer_Base& _Serializer );
+		struct BindInfo{ zU8 uSlot;	zU8 uCount;	};
+		zenConst::eShaderStage		meShaderStage;				//!< Type of shader (vertex, pixel, ...)
+		zArrayStatic<zResID>		maParamDefID;				//!< List of Parameter info used with this shader
+		zArrayStatic<zHash32>		maTextureSamplerName;		//!< List of name used for Texture and associated Sampler 
+		zArrayStatic<BindInfo>		maTextureSamplerSlot;		//!< Texture or sampler slot used for each item in mTextureSamplerName
+		zResID						mShaderInputSignatureID;	//!< Used for vertex shader
+		zArrayStatic<zU8>			maCompiledShader;			//!< Compiled shader code
+		zU8							muTextureSlotCount;			//!< Texture slot used in shader
 	};
-
-	class SerialGfxShaderPixel_DX11 : public SerialShader_DX11
-	{
-	ZENClassDeclare(SerialGfxShaderPixel_DX11, SerialShader_DX11)
-	//-------------------------------------------------------------------------------------------------
-	// Serialization and Asset creation support
-	//-------------------------------------------------------------------------------------------------
-	public:		
-		virtual bool				Serialize				( zcExp::Serializer_Base& _Serializer );
-	
-	//-------------------------------------------------------------------------------------------------
-	// Export support section
-	//-------------------------------------------------------------------------------------------------
-	protected:	
-		virtual bool				ExportWork(bool _bIsTHRTask);			
-	};
-
-
-	class SerialGfxShaderVertex_DX11 : public SerialShader_DX11
-	{
-	ZENClassDeclare(SerialGfxShaderVertex_DX11, SerialShader_DX11)
-	//-------------------------------------------------------------------------------------------------
-	// Serialization and Asset creation support
-	//-------------------------------------------------------------------------------------------------
-	public:		
-		virtual bool				Serialize				( zcExp::Serializer_Base& _Serializer );
-
-		struct SerialUseOnly
-		{
-			zResID			mShaderInputSignatureID;
-		};
-		SerialUseOnly				mSerial;
-
-	//-------------------------------------------------------------------------------------------------
-	// Export support section
-	//-------------------------------------------------------------------------------------------------
-	protected:	
-		virtual bool				ExportWork(bool _bIsTHRTask);	
-		virtual	bool				ExportEnd();
-	};
-
 }
 
 #endif

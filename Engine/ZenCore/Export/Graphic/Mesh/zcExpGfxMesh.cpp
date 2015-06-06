@@ -2,11 +2,11 @@
 
 namespace zcExp
 {
-	zResID SerialMesh_Base::CallbackGetItemID(zenConst::eResPlatform _ePlatform, zenConst::eResType _eType, zenConst::eResSource _eSource, const zcExp::ExportInfoBase* _pExportInfo, bool& _bExistOut)
+	zResID ExportInfoGfxMesh::CallbackGetItemID(zenConst::eResPlatform _ePlatform, zenConst::eResType _eType, zenConst::eResSource _eSource, const zcExp::ExportInfoBase* _pExportInfo, bool& _bExistOut)
 	{
 		ZENAssert(_eType==zenConst::keResType_GfxMesh);
 		ZENAssert( _pExportInfo );
-		const ExportInfo* pExportInfo = static_cast<const ExportInfo*>(_pExportInfo);
+		const ExportInfoGfxMesh* pExportInfo = static_cast<const ExportInfoGfxMesh*>(_pExportInfo);
 
 		zResID::NameHash hName;
 		for(zUInt meshStripIdx(0), meshStripCount(pExportInfo->maMeshStripID.Count()); meshStripIdx<meshStripCount; ++meshStripIdx)
@@ -24,9 +24,9 @@ namespace zcExp
 	//=================================================================================================
 	zResID CreateGfxMesh(const zArrayBase<zResID>& _aMeshStripID)
 	{
-		static zenMem::zAllocatorPool sMemPool("Pool CreateMesh", sizeof(SerialMesh_Base::ExportInfo), 1, 5 );
-		SerialMesh_Base::ExportInfo* pExportInfo	= zenNew(&sMemPool) SerialMesh_Base::ExportInfo;
-		pExportInfo->maMeshStripID					= _aMeshStripID;	
+		static zenMem::zAllocatorPool sMemPool("Pool CreateMesh", sizeof(ExportInfoGfxMesh), 1, 5 );
+		ExportInfoGfxMesh* pExportInfo	= zenNew(&sMemPool) ExportInfoGfxMesh;
+		pExportInfo->maMeshStripID			= _aMeshStripID;	
 		return EMgr::Export.CreateItem( zResID::kePlatformType_GFX, zenConst::keResType_GfxMesh, pExportInfo );
 	}
 

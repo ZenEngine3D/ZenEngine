@@ -4,28 +4,17 @@
 
 namespace zcRes
 {
-	class GfxView_DX11 : public Resource
+	class GfxViewProxy_DX11 : public zRefCountedAutoDel
 	{
-		struct InstanceInfo : public zcExp::SerialGfxView_Base
-		{
-			zArrayStatic<GfxRenderTargetRef>	marTargetColor;
-			GfxRenderTargetRef					mrTargetDepth;
-		};
-		ZENResourceDeclare(GfxView_DX11, InstanceInfo, zenConst::keResType_GfxView)
-	//------------------------------------------------------------------
-	// Common to all RenderTarget
-	//------------------------------------------------------------------
+	ZENClassDeclare(GfxViewProxy_DX11, zRefCountedAutoDel)
 	public:
-		void						Clear( bool _bClearColor, const zVec4F& _vRGBA, bool _bClearDepth=true, float _fDepth=1, bool _bClearStencil=false, zU8 _uStencil=0 );
-		
-	//------------------------------------------------------------------
-	// Platform Implementation
-	//------------------------------------------------------------------
-	public:
-		virtual						~GfxView_DX11();
-		virtual bool				ResourceInit();		
-
-		
+												GfxViewProxy_DX11();
+		virtual									~GfxViewProxy_DX11();												
+		bool									Initialize(class GfxView& _Owner);
+		void									Clear( bool _bClearColor, const zVec4F& _vRGBA, bool _bClearDepth=true, float _fDepth=1, bool _bClearStencil=false, zU8 _uStencil=0 );
+		zArrayStatic<GfxRenderTargetProxyRef>	marProxTargetColor;
+		GfxRenderTargetProxyRef					mrProxTargetDepth;
+		ZENDbgCode(class GfxView*			mpOwner);
 	};
 }
 

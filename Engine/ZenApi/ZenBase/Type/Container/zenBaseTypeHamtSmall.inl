@@ -613,7 +613,7 @@ const zHamt< TKey, TValue, TIndex, TIndexBits>& zHamt< TKey, TValue, TIndex, TIn
 	{
 		// Size pools to have just enough space for all allocated items per pool
 		for(zUInt poolIdx=0; poolIdx<=kuSlotCount; ++poolIdx)
-			mPools[poolIdx].Init("HamtSmallPool", _Copy.mPools[poolIdx].GetItemSize(), _Copy.mPools[poolIdx].GetTotalAllocCount(), _Copy.mPools[poolIdx].GetIncreaseCount(), _Copy.mPools[poolIdx].GetAllocator() );
+			mPools[poolIdx].Init("HamtSmallPool", _Copy.mPools[poolIdx].GetItemSize(), _Copy.mPools[poolIdx].GetTotalAllocCount(), _Copy.mPools[poolIdx].GetIncreaseCount() );
 	}
 			
 	// Copy each nodes 			

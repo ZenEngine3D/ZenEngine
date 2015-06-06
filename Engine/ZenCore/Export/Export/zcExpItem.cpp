@@ -16,8 +16,10 @@ namespace zcExp
 		zenDelNull(mpExportInfoExt);
 	}
 
-	ExportItem::ExportItem()
+	//=================================================================
+	ExporterBase::ExporterBase(const ExportDataRef& _rExportData)
 	: mpExportInfo(NULL)
+	, mrExportData(_rExportData)
 	{		
 	}
 
@@ -27,7 +29,7 @@ namespace zcExp
 	//---------------------------------------------------------------------------------------------
 	//! @param _ExportInfo - Parameters received with export infos
 	//=============================================================================================
-	bool ExportItem::Export( zcExp::ExportInfoBase& _ExportInfo )
+	bool ExporterBase::Export( zcExp::ExportInfoBase& _ExportInfo )
 	{
 		mpExportInfo					= &_ExportInfo;
 		mpExportInfo->mbSuccessWork		= false;
@@ -37,32 +39,49 @@ namespace zcExp
 			_ExportInfo.mbSuccessWork	= ExportWork(FALSE);
 		_ExportInfo.mbSuccessEnd		= ExportEnd();
 		mpExportInfo					= NULL;
-		return _ExportInfo.IsSuccess() && mResID.IsValid();
+		return _ExportInfo.IsSuccess() && mrExportData->mResID.IsValid();
 	}
 
 	//=============================================================================================
 	//! @brief	Always called at the start of Export, in Thread:Main
 	//! @detail	
 	//=============================================================================================
-	bool ExportItem::ExportStart()
+	bool ExporterBase::ExportStart()
 	{ 
-		mResID = mpExportInfo ? mpExportInfo->mExportResID : zResID(); 
-		return mResID.IsValid();
+		mrExportData->mResID = mpExportInfo ? mpExportInfo->mExportResID : zResID(); 		
+		return mrExportData->mResID.IsValid();
 	}
 
 	//=============================================================================================
 	//! @brief	Always called at the end of Export, in Thread:Main
 	//! @detail	
 	//=============================================================================================
-	bool ExportItem::ExportEnd()
-	{		
+	bool ExporterBase::ExportEnd()
+	{	
 		if( mpExportInfo->IsSuccess() )
 		{
-			muVersion		= sVersions[mResID.Type()];
+			mrExportData->muVersion		= SerialItem::sVersions[mpExportInfo->mExportResID.Type()];
+			mrExportData->mExportTime	= zenSys::GetTimeStamp();			
+			EMgr::SerialItems.SetItem(mrExportData.Get()); //! @todo urgent transform SerialItem manager to use refcount
+		}		
+		EMgr::Export.ExportDone(mrExportData.Get()); //! @todo replug this with new system
+		return true;
+	/*	
+		if( mpExportInfo->IsSuccess() )
+		{
+			muVersion		= sVersions[mpExportInfo->mExportResID.Type()];
 			mExportTime		= zenSys::GetTimeStamp();			
 			EMgr::SerialItems.SetItem(this);
 		}		
 		EMgr::Export.ExportDone(this);
 		return true;
+		*/
+	}
+	
+	bool ExporterNone::ExportStart()
+	{
+		ZENAssertMsg(0, "Exporting an unsupported resource");
+		return false;
 	}
 }
+

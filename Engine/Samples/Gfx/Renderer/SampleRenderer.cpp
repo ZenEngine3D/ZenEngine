@@ -110,12 +110,12 @@ bool SampleRendererInstance::Init()
 	rCubeIndex			= zenRes::zGfxIndex::Create( zArrayStatic<zU16>(CubeIndices, ZENArrayCount(CubeIndices), TRUE), zenConst::kePrimType_TriangleList );
 	rShaderVS			= zenRes::zGfxShaderVertex::Create( "Shader/Tutorial07.fx", "VS");
 	rShaderPS			= zenRes::zGfxShaderPixel::Create( "Shader/Tutorial07.fx", "PS", test );		
-	rTexture			= zenRes::zGfxTexture2D::Create(zenConst::keTexFormat_RGBA8, vTexSize, aTexRGBA );
+	rTexture			= zenRes::zGfxTexture2d::Create(zenConst::keTexFormat_RGBA8, vTexSize, aTexRGBA );
 	rSampler			= zenRes::zGfxSampler::Create(zenConst::keTexFilter_Trilinear, zenConst::keTexFilter_Bilinear, zenConst::keTexWrap_Clamp, zenConst::keTexWrap_Clamp, 0);
 	rSampler2			= zenRes::zGfxSampler::Create(zenConst::keTexFilter_Point, zenConst::keTexFilter_Point, zenConst::keTexWrap_Clamp, zenConst::keTexWrap_Clamp, 0);
 	rRenderColor		= zenRes::zGfxRenderTarget::Create(zenConst::keTexFormat_RGBA8, zVec2U16(512,512) );
 	rRenderDepth		= zenRes::zGfxRenderTarget::Create(zenConst::keTexFormat_D24S8, zVec2U16(512,512) );
-	rView				= zenRes::zGfxView::Create( rRenderColor, rRenderDepth, zVec2U16(256,256), zVec2U16(256,256) );
+	rView				= zenRes::zGfxView::Create( rRenderColor, rRenderDepth, zVec2U16(256,256), zVec2S16(256,256) );
 
 	// Some bindings of render resource together
 	const zenRes::zGfxShader pShaders[]			= {rShaderVS, rShaderPS};
@@ -153,26 +153,26 @@ bool SampleRendererInstance::Init()
 	rCube2MeshStrip.SetValue( aParamAll );		
 	rCube2MeshStrip.SetValue( zHash32("View"),		matView );				
 	rCube2MeshStrip.SetValue( zHash32("World"),		matWorld[1] );
-	rCube2MeshStrip.SetValue( zHash32("txColor"),		rRenderColor.GetTexture2D(), rSampler);
-	rCube2MeshStrip.SetValue( zHash32("vColor"),		zVec4F(1,0,1,1));
+	rCube2MeshStrip.SetValue( zHash32("txColor"),	rRenderColor.GetTexture2D(), rSampler);
+	rCube2MeshStrip.SetValue( zHash32("vColor"),	zVec4F(1,0,1,1));
 
 	matWorld[2].SetPos(zenMath::simdXYZW(3.0f, 0.0f, 0.0f, 1.0f));
 	rCube3MeshStrip.SetValue( aParamAll );
 	rCube3MeshStrip.SetValue( zHash32("View"),		matView );
-	rCube3MeshStrip.SetValue( zHash32("Projection"),	matProjection );		
+	rCube3MeshStrip.SetValue( zHash32("Projection"),matProjection );		
 	rCube3MeshStrip.SetValue( zHash32("World"),		matWorld[2] );
-	rCube3MeshStrip.SetValue( zHash32("txColor"),		rTexture, rSampler2);
-	rCube3MeshStrip.SetValue( zHash32("vColor"),		zVec4F(1,1,1,1));
+	rCube3MeshStrip.SetValue( zHash32("txColor"),	rTexture, rSampler2);
+	rCube3MeshStrip.SetValue( zHash32("vColor"),	zVec4F(1,1,1,1));
 
 
 	matWorld[3].SetPos(zenMath::simdXYZW(0.0f, 0.0f, 0.0f, 1.0f));
 	rCube4Mesh.SetValue(aParamAll);
-	rCube4Mesh.SetValue( zHash32("View"),				matView );
+	rCube4Mesh.SetValue( zHash32("View"),			matView );
 	rCube4Mesh.SetValue( zHash32("Projection"),		matProjection );		
 	rCube4Mesh.SetValue( zHash32("World"),			matWorld[3] );
-	rCube4Mesh.SetValue( zHash32("txColor"),			rTexture, rSampler);
-	rCube4MeshStripA.SetValue( zHash32("vColor"),		zVec4F(1,0.2f,0.2f,1));
-	rCube4MeshStripB.SetValue( zHash32("vColor"),		zVec4F(0.2f,1,0.2f,1));	
+	rCube4Mesh.SetValue( zHash32("txColor"),		rTexture, rSampler);
+	rCube4MeshStripA.SetValue( zHash32("vColor"),	zVec4F(1,0.2f,0.2f,1));
+	rCube4MeshStripB.SetValue( zHash32("vColor"),	zVec4F(0.2f,1,0.2f,1));	
 
 
 	//---------------------------------------------------------------------
@@ -224,7 +224,7 @@ void SampleRendererInstance::Update()
 		zVec4F vShaderColor = zenMath::TriLerp<zVec4F>( zVec4F(1,1,1,1), zVec4F(0.15f,0.15f,1.0f,1), zVec4F(1,1,1,1), zenMath::Fract(t*2) );
 		matWorld[0].SetRotationY( t );							// Rotate cube around the origin
 		rCube1MeshStrip.SetValue( zHash32("World"),		matWorld[0] );
-		rCube1MeshStrip.SetValue( zHash32("vColor"),		vShaderColor);
+		rCube1MeshStrip.SetValue( zHash32("vColor"),	vShaderColor);
 		rCube1MeshStrip.RenderMeshStrip();
 	}
 

@@ -12,7 +12,7 @@ namespace zen { namespace zenRes {
 	public:
 	};
 	
-	AWClassResourceRef2Declare(zGfxShader, zenConst::keResType_GfxShaderVertex, zenConst::keResType_GfxShaderPixel) 
+	ZENClassResourceRef2Declare(zGfxShader, zenConst::keResType_GfxShaderVertex, zenConst::keResType_GfxShaderPixel) 
 	public:	
 	};
 

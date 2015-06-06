@@ -2,13 +2,24 @@
 
 namespace zcExp
 {
-	bool SerialRenderTarget_Base::ExportEnd()
+	ExporterGfxRenderTarget::ExporterGfxRenderTarget(const ExportDataRef& _rExportData)
+	: Super(_rExportData.GetSafe())
+	, mrExportData(_rExportData)
 	{
-		ExportInfo* pExportInfo = static_cast<ExportInfo*>(mpExportInfo);		
-		meFormat	= pExportInfo->meFormat;
-		mvDim		= pExportInfo->mvDim;
-		mbSRGB		= pExportInfo->mbSRGB;
-		return Super::ExportEnd();
+	}
+
+	bool ExporterGfxRenderTarget::ExportStart()
+	{
+		ExportSkipWork();
+		if( Super::ExportStart() )
+		{
+			ExportInfoGfxRendertarget* pExportInfo	= static_cast<ExportInfoGfxRendertarget*>(mpExportInfo);		
+			mrExportData->meFormat						= pExportInfo->meFormat;
+			mrExportData->mvDim							= pExportInfo->mvDim;
+			mrExportData->mbSRGB						= pExportInfo->mbSRGB;
+			return true;
+		}
+		return false;
 	}
 
 	//=================================================================================================
@@ -22,11 +33,11 @@ namespace zcExp
 	//=================================================================================================
 	zResID CreateGfxRenderTarget(zenConst::eTextureFormat _eFormat, zVec2U16 _vDim, bool _bSrgb)
 	{		
-		static zenMem::zAllocatorPool sMemPool("Pool RenderTarget", sizeof(SerialRenderTarget_Base::ExportInfo), 1, 5 );
-		SerialRenderTarget_Base::ExportInfo* pExportInfo	= zenNew(&sMemPool) SerialRenderTarget_Base::ExportInfo;		
-		pExportInfo->meFormat								= _eFormat;
-		pExportInfo->mvDim									= _vDim;
-		pExportInfo->mbSRGB									= _bSrgb;
+		static zenMem::zAllocatorPool sMemPool("Pool RenderTarget", sizeof(ExportInfoGfxRendertarget), 1, 5 );
+		ExportInfoGfxRendertarget* pExportInfo	= zenNew(&sMemPool) ExportInfoGfxRendertarget;		
+		pExportInfo->meFormat						= _eFormat;
+		pExportInfo->mvDim							= _vDim;
+		pExportInfo->mbSRGB							= _bSrgb;
 		return EMgr::Export.CreateItem( zResID::kePlatformType_GFX, zenConst::keResType_GfxRenderTarget, pExportInfo );
 	}
 

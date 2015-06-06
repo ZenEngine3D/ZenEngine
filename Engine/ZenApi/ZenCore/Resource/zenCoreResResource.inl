@@ -143,18 +143,18 @@ class _ClassName_ : public zenRes::zResourceTypedRef<_Type_>						\
 {																					\
 ZENClassDeclare(_ClassName_, zenRes::zResourceTypedRef<_Type_>)						\
 public:																				\
-	ZENInline	_ClassName_(){}															\
-	ZENInline	_ClassName_(zenRes::zResource* _pResource):Super(_pResource){}			\
+	ZENInline	_ClassName_(){}														\
+	ZENInline	_ClassName_(zenRes::zResource* _pResource):Super(_pResource){}		\
 	ZENInline	_ClassName_(zResID _ResourceID):Super(_ResourceID){}
 
 //#################################################################################################
 // Used for declaration of zResourceTyped2Ref classes
 //#################################################################################################
-#define AWClassResourceRef2Declare(_ClassName_, _Type1_, _Type2_)					\
+#define ZENClassResourceRef2Declare(_ClassName_, _Type1_, _Type2_)					\
 class _ClassName_ : public zenRes::zResourceTyped2Ref<_Type1_ , _Type2_>			\
 {																					\
 ZENClassDeclare(_ClassName_, zenRes::zResourceTyped2Ref<_Type1_ ZENComma _Type2_> )	\
 public:																				\
-	ZENInline	_ClassName_(){}															\
-	ZENInline	_ClassName_(zenRes::zResource* _pResource):Super(_pResource){}			\
+	ZENInline	_ClassName_(){}														\
+	ZENInline	_ClassName_(zenRes::zResource* _pResource):Super(_pResource){}		\
 	ZENInline	_ClassName_(zResID _ResourceID):Super(_ResourceID){}

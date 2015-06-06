@@ -48,6 +48,7 @@ namespace zen {
 			keResType_GfxMesh,
 			keResType_GfxInputStream,
 			keResType_GfxInputSignature,
+			keResType_GfxRenderPass,
 			//--- .... ---	
 			keResType__Count,
 			keResType__Invalid=keResType__Count,

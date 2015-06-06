@@ -99,21 +99,21 @@ void ManagerState_DX11::PipelineUpdate()
 		if( mrView.IsValid() )
 		{
 			// Setup rendertarget
-			zUInt targetCount = mrView->Get().marTargetColor.Count();
+			zUInt targetCount = mrView->GetProxy()->marProxTargetColor.Count();
 			for( zUInt targetIdx(0); targetIdx<kuMaxRenderTarget; ++targetIdx)
 			{
-				zcRes::GfxRenderTargetRef rTarget	= (targetIdx<targetCount) ? mrView->Get().marTargetColor[targetIdx] : NULL;
-				apColorViews[targetIdx]				= rTarget.IsValid() ? rTarget->Get().mpTargetColorView : NULL;
+				zcRes::GfxRenderTargetProxyRef rTarget	= (targetIdx<targetCount) ? mrView->GetProxy()->marProxTargetColor[targetIdx] : NULL;
+				apColorViews[targetIdx]					= rTarget.IsValid() ? rTarget->mpTargetColorView : NULL;
 			}
-			pDepthView = mrView->Get().mrTargetDepth.IsValid() ? mrView->Get().mrTargetDepth->Get().mpTargetDepthView : NULL;
+			pDepthView = mrView->GetProxy()->mrProxTargetDepth.IsValid() ? mrView->GetProxy()->mrProxTargetDepth->mpTargetDepthView : NULL;
 			
 			// Setup the viewport		
-			vp.Width	= (FLOAT)mrView->Get().mvDim.x;
-			vp.Height	= (FLOAT)mrView->Get().mvDim.y;
+			vp.Width	= (FLOAT)mrView->GetDim().x;
+			vp.Height	= (FLOAT)mrView->GetDim().y;
 			vp.MinDepth = 0.0f;
 			vp.MaxDepth = 1.0f;
-			vp.TopLeftX = (FLOAT)mrView->Get().mvOrigin.x;
-			vp.TopLeftY = (FLOAT)mrView->Get().mvOrigin.y;
+			vp.TopLeftX = (FLOAT)mrView->GetOrigin().x;
+			vp.TopLeftY = (FLOAT)mrView->GetOrigin().y;
 		}
 		
 		EMgr::GfxRender.DX11GetDeviceContext()->OMSetRenderTargets( kuMaxRenderTarget, apColorViews, pDepthView );

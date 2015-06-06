@@ -4,6 +4,7 @@
 
 namespace zcExp
 {	
+	/*
 	class ExportTask : public zcJob::JobItem
 	{
 	ZENClassDeclare(ExportTask, zcJob::JobItem)
@@ -15,7 +16,8 @@ namespace zcExp
 		
 	protected:
 		ExportItem*					mpExportItem;	//!< Serializable item to generate	
-	};	
+	};
+	*/	
 }
 
 #endif

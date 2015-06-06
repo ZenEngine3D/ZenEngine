@@ -4,35 +4,27 @@
 
 namespace zcRes
 {
-	class GfxWindow_DX11 : public Resource
+	class GfxWindowProxy_DX11 : public zRefCountedAutoDel
 	{
-		struct InstanceInfo : public zcExp::SerialGfxWindow_DX11
-		{
-			IDXGISwapChain*			mDX11pSwapChain;			
-			GfxRenderTargetRef		mrBackbufferColor;
-			GfxRenderTargetRef		mrBackbufferDepth;
-			GfxViewRef				mrBackbufferView;
-			zenConst::eTextureFormat	meBackbufferColorFormat;
-			zenConst::eTextureFormat	meBackbufferDepthFormat;
-			zVec2U16				mvSize;			
-		};
-		ZENResourceDeclare(GfxWindow_DX11, InstanceInfo, zenConst::keResType_GfxWindow)
-	
-	//------------------------------------------------------------------
-	// Common to all Window
-	//------------------------------------------------------------------
+	ZENClassDeclare(GfxWindowProxy_DX11, zRefCountedAutoDel)
 	public:
-		ZENInline zcRes::GfxViewRef		GetBackbuffer(){ return mInstanceInfo.mrBackbufferView; }
-		void						Resize(const zVec2U16& _vSize);		
+												GfxWindowProxy_DX11();
+		virtual									~GfxWindowProxy_DX11();												
+		bool									Initialize(class GfxWindow& _Owner);
+		
+		void									PerformResize();
+		zVec2U16								mvPendingResize;
 
-	//------------------------------------------------------------------
-	// Platform Implementation
-	//------------------------------------------------------------------
-	public:
-		virtual						~GfxWindow_DX11();
-		virtual bool				ResourceInit();	
-		void						PerformResize();
-		zVec2U16					mvPendingResize;
+		ZENInline zcRes::GfxViewProxyRef		GetBackbuffer(){ return mrProxBackbufferView; }	//! @clean move to non proxy		
+
+		IDXGISwapChain*							mDX11pSwapChain;
+		GfxRenderTargetProxyRef					mrProxBackbufferColor;
+		GfxRenderTargetProxyRef					mrProxBackbufferDepth;
+		GfxViewProxyRef							mrProxBackbufferView;
+		zenConst::eTextureFormat				meBackbufferColorFormat;
+		zenConst::eTextureFormat				meBackbufferDepthFormat;
+		zVec2U16								mvSize;
+		ZENDbgCode(class GfxWindow*		mpOwner);
 	};
 }
 

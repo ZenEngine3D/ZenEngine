@@ -12,8 +12,6 @@ zU32	ManagerExport::saNextID[zenConst::keResType__Count];
 //=================================================================================================
 ManagerExport::ManagerExport()
 : muExportPending(0)
-, maExportSuccess(256)
-, maExportFail(256)
 {	
 }
 
@@ -32,19 +30,20 @@ bool ManagerExport::Load()
 			mpCallbackGetItemID[idxPlatform][idxType] = CallbackGetItemID;	
 	
 	// Configure specific callback for zResID value 
-#if ZEN_EXPORT_OR_RESOURCE_DX11	
-	mpCallbackGetItemID[zenConst::keResPlatform_DX11][zenConst::keResType_GfxView]				= zcExp::SerialGfxView_Base::CallbackGetItemID;
-	mpCallbackGetItemID[zenConst::keResPlatform_DX11][zenConst::keResType_GfxMesh]				= zcExp::SerialMesh_Base::CallbackGetItemID;
-	mpCallbackGetItemID[zenConst::keResPlatform_DX11][zenConst::keResType_GfxSampler]			= zcExp::SerialGfxSampler_DX11::CallbackGetItemID;
-	mpCallbackGetItemID[zenConst::keResPlatform_DX11][zenConst::keResType_GfxBlend]				= zcExp::SerialGfxBlend_DX11::CallbackGetItemID;
-	mpCallbackGetItemID[zenConst::keResPlatform_DX11][zenConst::keResType_GfxDepthStencil]		= zcExp::SerialGfxDepthStencil_DX11::CallbackGetItemID;
-	mpCallbackGetItemID[zenConst::keResPlatform_DX11][zenConst::keResType_GfxRasterizer]		= zcExp::SerialGfxRasterizer_DX11::CallbackGetItemID;
-	mpCallbackGetItemID[zenConst::keResPlatform_DX11][zenConst::keResType_GfxShaderBinding]		= zcExp::SerialShaderBinding_Base::CallbackGetItemID;
-	mpCallbackGetItemID[zenConst::keResPlatform_DX11][zenConst::keResType_GfxInputStream]		= zcExp::SerialGfxInputStream_DX11::CallbackGetItemID;
-	mpCallbackGetItemID[zenConst::keResPlatform_DX11][zenConst::keResType_GfxInputSignature]	= zcExp::SerialGfxInputSignature_DX11::CallbackGetItemID;	
-	mpCallbackGetItemID[zenConst::keResPlatform_DX11][zenConst::keResType_GfxShaderVertex]		= zcExp::SerialShader_Base::CallbackGetItemID;
-	mpCallbackGetItemID[zenConst::keResPlatform_DX11][zenConst::keResType_GfxShaderPixel]		= zcExp::SerialShader_Base::CallbackGetItemID;
-	mpCallbackGetItemID[zenConst::keResPlatform_DX11][zenConst::keResType_GfxShaderParamDef]	= zcExp::SerialGfxShaderParamDef_DX11::CallbackGetItemID;	
+	//! @todo cleanup move this to console specific code
+#if ZEN_RENDERER_DX11	
+	mpCallbackGetItemID[zenConst::keResPlatform_DX11][zenConst::keResType_GfxView]				= zcExp::ExportInfoGfxView::CallbackGetItemID;
+	mpCallbackGetItemID[zenConst::keResPlatform_DX11][zenConst::keResType_GfxMesh]				= zcExp::ExportInfoGfxMesh::CallbackGetItemID;
+	mpCallbackGetItemID[zenConst::keResPlatform_DX11][zenConst::keResType_GfxSampler]			= zcExp::ExporterGfxSamplerDX11_DX11::CallbackGetItemID;
+	mpCallbackGetItemID[zenConst::keResPlatform_DX11][zenConst::keResType_GfxBlend]				= zcExp::ExporterGfxStateBlendDX11_DX11::CallbackGetItemID;
+	mpCallbackGetItemID[zenConst::keResPlatform_DX11][zenConst::keResType_GfxDepthStencil]		= zcExp::ExporterGfxStateDepthStencilDX11_DX11::CallbackGetItemID;
+	mpCallbackGetItemID[zenConst::keResPlatform_DX11][zenConst::keResType_GfxRasterizer]		= zcExp::ExporterGfxStateRasterizerDX11_DX11::CallbackGetItemID;	
+	mpCallbackGetItemID[zenConst::keResPlatform_DX11][zenConst::keResType_GfxInputStream]		= zcExp::ExporterGfxInputStreamDX11_DX11::CallbackGetItemID;
+	mpCallbackGetItemID[zenConst::keResPlatform_DX11][zenConst::keResType_GfxInputSignature]	= zcExp::ExporterGfxInputSignatureDX11_DX11::CallbackGetItemID;	
+	mpCallbackGetItemID[zenConst::keResPlatform_DX11][zenConst::keResType_GfxShaderVertex]		= zcExp::ExportInfoGfxShader::CallbackGetItemID;
+	mpCallbackGetItemID[zenConst::keResPlatform_DX11][zenConst::keResType_GfxShaderPixel]		= zcExp::ExportInfoGfxShader::CallbackGetItemID;
+	mpCallbackGetItemID[zenConst::keResPlatform_DX11][zenConst::keResType_GfxShaderParamDef]	= zcExp::ExportInfoGfxShaderParamDef::CallbackGetItemID;
+	mpCallbackGetItemID[zenConst::keResPlatform_DX11][zenConst::keResType_GfxShaderBinding]		= zcExp::ExportInfoGfxShaderBinding::CallbackGetItemID;
 #endif
 
 	return true;
@@ -70,7 +69,7 @@ zResID ManagerExport::CreateItem( zResID::ePlatformType _ePlatformType, zenConst
 }
 
 //=================================================================================================
-//! @brief		Request an new zResID for a particular resource type
+//! @brief		Request a new zResID for a particular resource type
 //! @details	Use internal table, keeping track of each resource type zResID creation 
 //!				callback method.
 //-------------------------------------------------------------------------------------------------
@@ -79,6 +78,18 @@ zResID ManagerExport::CreateItem( zResID::ePlatformType _ePlatformType, zenConst
 zResID ManagerExport::GetNewResourceID(zenConst::eResPlatform _ePlatform, zenConst::eResType _eType, zenConst::eResSource _eSource, const ExportInfoBase* _pExportInfo, bool& _bExistOut)
 {
 	return mpCallbackGetItemID[_ePlatform][_eType](_ePlatform, _eType, _eSource, _pExportInfo, _bExistOut);
+}
+
+//=================================================================================================
+//! @brief		Request a new zResID for a resource type created at runtime
+//! @details	
+//-------------------------------------------------------------------------------------------------
+//! @return		New zResID
+//=================================================================================================
+zResID ManagerExport::GetNewResourceID(zenConst::eResType _eType)
+{
+	bool _bUnused;
+	return CallbackGetItemID(zenConst::kCurrentPlatformOS, _eType, zenConst::keResSource_Runtime, NULL, _bUnused);
 }
 
 //=================================================================================================
@@ -127,7 +138,7 @@ void ManagerExport::WaitExportDone() const
 		Sleep(1);
 	}
 }
-
+/*
 void ManagerExport::ExportDone(ExportItem* _pExportItem)
 {
 	if( _pExportItem->mResID.IsExport() )
@@ -136,8 +147,21 @@ void ManagerExport::ExportDone(ExportItem* _pExportItem)
 		--muExportPending;	
 	}
 
-	if( _pExportItem->mpExportInfo->IsSuccess() )	maExportSuccess.Push(_pExportItem);
-	else											maExportFail.Push(_pExportItem);	
+	if( _pExportItem->mpExportInfo->IsSuccess() )	maExportSuccessOld.Push(_pExportItem);
+	else											maExportFailOld.Push(_pExportItem);	
+}
+*/
+void ManagerExport::ExportDone(const ExportDataRef& _rExportData)
+{
+	if( _rExportData->mResID.IsExport() )
+	{
+		ZENAssert(muExportPending>0);
+		--muExportPending;	
+	}
+
+//! @todo cleanup revisit this (used to be in export/serial item class, but now split in 2
+//	if( _rExportData->mpExportInfo->IsSuccess() )	maExportSuccess.Push(_rExportData);
+//	else											maExportFail.Push(_rExportData);	
 }
 
 //=================================================================================================

@@ -11,13 +11,12 @@ namespace zcExp
 //! @param _aParamValues		- Values assigned to instance (overriding default values)
 //! @return 					- Unique zResID of created Resource
 //=================================================================================================
-zResID CreateGfxShaderParam(zResID _ParentParamDefID, const zArrayBase<const zcExp::ParameterBase*>& _aParamValues)
+zResID CreateGfxShaderParam(zResID _ParentParamDefID)
 {
 	ZENAssert( _ParentParamDefID.Type() == zenConst::keResType_GfxShaderParamDef );	
-	static zenMem::zAllocatorPool sMemPool("Pool CreateShaderParam", sizeof(SerialShaderParam_Base::ExportInfo), 1, 5 );
-	SerialShaderParam_Base::ExportInfo*	pExportInfo = zenNew(&sMemPool) SerialShaderParam_Base::ExportInfo;
-	pExportInfo->maParamValues						= _aParamValues;
-	pExportInfo->mParentParamDefID					= _ParentParamDefID;
+	static zenMem::zAllocatorPool sMemPool("Pool CreateShaderParam", sizeof(ExportInfoGfxShaderParam), 1, 5 );
+	ExportInfoGfxShaderParam*	pExportInfo		= zenNew(&sMemPool) ExportInfoGfxShaderParam;
+	pExportInfo->mParentParamDefID				= _ParentParamDefID;
 	return EMgr::Export.CreateItem( zResID::kePlatformType_GFX, zenConst::keResType_GfxShaderParam, pExportInfo );
 }
 
@@ -31,12 +30,12 @@ zResID CreateGfxShaderParam(zResID _ParentParamDefID, const zArrayBase<const zcE
 //! @param _aParamValues		- Values assigned to instance (overriding default values)
 //! @return 					- Unique zResID of created Resource
 //=================================================================================================
-zResID CreateGfxShaderParam(zResID _ParentShaderID, zcExp::eShaderParamFreq _eShaderParamIndex, const zArrayBase<const zcExp::ParameterBase*>& _aParamValues)
+zResID CreateGfxShaderParam(zResID _ParentShaderID, zcExp::eShaderParamFreq _eShaderParamIndex)
 {
 	ZENAssert( zenConst::kFlagResShaders.Any(_ParentShaderID.Type()) );
-	SerialShader_Base* pParentShader = EMgr::SerialItems.GetItem<SerialShader_Base>(_ParentShaderID);
-	if( pParentShader && pParentShader->maParamDefID[_eShaderParamIndex].IsValid() )
-		return CreateGfxShaderParam( pParentShader->maParamDefID[_eShaderParamIndex], _aParamValues);	
+	zcRes::GfxShaderExportDataRef rShaderData = EMgr::SerialItems.GetItem<zcRes::GfxShaderExportData>(_ParentShaderID); 
+	if( rShaderData.IsValid() && rShaderData->maParamDefID[_eShaderParamIndex].IsValid() )
+	return CreateGfxShaderParam( rShaderData->maParamDefID[_eShaderParamIndex]);	
 	return zResID();
 }
 

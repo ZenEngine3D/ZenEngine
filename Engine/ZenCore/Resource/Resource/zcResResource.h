@@ -11,12 +11,13 @@ namespace zcRes
 	{
 	ZENClassDeclare(Resource, zenRes::zResource)
 	public:									
-		virtual								~Resource();
-		virtual bool						ResourceInit();
-		virtual bool						ResourceCreate( zcExp::ExportItem& _SerialItem, zcExp::ExportInfoBase& _ExportInfo );
-		bool								ResourceCreateRuntime(); //!< @todo Clean: Get rid of this
+		virtual								~Resource();	
+		bool								Initialize();
 		zList<Resource>::Link				mlnkList;
 	protected:			
+		
+		virtual bool						ResourceInit();		//!< @todo cleanup rename this.  Initialize and Resourcinit confusing
+		virtual void						StripExportData(){} //!< @Brief Child class should override this if some ExportData can be stripped out for runtime, after proxy init
 											Resource();
 	};
 	
@@ -30,7 +31,88 @@ namespace zcRes
 	public:
 											UnsupportedResource();
 	};
+
+	//=============================================================================================
+	//! @class	Templated specialized version of Resource
+	//!			Implement basic common functionalities like creation, Proxy declaration and access...
+	//=============================================================================================
+	template<class TClassResource, class TClassExportData, class TClassProxy, class TClassExporter>
+	class TResource : public Resource
+	{
+	ZENClassDeclare(TResource, Resource)
+	public:
+		typedef TClassProxy						ClassProxy;
+		typedef TClassExporter					ClassExporter;
+		typedef TClassExportData				ClassExportData;
+		typedef TClassResource					ClassResource;
+		typedef zGameRef<TClassProxy>			ProxyRef;
+		typedef zGameRef<TClassExportData>		ExportDataRef;
+		typedef zGameRef<TClassResource>		ResourceRef;
+				
+	protected:
+		//! @todo cleanup
+		virtual bool ResourceInit()
+		{
+			ZENAssert( !mrProxy.IsValid() );
+			if( Super::ResourceInit() )
+			{
+				static zenMem::zAllocatorPool sMemPool("Pool TResource Proxy", sizeof(ClassProxy), 32, 32 );
+				mrProxy = zenNew(&sMemPool) ClassProxy();
+				if( !mrProxy->Initialize( *static_cast<ClassResource*>(this)) )
+					mrProxy = NULL; //! @todo assign a default value
+
+				StripExportData();				
+			}
+			return mrProxy.IsValid();
+		}
+		
+	public:	
+		//! @Brief Child class should override this if some ExportData can be stripped out for runtime, after proxy init
+		virtual void StripExportData()
+		{
+			//mrExportData = NULL;
+		}
+
+		ZENInline const ExportDataRef& GetExportData()const									
+		{ 
+			return mrExportData;
+		}
+
+		ZENInline const ProxyRef& GetProxy() const
+		{
+			return mrProxy;
+		}
+
+		static ClassResource* RuntimeExport(zcExp::ExportInfoBase& _ExportInfo) 
+		{ 	
+			static zenMem::zAllocatorPool sMemPool("Pool TResource SeriaData", sizeof(ClassExportData), 32, 32 );			
+			ExportDataRef rExportData = zenNew(&sMemPool) ClassExportData();
+			ClassExporter Exporter(rExportData);
+			Exporter.Export( _ExportInfo );
+			if( _ExportInfo.IsSuccess() )
+				return RuntimeCreate(rExportData);
+			
+			return NULL;				
+		}
+		
+		static ClassResource* RuntimeCreate(const ExportDataRef& _rExportData) 
+		{ 						
+			ClassResource* pNewResource	= zenNewDefault ClassResource;
+			pNewResource->mrExportData	= _rExportData;
+			pNewResource->mResID		= _rExportData->mResID;
+			if( !pNewResource->Initialize() )
+				zenDelNull(pNewResource)
+			
+			return pNewResource;
+		}
+		
+	protected:
+		TResource(){}
+		ProxyRef		mrProxy;
+		ExportDataRef	mrExportData; //! @todo clean make this constref, and use pointer from resource and proxy
+	};
 	
+
 	//=============================================================================================
 	//! @class	Templated specialized version of ResourceAnyRef, that does ResourceType check
 	//!			before use, making sure we're not mis-casting to wrong ResourceType
@@ -40,13 +122,31 @@ namespace zcRes
 	{
 	ZENClassDeclare(ResourceRef, TReferenceClass)
 	public:	
+		typedef TResourceClass Resource;
 		ZENInline								ResourceRef();
 		ZENInline								ResourceRef(zenRes::zResource* _pResource);
 		ZENInline								ResourceRef(zResID _ResourceID);
 		ZENInline								ResourceRef(const TReferenceClass& _Copy);
 		ZENInline TResourceClass*				operator->();		//!< Return a pointer to resource
-		ZENInline const TResourceClass*			operator->()const;	//!< Return a const pointiner to resource
+		ZENInline const TResourceClass*			operator->()const;	//!< Return a const pointer to resource
+		ZENInline TResourceClass*				Get();				//!< Return a pointer to resource
+		ZENInline const TResourceClass*			Get()const;			//!< Return a const pointer to resource
 	};
+
+	//=============================================================================================
+	//! @brief	Retrieve the proxy associated with a resource, from its ResourceID
+	//!			before use, making sure we're not mis-casting to wrong ResourceType
+	//! @todo safety Add thread check (only use in main thread)
+	//! @todo clean Review template class. Use proxy class straight?
+	//=============================================================================================
+	template<class TResourceRef>
+	typename TResourceRef::Resource::ProxyRef GetResourceProxy(zResID _ResourceID)
+	{
+		TResourceRef rResource = _ResourceID.IsValid() ? EMgr::Resources.GetResource(_ResourceID) : NULL;
+		if( rResource.IsValid() )
+			return rResource->GetProxy();
+		return NULL;
+	}
 }
 
 #include "zcResResource.inl"
@@ -54,24 +154,64 @@ namespace zcRes
 #include ZENHeaderPlatform( zcResResource )	// Each platform resources typedef to generic name used in-engine
 
 namespace zcRes
-{	
-	typedef ResourceRef<zGfxIndex,			zenRes::zGfxIndex>			GfxIndexRef;
-	typedef ResourceRef<zGfxVertex,			zenRes::zGfxVertex>			GfxVertexRef;
-	typedef ResourceRef<zGfxInputStream,	zenRes::zGfxInputStream>	GfxInputStreamRef;
-	typedef ResourceRef<zGfxInputSignature,	zenRes::zGfxInputSignature>	GfxInputSignatureRef;
-	typedef ResourceRef<zGfxShaderBinding,	zenRes::zGfxShaderBinding>	GfxShaderBindingRef;
-	typedef ResourceRef<zGfxMesh,			zenRes::zGfxMesh>			GfxMeshRef;
-	typedef ResourceRef<zGfxMeshStrip,		zenRes::zGfxMeshStrip>		GfxMeshStripRef;
-	typedef ResourceRef<zGfxTexture2D,		zenRes::zGfxTexture2D>		GfxTexture2DRef;
-	typedef ResourceRef<zGfxRenderTarget,	zenRes::zGfxRenderTarget>	GfxRenderTargetRef;
-	typedef ResourceRef<zGfxView,			zenRes::zGfxView>			GfxViewRef;
-	typedef ResourceRef<zGfxSampler,		zenRes::zGfxSampler>		GfxSamplerRef;
-	typedef ResourceRef<zGfxWindow,			zenRes::zGfxWindow>			GfxWindowRef;
-	typedef ResourceRef<zGfxShaderParamDef,	zenRes::zGfxShaderParamDef>	GfxShaderParamDefRef;
-	typedef ResourceRef<zGfxShader,			zenRes::zGfxShader>			GfxShaderRef;
-	typedef ResourceRef<zGfxShaderVertex,	zenRes::zGfxShaderVertex>	GfxShaderVertexRef;
-	typedef ResourceRef<zGfxShaderPixel,	zenRes::zGfxShaderPixel>	GfxShaderPixelRef;
-	typedef ResourceRef<zGfxShaderParam,	zenRes::zGfxShaderParam>	GfxShaderParamRef;
+{		
+	typedef ResourceRef<class GfxShaderVertex,		zenRes::zGfxShaderVertex>		GfxShaderVertexRef;
+	typedef ResourceRef<class GfxShaderPixel,		zenRes::zGfxShaderPixel>		GfxShaderPixelRef;	
+	typedef ResourceRef<class GfxIndex,				zenRes::zGfxIndex>				GfxIndexRef;
+	typedef ResourceRef<class GfxVertex,			zenRes::zGfxVertex>				GfxVertexRef;
+	typedef ResourceRef<class GfxTexture2d,			zenRes::zGfxTexture2d>			GfxTexture2dRef; 
+	typedef ResourceRef<class GfxRenderTarget,		zenRes::zGfxRenderTarget>		GfxRenderTargetRef;
+	typedef ResourceRef<class GfxView,				zenRes::zGfxView>				GfxViewRef;	
+	typedef ResourceRef<class GfxWindow,			zenRes::zGfxWindow>				GfxWindowRef;	
+	typedef ResourceRef<class GfxSampler,			zenRes::zGfxSampler>			GfxSamplerRef;
+	typedef ResourceRef<class GfxStateBlend,		zenRes::zGfxStateBlend>			GfxStateBlendRef;
+	typedef ResourceRef<class GfxStateDepthStencil,	zenRes::zGfxStateDepthStencil>	GfxStateDepthStencilRef;
+	typedef ResourceRef<class GfxStateRasterizer,	zenRes::zGfxStateRasterizer>	GfxStateRasterizerRef; 
+	typedef ResourceRef<class GfxInputStream,		zenRes::zGfxInputStream>		GfxInputStreamRef;
+	typedef ResourceRef<class GfxInputSignature,	zenRes::zGfxInputSignature>		GfxInputSignatureRef;
+	typedef ResourceRef<class GfxMeshStrip,			zenRes::zGfxMeshStrip>			GfxMeshStripRef;
+	typedef ResourceRef<class GfxMesh,				zenRes::zGfxMesh>				GfxMeshRef;
+	typedef ResourceRef<class GfxShaderParamDef,	zenRes::zGfxShaderParamDef>		GfxShaderParamDefRef;
+	typedef ResourceRef<class GfxShaderParam,		zenRes::zGfxShaderParam>		GfxShaderParamRef;
+	typedef ResourceRef<class GfxShaderBinding,		zenRes::zGfxShaderBinding>		GfxShaderBindingRef;
+	
+		
+	typedef zGameRef<GfxSamplerExportData>											GfxSamplerExportDataRef;
+	typedef zGameRef<GfxStateBlendExportData>										GfxStateBlendExportDataRef;
+	typedef zGameRef<GfxStateDepthStencilExportData>								GfxStateDepthStencilExportDataRef;
+	typedef zGameRef<GfxStateRasterizerExportData>									GfxStateRasterizerExportDataRef;
+	typedef zGameRef<GfxIndexExportData>											GfxIndexExportDataRef;
+	typedef zGameRef<GfxVertexExportData>											GfxVertexExportDataRef;	
+	typedef zGameRef<GfxTexture2dExportData>										GfxTexture2dExportDataRef;
+	typedef zGameRef<GfxRenderTargetExportData>										GfxRenderTargetExportDataRef;
+	typedef zGameRef<GfxViewExportData>												GfxViewExportDataRef;	
+	typedef zGameRef<GfxWindowExportData>											GfxWindowExportDataRef;	
+	typedef zGameRef<GfxShaderExportData>											GfxShaderExportDataRef;
+	typedef zGameRef<GfxInputStreamExportData>										GfxInputStreamExportDataRef;
+	typedef zGameRef<GfxInputSignatureExportData>									GfxInputSignatureExportDataRef;
+	typedef zGameRef<GfxMeshStripExportData>										GfxMeshStripExportDataRef;
+	typedef zGameRef<GfxShaderParamDefExportData>									GfxShaderParamDefExportDataRef;
+	typedef zGameRef<GfxShaderParamExportData>										GfxShaderParamExportDataRef;
+	typedef zGameRef<GfxShaderBindingExportData>									GfxShaderBindingExportDataRef;
+			 
+	typedef zGameRef<GfxSamplerProxy>												GfxSamplerProxyRef;
+	typedef zGameRef<GfxStateBlendProxy>											GfxStateBlendProxyRef;
+	typedef zGameRef<GfxStateDepthStencilProxy>										GfxStateDepthStencilProxyRef;
+	typedef zGameRef<GfxStateRasterizerProxy>										GfxStateRasterizerProxyRef;
+	typedef zGameRef<GfxIndexProxy>													GfxIndexProxyRef;
+	typedef zGameRef<GfxVertexProxy>												GfxVertexProxyRef;
+	typedef zGameRef<GfxTexture2dProxy>												GfxTexture2dProxyRef;
+	typedef zGameRef<GfxRenderTargetProxy>											GfxRenderTargetProxyRef;
+	typedef zGameRef<GfxViewProxy>													GfxViewProxyRef;
+	typedef zGameRef<GfxWindowProxy>												GfxWindowViewProxyRef;
+	typedef zGameRef<GfxShaderVertexProxy>											GfxShaderVertexProxyRef;
+	typedef zGameRef<GfxShaderPixelProxy>											GfxShaderPixelProxyRef;
+	typedef zGameRef<GfxInputStreamProxy>											GfxInputStreamProxyRef;
+	typedef zGameRef<GfxInputSignatureProxy>										GfxInputSignatureProxyRef;
+	typedef zGameRef<GfxMeshStripProxy>												GfxMeshStripProxyRef;
+	typedef zGameRef<GfxShaderParamDefProxy>										GfxShaderParamDefProxyRef;
+	typedef zGameRef<GfxShaderParamProxy>											GfxShaderParamProxyRef;
+	typedef zGameRef<GfxShaderBindingProxy>											GfxShaderBindingProxyRef;
 }
 
 #endif

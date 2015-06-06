@@ -2,50 +2,11 @@
 
 namespace zcExp
 {
-	//=================================================================================================
-	//! @brief		Associate a serie of RenderTarget together
-	//! @details	Since there's no work proper here, cancel the work phase of export
-	//-------------------------------------------------------------------------------------------------
-	//! @return 	- True if successful
-	//=================================================================================================
-	bool SerialGfxView_Base::ExportStart()
-	{
-		ExportInfo* pExportInfo = static_cast<ExportInfo*>(mpExportInfo);
-		if( !Super::ExportStart() )
-			return false;		
-
-		zVec2U16 vDim	= pExportInfo->mvDim;
-		const SerialRenderTarget_Base* pParamRender = EMgr::SerialItems.GetItem<const SerialRenderTarget_Base>( pExportInfo->mTargetDepthID );
-		if( pParamRender )	
-		{
-			vDim.x = zenMath::Min<zU16>(vDim.x, pParamRender->mvDim.x-pExportInfo->mvOrigin.x );
-			vDim.y = zenMath::Min<zU16>(vDim.y, pParamRender->mvDim.y-pExportInfo->mvOrigin.y );
-		}
-
-		for(zUInt rtIdx(0), rtCount(pExportInfo->maTargetColorID.Count()); rtIdx<rtCount; ++rtIdx)
-		{
-			pParamRender = EMgr::SerialItems.GetItem<const SerialRenderTarget_Base>( pExportInfo->maTargetColorID[rtIdx] );
-			//! @todo Missing: error if mismatch size
-			if( pParamRender )
-			{
-				vDim.x = zenMath::Min<zU16>(vDim.x, pParamRender->mvDim.x-pExportInfo->mvOrigin.x );
-				vDim.y = zenMath::Min<zU16>(vDim.y, pParamRender->mvDim.y-pExportInfo->mvOrigin.y );
-			}			
-		}
-		
-		mSerial.maTargetColorID = pExportInfo->maTargetColorID;
-		mSerial.mTargetDepthID	= pExportInfo->mTargetDepthID;
-		mvDim					= vDim;
-		mvOrigin				= pExportInfo->mvOrigin;
-		ExportSkipWork();
-		return true;
-	}
-
-	zResID SerialGfxView_Base::CallbackGetItemID(zenConst::eResPlatform _ePlatform, zenConst::eResType _eType, zenConst::eResSource _eSource, const zcExp::ExportInfoBase* _pExportInfo, bool& _bExistOut)
+	zResID ExportInfoGfxView::CallbackGetItemID(zenConst::eResPlatform _ePlatform, zenConst::eResType _eType, zenConst::eResSource _eSource, const zcExp::ExportInfoBase* _pExportInfo, bool& _bExistOut)
 	{
 		ZENAssert(_eType==zenConst::keResType_GfxView);
 		ZENAssert( _pExportInfo );
-		const ExportInfo* pExportInfo = static_cast<const ExportInfo*>(_pExportInfo);
+		const ExportInfoGfxView* pExportInfo = static_cast<const ExportInfoGfxView*>(_pExportInfo);
 
 		zResID::NameHash hName;
 		hName.Append( &pExportInfo->mvDim,		sizeof(&pExportInfo->mvDim) );
@@ -55,6 +16,45 @@ namespace zcExp
 			hName.Append( &(pExportInfo->maTargetColorID[rtIdx]), sizeof(zResID) );
 
 		return zcExp::ValidateItemID(_ePlatform, _eType, _eSource, hName, _bExistOut);
+	}
+
+	ExporterGfxView::ExporterGfxView(const ExportDataRef& _rExportData)
+	: Super(_rExportData.GetSafe())
+	, mrExportData(_rExportData)
+	{
+	}
+
+	bool ExporterGfxView::ExportStart()
+	{
+		ExportInfoGfxView* pExportInfo = static_cast<ExportInfoGfxView*>(mpExportInfo);
+		if( !Super::ExportStart() )
+			return false;		
+
+		zVec2U16 vDim	= pExportInfo->mvDim;
+		const ExportDataGfxRenderTarget* pParamRender = EMgr::SerialItems.GetItem<const ExportDataGfxRenderTarget>( pExportInfo->mTargetDepthID );
+		if( pParamRender )	
+		{
+			vDim.x = zenMath::Min<zU16>(vDim.x, pParamRender->mvDim.x-pExportInfo->mvOrigin.x );
+			vDim.y = zenMath::Min<zU16>(vDim.y, pParamRender->mvDim.y-pExportInfo->mvOrigin.y );
+		}
+
+		for(zUInt rtIdx(0), rtCount(pExportInfo->maTargetColorID.Count()); rtIdx<rtCount; ++rtIdx)
+		{
+			pParamRender = EMgr::SerialItems.GetItem<const ExportDataGfxRenderTarget>( pExportInfo->maTargetColorID[rtIdx] );
+			//! @todo Missing: error if mismatch size
+			if( pParamRender )
+			{
+				vDim.x = zenMath::Min<zU16>(vDim.x, pParamRender->mvDim.x-pExportInfo->mvOrigin.x );
+				vDim.y = zenMath::Min<zU16>(vDim.y, pParamRender->mvDim.y-pExportInfo->mvOrigin.y );
+			}			
+		}
+		
+		mrExportData->maTargetColorID	= pExportInfo->maTargetColorID;
+		mrExportData->mTargetDepthID	= pExportInfo->mTargetDepthID;
+		mrExportData->mvDim				= vDim;
+		mrExportData->mvOrigin			= pExportInfo->mvOrigin;
+		ExportSkipWork();
+		return true;
 	}
 
 	//=================================================================================================
@@ -67,14 +67,14 @@ namespace zcExp
 	//! @param _vOrigin			- Viewport origin ([0,0] by default)
 	//! @return 				- Unique zResID of created Resource
 	//=================================================================================================
-	zResID CreateGfxView( const zResID& _TargetColorID, const zResID& _TargetDepthID, const zVec2U16& _vDim, const zVec2U16& _vOrigin )
+	zResID CreateGfxView( const zResID& _TargetColorID, const zResID& _TargetDepthID, const zVec2U16& _vDim, const zVec2S16& _vOrigin )
 	{
-		static zenMem::zAllocatorPool sMemPool("Pool Views", sizeof(SerialGfxView_Base::ExportInfo), 1, 5 );
-		SerialGfxView_Base::ExportInfo* pExportInfo	= zenNew(&sMemPool) SerialGfxView_Base::ExportInfo;
+		static zenMem::zAllocatorPool sMemPool("Pool Views", sizeof(ExportInfoGfxView), 1, 5 );
+		ExportInfoGfxView* pExportInfo	= zenNew(&sMemPool) ExportInfoGfxView;
 		pExportInfo->maTargetColorID.Copy(&_TargetColorID, 1);		
-		pExportInfo->mTargetDepthID					= _TargetDepthID;
-		pExportInfo->mvOrigin						= _vOrigin;
-		pExportInfo->mvDim							= _vDim;
+		pExportInfo->mTargetDepthID			= _TargetDepthID;
+		pExportInfo->mvOrigin				= _vOrigin;
+		pExportInfo->mvDim					= _vDim;
 		return EMgr::Export.CreateItem( zResID::kePlatformType_GFX, zenConst::keResType_GfxView, pExportInfo );
 	}
 
@@ -88,14 +88,14 @@ namespace zcExp
 	//! @param _vOrigin			- Viewport origin ([0,0] by default)
 	//! @return 				- Unique zResID of created Resource
 	//=================================================================================================
-	zResID CreateGfxView( const zArrayBase<zResID>& _aTargetColorID, const zResID& _TargetDepthID, const zVec2U16& _vDim, const zVec2U16& _vOrigin )
+	zResID CreateGfxView( const zArrayBase<zResID>& _aTargetColorID, const zResID& _TargetDepthID, const zVec2U16& _vDim, const zVec2S16& _vOrigin )
 	{
-		static zenMem::zAllocatorPool sMemPool("Pool Views", sizeof(SerialGfxView_Base::ExportInfo), 1, 5 );
-		SerialGfxView_Base::ExportInfo* pExportInfo	= zenNew(&sMemPool) SerialGfxView_Base::ExportInfo;
-		pExportInfo->maTargetColorID				= _aTargetColorID;
-		pExportInfo->mTargetDepthID					= _TargetDepthID;
-		pExportInfo->mvOrigin						= _vOrigin;
-		pExportInfo->mvDim							= _vDim;
+		static zenMem::zAllocatorPool sMemPool("Pool Views", sizeof(ExportInfoGfxView), 1, 5 );
+		ExportInfoGfxView* pExportInfo	= zenNew(&sMemPool) ExportInfoGfxView;
+		pExportInfo->maTargetColorID		= _aTargetColorID;
+		pExportInfo->mTargetDepthID			= _TargetDepthID;
+		pExportInfo->mvOrigin				= _vOrigin;
+		pExportInfo->mvDim					= _vDim;
 		return EMgr::Export.CreateItem( zResID::kePlatformType_GFX, zenConst::keResType_GfxView, pExportInfo );
 	}
 

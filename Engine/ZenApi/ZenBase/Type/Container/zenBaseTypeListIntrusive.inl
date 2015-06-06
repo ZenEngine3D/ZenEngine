@@ -76,20 +76,20 @@ void zList<TListItem>::Link::Unlink()
 }
 
 template<class TListItem>
-void zList<TListItem>::Link::InsertBefore(TListItem& _Item)
+void zList<TListItem>::Link::InsertBefore(TListItem& _NewItem)
 {
-	Link* pNewLink = reinterpret_cast<Link*>((size_t)&_Item + GetOffset());
+	Link* pNewLink = reinterpret_cast<Link*>((size_t)&_NewItem + GetOffset());
 	pNewLink->Unlink();
 	pNewLink->mpPrevLink = mpPrevLink;
 	pNewLink->mpNextItem = mpPrevLink->mpNextItem;
-	mpPrevLink->mpNextItem = &_Item;
+	mpPrevLink->mpNextItem = &_NewItem;
 	mpPrevLink = pNewLink;
 }
 
 template<class TListItem>
-void zList<TListItem>::Link::InsertAfter(TListItem& _Item)
+void zList<TListItem>::Link::InsertAfter(TListItem& _NewItem)
 {
-	GetNextItemLink()->InsertBefore(_Item);
+	GetNextItemLink()->InsertBefore(_NewItem);
 }
 
 template<class TListItem>
@@ -240,6 +240,26 @@ TListItem* zList<TListItem>::Iterator::UnlinkGoPrev()
 	TListItem* pItem	= GoPrevious();
 	pUnlink->Unlink();
 	return pItem;
+}
+
+template<class TListItem>
+bool zList<TListItem>::Iterator::IsValid()
+{
+	return Get() != NULL;
+}
+
+template<class TListItem>
+void zList<TListItem>::Iterator::InsertBefore(TListItem& _NewItem)
+{
+	ZENAssert(IsValid());
+	mpLink->InsertBefore(_NewItem);
+}
+
+template<class TListItem>
+void zList<TListItem>::Iterator::InsertAfter(TListItem& _NewItem)
+{
+	ZENAssert(IsValid());
+	mpLink->InsertAfter(_NewItem);
 }
 
 //#################################################################################################

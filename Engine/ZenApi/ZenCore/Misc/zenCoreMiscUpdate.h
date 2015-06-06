@@ -8,9 +8,12 @@ namespace zenConst
 {
 	enum eUpdatePriority
 	{
-		keUpdt_FrameStart,
-		keUpdt_FrameEnd,
+		keUpdt__First,
+		keUpdt_FrameStart = keUpdt__First,
+		keUpdt_FrameEnd,		
 		keUpdt__Count,
+		keUpdt__Last = keUpdt__Count-1,
+		keUpdt__Invalid,		
 	};
 }
 
@@ -19,16 +22,19 @@ namespace zenMisc {
 class IUpdate
 {
 public:
-							IUpdate();
-	virtual					~IUpdate();
-	virtual void			Update();
-	void					Activate(zenConst::eUpdatePriority _ePriorityGroup, zUInt _uPriority);
-	void					Deactivate();
+								IUpdate();
+								IUpdate(zenConst::eUpdatePriority _ePriorityGroup, zU32 _uPriority=0);
+	virtual						~IUpdate();
+	virtual void				Update();
+	void						Activate(zenConst::eUpdatePriority _ePriorityGroup, zU32 _uPriority=0);
+	void						Deactivate();
+	void						Reactivate();
 
-	zList<IUpdate>::Link	mLink;
+	zList<IUpdate>::Link		mLink;
 protected:
-	zU64					mTimeLastUpdate;
-	
+	zU64						mTimeLastUpdate;
+	zenConst::eUpdatePriority	mePriorityGroup;
+	zU32						muPriority;
 };
 
 

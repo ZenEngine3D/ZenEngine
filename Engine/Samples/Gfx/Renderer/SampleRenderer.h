@@ -33,7 +33,7 @@ protected:
 	zenRes::zGfxIndex			rCubeIndex;	
 	zenRes::zGfxShaderVertex	rShaderVS;	
 	zenRes::zGfxShaderPixel		rShaderPS;	
-	zenRes::zGfxTexture2D		rTexture;	
+	zenRes::zGfxTexture2d		rTexture;	
 	zenRes::zGfxSampler			rSampler;	
 	zenRes::zGfxSampler			rSampler2;	
 	zenRes::zGfxRenderTarget	rRenderColor;

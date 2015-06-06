@@ -16,7 +16,7 @@ ManagerRender_Base::ManagerRender_Base()
 void ManagerRender_Base::FrameBegin( zcRes::GfxWindowRef _FrameWindow )
 {
 	ZENAssertMsg( !mrWindowCurrent.IsValid(), "End previous frame before starting a new one" );
-	_FrameWindow->PerformResize();
+	_FrameWindow->GetProxy()->PerformResize();
 	mrWindowCurrent = _FrameWindow;
 	/*
 	//! @todo Missing: Stats per window

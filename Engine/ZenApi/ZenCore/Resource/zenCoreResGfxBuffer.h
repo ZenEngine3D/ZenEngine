@@ -18,17 +18,17 @@ namespace zen { namespace zenRes
 			{}
 
 			zenConst::eShaderElementType	meType;
-			zenConst::eShaderSemantic	meSemantic;
-			zU8						muVectorSize;
-			zU8						muOffset;		
+			zenConst::eShaderSemantic		meSemantic;
+			zU8								muVectorSize;
+			zU8								muOffset;		
 		};
 
 		struct Stream
 		{
 		public:
-			zArrayStatic<zU8>		maData;
-			zArrayStatic<Element>	maElements;
-			zU8					muStride;
+			zArrayStatic<zU8>				maData;
+			zArrayStatic<Element>			maElements;
+			zU8								muStride;
 			Stream& operator=(const Stream& _Copy)
 			{
 				maData		= _Copy.maData;
@@ -53,18 +53,18 @@ namespace zen { namespace zenRes
 		static zGfxIndex		Create(const zArrayBase<zU32>& _Indices, zenConst::ePrimitiveType _ePrimitiveType);
 	};
 
-	ZENClassResourceRefDeclare(zGfxTexture2D, zenConst::keResType_GfxTexture2D)
+	ZENClassResourceRefDeclare(zGfxTexture2d, zenConst::keResType_GfxTexture2D)
 	public:		
 		const zVec2U16&			GetDim();
-		static zGfxTexture2D	Create(zenConst::eTextureFormat _eFormat, zVec2U16 _vDim, zFlagResTexUse _CreationFlags=zFlagResTexUse());		
-		static zGfxTexture2D	Create(zenConst::eTextureFormat _eFormat, zVec2U16 _vDim, const zArrayBase<zU8>& _aRawData, zFlagResTexUse _CreationFlags=zFlagResTexUse());
+		static zGfxTexture2d	Create(zenConst::eTextureFormat _eFormat, zVec2U16 _vDim, zFlagResTexUse _CreationFlags=zFlagResTexUse());		
+		static zGfxTexture2d	Create(zenConst::eTextureFormat _eFormat, zVec2U16 _vDim, const zArrayBase<zU8>& _aRawData, zFlagResTexUse _CreationFlags=zFlagResTexUse());
 	};
 
 	ZENClassResourceRefDeclare(zGfxRenderTarget, zenConst::keResType_GfxRenderTarget)
 	public:		
 		bool					IsDepth();
 		const zVec2U16&			GetDim();
-		zGfxTexture2D			GetTexture2D();
+		zGfxTexture2d			GetTexture2D();
 		void					Clear(const zVec4F& _vRGBA);
 		void					Clear(float _fDepth=1, zU8 _uStencil=0, bool _bClearDepth=true, bool _bClearStencil=false);
 		

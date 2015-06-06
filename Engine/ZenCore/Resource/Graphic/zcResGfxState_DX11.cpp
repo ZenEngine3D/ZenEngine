@@ -3,86 +3,99 @@
 namespace zcRes
 {
 	//////////////////////////////////////////////////////////////////////////
-	//GfxSampler_DX11
+	// GfxSamplerProxy
 	//////////////////////////////////////////////////////////////////////////
-	GfxSampler_DX11::GfxSampler_DX11()
-	: zcRes::Resource()
-	{		
-		mInstanceInfo.mpSamplerState = NULL;
-	}
-
-	GfxSampler_DX11::~GfxSampler_DX11()
-	{	
-		if( mInstanceInfo.mpSamplerState )
-			mInstanceInfo.mpSamplerState->Release();
-	}
-
-	bool GfxSampler_DX11::ResourceInit()
+	GfxSamplerProxy_DX11::GfxSamplerProxy_DX11()
+	: mpSamplerState(NULL)
 	{
-		HRESULT hr = EMgr::GfxRender.DX11GetDevice()->CreateSamplerState( &mInstanceInfo.mSerial.mSamplerDesc, &mInstanceInfo.mpSamplerState );
+	}
+	
+	GfxSamplerProxy_DX11::~GfxSamplerProxy_DX11()
+	{
+		if( mpSamplerState )
+			mpSamplerState->Release();
+		mpSamplerState = NULL;
+	}
+	
+	bool GfxSamplerProxy_DX11::Initialize(class GfxSampler& _Owner)
+	{	
+		const GfxSampler::ExportDataRef& rExportData = _Owner.GetExportData();
+		ZENAssert(rExportData.IsValid());
+		ZENDbgCode(mpOwner = &_Owner);
+		HRESULT hr = EMgr::GfxRender.DX11GetDevice()->CreateSamplerState( &rExportData->mSamplerDesc, &mpSamplerState );
 		return SUCCEEDED(hr);
 	}
-
+	
+					
 	//////////////////////////////////////////////////////////////////////////
 	//GfxBlend_DX11
 	//////////////////////////////////////////////////////////////////////////
-	GfxBlend_DX11::GfxBlend_DX11()
-		: zcRes::Resource()
+	GfxStateBlendProxy_DX11::GfxStateBlendProxy_DX11()
+	: mpBlendState(NULL)
 	{		
-		mInstanceInfo.mpBlendState = NULL;
 	}
 
-	GfxBlend_DX11::~GfxBlend_DX11()
+	GfxStateBlendProxy_DX11::~GfxStateBlendProxy_DX11()
 	{	
-		if( mInstanceInfo.mpBlendState )
-			mInstanceInfo.mpBlendState->Release();
+		if( mpBlendState )
+			mpBlendState->Release();
+		mpBlendState = NULL;
 	}
 
-	bool GfxBlend_DX11::ResourceInit()
+	bool GfxStateBlendProxy_DX11::Initialize(class GfxStateBlend& _Owner)
 	{
-		HRESULT hr = EMgr::GfxRender.DX11GetDevice()->CreateBlendState( &mInstanceInfo.mSerial.mBlendDesc, &mInstanceInfo.mpBlendState );
+		const GfxStateBlend::ExportDataRef& rExportData = _Owner.GetExportData();
+		ZENAssert(rExportData.IsValid());
+		ZENDbgCode(mpOwner = &_Owner);
+		HRESULT hr = EMgr::GfxRender.DX11GetDevice()->CreateBlendState( &rExportData->mBlendDesc, &mpBlendState );
 		return SUCCEEDED(hr);
 	}
 
 	//////////////////////////////////////////////////////////////////////////
 	//GfxDepthStencil_DX11
 	//////////////////////////////////////////////////////////////////////////
-	GfxDepthStencil_DX11::GfxDepthStencil_DX11()
-		: zcRes::Resource()
+	GfxStateDepthStencilProxy_DX11::GfxStateDepthStencilProxy_DX11()
+	: mpDepthStencilState(NULL)
 	{		
-		mInstanceInfo.mpDepthStencilState = NULL;
 	}
 
-	GfxDepthStencil_DX11::~GfxDepthStencil_DX11()
+	GfxStateDepthStencilProxy_DX11::~GfxStateDepthStencilProxy_DX11()
 	{	
-		if( mInstanceInfo.mpDepthStencilState )
-			mInstanceInfo.mpDepthStencilState->Release();
+		if( mpDepthStencilState )
+			mpDepthStencilState->Release();
+		mpDepthStencilState = NULL;
 	}
 
-	bool GfxDepthStencil_DX11::ResourceInit()
+	bool GfxStateDepthStencilProxy_DX11::Initialize(class GfxStateDepthStencil& _Owner)
 	{
-		HRESULT hr = EMgr::GfxRender.DX11GetDevice()->CreateDepthStencilState( &mInstanceInfo.mSerial.mDepthStencilDesc, &mInstanceInfo.mpDepthStencilState );
+		const GfxStateDepthStencil::ExportDataRef& rExportData = _Owner.GetExportData();
+		ZENAssert(rExportData.IsValid());
+		ZENDbgCode(mpOwner = &_Owner);
+		HRESULT hr = EMgr::GfxRender.DX11GetDevice()->CreateDepthStencilState( &rExportData->mDepthStencilDesc, &mpDepthStencilState );
 		return SUCCEEDED(hr);
 	}
 
 	//////////////////////////////////////////////////////////////////////////
 	//GfxRasterizer_DX11
 	//////////////////////////////////////////////////////////////////////////
-	GfxRasterizer_DX11::GfxRasterizer_DX11()
-		: zcRes::Resource()
+	GfxStateRasterizerProxy_DX11::GfxStateRasterizerProxy_DX11()
+	: mpRasterizerState(NULL)
 	{		
-		mInstanceInfo.mpRasterizerState = NULL;
 	}
 
-	GfxRasterizer_DX11::~GfxRasterizer_DX11()
+	GfxStateRasterizerProxy_DX11::~GfxStateRasterizerProxy_DX11()
 	{	
-		if( mInstanceInfo.mpRasterizerState )
-			mInstanceInfo.mpRasterizerState->Release();
+		if( mpRasterizerState )
+			mpRasterizerState->Release();
+		mpRasterizerState = NULL;
 	}
 
-	bool GfxRasterizer_DX11::ResourceInit()
+	bool GfxStateRasterizerProxy_DX11::Initialize(class GfxStateRasterizer& _Owner)
 	{
-		HRESULT hr = EMgr::GfxRender.DX11GetDevice()->CreateRasterizerState( &mInstanceInfo.mSerial.mRasterizerDesc, &mInstanceInfo.mpRasterizerState );
+		const GfxStateRasterizer::ExportDataRef& rExportData = _Owner.GetExportData();
+		ZENAssert(rExportData.IsValid());
+		ZENDbgCode(mpOwner = &_Owner);
+		HRESULT hr = EMgr::GfxRender.DX11GetDevice()->CreateRasterizerState( &rExportData->mRasterizerDesc, &mpRasterizerState );
 		return SUCCEEDED(hr);
 	}
 }

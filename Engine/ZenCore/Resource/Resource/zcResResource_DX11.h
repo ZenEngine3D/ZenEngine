@@ -4,26 +4,81 @@
 
 namespace zcRes
 {	
-	typedef class GfxIndex_DX11						zGfxIndex;
-	typedef class GfxVertex_DX11					zGfxVertex;	
-	typedef class GfxRenderTarget_DX11				zGfxRenderTarget;
-	typedef class GfxView_DX11						zGfxView;
-	typedef class GfxWindow_DX11					zGfxWindow;	
-	typedef class GfxShader_DX11					zGfxShader;
-	typedef class GfxShaderVertex_DX11				zGfxShaderVertex;
-	typedef class GfxShaderPixel_DX11				zGfxShaderPixel;
-	typedef class GfxShaderParam_DX11				zGfxShaderParam;
-	typedef class GfxShaderParamDef_DX11			zGfxShaderParamDef;	
-	typedef class GfxInputStream_DX11				zGfxInputStream;
-	typedef class GfxInputSignature_DX11			zGfxInputSignature;
-	typedef class GfxShaderBinding_DX11				zGfxShaderBinding;
-	typedef class GfxMeshStrip_DX11					zGfxMeshStrip;
-	typedef class GfxMesh_DX11						zGfxMesh;
-	typedef class GfxTexture2D_DX11					zGfxTexture2D;
-	typedef class GfxSampler_DX11					zGfxSampler;		
-	typedef class GfxBlend_DX11						zGfxBlend;
-	typedef class GfxDepthStencil_DX11				zGfxDepthStencil;
-	typedef class GfxRasterizer_DX11				zGfxRasterizer;
+	typedef class GfxSamplerProxy_DX11									GfxSamplerProxy;
+	typedef zcExp::ExporterGfxSamplerDX11_DX11							GfxSamplerExporterRuntime;
+	typedef zcExp::ExporterGfxSamplerDX11_DX11::ExportData				GfxSamplerExportData;
+	
+	typedef class GfxStateBlendProxy_DX11								GfxStateBlendProxy;
+	typedef zcExp::ExporterGfxStateBlendDX11_DX11						GfxStateBlendExporterRuntime;
+	typedef zcExp::ExporterGfxStateBlendDX11_DX11::ExportData			GfxStateBlendExportData;
+	
+	typedef class GfxStateDepthStencilProxy_DX11						GfxStateDepthStencilProxy;
+	typedef zcExp::ExporterGfxStateDepthStencilDX11_DX11				GfxStateDepthStencilExporterRuntime;
+	typedef zcExp::ExporterGfxStateDepthStencilDX11_DX11::ExportData	GfxStateDepthStencilExportData;
+	
+	typedef class GfxStateRasterizerProxy_DX11							GfxStateRasterizerProxy;
+	typedef zcExp::ExporterGfxStateRasterizerDX11_DX11					GfxStateRasterizerExporterRuntime;
+	typedef zcExp::ExporterGfxStateRasterizerDX11_DX11::ExportData		GfxStateRasterizerExportData;
+	
+	typedef class GfxIndexProxy_DX11									GfxIndexProxy;
+	typedef zcExp::ExporterGfxIndexDX11_DX11							GfxIndexExporterRuntime;
+	typedef zcExp::ExporterGfxIndexDX11_DX11::ExportData				GfxIndexExportData;
+	
+	typedef class GfxVertexProxy_DX11									GfxVertexProxy;
+	typedef zcExp::ExporterGfxVertexDX11_DX11							GfxVertexExporterRuntime;
+	typedef zcExp::ExporterGfxVertexDX11_DX11::ExportData				GfxVertexExportData;
+	
+	typedef class GfxInputSignatureProxy_DX11							GfxInputSignatureProxy;
+	typedef zcExp::ExporterGfxInputSignatureDX11_DX11					GfxInputSignatureExporterRuntime;
+	typedef zcExp::ExporterGfxInputSignatureDX11_DX11::ExportData		GfxInputSignatureExportData;
+
+	typedef class GfxTexture2dProxy_DX11								GfxTexture2dProxy;
+	typedef zcExp::ExporterGfxTexture2dDX11_DX11						GfxTexture2dExporterRuntime;
+	typedef zcExp::ExporterGfxTexture2dDX11_DX11::ExportData			GfxTexture2dExportData;
+	
+	typedef class GfxRenderTargetProxy_DX11								GfxRenderTargetProxy;
+	typedef zcExp::ExporterGfxRenderTarget								GfxRenderTargetExporterRuntime;
+	typedef zcExp::ExporterGfxRenderTarget::ExportData					GfxRenderTargetExportData;
+
+	typedef class GfxViewProxy_DX11										GfxViewProxy;
+	typedef zcExp::ExporterGfxView										GfxViewExporterRuntime;
+	typedef zcExp::ExporterGfxView::ExportData							GfxViewExportData;
+
+	typedef class GfxWindowProxy_DX11									GfxWindowProxy;
+	typedef zcExp::ExportDataGfxWindowDX11								GfxWindowExportData;
+
+	typedef class GfxInputStreamProxy_DX11								GfxInputStreamProxy;
+	typedef zcExp::ExporterGfxInputStreamDX11_DX11						GfxInputStreamExporterRuntime;
+	typedef zcExp::ExporterGfxInputStreamDX11_DX11::ExportData			GfxInputStreamExportData;
+
+	typedef class GfxInputSignatureProxy_DX11							GfxInputSignatureProxy;
+	typedef zcExp::ExporterGfxInputSignatureDX11_DX11					GfxInputSignatureExporterRuntime;
+	typedef zcExp::ExporterGfxInputSignatureDX11_DX11::ExportData		GfxInputSignatureExportData;
+
+	typedef class GfxMeshStripProxy_DX11								GfxMeshStripProxy;
+	typedef zcExp::ExporterGfxMeshStripDX11_DX11						GfxMeshStripExporterRuntime;
+	typedef zcExp::ExporterGfxMeshStripDX11_DX11::ExportData			GfxMeshStripExportData;
+
+	typedef class GfxMeshProxy_DX11										GfxMeshProxy;
+	typedef zcExp::ExporterGfxMeshDX11_DX11								GfxMeshExporterRuntime;
+	typedef zcExp::ExporterGfxMeshDX11_DX11::ExportData					GfxMeshExportData;
+
+	typedef class GfxShaderParamDefProxy_DX11							GfxShaderParamDefProxy;
+	typedef zcExp::ExporterGfxShaderParamDefDX11_DX11					GfxShaderParamDefExporterRuntime;
+	typedef zcExp::ExporterGfxShaderParamDefDX11_DX11::ExportData		GfxShaderParamDefExportData;
+
+	typedef class GfxShaderParamProxy_DX11								GfxShaderParamProxy;
+	typedef zcExp::ExporterGfxShaderParamDX11_DX11						GfxShaderParamExporterRuntime;		
+	typedef zcExp::ExporterGfxShaderParamDX11_DX11::ExportData			GfxShaderParamExportData;	
+
+	typedef class GfxShaderBindingProxy_DX11							GfxShaderBindingProxy;
+	typedef zcExp::ExporterGfxShaderBindingDX11_DX11					GfxShaderBindingExporterRuntime;		
+	typedef zcExp::ExporterGfxShaderBindingDX11_DX11::ExportData		GfxShaderBindingExportData;
+
+	typedef class GfxShaderVertexProxy_DX11								GfxShaderVertexProxy;
+	typedef class GfxShaderPixelProxy_DX11								GfxShaderPixelProxy;
+	typedef zcExp::ExporterGfxShaderDX11_DX11							GfxShaderExporterRuntime;
+	typedef zcExp::ExporterGfxShaderDX11_DX11::ExportData				GfxShaderExportData;	
 }
 
 #endif

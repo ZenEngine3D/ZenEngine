@@ -7,13 +7,13 @@
 #define ZENResourceDeclareParent(_Class_, _ClassParent_, _ClassInstance_, _ResourceType_)											\
 	ZENClassDeclare(_Class_, _ClassParent_)																							\
 public:																																\
-	ZENInline const _ClassInstance_&	Get()const								{	return mInstanceInfo;};							\
-	ZENInline _ClassInstance_&	Get()											{	return mInstanceInfo;};							\
-	static _Class_*					Create(zcExp::ExportInfoBase& _ExportInfo)	{	_Class_* pNewRes = zenNewDefault _Class_();		\
+	ZENInline const _ClassInstance_&	Get()const									{	return mInstanceInfo;};						\
+	ZENInline _ClassInstance_&			Get()										{	return mInstanceInfo;};						\
+	static _Class_*						Create(zcExp::ExportInfoBase& _ExportInfo)	{	_Class_* pNewRes = zenNewDefault _Class_();	\
 																					return pNewRes->ResourceCreate(pNewRes->mInstanceInfo, _ExportInfo) ? pNewRes : NULL; }\
-	static zenConst::eResType		GetResourceType()							{	return _ResourceType_; }						\
+	static zenConst::eResType			GetResourceType()							{	return _ResourceType_; }					\
 protected:																															\
-	_ClassInstance_					mInstanceInfo;																					\
+	_ClassInstance_						mInstanceInfo;																				\
 private:																															\
 	_Class_();	
 
@@ -54,6 +54,17 @@ template<class TResourceClass, class TReferenceClass>
 const TResourceClass* ResourceRef<TResourceClass, TReferenceClass>::operator->()const	
 { 
 	ZENAssert(mpResource); 
+	return static_cast<const TResourceClass*>(mpResource); 
+}
+template<class TResourceClass, class TReferenceClass>
+TResourceClass* ResourceRef<TResourceClass, TReferenceClass>::Get()
+{
+	return static_cast<TResourceClass*>(mpResource); 
+}
+
+template<class TResourceClass, class TReferenceClass>
+const TResourceClass* ResourceRef<TResourceClass, TReferenceClass>::Get()const
+{
 	return static_cast<const TResourceClass*>(mpResource); 
 }
 

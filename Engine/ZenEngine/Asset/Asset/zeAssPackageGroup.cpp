@@ -116,6 +116,29 @@ void PackageGroup::Delete()
 	zeMgr::Asset.GroupDelete( rThis );
 }
 
+bool PackageGroup::IsParentOf(const zenAss::zPackageGroupRef& _Child)const
+{
+	zenAss::zPackageGroupRef rCurrentParent = _Child.IsValid() ? _Child->GetParentGroup() : NULL;
+	while( rCurrentParent.IsValid() )
+	{
+		if( rCurrentParent.Get() == this )
+			return true;
+		rCurrentParent = rCurrentParent->GetParentGroup();
+	}
+	return false;
+}
+
+bool PackageGroup::IsParentOf(const zenAss::zPackageRef& _Child)const
+{
+	zenAss::zPackageGroupRef rCurrentParent = _Child.IsValid() ? _Child->GetParentGroup() : NULL;
+	while (rCurrentParent.IsValid())
+	{
+		if (rCurrentParent.Get() == this)
+			return true;
+		rCurrentParent = rCurrentParent->GetParentGroup();
+	}
+	return false;
+}
 
 }} //namespace zen { namespace zeAss
 

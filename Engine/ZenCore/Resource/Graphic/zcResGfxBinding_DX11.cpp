@@ -3,100 +3,184 @@
 namespace zcRes
 {
 
-GfxInputStream_DX11::GfxInputStream_DX11()
+GfxInputStreamProxy_DX11::GfxInputStreamProxy_DX11()
+: mpInputLayout(NULL)
 {
 }
 
-GfxInputStream_DX11::~GfxInputStream_DX11()
+GfxInputStreamProxy_DX11::~GfxInputStreamProxy_DX11()
 {
-	mInstanceInfo.mpInputLayout->Release();
+	if( mpInputLayout )
+		mpInputLayout->Release();
+	mpInputLayout = NULL;
 }
 
-bool GfxInputStream_DX11::ResourceInit()
+bool GfxInputStreamProxy_DX11::Initialize(class GfxInputStream& _Owner)
 {
+	const GfxInputStream::ExportDataRef& rExportData = _Owner.GetExportData();
+	ZENAssert(rExportData.IsValid());
+	ZENDbgCode(mpOwner = &_Owner);
+
 	bool bSuccess(FALSE);
-	mInstanceInfo.mrVertex		= mInstanceInfo.mSerial.mVertexBufferID;
-	mInstanceInfo.mrSignature	= mInstanceInfo.mSerial.mShaderInputSignatureID;
-	if( mInstanceInfo.mrVertex.IsValid() && mInstanceInfo.mrSignature.IsValid() )
+	mrVertexProxy	= GetResourceProxy<GfxVertexRef>(rExportData->mVertexBufferID);
+	if( mrVertexProxy.IsValid() )
 	{
-		HRESULT hr = EMgr::GfxRender.DX11GetDevice()->CreateInputLayout( mInstanceInfo.mrVertex->Get().maElementDef.First(), mInstanceInfo.mrVertex->Get().maElementDef.Count(), 
-			mInstanceInfo.mrSignature->Get().maDummyShaderCode.First(), mInstanceInfo.mrSignature->Get().maDummyShaderCode.Size(), &mInstanceInfo.mpInputLayout );
-		bSuccess = SUCCEEDED( hr );		
+		
+		mrSignatureProxy		= GetResourceProxy<GfxInputSignatureRef>(rExportData->mShaderInputSignatureID);
+		if( mrSignatureProxy.IsValid() )
+		{
+			//! @todo make sure proxy not accessed gamethread
+			HRESULT hr = EMgr::GfxRender.DX11GetDevice()->CreateInputLayout( mrVertexProxy->maElementDef.First(), mrVertexProxy->maElementDef.Count(), 
+				mrSignatureProxy->maDummyShaderCode.First(), mrSignatureProxy->maDummyShaderCode.Size(), &mpInputLayout );
+			bSuccess = SUCCEEDED( hr );		
+		}
 	}	
 	return bSuccess;
 }
 
-GfxShaderBinding_DX11::GfxShaderBinding_DX11()
-: Super()
+
+//=================================================================================================
+
+GfxMeshProxy_DX11::GfxMeshProxy_DX11()
 {	
 }
 
-bool GfxShaderBinding_DX11::ResourceInit()
+GfxMeshProxy_DX11::~GfxMeshProxy_DX11()
 {
-	mInstanceInfo.maGfxShaderRef.Copy<zResID>( mInstanceInfo.mSerial.maShaderID );	
+}
 
-	zcExp::SerialGfxShaderBinding_DX11::TextureSlot emptySlot;
-	mInstanceInfo.mdStageSlotPerTexture.Init(mInstanceInfo.maTextureName.Count()*2);
-	mInstanceInfo.mdStageSlotPerTexture.SetDefaultValue(emptySlot);
-	mInstanceInfo.mdStageSlotPerTexture.Import( mInstanceInfo.maTextureName, mInstanceInfo.maTextureBind );
+bool GfxMeshProxy_DX11::Initialize(class GfxMesh& _Owner)
+{
+	const GfxMesh::ExportDataRef& rExportData = _Owner.GetExportData();
+	ZENAssert(rExportData.IsValid());
+	ZENDbgCode(mpOwner = &_Owner);
 
-	mInstanceInfo.mdCBuferPerParam.Init(mInstanceInfo.maParameterName.Count()*2);
-	mInstanceInfo.mdCBuferPerParam.SetDefaultValue(0);
-	mInstanceInfo.mdCBuferPerParam.Import( mInstanceInfo.maParameterName, mInstanceInfo.maParameterMask );
-
+	marProxGfxMeshStrip.SetCount( rExportData->maMeshStripID.Count() );
+	for(zUInt stripIdx(0), stripCount(marProxGfxMeshStrip.Count()); stripIdx<stripCount; ++stripIdx)
+		marProxGfxMeshStrip[stripIdx] = GetResourceProxy<GfxMeshStripRef>(rExportData->maMeshStripID[stripIdx]);
+		
 	return true;
 }
 
-GfxMeshStrip_DX11::GfxMeshStrip_DX11()
+void GfxMeshProxy_DX11::SetValue(const zArrayBase<const zenRes::zShaderParameter*>& _aValues)
+{
+	for(zUInt stripIdx(0), stripCount(marProxGfxMeshStrip.Count()); stripIdx<stripCount; ++stripIdx)
+		marProxGfxMeshStrip[stripIdx]->SetValue(_aValues);
+}
+void GfxMeshProxy_DX11::SetValue(const zenRes::zShaderParameter& _Value)
+{
+	for(zUInt stripIdx(0), stripCount(marProxGfxMeshStrip.Count()); stripIdx<stripCount; ++stripIdx)
+		marProxGfxMeshStrip[stripIdx]->SetValue(_Value);
+}
+void GfxMeshProxy_DX11::SetValue(const zHash32& _hParamName, const float& _fValue)
+{
+	for(zUInt stripIdx(0), stripCount(marProxGfxMeshStrip.Count()); stripIdx<stripCount; ++stripIdx)
+		marProxGfxMeshStrip[stripIdx]->SetValue(_hParamName, _fValue);
+}
+void GfxMeshProxy_DX11::SetValue(const zHash32& _hParamName, const zVec2F& _vValue)
+{
+	for(zUInt stripIdx(0), stripCount(marProxGfxMeshStrip.Count()); stripIdx<stripCount; ++stripIdx)
+		marProxGfxMeshStrip[stripIdx]->SetValue(_hParamName, _vValue);
+}
+void GfxMeshProxy_DX11::SetValue(const zHash32& _hParamName, const zVec3F& _vValue)
+{
+	for(zUInt stripIdx(0), stripCount(marProxGfxMeshStrip.Count()); stripIdx<stripCount; ++stripIdx)
+		marProxGfxMeshStrip[stripIdx]->SetValue(_hParamName, _vValue);
+}
+void GfxMeshProxy_DX11::SetValue(const zHash32& _hParamName, const zVec4F& _vValue)
+{
+	for(zUInt stripIdx(0), stripCount(marProxGfxMeshStrip.Count()); stripIdx<stripCount; ++stripIdx)
+		marProxGfxMeshStrip[stripIdx]->SetValue(_hParamName, _vValue);
+}
+void GfxMeshProxy_DX11::SetValue(const zHash32& _hParamName, const zenMath::Matrix& _matValue)
+{
+	for(zUInt stripIdx(0), stripCount(marProxGfxMeshStrip.Count()); stripIdx<stripCount; ++stripIdx)
+		marProxGfxMeshStrip[stripIdx]->SetValue(_hParamName, _matValue);
+}
+void GfxMeshProxy_DX11::SetValue(const zHash32& _hTextureName, GfxTexture2dProxyRef _rTexture )
+{
+	for(zUInt stripIdx(0), stripCount(marProxGfxMeshStrip.Count()); stripIdx<stripCount; ++stripIdx)
+		marProxGfxMeshStrip[stripIdx]->SetValue(_hTextureName, _rTexture);
+}
+void GfxMeshProxy_DX11::SetValue(const zHash32& _hTextureName, GfxSamplerProxyRef _rSampler )
+{
+	for(zUInt stripIdx(0), stripCount(marProxGfxMeshStrip.Count()); stripIdx<stripCount; ++stripIdx)
+		marProxGfxMeshStrip[stripIdx]->SetValue(_hTextureName, _rSampler);
+}
+void GfxMeshProxy_DX11::SetValue(const zHash32& _hTextureName, GfxTexture2dProxyRef _rTexture, GfxSamplerProxyRef _rSampler )
+{
+	for(zUInt stripIdx(0), stripCount(marProxGfxMeshStrip.Count()); stripIdx<stripCount; ++stripIdx)
+		marProxGfxMeshStrip[stripIdx]->SetValue(_hTextureName, _rTexture, _rSampler);
+}
+
+//=================================================================================================
+
+GfxMeshStripProxy_DX11::GfxMeshStripProxy_DX11()
 {
 }
 
-bool GfxMeshStrip_DX11::ResourceInit()
+GfxMeshStripProxy_DX11::~GfxMeshStripProxy_DX11()
 {
-	mInstanceInfo.mrIndexBuffer		= mInstanceInfo.mSerial.mIndexBufferID;
-	mInstanceInfo.mrInputStream		= mInstanceInfo.mSerial.mStreamBindingID;
-	mInstanceInfo.mrShaderBinding	= mInstanceInfo.mSerial.mShaderBindingID;	
-	mInstanceInfo.maShaderParamRef.Copy<zResID>( mInstanceInfo.mSerial.maShaderParamID );
-	
-	mInstanceInfo.maTextureRef.SetCount( zcExp::keShaderStage__Count );
-	mInstanceInfo.maGfxSamplerRef.SetCount( zcExp::keShaderStage__Count );	
-	for(zUInt stageIdx(0), stageCount(mInstanceInfo.mSerial.maTextureID.Count()); stageIdx<stageCount; ++stageIdx )
+}
+
+bool GfxMeshStripProxy_DX11::Initialize(class GfxMeshStrip& _Owner)
+{
+	const GfxMeshStrip::ExportDataRef& rExportData = _Owner.GetExportData();
+	ZENAssert(rExportData.IsValid());
+	ZENDbgCode(mpOwner = &_Owner);
+
+	mrIndexBufferProxy		= GetResourceProxy<GfxIndexRef>(rExportData->mIndexBufferID);
+	mrInputStreamProxy		= GetResourceProxy<GfxInputStreamRef>(rExportData->mStreamBindingID);
+	mrShaderBindingProxy		= GetResourceProxy<GfxShaderBindingRef>(rExportData->mShaderBindingID);
+	muIndexFirst		= rExportData->muIndexFirst;
+	muIndexCount		= rExportData->muIndexCount;
+	marShaderParamProxy.SetCount(rExportData->maShaderParamID.Count());
+	for(zUInt idx(0), count(marShaderParamProxy.Count()); idx<count; ++idx)
+		marShaderParamProxy[idx] = GetResourceProxy<GfxShaderParamRef>(rExportData->maShaderParamID[idx]);
+		
+	marTextureProxy.SetCount( zenConst::keShaderStage__Count );
+	marGfxSamplerProxy.SetCount( zenConst::keShaderStage__Count );	
+	for(zUInt stageIdx(0), stageCount(rExportData->maTextureID.Count()); stageIdx<stageCount; ++stageIdx )
 	{	
-		ZENAssert( mInstanceInfo.mSerial.maTextureID[stageIdx].Count() == mInstanceInfo.mSerial.maSamplerID[stageIdx].Count() );
-		mInstanceInfo.maTextureRef[stageIdx].Copy<zResID>( mInstanceInfo.mSerial.maTextureID[stageIdx] );
-		mInstanceInfo.maGfxSamplerRef[stageIdx].Copy<zResID>( mInstanceInfo.mSerial.maSamplerID[stageIdx] );
+		ZENAssert( rExportData->maTextureID[stageIdx].Count() == rExportData->maSamplerID[stageIdx].Count() );
+		marTextureProxy[stageIdx].SetCount(rExportData->maTextureID[stageIdx].Count());
+		marGfxSamplerProxy[stageIdx].SetCount(rExportData->maTextureID[stageIdx].Count());
+		for(zUInt idx(0), count(marTextureProxy[stageIdx].Count()); idx<count; ++idx)
+		{
+			marTextureProxy[stageIdx][idx]		= GetResourceProxy<GfxTexture2dRef>(rExportData->maTextureID[stageIdx][idx]);
+			marGfxSamplerProxy[stageIdx][idx]	= GetResourceProxy<GfxSamplerRef>(rExportData->maSamplerID[stageIdx][idx]);
+		}
 	}
 	//! @todo Missing: assign default texture for the one not assigned
 
 	return true;
 }
 
-
-void GfxMeshStrip_DX11::SetValue(const zenRes::zShaderParameter& _Value)
+void GfxMeshStripProxy_DX11::SetValue(const zenRes::zShaderParameter& _Value)
 {
 	zUInt idxStage	= 0;
-	zU32 paramMask	= mInstanceInfo.mrShaderBinding->Get().mdCBuferPerParam[_Value.mhName];	
+	zU32 paramMask	= mrShaderBindingProxy->mdBufferPerParam[_Value.mhName];	
 	while( paramMask != 0 )
 	{
 		if( (paramMask&1)!=0 ){
-			mInstanceInfo.maShaderParamRef[idxStage]->SetValue(_Value);
+			marShaderParamProxy[idxStage]->SetValue(_Value);
 		}
 		paramMask = paramMask>>1;
 		++idxStage;
 	}
 }
 
-void GfxMeshStrip_DX11::SetValue(const zArrayBase<const zenRes::zShaderParameter*>& _aValues)
+void GfxMeshStripProxy_DX11::SetValue(const zArrayBase<const zenRes::zShaderParameter*>& _aValues)
 {
 	for(zUInt valIdx(0), valCount(_aValues.Count()); valIdx<valCount; ++valIdx)
 	{
 		zUInt idxStage							= 0;
 		const zenRes::zShaderParameter* pValue	= _aValues[valIdx];
-		zU32 paramMask							= mInstanceInfo.mrShaderBinding->Get().mdCBuferPerParam[pValue->mhName];
+		zU32 paramMask							= mrShaderBindingProxy->mdBufferPerParam[pValue->mhName];
 		while( paramMask != 0 )
 		{
 			if( (paramMask&1)!=0 ){
-				mInstanceInfo.maShaderParamRef[idxStage]->SetValue(*pValue);
+				marShaderParamProxy[idxStage]->SetValue(*pValue);
 			}
 			paramMask = paramMask>>1;
 			++idxStage;
@@ -104,116 +188,116 @@ void GfxMeshStrip_DX11::SetValue(const zArrayBase<const zenRes::zShaderParameter
 	}
 }
 
-void GfxMeshStrip_DX11::SetValue(const zHash32& _hParamName, const float& _fValue)
+void GfxMeshStripProxy_DX11::SetValue(const zHash32& _hParamName, const float& _fValue)
 {
 	zUInt idxStage	= 0;
-	zU32 paramMask	= mInstanceInfo.mrShaderBinding->Get().mdCBuferPerParam[_hParamName];	
+	zU32 paramMask	= mrShaderBindingProxy->mdBufferPerParam[_hParamName];	
 	while( paramMask != 0 )
 	{
 		if( (paramMask&1)!=0 ){
-			mInstanceInfo.maShaderParamRef[idxStage]->SetValue(_hParamName, _fValue);
+			marShaderParamProxy[idxStage]->SetValue(_hParamName, _fValue);
 		}
 		paramMask = paramMask>>1;
 		++idxStage;
 	}
 }
 
-void GfxMeshStrip_DX11::SetValue(const zHash32& _hParamName, const zVec2F& _vValue)
+void GfxMeshStripProxy_DX11::SetValue(const zHash32& _hParamName, const zVec2F& _vValue)
 {
 	zUInt idxStage	= 0;
-	zU32 paramMask	= mInstanceInfo.mrShaderBinding->Get().mdCBuferPerParam[_hParamName];	
+	zU32 paramMask	= mrShaderBindingProxy->mdBufferPerParam[_hParamName];	
 	while( paramMask != 0 )
 	{
 		if( (paramMask&1)!=0 ){
-			mInstanceInfo.maShaderParamRef[idxStage]->SetValue(_hParamName, _vValue);
+			marShaderParamProxy[idxStage]->SetValue(_hParamName, _vValue);
 		}
 		paramMask = paramMask>>1;
 		++idxStage;
 	}
 }
 
-void GfxMeshStrip_DX11::SetValue(const zHash32& _hParamName, const zVec3F& _vValue)
+void GfxMeshStripProxy_DX11::SetValue(const zHash32& _hParamName, const zVec3F& _vValue)
 {
 	zUInt idxStage	= 0;
-	zU32 paramMask	= mInstanceInfo.mrShaderBinding->Get().mdCBuferPerParam[_hParamName];	
+	zU32 paramMask	= mrShaderBindingProxy->mdBufferPerParam[_hParamName];	
 	while( paramMask != 0 )
 	{
 		if( (paramMask&1)!=0 ){
-			mInstanceInfo.maShaderParamRef[idxStage]->SetValue(_hParamName, _vValue);
+			marShaderParamProxy[idxStage]->SetValue(_hParamName, _vValue);
 		}
 		paramMask = paramMask>>1;
 		++idxStage;
 	}
 }
 
-void GfxMeshStrip_DX11::SetValue(const zHash32& _hParamName, const zVec4F& _vValue)
+void GfxMeshStripProxy_DX11::SetValue(const zHash32& _hParamName, const zVec4F& _vValue)
 {
 	zUInt idxStage	= 0;
-	zU32 paramMask	= mInstanceInfo.mrShaderBinding->Get().mdCBuferPerParam[_hParamName];	
+	zU32 paramMask	= mrShaderBindingProxy->mdBufferPerParam[_hParamName];	
 	while( paramMask != 0 )
 	{
 		if( (paramMask&1)!=0 ){
-			mInstanceInfo.maShaderParamRef[idxStage]->SetValue(_hParamName, _vValue);
+			marShaderParamProxy[idxStage]->SetValue(_hParamName, _vValue);
 		}
 		paramMask = paramMask>>1;
 		++idxStage;
 	}	
 }
 
-void GfxMeshStrip_DX11::SetValue(const zHash32& _hParamName, const zenMath::Matrix& _matValue)
+void GfxMeshStripProxy_DX11::SetValue(const zHash32& _hParamName, const zenMath::Matrix& _matValue)
 {
 	zUInt idxStage	= 0;
-	zU32 paramMask	= mInstanceInfo.mrShaderBinding->Get().mdCBuferPerParam[_hParamName];	
+	zU32 paramMask	= mrShaderBindingProxy->mdBufferPerParam[_hParamName];	
 	while( paramMask != 0 )
 	{
 		if( (paramMask&1)!=0 ){
-			mInstanceInfo.maShaderParamRef[idxStage]->SetValue(_hParamName, _matValue);
+			marShaderParamProxy[idxStage]->SetValue(_hParamName, _matValue);
 		}
 		paramMask = paramMask>>1;
 		++idxStage;
 	}
 }
 
-void GfxMeshStrip_DX11::SetValue(const zHash32& _hTextureName, GfxTexture2DRef _rTexture )
+void GfxMeshStripProxy_DX11::SetValue(const zHash32& _hTextureName, GfxTexture2dProxyRef _rTexture )
 {		
-	zcExp::SerialGfxShaderBinding_DX11::TextureSlot SlotInfos;
-	if( mInstanceInfo.mrShaderBinding->Get().mdStageSlotPerTexture.Get(_hTextureName, SlotInfos) )
+	GfxShaderBindingExportData::TextureSlot SlotInfos;
+	if( mrShaderBindingProxy->mdStageSlotPerTexture.Get(_hTextureName, SlotInfos) )
 	{
-		for(zUInt stageIdx(0); stageIdx<zcExp::keShaderStage__Count; ++stageIdx)
+		for(zUInt stageIdx(0); stageIdx<zenConst::keShaderStage__Count; ++stageIdx)
 		{
 			ZENWarningMsg( SlotInfos.muCount[stageIdx] <= 1, "Trying to set a single Texture to texture array.");
 			if( SlotInfos.muCount[stageIdx] > 0 )
-				mInstanceInfo.maTextureRef[stageIdx][SlotInfos.muSlot[stageIdx]] = _rTexture;
+				marTextureProxy[stageIdx][SlotInfos.muSlot[stageIdx]] = _rTexture;
 		}
 	}	
 }
 
-void GfxMeshStrip_DX11::SetValue(const zHash32& _hTextureName, GfxSamplerRef _rSampler )
+void GfxMeshStripProxy_DX11::SetValue(const zHash32& _hTextureName, GfxSamplerProxyRef _rSampler )
 {
-	zcExp::SerialGfxShaderBinding_DX11::TextureSlot SlotInfos;
-	if( mInstanceInfo.mrShaderBinding->Get().mdStageSlotPerTexture.Get(_hTextureName, SlotInfos) )
+	GfxShaderBindingExportData::TextureSlot SlotInfos;
+	if( mrShaderBindingProxy->mdStageSlotPerTexture.Get(_hTextureName, SlotInfos) )
 	{
-		for(zUInt stageIdx(0); stageIdx<zcExp::keShaderStage__Count; ++stageIdx)
+		for(zUInt stageIdx(0); stageIdx<zenConst::keShaderStage__Count; ++stageIdx)
 		{
 			ZENWarningMsg( SlotInfos.muCount[stageIdx] <= 1, "Trying to set a single Texture to texture array.");
 			if( SlotInfos.muCount[stageIdx] > 0 )
-				mInstanceInfo.maGfxSamplerRef[stageIdx][SlotInfos.muSlot[stageIdx]] = _rSampler;				
+				marGfxSamplerProxy[stageIdx][SlotInfos.muSlot[stageIdx]] = _rSampler;				
 		}
 	}	
 }
 
-void GfxMeshStrip_DX11::SetValue(const zHash32& _hTextureName, GfxTexture2DRef _rTexture, GfxSamplerRef _rSampler )
+void GfxMeshStripProxy_DX11::SetValue(const zHash32& _hTextureName, GfxTexture2dProxyRef _rTexture, GfxSamplerProxyRef _rSampler )
 {
-	zcExp::SerialGfxShaderBinding_DX11::TextureSlot SlotInfos;
-	if( mInstanceInfo.mrShaderBinding->Get().mdStageSlotPerTexture.Get(_hTextureName, SlotInfos) )
+	GfxShaderBindingExportData::TextureSlot SlotInfos;
+	if( mrShaderBindingProxy->mdStageSlotPerTexture.Get(_hTextureName, SlotInfos) )
 	{
-		for(zUInt stageIdx(0); stageIdx<zcExp::keShaderStage__Count; ++stageIdx)
+		for(zUInt stageIdx(0); stageIdx<zenConst::keShaderStage__Count; ++stageIdx)
 		{
 			ZENWarningMsg( SlotInfos.muCount[stageIdx] <= 1, "Trying to set a single Texture to texture array.");
 			if( SlotInfos.muCount[stageIdx] > 0 )
 			{
-				mInstanceInfo.maTextureRef[stageIdx][SlotInfos.muSlot[stageIdx]] = _rTexture;
-				mInstanceInfo.maGfxSamplerRef[stageIdx][SlotInfos.muSlot[stageIdx]] = _rSampler;
+				marTextureProxy[stageIdx][SlotInfos.muSlot[stageIdx]] = _rTexture;
+				marGfxSamplerProxy[stageIdx][SlotInfos.muSlot[stageIdx]] = _rSampler;
 			}
 		}
 	}	
@@ -221,66 +305,34 @@ void GfxMeshStrip_DX11::SetValue(const zHash32& _hTextureName, GfxTexture2DRef _
 
 //=================================================================================================
 
-GfxMesh_DX11::GfxMesh_DX11()
-: Super()
+GfxShaderBindingProxy_DX11::GfxShaderBindingProxy_DX11()
 {	
 }
 
-bool GfxMesh_DX11::ResourceInit()
+GfxShaderBindingProxy_DX11::~GfxShaderBindingProxy_DX11()
 {
-	mInstanceInfo.maGfxMeshStripRef.Copy<zResID>( mInstanceInfo.mSerial.maMeshStripID );	
-	return true;
 }
 
-void GfxMesh_DX11::SetValue(const zArrayBase<const zenRes::zShaderParameter*>& _aValues)
+bool GfxShaderBindingProxy_DX11::Initialize(class GfxShaderBinding& _Owner)
 {
-	for(zUInt stripIdx(0), stripCount(mInstanceInfo.maGfxMeshStripRef.Count()); stripIdx<stripCount; ++stripIdx)
-		mInstanceInfo.maGfxMeshStripRef[stripIdx]->SetValue(_aValues);
-}
-void GfxMesh_DX11::SetValue(const zenRes::zShaderParameter& _Value)
-{
-	for(zUInt stripIdx(0), stripCount(mInstanceInfo.maGfxMeshStripRef.Count()); stripIdx<stripCount; ++stripIdx)
-		mInstanceInfo.maGfxMeshStripRef[stripIdx]->SetValue(_Value);
-}
-void GfxMesh_DX11::SetValue(const zHash32& _hParamName, const float& _fValue)
-{
-	for(zUInt stripIdx(0), stripCount(mInstanceInfo.maGfxMeshStripRef.Count()); stripIdx<stripCount; ++stripIdx)
-		mInstanceInfo.maGfxMeshStripRef[stripIdx]->SetValue(_hParamName, _fValue);
-}
-void GfxMesh_DX11::SetValue(const zHash32& _hParamName, const zVec2F& _vValue)
-{
-	for(zUInt stripIdx(0), stripCount(mInstanceInfo.maGfxMeshStripRef.Count()); stripIdx<stripCount; ++stripIdx)
-		mInstanceInfo.maGfxMeshStripRef[stripIdx]->SetValue(_hParamName, _vValue);
-}
-void GfxMesh_DX11::SetValue(const zHash32& _hParamName, const zVec3F& _vValue)
-{
-	for(zUInt stripIdx(0), stripCount(mInstanceInfo.maGfxMeshStripRef.Count()); stripIdx<stripCount; ++stripIdx)
-		mInstanceInfo.maGfxMeshStripRef[stripIdx]->SetValue(_hParamName, _vValue);
-}
-void GfxMesh_DX11::SetValue(const zHash32& _hParamName, const zVec4F& _vValue)
-{
-	for(zUInt stripIdx(0), stripCount(mInstanceInfo.maGfxMeshStripRef.Count()); stripIdx<stripCount; ++stripIdx)
-		mInstanceInfo.maGfxMeshStripRef[stripIdx]->SetValue(_hParamName, _vValue);
-}
-void GfxMesh_DX11::SetValue(const zHash32& _hParamName, const zenMath::Matrix& _matValue)
-{
-	for(zUInt stripIdx(0), stripCount(mInstanceInfo.maGfxMeshStripRef.Count()); stripIdx<stripCount; ++stripIdx)
-		mInstanceInfo.maGfxMeshStripRef[stripIdx]->SetValue(_hParamName, _matValue);
-}
-void GfxMesh_DX11::SetValue(const zHash32& _hTextureName, GfxTexture2DRef _rTexture )
-{
-	for(zUInt stripIdx(0), stripCount(mInstanceInfo.maGfxMeshStripRef.Count()); stripIdx<stripCount; ++stripIdx)
-		mInstanceInfo.maGfxMeshStripRef[stripIdx]->SetValue(_hTextureName, _rTexture);
-}
-void GfxMesh_DX11::SetValue(const zHash32& _hTextureName, GfxSamplerRef _rSampler )
-{
-	for(zUInt stripIdx(0), stripCount(mInstanceInfo.maGfxMeshStripRef.Count()); stripIdx<stripCount; ++stripIdx)
-		mInstanceInfo.maGfxMeshStripRef[stripIdx]->SetValue(_hTextureName, _rSampler);
-}
-void GfxMesh_DX11::SetValue(const zHash32& _hTextureName, GfxTexture2DRef _rTexture, GfxSamplerRef _rSampler )
-{
-	for(zUInt stripIdx(0), stripCount(mInstanceInfo.maGfxMeshStripRef.Count()); stripIdx<stripCount; ++stripIdx)
-		mInstanceInfo.maGfxMeshStripRef[stripIdx]->SetValue(_hTextureName, _rTexture, _rSampler);
+	const GfxShaderBinding::ExportDataRef& rExportData = _Owner.GetExportData();
+	ZENAssert(rExportData.IsValid());
+	ZENDbgCode(mpOwner = &_Owner);
+
+	mrProxShaderVertex	= GetResourceProxy<GfxShaderVertexRef>(rExportData->maShaderID[zenConst::keShaderStage_Vertex]);
+	mrProxShaderPixel	= GetResourceProxy<GfxShaderPixelRef>(rExportData->maShaderID[zenConst::keShaderStage_Pixel]);
+	
+	GfxShaderBindingExportData::TextureSlot emptySlot;
+	mdStageSlotPerTexture.Init(rExportData->maTextureName.Count()*2);
+	mdStageSlotPerTexture.SetDefaultValue(emptySlot);
+	mdStageSlotPerTexture.Import( rExportData->maTextureName, rExportData->maTextureBind );
+
+	mdBufferPerParam.Init(rExportData->maParameterName.Count()*2);
+	mdBufferPerParam.SetDefaultValue(0);
+	mdBufferPerParam.Import( rExportData->maParameterName, rExportData->maParameterMask );
+
+	maStagePerParamDef = rExportData->maStagePerParamDef;
+	return true;
 }
 
 

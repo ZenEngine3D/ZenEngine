@@ -20,6 +20,7 @@ namespace zen { namespace zenRes {
 
 	//=============================================================================================
 	//! @class	Used when setting the properties of a texture/sampler pair
+	//! @todo optim remove sampler/texture automatic depency
 	//=============================================================================================
 	class zShaderTexture
 	{

@@ -2,38 +2,42 @@
 
 namespace zcRes
 {
-	GfxView_DX11::GfxView_DX11()
-	{
-		mInstanceInfo.marTargetColor.SetCount(0);
-		mInstanceInfo.mrTargetDepth	= NULL;
-	}
 
-	GfxView_DX11::~GfxView_DX11()
-	{
+GfxViewProxy_DX11::GfxViewProxy_DX11()
+{
+}
 
-	}
+GfxViewProxy_DX11::~GfxViewProxy_DX11()
+{
+}
 
-	bool GfxView_DX11::ResourceInit()
-	{
-		mInstanceInfo.marTargetColor.Copy<zResID>( mInstanceInfo.mSerial.maTargetColorID );
-		mInstanceInfo.mrTargetDepth = mInstanceInfo.mSerial.mTargetDepthID;
-		return true;
-	}
+bool GfxViewProxy_DX11::Initialize(class GfxView& _Owner)
+{
+	const GfxView::ExportDataRef& rExportData = _Owner.GetExportData();
+	ZENAssert(rExportData.IsValid());
+	ZENDbgCode(mpOwner = &_Owner);
 
-	void GfxView_DX11::Clear( bool _bClearColor, const zVec4F& _vRGBA, bool _bClearDepth, float _fDepth, bool _bClearStencil, zU8 _uStencil )
+	marProxTargetColor.SetCount( rExportData->maTargetColorID.Count() );
+	for(int idx(0), count(marProxTargetColor.Count()); idx<count; ++idx)
+		marProxTargetColor[idx] = GetResourceProxy<GfxRenderTargetRef>(rExportData->maTargetColorID[idx]);
+	mrProxTargetDepth =  GetResourceProxy<GfxRenderTargetRef>(rExportData->mTargetDepthID);
+	return true;
+}
+
+void GfxViewProxy_DX11::Clear( bool _bClearColor, const zVec4F& _vRGBA, bool _bClearDepth, float _fDepth, bool _bClearStencil, zU8 _uStencil )
+{
+	if( _bClearColor )
 	{
-		if( _bClearColor )
+		for(zUInt rtIdx(0), rtCount(marProxTargetColor.Count()); rtIdx<rtCount; ++rtIdx)
 		{
-			for(zUInt rtIdx(0), rtCount(mInstanceInfo.marTargetColor.Count()); rtIdx<rtCount; ++rtIdx)
-			{
-				if( mInstanceInfo.marTargetColor[rtIdx].IsValid() )
-					mInstanceInfo.marTargetColor[rtIdx]->Clear(_vRGBA);
-			}
-		}
-		if( mInstanceInfo.mrTargetDepth.IsValid()&& (_bClearDepth || _bClearStencil) )
-		{
-			mInstanceInfo.mrTargetDepth->Clear(_fDepth, _uStencil, _bClearDepth, _bClearStencil);
+			if( marProxTargetColor[rtIdx].IsValid() )
+				marProxTargetColor[rtIdx]->Clear(_vRGBA);
 		}
 	}
-	
+	if( mrProxTargetDepth.IsValid()&& (_bClearDepth || _bClearStencil) )
+	{
+		mrProxTargetDepth->Clear(_fDepth, _uStencil, _bClearDepth, _bClearStencil);
+	}
+}
+
 }

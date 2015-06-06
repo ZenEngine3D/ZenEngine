@@ -41,17 +41,17 @@ const TextureBlockInfo& GetTextureBlockInfo( zenConst::eTextureFormat _eFormat )
 //=================================================================================================
 zResID CreateGfxTexture2D(zenConst::eTextureFormat _eFormat, zFlagResTexUse _CreationFlags, zVec2U16 _vDim, const zArrayBase<zU8>& _aRawData)
 {
-	static zenMem::zAllocatorPool sMemPool("Pool CreateTexture2D", sizeof(SerialTexture2D_Base::ExportInfo), 1, 5 );
-	SerialTexture2D_Base::ExportInfo* pExportInfo	= zenNew(&sMemPool) SerialTexture2D_Base::ExportInfo;
-	const zcExp::TextureBlockInfo& BlockInfo			= zcExp::GetTextureBlockInfo(_eFormat);
+	static zenMem::zAllocatorPool sMemPool("Pool CreateTexture2D", sizeof(ExportInfoGfxTexture2d), 1, 5 );
+	ExportInfoGfxTexture2d* pExportInfo		= zenNew(&sMemPool) ExportInfoGfxTexture2d;
+	const zcExp::TextureBlockInfo& BlockInfo	= zcExp::GetTextureBlockInfo(_eFormat);
 	pExportInfo->maMipData.SetCount(1);
-	pExportInfo->maMipData[0].maData				= _aRawData;
-	pExportInfo->maMipData[0].mvDim					= _vDim;
-	pExportInfo->maMipData[0].muStride				= (_vDim.x / BlockInfo.muWidth) * BlockInfo.muSize;
-	pExportInfo->meFormatInput						= _eFormat;	
-	pExportInfo->meFormatOutput						= _eFormat;
-	pExportInfo->mCreationFlags						= _CreationFlags;
-	pExportInfo->mbGenerateMip						= FALSE;
+	pExportInfo->maMipData[0].maData			= _aRawData;
+	pExportInfo->maMipData[0].mvDim				= _vDim;
+	pExportInfo->maMipData[0].muStride			= (_vDim.x / BlockInfo.muWidth) * BlockInfo.muSize;
+	pExportInfo->meFormatInput					= _eFormat;	
+	pExportInfo->meFormatOutput					= _eFormat;
+	pExportInfo->mCreationFlags					= _CreationFlags;
+	pExportInfo->mbGenerateMip					= FALSE;
 	return EMgr::Export.CreateItem( zResID::kePlatformType_GFX, zenConst::keResType_GfxTexture2D, pExportInfo );
 }
 

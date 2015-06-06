@@ -2,6 +2,7 @@
 
 namespace zcExp
 {
+
 	const zenConst::eEngineVersion SerialItem::sVersions[]=
 	{
 		zenConst::keEngineVersion_Initial,		// keItem_GfxShaderVertex_DX11,
@@ -9,7 +10,7 @@ namespace zcExp
 		zenConst::keEngineVersion_Initial,		// keItem_ShaderVertex_GLSL4,
 		zenConst::keEngineVersion_Initial,		// keItem_ShaderPixel_GLSL4,
 	};
-
+	
 	SerialItem::SerialItem()
 	: muSize(0)
 	, mExportTime(0)	
@@ -25,5 +26,14 @@ namespace zcExp
 		bSuccess		&= aSerializer.Serialize(muVersion);
 		bSuccess		&= aSerializer.Serialize(mExportTime);		
 		return bSuccess && muVersion <= zUInt(sVersions[mResID.Type()]);
+	}
+
+	
+	ExportDataBase::ExportDataBase()
+	/*: muSize(0)
+	, mExportTime(0)	
+	, muVersion(zenConst::keEngineVersion__Current)*/
+	{
+		ZENStaticAssert( ZENArrayCount(sVersions)==zenConst::keResType__Count );
 	}
 }

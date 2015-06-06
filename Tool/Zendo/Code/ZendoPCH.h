@@ -3,6 +3,6 @@
 
 #include <zenEngine/zenEngine.h>
 #include <Engine/zenExternal/zxExternal.h>
-//#include <Engine/ZenExternal/UI/zxUIwxWidgets.h>
+#include <Engine/ZenExternal/UI/zxUIwxWidgets.h>
 
 #endif

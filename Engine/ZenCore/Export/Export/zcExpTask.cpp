@@ -2,6 +2,7 @@
 
 namespace zcExp
 {
+/*
 	ExportTask::ExportTask(ExportItem* _pExportItem, zcExp::ExportInfoBase* _pExportInfo)
 	: mpExportItem(_pExportItem)
 	{
@@ -28,5 +29,6 @@ namespace zcExp
 		mpExportItem->mpExportInfo->mbSuccessEnd = mpExportItem->ExportEnd();		
 		return mpExportItem->mpExportInfo->mbSuccessEnd;
 	}
+	*/
 }
 

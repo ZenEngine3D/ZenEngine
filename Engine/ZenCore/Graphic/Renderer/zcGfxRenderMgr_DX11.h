@@ -16,31 +16,31 @@ ZENClassDeclare(ManagerRender, ManagerRender_Base)
 // Common to all ManagerRender
 //---------------------------------------------------------
 public:
-							ManagerRender();
-	virtual void			FrameBegin(zcRes::GfxWindowRef _FrameWindow);
-	virtual void			FrameEnd();
+									ManagerRender();
+	virtual void					FrameBegin(zcRes::GfxWindowRef _FrameWindow);
+	virtual void					FrameEnd();
 
-	void					Render(zcRes::GfxMeshRef _rMesh);
-	void					Render(zcRes::GfxMeshStripRef _rMeshStrip);
+	void							Render(zcRes::GfxMeshRef _rMesh);
+	void							Render(zcRes::GfxMeshStripProxyRef _rMeshStrip);
 	
 //---------------------------------------------------------
 // DirectX device infos
 //---------------------------------------------------------
-public:
-	
-	ID3D11Device*			DX11GetDevice(){return mDX11pDevice;}
-	ID3D11DeviceContext*	DX11GetDeviceContext(){return mDX11pContextImmediate;}
-	DXGI_FORMAT				AWFormatToNative( zenConst::eTextureFormat _eTexFormat )const { return meFormatConversion[_eTexFormat]; }
-	void					UnbindTextures();
+public:	
+	ID3D11Device*					DX11GetDevice(){return mDX11pDevice;}
+	ID3D11DeviceContext*			DX11GetDeviceContext(){return mDX11pContextImmediate;}
+	DXGI_FORMAT						ZenFormatToNative( zenConst::eTextureFormat _eTexFormat )const { return meFormatConversion[_eTexFormat]; }
+	void							UnbindTextures();
+
 protected:
-	zU16					muPerStageTextureCount[zcExp::keShaderStage__Count];
-	DXGI_FORMAT				meFormatConversion[zenConst::keTexFormat__Count];
-	D3D_DRIVER_TYPE         mDX11DriverType;
-	D3D_FEATURE_LEVEL       mDX11FeatureLevel;
-	ID3D11Device*           mDX11pDevice;
-	ID3D11DeviceContext*    mDX11pContextImmediate;
-	zcRes::GfxSamplerRef		maCurrentSampler[zcExp::keShaderStage__Count][zcExp::kuDX11_TexturePerStageMax];
-	zcRes::GfxTexture2DRef	maCurrentTexture[zcExp::keShaderStage__Count][zcExp::kuDX11_TexturePerStageMax];
+	zU16							muPerStageTextureCount[zenConst::keShaderStage__Count];
+	DXGI_FORMAT						meFormatConversion[zenConst::keTexFormat__Count];
+	D3D_DRIVER_TYPE					mDX11DriverType;
+	D3D_FEATURE_LEVEL				mDX11FeatureLevel;
+	ID3D11Device*					mDX11pDevice;
+	ID3D11DeviceContext*			mDX11pContextImmediate;
+	zcRes::GfxSamplerProxyRef		maCurrentSampler[zenConst::keShaderStage__Count][zcExp::kuDX11_TexturePerStageMax];
+	zcRes::GfxTexture2dProxyRef		maCurrentTexture[zenConst::keShaderStage__Count][zcExp::kuDX11_TexturePerStageMax];
 	
 //---------------------------------------------------------
 // ManagerBase Section

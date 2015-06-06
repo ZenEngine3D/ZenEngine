@@ -4,6 +4,13 @@
 
 namespace zen { namespace zenConst {
 
+	enum eShaderStage
+	{
+		keShaderStage_Vertex, 
+		keShaderStage_Pixel,
+		keShaderStage__Count,
+		keShaderStage__Invalid
+	};
 
 }}  //namespace zen, Const 
 

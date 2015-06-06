@@ -2,39 +2,43 @@
 
 namespace zcRes
 {
-	GfxWindow_DX11::GfxWindow_DX11()
-	: mvPendingResize(0,0)
-	{
-		mInstanceInfo.mDX11pSwapChain	= NULL;
-		mInstanceInfo.mrBackbufferColor	= NULL;
-		mInstanceInfo.mrBackbufferDepth	= NULL;
-		mInstanceInfo.mvSize			= zVec2U16(0,0);
+	GfxWindowProxy_DX11::GfxWindowProxy_DX11()
+	: mDX11pSwapChain(NULL)
+	, mvPendingResize(0,0)
+	{		
+		mrProxBackbufferColor	= NULL;
+		mrProxBackbufferDepth	= NULL;
+		mvSize				= zVec2U16(0,0);
 	}
 
-	GfxWindow_DX11::~GfxWindow_DX11()
+	GfxWindowProxy_DX11::~GfxWindowProxy_DX11()
 	{
-		if( mInstanceInfo.mDX11pSwapChain )
-			mInstanceInfo.mDX11pSwapChain->Release();	
+		if( mDX11pSwapChain )
+			mDX11pSwapChain->Release();	
 	}
 
-	bool GfxWindow_DX11::ResourceInit()
+	bool GfxWindowProxy_DX11::Initialize(class GfxWindow& _Owner)
 	{
+		const GfxWindow::ExportDataRef& rExportData = _Owner.GetExportData();
+		ZENAssert(rExportData.IsValid());
+		ZENDbgCode(mpOwner = &_Owner);
+
 		RECT rc;
-		GetClientRect( Get().mhWindow, &rc );
-		mInstanceInfo.mvSize					= zVec2U16(zU16(rc.right-rc.left), zU16(rc.bottom-rc.top));
-		mInstanceInfo.meBackbufferColorFormat	= zenConst::keTexFormat_RGBA8;
-		mInstanceInfo.meBackbufferDepthFormat	= zenConst::keTexFormat_D24S8;
+		GetClientRect( rExportData->mhWindow, &rc );
+		mvSize					= zVec2U16(zU16(rc.right-rc.left), zU16(rc.bottom-rc.top));
+		meBackbufferColorFormat	= zenConst::keTexFormat_RGBA8;	//! @todo feature expose desired format in ExportData
+		meBackbufferDepthFormat	= zenConst::keTexFormat_D24S8;
 
 		DXGI_SWAP_CHAIN_DESC swapDesc;
 		ZeroMemory( &swapDesc, sizeof( swapDesc ) );
 		swapDesc.BufferCount						= 2;
-		swapDesc.BufferDesc.Width					= mInstanceInfo.mvSize.x;
-		swapDesc.BufferDesc.Height					= mInstanceInfo.mvSize.y;
-		swapDesc.BufferDesc.Format					= EMgr::GfxRender.AWFormatToNative(mInstanceInfo.meBackbufferColorFormat);
+		swapDesc.BufferDesc.Width					= mvSize.x;
+		swapDesc.BufferDesc.Height					= mvSize.y;
+		swapDesc.BufferDesc.Format					= EMgr::GfxRender.ZenFormatToNative(meBackbufferColorFormat);
 		swapDesc.BufferDesc.RefreshRate.Numerator	= 60;
 		swapDesc.BufferDesc.RefreshRate.Denominator	= 1;
 		swapDesc.BufferUsage						= DXGI_USAGE_RENDER_TARGET_OUTPUT;
-		swapDesc.OutputWindow						= mInstanceInfo.mhWindow;
+		swapDesc.OutputWindow						= rExportData->mhWindow;
 		swapDesc.SampleDesc.Count					= 1;
 		swapDesc.SampleDesc.Quality					= 0;
 		swapDesc.Windowed							= TRUE;
@@ -47,20 +51,29 @@ namespace zcRes
 		if( SUCCEEDED(DX11pDevice->QueryInterface(__uuidof(IDXGIDevice), (void **)&pDXGIDevice)) )
 			if( SUCCEEDED(pDXGIDevice->GetParent(__uuidof(IDXGIAdapter), (void **)&pDXGIAdapter)) )
 				if( SUCCEEDED(pDXGIAdapter->GetParent(__uuidof(IDXGIFactory), (void **)&pIDXGIFactory)) )
-					if( SUCCEEDED(pIDXGIFactory->CreateSwapChain( DX11pDevice, &swapDesc, &mInstanceInfo.mDX11pSwapChain)) )
+					if( SUCCEEDED(pIDXGIFactory->CreateSwapChain( DX11pDevice, &swapDesc, &mDX11pSwapChain)) )
 					{
-						mInstanceInfo.mrBackbufferColor = zcRes::GfxRenderTarget_DX11::CreateFromBackuffer( mInstanceInfo.mDX11pSwapChain, mInstanceInfo.meBackbufferColorFormat, mInstanceInfo.mvSize );
-						mInstanceInfo.mrBackbufferDepth = zcExp::CreateGfxRenderTarget( mInstanceInfo.meBackbufferDepthFormat, mInstanceInfo.mvSize);
-						mInstanceInfo.mrBackbufferView	= zcExp::CreateGfxView( mInstanceInfo.mrBackbufferColor.GetResID(), mInstanceInfo.mrBackbufferDepth.GetResID() );
-						return mInstanceInfo.mrBackbufferView.IsValid();
+						//! @todo can't allow access to owner in renderthread, fix this
+						//! @todo clean move code to resize and avoid duplicate
+						GfxRenderTargetExportDataRef rExportData	= zenNewDefault GfxRenderTargetExportData();
+						rExportData->mResID							= EMgr::Export.GetNewResourceID( zenConst::keResType_GfxRenderTarget );
+						rExportData->mbSRGB							= TRUE;
+						rExportData->meFormat						= meBackbufferColorFormat;
+						rExportData->mvDim							= mvSize;
+						rExportData->mpBackbuffer					= mDX11pSwapChain;
+						
+						GfxRenderTargetRef rBackbufferColor			= GfxRenderTarget::RuntimeCreate(rExportData);
+						GfxRenderTargetRef rBackbufferDepth			= zcExp::CreateGfxRenderTarget( meBackbufferDepthFormat, mvSize);						
+						GfxViewRef rView							= zcExp::CreateGfxView( rBackbufferColor.GetResID(), rBackbufferDepth.GetResID() );
+						
+						mrProxBackbufferColor						= rBackbufferColor->GetProxy();
+						mrProxBackbufferDepth						= rBackbufferDepth->GetProxy();
+						mrProxBackbufferView						= rView->GetProxy();
+						_Owner.SetBackbuffer(rView);
+						return mrProxBackbufferView.IsValid();
 					}
 		
 		return false;;
-	}
-
-	void GfxWindow_DX11::Resize(const zVec2U16& _vSize)
-	{
-		mvPendingResize	 = _vSize;
 	}
 
 	//==================================================================================================
@@ -71,21 +84,35 @@ namespace zcRes
 	//--------------------------------------------------------------------------------------------------
 	//! @return		
 	//==================================================================================================
-	void GfxWindow_DX11::PerformResize()
+	void GfxWindowProxy_DX11::PerformResize()
 	{
 		zcRes::GfxWindowRef rWindowCur = EMgr::GfxRender.GetWindowCurrent();
-		ZENAssert(mInstanceInfo.mDX11pSwapChain);
-		ZENAssertMsg(rWindowCur != this, "This method should only be called in ManagerBase::FrameStart()");
+		ZENAssert(mDX11pSwapChain);
+		ZENAssertMsg(rWindowCur.IsValid()==false || rWindowCur->GetProxy() != this, "This method should only be called in ManagerBase::FrameStart()");
 
-		if( !mvPendingResize.IsNull() && mvPendingResize != mInstanceInfo.mvSize )
+		if( !mvPendingResize.IsNull() && mvPendingResize != mvSize )
 		{
-			mInstanceInfo.mvSize			= mvPendingResize;			
-			mInstanceInfo.mrBackbufferColor->ReleaseBackbuffer();
-			mInstanceInfo.mDX11pSwapChain->ResizeBuffers(0, mvPendingResize.x, mvPendingResize.y, DXGI_FORMAT_UNKNOWN, 0);
-			mInstanceInfo.mrBackbufferColor = zcRes::GfxRenderTarget_DX11::CreateFromBackuffer( mInstanceInfo.mDX11pSwapChain, mInstanceInfo.meBackbufferColorFormat, mvPendingResize );
-			mInstanceInfo.mrBackbufferDepth = zcExp::CreateGfxRenderTarget( mInstanceInfo.meBackbufferDepthFormat, mvPendingResize);
-			mInstanceInfo.mrBackbufferView	= zcExp::CreateGfxView( mInstanceInfo.mrBackbufferColor.GetResID(), mInstanceInfo.mrBackbufferDepth.GetResID() );
+			mvSize			= mvPendingResize;			
+			mrProxBackbufferColor->ReleaseBackbuffer();
+			mDX11pSwapChain->ResizeBuffers(0, mvPendingResize.x, mvPendingResize.y, DXGI_FORMAT_UNKNOWN, 0);
+
+			GfxRenderTargetExportDataRef rExportData	= zenNewDefault GfxRenderTargetExportData();
+			rExportData->mResID							= EMgr::Export.GetNewResourceID( zenConst::keResType_GfxRenderTarget );
+			rExportData->mbSRGB							= TRUE;
+			rExportData->meFormat						= meBackbufferColorFormat;
+			rExportData->mvDim							= mvSize;
+			rExportData->mpBackbuffer					= mDX11pSwapChain;
+			
+			GfxRenderTargetRef rBackbufferColor			= GfxRenderTarget::RuntimeCreate(rExportData);
+			GfxRenderTargetRef rBackbufferDepth			= zcExp::CreateGfxRenderTarget( meBackbufferDepthFormat, mvSize);						
+			GfxViewRef rView							= zcExp::CreateGfxView( rBackbufferColor.GetResID(), rBackbufferDepth.GetResID() );
+						
+			mrProxBackbufferColor						= rBackbufferColor->GetProxy();
+			mrProxBackbufferDepth						= rBackbufferDepth->GetProxy();
+			mrProxBackbufferView						= rView->GetProxy();
+			mpOwner->SetBackbuffer(rView); //! @todo urgent can't access game thread object here
 		}		
 		mvPendingResize.SetNull();
 	}
+
 }

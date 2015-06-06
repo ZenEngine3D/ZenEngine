@@ -4,16 +4,11 @@
 
 namespace zcExp
 {
-	class SerialIndex_Base : public zcExp::ExportItem
-	{
-	ZENClassDeclare(SerialIndex_Base, zcExp::ExportItem)
-	public:		
-		struct ExportInfo : public zcExp::ExportInfoBase
-		{			
-			zArrayStatic<zU16>	maIndice16;			//!< 16bits Indices list (Pick 1st one valid)
-			zArrayStatic<zU32>	maIndice32;			//!< 32bits Indices list
-			zenConst::ePrimitiveType	mePrimitiveType;	//!< Type of primitive the indices are for
-		};
+	struct ExportInfoGfxIndex : public ExportInfoBase
+	{			
+		zArrayStatic<zU16>			maIndice16;			//!< 16bits Indices list (Pick 1st one valid)
+		zArrayStatic<zU32>			maIndice32;			//!< 32bits Indices list
+		zenConst::ePrimitiveType	mePrimitiveType;	//!< Type of primitive the indices are for
 	};
 	
 	zResID CreateGfxIndexBuffer(const zArrayBase<zU16>& _Indices, zenConst::ePrimitiveType _ePrimitiveType);

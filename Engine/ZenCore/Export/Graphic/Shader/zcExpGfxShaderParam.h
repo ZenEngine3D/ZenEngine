@@ -5,15 +5,27 @@
 namespace zcExp
 {
 	
+enum eShaderParamFreq
+{
+	keShaderParamFreq_Global		= 0,
+	keShaderParamFreq_PerViewPhase	= 1,		
+	keShaderParamFreq_PerMeshOnce	= 2,
+	keShaderParamFreq_PerMesh		= 3,
+	keShaderParamFreq_PerStripOnce	= 4,
+	keShaderParamFreq_PerStrip		= 5,
+	keShaderParamFreq__Count,
+	keShaderParamFreq__Invalid
+};
+
 class ParameterBase
 {
 ZENClassDeclareNoParent(ParameterBase)
 public:
  	zHash32		mhName;						//!< Parameter name
-	zU32			meType			: 4;		//!< eShaderElementType
-	zU32			muVectorSize	: 4;		//!< Number of elements in vector
-	zU32			muArrayCount	: 10;		//!< Number of elements in array
-	zU32			muSizeTotal		: 16;		//!< Total size of the child class
+	zU32		meType			: 4;		//!< eShaderElementType
+	zU32		muVectorSize	: 4;		//!< Number of elements in vector
+	zU32		muArrayCount	: 10;		//!< Number of elements in array
+	zU32		muSizeTotal		: 16;		//!< Total size of the child class
 	const void*	GetData()const {return this + 1;}
 
 protected:
@@ -129,25 +141,13 @@ typedef ParameterVector3< float, zenConst::keShaderElemType_Float > ParameterFlo
 typedef ParameterVector4< float, zenConst::keShaderElemType_Float > ParameterFloat4;
 
 
-class SerialShaderParam_Base : public zcExp::ExportItem
+struct ExportInfoGfxShaderParam : public ExportInfoBase
 {
-ZENClassDeclare(SerialShaderParam_Base, zcExp::ExportItem)
-public:
-	struct ExportInfo : public zcExp::ExportInfoBase
-	{		
-		zArrayStatic<const zcExp::ParameterBase*> maParamValues;
-		zResID								mParentParamDefID;
-	};
-	struct SerialUseOnly
-	{
-		zResID mParentParamDefID;	//!< Parent ShaderParam definition
-	};
-
-	SerialUseOnly	mSerial;
+	zResID	mParentParamDefID;
 };
 
-zResID	CreateGfxShaderParam(zResID _ParentParamDefID, const zArrayBase<const zcExp::ParameterBase*>& _aParamValues);
-zResID	CreateGfxShaderParam(zResID _ParentShaderID, zcExp::eShaderParamFreq _eShaderParamIndex, const zArrayBase<const zcExp::ParameterBase*>& _aParamValues=zArrayStatic<const zcExp::ParameterBase*>());
+zResID	CreateGfxShaderParam(zResID _ParentParamDefID);
+zResID	CreateGfxShaderParam(zResID _ParentShaderID, zcExp::eShaderParamFreq _eShaderParamIndex);
 
 }
 

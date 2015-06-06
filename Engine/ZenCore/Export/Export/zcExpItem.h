@@ -17,36 +17,52 @@ struct ExportInfoBase
 	bool						IsSuccess(){return mbSuccessStart && mbSuccessWork && mbSuccessEnd; }
 };
 
-class ExportItem : public zcExp::SerialItem
+class ExportDataBase : public SerialItem, public zRefCounted
+{
+ZENClassDeclare(ExportDataBase, zcExp::ISerialize)
+public:
+										ExportDataBase();
+};
+
+typedef zEngineRef<class ExportDataBase> ExportDataRef;
+
+class ExporterBase
 {
 public:
-								ExportItem();
+								ExporterBase(const ExportDataRef& _rExportData);
 
 	bool						Export( zcExp::ExportInfoBase& _ExportInfo );	//!< @brief	Export this item, from current thread
+	//! @todo urgent remove this, move this to exporter class?
 	ExportInfoBase*				mpExportInfo;									//!< @brief	Informations needed to export this item (child class a child ExportInfo with parameters specific to them)	
-protected:								
+
+protected:
 	virtual bool				ExportStart();									//!< @brief Called from Thread:Main before the start of export
 	virtual bool				ExportWork(bool _bIsTHRTask){return TRUE;};		//!< @brief Called from Thread:Main or Thread:Task for main export operation (must be threadsafe)
 	virtual bool				ExportEnd();									//!< @brief Called from Thread:Main, for some post export task 
 	ZENInline	void			ExportSkipWork();								//!< @brief Call in ExportStart to avoid launching a job for this
-
-	//static zResID	ValidateItemID(zenConst::eResPlatform _ePlatform, zenConst::eResType _eType, zenConst::eResSource _eSource, zResID::NameHash _hName, bool& _bExistOut);
-
+	ExportDataRef				mrExportData;
 	friend class ExportTask;
 	friend class ManagerExport;
 };
-	
-ZENInline void ExportItem::ExportSkipWork()
+
+class ExporterNone : public ExporterBase
+{
+ZENClassDeclare(ExporterNone, ExporterBase)
+public:
+	virtual bool ExportStart();
+};
+
+ZENInline void ExporterBase::ExportSkipWork()
 {
 	ZENAssertMsg(mpExportInfo, "Call only from ExportStart()"); 
-	mpExportInfo->mbSuccessWork = TRUE; 
+	mpExportInfo->mbSuccessWork = TRUE; //! @todo urgent move this to exporter class?
 }
 
 ZENInline zResID ValidateItemID(zenConst::eResPlatform _ePlatform, zenConst::eResType _eType, zenConst::eResSource _eSource, zResID::NameHash _hName, bool& _bExistOut)
 {
 	zResID newResID(_hName, _ePlatform, _eType, _eSource);
 	zcExp::SerialItem* pItem	= EMgr::SerialItems.GetItemBaseAnySource( newResID );
-	_bExistOut				= pItem != NULL;
+	_bExistOut					= pItem != NULL;
 	return _bExistOut ? pItem->mResID : newResID;
 }
 

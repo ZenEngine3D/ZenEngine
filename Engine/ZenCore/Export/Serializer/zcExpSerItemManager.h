@@ -15,6 +15,8 @@ public:
 	zcExp::SerialItem*					GetItemBaseAnySource(const zResID _ResID);
 	bool								IsValid(const zResID _ResID);
 	bool								IsValid(const zArrayBase<zResID>& _aResID);
+
+	//! @todo clean should store and return ref objects
 	template<class TType>
 	TType* GetItem(const zResID _ResID)
 	{
