@@ -10,9 +10,9 @@ namespace zcExp
 		static zResID			CallbackGetItemID(zenConst::eResPlatform _ePlatform, zenConst::eResType _eType, zenConst::eResSource _eSource, const zcExp::ExportInfoBase* _pExportInfo, bool& _bExistOut);
 	};
 
-	class ResDataGfxShaderBinding : public ResDataBase
+	class ResDataGfxShaderBinding : public ResourceData
 	{
-	ZENClassDeclare(ResDataGfxShaderBinding, ResDataBase)
+	ZENClassDeclare(ResDataGfxShaderBinding, ResourceData)
 	public:
 		//! @class Used to track texture SlotIndex and SlotCount
 		struct TextureSlot : public zcExp::ISerialize

@@ -5,7 +5,7 @@ namespace zcExp
 
 //=================================================================================================
 //! @brief		Create a new Vertex Buffer
-//! @details	Create a SerialItem to be serialized and used for creating a new Resource afterward
+//! @details	Create a ResourceData to be serialized and used for creating a new Resource afterward
 //-------------------------------------------------------------------------------------------------
 //! @param _Streams			- Infos on the various streams for the vertex
 //! @param _ResourceUse		- Planned useage

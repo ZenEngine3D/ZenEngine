@@ -24,11 +24,11 @@ bool ExporterGfxShaderParamDefDX11_DX11::ExportStart()
 	if( !Super::ExportStart() )
 		return false;
 
-	ExportInfoGfxShaderParamDef*	pExportInfo = static_cast<ExportInfoGfxShaderParamDef*>(mpExportInfo);	
-	ResDataGfxShaderDX11*		pShaderItem	= EMgr::SerialItems.GetItem<ResDataGfxShaderDX11>(pExportInfo->mParentShaderID);
-	if( pShaderItem )
+	ExportInfoGfxShaderParamDef*			pExportInfo = static_cast<ExportInfoGfxShaderParamDef*>(mpExportInfo);	
+	zEngineConstRef<ResDataGfxShaderDX11>	rShaderItem	= zcDepot::ResourceData.GetItem<ResDataGfxShaderDX11>(pExportInfo->mParentShaderID);
+	if( rShaderItem.IsValid() )
 	{
-		maCompiledShader = pShaderItem->maCompiledShader;
+		maCompiledShader = rShaderItem->maCompiledShader;
 		return true;
 	}
 	return false;
@@ -121,7 +121,7 @@ bool ExporterGfxShaderParamDefDX11_DX11::ExportWork(bool _bIsTHRTask)
 
 	//! @todo Missing : support logging
 	//if( !bValid )
-	//	strncpy( mzLogDetail, "Failed initializing ConstantBuffer SerialItem", keLogSizeDetail );
+	//	strncpy( mzLogDetail, "Failed initializing ConstantBuffer ResourceData", keLogSizeDetail );
 	return bValid;
 }
 

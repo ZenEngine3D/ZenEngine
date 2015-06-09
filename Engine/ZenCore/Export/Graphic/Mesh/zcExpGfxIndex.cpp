@@ -5,8 +5,8 @@ namespace zcExp
 
 //=================================================================================================
 //! @brief		Create a new 16bits Index Buffer
-//! @details	Create a temporary SerialItem to create a new Resource and then delete the SerialItem.
-//!				The temporary SerialItem and Asset created, will be for engine default renderer type
+//! @details	Create a temporary ResourceData to create a new Resource and then delete the ResourceData.
+//!				The temporary ResourceData and Asset created, will be for engine default renderer type
 //! @todo Optim: Create reference to array, when executed synchronously (instead of duplicating info)
 //-------------------------------------------------------------------------------------------------
 //! @param _Indices			- List of Indices
@@ -24,8 +24,8 @@ zResID CreateGfxIndexBuffer( const zArrayBase<zU16>& _Indices, zenConst::ePrimit
 
 //=================================================================================================
 //! @brief		Create a new 32bits Index Buffer
-//! @details	Create a temporary SerialItem to create a new Resource and then delete the SerialItem.
-//!				The temporary SerialItem and Asset created, will be for engine default renderer type
+//! @details	Create a temporary ResourceData to create a new Resource and then delete the ResourceData.
+//!				The temporary ResourceData and Asset created, will be for engine default renderer type
 //! @todo Optim: Create reference to array, when executed synchronously (instead of duplicating info)
 //-------------------------------------------------------------------------------------------------
 //! @param _Indices			- List of Indices

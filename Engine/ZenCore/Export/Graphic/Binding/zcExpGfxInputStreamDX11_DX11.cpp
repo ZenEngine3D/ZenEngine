@@ -9,8 +9,8 @@ zResID ExporterGfxInputStreamDX11_DX11::CallbackGetItemID(zenConst::eResPlatform
 	ZENAssert( _pExportInfo );
 	const ExportInfoGfxInputStream* pExportInfo = static_cast<const ExportInfoGfxInputStream*>(_pExportInfo);
 
-	zResID::NameHash hName = pExportInfo->mVertexBufferID.Name();	//! @todo Optim: Different buffer with same format should return same id, saving a lot of binding
-	hName.Append( &pExportInfo->mShaderInputSignatureID.Name(), sizeof(zResID::NameHash) );
+	zResID::NameHash hName = pExportInfo->mVertexBufferID.GetName();	//! @todo Optim: Different buffer with same format should return same id, saving a lot of binding
+	hName.Append( &pExportInfo->mShaderInputSignatureID.GetName(), sizeof(zResID::NameHash) );
 	return zcExp::ValidateItemID(_ePlatform, _eType, _eSource, hName, _bExistOut);
 }
 

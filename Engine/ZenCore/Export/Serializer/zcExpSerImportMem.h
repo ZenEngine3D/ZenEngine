@@ -39,8 +39,8 @@ public:
 	virtual bool	Serialize(zArrayBase<zI64>&	aValues);	
 
 protected:				
-	virtual bool	ItemStarted(zcExp::SerialItem&		aItem);
-	virtual bool	ItemSkip(zcExp::SerialItem&			aItem);
+	virtual bool	ItemStarted(zcExp::ResourceData&		aItem);
+	virtual bool	ItemSkip(zcExp::ResourceData&			aItem);
 };
 }
 

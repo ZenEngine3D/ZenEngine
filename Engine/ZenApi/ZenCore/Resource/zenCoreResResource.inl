@@ -41,7 +41,7 @@ void zResourceRef::SetResource(zResource* _pResource)
 {
 	if( mpResource )
 		mpResource->ReferenceRem();
-	ZENAssert(!_pResource || mSupportedTypeMask.Any(_pResource->GetResID().Type()) );
+	ZENAssert(!_pResource || mSupportedTypeMask.Any(_pResource->GetResID().GetType()) );
 	mpResource = _pResource;
 	if( mpResource )
 		mpResource->ReferenceAdd();

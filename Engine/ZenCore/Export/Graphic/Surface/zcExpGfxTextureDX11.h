@@ -5,9 +5,9 @@
 namespace zcExp
 {	
 
-class ResDataGfxTexture2dDX11 : public ResDataBase
+class ResDataGfxTexture2dDX11 : public ResourceData
 {
-ZENClassDeclare(ResDataGfxTexture2dDX11, ResDataBase)
+ZENClassDeclare(ResDataGfxTexture2dDX11, ResourceData)
 public:
 	virtual bool				Serialize( zcExp::Serializer_Base& _Serializer ){return true;}
 	zArrayStatic<MipInfo>		maMipData;

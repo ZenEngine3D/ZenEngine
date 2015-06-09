@@ -12,15 +12,14 @@ zResID ExporterGfxInputSignatureDX11_DX11::CallbackGetItemID(zenConst::eResPlatf
 {
 	ZENAssert(_ePlatform==zenConst::keResPlatform_DX11 && _eType==zenConst::keResType_GfxInputSignature);
 	ZENAssert( _pExportInfo );
-	const ExportInfoGfxInputSignature* pExportInfo = static_cast<const ExportInfoGfxInputSignature*>(_pExportInfo);
-	
 	zResID::NameHash hName;
-	const ResDataGfxShaderDX11* pParentShader = EMgr::SerialItems.GetItem<ResDataGfxShaderDX11>( pExportInfo->mParentShaderID );
-	if( pParentShader )
+	const ExportInfoGfxInputSignature* pExportInfo		= static_cast<const ExportInfoGfxInputSignature*>(_pExportInfo);
+	zEngineConstRef<ResDataGfxShaderDX11> rParentShader = zcDepot::ResourceData.GetItem<ResDataGfxShaderDX11>( pExportInfo->mParentShaderID );
+	if( rParentShader.IsValid() )
 	{
 		ID3D11ShaderReflection* pGfxShaderReflection = NULL;	
 		//SF if ( SUCCEEDED( D3DReflect( &pParentShader->mSerialCommon.maCompiledShader[0], pParentShader->mSerialCommon.maCompiledShader.Size(), IID_ID3D11ShaderReflection, (void**)&pGfxShaderReflection ) ) ) 
-		if ( SUCCEEDED( D3DReflect( &pParentShader->maCompiledShader[0], pParentShader->maCompiledShader.Size(), IID_ID3D11ShaderReflection, (void**)&pGfxShaderReflection ) ) ) 
+		if ( SUCCEEDED( D3DReflect( &rParentShader->maCompiledShader[0], rParentShader->maCompiledShader.Size(), IID_ID3D11ShaderReflection, (void**)&pGfxShaderReflection ) ) ) 
 		{
 			// Get zResID of Input Signature
 			D3D11_SHADER_DESC shaderDesc;
@@ -60,10 +59,10 @@ bool ExporterGfxInputSignatureDX11_DX11::ExportStart()
 	if( !Super::ExportStart() )
 		return false;
 
-	ExportInfoGfxInputSignature* pExportInfo		= static_cast<ExportInfoGfxInputSignature*>(mpExportInfo);
-	zcExp::ResDataGfxShaderDX11* pShaderParent	= EMgr::SerialItems.GetItem<zcExp::ResDataGfxShaderDX11>( pExportInfo->mParentShaderID);
-	if( pShaderParent )
-		maParentCompiledShader = pShaderParent->maCompiledShader;
+	ExportInfoGfxInputSignature*			pExportInfo		= static_cast<ExportInfoGfxInputSignature*>(mpExportInfo);
+	zEngineConstRef<ResDataGfxShaderDX11>	rShaderParent	= zcDepot::ResourceData.GetItem<zcExp::ResDataGfxShaderDX11>( pExportInfo->mParentShaderID);
+	if( rShaderParent.IsValid() )
+		maParentCompiledShader = rShaderParent->maCompiledShader;
 	
 	return maParentCompiledShader.Count() > 0;
 }

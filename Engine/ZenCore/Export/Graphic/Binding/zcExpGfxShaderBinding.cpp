@@ -14,7 +14,7 @@ namespace zcExp
 
 		for(zUInt idx=0; idx<uShaderCount; ++idx)
 			if( pExportInfo->maShaderID[idx].IsValid() )
-				aSortedResname[uValidCount++] = pExportInfo->maShaderID[idx].HashID();
+				aSortedResname[uValidCount++] = pExportInfo->maShaderID[idx].GetHashID();
 
 		//! @todo Urgent need sorting re-implemented
 		//aSortedResname.Sort();
@@ -34,7 +34,7 @@ namespace zcExp
 	//!				are provided, and store information on which shader stage they're used with
 	//-------------------------------------------------------------------------------------------------
 	//! @param _eRenderType		- Renderer type this resource will be for (DX9, DX11, GL, ...)
-	//! @return 				- SerialItem of this resource type
+	//! @return 				- ResourceData of this resource type
 	//=================================================================================================
 	bool ExporterGfxShaderBinding::ExportStart()
 	{
@@ -53,15 +53,15 @@ namespace zcExp
 		mdStagePerParamDef.SetDefaultValue(0);
 		for(zUInt idx=0; idx<pExport->maShaderID.Count(); ++idx)
 		{
-			zcRes::GfxShaderResData* pShader = EMgr::SerialItems.GetItem<zcRes::GfxShaderResData>( pExport->maShaderID[idx] );
-			if( pShader )
+			zEngineConstRef<zcRes::GfxShaderResData> rShader = zcDepot::ResourceData.GetItem<zcRes::GfxShaderResData>( pExport->maShaderID[idx] );
+			if( rShader.IsValid() )
 			{
-				ZENAssertMsg(!aShaderID[pShader->meShaderStage].IsValid(), "Should only specify 1 shader per shader stage");	//! @todo Missing: error output
-				aShaderID[pShader->meShaderStage] = pShader->mResID;
-				for(zResID *pParamIDCur(pShader->maParamDefID.First()), *pParamIDLast(pShader->maParamDefID.Last()); pParamIDCur<=pParamIDLast;  ++pParamIDCur )
+				ZENAssertMsg(!aShaderID[rShader->meShaderStage].IsValid(), "Should only specify 1 shader per shader stage");	//! @todo Missing: error output
+				aShaderID[rShader->meShaderStage] = rShader->mResID;
+				for(const zResID *pParamIDCur(rShader->maParamDefID.First()), *pParamIDLast(rShader->maParamDefID.Last()); pParamIDCur<=pParamIDLast;  ++pParamIDCur )
 				{
 					if( pParamIDCur->IsValid() )
-						mdStagePerParamDef.GetAdd(pParamIDCur->HashID()) |= 1<<pShader->meShaderStage;
+						mdStagePerParamDef.GetAdd(pParamIDCur->GetHashID()) |= 1<<rShader->meShaderStage;
 				}					
 			}			
 		}

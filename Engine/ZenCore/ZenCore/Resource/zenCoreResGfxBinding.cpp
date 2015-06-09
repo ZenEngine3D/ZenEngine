@@ -73,9 +73,9 @@ zGfxView zGfxView::Create( const zArrayBase<zGfxRenderTarget>& _aRTColor, const 
 
 zGfxWindow zGfxWindow::Create( HWND _WindowHandle )
 {
-	zcRes::GfxWindowResDataRef rResData	= zenNewDefault zcRes::GfxWindowResData();
-	rResData->mResID							= EMgr::Export.GetNewResourceID( zenConst::keResType_GfxWindow );
-	rResData->mhWindow						= _WindowHandle;
+	zEngineRef<zcRes::GfxWindowResData> rResData	= zenNewDefault zcRes::GfxWindowResData();
+	rResData->mResID								= EMgr::Export.GetNewResourceID( zenConst::keResType_GfxWindow );
+	rResData->mhWindow								= _WindowHandle;
 	return zcRes::GfxWindow::RuntimeCreate(rResData);
 }
 
@@ -157,7 +157,7 @@ void zGfxMesh::RenderMesh()
 {
 	ZENAssertMsg(mpResource, "No valid resource assigned");
 	zcRes::GfxMeshRef& rMesh = *static_cast<zcRes::GfxMeshRef*>(this);
-	EMgr::GfxRender.Render( rMesh );
+	EMgr::GfxRender.Render( rMesh->GetProxy() );
 }
 
 void zGfxMesh::SetValue(const zShaderParameter& _Value)

@@ -194,7 +194,7 @@ zResID CreateExportItemOffline(zenConst::eResType _eResType, zcExp::ExportInfoBa
 		}break;			
 	#endif
 	}
-	//EMgr::Export.Export( SerialIndex_Base::CreateSerialItem(), pExportInfo );
+	//EMgr::Export.Export( SerialIndex_Base::CreateResourceData(), pExportInfo );
 	//return pExportInfo->mExportResID;
 	return NULL;	
 }

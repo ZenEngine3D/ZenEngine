@@ -5,9 +5,9 @@
 namespace zcExp
 {	
 
-class ResDataGfxInputSignatureDX11 : public ResDataBase
+class ResDataGfxInputSignatureDX11 : public ResourceData
 {
-ZENClassDeclare(ResDataGfxInputSignatureDX11, ResDataBase)
+ZENClassDeclare(ResDataGfxInputSignatureDX11, ResourceData)
 public:
 	virtual bool				Serialize( zcExp::Serializer_Base& _Serializer ){return true;}
 	zArrayStatic<zU8>			maDummyShaderCode;

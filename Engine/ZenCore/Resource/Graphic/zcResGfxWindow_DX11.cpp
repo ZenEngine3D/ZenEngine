@@ -55,12 +55,12 @@ namespace zcRes
 					{
 						//! @todo can't allow access to owner in renderthread, fix this
 						//! @todo clean move code to resize and avoid duplicate
-						GfxRenderTargetResDataRef rResData	= zenNewDefault GfxRenderTargetResData();
+						zEngineRef<GfxRenderTargetResData> rResData	= zenNewDefault GfxRenderTargetResData();
 						rResData->mResID							= EMgr::Export.GetNewResourceID( zenConst::keResType_GfxRenderTarget );
 						rResData->mbSRGB							= TRUE;
-						rResData->meFormat						= meBackbufferColorFormat;
-						rResData->mvDim							= mvSize;
-						rResData->mpBackbuffer					= mDX11pSwapChain;
+						rResData->meFormat							= meBackbufferColorFormat;
+						rResData->mvDim								= mvSize;
+						rResData->mpBackbuffer						= mDX11pSwapChain;
 						
 						GfxRenderTargetRef rBackbufferColor			= GfxRenderTarget::RuntimeCreate(rResData);
 						GfxRenderTargetRef rBackbufferDepth			= zcExp::CreateGfxRenderTarget( meBackbufferDepthFormat, mvSize);						
@@ -92,20 +92,20 @@ namespace zcRes
 
 		if( !mvPendingResize.IsNull() && mvPendingResize != mvSize )
 		{
-			mvSize			= mvPendingResize;			
+			mvSize								= mvPendingResize;			
 			mrProxBackbufferColor->ReleaseBackbuffer();
 			mDX11pSwapChain->ResizeBuffers(0, mvPendingResize.x, mvPendingResize.y, DXGI_FORMAT_UNKNOWN, 0);
 
-			GfxRenderTargetResDataRef rResData	= zenNewDefault GfxRenderTargetResData();
+			zEngineRef<GfxRenderTargetResData> rResData	= zenNewDefault GfxRenderTargetResData();
 			rResData->mResID							= EMgr::Export.GetNewResourceID( zenConst::keResType_GfxRenderTarget );
 			rResData->mbSRGB							= TRUE;
-			rResData->meFormat						= meBackbufferColorFormat;
-			rResData->mvDim							= mvSize;
-			rResData->mpBackbuffer					= mDX11pSwapChain;
+			rResData->meFormat							= meBackbufferColorFormat;
+			rResData->mvDim								= mvSize;
+			rResData->mpBackbuffer						= mDX11pSwapChain;
 			
 			GfxRenderTargetRef rBackbufferColor			= GfxRenderTarget::RuntimeCreate(rResData);
-			GfxRenderTargetRef rBackbufferDepth			= zcExp::CreateGfxRenderTarget( meBackbufferDepthFormat, mvSize);						
-			GfxViewRef rView							= zcExp::CreateGfxView( rBackbufferColor.GetResID(), rBackbufferDepth.GetResID() );
+			GfxRenderTargetRef rBackbufferDepth			= zcExp::CreateGfxRenderTarget(meBackbufferDepthFormat, mvSize);						
+			GfxViewRef rView							= zcExp::CreateGfxView(rBackbufferColor.GetResID(), rBackbufferDepth.GetResID());
 						
 			mrProxBackbufferColor						= rBackbufferColor->GetProxy();
 			mrProxBackbufferDepth						= rBackbufferDepth->GetProxy();

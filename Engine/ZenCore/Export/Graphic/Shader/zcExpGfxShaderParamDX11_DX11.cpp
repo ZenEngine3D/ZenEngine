@@ -14,12 +14,12 @@ bool ExporterGfxShaderParamDX11_DX11::ExportStart()
 	ExportSkipWork();
 	if( Super::ExportStart() )
 	{
-		ExportInfoGfxShaderParam* pExportInfo		= static_cast<ExportInfoGfxShaderParam*>(mpExportInfo);
-		mrResData->mParentParamDefID				= pExportInfo->mParentParamDefID;	
-		ResDataGfxShaderParamDefDX11* pParent	= EMgr::SerialItems.GetItem<ResDataGfxShaderParamDefDX11>(pExportInfo->mParentParamDefID);
-		if( pParent )
+		ExportInfoGfxShaderParam* pExportInfo					= static_cast<ExportInfoGfxShaderParam*>(mpExportInfo);
+		mrResData->mParentParamDefID							= pExportInfo->mParentParamDefID;	
+		zEngineConstRef<ResDataGfxShaderParamDefDX11> rParent	= zcDepot::ResourceData.GetItem<ResDataGfxShaderParamDefDX11>(pExportInfo->mParentParamDefID);
+		if( rParent.IsValid() )
 		{
-			mrResData->maParameterValues			= pParent->maParameterDefaults;
+			mrResData->maParameterValues = rParent->maParameterDefaults;
 			return TRUE;
 		}
 	}

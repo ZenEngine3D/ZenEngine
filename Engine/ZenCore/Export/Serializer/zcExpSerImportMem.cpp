@@ -12,7 +12,7 @@ SerializerImportMem::SerializerImportMem(zU8* apBuffer, zUInt auBufferSize)
 {
 }
 
-bool SerializerImportMem::ItemStarted(zcExp::SerialItem& aItem)
+bool SerializerImportMem::ItemStarted(zcExp::ResourceData& aItem)
 {
 	if( ISerializerImporter::ItemStarted(aItem) )
 	{
@@ -22,7 +22,7 @@ bool SerializerImportMem::ItemStarted(zcExp::SerialItem& aItem)
 	return false;
 }
 
-bool SerializerImportMem::ItemSkip(zcExp::SerialItem& aItem)
+bool SerializerImportMem::ItemSkip(zcExp::ResourceData& aItem)
 {
 	mpMemoryCur = mpMemoryItemStart + aItem.muSize;
 	return true;

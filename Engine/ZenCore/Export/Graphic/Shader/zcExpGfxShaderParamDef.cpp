@@ -3,43 +3,23 @@
 namespace zcExp
 {
 
-#if 0 //SF replaced
 zResID ExportInfoGfxShaderParamDef::CallbackGetItemID(zenConst::eResPlatform _ePlatform, zenConst::eResType _eType, zenConst::eResSource _eSource, const zcExp::ExportInfoBase* _pExportInfo, bool& _bExistOut)
 {
 	ZENAssert(_ePlatform==zenConst::keResPlatform_DX11 && _eType==zenConst::keResType_GfxShaderParamDef);
 	ZENAssert( _pExportInfo );
-	const ExportInfo*			pExportInfo		= static_cast<const ExportInfo*>(_pExportInfo);
-	const SerialShader_DX11*	pParentShader	= EMgr::SerialItems.GetItem<SerialShader_DX11>( pExportInfo->mParentShaderID );	
-	if( pParentShader && pParentShader->maParamDefID.Count() > (zUInt)pExportInfo->meBufferIndex )
+	const ExportInfoGfxShaderParamDef*		pExportInfo		= static_cast<const ExportInfoGfxShaderParamDef*>(_pExportInfo);
+	zEngineConstRef<ResDataGfxShaderDX11>	rParentShader	= zcDepot::ResourceData.GetItem<ResDataGfxShaderDX11>( pExportInfo->mParentShaderID );	
+	if( rParentShader.IsValid() && rParentShader->maParamDefID.Count() > (zUInt)pExportInfo->meBufferIndex )
 	{
-		zResID pPreProcessId = pParentShader->maParamDefID[pExportInfo->meBufferIndex]; //Re-use already processed ID (from shader creation)
-		return zcExp::ValidateItemID(_ePlatform, _eType, _eSource, pPreProcessId.Name(), _bExistOut);
+		zResID pPreProcessId = rParentShader->maParamDefID[pExportInfo->meBufferIndex]; //Re-use already processed ID (from shader creation)		
+		zResID::NameHash _hName = pPreProcessId.GetName();
+		zResID newResID(_hName, _ePlatform, _eType, _eSource);
+		zEngineConstRef<ResourceData> rResData	= zcDepot::ResourceData.GetItemBaseAnySource( newResID );
+		_bExistOut								= rResData.IsValid();
+		return _bExistOut ? rResData->mResID : newResID;
 	}
 	return zResID();		
 }
-#else
-zResID ExportInfoGfxShaderParamDef::CallbackGetItemID(zenConst::eResPlatform _ePlatform, zenConst::eResType _eType, zenConst::eResSource _eSource, const zcExp::ExportInfoBase* _pExportInfo, bool& _bExistOut)
-{
-	ZENAssert(_ePlatform==zenConst::keResPlatform_DX11 && _eType==zenConst::keResType_GfxShaderParamDef);
-	ZENAssert( _pExportInfo );
-	const ExportInfoGfxShaderParamDef*	pExportInfo		= static_cast<const ExportInfoGfxShaderParamDef*>(_pExportInfo);
-	const ResDataGfxShaderDX11*			pParentShader	= EMgr::SerialItems.GetItem<ResDataGfxShaderDX11>( pExportInfo->mParentShaderID );	
-	if( pParentShader && pParentShader->maParamDefID.Count() > (zUInt)pExportInfo->meBufferIndex )
-	{
-		zResID pPreProcessId = pParentShader->maParamDefID[pExportInfo->meBufferIndex]; //Re-use already processed ID (from shader creation)
-		//return zcExp::ValidateItemID(_ePlatform, _eType, _eSource, pPreProcessId.Name(), _bExistOut);
-		//ValidateItemID(zenConst::eResPlatform _ePlatform, zenConst::eResType _eType, zenConst::eResSource _eSource, zResID::NameHash _hName, bool& _bExistOut)
-		{
-			zResID::NameHash _hName = pPreProcessId.Name();
-			zResID newResID(_hName, _ePlatform, _eType, _eSource);
-			zcExp::SerialItem* pItem	= EMgr::SerialItems.GetItemBaseAnySource( newResID );
-			_bExistOut					= pItem != NULL;
-			return _bExistOut ? pItem->mResID : newResID;
-		}
-	}
-	return zResID();		
-}
-#endif
 
 //=================================================================================================
 //! @brief		Create a new Shader Parameter Definition

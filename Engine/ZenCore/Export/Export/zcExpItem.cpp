@@ -4,7 +4,6 @@ namespace zcExp
 {
 	ExportInfoBase::ExportInfoBase()
 	: mExportResID()
-	, mpExportInfoExt(NULL)
 	, mbSuccessStart(TRUE)
 	, mbSuccessWork(TRUE)
 	, mbSuccessEnd(TRUE)
@@ -13,7 +12,6 @@ namespace zcExp
 	
 	ExportInfoBase::~ExportInfoBase()
 	{
-		zenDelNull(mpExportInfoExt);
 	}
 
 	//=================================================================
@@ -60,22 +58,12 @@ namespace zcExp
 	{	
 		if( mpExportInfo->IsSuccess() )
 		{
-			mrResData->muVersion		= SerialItem::sVersions[mpExportInfo->mExportResID.Type()];
+			mrResData->muVersion	= zcDepot::ResourceData.GetEngineVersion(mpExportInfo->mExportResID.GetType());
 			mrResData->mExportTime	= zenSys::GetTimeStamp();			
-			EMgr::SerialItems.SetItem(mrResData.Get()); //! @todo urgent transform SerialItem manager to use refcount
+			zcDepot::ResourceData.SetItem(mrResData);
 		}		
 		EMgr::Export.ExportDone(mrResData.Get()); //! @todo replug this with new system
 		return true;
-	/*	
-		if( mpExportInfo->IsSuccess() )
-		{
-			muVersion		= sVersions[mpExportInfo->mExportResID.Type()];
-			mExportTime		= zenSys::GetTimeStamp();			
-			EMgr::SerialItems.SetItem(this);
-		}		
-		EMgr::Export.ExportDone(this);
-		return true;
-		*/
 	}
 	
 	bool ExporterNone::ExportStart()

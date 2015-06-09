@@ -176,7 +176,7 @@ bool ExporterGfxShaderDX11_DX11::ExportWorkExtractResources()
 				else if( resourceDesc.Type == D3D_SIT_CBUFFER )
 				{
 					ZENAssert(resourceDesc.BindPoint<zcExp::keShaderParamFreq__Count);
-					ProcessShaderParamDef( *pGfxShaderReflection, resourceDesc, mrResData->mResID.Source(), mrResData->maParamDefID[resourceDesc.BindPoint] );
+					ProcessShaderParamDef( *pGfxShaderReflection, resourceDesc, mrResData->mResID.GetSource(), mrResData->maParamDefID[resourceDesc.BindPoint] );
 				}
 			}			
 		}

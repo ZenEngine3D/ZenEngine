@@ -41,13 +41,13 @@ namespace zcRes
 	{
 	ZENClassDeclare(TResource, Resource)
 	public:
-		typedef TClassProxy						ClassProxy;
-		typedef TClassExporter					ClassExporter;
+		typedef TClassProxy					ClassProxy;
+		typedef TClassExporter				ClassExporter;
 		typedef TClassResData				ClassResData;
-		typedef TClassResource					ClassResource;
-		typedef zGameRef<TClassProxy>			ProxyRef;
-		typedef zGameRef<TClassResData>		ResDataRef;
-		typedef zGameRef<TClassResource>		ResourceRef;
+		typedef TClassResource				ClassResource;
+		typedef zEngineRef<TClassProxy>		ProxyRef;
+		typedef zEngineRef<TClassResData>	ResDataRef;
+		typedef zEngineRef<TClassResource>	ResourceRef;
 				
 	protected:
 		//! @todo cleanup
@@ -176,42 +176,44 @@ namespace zcRes
 	typedef ResourceRef<class GfxShaderBinding,		zenRes::zGfxShaderBinding>		GfxShaderBindingRef;
 	
 		
-	typedef zGameRef<GfxSamplerResData>											GfxSamplerResDataRef;
-	typedef zGameRef<GfxStateBlendResData>										GfxStateBlendResDataRef;
-	typedef zGameRef<GfxStateDepthStencilResData>								GfxStateDepthStencilResDataRef;
-	typedef zGameRef<GfxStateRasterizerResData>									GfxStateRasterizerResDataRef;
-	typedef zGameRef<GfxIndexResData>											GfxIndexResDataRef;
-	typedef zGameRef<GfxVertexResData>											GfxVertexResDataRef;	
-	typedef zGameRef<GfxTexture2dResData>										GfxTexture2dResDataRef;
-	typedef zGameRef<GfxRenderTargetResData>										GfxRenderTargetResDataRef;
-	typedef zGameRef<GfxViewResData>												GfxViewResDataRef;	
-	typedef zGameRef<GfxWindowResData>											GfxWindowResDataRef;	
-	typedef zGameRef<GfxShaderResData>											GfxShaderResDataRef;
-	typedef zGameRef<GfxInputStreamResData>										GfxInputStreamResDataRef;
-	typedef zGameRef<GfxInputSignatureResData>									GfxInputSignatureResDataRef;
-	typedef zGameRef<GfxMeshStripResData>										GfxMeshStripResDataRef;
-	typedef zGameRef<GfxShaderParamDefResData>									GfxShaderParamDefResDataRef;
-	typedef zGameRef<GfxShaderParamResData>										GfxShaderParamResDataRef;
-	typedef zGameRef<GfxShaderBindingResData>									GfxShaderBindingResDataRef;
+	typedef zEngineConstRef<GfxSamplerResData>										GfxSamplerResDataRef;
+	typedef zEngineConstRef<GfxStateBlendResData>									GfxStateBlendResDataRef;
+	typedef zEngineConstRef<GfxStateDepthStencilResData>							GfxStateDepthStencilResDataRef;
+	typedef zEngineConstRef<GfxStateRasterizerResData>								GfxStateRasterizerResDataRef;
+	typedef zEngineConstRef<GfxIndexResData>										GfxIndexResDataRef;
+	typedef zEngineConstRef<GfxVertexResData>										GfxVertexResDataRef;	
+	typedef zEngineConstRef<GfxTexture2dResData>									GfxTexture2dResDataRef;
+	typedef zEngineConstRef<GfxRenderTargetResData>									GfxRenderTargetResDataRef;
+	typedef zEngineConstRef<GfxViewResData>											GfxViewResDataRef;	
+	typedef zEngineConstRef<GfxWindowResData>										GfxWindowResDataRef;	
+	typedef zEngineConstRef<GfxShaderResData>										GfxShaderResDataRef;
+	typedef zEngineConstRef<GfxInputStreamResData>									GfxInputStreamResDataRef;
+	typedef zEngineConstRef<GfxInputSignatureResData>								GfxInputSignatureResDataRef;
+	typedef zEngineConstRef<GfxMeshStripResData>									GfxMeshStripResDataRef;
+	typedef zEngineConstRef<GfxMeshResData>											GfxMeshResDataRef;
+	typedef zEngineConstRef<GfxShaderParamDefResData>								GfxShaderParamDefResDataRef;
+	typedef zEngineConstRef<GfxShaderParamResData>									GfxShaderParamResDataRef;
+	typedef zEngineConstRef<GfxShaderBindingResData>								GfxShaderBindingResDataRef;
 			 
-	typedef zGameRef<GfxSamplerProxy>												GfxSamplerProxyRef;
-	typedef zGameRef<GfxStateBlendProxy>											GfxStateBlendProxyRef;
-	typedef zGameRef<GfxStateDepthStencilProxy>										GfxStateDepthStencilProxyRef;
-	typedef zGameRef<GfxStateRasterizerProxy>										GfxStateRasterizerProxyRef;
-	typedef zGameRef<GfxIndexProxy>													GfxIndexProxyRef;
-	typedef zGameRef<GfxVertexProxy>												GfxVertexProxyRef;
-	typedef zGameRef<GfxTexture2dProxy>												GfxTexture2dProxyRef;
-	typedef zGameRef<GfxRenderTargetProxy>											GfxRenderTargetProxyRef;
-	typedef zGameRef<GfxViewProxy>													GfxViewProxyRef;
-	typedef zGameRef<GfxWindowProxy>												GfxWindowViewProxyRef;
-	typedef zGameRef<GfxShaderVertexProxy>											GfxShaderVertexProxyRef;
-	typedef zGameRef<GfxShaderPixelProxy>											GfxShaderPixelProxyRef;
-	typedef zGameRef<GfxInputStreamProxy>											GfxInputStreamProxyRef;
-	typedef zGameRef<GfxInputSignatureProxy>										GfxInputSignatureProxyRef;
-	typedef zGameRef<GfxMeshStripProxy>												GfxMeshStripProxyRef;
-	typedef zGameRef<GfxShaderParamDefProxy>										GfxShaderParamDefProxyRef;
-	typedef zGameRef<GfxShaderParamProxy>											GfxShaderParamProxyRef;
-	typedef zGameRef<GfxShaderBindingProxy>											GfxShaderBindingProxyRef;
+	typedef zEngineRef<GfxSamplerProxy>												GfxSamplerProxyRef;
+	typedef zEngineRef<GfxStateBlendProxy>											GfxStateBlendProxyRef;
+	typedef zEngineRef<GfxStateDepthStencilProxy>									GfxStateDepthStencilProxyRef;
+	typedef zEngineRef<GfxStateRasterizerProxy>										GfxStateRasterizerProxyRef;
+	typedef zEngineRef<GfxIndexProxy>												GfxIndexProxyRef;
+	typedef zEngineRef<GfxVertexProxy>												GfxVertexProxyRef;
+	typedef zEngineRef<GfxTexture2dProxy>											GfxTexture2dProxyRef;
+	typedef zEngineRef<GfxRenderTargetProxy>										GfxRenderTargetProxyRef;
+	typedef zEngineRef<GfxViewProxy>												GfxViewProxyRef;
+	typedef zEngineRef<GfxWindowProxy>												GfxWindowViewProxyRef;
+	typedef zEngineRef<GfxShaderVertexProxy>										GfxShaderVertexProxyRef;
+	typedef zEngineRef<GfxShaderPixelProxy>											GfxShaderPixelProxyRef;
+	typedef zEngineRef<GfxInputStreamProxy>											GfxInputStreamProxyRef;
+	typedef zEngineRef<GfxInputSignatureProxy>										GfxInputSignatureProxyRef;
+	typedef zEngineRef<GfxMeshStripProxy>											GfxMeshStripProxyRef;
+	typedef zEngineRef<GfxMeshProxy>												GfxMeshProxyRef;
+	typedef zEngineRef<GfxShaderParamDefProxy>										GfxShaderParamDefProxyRef;
+	typedef zEngineRef<GfxShaderParamProxy>											GfxShaderParamProxyRef;
+	typedef zEngineRef<GfxShaderBindingProxy>										GfxShaderBindingProxyRef;
 }
 
 #endif

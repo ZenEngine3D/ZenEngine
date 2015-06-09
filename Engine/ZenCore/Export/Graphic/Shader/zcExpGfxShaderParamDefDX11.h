@@ -4,9 +4,9 @@
 
 namespace zcExp
 {
-	class ResDataGfxShaderParamDefDX11 : public ResDataBase
+	class ResDataGfxShaderParamDefDX11 : public ResourceData
 	{
-	ZENClassDeclare(ResDataGfxShaderParamDefDX11, ResDataBase)
+	ZENClassDeclare(ResDataGfxShaderParamDefDX11, ResourceData)
 	public:
 		virtual bool			Serialize( zcExp::Serializer_Base& _Serializer ){return true;}				
 		eShaderParamFreq		meFrequence;		

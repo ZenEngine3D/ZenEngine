@@ -31,16 +31,16 @@ namespace zcExp
 		dTextureBindInfo.SetDefaultValue( ResDataGfxShaderBinding::TextureSlot() );
 		for( zUInt stageIdx(0), stageCount(mrResData->maShaderID.Count()); stageIdx<stageCount; ++stageIdx)
 		{
-			zcExp::ResDataGfxShaderDX11* pSerialShader = EMgr::SerialItems.GetItem<zcExp::ResDataGfxShaderDX11>( mrResData->maShaderID[stageIdx] );
-			if( pSerialShader )
+			zEngineConstRef<ResDataGfxShaderDX11> rShaderData = zcDepot::ResourceData.GetItem<zcExp::ResDataGfxShaderDX11>( mrResData->maShaderID[stageIdx] );
+			if( rShaderData.IsValid() )
 			{				
-				for(zUInt idxTexShader=0; idxTexShader < pSerialShader->maTextureSamplerSlot.Count(); ++idxTexShader)
+				for(zUInt idxTexShader=0; idxTexShader < rShaderData->maTextureSamplerSlot.Count(); ++idxTexShader)
 				{						
-					ResDataGfxShaderDX11::BindInfo& SlotInfoIn			= pSerialShader->maTextureSamplerSlot[idxTexShader];
- 				 	zHash32 hTextureName									= pSerialShader->maTextureSamplerName[idxTexShader];					
+					const ResDataGfxShaderDX11::BindInfo& SlotInfoIn	= rShaderData->maTextureSamplerSlot[idxTexShader];
+ 				 	zHash32 hTextureName								= rShaderData->maTextureSamplerName[idxTexShader];					
  					ResDataGfxShaderBinding::TextureSlot& SlotInfoOut	= dTextureBindInfo.GetAdd(hTextureName);
- 					SlotInfoOut.muSlot[stageIdx]							= SlotInfoIn.uSlot;
- 					SlotInfoOut.muCount[stageIdx]							= SlotInfoIn.uCount;	
+ 					SlotInfoOut.muSlot[stageIdx]						= SlotInfoIn.uSlot;
+ 					SlotInfoOut.muCount[stageIdx]						= SlotInfoIn.uCount;	
 				}
 			}
 		}	
@@ -54,10 +54,10 @@ namespace zcExp
 		for(zUInt paramDefIdx(0), paramDefCount(mrResData->maParamDefID.Count()); paramDefIdx<paramDefCount; ++paramDefIdx )
 		{
 			ZENAssert( paramDefIdx < mrResData->maParameterMask.SizeElement() );			
-			const ResDataGfxShaderParamDefDX11* pParamDef = EMgr::SerialItems.GetItem<const ResDataGfxShaderParamDefDX11>( mrResData->maParamDefID[paramDefIdx] );
-			if( pParamDef )
+			zEngineConstRef<ResDataGfxShaderParamDefDX11> rParamDef = zcDepot::ResourceData.GetItem<ResDataGfxShaderParamDefDX11>( mrResData->maParamDefID[paramDefIdx] );
+			if( rParamDef.IsValid() )
 			{
-				zcExp::ShaderParamItemInfoMap::Iterator it(pParamDef->mdParameters);
+				zcExp::ShaderParamItemInfoMap::Iterator it(rParamDef->mdParameters);
 				while( it.IsValid() )
 				{
 					dParamDefPerName.GetAdd(it.GetKey()) |= 1<<paramDefIdx;

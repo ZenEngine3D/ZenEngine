@@ -13,9 +13,9 @@ namespace zcExp
 		static zResID			CallbackGetItemID(zenConst::eResPlatform _ePlatform, zenConst::eResType _eType, zenConst::eResSource _eSource, const ExportInfoBase* _pExportInfo, bool& _bExistOut);
 	};
 	
-	class ResDataGfxView : public ResDataBase
+	class ResDataGfxView : public ResourceData
 	{
-	ZENClassDeclare(ResDataGfxView, ResDataBase)
+	ZENClassDeclare(ResDataGfxView, ResourceData)
 	public:
 		virtual bool			Serialize( zcExp::Serializer_Base& _Serializer ){return true;}		
 		zArrayStatic<zResID>	maTargetColorID;
@@ -29,10 +29,10 @@ namespace zcExp
 	ZENClassDeclare(ExporterGfxView, ExporterBase)
 	public:				
 	typedef ResDataGfxView		ResData;
-	typedef zGameRef<ResData>	ResDataRef;
-									ExporterGfxView(const ResDataRef& _rResData);
+	typedef zEngineRef<ResData>	ResDataRef;
+								ExporterGfxView(const ResDataRef& _rResData);
 	protected:	
-		virtual bool				ExportStart();		
+		virtual bool			ExportStart();		
 		ResDataRef				mrResData;
 	};
 

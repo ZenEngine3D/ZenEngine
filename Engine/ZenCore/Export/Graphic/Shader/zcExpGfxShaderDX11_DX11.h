@@ -8,15 +8,15 @@ namespace zcExp
 	{
 	ZENClassDeclare(ExporterGfxShaderDX11_DX11, ExporterBase)
 	public:				
-		typedef ResDataGfxShaderDX11 ResData;
-		typedef zGameRef<ResData>	ResDataRef;
+		typedef ResDataGfxShaderDX11	ResData;
+		typedef zEngineRef<ResData>		ResDataRef;
 										ExporterGfxShaderDX11_DX11(const ResDataRef& _rResData);		
 	protected:	
 		virtual bool					ExportWork(bool _bIsTHRTask);
 		virtual bool					ExportEnd();
 		bool							ExportWorkCompile();
 		bool							ExportWorkExtractResources();		
-		ResDataRef					mrResData;
+		ResDataRef						mrResData;
 	};
 }
 

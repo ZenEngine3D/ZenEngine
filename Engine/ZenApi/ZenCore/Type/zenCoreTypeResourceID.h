@@ -100,15 +100,15 @@ namespace zen { namespace zenType {
 		zResID():mhName(""), meType(zenConst::keResType__Invalid), mePlatform(zenConst::keResPlatform__Invalid), meSource(zenConst::keResSource_Runtime){}
 		zResID(NameHash _hName, zenConst::eResPlatform _ePlatform, zenConst::eResType _eType, zenConst::eResSource _eSource):mhName(_hName), meType(_eType), mePlatform(_ePlatform), meSource(_eSource){}								
 
-		ZENInline const NameHash&			Name()const							{ return mhName; }
-		ZENInline zenConst::eResType		Type()const							{ return static_cast<zenConst::eResType>(meType); }
-		ZENInline zenConst::eResPlatform	Platform()const						{ return static_cast<zenConst::eResPlatform>(mePlatform); } 
-		ZENInline zenConst::eResSource		Source()const						{ return static_cast<zenConst::eResSource>(meSource); }
-		ZENInline zU64						HashID()const						{ return muHashID; }
+		ZENInline const NameHash&			GetName()const						{ return mhName; }
+		ZENInline zenConst::eResType		GetType()const						{ return static_cast<zenConst::eResType>(meType); }
+		ZENInline zenConst::eResPlatform	GetPlatform()const					{ return static_cast<zenConst::eResPlatform>(mePlatform); } 
+		ZENInline zenConst::eResSource		GetSource()const					{ return static_cast<zenConst::eResSource>(meSource); }
+		ZENInline zU64						GetHashID()const					{ return muHashID; }
 		ZENInline void						SetName(NameHash _hName)			{ mhName = _hName; }
 		ZENInline void						SetType(zenConst::eResType _eResType)			{ meType = _eResType; }
 		ZENInline void						SetPlatform(zenConst::eResPlatform _ePlatform)	{ mePlatform = _ePlatform; }
-		ZENInline void						SetSource(zenConst::eResSource _eSource)			{ meSource = _eSource; }
+		ZENInline void						SetSource(zenConst::eResSource _eSource)		{ meSource = _eSource; }
 		ZENInline bool						IsRuntime()const					{ return meSource==zenConst::keResSource_Runtime; }
 		ZENInline bool						IsExport()const						{ return meSource==zenConst::keResSource_Offline; }
 		ZENInline bool						IsLoaded()const						{ return meSource==zenConst::keResSource_Loaded; }

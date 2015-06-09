@@ -30,7 +30,7 @@ namespace zcExp
 		virtual bool	Serialize(zArrayBase<zI32>&	aValues){muSerializeSize += sizeof(zU32)+aValues.Size(); return true;}
 		virtual bool	Serialize(zArrayBase<zI64>&	aValues){muSerializeSize += sizeof(zU32)+aValues.Size(); return true;}
 
-		virtual bool	ItemStarted(zcExp::SerialItem& aItem)
+		virtual bool	ItemStarted(zcExp::ResourceData& aItem)
 		{
 			muSerializeSize = 0;			
 			return true;

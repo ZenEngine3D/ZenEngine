@@ -35,20 +35,20 @@ void Serializer_Base::SerializeStop()
 //! @brief		Called when an item failed to serialized
 //! @details	Childclass should skip to next item here
 //=================================================================================================
-bool Serializer_Base::ItemSkip(SerialItem& aItem)
+bool Serializer_Base::ItemSkip(ResourceData& aItem)
 {
 	++muItemFailed;
 	return true;
 }
 
 //=================================================================================================
-//! @brief		Called when starting a new SerialItem
+//! @brief		Called when starting a new ResourceData
 //! @details	Entry point when a new resource is being serialized
 //-------------------------------------------------------------------------------------------------
-//! @param		aItem - SerialItem to serialize
+//! @param		aItem - ResourceData to serialize
 //! @return		True if successful
 //=================================================================================================
-bool Serializer_Base::ItemSerialize(SerialItem& aItem)
+bool Serializer_Base::ItemSerialize(ResourceData& aItem)
 {
 	if( ItemStarted(aItem) && Serialize(aItem) )
 	{
@@ -65,10 +65,10 @@ bool Serializer_Base::ItemSerialize(SerialItem& aItem)
 //! @brief		Callback when a new item started
 //! @details	Child class can do special processing here
 //-------------------------------------------------------------------------------------------------
-//! @param		aItem - New SerialItem started
+//! @param		aItem - New ResourceData started
 //! @return		True successful
 //=================================================================================================
-bool Serializer_Base::ItemStarted(SerialItem& aItem)
+bool Serializer_Base::ItemStarted(ResourceData& aItem)
 {
 	++muItemProcessed;
 	return true;
@@ -78,10 +78,10 @@ bool Serializer_Base::ItemStarted(SerialItem& aItem)
 //! @brief		Callback when a item completed serializing
 //! @details	Child class can do special processing here
 //-------------------------------------------------------------------------------------------------
-//! @param		aItem - SerialItem completed
+//! @param		aItem - ResourceData completed
 //! @return		True successful
 //=================================================================================================
-bool Serializer_Base::ItemEnded(SerialItem& aItem)
+bool Serializer_Base::ItemEnded(ResourceData& aItem)
 {
 	return true;
 }	
@@ -126,14 +126,14 @@ bool Serializer_Base::Serialize(ISerialize&	_Value)
 //! @brief		Serialize a zResID
 //! @details	Will convert the source from 'Export' to 'Loaded'
 //-------------------------------------------------------------------------------------------------
-//! @param		_Value - SerialItem ResourceId to save/load
+//! @param		_Value - ResourceData ResourceId to save/load
 //! @return		True successful
 //=================================================================================================
 bool Serializer_Base::Serialize(zResID& _Value)
 {	
 	if( GetStatus() == keStatus_Exporting)
 	{
-		ZENAssertMsg(_Value.IsExport(), "Can only save export SerialItem.");
+		ZENAssertMsg(_Value.IsExport(), "Can only save export ResourceData.");
 		zResID ResId(_Value);
 		ResId.SetSource(zenConst::keResSource_Loaded);
 		return Serialize(*(zU64*)&ResId);	
@@ -143,12 +143,12 @@ bool Serializer_Base::Serialize(zResID& _Value)
 
 //=================================================================================================
 //! @brief		Callback when a new item started
-//! @details	Exporter find out SerialItem size, before exporting it
+//! @details	Exporter find out ResourceData size, before exporting it
 //-------------------------------------------------------------------------------------------------
-//! @param		aItem - New SerialItem started
+//! @param		aItem - New ResourceData started
 //! @return		True successful
 //=================================================================================================
-bool ISerializerExporter::ItemStarted(SerialItem& aItem)
+bool ISerializerExporter::ItemStarted(ResourceData& aItem)
 {
 	Serializer_Base::ItemStarted(aItem);
 	SerializerGetSize oGetItemSize;
@@ -159,7 +159,7 @@ bool ISerializerExporter::ItemStarted(SerialItem& aItem)
 	{
 		aItem.muSize		= oGetItemSize.GetSerializeSize();			
 		aItem.mExportTime	= 0;
-		aItem.muVersion		= SerialItem::sVersions[aItem.mResID.meType];
+		aItem.muVersion		= zcDepot::ResourceData.GetEngineVersion( aItem.mResID.GetType() );
 		return true;
 	}
 	return false;

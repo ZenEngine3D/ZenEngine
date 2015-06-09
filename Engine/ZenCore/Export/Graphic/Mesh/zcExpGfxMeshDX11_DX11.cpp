@@ -14,13 +14,13 @@ namespace zcExp
 			return false;
 	
 		ExportInfoGfxMesh* pExportInfo	= static_cast<ExportInfoGfxMesh*>(mpExportInfo);
-		mrResData->maMeshStripID			= pExportInfo->maMeshStripID;
+		mrResData->maMeshStripID		= pExportInfo->maMeshStripID;
 
 		// Make sure all MeshStrip are valid
 		for(zUInt stripIdx(0), stripCount(mrResData->maMeshStripID.Count()); stripIdx<stripCount; ++stripIdx)
 		{
 			zResID resID = mrResData->maMeshStripID[stripIdx];
-			if( resID.Type()!=zenConst::keResType_GfxMeshStrip || !EMgr::SerialItems.GetItem<ResDataGfxMeshStripDX11>(resID) )
+			if( resID.GetType()!=zenConst::keResType_GfxMeshStrip || zcDepot::ResourceData.GetItem<ResDataGfxMeshStripDX11>(resID).IsValid()==false )
 				return false;
 		}
 

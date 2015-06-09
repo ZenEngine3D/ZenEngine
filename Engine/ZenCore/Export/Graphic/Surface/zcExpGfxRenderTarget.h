@@ -11,9 +11,9 @@ namespace zcExp
 		bool								mbSRGB;
 	};
 
-	class ResDataGfxRenderTarget : public ResDataBase
+	class ResDataGfxRenderTarget : public ResourceData
 	{
-	ZENClassDeclare(ResDataGfxRenderTarget, ResDataBase)
+	ZENClassDeclare(ResDataGfxRenderTarget, ResourceData)
 	public:
 											ResDataGfxRenderTarget(){mpBackbuffer=NULL;}
 		virtual bool						Serialize( zcExp::Serializer_Base& _Serializer ){return true;}		
@@ -28,10 +28,10 @@ namespace zcExp
 	ZENClassDeclare(ExporterGfxRenderTarget, ExporterBase)
 	public:				
 	typedef ResDataGfxRenderTarget		ResData;
-	typedef zGameRef<ResData>			ResDataRef;
-											ExporterGfxRenderTarget(const ResDataRef& _rResData);
+	typedef zEngineRef<ResData>			ResDataRef;
+										ExporterGfxRenderTarget(const ResDataRef& _rResData);
 	protected:	
-		virtual bool						ExportStart();		
+		virtual bool					ExportStart();		
 		ResDataRef						mrResData;
 	};
 

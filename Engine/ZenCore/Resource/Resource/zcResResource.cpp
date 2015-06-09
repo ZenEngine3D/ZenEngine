@@ -27,7 +27,7 @@ bool Resource::Initialize( )
 {
 	if( ResourceInit() && EMgr::Resources.Add(this).IsValid() )
 	{
-		glstResourceActive[mResID.Type()].PushHead(*this);
+		glstResourceActive[mResID.GetType()].PushHead(*this);
 		return true;
 	}
 	return false;

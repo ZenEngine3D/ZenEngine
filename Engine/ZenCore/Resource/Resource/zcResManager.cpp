@@ -15,25 +15,8 @@ zResID RuntimeCreateResource(zcExp::ExportInfoBase* _pExportInfo)
 {
 	ZENAssert(_pExportInfo);
 	zenRes::zResourceRef rResource;
-	switch( _pExportInfo->mExportResID.Type() )
+	switch( _pExportInfo->mExportResID.GetType() )
 	{	
-//	case zenConst::keResType_GfxShaderParamDef:			rResource = zGfxShaderParamDef::Create(*_pExportInfo);		break;
-//	case zenConst::keResType_GfxShaderParam:			rResource = zGfxShaderParam::Create(*_pExportInfo);			break;
-//	case zenConst::keResType_GfxShaderBinding:			rResource = zGfxShaderBinding::Create(*_pExportInfo);		break;
-//	case zenConst::keResType_GfxIndex:					rResource = zGfxIndex::Create(*_pExportInfo);				break;
-//	case zenConst::keResType_GfxVertex:					rResource = zGfxVertex::Create(*_pExportInfo);				break;
-//	case zenConst::keResType_GfxTexture2D:				rResource = zGfxTexture2D::Create(*_pExportInfo);			break;
-//	case zenConst::keResType_GfxRenderTarget:			rResource = zGfxRenderTarget::Create(*_pExportInfo);		break;
-//	case zenConst::keResType_GfxView:					rResource = zGfxView::Create(*_pExportInfo);				break;
-//	case zenConst::keResType_GfxWindow:					rResource = zGfxWindow::Create(*_pExportInfo);				break;
-//	case zenConst::keResType_GfxMeshStrip:				rResource = zGfxMeshStrip::Create(*_pExportInfo);			break;
-//	case zenConst::keResType_GfxMesh:					rResource = zGfxMesh::Create(*_pExportInfo);				break;
-//	case zenConst::keResType_GfxInputStream:			rResource = zGfxInputStream::Create(*_pExportInfo);			break;
-//	case zenConst::keResType_GfxInputSignature:			rResource = zGfxInputSignature::Create(*_pExportInfo);		break;	
-//	case zenConst::keResType_GfxBlend:					rResource = zGfxBlend::Create(*_pExportInfo);				break;
-//	case zenConst::keResType_GfxDepthStencil:			rResource = zGfxDepthStencil::Create(*_pExportInfo);		break;
-//	case zenConst::keResType_GfxRasterizer:				rResource = zGfxRasterizer::Create(*_pExportInfo);			break;
-
 	case zenConst::keResType_GfxSampler:				rResource = GfxSampler::RuntimeExport(*_pExportInfo);			break;
 	case zenConst::keResType_GfxBlend:					rResource = GfxStateBlend::RuntimeExport(*_pExportInfo);		break;
 	case zenConst::keResType_GfxDepthStencil:			rResource = GfxStateDepthStencil::RuntimeExport(*_pExportInfo);	break;
@@ -94,8 +77,8 @@ zenRes::zResourceRef ManagerResource::GetResource(const zResID& _ResID, bool _bS
 {
 	//ZENAssert(_ResID.IsValid());cd
 	zenRes::zResource* pResource;
-	if( mdResources.Get(_ResID.HashID(), pResource) )	return pResource;
-	else if(_bSupportDefault )							return maResourcesDefault[_ResID.Type()];
+	if( mdResources.Get(_ResID.GetHashID(), pResource) )	return pResource;
+	else if(_bSupportDefault )							return maResourcesDefault[_ResID.GetType()];
 	else												return (zenRes::zResource*)NULL;
 }
 
@@ -113,15 +96,15 @@ zenRes::zResourceRef ManagerResource::GetResourceAnySource(const zResID& _ResID,
 	zenRes::zResource* pResource;
 	zResID anySourceResID(_ResID);
 	anySourceResID.SetSource(zenConst::keResSource_Loaded);
-	if( mdResources.Get(_ResID.HashID(), pResource) )	
+	if( mdResources.Get(_ResID.GetHashID(), pResource) )	
 	{
 		return pResource;
 	}
 	else
 	{
 		anySourceResID.SetSource(zenConst::keResSource_Runtime);	
-		if( mdResources.Get(_ResID.HashID(), pResource) )	return pResource;
-		else if(_bSupportDefault )							return maResourcesDefault[_ResID.Type()];
+		if( mdResources.Get(_ResID.GetHashID(), pResource) )	return pResource;
+		else if(_bSupportDefault )							return maResourcesDefault[_ResID.GetType()];
 		else												return (zenRes::zResource*)NULL;
 	}
 }
@@ -136,7 +119,7 @@ zenRes::zResourceRef ManagerResource::Add(zenRes::zResource* _pResource)
 {
 	if( _pResource && _pResource->IsValid() )	
 	{
-		mdResources.Set(_pResource->GetResID().HashID(), _pResource);
+		mdResources.Set(_pResource->GetResID().GetHashID(), _pResource);
 		return _pResource;
 	}
 	return (zenRes::zResource*)NULL;

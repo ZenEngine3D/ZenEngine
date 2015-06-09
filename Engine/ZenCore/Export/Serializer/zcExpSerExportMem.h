@@ -46,7 +46,7 @@ public:
 	virtual bool	Serialize(zArrayBase<zI32>&	_aValues);
 	virtual bool	Serialize(zArrayBase<zI64>&	_aValues);
 protected:
-	virtual bool	ItemStarted(zcExp::SerialItem& aItem);
+	virtual bool	ItemStarted(zcExp::ResourceData& aItem);
 
 	//! @todo Missing: Support skipping failed item
 	//virtual bool	ItemSkip(ExportItem& aItem);

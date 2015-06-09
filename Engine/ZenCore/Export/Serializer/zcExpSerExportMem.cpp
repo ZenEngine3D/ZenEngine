@@ -18,7 +18,7 @@ SerializerExportMem::~SerializerExportMem()
 	}
 }
 
-bool SerializerExportMem::ItemStarted(zcExp::SerialItem& aItem)
+bool SerializerExportMem::ItemStarted(zcExp::ResourceData& aItem)
 {
 	if( ISerializerExporter::ItemStarted( aItem ) )
 	{

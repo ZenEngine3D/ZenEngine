@@ -23,14 +23,11 @@
 //=================================================================================================
 
 //=================================================================================================
-//! @file		libZenBaseBase.h
+//! @file		zbBase.h
 //! @brief		Base header file to include in every other header files.
 //! @details	Contains basic data type definitions, etc...
 //=================================================================================================
-#ifdef ZEN_ENGINELIB
-#undef ZEN_ENGINELIB
-#endif
-#define ZEN_ENGINELIB 1
+#define ZEN_ENGINELIB 1 
 
 #include <ZenBase/zenBase.h>
 #include <Engine/ZenBase/Type/zbType.h>

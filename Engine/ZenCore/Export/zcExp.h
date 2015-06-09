@@ -18,11 +18,12 @@
 //=================================================================================================
 
 #include "Export/Serializer/zcExpSerItem.h"
-#include "Export/Serializer/zcExpSerType.h"
-#include "Export/Serializer/zcExpSerSerializer.h"
-#include "Export/Serializer/zcExpSerItemManager.h"
+#include "Serializer/zcExpSerType.h"
+#include "Serializer/zcExpSerSerializer.h"
+#include "Export/zcExpResourceDataDepot.h"
 #include "Export/zcExpItem.h"
 #include "Export/zcExpTask.h"
+
 #include "Serializer/zcExpSerGetSize.h"
 #include "Serializer/zcExpSerExportMem.h"
 #include "Serializer/zcExpSerImportMem.h"

@@ -26,7 +26,7 @@ namespace zcExp
 	{
 		static zenMem::zAllocatorPool sMemPool("Pool CreateMesh", sizeof(ExportInfoGfxMesh), 1, 5 );
 		ExportInfoGfxMesh* pExportInfo	= zenNew(&sMemPool) ExportInfoGfxMesh;
-		pExportInfo->maMeshStripID			= _aMeshStripID;	
+		pExportInfo->maMeshStripID		= _aMeshStripID;	
 		return EMgr::Export.CreateItem( zResID::kePlatformType_GFX, zenConst::keResType_GfxMesh, pExportInfo );
 	}
 

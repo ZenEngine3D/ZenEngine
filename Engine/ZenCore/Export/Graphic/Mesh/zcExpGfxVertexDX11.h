@@ -5,9 +5,9 @@
 namespace zcExp
 {
 
-class ResDataGfxVertexDX11 : public ResDataBase
+class ResDataGfxVertexDX11 : public ResourceData
 {
-ZENClassDeclare(ResDataGfxVertexDX11, ResDataBase)
+ZENClassDeclare(ResDataGfxVertexDX11, ResourceData)
 public:
 	class Stream : public zcExp::ISerialize
 	{
