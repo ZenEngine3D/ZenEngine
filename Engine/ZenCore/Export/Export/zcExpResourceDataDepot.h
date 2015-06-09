@@ -1,0 +1,56 @@
+#pragma once
+#ifndef __zCore_Exp_ResourceData_Manager_h__
+#define __zCore_Exp_ResourceData_Manager_h__
+
+namespace zcExp
+{
+
+class DepotResourceData : public zbType::Manager
+{
+ZENClassDeclare(DepotResourceData, zbType::Manager)
+public:
+										DepotResourceData();			
+	void								SetItem(const zEngineRef<ResourceData>& _rResData);
+	
+	zEngineConstRef<ResourceData>		GetItemBase(const zResID _ResID);
+	zEngineConstRef<ResourceData>		GetItemBaseAnySource(const zResID _ResID);
+	bool								IsValid(const zResID _ResID);
+	bool								IsValid(const zArrayBase<zResID>& _aResID);
+
+	zenConst::eEngineVersion			GetEngineVersion(zenConst::eResType _eResType)const;
+
+	//! @todo clean should check object type
+	template<class TType>
+	zEngineConstRef<TType> GetItem(const zResID _ResID)
+	{
+		zEngineConstRef<ResourceData> rResData = GetItemBase(_ResID);
+		if( rResData.IsValid() )
+			return static_cast<const TType*>(rResData.Get());
+		return NULL;
+	} 
+
+	template<class TType>
+	zEngineConstRef<TType> GetItemAnySource(const zResID _ResID)
+	{
+		zEngineConstRef<ResourceData> rResData = GetItemBaseAnySource(_ResID);
+		if( rResData.IsValid() )
+			return static_cast<const TType*>(rResData.Get());
+		return NULL;
+	}
+	
+protected:
+	zMap<zEngineRef<ResourceData>>::Key64	mdResourceData;		
+	
+//---------------------------------------------------------
+// ManagerBase Section
+//---------------------------------------------------------
+public:
+	virtual	bool	Load();
+	virtual	bool	Unload();
+};
+
+}
+
+namespace zcDepot{ extern zcExp::DepotResourceData ResourceData; }
+
+#endif

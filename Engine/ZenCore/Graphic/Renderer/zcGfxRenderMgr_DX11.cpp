@@ -88,14 +88,12 @@ void ManagerRender::FrameEnd()
 	Super::FrameEnd();
 }
 
-//! @todo urgent replace GfxMeshRef by GfxMeshProxyRef
-void ManagerRender::Render(zcRes::GfxMeshRef _rMesh)
+void ManagerRender::Render(zcRes::GfxMeshProxyRef _rMesh)
 {
-	for(zUInt stripIdx(0), stripCount(_rMesh->GetProxy()->marProxGfxMeshStrip.Count()); stripIdx<stripCount; ++stripIdx )
-		Render( _rMesh->GetProxy()->marProxGfxMeshStrip[stripIdx] );
+	for(zUInt stripIdx(0), stripCount(_rMesh->marProxGfxMeshStrip.Count()); stripIdx<stripCount; ++stripIdx )
+		Render( _rMesh->marProxGfxMeshStrip[stripIdx] );
 }
 
-//! @todo urgent replace GfxMeshStripRef by GfxMeshStripProxyRef
 void ManagerRender::Render(zcRes::GfxMeshStripProxyRef _rMeshStrip)
 {	
 	EMgr::GfxState.PipelineUpdate();

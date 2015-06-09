@@ -76,7 +76,7 @@ namespace zcExp
 		ZENAssert(_ePlatform==zenConst::keResPlatform_DX11 && _eType==zenConst::keResType_GfxSampler);
 		ZENAssert( _pExportInfo );
 		const ExportInfoGfxSampler* pExportInfo	= static_cast<const ExportInfoGfxSampler*>(_pExportInfo);
-		zUInt uSize							= ZENMemberOffsetAfter(ExportInfoGfxSampler, mvBorderColor) - ZENMemberOffset(ExportInfoGfxSampler, meFilterMin);
+		zUInt uSize								= ZENMemberOffsetAfter(ExportInfoGfxSampler, mvBorderColor) - ZENMemberOffset(ExportInfoGfxSampler, meFilterMin);
 		zResID::NameHash hName((void*)&pExportInfo->meFilterMin, uSize); 
 		return zcExp::ValidateItemID(_ePlatform, _eType, _eSource, hName, _bExistOut);
 	}

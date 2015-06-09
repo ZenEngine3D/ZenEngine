@@ -1,16 +1,42 @@
 #include "zcCore.h"
 
-namespace EMgr{ zcExp::ManagerSerialItem SerialItems; }
+namespace zcDepot{ zcExp::DepotResourceData ResourceData; }
 
 namespace zcExp
 {
-	
+
+const zenConst::eEngineVersion gResourceVersions[]=
+{
+	//--- GFX ---
+	zenConst::keEngineVersion_Initial,		//keResType_GfxShaderPixel,
+	zenConst::keEngineVersion_Initial,		//keResType_GfxShaderVertex,			
+	zenConst::keEngineVersion_Initial,		//keResType_GfxShaderParamDef,
+	zenConst::keEngineVersion_Initial,		//keResType_GfxShaderParam,
+	zenConst::keEngineVersion_Initial,		//keResType_GfxShaderBinding,		
+	zenConst::keEngineVersion_Initial,		//keResType_GfxRenderTarget,
+	zenConst::keEngineVersion_Initial,		//keResType_GfxView,
+	zenConst::keEngineVersion_Initial,		//keResType_GfxWindow,
+	zenConst::keEngineVersion_Initial,		//keResType_GfxIndex,
+	zenConst::keEngineVersion_Initial,		//keResType_GfxVertex,			
+	zenConst::keEngineVersion_Initial,		//keResType_GfxTexture2D,
+	zenConst::keEngineVersion_Initial,		//keResType_GfxSampler,
+	zenConst::keEngineVersion_Initial,		//keResType_GfxBlend,
+	zenConst::keEngineVersion_Initial,		//keResType_GfxDepthStencil,
+	zenConst::keEngineVersion_Initial,		//keResType_GfxRasterizer,
+	zenConst::keEngineVersion_Initial,		//keResType_GfxMeshStrip,
+	zenConst::keEngineVersion_Initial,		//keResType_GfxMesh,
+	zenConst::keEngineVersion_Initial,		//keResType_GfxInputStream,
+	zenConst::keEngineVersion_Initial,		//keResType_GfxInputSignature,
+	zenConst::keEngineVersion_Initial,		//keResType_GfxRenderPass,
+};
+
 //=================================================================================================
 //! @brief		Constructor
 //=================================================================================================
-ManagerSerialItem::ManagerSerialItem()
-: mdSerialItems(256)
+DepotResourceData::DepotResourceData()
+: mdResourceData(256)
 {	
+	ZENStaticAssert( ZENArrayCount(gResourceVersions)==zenConst::keResType__Count );
 }
 
 //=================================================================================================
@@ -19,9 +45,9 @@ ManagerSerialItem::ManagerSerialItem()
 //!-----------------------------------------------------------------------------
 //! @return		True if init was successful
 //=================================================================================================
-bool ManagerSerialItem::Load()
+bool DepotResourceData::Load()
 {	
-	mdSerialItems.SetDefaultValue(NULL);
+	mdResourceData.SetDefaultValue(NULL);
 	return true;
 }
 
@@ -31,24 +57,20 @@ bool ManagerSerialItem::Load()
 //--------------------------------------------------------------------------------------------------
 //! @return		True if unload was successful
 //=================================================================================================
-bool ManagerSerialItem::Unload()
+bool DepotResourceData::Unload()
 {
 	return true;
 } 
 
 //=================================================================================================
-//! @brief		Store a new SerialItem 
+//! @brief		Store a new ResourceData 
 //! @details	If a previous serial item existed, will remove it first
 //=================================================================================================
-void ManagerSerialItem::SetItem(zcExp::SerialItem* _pItem)
+void DepotResourceData::SetItem(const zEngineRef<ResourceData>& _rResData)
 {
-	zcExp::SerialItem* pOldSerialItem;
-	if( mdSerialItems.SetReplace(_pItem->mResID.HashID(), _pItem, pOldSerialItem) )
-	{
-		// Item already existed, need to delete it
-		//! @todo Important: Actually take into account resource still using this item, this will crash if not taken care of (to delete list?)
-		zenDelNull(pOldSerialItem);
-	}
+	ZENAssert(_rResData.IsValid());
+	zEngineRef<ResourceData> rResDataOld;
+	mdResourceData.SetReplace(_rResData->mResID.GetHashID(), _rResData, rResDataOld);
 } 
 
 //=================================================================================================
@@ -57,40 +79,40 @@ void ManagerSerialItem::SetItem(zcExp::SerialItem* _pItem)
 //-------------------------------------------------------------------------------------------------
 //! @return 	
 //=================================================================================================
-SerialItem* ManagerSerialItem::GetItemBase(const zResID _ResID)
+zEngineConstRef<ResourceData> DepotResourceData::GetItemBase(const zResID _ResID)
 {
-	zcExp::SerialItem* pSerialItem(NULL);
-	mdSerialItems.Get( _ResID.HashID(), pSerialItem );
-	return pSerialItem;
+	zEngineRef<ResourceData> rResData;
+	mdResourceData.Get( _ResID.GetHashID(), rResData );
+	return rResData;
 } 
 
 //=================================================================================================
-//! @brief		Find and return the SerialItem with a particular zResID
-//! @details	This version try to look in all possible SerialItem Sources, not limited to  
+//! @brief		Find and return the ResourceData with a particular zResID
+//! @details	This version try to look in all possible ResourceData Sources, not limited to  
 //!				the one provided in the zResID parameter.
 //!				Some generated zResID can be created on the fly or already loaded, useful
 //!				for those cases where we create a resource that depends on another one
 //-------------------------------------------------------------------------------------------------
 //! @param		_ResID				- zResID to look for
-//! @return 	void* to SerialItem
+//! @return 	void* to ResourceData
 //=================================================================================================
-SerialItem* ManagerSerialItem::GetItemBaseAnySource(const zResID _ResID)
+zEngineConstRef<ResourceData> DepotResourceData::GetItemBaseAnySource(const zResID _ResID)
 {
 	ZENAssert(_ResID.IsValid());
-	zcExp::SerialItem* pSerialItem(NULL);
+	zEngineRef<ResourceData> rResData;
 	zResID anySourceResID(_ResID);
 
 	anySourceResID.SetSource(zenConst::keResSource_Loaded);
-	if( mdSerialItems.Get(_ResID.HashID(), pSerialItem) )	
-		return pSerialItem;
+	if( mdResourceData.Get(_ResID.GetHashID(), rResData) )	
+		return rResData;
 
 	anySourceResID.SetSource(zenConst::keResSource_Runtime);	
-	if( mdSerialItems.Get(_ResID.HashID(), pSerialItem) )	
-		return pSerialItem;
+	if( mdResourceData.Get(_ResID.GetHashID(), rResData) )	
+		return rResData;
 	
 	anySourceResID.SetSource(zenConst::keResSource_Offline);	
-	if( mdSerialItems.Get(_ResID.HashID(), pSerialItem) )	
-		return pSerialItem;
+	if( mdResourceData.Get(_ResID.GetHashID(), rResData) )	
+		return rResData;
 		
 	return NULL;	
 }
@@ -102,9 +124,9 @@ SerialItem* ManagerSerialItem::GetItemBaseAnySource(const zResID _ResID)
 //! @param		_ResID				- zResID to look for
 //! @return 	true if valid
 //=================================================================================================
-bool ManagerSerialItem::IsValid(const zResID _ResID)
+bool DepotResourceData::IsValid(const zResID _ResID)
 {
-	return mdSerialItems.Exist(_ResID.HashID());
+	return mdResourceData.Exist(_ResID.GetHashID());
 }
 
 //=================================================================================================
@@ -114,17 +136,23 @@ bool ManagerSerialItem::IsValid(const zResID _ResID)
 //! @param		_ResID				- zResID to look for
 //! @return 	true if valid
 //=================================================================================================
-bool ManagerSerialItem::IsValid(const zArrayBase<zResID>& _aResID)
+bool DepotResourceData::IsValid(const zArrayBase<zResID>& _aResID)
 {
 	const zResID* pResIdCur	= _aResID.First();
 	const zResID* pResIDEnd	= _aResID.Last()+1;
 	while( pResIdCur < pResIDEnd )
 	{
-		if( !mdSerialItems.Exist(pResIdCur->HashID()) )
+		if( !mdResourceData.Exist(pResIdCur->GetHashID()) )
 			return false;
 		++pResIdCur;
 	}
 	return true;
+}
+
+zenConst::eEngineVersion DepotResourceData::GetEngineVersion(zenConst::eResType _eResType) const
+{
+	ZENAssert(_eResType < zenConst::keResType__Count);
+	return gResourceVersions[_eResType];
 }
 
 }

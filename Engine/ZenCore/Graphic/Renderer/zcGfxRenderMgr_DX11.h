@@ -20,7 +20,7 @@ public:
 	virtual void					FrameBegin(zcRes::GfxWindowRef _FrameWindow);
 	virtual void					FrameEnd();
 
-	void							Render(zcRes::GfxMeshRef _rMesh);
+	void							Render(zcRes::GfxMeshProxyRef _rMesh);
 	void							Render(zcRes::GfxMeshStripProxyRef _rMeshStrip);
 	
 //---------------------------------------------------------
