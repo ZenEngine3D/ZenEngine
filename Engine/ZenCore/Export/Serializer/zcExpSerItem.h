@@ -18,13 +18,13 @@ namespace zcExp
 	{
 	ZENClassDeclare(ResourceData, ISerialize)
 	public:
-												ResourceData();		
-		virtual bool							Serialize( zcExp::Serializer_Base& aSerializer );		
+							ResourceData();		
+		virtual bool		Serialize( zcExp::Serializer_Base& aSerializer );		
 
-		zU32									muSize;
-		zU32									muVersion;
-		zTimeStamp								mExportTime;
-		zResID									mResID;		
+		zU32				muSize;			//!< Serialized data size
+		zU32				muVersion;		//!< Resource version ID (Based on engine used to export it)
+		zTimeStamp			mExportTime;	//!< When resource was exported
+		zResID				mResID;			//!< Resource unique ID
 	};
 
 }

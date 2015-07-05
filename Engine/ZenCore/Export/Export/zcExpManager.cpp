@@ -134,7 +134,7 @@ void ManagerExport::WaitExportDone() const
 {
 	while( HasPendingTask() )
 	{
-		zcMgr::Job.Update();
+	//	zcMgr::Job.Update();
 		Sleep(1);
 	}
 }

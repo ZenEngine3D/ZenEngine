@@ -6,6 +6,7 @@ namespace zen { namespace zenSys
 
 static zU64 suStartTime = GetTimeUSec();
 
+
 zU64 GetTimeUSec()
 {
     //-----------------------------------------------------

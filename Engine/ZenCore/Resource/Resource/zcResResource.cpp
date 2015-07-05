@@ -25,7 +25,7 @@ bool Resource::ResourceInit()
 
 bool Resource::Initialize( )
 {
-	if( ResourceInit() && EMgr::Resources.Add(this).IsValid() )
+	if( ResourceInit() && zcDepot::Resources.Add(this).IsValid() )
 	{
 		glstResourceActive[mResID.GetType()].PushHead(*this);
 		return true;

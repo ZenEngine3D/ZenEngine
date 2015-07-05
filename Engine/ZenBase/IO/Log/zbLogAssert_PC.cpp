@@ -26,7 +26,6 @@ void Assert( const char* _zCond, const char* _zFilename, unsigned int _uLine, eE
 	char Buffer[1024];
 	sprintf_s(Buffer, "\n%s Infos     : %s",	zbMgr::Log.GetEmptyStamp(), _zMessage);
 	
-
 	zbMgr::Log.Printf(eLog, "\n%s Condition : %s",		zbMgr::Log.GetTypeStamp(eLog), _zCond);
 	zbMgr::Log.Printf(eLog, "\n%s Location  : %s:%i",	zbMgr::Log.GetEmptyStamp(), _zFilename, _uLine);
 	//zbMgr::Log.Printf(eLog, "\n%s Infos     : %s",		zbMgr::Log.GetEmptyStamp(), _zMessage);

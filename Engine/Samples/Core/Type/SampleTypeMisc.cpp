@@ -29,18 +29,18 @@ namespace sample
 
 		//-------------------------------------------------
 		// Verify compile time type/class informations
-		bool bPointerFalse	= ZenIsPointer<int>::value;	
-		bool bPointerTrue	= ZenIsPointer<int*>::value;
-		bool bMemcpyTrue1	= ZenSupportsMemCopy<zU8>::value;
-		bool bMemcpyTrue2	= ZenSupportsMemCopy<TestWithMemCopy>::value;
-		bool bMemcpyFalse	= ZenSupportsMemCopy<TestNoMemCopy>::value;
+		bool bPointerFalse	= zenIsPointer<int>::value;	
+		bool bPointerTrue	= zenIsPointer<int*>::value;
+		bool bMemcpyTrue1	= zenSupportsMemCopy<zU8>::value;
+		bool bMemcpyTrue2	= zenSupportsMemCopy<TestWithMemCopy>::value;
+		bool bMemcpyFalse	= zenSupportsMemCopy<TestNoMemCopy>::value;
 		
 		zenIO::Log(zenConst::keLog_Game, "Compile Type Info :");
-		zenIO::Log(zenConst::keLog_Game, "   ZenIsPointer<int>                    = 0 ? %s", zenConst::kzFalseTrue[bPointerFalse==false] );
-		zenIO::Log(zenConst::keLog_Game, "   ZenIsPointer<int*>                   = 1 ? %s", zenConst::kzFalseTrue[bPointerTrue==true] );
-		zenIO::Log(zenConst::keLog_Game, "   ZenSupportsMemCopy<TestNoMemCopy>    = 0 ? %s", zenConst::kzFalseTrue[bMemcpyFalse==false] );
-		zenIO::Log(zenConst::keLog_Game, "   ZenSupportsMemCopy<zU8>              = 1 ? %s", zenConst::kzFalseTrue[bMemcpyTrue1==true] );
-		zenIO::Log(zenConst::keLog_Game, "   ZenSupportsMemCopy<TestWithMemCopy>  = 1 ? %s", zenConst::kzFalseTrue[bMemcpyTrue2==true] );
+		zenIO::Log(zenConst::keLog_Game, "   zenIsPointer<int>                    = 0 ? %s", zenConst::kzFalseTrue[bPointerFalse==false] );
+		zenIO::Log(zenConst::keLog_Game, "   zenIsPointer<int*>                   = 1 ? %s", zenConst::kzFalseTrue[bPointerTrue==true] );
+		zenIO::Log(zenConst::keLog_Game, "   zenSupportsMemCopy<TestNoMemCopy>    = 0 ? %s", zenConst::kzFalseTrue[bMemcpyFalse==false] );
+		zenIO::Log(zenConst::keLog_Game, "   zenSupportsMemCopy<zU8>              = 1 ? %s", zenConst::kzFalseTrue[bMemcpyTrue1==true] );
+		zenIO::Log(zenConst::keLog_Game, "   zenSupportsMemCopy<TestWithMemCopy>  = 1 ? %s", zenConst::kzFalseTrue[bMemcpyTrue2==true] );
 	}
 
 }

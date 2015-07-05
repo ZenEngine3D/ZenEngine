@@ -38,7 +38,7 @@ void zEngineInstance::Destroy()
 
 void zEngineInstance::MainLoop()
 {
-	zcMgr::Job.Update();	
+//	zcMgr::Job.Update();	
 	zcMgr::Updater.Update(zenConst::keUpdt_FrameStart);
 	msigUpdate.Emit(zenConst::keUpdt_FrameStart);
 

@@ -4,7 +4,7 @@
 
 namespace zbSys
 {
-
+/*
 template< class T >
 class AWThread_PC : public AWThread<T>
 {
@@ -112,7 +112,7 @@ private:
 	AWThread_PC(const AWThread_PC<T>& _other) { }
 	AWThread_PC<T>& operator = (const AWThread_PC<T>& _other) { }
 };
-
+*/
 }
 
 #endif

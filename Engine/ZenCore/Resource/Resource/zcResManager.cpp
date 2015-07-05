@@ -1,11 +1,11 @@
 #include "zcCore.h"
 
-namespace EMgr { zcRes::ManagerResource Resources; }
+namespace zcDepot { zcRes::ManagerResource Resources; }
 
 namespace zcRes
 {
 //=================================================================================================
-//! @brief		Create new dynamicly create resources , at runtime.
+//! @brief		Create new dynamically create resources , at runtime.
 //! @details	
 //! @param		_eResType
 //! @param		_pExportInfo

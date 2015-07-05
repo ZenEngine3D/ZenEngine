@@ -33,7 +33,7 @@ bool ManagerFile_PC::Load()
 		while( !bValid && (uPosEnd > 0) && (zWorkingDir[uPosEnd]!= L'\\' && zWorkingDir[uPosEnd]!= L'/') )
 			--uPosEnd;
 	}
-	
+	//! @todo Safety Check if content folder hasn't been found. Currently crash engine
 	return bValid;
 }
 

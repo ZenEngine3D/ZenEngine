@@ -13,10 +13,9 @@ bool StartupEngine()
 	bool bResult(true);
 
 	bResult &= zbMgr::Log.Startup();
-	bResult &= zcMgr::Job.Startup();	
 	bResult &= zbMgr::File.Startup();
 	bResult &= EMgr::Export.Startup();
-	bResult	&= EMgr::Resources.Startup();
+	bResult	&= zcDepot::Resources.Startup();
 	bResult &= zcDepot::ResourceData.Startup();	
 	bResult &= EMgr::GfxState.Startup();
 	bResult &= EMgr::GfxRender.Startup();
@@ -43,9 +42,8 @@ bool ShutdownEngine()
 	bResult &= EMgr::GfxRender.Shutdown();
 	bResult &= EMgr::GfxState.Shutdown();		
 	bResult &= zcDepot::ResourceData.Shutdown();
-	bResult &= EMgr::Resources.Shutdown();
+	bResult &= zcDepot::Resources.Shutdown();
 	bResult &= EMgr::Export.Shutdown();
-	bResult &= zcMgr::Job.Shutdown();
 	bResult &= zbMgr::File.Shutdown();
 	bResult &= zbMgr::Log.Shutdown();
 

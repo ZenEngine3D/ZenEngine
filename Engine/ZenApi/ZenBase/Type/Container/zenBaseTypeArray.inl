@@ -166,7 +166,7 @@ zUInt zArrayBase<TType>::Copy(const TType* _pCopy, zUInt _uCount)
 {	
 	Clear();
 	SetCount(_uCount);
-	if( ZenSupportsMemCopy<TType>::value )
+	if( zenSupportsMemCopy<TType>::value )
 	{
 		zenMem::Copy(mpData, _pCopy, sizeof(TType)*_uCount);
 	}	

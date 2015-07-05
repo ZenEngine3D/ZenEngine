@@ -6,13 +6,13 @@ zResourceRef::zResourceRef(zFlagResType _SupportedTypes, zResID _ResourceID)
 : mpResource(NULL)
 {
 	ZENDbgCode( mSupportedTypeMask = _SupportedTypes; )
-	zResourceRef rResourceRef = EMgr::Resources.GetResource(_ResourceID); 
+	zResourceRef rResourceRef = zcDepot::Resources.GetResource(_ResourceID); 
 	SetResource( rResourceRef.mpResource );
 }
 
 const zResourceRef& zResourceRef::operator=(const zResID& _ResourceID)
 {
-	zResourceRef rResourceRef = _ResourceID.IsValid() ? EMgr::Resources.GetResource(_ResourceID) : NULL;
+	zResourceRef rResourceRef = _ResourceID.IsValid() ? zcDepot::Resources.GetResource(_ResourceID) : NULL;
 	SetResource( rResourceRef.mpResource );
 	return *this;
 }

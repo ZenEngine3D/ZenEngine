@@ -142,7 +142,7 @@ namespace zcRes
 	template<class TResourceRef>
 	typename TResourceRef::Resource::ProxyRef GetResourceProxy(zResID _ResourceID)
 	{
-		TResourceRef rResource = _ResourceID.IsValid() ? EMgr::Resources.GetResource(_ResourceID) : NULL;
+		TResourceRef rResource = _ResourceID.IsValid() ? zcDepot::Resources.GetResource(_ResourceID) : NULL;
 		if( rResource.IsValid() )
 			return rResource->GetProxy();
 		return NULL;

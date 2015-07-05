@@ -6,9 +6,7 @@
 #include <ZenCore/zenCore.h>
 
 #include "Misc/zcMiscUpdate.h"
-#include "Job/zcJobItem.h"
 #include "Export/zcExp.h"
-#include "Job/zcJob.h"
 #include "Resource/zcRes.h"
 #include "Graphic/zcGfx.h"
 

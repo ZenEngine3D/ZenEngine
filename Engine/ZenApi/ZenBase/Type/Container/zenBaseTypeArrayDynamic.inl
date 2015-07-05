@@ -27,7 +27,7 @@ zArrayDynamic<TType, TGrowthPolicy>::zArrayDynamic(const TType* _pCopy, zUInt _u
 {		
 	Grow(_uCount+_uExtraCount);
 	muCount	= _uCount;
-	if( ZenSupportsMemCopy<TType>::value )
+	if( zenSupportsMemCopy<TType>::value )
 	{
 		zenMem::Copy(mpData, _pCopy, sizeof(TType)*_uCount);
 	}
@@ -49,7 +49,7 @@ zArrayDynamic<TType, TGrowthPolicy>::zArrayDynamic(const zArrayDynamic& _Copy, z
 	Grow(_Copy.Count()+_uExtraCount);
 	muCount					= _Copy.Count();
 	const TType* pItemSrc	= _Copy.First();
-	if( ZenSupportsMemCopy<TType>::value )
+	if( zenSupportsMemCopy<TType>::value )
 	{
 		zenMem::Copy(mpData, pItemSrc, sizeof(TType)*_Copy.Count());
 	}

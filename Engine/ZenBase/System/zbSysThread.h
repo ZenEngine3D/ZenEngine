@@ -7,7 +7,7 @@
 //=================================================================================================
 namespace zbSys
 {
-
+/*
 template< class T >
 class AWThread
 {
@@ -53,7 +53,7 @@ private:
 	AWThread(const AWThread<T>& _other) { }
 	AWThread<T>& operator = (const AWThread<T>& _other) { }
 };
-
+*/
 }
 
 #include ZENHeaderPlatform( zbSysThread )

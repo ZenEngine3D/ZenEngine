@@ -20,7 +20,7 @@ zArrayStatic<TType>::zArrayStatic(const TType* _pCopy, zUInt _uCount, zUInt _uEx
 {		
 	muCount			= _uCount+_uExtraCount;
 	mpData			= zenNewDefault TType[muCount];			
-	if( ZenSupportsMemCopy<TType>::value )	
+	if( zenSupportsMemCopy<TType>::value )	
 	{
 		memcpy(mpData, _pCopy, sizeof(TType)*_uCount);
 	}
@@ -39,7 +39,7 @@ zArrayStatic<TType>::zArrayStatic(const zArrayStatic& _Copy, zUInt _uExtraCount=
 	muCount					= _Copy.Count()+_uExtraCount;
 	mpData					= zenNewDefault TType[muCount];		
 	const TType* pItemSrc	= _Copy.First();
-	if( ZenSupportsMemCopy<TType>::value )
+	if( zenSupportsMemCopy<TType>::value )
 	{
 		memcpy(mpData, pItemSrc, sizeof(TType)*muCount);
 	}
