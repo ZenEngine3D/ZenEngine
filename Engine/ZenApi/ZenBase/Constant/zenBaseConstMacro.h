@@ -37,32 +37,6 @@
 #define ZENClassDeclareNoParent(_Class_)			public: void zenClassDeclareCheck(){ ZENStaticAssertMsg( sizeof(*this) == sizeof(_Class_), "Wrong Class name in ClassDeclare macro" );}
 #define ZENClassDeclare(_Class_, _ClassParent_)		ZENClassDeclareNoParent(_Class_)			\
 													private: typedef _ClassParent_ Super;
-
-//=================================================================================================
-// Useful compile-time infos on type/class
-//=================================================================================================
-//! @brief Template magic determining if parameter is a pointer (at compile time)
-//! @todo cleanup refactor with C++11 type support
-template<typename T> struct zenIsPointer					{ enum {value = false}; };	
-template<typename T> struct zenIsPointer<T*>				{ enum {value = true};	};	//!< @brief Template specialization detecting pointers
-
-//! @brief	Template magic to determine if parameter type/class supports memcopy
-//! @detail We can safely do memcopy on builtin type and pointers without problem.
-//!			Classes that contains more than builtin type (int, float, ...) are not able to
-//!			use memcopy for assignment, since their operator= might be doing some more complex work.
-//!			If a class is safe, it should use the macro ZENSupportMemcopy to make the compiler know.
-template<typename T> struct zenSupportsMemCopy			{ enum {value = false}; };	
-template<typename T> struct zenSupportsMemCopy<T*>		{ enum {value = true};	};
-template<typename T> struct zenSupportsMemCopy<const T*>{ enum {value = true};	};
-#define ZENSupportMemcopy(_CLASS_)	template<> struct zenSupportsMemCopy<_CLASS_>	{ enum {value = true};	};
-
-template<typename T> void zenSwap(T& _Val1, T& _Val2)
-{
-	T Temp(_Val2);
-	_Val2 = _Val1;
-	_Val1 = Temp;
-}
-
 #include ZENHeaderPlatform(zenBaseConstMacro)
 
 #endif

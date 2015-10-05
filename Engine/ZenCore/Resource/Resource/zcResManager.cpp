@@ -35,6 +35,7 @@ zResID RuntimeCreateResource(zcExp::ExportInfoBase* _pExportInfo)
 	case zenConst::keResType_GfxShaderParamDef:			rResource = GfxShaderParamDef::RuntimeExport(*_pExportInfo);	break;
 	case zenConst::keResType_GfxShaderParam:			rResource = GfxShaderParam::RuntimeExport(*_pExportInfo);		break;
 	case zenConst::keResType_GfxShaderBinding:			rResource = GfxShaderBinding::RuntimeExport(*_pExportInfo);		break;
+	case zenConst::keResType_GfxRenderPass:				rResource = GfxRenderPass::RuntimeExport(*_pExportInfo);		break;
 	}
 	zenDelNull(_pExportInfo);
 	return rResource.GetResID();
@@ -52,7 +53,7 @@ bool ManagerResource::Load()
 	zenConst::eResPlatform aPlatformTypes[zResID::kePlatformType__Count];
 	aPlatformTypes[zResID::kePlatformType_OS]	= zenConst::kCurrentPlatformOS;
 	aPlatformTypes[zResID::kePlatformType_GFX]	= zenConst::kCurrentPlatformGfx;
-	EMgr::Export.SetExportInfos( aPlatformTypes, zenConst::keResSource_Runtime, RuntimeCreateResource );
+	zcMgr::Export.SetExportInfos( aPlatformTypes, zenConst::keResSource_Runtime, RuntimeCreateResource );
 	return true;
 }
 
@@ -75,11 +76,11 @@ bool ManagerResource::Unload()
 //=================================================================================================
 zenRes::zResourceRef ManagerResource::GetResource(const zResID& _ResID, bool _bSupportDefault)
 {
-	//ZENAssert(_ResID.IsValid());cd
+	//ZENAssert(_ResID.IsValid());
 	zenRes::zResource* pResource;
 	if( mdResources.Get(_ResID.GetHashID(), pResource) )	return pResource;
-	else if(_bSupportDefault )							return maResourcesDefault[_ResID.GetType()];
-	else												return (zenRes::zResource*)NULL;
+	else if(_bSupportDefault )								return maResourcesDefault[_ResID.GetType()];
+	else													return (zenRes::zResource*)NULL;
 }
 
 //=================================================================================================
@@ -104,14 +105,14 @@ zenRes::zResourceRef ManagerResource::GetResourceAnySource(const zResID& _ResID,
 	{
 		anySourceResID.SetSource(zenConst::keResSource_Runtime);	
 		if( mdResources.Get(_ResID.GetHashID(), pResource) )	return pResource;
-		else if(_bSupportDefault )							return maResourcesDefault[_ResID.GetType()];
-		else												return (zenRes::zResource*)NULL;
+		else if(_bSupportDefault )								return maResourcesDefault[_ResID.GetType()];
+		else													return (zenRes::zResource*)NULL;
 	}
 }
 
 //=================================================================================================
 //! @brief		Add a resource to our resource dictionary
-//! @details	This manager takes ownership of the resource and will free it once uneeded
+//! @details	This manager takes ownership of the resource and will free it once unneeded
 //! @param		_pResource - Resource asset
 //! @return 	Reference to resource
 //=================================================================================================

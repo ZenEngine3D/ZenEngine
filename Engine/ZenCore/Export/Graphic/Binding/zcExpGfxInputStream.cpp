@@ -14,9 +14,9 @@ namespace zcExp
 	{
 		static zenMem::zAllocatorPool sMemPool("Pool CreateInputStream", sizeof(ExportInfoGfxInputStream), 1, 5 );
 		ExportInfoGfxInputStream* pExportInfo	= zenNew(&sMemPool) ExportInfoGfxInputStream;
-		pExportInfo->mVertexBufferID							= _VertexBufferID;
-		pExportInfo->mShaderInputSignatureID					= _ShaderInputSignatureID;
-		return EMgr::Export.CreateItem( zResID::kePlatformType_GFX, zenConst::keResType_GfxInputStream, pExportInfo );
+		pExportInfo->mVertexBufferID			= _VertexBufferID;
+		pExportInfo->mShaderInputSignatureID	= _ShaderInputSignatureID;
+		return zcMgr::Export.CreateItem( zResID::kePlatformType_GFX, zenConst::keResType_GfxInputStream, pExportInfo );
 	}
 
 }

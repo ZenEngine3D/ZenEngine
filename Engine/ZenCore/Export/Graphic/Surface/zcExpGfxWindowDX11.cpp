@@ -38,7 +38,7 @@ namespace zcExp
 		static zenMem::zAllocatorPool sMemPool("Pool Views", sizeof(SerialGfxWindow_DX11::ExportInfo), 1, 5 );
 		SerialGfxWindow_DX11::ExportInfo* pExportInfo	= zenNew(&sMemPool) SerialGfxWindow_DX11::ExportInfo;
 		pExportInfo->mhWindow							= _WindowHandle;
-		return EMgr::Export.CreateItem( zResID::kePlatformType_GFX, zenConst::keResType_GfxWindow, pExportInfo );
+		return zcMgr::Export.CreateItem( zResID::kePlatformType_GFX, zenConst::keResType_GfxWindow, pExportInfo );
 	}
 	*/
 

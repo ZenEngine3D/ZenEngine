@@ -34,7 +34,7 @@ namespace zcRes
 		swapDesc.BufferCount						= 2;
 		swapDesc.BufferDesc.Width					= mvSize.x;
 		swapDesc.BufferDesc.Height					= mvSize.y;
-		swapDesc.BufferDesc.Format					= EMgr::GfxRender.ZenFormatToNative(meBackbufferColorFormat);
+		swapDesc.BufferDesc.Format					= zcMgr::GfxRender.ZenFormatToNative(meBackbufferColorFormat);
 		swapDesc.BufferDesc.RefreshRate.Numerator	= 60;
 		swapDesc.BufferDesc.RefreshRate.Denominator	= 1;
 		swapDesc.BufferUsage						= DXGI_USAGE_RENDER_TARGET_OUTPUT;
@@ -47,7 +47,7 @@ namespace zcRes
 		IDXGIAdapter*	pDXGIAdapter;
 		IDXGIFactory*	pIDXGIFactory;		
 		
-		ID3D11Device*   DX11pDevice = EMgr::GfxRender.DX11GetDevice();
+		ID3D11Device*   DX11pDevice = zcMgr::GfxRender.DX11GetDevice();
 		if( SUCCEEDED(DX11pDevice->QueryInterface(__uuidof(IDXGIDevice), (void **)&pDXGIDevice)) )
 			if( SUCCEEDED(pDXGIDevice->GetParent(__uuidof(IDXGIAdapter), (void **)&pDXGIAdapter)) )
 				if( SUCCEEDED(pDXGIAdapter->GetParent(__uuidof(IDXGIFactory), (void **)&pIDXGIFactory)) )
@@ -56,7 +56,7 @@ namespace zcRes
 						//! @todo can't allow access to owner in renderthread, fix this
 						//! @todo clean move code to resize and avoid duplicate
 						zEngineRef<GfxRenderTargetResData> rResData	= zenNewDefault GfxRenderTargetResData();
-						rResData->mResID							= EMgr::Export.GetNewResourceID( zenConst::keResType_GfxRenderTarget );
+						rResData->mResID							= zcMgr::Export.GetNewResourceID( zenConst::keResType_GfxRenderTarget );
 						rResData->mbSRGB							= TRUE;
 						rResData->meFormat							= meBackbufferColorFormat;
 						rResData->mvDim								= mvSize;
@@ -86,7 +86,7 @@ namespace zcRes
 	//==================================================================================================
 	void GfxWindowProxy_DX11::PerformResize()
 	{
-		zcRes::GfxWindowRef rWindowCur = EMgr::GfxRender.GetWindowCurrent();
+		zcRes::GfxWindowRef rWindowCur = zcMgr::GfxRender.GetWindowCurrent();
 		ZENAssert(mDX11pSwapChain);
 		ZENAssertMsg(rWindowCur.IsValid()==false || rWindowCur->GetProxy() != this, "This method should only be called in ManagerBase::FrameStart()");
 
@@ -97,7 +97,7 @@ namespace zcRes
 			mDX11pSwapChain->ResizeBuffers(0, mvPendingResize.x, mvPendingResize.y, DXGI_FORMAT_UNKNOWN, 0);
 
 			zEngineRef<GfxRenderTargetResData> rResData	= zenNewDefault GfxRenderTargetResData();
-			rResData->mResID							= EMgr::Export.GetNewResourceID( zenConst::keResType_GfxRenderTarget );
+			rResData->mResID							= zcMgr::Export.GetNewResourceID( zenConst::keResType_GfxRenderTarget );
 			rResData->mbSRGB							= TRUE;
 			rResData->meFormat							= meBackbufferColorFormat;
 			rResData->mvDim								= mvSize;

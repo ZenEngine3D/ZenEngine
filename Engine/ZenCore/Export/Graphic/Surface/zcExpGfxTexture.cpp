@@ -52,7 +52,7 @@ zResID CreateGfxTexture2D(zenConst::eTextureFormat _eFormat, zFlagResTexUse _Cre
 	pExportInfo->meFormatOutput					= _eFormat;
 	pExportInfo->mCreationFlags					= _CreationFlags;
 	pExportInfo->mbGenerateMip					= FALSE;
-	return EMgr::Export.CreateItem( zResID::kePlatformType_GFX, zenConst::keResType_GfxTexture2D, pExportInfo );
+	return zcMgr::Export.CreateItem( zResID::kePlatformType_GFX, zenConst::keResType_GfxTexture2D, pExportInfo );
 }
 
 }

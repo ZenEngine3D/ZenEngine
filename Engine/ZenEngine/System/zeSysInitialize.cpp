@@ -14,11 +14,10 @@ bool StartupEngine()
 
 	bResult &= zbMgr::Log.Startup();
 	bResult &= zbMgr::File.Startup();
-	bResult &= EMgr::Export.Startup();
+	bResult &= zcMgr::Export.Startup();
 	bResult	&= zcDepot::Resources.Startup();
 	bResult &= zcDepot::ResourceData.Startup();	
-	bResult &= EMgr::GfxState.Startup();
-	bResult &= EMgr::GfxRender.Startup();
+	bResult &= zcMgr::GfxRender.Startup();
 #if ZEN_ENGINETOOL
 	bResult &= zeMgr::Asset.Startup();
 #endif
@@ -39,11 +38,10 @@ bool ShutdownEngine()
 #if ZEN_ENGINETOOL
 	bResult &= zeMgr::Asset.Shutdown();
 #endif
-	bResult &= EMgr::GfxRender.Shutdown();
-	bResult &= EMgr::GfxState.Shutdown();		
+	bResult &= zcMgr::GfxRender.Shutdown();
 	bResult &= zcDepot::ResourceData.Shutdown();
 	bResult &= zcDepot::Resources.Shutdown();
-	bResult &= EMgr::Export.Shutdown();
+	bResult &= zcMgr::Export.Shutdown();
 	bResult &= zbMgr::File.Shutdown();
 	bResult &= zbMgr::Log.Shutdown();
 

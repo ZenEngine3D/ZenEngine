@@ -17,7 +17,7 @@ zResID CreateGfxShaderParam(zResID _ParentParamDefID)
 	static zenMem::zAllocatorPool sMemPool("Pool CreateShaderParam", sizeof(ExportInfoGfxShaderParam), 1, 5 );
 	ExportInfoGfxShaderParam*	pExportInfo		= zenNew(&sMemPool) ExportInfoGfxShaderParam;
 	pExportInfo->mParentParamDefID				= _ParentParamDefID;
-	return EMgr::Export.CreateItem( zResID::kePlatformType_GFX, zenConst::keResType_GfxShaderParam, pExportInfo );
+	return zcMgr::Export.CreateItem( zResID::kePlatformType_GFX, zenConst::keResType_GfxShaderParam, pExportInfo );
 }
 
 //=================================================================================================

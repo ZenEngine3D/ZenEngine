@@ -1,6 +1,6 @@
 #include "zcCore.h"
 
-namespace EMgr { zcExp::ManagerExport Export; }
+namespace zcMgr { zcExp::ManagerExport Export; }
 
 namespace zcExp
 {
@@ -174,7 +174,7 @@ void ManagerExport::ExportDone(const ResDataRef& _rResData)
 /*
 zResID CreateExportItemOffline(zenConst::eResType _eResType, zcExp::ExportInfoBase* _pExportInfo)
 {
-	switch( EMgr::Export.GetExportGfx() )
+	switch( zcMgr::Export.GetExportGfx() )
 	{
 	#if ZEN_EXPORT_OR_RESOURCE_DX11
 		case zenConst::keResPlatform_DX11:
@@ -186,7 +186,7 @@ zResID CreateExportItemOffline(zenConst::eResType _eResType, zcExp::ExportInfoBa
 		}break;
 	#endif
 	}
-	switch( EMgr::Export.GetExportOS() )
+	switch( zcMgr::Export.GetExportOS() )
 	{
 	#if AWEXPORT_WIN
 		case zenConst::keResPlatform_Window:
@@ -194,7 +194,7 @@ zResID CreateExportItemOffline(zenConst::eResType _eResType, zcExp::ExportInfoBa
 		}break;			
 	#endif
 	}
-	//EMgr::Export.Export( SerialIndex_Base::CreateResourceData(), pExportInfo );
+	//zcMgr::Export.Export( SerialIndex_Base::CreateResourceData(), pExportInfo );
 	//return pExportInfo->mExportResID;
 	return NULL;	
 }

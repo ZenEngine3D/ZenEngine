@@ -70,7 +70,6 @@ namespace zen { namespace zenType
 		// Constructors
 		//=================================================================================================	
 		ZENInlineForce				zHash32();
-		ZENInlineForce				zHash32(const zHash32& _hCopy);
 		ZENInlineForce				zHash32(const zU32& _uCopy);
 		ZENInlineForce				zHash32(const zI32& _iCopy);
 		ZENInlineForce				zHash32(ConstCharWrapper _zStr);

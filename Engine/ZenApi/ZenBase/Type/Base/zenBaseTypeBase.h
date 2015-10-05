@@ -17,17 +17,6 @@ typedef uint64_t		zU64;		//!< Basic integer type
 typedef int				zInt;		//!< Basic int
 typedef unsigned int	zUInt;		//!< Basic unsigned int
 
-ZENSupportMemcopy(zI8);
-ZENSupportMemcopy(zI16);
-ZENSupportMemcopy(zI32);
-ZENSupportMemcopy(zI64);
-ZENSupportMemcopy(zU8);
-ZENSupportMemcopy(zU16);
-ZENSupportMemcopy(zU32);
-ZENSupportMemcopy(zU64);
-ZENSupportMemcopy(float);
-ZENSupportMemcopy(double);
-
 //! @todo Cleanup : Find better location for this utility method
 template<class TClass, class TMemberClass>
 zU32 zenOffsetOf( TMemberClass TClass::* _pMember)
@@ -43,6 +32,13 @@ zU32 zenOffsetOf( TMemberClass TClass::* _pMember)
 	};
 	return GetOffset( _pMember ).mOffset;
 };
+
+template<typename T> void zenSwap(T& _Val1, T& _Val2)
+{
+	T Temp(_Val2);
+	_Val2 = _Val1;
+	_Val1 = Temp;
+}
 
 }} //namespace zen, zenType
 

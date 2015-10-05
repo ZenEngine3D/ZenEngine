@@ -14,7 +14,11 @@ namespace zcRes
 		void									Clear( bool _bClearColor, const zVec4F& _vRGBA, bool _bClearDepth=true, float _fDepth=1, bool _bClearStencil=false, zU8 _uStencil=0 );
 		zArrayStatic<GfxRenderTargetProxyRef>	marProxTargetColor;
 		GfxRenderTargetProxyRef					mrProxTargetDepth;
-		ZENDbgCode(class GfxView*			mpOwner);
+		ID3D11RenderTargetView*					mpColorViews[D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT];
+		ID3D11DepthStencilView*					mpDepthView;
+		D3D11_VIEWPORT							mViewport;
+		UINT									muColorCount;
+		ZENDbgCode(class GfxView*				mpOwner);
 	};
 }
 

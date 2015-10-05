@@ -57,13 +57,13 @@ bool GfxShaderParamProxy_DX11::Initialize(class GfxShaderParam& _Owner)
 	initData.pSysMem			= maParameterValues.First();
 	initData.SysMemPitch		= 0;
 	initData.SysMemSlicePitch	= 0;
-	HRESULT hr					= EMgr::GfxRender.DX11GetDevice()->CreateBuffer( &bufferDesc, &initData, &mpBufferBinding );		
+	HRESULT hr					= zcMgr::GfxRender.DX11GetDevice()->CreateBuffer( &bufferDesc, &initData, &mpBufferBinding );		
 	return SUCCEEDED(hr);
 }
 
 void GfxShaderParamProxy_DX11::Bind(zenConst::eShaderStage _eShaderStage)const
 {	
-	ID3D11DeviceContext* pContext = EMgr::GfxRender.DX11GetDeviceContext();
+	ID3D11DeviceContext* pContext = zcMgr::GfxRender.DX11GetDeviceContext();
 	if( mbUpdated )
 	{
 		pContext->UpdateSubresource( mpBufferBinding, 0, NULL, maParameterValues.First(), 0, 0 );

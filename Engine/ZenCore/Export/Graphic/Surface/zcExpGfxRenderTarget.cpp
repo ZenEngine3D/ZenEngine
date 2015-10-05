@@ -38,7 +38,7 @@ namespace zcExp
 		pExportInfo->meFormat						= _eFormat;
 		pExportInfo->mvDim							= _vDim;
 		pExportInfo->mbSRGB							= _bSrgb;
-		return EMgr::Export.CreateItem( zResID::kePlatformType_GFX, zenConst::keResType_GfxRenderTarget, pExportInfo );
+		return zcMgr::Export.CreateItem( zResID::kePlatformType_GFX, zenConst::keResType_GfxRenderTarget, pExportInfo );
 	}
 
 }

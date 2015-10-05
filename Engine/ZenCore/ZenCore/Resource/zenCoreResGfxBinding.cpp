@@ -2,6 +2,46 @@
 
 namespace zen { namespace zenRes {
 
+//! @todo Urgent move elsewhere, not a resource per see
+zGfxDrawcall::zGfxDrawcall(const zGfxDrawcall& _Copy)
+{
+	*this = _Copy;
+}
+
+zGfxDrawcall::zGfxDrawcall()
+{
+}
+
+zGfxDrawcall::zGfxDrawcall(zcGfx::Drawcall* _pDrawcall)
+{
+	*this = _pDrawcall;
+}
+
+zGfxDrawcall zGfxDrawcall::Create(const zGfxRenderPass& _rRenderPass, const zGfxMeshStrip& _rMeshStrip, float _fPriority)
+{
+	zcRes::GfxRenderPassRef rRenderpass	= _rRenderPass;
+	zcRes::GfxMeshStripRef rMeshStrip	= _rMeshStrip;
+	zGfxDrawcall rDrawcall				= zcGfx::Drawcall::Create(rRenderpass, rMeshStrip, _fPriority ).GetSafe();	
+	return rDrawcall;
+}
+
+void zGfxDrawcall::Submit(zArrayDynamic<zenRes::zGfxDrawcall>& _aDrawcalls)
+{
+	zcMgr::GfxRender.Render( _aDrawcalls );
+}
+
+zGfxDrawcall& zGfxDrawcall::operator=(const zGfxDrawcall& _Copy)
+{	
+	Super::operator=(_Copy.Get());
+	return *this;
+}
+
+zGfxDrawcall& zGfxDrawcall::operator=(zcGfx::Drawcall* _pCopy)
+{	
+	Super::operator=(_pCopy);
+	return *this;
+}
+
 //=================================================================================================
 // CREATES
 //=================================================================================================
@@ -19,6 +59,18 @@ zGfxMesh zGfxMesh::Create(const zGfxMeshStrip* _aMeshStrip, zUInt _uMeshStripCou
 	zArrayStatic<zResID> aMeshStripID;
 	aMeshStripID.Copy<zGfxMeshStrip>(_aMeshStrip, _uMeshStripCount);
 	return zcExp::CreateGfxMesh( aMeshStripID );
+}
+
+void zGfxMesh::Draw(zenRes::zGfxRenderPass& _rRenderpass, float _fPriority, zArrayDynamic<zenRes::zGfxDrawcall>& _aDrawcallsOut)
+{
+	zcRes::GfxMeshRef rMesh									= *this;
+	zcRes::GfxRenderPassRef rRenderpass						= _rRenderpass;
+	const zArrayStatic<zcRes::GfxMeshStripRef>& aMeshStrips	= rMesh->GetMeshStrips();
+	const zUInt uOldCount									= _aDrawcallsOut.Count();
+	const zUInt uStripCount									= aMeshStrips.Count();
+	_aDrawcallsOut.SetCount( uOldCount + uStripCount );
+	for(zUInt stripIdx(0); stripIdx<uStripCount; ++stripIdx)
+		_aDrawcallsOut[uOldCount+stripIdx] = zcGfx::Drawcall::Create(rRenderpass, aMeshStrips[stripIdx], _fPriority ).GetSafe();
 }
 
 zGfxMeshStrip zGfxMeshStrip::Create(const zGfxVertex& _VertexBuffer, const zGfxIndex& _IndexBuffer, const zGfxShaderBinding& _rShaderBinding, const zArrayBase<zResID>& _aShaderParamID, const zArrayBase<zShaderTexture>& _aTexture, zU32 _uIndexFirst, zU32 _uIndexCount)
@@ -39,24 +91,11 @@ zGfxMeshStrip zGfxMeshStrip::Create(const zGfxVertex& _VertexBuffer, const zGfxI
 	return zcExp::CreateGfxMeshStrip(_VertexBuffer, _IndexBuffer, _rShaderBinding.GetResID(), _uIndexFirst, _uIndexCount, aShaderParamID, aTexture);
 }
 
-zGfxSampler zGfxSampler::Create( zenConst::eTextureFiltering _eFilterMin, zenConst::eTextureFiltering _eFilterMag, zenConst::eTextureWrap _eWrapU, zenConst::eTextureWrap _eWrapV, float _fLodBias, const zVec4F& _vBorderColor )
+void zGfxMeshStrip::Draw(zenRes::zGfxRenderPass& _rRenderpass, float _fPriority, zArrayDynamic<zenRes::zGfxDrawcall>& _aDrawcallsOut)
 {
-	return zcExp::CreateGfxSampler(_eFilterMin, _eFilterMag, _eWrapU, _eWrapV, _fLodBias, _vBorderColor);
-}
-
-zGfxStateBlend zGfxStateBlend::Create( zenType::zBlendDesc::zRTBlendDesc* _pxBlendDesc, zU8 _uRenderTargets, bool _bAlphaToCoverageEnable, bool _bIndependentBlendEnable )
-{
-	return zcExp::CreateGfxBlend(_pxBlendDesc, _uRenderTargets, _bAlphaToCoverageEnable, _bIndependentBlendEnable);
-}
-
-zGfxStateDepthStencil zGfxStateDepthStencil::Create( bool _bDepthEnable, bool _bDepthWrite, bool _bStencilEnable, zU8 _uStencilReadMask, zU8 _uStencilWriteMask, zenConst::eComparisonFunc _eDepthFunc, zenType::zDepthStencilDesc::DepthStencilOp _xFrontFace, zenType::zDepthStencilDesc::DepthStencilOp _xBackFace )
-{
-	return zcExp::CreateGfxDepthStencil(_bDepthEnable, _bDepthWrite, _bStencilEnable, _uStencilReadMask, _uStencilWriteMask, _eDepthFunc, _xFrontFace, _xBackFace);
-}
-
-zGfxStateRasterizer zGfxStateRasterizer::Create( bool _bFrontCounterClockwise, bool _bDepthClipEnable, bool _bScissorEnable, bool _bMultisampleEnable, bool _bAntialiasedLineEnable, bool _bWireFrame, zenConst::eCullMode _eCullMode, zI32 _iDepthBias, float _fDepthBiasClamp, float _fSlopeScaledDepthBias )
-{
-	return zcExp::CreateGfxRasterizer(_bFrontCounterClockwise, _bDepthClipEnable, _bScissorEnable, _bMultisampleEnable, _bAntialiasedLineEnable, _bWireFrame, _eCullMode, _iDepthBias, _fDepthBiasClamp, _fSlopeScaledDepthBias);
+	zcRes::GfxRenderPassRef rRenderpass	= _rRenderpass;
+	zcRes::GfxMeshStripRef rMeshStrip	= *this;
+	_aDrawcallsOut.Push( zcGfx::Drawcall::Create(rRenderpass, rMeshStrip, _fPriority ).GetSafe() );
 }
 
 zGfxView zGfxView::Create( const zGfxRenderTarget& _RTColor, const zGfxRenderTarget& _RTDepth, const zVec2U16& _vDim, const zVec2S16& _vOrigin )
@@ -74,7 +113,7 @@ zGfxView zGfxView::Create( const zArrayBase<zGfxRenderTarget>& _aRTColor, const 
 zGfxWindow zGfxWindow::Create( HWND _WindowHandle )
 {
 	zEngineRef<zcRes::GfxWindowResData> rResData	= zenNewDefault zcRes::GfxWindowResData();
-	rResData->mResID								= EMgr::Export.GetNewResourceID( zenConst::keResType_GfxWindow );
+	rResData->mResID								= zcMgr::Export.GetNewResourceID( zenConst::keResType_GfxWindow );
 	rResData->mhWindow								= _WindowHandle;
 	return zcRes::GfxWindow::RuntimeCreate(rResData);
 }
@@ -92,6 +131,34 @@ zGfxShaderBinding zGfxShaderBinding::Create(const zenRes::zGfxShader* _pShaders,
 	aShaderID.Copy<zenRes::zGfxShader>(_pShaders, _uCount);	
 	return zcExp::CreateGfxShaderBinding(aShaderID);
 }
+//=================================================================================================
+// GFX RenderPass
+//! @todo Cleanup move this to own file
+//=================================================================================================
+zGfxRenderPass zGfxRenderPass::Create(const zString& _zStageName, const zGfxStateBlend& _rStateBlend, const zGfxStateDepthStencil& _rStateDepthStencil, const zGfxStateRasterizer& _rStateRaster, const zGfxView& _rView)
+{
+	return zcExp::CreateGfxRenderPass(_zStageName, _rStateBlend.GetResID(), _rStateDepthStencil.GetResID(), _rStateRaster.GetResID(), _rView.GetResID());
+}
+
+zGfxRenderPass zGfxRenderPass::Create(const zString& _zStageName, const ViewConfig& _rView, const zGfxTexture2d& _rTargetDepth, const zGfxStateDepthStencil& _rStateDepthStencil, const zGfxStateRasterizer& _rStateRaster)
+{/*
+	zArrayStatic<ViewConfig> aViews(1);
+	aViews[0] = _rView;
+	return zcExp::CreateGfxRenderPass(_zStageName, _rStateBlend.GetResID(), _rStateDepthStencil.GetResID(), _rStateRaster.GetResID(), _rView.GetResID());
+	*/
+	return NULL;
+}
+/*
+struct ViewConfig
+		{
+			zGfxTexture2d	mTargetSurface;
+			zGfxStateBlend	mStateBlend;
+			zVec2S16		mvOrigin;
+			zVec2U16		mvDim;
+		};
+		static zGfxRenderPass			Create(const zString& _zStageName, const zGfxStateBlend& _rStateBlend, const zGfxStateDepthStencil&	_rStateDepthStencil, const zGfxStateRasterizer& _rStateRaster, const zGfxView& _rView);
+		static zGfxRenderPass			Create(const zString& _zStageName, const ViewConfig& _View, const zGfxTexture2d& _TargetDepth, const zGfxStateDepthStencil& _rStateDepthStencil, const zGfxStateRasterizer& _rStateRaster);
+*/
 
 //=================================================================================================
 // GFX WINDOW
@@ -100,30 +167,29 @@ zGfxShaderBinding zGfxShaderBinding::Create(const zenRes::zGfxShader* _pShaders,
 zGfxView zGfxWindow::GetBackbuffer()
 {
 	ZENAssertMsg(mpResource, "No valid resource assigned");
-	zcRes::GfxWindowRef& rWindow = *static_cast<zcRes::GfxWindowRef*>(this);
-	return rWindow->GetBackbuffer();
+	zcRes::GfxWindow* pWindow = static_cast<zcRes::GfxWindow*>(mpResource);
+	return pWindow->GetBackbuffer();
 }
 
 void zGfxWindow::Resize(const zVec2U16& _vSize)
 {
 	ZENAssertMsg(mpResource, "No valid resource assigned");
-	zcRes::GfxWindowRef& rWindow = *static_cast<zcRes::GfxWindowRef*>(this);
-	return rWindow->Resize(_vSize);
+	zcRes::GfxWindow* pWindow = static_cast<zcRes::GfxWindow*>(mpResource);
+	return pWindow->Resize(_vSize);
 }
 
 void zGfxWindow::FrameBegin()
 {
 	ZENAssertMsg(mpResource, "No valid resource assigned");
-	zcRes::GfxWindowRef& rWindow = *static_cast<zcRes::GfxWindowRef*>(this);
-	EMgr::GfxRender.FrameBegin(rWindow);
-	EMgr::GfxState.PipelineReset();
+	zcRes::GfxWindow* pWindow = static_cast<zcRes::GfxWindow*>(mpResource);
+	zcMgr::GfxRender.FrameBegin(pWindow);
 }
 
 void zGfxWindow::FrameEnd()
 {
 	ZENAssertMsg(mpResource, "No valid resource assigned");
-	zcRes::GfxWindowRef& rWindow = *static_cast<zcRes::GfxWindowRef*>(this);
-	EMgr::GfxRender.FrameEnd();
+	zcRes::GfxWindow* pWindow = static_cast<zcRes::GfxWindow*>(mpResource);
+	zcMgr::GfxRender.FrameEnd();
 }
 
 //=================================================================================================
@@ -132,34 +198,20 @@ void zGfxWindow::FrameEnd()
 void zGfxView::Clear( bool _bClearColor, const zVec4F& _vRGBA, bool _bClearDepth, float _fDepth, bool _bClearStencil, zU8 _uStencil )
 {
 	ZENAssertMsg(mpResource, "No valid resource assigned");
-	zcRes::GfxViewRef& rView = *static_cast<zcRes::GfxViewRef*>(this);
+	zcRes::GfxViewRef rView = mpResource;
 	rView->Clear(_bClearColor, _vRGBA, _bClearDepth, _fDepth, _bClearStencil, _uStencil);
-}
-
-void zGfxView::ActivateView()
-{
-	ZENAssertMsg(mpResource, "No valid resource assigned");
-	zcRes::GfxViewRef& rView = *static_cast<zcRes::GfxViewRef*>(this);
-	EMgr::GfxState.SetView( rView );
 }
 
 zVec2U16 zGfxView::GetDim()const
 {
-	const zcRes::GfxViewRef& rView = *static_cast<const zcRes::GfxViewRef*>(this);
-	ZENAssertMsg(rView.IsValid(), "No valid resource assigned");
-	return rView->GetDim();
+	ZENAssertMsg(mpResource, "No valid resource assigned");
+	const zcRes::GfxView* pView = static_cast<const zcRes::GfxView*>(mpResource);	
+	return pView->GetDim();
 }
 
 //=================================================================================================
 // GFX MESH
 //=================================================================================================
-void zGfxMesh::RenderMesh()
-{
-	ZENAssertMsg(mpResource, "No valid resource assigned");
-	zcRes::GfxMeshRef& rMesh = *static_cast<zcRes::GfxMeshRef*>(this);
-	EMgr::GfxRender.Render( rMesh->GetProxy() );
-}
-
 void zGfxMesh::SetValue(const zShaderParameter& _Value)
 {
 	ZENAssertMsg(mpResource, "No valid resource assigned");
@@ -232,13 +284,6 @@ void zGfxMesh::SetValue(const zHash32& _hTextureName, zGfxTexture2d _rTexture, z
 //=================================================================================================
 // GFX MESH STRIP
 //=================================================================================================
-void zGfxMeshStrip::RenderMeshStrip()
-{
-	ZENAssertMsg(mpResource, "No valid resource assigned");
-	zcRes::GfxMeshStripRef& rMeshStrip = *static_cast<zcRes::GfxMeshStripRef*>(this);
-	EMgr::GfxRender.Render( rMeshStrip->GetProxy() );
-}
-
 void zGfxMeshStrip::SetValue(const zShaderParameter& _Value)
 {
 	ZENAssertMsg(mpResource, "No valid resource assigned");

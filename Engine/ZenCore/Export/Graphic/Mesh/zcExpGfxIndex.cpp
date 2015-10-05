@@ -19,7 +19,7 @@ zResID CreateGfxIndexBuffer( const zArrayBase<zU16>& _Indices, zenConst::ePrimit
 	ExportInfoGfxIndex* pExportInfo	= zenNew(&sMemPool) ExportInfoGfxIndex;
 	pExportInfo->maIndice16				= _Indices;
 	pExportInfo->mePrimitiveType		= _ePrimitiveType;
-	return EMgr::Export.CreateItem( zResID::kePlatformType_GFX, zenConst::keResType_GfxIndex, pExportInfo );
+	return zcMgr::Export.CreateItem( zResID::kePlatformType_GFX, zenConst::keResType_GfxIndex, pExportInfo );
 }
 
 //=================================================================================================
@@ -38,7 +38,7 @@ zResID CreateGfxIndexBuffer( const zArrayBase<zU32>& _Indices, zenConst::ePrimit
 	ExportInfoGfxIndex* pExportInfo	= zenNew(&sMemPool) ExportInfoGfxIndex;
 	pExportInfo->maIndice32				= _Indices;
 	pExportInfo->mePrimitiveType		= _ePrimitiveType;
-	return EMgr::Export.CreateItem( zResID::kePlatformType_GFX, zenConst::keResType_GfxIndex, pExportInfo );
+	return zcMgr::Export.CreateItem( zResID::kePlatformType_GFX, zenConst::keResType_GfxIndex, pExportInfo );
 }
 
 

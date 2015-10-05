@@ -75,7 +75,7 @@ namespace zcExp
 		pExportInfo->mTargetDepthID			= _TargetDepthID;
 		pExportInfo->mvOrigin				= _vOrigin;
 		pExportInfo->mvDim					= _vDim;
-		return EMgr::Export.CreateItem( zResID::kePlatformType_GFX, zenConst::keResType_GfxView, pExportInfo );
+		return zcMgr::Export.CreateItem( zResID::kePlatformType_GFX, zenConst::keResType_GfxView, pExportInfo );
 	}
 
 	//=================================================================================================
@@ -96,7 +96,7 @@ namespace zcExp
 		pExportInfo->mTargetDepthID			= _TargetDepthID;
 		pExportInfo->mvOrigin				= _vOrigin;
 		pExportInfo->mvDim					= _vDim;
-		return EMgr::Export.CreateItem( zResID::kePlatformType_GFX, zenConst::keResType_GfxView, pExportInfo );
+		return zcMgr::Export.CreateItem( zResID::kePlatformType_GFX, zenConst::keResType_GfxView, pExportInfo );
 	}
 
 }

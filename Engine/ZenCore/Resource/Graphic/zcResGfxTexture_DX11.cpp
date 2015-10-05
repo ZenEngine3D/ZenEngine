@@ -32,12 +32,12 @@ bool GfxTexture2dProxy_DX11::Initialize(class GfxTexture2d& _Owner)
 	ZeroMemory( &bufferDesc, sizeof(bufferDesc) );
 	ZeroMemory( &viewDesc, sizeof(viewDesc) );
 	ZeroMemory( aInitData, sizeof(aInitData) );		
-	bool bIsDepth							= EMgr::GfxRender.IsDepth(rResData->meFormat);
+	bool bIsDepth							= zcMgr::GfxRender.IsDepth(rResData->meFormat);
 	bufferDesc.Width						= rResData->maMipData[0].mvDim.x;
 	bufferDesc.Height						= rResData->maMipData[0].mvDim.y;
 	bufferDesc.MipLevels					= rResData->maMipData.Count();
 	bufferDesc.ArraySize					= 1;
-	bufferDesc.Format						= EMgr::GfxRender.ZenFormatToNative(rResData->meFormat);
+	bufferDesc.Format						= zcMgr::GfxRender.ZenFormatToNative(rResData->meFormat);
 	bufferDesc.SampleDesc.Count				= 1;
 	bufferDesc.SampleDesc.Quality			= 0;
 	bufferDesc.CPUAccessFlags				= 0;
@@ -67,14 +67,14 @@ bool GfxTexture2dProxy_DX11::Initialize(class GfxTexture2d& _Owner)
 		}			
 	}
 
-	HRESULT ret = EMgr::GfxRender.DX11GetDevice()->CreateTexture2D( &bufferDesc, bValidInitData ? aInitData : NULL, &mpTextureBuffer );
+	HRESULT ret = zcMgr::GfxRender.DX11GetDevice()->CreateTexture2D( &bufferDesc, bValidInitData ? aInitData : NULL, &mpTextureBuffer );
 	if( SUCCEEDED(ret) && !bIsDepth)
 	{
 		viewDesc.Format						= bufferDesc.Format;
 		viewDesc.ViewDimension				= D3D11_SRV_DIMENSION_TEXTURE2D;
 		viewDesc.Texture2D.MostDetailedMip	= 0;
 		viewDesc.Texture2D.MipLevels		= bufferDesc.MipLevels;
-		ret = EMgr::GfxRender.DX11GetDevice()->CreateShaderResourceView( mpTextureBuffer, &viewDesc, &mpTextureView );
+		ret = zcMgr::GfxRender.DX11GetDevice()->CreateShaderResourceView( mpTextureBuffer, &viewDesc, &mpTextureView );
 	}
 
 	return SUCCEEDED(ret);

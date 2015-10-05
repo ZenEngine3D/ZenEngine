@@ -4,6 +4,7 @@
 
 namespace zcExp
 {
+//! @todo Urgent remove views
 	struct ExportInfoGfxView : public ExportInfoBase
 	{
 		zArrayStatic<zResID>	maTargetColorID;
@@ -35,9 +36,10 @@ namespace zcExp
 		virtual bool			ExportStart();		
 		ResDataRef				mrResData;
 	};
-
+	//! @todo Urgent support blend/depth state in a view
 	zResID CreateGfxView( const zResID& _TargetColorID, const zResID& _TargetDepthID, const zVec2U16& _vDim=zVec2U16(9999,9999), const zVec2S16& _vOrigin=zVec2S16(0,0) );
 	zResID CreateGfxView( const zArrayBase<zResID>& _aTargetColorID, const zResID& _TargetDepthID, const zVec2U16& _vDim=zVec2U16(9999,9999), const zVec2S16& _vOrigin=zVec2S16(0,0) );
+	
 }
 
 

@@ -25,7 +25,7 @@ namespace zcExp
 		pExportInfo->maShaderParamID			= _aShaderParamID;		
 		pExportInfo->muIndexFirst				= _uIndexFirst;
 		pExportInfo->muIndexCount				= _uIndexCount;
-		return EMgr::Export.CreateItem( zResID::kePlatformType_GFX, zenConst::keResType_GfxMeshStrip, pExportInfo );
+		return zcMgr::Export.CreateItem( zResID::kePlatformType_GFX, zenConst::keResType_GfxMeshStrip, pExportInfo );
 	}
 
 

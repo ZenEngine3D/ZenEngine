@@ -63,7 +63,7 @@ bool GfxVertexProxy_DX11::Initialize(class GfxVertex& _Owner)
 		initData.pSysMem			= stream.maData.First();
 		initData.SysMemPitch		= 0;
 		initData.SysMemSlicePitch	= 0;
-		HRESULT hr = EMgr::GfxRender.DX11GetDevice()->CreateBuffer( &vertexDesc, &initData, &maStreamBuffer[streamIdx] );
+		HRESULT hr = zcMgr::GfxRender.DX11GetDevice()->CreateBuffer( &vertexDesc, &initData, &maStreamBuffer[streamIdx] );
 		if( FAILED(hr) )
 		{
 			//zbLog::Log(zbLog::keLog_ResGeometry, "Failed creating DX11 VertexBuffer");
@@ -86,7 +86,7 @@ zU8* GfxVertexProxy_DX11::Lock()
 	if( maStreamBuffer.Count() > 0 )
 	{
 		D3D11_MAPPED_SUBRESOURCE mapRes;
-		HRESULT hr = EMgr::GfxRender.DX11GetDeviceContext()->Map(maStreamBuffer[0], 0, D3D11_MAP_WRITE_DISCARD, NULL, &mapRes);
+		HRESULT hr = zcMgr::GfxRender.DX11GetDeviceContext()->Map(maStreamBuffer[0], 0, D3D11_MAP_WRITE_DISCARD, NULL, &mapRes);
 		if( SUCCEEDED(hr) )
 			return (zU8*)mapRes.pData;
 	}
@@ -97,7 +97,7 @@ void GfxVertexProxy_DX11::Unlock()
 {
 	if( maStreamBuffer.Count() > 0 )
 	{
-		EMgr::GfxRender.DX11GetDeviceContext()->Unmap(maStreamBuffer[0], NULL);
+		zcMgr::GfxRender.DX11GetDeviceContext()->Unmap(maStreamBuffer[0], NULL);
 	}
 }
 

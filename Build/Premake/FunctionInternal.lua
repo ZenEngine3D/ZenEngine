@@ -109,18 +109,19 @@ function Orion_AddProjectCommon(aFilesExt, aPathList, aPchFile )
 	location 		( vOutputRoot .. "/" .. project().name )
 	objdir			( vOutputRoot .. "/" .. project().name .. "/obj" )
 	includedirs 	( {vSourceRoot, vSourceRoot .. "/Engine/ZenApi"} )
-	vpaths 			( {["*"] = "../../../Engine/ZenApi" } )
-	vpaths 			( {["*"] = "../../../Engine/ZenBase"} )
-	vpaths 			( {["*"] = "../../../Engine/ZenCore"} )
-	vpaths 			( {["*"] = "../../../Engine/ZenEngine"} )
+	-- ToDo find more generalize way to do this
+	vpaths 			( {["Api/*"] = "../../../Engine/ZenApi/ZenBase" } )
+	vpaths 			( {["Api/*"] = "../../../Engine/ZenApi/ZenCore" } )
+	vpaths 			( {["Api/*"] = "../../../Engine/ZenApi/ZenEngine" } )
 	language 		( "C++" )	
 	Orion_ConfigurePCH	( aPathList, aPchFile )
 	
-	for i, vPath in ipairs(aPathList) do 
+	for i, vPath in ipairs(aPathList) do 		
 		for j, vExt in ipairs(aFilesExt) do 
-			files( vSourceRoot .. "/" .. vPath .. vExt )
+			files( vSourceRoot .. "/" .. vPath .. vExt )			
 			--print("[" .. project().name .. "] Adding : " .. vPath .. vExt)
 		end
+		vpaths( {["*"] = vSourceRoot .. "/" .. vPath .. "/**" } )
 	end
 	
 	Orion_ConfigureBuild()

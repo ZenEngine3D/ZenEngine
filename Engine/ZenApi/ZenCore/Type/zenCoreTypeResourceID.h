@@ -3,47 +3,37 @@
 #define __zenCore_Type_ResourceID_h__
 
 namespace zen { namespace zenType {
-
 	
 	class zBlendDesc
 	{
 	ZENClassDeclareNoParent(zBlendDesc)
 	public:
-		struct zRTBlendDesc
-		{
-			zRTBlendDesc(void)
-			: mbBlendEnable(false)
-			, muRenderTargetWriteMask(0xFF)
-			, meSrcBlend(zenConst::keBlend_SrcColor)
-			, meDestBlend(zenConst::keBlend_InvSrcColor)
-			, meBlendOp(zenConst::keBlendOp_Add)
-			, meSrcBlendAlpha(zenConst::keBlend_SrcColor)
-			, meDestBlendAlpha(zenConst::keBlend_InvSrcColor)
-			, meBlendOpAlpha(zenConst::keBlendOp_Add)
-			{
-			}
-			bool				mbBlendEnable;
-			zU8					muRenderTargetWriteMask;
-			zenConst::eBlend	meSrcBlend;
-			zenConst::eBlend	meDestBlend;
-			zenConst::eBlendOp	meBlendOp;
-			zenConst::eBlend	meSrcBlendAlpha;
-			zenConst::eBlend	meDestBlendAlpha;
-			zenConst::eBlendOp	meBlendOpAlpha;
-		};
-
-		ZENInlineForce zBlendDesc(void)
-		: mbAlphaToCoverageEnable(false)
+		ZENInlineForce zBlendDesc(void)		
+		: mbBlendEnable(false)
+		, muRenderTargetWriteMask(0xFF)
+		, meSrcBlend(zenConst::keBlend_SrcColor)
+		, meDestBlend(zenConst::keBlend_InvSrcColor)
+		, meBlendOp(zenConst::keBlendOp_Add)
+		, meSrcBlendAlpha(zenConst::keBlend_SrcColor)
+		, meDestBlendAlpha(zenConst::keBlend_InvSrcColor)
+		, meBlendOpAlpha(zenConst::keBlendOp_Add)
+		, mbAlphaToCoverageEnable(false)
 		, mbIndependentBlendEnable(false)
 		{
 		}
 
-		bool			mbAlphaToCoverageEnable;
-		bool			mbIndependentBlendEnable;
-		zRTBlendDesc	mxRenderTarget[ 8 ];
+		bool				mbBlendEnable;
+		zU8					muRenderTargetWriteMask;
+		zenConst::eBlend	meSrcBlend;
+		zenConst::eBlend	meDestBlend;
+		zenConst::eBlendOp	meBlendOp;
+		zenConst::eBlend	meSrcBlendAlpha;
+		zenConst::eBlend	meDestBlendAlpha;
+		zenConst::eBlendOp	meBlendOpAlpha;
+		bool				mbAlphaToCoverageEnable;
+		bool				mbIndependentBlendEnable;
 	};
-	ZENSupportMemcopy(zBlendDesc);
-
+	
 	class zDepthStencilDesc
 	{
 	ZENClassDeclareNoParent(zDepthStencilDesc)
@@ -82,9 +72,7 @@ namespace zen { namespace zenType {
 		DepthStencilOp				mxFrontFace;
 		DepthStencilOp				mxBackFace;
 	};
-	ZENSupportMemcopy(zDepthStencilDesc);
-
-
+	
 	class zResID
 	{
 	ZENClassDeclareNoParent(zResID)
@@ -131,8 +119,7 @@ namespace zen { namespace zenType {
 			zU64 muHashID;
 		};
 	};
-	ZENSupportMemcopy(zResID);
-	
+		
 
 }}  //namespace zen, Type 
 

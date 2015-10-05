@@ -68,7 +68,7 @@ namespace zcExp
 		pExport->maShaderID = aShaderID;
 		return true;
 	}
-
+	
 	//=================================================================================================
 	//! @brief		Create a new Shader Binding 
 	//! @details	The created resource will bind together shader stages(vertex/pixel/...) and 
@@ -83,9 +83,9 @@ namespace zcExp
 	{	
 		static zenMem::zAllocatorPool sMemPool("Pool CreateShaderBinding", sizeof(ExportInfoGfxShaderBinding), 1, 5 );
 		ExportInfoGfxShaderBinding* pExportInfo	= zenNew(&sMemPool) ExportInfoGfxShaderBinding;
-		pExportInfo->maShaderID								= _aShaderID;
-		return EMgr::Export.CreateItem( zResID::kePlatformType_GFX, zenConst::keResType_GfxShaderBinding, pExportInfo );
+		pExportInfo->maShaderID					= _aShaderID;
+		return zcMgr::Export.CreateItem( zResID::kePlatformType_GFX, zenConst::keResType_GfxShaderBinding, pExportInfo );
 	}
-
+	
 }
 

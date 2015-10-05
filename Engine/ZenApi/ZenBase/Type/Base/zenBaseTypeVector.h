@@ -90,21 +90,21 @@ namespace zen { namespace zenType
 		static const zVector4 One;
 	};
 
-	typedef zVector2<zI16>	zVec2S16;	ZENSupportMemcopy(zVec2S16);
-	typedef zVector2<zI32>	zVec2S32;	ZENSupportMemcopy(zVec2S32);
-	typedef zVector2<zU16>	zVec2U16;	ZENSupportMemcopy(zVec2U16);
-	typedef zVector2<zU32>	zVec2U32;	ZENSupportMemcopy(zVec2U32);
-	typedef zVector2<float>	zVec2F;		ZENSupportMemcopy(zVec2F);
-	typedef zVector3<zI16>	zVec3S16;	ZENSupportMemcopy(zVec3S16);
-	typedef zVector3<zI32>	zVec3S32;	ZENSupportMemcopy(zVec3S32);
-	typedef zVector3<zU16>	zVec3U16;	ZENSupportMemcopy(zVec3U16);
-	typedef zVector3<zU32>	zVec3U32;	ZENSupportMemcopy(zVec3U32);
-	typedef zVector3<float>	zVec3F;		ZENSupportMemcopy(zVec3F);
-	typedef zVector4<zI16>	zVec4S16;	ZENSupportMemcopy(zVec4S16);
-	typedef zVector4<zI32>	zVec4S32;	ZENSupportMemcopy(zVec4S32);
-	typedef zVector4<zU16>	zVec4U16;	ZENSupportMemcopy(zVec4U16);
-	typedef zVector4<zU32>	zVec4U32;	ZENSupportMemcopy(zVec4U32);
-	typedef zVector4<float>	zVec4F;		ZENSupportMemcopy(zVec4F);
+	typedef zVector2<zI16>	zVec2S16;	
+	typedef zVector2<zI32>	zVec2S32;	
+	typedef zVector2<zU16>	zVec2U16;	
+	typedef zVector2<zU32>	zVec2U32;	
+	typedef zVector2<float>	zVec2F;		
+	typedef zVector3<zI16>	zVec3S16;	
+	typedef zVector3<zI32>	zVec3S32;	
+	typedef zVector3<zU16>	zVec3U16;	
+	typedef zVector3<zU32>	zVec3U32;	
+	typedef zVector3<float>	zVec3F;		
+	typedef zVector4<zI16>	zVec4S16;	
+	typedef zVector4<zI32>	zVec4S32;	
+	typedef zVector4<zU16>	zVec4U16;	
+	typedef zVector4<zU32>	zVec4U32;	
+	typedef zVector4<float>	zVec4F;		
 }} // namespace zen, zenType
 
 #include "zenBaseTypeVector.inl"

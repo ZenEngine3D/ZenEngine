@@ -106,28 +106,34 @@ bool SampleRendererInstance::Init()
 	zArrayStatic<zenRes::zShaderDefine> test(2);
 	test[0] = zenRes::zShaderDefine("DEFINETEST", "1");
 
-	rCubeVertex			= zenRes::zGfxVertex::Create(aVerticeStreams, zFlagResUse());	
-	rCubeIndex			= zenRes::zGfxIndex::Create( zArrayStatic<zU16>(CubeIndices, ZENArrayCount(CubeIndices), TRUE), zenConst::kePrimType_TriangleList );
-	rShaderVS			= zenRes::zGfxShaderVertex::Create( "Shader/Tutorial07.fx", "VS");
-	rShaderPS			= zenRes::zGfxShaderPixel::Create( "Shader/Tutorial07.fx", "PS", test );		
-	rTexture			= zenRes::zGfxTexture2d::Create(zenConst::keTexFormat_RGBA8, vTexSize, aTexRGBA );
-	rSampler			= zenRes::zGfxSampler::Create(zenConst::keTexFilter_Trilinear, zenConst::keTexFilter_Bilinear, zenConst::keTexWrap_Clamp, zenConst::keTexWrap_Clamp, 0);
-	rSampler2			= zenRes::zGfxSampler::Create(zenConst::keTexFilter_Point, zenConst::keTexFilter_Point, zenConst::keTexWrap_Clamp, zenConst::keTexWrap_Clamp, 0);
-	rRenderColor		= zenRes::zGfxRenderTarget::Create(zenConst::keTexFormat_RGBA8, zVec2U16(512,512) );
-	rRenderDepth		= zenRes::zGfxRenderTarget::Create(zenConst::keTexFormat_D24S8, zVec2U16(512,512) );
-	rView				= zenRes::zGfxView::Create( rRenderColor, rRenderDepth, zVec2U16(256,256), zVec2S16(256,256) );
+	mrCubeVertex			= zenRes::zGfxVertex::Create(aVerticeStreams, zFlagResUse());	
+	mrCubeIndex			= zenRes::zGfxIndex::Create( zArrayStatic<zU16>(CubeIndices, ZENArrayCount(CubeIndices), TRUE), zenConst::kePrimType_TriangleList );
+	mrShaderVS			= zenRes::zGfxShaderVertex::Create( "Shader/Tutorial07.fx", "VS");
+	mrShaderPS			= zenRes::zGfxShaderPixel::Create( "Shader/Tutorial07.fx", "PS", test );		
+	mrTexture			= zenRes::zGfxTexture2d::Create(zenConst::keTexFormat_RGBA8, vTexSize, aTexRGBA );
+	mrSampler			= zenRes::zGfxSampler::Create(zenConst::keTexFilter_Trilinear, zenConst::keTexFilter_Bilinear, zenConst::keTexWrap_Clamp, zenConst::keTexWrap_Clamp, 0);
+	mrSampler2			= zenRes::zGfxSampler::Create(zenConst::keTexFilter_Point, zenConst::keTexFilter_Point, zenConst::keTexWrap_Clamp, zenConst::keTexWrap_Clamp, 0);
+	mrRenderColor		= zenRes::zGfxRenderTarget::Create(zenConst::keTexFormat_RGBA8, zVec2U16(512,512) );
+	mrRenderDepth		= zenRes::zGfxRenderTarget::Create(zenConst::keTexFormat_D24S8, zVec2U16(512,512) );
+	mrView				= zenRes::zGfxView::Create( mrRenderColor, mrRenderDepth, zVec2U16(256,256), zVec2S16(256,256) );
 
 	// Some bindings of render resource together
-	const zenRes::zGfxShader pShaders[]			= {rShaderVS, rShaderPS};
-	rTestShaderBind		= zenRes::zGfxShaderBinding::Create( pShaders, ZENArrayCount(pShaders) );
-	rCube1MeshStrip		= zenRes::zGfxMeshStrip::Create( rCubeVertex, rCubeIndex, rTestShaderBind );
-	rCube2MeshStrip		= zenRes::zGfxMeshStrip::Create( rCubeVertex, rCubeIndex, rTestShaderBind );
-	rCube3MeshStrip		= zenRes::zGfxMeshStrip::Create( rCubeVertex, rCubeIndex, rTestShaderBind );
+	const zenRes::zGfxShader pShaders[]			= {mrShaderVS, mrShaderPS};
+	mrTestShaderBind	= zenRes::zGfxShaderBinding::Create( pShaders, ZENArrayCount(pShaders) );
+	mrCube1MeshStrip	= zenRes::zGfxMeshStrip::Create( mrCubeVertex, mrCubeIndex, mrTestShaderBind );
+	mrCube2MeshStrip	= zenRes::zGfxMeshStrip::Create( mrCubeVertex, mrCubeIndex, mrTestShaderBind );
+	mrCube3MeshStrip	= zenRes::zGfxMeshStrip::Create( mrCubeVertex, mrCubeIndex, mrTestShaderBind );
 
-	zenRes::zGfxMeshStrip rCube4MeshStripA		= zenRes::zGfxMeshStrip::Create( rCubeVertex, rCubeIndex, rTestShaderBind, 0, 12 );
-	zenRes::zGfxMeshStrip rCube4MeshStripB		= zenRes::zGfxMeshStrip::Create( rCubeVertex, rCubeIndex, rTestShaderBind, 12, 0xFFFFFFFF );
+	zenRes::zGfxMeshStrip rCube4MeshStripA		= zenRes::zGfxMeshStrip::Create( mrCubeVertex, mrCubeIndex, mrTestShaderBind, 0, 12 );
+	zenRes::zGfxMeshStrip rCube4MeshStripB		= zenRes::zGfxMeshStrip::Create( mrCubeVertex, mrCubeIndex, mrTestShaderBind, 12, 0xFFFFFFFF );
 	const zenRes::zGfxMeshStrip aMesh4Strip[]	= {rCube4MeshStripA, rCube4MeshStripB};
-	rCube4Mesh									= zenRes::zGfxMesh::Create( aMesh4Strip, ZENArrayCount(aMesh4Strip) );
+	mrCube4Mesh									= zenRes::zGfxMesh::Create( aMesh4Strip, ZENArrayCount(aMesh4Strip) );
+
+	mrStateBlend		= zenRes::zGfxStateBlend::Create();
+	mrStateDepth		= zenRes::zGfxStateDepthStencil::Create(true, true);
+	mrStateRaster		= zenRes::zGfxStateRasterizer::Create(false, false, false, false, false, false, zenConst::eCullMode::keCullMode_Back);
+	mrRndPassTexture	= zenRes::zGfxRenderPass::Create("RenderToTexture",mrStateBlend,mrStateDepth,mrStateRaster,mrView);
+	mrRndPassFinal		= zenRes::zGfxRenderPass::Create("RenderBackbufferFinal",mrStateBlend,mrStateDepth,mrStateRaster,mrMainGfxWindow.GetBackbuffer());
 
 	//-------------------------------------------------
 	// Init some shader values
@@ -139,48 +145,46 @@ bool SampleRendererInstance::Init()
 	zenMath::V4 vAt		= zenMath::simdXYZW( 0.0f, 0.0f, 0.0f, 0.0f );
 	zenMath::V4 vUp		= zenMath::simdXYZW( 0.0f, 1.0f, 0.0f, 0.0f );
 	zenMath::MatrixLookAtLH(matView, vEye, vAt, vUp );
-	zenMath::MatrixProjectionLH( matProjectionRT, 60, float(rRenderColor.GetDim().y)/float(rRenderColor.GetDim().x), 0.01f, 100.f );
-	rCube1MeshStrip.SetValue( aParamAll );
-	rCube1MeshStrip.SetValue( zHash32("World"),		matWorld[0] );
-	rCube1MeshStrip.SetValue( zHash32("View"),		matView );
-	rCube1MeshStrip.SetValue( zHash32("Projection"),	matProjectionRT );
-	rCube1MeshStrip.SetValue( zHash32("txColor"),		rTexture, rSampler);
+	zenMath::MatrixProjectionLH( matProjectionRT, 60, float(mrRenderColor.GetDim().y)/float(mrRenderColor.GetDim().x), 0.01f, 100.f );
+	mrCube1MeshStrip.SetValue( aParamAll );
+	mrCube1MeshStrip.SetValue( zHash32("World"),			matWorld[0] );
+	mrCube1MeshStrip.SetValue( zHash32("View"),			matView );
+	mrCube1MeshStrip.SetValue( zHash32("Projection"),	matProjectionRT );
+	mrCube1MeshStrip.SetValue( zHash32("txColor"),		mrTexture, mrSampler);
 
 	vEye	= zenMath::simdXYZW( 0.0f, 0.0f, -5.0f, 0.0f );
 	zenMath::MatrixLookAtLH(matView, vEye, vAt, vUp );		
 	matWorld[1].SetPos(zenMath::simdXYZW(-3.0f, 0.0f, 0.0f, 1.0f));
 	matWorld[1].SetRotationY( zenMath::kfPI2x );		
-	rCube2MeshStrip.SetValue( aParamAll );		
-	rCube2MeshStrip.SetValue( zHash32("View"),		matView );				
-	rCube2MeshStrip.SetValue( zHash32("World"),		matWorld[1] );
-	rCube2MeshStrip.SetValue( zHash32("txColor"),	rRenderColor.GetTexture2D(), rSampler);
-	rCube2MeshStrip.SetValue( zHash32("vColor"),	zVec4F(1,0,1,1));
+	mrCube2MeshStrip.SetValue( aParamAll );		
+	mrCube2MeshStrip.SetValue( zHash32("View"),		matView );				
+	mrCube2MeshStrip.SetValue( zHash32("World"),	matWorld[1] );
+	mrCube2MeshStrip.SetValue( zHash32("txColor"),	mrRenderColor.GetTexture2D(), mrSampler);
+	mrCube2MeshStrip.SetValue( zHash32("vColor"),	zVec4F(1,0,1,1));
 
 	matWorld[2].SetPos(zenMath::simdXYZW(3.0f, 0.0f, 0.0f, 1.0f));
-	rCube3MeshStrip.SetValue( aParamAll );
-	rCube3MeshStrip.SetValue( zHash32("View"),		matView );
-	rCube3MeshStrip.SetValue( zHash32("Projection"),matProjection );		
-	rCube3MeshStrip.SetValue( zHash32("World"),		matWorld[2] );
-	rCube3MeshStrip.SetValue( zHash32("txColor"),	rTexture, rSampler2);
-	rCube3MeshStrip.SetValue( zHash32("vColor"),	zVec4F(1,1,1,1));
-
+	mrCube3MeshStrip.SetValue( aParamAll );
+	mrCube3MeshStrip.SetValue( zHash32("View"),		matView );
+	mrCube3MeshStrip.SetValue( zHash32("Projection"),matProjection );		
+	mrCube3MeshStrip.SetValue( zHash32("World"),		matWorld[2] );
+	mrCube3MeshStrip.SetValue( zHash32("txColor"),	mrTexture, mrSampler2);
+	mrCube3MeshStrip.SetValue( zHash32("vColor"),	zVec4F(1,1,1,1));
 
 	matWorld[3].SetPos(zenMath::simdXYZW(0.0f, 0.0f, 0.0f, 1.0f));
-	rCube4Mesh.SetValue(aParamAll);
-	rCube4Mesh.SetValue( zHash32("View"),			matView );
-	rCube4Mesh.SetValue( zHash32("Projection"),		matProjection );		
-	rCube4Mesh.SetValue( zHash32("World"),			matWorld[3] );
-	rCube4Mesh.SetValue( zHash32("txColor"),		rTexture, rSampler);
+	mrCube4Mesh.SetValue(aParamAll);
+	mrCube4Mesh.SetValue( zHash32("View"),			matView );
+	mrCube4Mesh.SetValue( zHash32("Projection"),	matProjection );		
+	mrCube4Mesh.SetValue( zHash32("World"),			matWorld[3] );
+	mrCube4Mesh.SetValue( zHash32("txColor"),		mrTexture, mrSampler);
 	rCube4MeshStripA.SetValue( zHash32("vColor"),	zVec4F(1,0.2f,0.2f,1));
 	rCube4MeshStripB.SetValue( zHash32("vColor"),	zVec4F(0.2f,1,0.2f,1));	
-
-
+	
 	//---------------------------------------------------------------------
 	// Testing Lock
 	//---------------------------------------------------------------------
 	SimpleVertex* pVertexSrc	= CubeVertices;
 	SimpleVertex* pVertexSrcEnd	= &CubeVertices[ZENArrayCount(CubeVertices)];
-	SimpleVertex* pVertex		= (SimpleVertex*)rCubeVertex.Lock();		
+	SimpleVertex* pVertex		= (SimpleVertex*)mrCubeVertex.Lock();		
 	while( pVertexSrc < pVertexSrcEnd )
 	{
 		pVertex->Pos = pVertexSrc->Pos * 1.5;
@@ -188,7 +192,7 @@ bool SampleRendererInstance::Init()
 		++pVertexSrc;
 		++pVertex;
 	}
-	rCubeVertex.Unlock();
+	mrCubeVertex.Unlock();
 	return true;
 }
 
@@ -200,6 +204,8 @@ void SampleRendererInstance::Destroy()
 void SampleRendererInstance::Update()
 {	
 	Super::Update();
+	zArrayDynamic<zenRes::zGfxDrawcall> aDrawcalls(128);
+
 	//---------------------------------------------------------------------
 	// Render loop
 	//---------------------------------------------------------------------
@@ -216,43 +222,42 @@ void SampleRendererInstance::Update()
 	float t = static_cast<float>(zenSys::GetElapsedSec() / 3.0);	// Update our time animation
 
 	//-----------------------------------------------------------------
-	// Render cube in rendertarget
+	// Render cube in RenderTarget
 	//-----------------------------------------------------------------
 	{				
-		rView.ActivateView();
-		rView.Clear( true, zVec4F(1,0,0,0) );
+		mrView.Clear( true, zVec4F(1,0,0,0) );
 		zVec4F vShaderColor = zenMath::TriLerp<zVec4F>( zVec4F(1,1,1,1), zVec4F(0.15f,0.15f,1.0f,1), zVec4F(1,1,1,1), zenMath::Fract(t*2) );
 		matWorld[0].SetRotationY( t );							// Rotate cube around the origin
-		rCube1MeshStrip.SetValue( zHash32("World"),		matWorld[0] );
-		rCube1MeshStrip.SetValue( zHash32("vColor"),	vShaderColor);
-		rCube1MeshStrip.RenderMeshStrip();
+		mrCube1MeshStrip.SetValue( zHash32("World"),	matWorld[0] );
+		mrCube1MeshStrip.SetValue( zHash32("vColor"),	vShaderColor);
+		mrCube1MeshStrip.Draw(mrRndPassTexture, 0, aDrawcalls);
 	}
 
 	//-----------------------------------------------------------------
 	// Render cubes in main render target
 	//-----------------------------------------------------------------
-	mrMainGfxWindow.GetBackbuffer().ActivateView();
-	zVec4F vClearColor = zenMath::TriLerp<zVec4F>( zVec4F(0.05f,0.05f,0.05f,1), zVec4F(0.1f,0.1f,0.20f,1), zVec4F(0.05f,0.05f,0.05f,1), zenMath::Fract(t) );
+	zVec4F vClearColor = zenMath::TriLerp( zVec4F(0.05f,0.05f,0.05f,1), zVec4F(0.1f,0.1f,0.20f,1), zVec4F(0.05f,0.05f,0.05f,1), zenMath::Fract(t) );
 	mrMainGfxWindow.GetBackbuffer().Clear( true, vClearColor, true, 0 );
 
-
 	// Render the cube with rendertarget as texture
-	rCube2MeshStrip.SetValue( zHash32("World"),			matWorld[1] );
-	rCube2MeshStrip.SetValue( zHash32("Projection"),	matProjection );
-	rCube2MeshStrip.RenderMeshStrip();
+	mrCube2MeshStrip.SetValue( zHash32("World"),		matWorld[1] );
+	mrCube2MeshStrip.SetValue( zHash32("Projection"),	matProjection );
+	mrCube2MeshStrip.Draw(mrRndPassFinal, 0, aDrawcalls);
 
 	// Render the cube with point sampling
 	matWorld[2].SetRotationY( t );						// Rotate cube around the origin 				
-	rCube3MeshStrip.SetValue( zHash32("World"),			matWorld[2] );
-	rCube3MeshStrip.SetValue( zHash32("Projection"),	matProjection );
-	rCube3MeshStrip.RenderMeshStrip();
+	mrCube3MeshStrip.SetValue( zHash32("World"),		matWorld[2] );
+	mrCube3MeshStrip.SetValue( zHash32("Projection"),	matProjection );
+	mrCube3MeshStrip.Draw(mrRndPassFinal, 0, aDrawcalls);
 
 	matWorld[3].SetRotationX( t );						// Rotate cube around the origin 				
-	rCube4Mesh.SetValue( zHash32("World"),				matWorld[3] );
-	rCube4Mesh.SetValue( zHash32("Projection"),			matProjection );
-	rCube4Mesh.SetValue( zHash32("World"),				matWorld[3] );
-	rCube4Mesh.SetValue( zHash32("Projection"),			matProjection );
-	rCube4Mesh.RenderMesh();
+	mrCube4Mesh.SetValue( zHash32("World"),				matWorld[3] );
+	mrCube4Mesh.SetValue( zHash32("Projection"),		matProjection );
+	mrCube4Mesh.SetValue( zHash32("World"),				matWorld[3] );
+	mrCube4Mesh.SetValue( zHash32("Projection"),		matProjection );	
+	mrCube4Mesh.Draw(mrRndPassFinal, 0, aDrawcalls);
+	
+	zenRes::zGfxDrawcall::Submit(aDrawcalls);
 
 	mrMainGfxWindow.FrameEnd();
 	

@@ -25,7 +25,7 @@ public:
 //==================================================================================================	
 public:
 										zArrayBase();
-	void								Sort();											//!< @brief Sort every element in array
+	//void								Sort();											//!< @brief Sort every element in array
 	int									Find(const TType& _Value);	
 	void								SetAll(const TType& _Value);					//!< @brief Set every array element to specific value
 	void								Clear();										//!< @brief Remove all element from array

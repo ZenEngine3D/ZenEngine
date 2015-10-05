@@ -24,18 +24,41 @@ bool GfxInputStreamProxy_DX11::Initialize(class GfxInputStream& _Owner)
 	bool bSuccess(FALSE);
 	mrVertexProxy	= GetResourceProxy<GfxVertexRef>(rResData->mVertexBufferID);
 	if( mrVertexProxy.IsValid() )
-	{
-		
-		mrSignatureProxy		= GetResourceProxy<GfxInputSignatureRef>(rResData->mShaderInputSignatureID);
+	{		
+		mrSignatureProxy = GetResourceProxy<GfxInputSignatureRef>(rResData->mShaderInputSignatureID);
 		if( mrSignatureProxy.IsValid() )
 		{
 			//! @todo make sure proxy not accessed gamethread
-			HRESULT hr = EMgr::GfxRender.DX11GetDevice()->CreateInputLayout( mrVertexProxy->maElementDef.First(), mrVertexProxy->maElementDef.Count(), 
+			HRESULT hr = zcMgr::GfxRender.DX11GetDevice()->CreateInputLayout( mrVertexProxy->maElementDef.First(), mrVertexProxy->maElementDef.Count(), 
 				mrSignatureProxy->maDummyShaderCode.First(), mrSignatureProxy->maDummyShaderCode.Size(), &mpInputLayout );
 			bSuccess = SUCCEEDED( hr );		
 		}
 	}	
 	return bSuccess;
+}
+
+//=================================================================================================
+GfxRenderPassProxy_DX11::GfxRenderPassProxy_DX11()
+: mzStageName("Uninitialized")
+{
+}
+
+GfxRenderPassProxy_DX11::~GfxRenderPassProxy_DX11()
+{
+}
+
+bool GfxRenderPassProxy_DX11::Initialize(class GfxRenderPass& _Owner)
+{
+	const GfxRenderPass::ResDataRef& rResData = _Owner.GetResData();
+	ZENAssert(rResData.IsValid());
+	ZENDbgCode(mpOwner = &_Owner);
+			
+	mzStageName				= rResData->mzStageName;
+	mrProxBlendState		= GetResourceProxy<GfxStateBlendRef>(rResData->mBlendStateID);
+	mrProxDepthStencilState	= GetResourceProxy<GfxStateDepthStencilRef>(rResData->mDepthStencilStateID);
+	mrProxRasterState		= GetResourceProxy<GfxStateRasterizerRef>(rResData->mRasterStateID);
+	mrProxViewState			= GetResourceProxy<GfxViewRef>(rResData->mViewStateID);
+	return true;
 }
 
 
@@ -58,7 +81,12 @@ bool GfxMeshProxy_DX11::Initialize(class GfxMesh& _Owner)
 	marProxGfxMeshStrip.SetCount( rResData->maMeshStripID.Count() );
 	for(zUInt stripIdx(0), stripCount(marProxGfxMeshStrip.Count()); stripIdx<stripCount; ++stripIdx)
 		marProxGfxMeshStrip[stripIdx] = GetResourceProxy<GfxMeshStripRef>(rResData->maMeshStripID[stripIdx]);
-		
+
+	//! @todo clean workaround until proxy/base class is sorted out
+	_Owner.marGfxMeshStrip.SetCount( rResData->maMeshStripID.Count() );
+	for(zUInt stripIdx(0), stripCount(marProxGfxMeshStrip.Count()); stripIdx<stripCount; ++stripIdx)
+		_Owner.marGfxMeshStrip[stripIdx] = rResData->maMeshStripID[stripIdx];
+
 	return true;
 }
 

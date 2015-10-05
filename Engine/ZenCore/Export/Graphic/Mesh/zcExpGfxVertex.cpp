@@ -17,7 +17,7 @@ zResID CreateGfxVertex(const zArrayBase<zenRes::zGfxVertex::Stream>& _aStreams, 
 	ExportInfoGfxVertex* pExportInfo	= zenNew(&sMemPool) ExportInfoGfxVertex;
 	pExportInfo->maStreams				= _aStreams;
 	pExportInfo->mResourceUse			= _ResourceUse;
-	return EMgr::Export.CreateItem( zResID::kePlatformType_GFX, zenConst::keResType_GfxVertex, pExportInfo );
+	return zcMgr::Export.CreateItem( zResID::kePlatformType_GFX, zenConst::keResType_GfxVertex, pExportInfo );
 }
 
 }

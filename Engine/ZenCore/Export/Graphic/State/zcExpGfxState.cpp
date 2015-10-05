@@ -12,21 +12,16 @@ namespace zcExp
 		pExportInfo->meWrapV				= _eWrapV;			
 		pExportInfo->mfLodBias				= _fLodBias;
 		pExportInfo->mvBorderColor			= _vBorderColor;
-		return EMgr::Export.CreateItem( zResID::kePlatformType_GFX, zenConst::keResType_GfxSampler, pExportInfo );
+		return zcMgr::Export.CreateItem( zResID::kePlatformType_GFX, zenConst::keResType_GfxSampler, pExportInfo );
 	}
 
-	zResID CreateGfxBlend( zenType::zBlendDesc::zRTBlendDesc* _pxBlendDesc, zU8 _uRenderTargets, bool _bAlphaToCoverageEnable, bool _bIndependentBlendEnable )
+	zResID CreateGfxBlend( zenType::zBlendDesc* _pBlendDesc )
 	{
 		static zenMem::zAllocatorPool sMemPool("Pool CreateBlend", sizeof(ExportInfoGfxStateBlend), 1, 5 );
 		ExportInfoGfxStateBlend*	pExportInfo				= zenNew(&sMemPool) ExportInfoGfxStateBlend;
-		pExportInfo->mBlendDesc.mbAlphaToCoverageEnable		= _bAlphaToCoverageEnable;
-		pExportInfo->mBlendDesc.mbIndependentBlendEnable	= _bIndependentBlendEnable;
-		if(_pxBlendDesc)
-		{
-			for(zUInt i = 0; i < _uRenderTargets; ++i)
-				pExportInfo->mBlendDesc.mxRenderTarget[i] = _pxBlendDesc[i];
-		}
-		return EMgr::Export.CreateItem( zResID::kePlatformType_GFX, zenConst::keResType_GfxBlend, pExportInfo );
+		if( _pBlendDesc )
+			pExportInfo->mBlendDesc = *_pBlendDesc;
+		return zcMgr::Export.CreateItem( zResID::kePlatformType_GFX, zenConst::keResType_GfxBlend, pExportInfo );
 	}
 
 	zResID CreateGfxDepthStencil( bool _bDepthEnable, bool _bDepthWrite, bool _bStencilEnable, zU8 _uStencilReadMask, zU8 _uStencilWriteMask, zenConst::eComparisonFunc _eDepthFunc, zenType::zDepthStencilDesc::DepthStencilOp _xFrontFace, zenType::zDepthStencilDesc::DepthStencilOp _xBackFace )
@@ -42,7 +37,7 @@ namespace zcExp
 		pExportInfo->mDepthStencilDesc.mxBackFace			= _xBackFace;
 		pExportInfo->mDepthStencilDesc.mxFrontFace			= _xFrontFace;
 
-		return EMgr::Export.CreateItem( zResID::kePlatformType_GFX, zenConst::keResType_GfxDepthStencil, pExportInfo );
+		return zcMgr::Export.CreateItem( zResID::kePlatformType_GFX, zenConst::keResType_GfxDepthStencil, pExportInfo );
 	}
 
 	zResID CreateGfxRasterizer( bool _bFrontCounterClockwise, bool _bDepthClipEnable, bool _bScissorEnable, bool _bMultisampleEnable, bool _bAntialiasedLineEnable, bool _bWireFrame, zenConst::eCullMode _eCullMode, zI32 _iDepthBias, float _fDepthBiasClamp, float _fSlopeScaledDepthBias )
@@ -61,6 +56,6 @@ namespace zcExp
 		pExportInfo->mfDepthBiasClamp			= _fDepthBiasClamp;
 		pExportInfo->mfSlopeScaledDepthBias		= _fSlopeScaledDepthBias;
 
-		return EMgr::Export.CreateItem( zResID::kePlatformType_GFX, zenConst::keResType_GfxSampler, pExportInfo );
+		return zcMgr::Export.CreateItem( zResID::kePlatformType_GFX, zenConst::keResType_GfxRasterizer, pExportInfo );
 	}
 }

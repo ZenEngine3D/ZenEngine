@@ -1,6 +1,6 @@
 #include "zcCore.h"
 
-namespace EMgr { zcGfx::ManagerRender GfxRender; }
+namespace zcMgr { zcGfx::ManagerRender GfxRender; }
 
 namespace zcGfx
 {
@@ -78,14 +78,67 @@ bool ManagerRender::Unload()
 void ManagerRender::FrameBegin(zcRes::GfxWindowRef _FrameWindow)
 {
 	Super::FrameBegin(_FrameWindow);
+	mrPreviousDrawcall = NULL;
 }
 
 void ManagerRender::FrameEnd()
 {	
 	mrWindowCurrent->GetProxy()->mDX11pSwapChain->Present( 1, 0 );
-	EMgr::GfxState.SetView(NULL);
-	EMgr::GfxState.PipelineUpdate();
 	Super::FrameEnd();
+}
+
+void ManagerRender::Render(const zenRes::zGfxDrawcall& _rDrawcall)
+{
+}
+
+void ManagerRender::Render( zArrayDynamic<zenRes::zGfxDrawcall>& _aDrawcalls)
+{
+	//_aDrawcalls.Sort<>(); //SF Sort element before render
+	zenRes::zGfxDrawcall* pDrawcall							= _aDrawcalls.First();
+	bool IsValidLastDraw									= mrPreviousDrawcall.IsValid() && mrPreviousDrawcall->mrRenderPass.IsValid();
+	zcRes::GfxStateBlendProxyRef		rStateBlend			= IsValidLastDraw ? mrPreviousDrawcall->mrRenderPass->mrProxBlendState : NULL;
+	zcRes::GfxStateDepthStencilProxyRef	rStateDepthStencil	= IsValidLastDraw ? mrPreviousDrawcall->mrRenderPass->mrProxDepthStencilState : NULL;
+	zcRes::GfxStateRasterizerProxyRef	rStateRaster		= IsValidLastDraw ? mrPreviousDrawcall->mrRenderPass->mrProxRasterState : NULL;
+	zcRes::GfxViewProxyRef				rStateView			= IsValidLastDraw ? mrPreviousDrawcall->mrRenderPass->mrProxViewState : NULL;
+
+	for(zUInt i(0), count(_aDrawcalls.Count()); i<count; ++i, ++pDrawcall)
+	{	
+		if( (*pDrawcall).IsValid() && (*pDrawcall)->mrRenderPass.IsValid() && (*pDrawcall)->mrMeshStrip.IsValid() )
+		{
+			// GPU State setting
+			if( rStateRaster != (*pDrawcall)->mrRenderPass->mrProxRasterState )
+			{
+				rStateRaster = (*pDrawcall)->mrRenderPass->mrProxRasterState;
+				mDX11pContextImmediate->RSSetState(rStateRaster->mpRasterizerState);
+			}
+			//! @todo Urgent fix blend
+			/*
+			if( rStateBlend != (*pDrawcall)->mrRenderPass->mrProxBlendState )
+			{
+				rStateBlend = (*pDrawcall)->mrRenderPass->mrProxBlendState;
+				mDX11pContextImmediate->OMSetBlendState( rStateBlend->mpBlendState, rStateBlend->mafBlendFactor, rStateBlend->muSampleMask );
+			}*/
+			if( rStateDepthStencil != (*pDrawcall)->mrRenderPass->mrProxDepthStencilState )
+			{	
+				rStateDepthStencil = (*pDrawcall)->mrRenderPass->mrProxDepthStencilState;
+				mDX11pContextImmediate->OMSetDepthStencilState(rStateDepthStencil->mpDepthStencilState, rStateDepthStencil->muStencilValue);
+			}
+			if( rStateView != (*pDrawcall)->mrRenderPass->mrProxViewState )
+			{
+				UINT maxCount = zenMath::Max( rStateView.IsValid() ? rStateView->muColorCount : 0, (*pDrawcall)->mrRenderPass->mrProxViewState->muColorCount);
+				rStateView = (*pDrawcall)->mrRenderPass->mrProxViewState;
+				zcMgr::GfxRender.UnbindTextures();
+				mDX11pContextImmediate->OMSetRenderTargets(maxCount, rStateView->mpColorViews, rStateView->mpDepthView );
+				mDX11pContextImmediate->RSSetViewports( 1, &rStateView->mViewport );
+			}
+	
+			// Shader Inputs Settings
+
+			//Drawcall
+			Render( (*pDrawcall)->mrMeshStrip );
+		}
+	}
+	mrPreviousDrawcall = *_aDrawcalls.Last();
 }
 
 void ManagerRender::Render(zcRes::GfxMeshProxyRef _rMesh)
@@ -96,8 +149,6 @@ void ManagerRender::Render(zcRes::GfxMeshProxyRef _rMesh)
 
 void ManagerRender::Render(zcRes::GfxMeshStripProxyRef _rMeshStrip)
 {	
-	EMgr::GfxState.PipelineUpdate();
-
 	UINT offset = 0;
 	const zcRes::GfxVertexProxyRef rVertex			= _rMeshStrip->mrInputStreamProxy->mrVertexProxy;
 	const zcRes::GfxIndexProxyRef rIndex			= _rMeshStrip->mrIndexBufferProxy;

@@ -4,6 +4,7 @@
 
 namespace zcExp
 {	
+	//! @todo clean move this to paltform generic entry, no need for class specialization
 	class ResDataGfxMeshDX11 : public ResourceData
 	{
 	ZENClassDeclare(ResDataGfxMeshDX11, ResourceData)

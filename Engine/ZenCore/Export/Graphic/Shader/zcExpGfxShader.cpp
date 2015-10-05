@@ -47,7 +47,7 @@ namespace zcExp
 		pExportInfo->mzEntryname			= _zEntryname;
 		pExportInfo->maDefines				= _aDefines;
 		pExportInfo->meShaderStage			= zenConst::keShaderStage_Vertex;
-		return EMgr::Export.CreateItem( zResID::kePlatformType_GFX, zenConst::keResType_GfxShaderVertex, pExportInfo );
+		return zcMgr::Export.CreateItem( zResID::kePlatformType_GFX, zenConst::keResType_GfxShaderVertex, pExportInfo );
 	}
 
 	//=================================================================================================
@@ -66,7 +66,7 @@ namespace zcExp
 		pExportInfo->mzEntryname			= _zEntryname;
 		pExportInfo->maDefines				= _aDefines;
 		pExportInfo->meShaderStage			= zenConst::keShaderStage_Pixel;
-		return EMgr::Export.CreateItem( zResID::kePlatformType_GFX, zenConst::keResType_GfxShaderPixel, pExportInfo );
+		return zcMgr::Export.CreateItem( zResID::kePlatformType_GFX, zenConst::keResType_GfxShaderPixel, pExportInfo );
 	}
 
 	

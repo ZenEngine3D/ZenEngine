@@ -81,9 +81,6 @@ zHash32::operator const zU32&()const
 zHash32::zHash32()						
 : muHash(FNV32_Seed){}
 
-zHash32::zHash32(const zHash32& _hCopy)	
-: muHash(_hCopy.muHash){}
-
 zHash32::zHash32(const zU32& _uCopy)				
 : muHash(_uCopy){}
 

@@ -38,7 +38,7 @@ bool GfxIndexProxy_DX11::Initialize(class GfxIndex& _Owner)
 	InitData.pSysMem				= rResData->maIndices.First();
 	InitData.SysMemPitch			= 0;
 	InitData.SysMemSlicePitch		= 0;
-	HRESULT hr						= EMgr::GfxRender.DX11GetDevice()->CreateBuffer( &IndexDesc, &InitData, &mpIndiceBuffer );
+	HRESULT hr						= zcMgr::GfxRender.DX11GetDevice()->CreateBuffer( &IndexDesc, &InitData, &mpIndiceBuffer );
 
 	mePrimitiveType					= rResData->mePrimitiveType;
 	meIndiceFormat					= rResData->meIndiceFormat;	
@@ -56,7 +56,7 @@ zU8* GfxIndexProxy_DX11::Lock()
 	if( mpIndiceBuffer )
 	{
 		D3D11_MAPPED_SUBRESOURCE mapRes;
-		EMgr::GfxRender.DX11GetDeviceContext()->Map(mpIndiceBuffer, 0, D3D11_MAP_WRITE_DISCARD, NULL, &mapRes);
+		zcMgr::GfxRender.DX11GetDeviceContext()->Map(mpIndiceBuffer, 0, D3D11_MAP_WRITE_DISCARD, NULL, &mapRes);
 		return (zU8*)mapRes.pData;
 	}
 	return NULL;
@@ -65,7 +65,7 @@ zU8* GfxIndexProxy_DX11::Lock()
 void GfxIndexProxy_DX11::Unlock()
 {
 	if( mpIndiceBuffer )
-		EMgr::GfxRender.DX11GetDeviceContext()->Unmap(mpIndiceBuffer, NULL);
+		zcMgr::GfxRender.DX11GetDeviceContext()->Unmap(mpIndiceBuffer, NULL);
 }
 
 }

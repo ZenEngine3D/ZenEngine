@@ -35,16 +35,16 @@ public:
 	};
 };
 
-typedef zRegion<zI8> 	zRegionS8;	ZENSupportMemcopy(zRegionS8);
-typedef zRegion<zU8> 	zRegionU8;	ZENSupportMemcopy(zRegionU8);
-typedef zRegion<zI16>	zRegionS16;	ZENSupportMemcopy(zRegionS16);
-typedef zRegion<zU16>	zRegionU16;	ZENSupportMemcopy(zRegionU16);
-typedef zRegion<zI32>	zRegionS32;	ZENSupportMemcopy(zRegionS32);
-typedef zRegion<zU32>	zRegionU32;	ZENSupportMemcopy(zRegionU32);
-typedef zRegion<zI64>	zRegionS64;	ZENSupportMemcopy(zRegionS64);
-typedef zRegion<zU64>	zRegionU64;	ZENSupportMemcopy(zRegionU64);
-typedef zRegion<float>	zRegionF32;	ZENSupportMemcopy(zRegionF32);
-typedef zRegion<double>	zRegionF64;	ZENSupportMemcopy(zRegionF64);
+typedef zRegion<zI8> 	zRegionS8;	
+typedef zRegion<zU8> 	zRegionU8;	
+typedef zRegion<zI16>	zRegionS16;	
+typedef zRegion<zU16>	zRegionU16;	
+typedef zRegion<zI32>	zRegionS32;	
+typedef zRegion<zU32>	zRegionU32;	
+typedef zRegion<zI64>	zRegionS64;	
+typedef zRegion<zU64>	zRegionU64;	
+typedef zRegion<float>	zRegionF32;	
+typedef zRegion<double>	zRegionF64;	
 
 } }//namespace zen { namespace zenType {
 

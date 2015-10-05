@@ -20,9 +20,10 @@ public:
 	virtual void					FrameBegin(zcRes::GfxWindowRef _FrameWindow);
 	virtual void					FrameEnd();
 
-	void							Render(zcRes::GfxMeshProxyRef _rMesh);
-	void							Render(zcRes::GfxMeshStripProxyRef _rMeshStrip);
-	
+	void							Render(zcRes::GfxMeshProxyRef _rMesh); //SF+++ del
+	void							Render(zcRes::GfxMeshStripProxyRef _rMeshStrip); //SF+++ del
+	void							Render(zArrayDynamic<zenRes::zGfxDrawcall>& _aDrawcalls);
+	void							Render(const zenRes::zGfxDrawcall& _rDrawcall);
 //---------------------------------------------------------
 // DirectX device infos
 //---------------------------------------------------------
@@ -33,6 +34,11 @@ public:
 	void							UnbindTextures();
 
 protected:
+	
+	zenRes::zGfxDrawcall			mrPreviousDrawcall;
+
+	
+
 	zU16							muPerStageTextureCount[zenConst::keShaderStage__Count];
 	DXGI_FORMAT						meFormatConversion[zenConst::keTexFormat__Count];
 	D3D_DRIVER_TYPE					mDX11DriverType;

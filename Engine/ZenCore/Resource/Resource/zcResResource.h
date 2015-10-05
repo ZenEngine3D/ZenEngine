@@ -108,7 +108,7 @@ namespace zcRes
 		
 	protected:
 		TResource(){}
-		ProxyRef		mrProxy;
+		ProxyRef	mrProxy;
 		ResDataRef	mrResData; //! @todo clean make this constref, and use pointer from resource and proxy
 	};
 	
@@ -156,17 +156,18 @@ namespace zcRes
 namespace zcRes
 {		
 	typedef ResourceRef<class GfxShaderVertex,		zenRes::zGfxShaderVertex>		GfxShaderVertexRef;
-	typedef ResourceRef<class GfxShaderPixel,		zenRes::zGfxShaderPixel>		GfxShaderPixelRef;	
+	typedef ResourceRef<class GfxShaderPixel,		zenRes::zGfxShaderPixel>		GfxShaderPixelRef;
 	typedef ResourceRef<class GfxIndex,				zenRes::zGfxIndex>				GfxIndexRef;
 	typedef ResourceRef<class GfxVertex,			zenRes::zGfxVertex>				GfxVertexRef;
-	typedef ResourceRef<class GfxTexture2d,			zenRes::zGfxTexture2d>			GfxTexture2dRef; 
+	typedef ResourceRef<class GfxTexture2d,			zenRes::zGfxTexture2d>			GfxTexture2dRef;
 	typedef ResourceRef<class GfxRenderTarget,		zenRes::zGfxRenderTarget>		GfxRenderTargetRef;
-	typedef ResourceRef<class GfxView,				zenRes::zGfxView>				GfxViewRef;	
-	typedef ResourceRef<class GfxWindow,			zenRes::zGfxWindow>				GfxWindowRef;	
+	typedef ResourceRef<class GfxView,				zenRes::zGfxView>				GfxViewRef;
+	typedef ResourceRef<class GfxWindow,			zenRes::zGfxWindow>				GfxWindowRef;
+	typedef ResourceRef<class GfxRenderPass,		zenRes::zGfxRenderPass>			GfxRenderPassRef;
 	typedef ResourceRef<class GfxSampler,			zenRes::zGfxSampler>			GfxSamplerRef;
 	typedef ResourceRef<class GfxStateBlend,		zenRes::zGfxStateBlend>			GfxStateBlendRef;
 	typedef ResourceRef<class GfxStateDepthStencil,	zenRes::zGfxStateDepthStencil>	GfxStateDepthStencilRef;
-	typedef ResourceRef<class GfxStateRasterizer,	zenRes::zGfxStateRasterizer>	GfxStateRasterizerRef; 
+	typedef ResourceRef<class GfxStateRasterizer,	zenRes::zGfxStateRasterizer>	GfxStateRasterizerRef;
 	typedef ResourceRef<class GfxInputStream,		zenRes::zGfxInputStream>		GfxInputStreamRef;
 	typedef ResourceRef<class GfxInputSignature,	zenRes::zGfxInputSignature>		GfxInputSignatureRef;
 	typedef ResourceRef<class GfxMeshStrip,			zenRes::zGfxMeshStrip>			GfxMeshStripRef;
@@ -174,18 +175,18 @@ namespace zcRes
 	typedef ResourceRef<class GfxShaderParamDef,	zenRes::zGfxShaderParamDef>		GfxShaderParamDefRef;
 	typedef ResourceRef<class GfxShaderParam,		zenRes::zGfxShaderParam>		GfxShaderParamRef;
 	typedef ResourceRef<class GfxShaderBinding,		zenRes::zGfxShaderBinding>		GfxShaderBindingRef;
-	
 		
 	typedef zEngineConstRef<GfxSamplerResData>										GfxSamplerResDataRef;
 	typedef zEngineConstRef<GfxStateBlendResData>									GfxStateBlendResDataRef;
 	typedef zEngineConstRef<GfxStateDepthStencilResData>							GfxStateDepthStencilResDataRef;
 	typedef zEngineConstRef<GfxStateRasterizerResData>								GfxStateRasterizerResDataRef;
 	typedef zEngineConstRef<GfxIndexResData>										GfxIndexResDataRef;
-	typedef zEngineConstRef<GfxVertexResData>										GfxVertexResDataRef;	
+	typedef zEngineConstRef<GfxVertexResData>										GfxVertexResDataRef;
 	typedef zEngineConstRef<GfxTexture2dResData>									GfxTexture2dResDataRef;
 	typedef zEngineConstRef<GfxRenderTargetResData>									GfxRenderTargetResDataRef;
-	typedef zEngineConstRef<GfxViewResData>											GfxViewResDataRef;	
-	typedef zEngineConstRef<GfxWindowResData>										GfxWindowResDataRef;	
+	typedef zEngineConstRef<GfxViewResData>											GfxViewResDataRef;
+	typedef zEngineConstRef<GfxWindowResData>										GfxWindowResDataRef;
+	typedef zEngineConstRef<GfxRenderPassResData>									GfxRenderPassResDataRef;
 	typedef zEngineConstRef<GfxShaderResData>										GfxShaderResDataRef;
 	typedef zEngineConstRef<GfxInputStreamResData>									GfxInputStreamResDataRef;
 	typedef zEngineConstRef<GfxInputSignatureResData>								GfxInputSignatureResDataRef;
@@ -193,7 +194,7 @@ namespace zcRes
 	typedef zEngineConstRef<GfxMeshResData>											GfxMeshResDataRef;
 	typedef zEngineConstRef<GfxShaderParamDefResData>								GfxShaderParamDefResDataRef;
 	typedef zEngineConstRef<GfxShaderParamResData>									GfxShaderParamResDataRef;
-	typedef zEngineConstRef<GfxShaderBindingResData>								GfxShaderBindingResDataRef;
+	typedef zEngineConstRef<GfxShaderBindingResData>								GfxShaderBindingResDataRef;	
 			 
 	typedef zEngineRef<GfxSamplerProxy>												GfxSamplerProxyRef;
 	typedef zEngineRef<GfxStateBlendProxy>											GfxStateBlendProxyRef;
@@ -203,8 +204,9 @@ namespace zcRes
 	typedef zEngineRef<GfxVertexProxy>												GfxVertexProxyRef;
 	typedef zEngineRef<GfxTexture2dProxy>											GfxTexture2dProxyRef;
 	typedef zEngineRef<GfxRenderTargetProxy>										GfxRenderTargetProxyRef;
-	typedef zEngineRef<GfxViewProxy>												GfxViewProxyRef;
+	typedef zEngineRef<GfxViewProxy>												GfxViewProxyRef;	
 	typedef zEngineRef<GfxWindowProxy>												GfxWindowViewProxyRef;
+	typedef zEngineRef<GfxRenderPassProxy>											GfxRenderPassProxyRef;
 	typedef zEngineRef<GfxShaderVertexProxy>										GfxShaderVertexProxyRef;
 	typedef zEngineRef<GfxShaderPixelProxy>											GfxShaderPixelProxyRef;
 	typedef zEngineRef<GfxInputStreamProxy>											GfxInputStreamProxyRef;
@@ -213,7 +215,7 @@ namespace zcRes
 	typedef zEngineRef<GfxMeshProxy>												GfxMeshProxyRef;
 	typedef zEngineRef<GfxShaderParamDefProxy>										GfxShaderParamDefProxyRef;
 	typedef zEngineRef<GfxShaderParamProxy>											GfxShaderParamProxyRef;
-	typedef zEngineRef<GfxShaderBindingProxy>										GfxShaderBindingProxyRef;
+	typedef zEngineRef<GfxShaderBindingProxy>										GfxShaderBindingProxyRef;	
 }
 
 #endif

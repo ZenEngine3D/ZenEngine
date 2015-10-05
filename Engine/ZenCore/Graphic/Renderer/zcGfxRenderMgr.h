@@ -17,16 +17,16 @@ class ManagerRender_Base : public zbType::Manager
 {
 ZENClassDeclare(ManagerRender_Base, zbType::Manager)
 public:	
-								ManagerRender_Base();
+									ManagerRender_Base();
 
-	virtual void				FrameBegin( zcRes::GfxWindowRef _FrameWindow );
-	virtual void				FrameEnd();
+	virtual void					FrameBegin( zcRes::GfxWindowRef _FrameWindow );
+	virtual void					FrameEnd();
 	
-	zU64						GetFrameCount();
+	zU64							GetFrameCount();
 	ZENInline zcRes::GfxWindowRef	GetWindowCurrent(){return mrWindowCurrent;}
 
 	//! @todo Clean: move to more generic AWformat testing functions file?
-	bool						IsDepth( zenConst::eTextureFormat _eTexFormat ) const { return _eTexFormat>=zenConst::keTexFormat__DepthFirst && _eTexFormat<=zenConst::keTexFormat__DepthLast; }
+	bool							IsDepth( zenConst::eTextureFormat _eTexFormat ) const { return _eTexFormat>=zenConst::keTexFormat__DepthFirst && _eTexFormat<=zenConst::keTexFormat__DepthLast; }
 	
 protected:
 	enum eConstants{kuFramesSaved=10};
@@ -38,6 +38,6 @@ protected:
 
 #include ZENHeaderRenderer( zcGfxRenderMgr )
 
-namespace EMgr { extern zcGfx::ManagerRender GfxRender; }
+namespace zcMgr { extern zcGfx::ManagerRender GfxRender; }
 
 #endif

@@ -4,6 +4,7 @@
 
 #include "zenCoreResResource.h"
 #include "zenCoreResGfxBuffer.h"
+#include "zenCoreResGfxState.h"
 #include "zenCoreResGfxShaderParam.h"
 #include "zenCoreResGfxShader.h"
 #include "zenCoreResGfxBinding.h"

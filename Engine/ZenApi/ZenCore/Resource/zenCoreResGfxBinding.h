@@ -4,75 +4,17 @@
 
 namespace zen { namespace zenRes {	
 
-	ZENClassResourceRefDeclare(zGfxSampler, zenConst::keResType_GfxSampler)
-	public:
-		static zGfxSampler				Create( zenConst::eTextureFiltering _eFilterMin=zenConst::keTexFilter_Bilinear, zenConst::eTextureFiltering _eFilterMag=zenConst::keTexFilter_Bilinear, zenConst::eTextureWrap _eWrapU=zenConst::keTexWrap_Repeat, zenConst::eTextureWrap _eWrapV=zenConst::keTexWrap_Repeat, float _fLodBias=0, const zVec4F& _vBorderColor=zVec4F(0,0,0,1) );
-	};
-
-	ZENClassResourceRefDeclare(zGfxStateBlend, zenConst::keResType_GfxBlend)
-	public:
-		static zGfxStateBlend			Create( zenType::zBlendDesc::zRTBlendDesc* _pxBlendDesc=nullptr, zU8 _uRenderTargets = 0, bool _bAlphaToCoverageEnable = false, bool _bIndependentBlendEnable = false );
-	};
-
-	ZENClassResourceRefDeclare(zGfxStateDepthStencil, zenConst::keResType_GfxDepthStencil)
-	public:
-		static zGfxStateDepthStencil	Create( bool _bDepthEnable = false, bool _bDepthWrite = false, bool _bStencilEnable = false, zU8 _uStencilReadMask = 0xFF, zU8 _uStencilWriteMask = 0xFF, zenConst::eComparisonFunc _eDepthFunc = zenConst::keComparisonFunc_Always, zenType::zDepthStencilDesc::DepthStencilOp _xFrontFace = zenType::zDepthStencilDesc::DepthStencilOp(), zenType::zDepthStencilDesc::DepthStencilOp _xBackFace = zenType::zDepthStencilDesc::DepthStencilOp() );
-	};
-
-	ZENClassResourceRefDeclare(zGfxStateRasterizer, zenConst::keResType_GfxRasterizer)
-	public:
-		static zGfxStateRasterizer		Create( bool _bFrontCounterClockwise = false, bool _bDepthClipEnable = false, bool _bScissorEnable = false, bool _bMultisampleEnable = false, bool _bAntialiasedLineEnable = false, bool _bWireFrame = false, zenConst::eCullMode _eCullMode = zenConst::keCullMode_None, zI32 _iDepthBias = 0, float _fDepthBiasClamp = 0.0f, float _fSlopeScaledDepthBias = 0.0f );
-	};
-
 	ZENClassResourceRefDeclare(zGfxShaderBinding, zenConst::keResType_GfxShaderBinding)
 	public:		
-		static zGfxShaderBinding		Create(const zArrayBase<zenRes::zGfxShader>& _aShader);
-		static zGfxShaderBinding		Create(const zenRes::zGfxShader* _pShaders, zUInt _uCount);
+		static zGfxShaderBinding		Create(const zArrayBase<zGfxShader>& _aShader);
+		static zGfxShaderBinding		Create(const zGfxShader* _pShaders, zUInt _uCount);
 	};
 
 	//! @todo Clean: remove this from api
 	ZENClassResourceRefDeclare(zGfxInputStream, zenConst::keResType_GfxInputStream) };
 
-	ZENClassResourceRefDeclare(zGfxMeshStrip, zenConst::keResType_GfxMeshStrip)
-	public:
-		void							RenderMeshStrip();
-		void							SetValue(const zShaderParameter& _Value);			
-		void							SetValue(const zArrayBase<const zShaderParameter*>& _aValues);	
-		void							SetValue(const zHash32& _hParamName, const float& _fValue);
-		void							SetValue(const zHash32& _hParamName, const zVec2F& _vValue);
-		void							SetValue(const zHash32& _hParamName, const zVec3F& _vValue);
-		void							SetValue(const zHash32& _hParamName, const zVec4F& _vValue);
-		void							SetValue(const zHash32& _hParamName, const zenMath::Matrix& _matValue);
-		void							SetValue(const zHash32& _hTextureName, zGfxTexture2d _rTexture );
-		void							SetValue(const zHash32& _hTextureName, zGfxSampler _rSampler );
-		void							SetValue(const zHash32& _hTextureName, zGfxTexture2d _rTexture, zGfxSampler _rSampler );
-		
-		static zGfxMeshStrip			Create(const zGfxVertex& _VertexBuffer, const zGfxIndex& _IndexBuffer, const zGfxShaderBinding& _rShaderBinding, const zArrayBase<zResID>& _aShaderParamID, const zArrayBase<zShaderTexture>& _aTexture, zU32 _uIndexFirst=0, zU32 _uIndexCount=0xFFFFFFFF);
-		static zGfxMeshStrip			Create(const zGfxVertex& _VertexBuffer, const zGfxIndex& _IndexBuffer, const zGfxShaderBinding& _rShaderBinding, const zArrayBase<zResID>& _aShaderParamID, zU32 _uIndexFirst=0, zU32 _uIndexCount=0xFFFFFFFF);
-		static zGfxMeshStrip			Create(const zGfxVertex& _VertexBuffer, const zGfxIndex& _IndexBuffer, const zGfxShaderBinding& _rShaderBinding, zU32 _uIndexFirst=0, zU32 _uIndexCount=0xFFFFFFFF);
-	};
-
-	ZENClassResourceRefDeclare(zGfxMesh, zenConst::keResType_GfxMesh)
-	public:
-		void							RenderMesh();
-		void							SetValue(const zShaderParameter& _Value);			
-		void							SetValue(const zArrayBase<const zShaderParameter*>& _aValues);	
-		void							SetValue(const zHash32& _hParamName, const float& _fValue);
-		void							SetValue(const zHash32& _hParamName, const zVec2F& _vValue);
-		void							SetValue(const zHash32& _hParamName, const zVec3F& _vValue);
-		void							SetValue(const zHash32& _hParamName, const zVec4F& _vValue);
-		void							SetValue(const zHash32& _hParamName, const zenMath::Matrix& _matValue);
-		void							SetValue(const zHash32& _hTextureName, zGfxTexture2d _rTexture );
-		void							SetValue(const zHash32& _hTextureName, zGfxSampler _rSampler );
-		void							SetValue(const zHash32& _hTextureName, zGfxTexture2d _rTexture, zGfxSampler _rSampler );
-		
-		static zGfxMesh					Create(const zArrayBase<zGfxMeshStrip>& _aMeshStrip);
-		static zGfxMesh					Create(const zGfxMeshStrip* _aMeshStrip, zUInt _uMeshStripCount);
-	};
-
 	ZENClassResourceRefDeclare(zGfxView, zenConst::keResType_GfxView)
 	public:
-		void							ActivateView();
 		void							Clear( bool _bClearColor, const zVec4F& _vRGBA, bool _bClearDepth=true, float _fDepth=1, bool _bClearStencil=false, zU8 _uStencil=0 );
 		zVec2U16						GetDim()const;
 		
@@ -90,7 +32,80 @@ namespace zen { namespace zenRes {
 		static zGfxWindow				Create( HWND _WindowHandle );
 	};
 
+	ZENClassResourceRefDeclare(zGfxRenderPass, zenConst::keResType_GfxRenderPass)
+	public:
+		struct ViewConfig
+		{
+			zGfxTexture2d	mTargetSurface;
+			zGfxStateBlend	mStateBlend;
+			zVec2S16		mvOrigin;
+			zVec2U16		mvDim;
+		};
+		static zGfxRenderPass			Create(const zString& _zStageName, const zGfxStateBlend& _rStateBlend, const zGfxStateDepthStencil&	_rStateDepthStencil, const zGfxStateRasterizer& _rStateRaster, const zGfxView& _rView);
+		static zGfxRenderPass			Create(const zString& _zStageName, const ViewConfig& _rView, const zGfxTexture2d& _rTargetDepth, const zGfxStateDepthStencil& _rStateDepthStencil, const zGfxStateRasterizer& _rStateRaster);
+	};
+
+	ZENClassResourceRefDeclare(zGfxMeshStrip, zenConst::keResType_GfxMeshStrip)
+	public:
+		void							Draw(zGfxRenderPass& _rRenderpass, float _fPriority, zArrayDynamic<class zGfxDrawcall>& _aDrawcallsOut);
+		void							SetValue(const zShaderParameter& _Value);			
+		void							SetValue(const zArrayBase<const zShaderParameter*>& _aValues);	
+		void							SetValue(const zHash32& _hParamName, const float& _fValue);
+		void							SetValue(const zHash32& _hParamName, const zVec2F& _vValue);
+		void							SetValue(const zHash32& _hParamName, const zVec3F& _vValue);
+		void							SetValue(const zHash32& _hParamName, const zVec4F& _vValue);
+		void							SetValue(const zHash32& _hParamName, const zenMath::Matrix& _matValue);
+		void							SetValue(const zHash32& _hTextureName, zGfxTexture2d _rTexture );
+		void							SetValue(const zHash32& _hTextureName, zGfxSampler _rSampler );
+		void							SetValue(const zHash32& _hTextureName, zGfxTexture2d _rTexture, zGfxSampler _rSampler );
+		
+		static zGfxMeshStrip			Create(const zGfxVertex& _rVertexBuffer, const zGfxIndex& _rIndexBuffer, const zGfxShaderBinding& _rShaderBinding, const zArrayBase<zResID>& _aShaderParamID, const zArrayBase<zShaderTexture>& _aTexture, zU32 _uIndexFirst=0, zU32 _uIndexCount=0xFFFFFFFF);
+		static zGfxMeshStrip			Create(const zGfxVertex& _rVertexBuffer, const zGfxIndex& _rIndexBuffer, const zGfxShaderBinding& _rShaderBinding, const zArrayBase<zResID>& _aShaderParamID, zU32 _uIndexFirst=0, zU32 _uIndexCount=0xFFFFFFFF);
+		static zGfxMeshStrip			Create(const zGfxVertex& _rVertexBuffer, const zGfxIndex& _rIndexBuffer, const zGfxShaderBinding& _rShaderBinding, zU32 _uIndexFirst=0, zU32 _uIndexCount=0xFFFFFFFF);
+	};
+
+	ZENClassResourceRefDeclare(zGfxMesh, zenConst::keResType_GfxMesh)
+	public:
+		void							Draw(zGfxRenderPass& _rRenderpass, float _fPriority, zArrayDynamic<class zGfxDrawcall>& _aDrawcallsOut);
+		void							SetValue(const zShaderParameter& _Value);			
+		void							SetValue(const zArrayBase<const zShaderParameter*>& _aValues);	
+		void							SetValue(const zHash32& _hParamName, const float& _fValue);
+		void							SetValue(const zHash32& _hParamName, const zVec2F& _vValue);
+		void							SetValue(const zHash32& _hParamName, const zVec3F& _vValue);
+		void							SetValue(const zHash32& _hParamName, const zVec4F& _vValue);
+		void							SetValue(const zHash32& _hParamName, const zenMath::Matrix& _matValue);
+		void							SetValue(const zHash32& _hTextureName, zGfxTexture2d _rTexture );
+		void							SetValue(const zHash32& _hTextureName, zGfxSampler _rSampler );
+		void							SetValue(const zHash32& _hTextureName, zGfxTexture2d _rTexture, zGfxSampler _rSampler );
+
+		static zGfxMesh					Create(const zArrayBase<zGfxMeshStrip>& _aMeshStrip);
+		static zGfxMesh					Create(const zGfxMeshStrip* _aMeshStrip, zUInt _uMeshStripCount);
+	};
+	
 }} // namespace zen, zenRes
+
+
+//! @todo Urgent, this is not a resource, should be moved elsewhere
+namespace zcGfx  { class Drawcall; }	//Forward declare
+namespace zen { namespace zenRes 
+{	
+	class zGfxDrawcall : public zEngineRef<zcGfx::Drawcall>
+	{
+	ZENClassDeclare(zGfxDrawcall, zEngineRef<zcGfx::Drawcall>);
+	public:			
+										zGfxDrawcall();
+										zGfxDrawcall(const zGfxDrawcall& _Copy);		
+										zGfxDrawcall(zcGfx::Drawcall* _Drawcall);
+
+		zGfxDrawcall&					operator=(const zGfxDrawcall& _Copy);
+		zGfxDrawcall&					operator=(zcGfx::Drawcall* _pCopy);
+		
+		static zGfxDrawcall				Create(const zGfxRenderPass& _rRenderPass, const zGfxMeshStrip&	_rMeshStrip, float _fPriority);
+		static void						Submit(zArrayDynamic<zenRes::zGfxDrawcall>& _aDrawcalls);
+	};
+	
+}}
+#include "zenCoreResGfxBinding.inl"
 
 #endif
 

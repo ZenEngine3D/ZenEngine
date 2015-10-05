@@ -25,25 +25,32 @@ public:
 	virtual void Update();
 	virtual bool IsDone();
 protected:
-	zenMath::Matrix				matWorld[4];
-	zenMath::Matrix				matView;
-	zenMath::Matrix				matProjection;
-	zenMath::Matrix				matProjectionRT;
-	zenRes::zGfxVertex			rCubeVertex;	
-	zenRes::zGfxIndex			rCubeIndex;	
-	zenRes::zGfxShaderVertex	rShaderVS;	
-	zenRes::zGfxShaderPixel		rShaderPS;	
-	zenRes::zGfxTexture2d		rTexture;	
-	zenRes::zGfxSampler			rSampler;	
-	zenRes::zGfxSampler			rSampler2;	
-	zenRes::zGfxRenderTarget	rRenderColor;
-	zenRes::zGfxRenderTarget	rRenderDepth;
-	zenRes::zGfxView			rView;
-	zenRes::zGfxShaderBinding	rTestShaderBind;
-	zenRes::zGfxMeshStrip		rCube1MeshStrip;
-	zenRes::zGfxMeshStrip		rCube2MeshStrip;
-	zenRes::zGfxMeshStrip		rCube3MeshStrip;
-	zenRes::zGfxMesh			rCube4Mesh;
+	zenMath::Matrix					matWorld[4];
+	zenMath::Matrix					matView;
+	zenMath::Matrix					matProjection;
+	zenMath::Matrix					matProjectionRT;
+	zenRes::zGfxVertex				mrCubeVertex;	
+	zenRes::zGfxIndex				mrCubeIndex;	
+	zenRes::zGfxShaderVertex		mrShaderVS;	
+	zenRes::zGfxShaderPixel			mrShaderPS;	
+	zenRes::zGfxTexture2d			mrTexture;	
+	zenRes::zGfxSampler				mrSampler;	
+	zenRes::zGfxSampler				mrSampler2;		
+	zenRes::zGfxShaderBinding		mrTestShaderBind;
+	zenRes::zGfxMeshStrip			mrCube1MeshStrip;
+	zenRes::zGfxMeshStrip			mrCube2MeshStrip;
+	zenRes::zGfxMeshStrip			mrCube3MeshStrip;
+	zenRes::zGfxMesh				mrCube4Mesh;
+
+	zenRes::zGfxRenderTarget		mrRenderColor;
+	zenRes::zGfxRenderTarget		mrRenderDepth;	
+	zenRes::zGfxView				mrView;
+	zenRes::zGfxStateBlend			mrStateBlend;
+	zenRes::zGfxStateDepthStencil	mrStateDepth;
+	zenRes::zGfxStateRasterizer		mrStateRaster;
+	zenRes::zGfxRenderPass			mrRndPassTexture;
+	zenRes::zGfxRenderPass			mrRndPassFinal;
+
 };
 
 }

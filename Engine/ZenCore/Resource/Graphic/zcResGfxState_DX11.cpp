@@ -22,7 +22,7 @@ namespace zcRes
 		const GfxSampler::ResDataRef& rResData = _Owner.GetResData();
 		ZENAssert(rResData.IsValid());
 		ZENDbgCode(mpOwner = &_Owner);
-		HRESULT hr = EMgr::GfxRender.DX11GetDevice()->CreateSamplerState( &rResData->mSamplerDesc, &mpSamplerState );
+		HRESULT hr = zcMgr::GfxRender.DX11GetDevice()->CreateSamplerState( &rResData->mSamplerDesc, &mpSamplerState );
 		return SUCCEEDED(hr);
 	}
 	
@@ -47,7 +47,12 @@ namespace zcRes
 		const GfxStateBlend::ResDataRef& rResData = _Owner.GetResData();
 		ZENAssert(rResData.IsValid());
 		ZENDbgCode(mpOwner = &_Owner);
-		HRESULT hr = EMgr::GfxRender.DX11GetDevice()->CreateBlendState( &rResData->mBlendDesc, &mpBlendState );
+		HRESULT hr = zcMgr::GfxRender.DX11GetDevice()->CreateBlendState( &rResData->mBlendDesc, &mpBlendState );
+		//! @note : Global write mask / Blend factor : Unused functionality for now (per render target for now)
+		muSampleMask = 0xFFFFFFFF;				
+		for(zUInt i(0); i<ZENArrayCount(mafBlendFactor); ++i)
+			mafBlendFactor[i] = 0.0f;
+
 		return SUCCEEDED(hr);
 	}
 
@@ -71,7 +76,8 @@ namespace zcRes
 		const GfxStateDepthStencil::ResDataRef& rResData = _Owner.GetResData();
 		ZENAssert(rResData.IsValid());
 		ZENDbgCode(mpOwner = &_Owner);
-		HRESULT hr = EMgr::GfxRender.DX11GetDevice()->CreateDepthStencilState( &rResData->mDepthStencilDesc, &mpDepthStencilState );
+		HRESULT hr = zcMgr::GfxRender.DX11GetDevice()->CreateDepthStencilState( &rResData->mDepthStencilDesc, &mpDepthStencilState );
+		muStencilValue = 0;
 		return SUCCEEDED(hr);
 	}
 
@@ -95,7 +101,7 @@ namespace zcRes
 		const GfxStateRasterizer::ResDataRef& rResData = _Owner.GetResData();
 		ZENAssert(rResData.IsValid());
 		ZENDbgCode(mpOwner = &_Owner);
-		HRESULT hr = EMgr::GfxRender.DX11GetDevice()->CreateRasterizerState( &rResData->mRasterizerDesc, &mpRasterizerState );
+		HRESULT hr = zcMgr::GfxRender.DX11GetDevice()->CreateRasterizerState( &rResData->mRasterizerDesc, &mpRasterizerState );
 		return SUCCEEDED(hr);
 	}
 }
