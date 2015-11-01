@@ -4,8 +4,51 @@
 
 namespace zcExp
 {
-	static const D3D11_COMPARISON_FUNC eComparisonFuncTranslator[] = {	D3D11_COMPARISON_NEVER, D3D11_COMPARISON_LESS, D3D11_COMPARISON_EQUAL, D3D11_COMPARISON_LESS_EQUAL,
-																		D3D11_COMPARISON_GREATER, D3D11_COMPARISON_NOT_EQUAL, D3D11_COMPARISON_GREATER_EQUAL, D3D11_COMPARISON_ALWAYS };
+	static const zArrayStatic<D3D11_COMPARISON_FUNC> gaComparisonTestTranslator = {	
+			D3D11_COMPARISON_NEVER,				// keCmpTest_Never
+			D3D11_COMPARISON_LESS, 				// keCmpTest_Less
+			D3D11_COMPARISON_EQUAL, 			// keCmpTest_Equal
+			D3D11_COMPARISON_LESS_EQUAL,		// keCmpTest_LessEqual
+			D3D11_COMPARISON_GREATER,			// keCmpTest_Greater
+			D3D11_COMPARISON_NOT_EQUAL, 		// keCmpTest_NotEqual
+			D3D11_COMPARISON_GREATER_EQUAL, 	// keCmpTest_GreaterEqual
+			D3D11_COMPARISON_ALWAYS 			// keCmpTest_Always
+			};
+
+	static const zArrayStatic<D3D11_STENCIL_OP> gaStencilOpTranslator = { 
+			D3D11_STENCIL_OP_KEEP,				// keStencilOp_Keep,
+			D3D11_STENCIL_OP_ZERO, 				// keStencilOp_Zero,
+			D3D11_STENCIL_OP_REPLACE,			// keStencilOp_Replace,
+			D3D11_STENCIL_OP_INCR_SAT,			// keStencilOp_IncrSat,
+			D3D11_STENCIL_OP_DECR_SAT,			// keStencilOp_DecrSat,
+			D3D11_STENCIL_OP_INVERT,			// keStencilOp_Invert,
+			D3D11_STENCIL_OP_INCR, 				// keStencilOp_Incr,
+			D3D11_STENCIL_OP_DECR				// keStencilOp_Decr
+			};
+
+	static const zArrayStatic<D3D11_BLEND> gaBlendValueTranslator = {
+			D3D11_BLEND_ZERO,					// keBlendVal_Zero, 
+			D3D11_BLEND_ONE, 					// keBlendVal_One, 
+			D3D11_BLEND_SRC_COLOR, 				// keBlendVal_SrcColor, 
+			D3D11_BLEND_INV_SRC_COLOR, 			// keBlendVal_InvSrcColor, 
+			D3D11_BLEND_SRC_ALPHA, 				// keBlendVal_SrcAlpha, 
+			D3D11_BLEND_INV_SRC_ALPHA, 			// keBlendVal_InvSrcAlpha, 
+			D3D11_BLEND_DEST_ALPHA,				// keBlendVal_DestAlpha, 
+			D3D11_BLEND_INV_DEST_ALPHA, 		// keBlendVal_InvDestAlpha, 
+			D3D11_BLEND_DEST_COLOR, 			// keBlendVal_DestColor, 
+			D3D11_BLEND_INV_DEST_COLOR, 		// keBlendVal_InvDestColor, 
+			D3D11_BLEND_SRC_ALPHA_SAT, 			// keBlendVal_SrcAlphaSat, 
+			D3D11_BLEND_BLEND_FACTOR, 			// keBlendVal_BlendFactor, 
+			D3D11_BLEND_INV_BLEND_FACTOR		// keBlendVal_InvBlendFactor, 
+			};
+
+	static const zArrayStatic<D3D11_BLEND_OP> gaBlendOpTranslator = {
+			D3D11_BLEND_OP_ADD,					// keBlendOp_Add, 
+			D3D11_BLEND_OP_SUBTRACT, 			// keBlendOp_Substract, 
+			D3D11_BLEND_OP_REV_SUBTRACT, 		// keBlendOp_RevSubstract,
+			D3D11_BLEND_OP_MIN, 				// keBlendOp_Min, 
+			D3D11_BLEND_OP_MAX					// keBlendOp_Max, 
+			};
 
 	//////////////////////////////////////////////////////////////////////////
 	//ExporterGfxSamplerDX11_DX11
@@ -89,35 +132,35 @@ namespace zcExp
 	, mrResData(_rResData)
 	{
 	}
-	/*
-	void SetRenderTargetBlendDesc(D3D11_RENDER_TARGET_BLEND_DESC& _Out, const zenType::zBlendDesc::zRTBlendDesc& _In)
-	{
-		static D3D11_BLEND eBlendTranslator[] = {D3D11_BLEND_ZERO, D3D11_BLEND_ONE, D3D11_BLEND_SRC_COLOR, D3D11_BLEND_INV_SRC_COLOR, D3D11_BLEND_SRC_ALPHA, D3D11_BLEND_INV_SRC_ALPHA, D3D11_BLEND_DEST_ALPHA,
-			D3D11_BLEND_INV_DEST_ALPHA, D3D11_BLEND_DEST_COLOR, D3D11_BLEND_INV_DEST_COLOR, D3D11_BLEND_SRC_ALPHA_SAT, D3D11_BLEND_BLEND_FACTOR, D3D11_BLEND_INV_BLEND_FACTOR, D3D11_BLEND_SRC1_COLOR,
-			D3D11_BLEND_INV_SRC1_COLOR, D3D11_BLEND_SRC1_ALPHA, D3D11_BLEND_INV_SRC1_ALPHA};
-		static D3D11_BLEND_OP eBlendOpTranslator[] = {D3D11_BLEND_OP_ADD, D3D11_BLEND_OP_SUBTRACT, D3D11_BLEND_OP_REV_SUBTRACT, D3D11_BLEND_OP_MIN, D3D11_BLEND_OP_MAX};
 
-		_Out.BlendEnable			= _In.mbBlendEnable ? TRUE : FALSE;
-		_Out.SrcBlend				= eBlendTranslator[_In.meSrcBlend];
-		_Out.DestBlend				= eBlendTranslator[_In.meDestBlend];
-		_Out.BlendOp				= eBlendOpTranslator[_In.meBlendOp];
-		_Out.SrcBlendAlpha			= eBlendTranslator[_In.meSrcBlendAlpha];
-		_Out.DestBlendAlpha			= eBlendTranslator[_In.meDestBlendAlpha];
-		_Out.BlendOpAlpha			= eBlendOpTranslator[_In.meBlendOpAlpha];
-		_Out.RenderTargetWriteMask	= _In.muRenderTargetWriteMask;
-	}
-	*/
 	bool ExporterGfxStateBlendDX11_DX11::ExportWork(bool _bIsTHRTask)
-	{
-		ZENAssert(mrResData.IsValid());
+	{		
 		ExportInfoGfxStateBlend* pExportInfo = static_cast<ExportInfoGfxStateBlend*>(mpExportInfo);
-		/*
-		mrResData->mBlendDesc.AlphaToCoverageEnable = pExportInfo->mBlendDesc.mbAlphaToCoverageEnable;
-		mrResData->mBlendDesc.IndependentBlendEnable= pExportInfo->mBlendDesc.mbIndependentBlendEnable;
-		for(zUInt u(0); u < ZENArrayCount(D3D11_RENDER_TARGET_BLEND_DESC); ++u)
-			SetRenderTargetBlendDesc(mrResData->mBlendDesc.RenderTarget[u], pExportInfo->mBlendDesc.mxRenderTarget[u]);
-			*/
-			//! @todo Urgent Implement this
+		ZENAssert(mrResData.IsValid());		
+		ZENAssert(gaBlendValueTranslator.Count() == zenRes::zGfxRenderPass::ConfigColorRT::keBlendVal__Count);
+		ZENAssert(gaBlendOpTranslator.Count() == zenRes::zGfxRenderPass::ConfigColorRT::keBlendOp__Count);		
+		ZENAssert( pExportInfo->mpaRenderTargetConfig && pExportInfo->mpaRenderTargetConfig->Count() < D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT );
+
+		zenMem::Zero(&mrResData->mBlendDesc, sizeof(mrResData->mBlendDesc));
+		mrResData->mBlendDesc.AlphaToCoverageEnable		= false;	//!< Currently not implemented
+		mrResData->mBlendDesc.IndependentBlendEnable	= true;		
+		for(zUInt rtIdx(0), rtCount(pExportInfo->mpaRenderTargetConfig->Count()); rtIdx<rtCount && rtIdx<D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT; ++rtIdx)
+		{			
+			const zenRes::zGfxRenderPass::ConfigColorRT& RtConfigIn	= (*pExportInfo->mpaRenderTargetConfig)[rtIdx];
+			D3D11_RENDER_TARGET_BLEND_DESC& RtConfigOut				= mrResData->mBlendDesc.RenderTarget[rtIdx];
+			RtConfigOut.BlendEnable									= RtConfigIn.mbBlendEnable;
+			RtConfigOut.SrcBlend									= gaBlendValueTranslator[RtConfigIn.meBlendColorSrc];
+			RtConfigOut.DestBlend									= gaBlendValueTranslator[RtConfigIn.meBlendColorDest];
+			RtConfigOut.BlendOp										= gaBlendOpTranslator[RtConfigIn.meBlendColorOp];
+			RtConfigOut.SrcBlendAlpha								= gaBlendValueTranslator[RtConfigIn.meBlendAlphaSrc];
+			RtConfigOut.DestBlendAlpha								= gaBlendValueTranslator[RtConfigIn.meBlendAlphaDest];
+			RtConfigOut.BlendOpAlpha								= gaBlendOpTranslator[RtConfigIn.meBlendAlphaOp];
+			RtConfigOut.RenderTargetWriteMask						 = RtConfigIn.mWriteMask.All(zenConst::keColor_R) ? D3D11_COLOR_WRITE_ENABLE_RED : 0;
+			RtConfigOut.RenderTargetWriteMask						|= RtConfigIn.mWriteMask.All(zenConst::keColor_G) ? D3D11_COLOR_WRITE_ENABLE_GREEN : 0;
+			RtConfigOut.RenderTargetWriteMask						|= RtConfigIn.mWriteMask.All(zenConst::keColor_B) ? D3D11_COLOR_WRITE_ENABLE_BLUE : 0;
+			RtConfigOut.RenderTargetWriteMask						|= RtConfigIn.mWriteMask.All(zenConst::keColor_A) ? D3D11_COLOR_WRITE_ENABLE_ALPHA : 0;
+		}
+		 
 		return TRUE;
 	}
 
@@ -126,45 +169,46 @@ namespace zcExp
 		ZENAssert(_ePlatform==zenConst::keResPlatform_DX11 && _eType==zenConst::keResType_GfxBlend);
 		ZENAssert( _pExportInfo );
 		const ExportInfoGfxStateBlend* pExportInfo	= static_cast<const ExportInfoGfxStateBlend*>(_pExportInfo);
-		zUInt uSize										= ZENMemberOffsetAfter(ExportInfoGfxStateBlend, mBlendDesc) - ZENMemberOffset(ExportInfoGfxStateBlend, mBlendDesc);
-		zResID::NameHash hName((void*)&pExportInfo->mBlendDesc, uSize);
+		ZENAssert( pExportInfo->mpaRenderTargetConfig->IsEmpty()==false );
+		zResID::NameHash hName((void*)pExportInfo->mpaRenderTargetConfig->First(), pExportInfo->mpaRenderTargetConfig->SizeMem());
 		return zcExp::ValidateItemID(_ePlatform, _eType, _eSource, hName, _bExistOut);
 	}
 
 	//////////////////////////////////////////////////////////////////////////
 	//SerialGfxDepthStencil_DX11
 	//////////////////////////////////////////////////////////////////////////
+	ZENInline void SetDepthStencilOpDesc(D3D11_DEPTH_STENCILOP_DESC& _StencilConfigDX11Out, const zenRes::zGfxRenderPass::ConfigDepthRT::ConfigStencil& _StencilConfigIn)
+	{		
+		ZENAssert( gaStencilOpTranslator.Count() == zenRes::zGfxRenderPass::ConfigDepthRT::keStencilOp__Count );
+		_StencilConfigDX11Out.StencilFunc			= gaComparisonTestTranslator[_StencilConfigIn.meStencilTest];
+		_StencilConfigDX11Out.StencilFailOp			= gaStencilOpTranslator[_StencilConfigIn.meStencilFailOp];		
+		_StencilConfigDX11Out.StencilPassOp			= gaStencilOpTranslator[_StencilConfigIn.meStencilPassOp];
+		_StencilConfigDX11Out.StencilDepthFailOp	= gaStencilOpTranslator[_StencilConfigIn.meDepthFailOp];		
+	}
+
 	ExporterGfxStateDepthStencilDX11_DX11::ExporterGfxStateDepthStencilDX11_DX11(const ResDataRef& _rResData)
 	: ExporterBase(_rResData.GetSafe())
 	, mrResData(_rResData)
 	{
 	}
 
-	static void SetDepthStencilOpDesc(D3D11_DEPTH_STENCILOP_DESC& xOut, const zenType::zDepthStencilDesc::DepthStencilOp& xIn)
-	{
-		static D3D11_STENCIL_OP eStencilOpTranslator[] = { 
-									D3D11_STENCIL_OP_KEEP, D3D11_STENCIL_OP_ZERO, 
-									D3D11_STENCIL_OP_REPLACE, D3D11_STENCIL_OP_INCR_SAT,
-									D3D11_STENCIL_OP_DECR_SAT, D3D11_STENCIL_OP_INVERT, 
-									D3D11_STENCIL_OP_INCR, D3D11_STENCIL_OP_DECR };
-
-		xOut.StencilFailOp		= eStencilOpTranslator[xIn.meStencilFailOp];
-		xOut.StencilDepthFailOp	= eStencilOpTranslator[xIn.meStencilDepthFailOp];
-		xOut.StencilPassOp		= eStencilOpTranslator[xIn.meStencilPassOp];
-		xOut.StencilFunc		= eComparisonFuncTranslator[xIn.meStencilFunc];
-	}
 	bool ExporterGfxStateDepthStencilDX11_DX11::ExportWork(bool _bIsTHRTask)
 	{
-		ZENAssert(mrResData.IsValid());
-		ExportInfoGfxStateDepthStencil* pExportInfo		= static_cast<ExportInfoGfxStateDepthStencil*>(mpExportInfo);
-		mrResData->mDepthStencilDesc.DepthEnable		= pExportInfo->mDepthStencilDesc.mbDepthEnable ? TRUE : FALSE;
-		mrResData->mDepthStencilDesc.DepthWriteMask		= pExportInfo->mDepthStencilDesc.mbDepthWrite ? D3D11_DEPTH_WRITE_MASK_ALL : D3D11_DEPTH_WRITE_MASK_ZERO;
-		mrResData->mDepthStencilDesc.StencilEnable		= pExportInfo->mDepthStencilDesc.mbStencilEnable ? TRUE : FALSE;
-		mrResData->mDepthStencilDesc.DepthFunc			= eComparisonFuncTranslator[pExportInfo->mDepthStencilDesc.meDepthFunc];
-		mrResData->mDepthStencilDesc.StencilReadMask	= pExportInfo->mDepthStencilDesc.muStencilReadMask;
-		mrResData->mDepthStencilDesc.StencilWriteMask	= pExportInfo->mDepthStencilDesc.muStencilWriteMask;
-		SetDepthStencilOpDesc(mrResData->mDepthStencilDesc.FrontFace, pExportInfo->mDepthStencilDesc.mxFrontFace);
-		SetDepthStencilOpDesc(mrResData->mDepthStencilDesc.BackFace,  pExportInfo->mDepthStencilDesc.mxBackFace );
+		ZENAssert(mrResData.IsValid());		
+		ZENAssert( gaComparisonTestTranslator.Count() == zenRes::zGfxRenderPass::ConfigDepthRT::keCmpTest__Count );
+		ExportInfoGfxStateDepthStencil* pExportInfo				= static_cast<ExportInfoGfxStateDepthStencil*>(mpExportInfo);
+		const zenRes::zGfxRenderPass::ConfigDepthRT* pConfig	= pExportInfo->mpDepthStencilConfig;
+		if( pConfig )
+		{
+			mrResData->mDepthStencilDesc.DepthEnable			= pConfig->mbDepthEnable;
+			mrResData->mDepthStencilDesc.DepthWriteMask			= pConfig->mbDepthWrite ? D3D11_DEPTH_WRITE_MASK_ALL : D3D11_DEPTH_WRITE_MASK_ZERO;
+			mrResData->mDepthStencilDesc.StencilEnable			= pConfig->mbStencilEnable;
+			mrResData->mDepthStencilDesc.DepthFunc				= gaComparisonTestTranslator[pConfig->meDepthTest];
+			mrResData->mDepthStencilDesc.StencilReadMask		= pConfig->muStencilReadMask;
+			mrResData->mDepthStencilDesc.StencilWriteMask		= pConfig->muStencilWriteMask;
+			SetDepthStencilOpDesc(mrResData->mDepthStencilDesc.FrontFace, pConfig->meStencilConfigFront);
+			SetDepthStencilOpDesc(mrResData->mDepthStencilDesc.BackFace,  pConfig->meStencilConfigBack);
+		}
 		return TRUE;
 	}
 
@@ -173,8 +217,8 @@ namespace zcExp
 		ZENAssert(_ePlatform==zenConst::keResPlatform_DX11 && _eType==zenConst::keResType_GfxDepthStencil);
 		ZENAssert( _pExportInfo );
 		const ExportInfoGfxStateDepthStencil* pExportInfo	= static_cast<const ExportInfoGfxStateDepthStencil*>(_pExportInfo);
-		zUInt uSize											= ZENMemberOffsetAfter(ExportInfoGfxStateDepthStencil, mDepthStencilDesc) - ZENMemberOffset(ExportInfoGfxStateDepthStencil, mDepthStencilDesc);
-		zResID::NameHash hName((void*)&pExportInfo->mDepthStencilDesc, uSize);
+		ZENAssert( pExportInfo->mpDepthStencilConfig );
+		zResID::NameHash hName((void*)pExportInfo->mpDepthStencilConfig, sizeof(zenRes::zGfxRenderPass::ConfigDepthRT));
 		return zcExp::ValidateItemID(_ePlatform, _eType, _eSource, hName, _bExistOut);
 	}
 
@@ -189,19 +233,19 @@ namespace zcExp
 
 	bool ExporterGfxStateRasterizerDX11_DX11::ExportWork(bool _bIsTHRTask)
 	{
-		static D3D11_CULL_MODE eCullModeTranslator[] = {D3D11_CULL_NONE, D3D11_CULL_FRONT, D3D11_CULL_BACK};
 		ZENAssert(mrResData.IsValid());
 		ExportInfoGfxStateRasterizer* pExportInfo			= static_cast<ExportInfoGfxStateRasterizer*>(mpExportInfo);
-		mrResData->mRasterizerDesc.AntialiasedLineEnable	= pExportInfo->mbAntialiasedLineEnable ? TRUE : FALSE;
-		mrResData->mRasterizerDesc.CullMode				= eCullModeTranslator[pExportInfo->meCullMode];
-		mrResData->mRasterizerDesc.DepthBias				= pExportInfo->miDepthBias;
-		mrResData->mRasterizerDesc.DepthBiasClamp		= pExportInfo->mfDepthBiasClamp;
-		mrResData->mRasterizerDesc.DepthClipEnable		= pExportInfo->mbDepthClipEnable ? TRUE : FALSE;
-		mrResData->mRasterizerDesc.FillMode				= pExportInfo->mbWireFrame ? D3D11_FILL_WIREFRAME : D3D11_FILL_SOLID;
-		mrResData->mRasterizerDesc.FrontCounterClockwise	= pExportInfo->mbFrontCounterClockwise ? TRUE : FALSE;
-		mrResData->mRasterizerDesc.MultisampleEnable		= pExportInfo->mbMultisampleEnable ? TRUE : FALSE;
-		mrResData->mRasterizerDesc.ScissorEnable			= pExportInfo->mbScissorEnable ? TRUE : FALSE;
-		mrResData->mRasterizerDesc.SlopeScaledDepthBias	= pExportInfo->mfSlopeScaledDepthBias;
+		zenRes::zGfxStateRasterizer::Config& Config			= pExportInfo->mRasterConfig;
+		mrResData->mRasterizerDesc.AntialiasedLineEnable	= pExportInfo->mRasterConfig.mbAntialiasedLineEnable;
+		mrResData->mRasterizerDesc.CullMode					= (Config.mbShowBackface && Config.mbShowFrontface) ? D3D11_CULL_NONE : Config.mbShowBackface ? D3D11_CULL_FRONT : D3D11_CULL_BACK;
+		mrResData->mRasterizerDesc.DepthBias				= zInt(Config.mfDepthBias);
+		mrResData->mRasterizerDesc.DepthBiasClamp			= Config.mfDepthBiasClamp;
+		mrResData->mRasterizerDesc.DepthClipEnable			= Config.mbDepthClipEnable;
+		mrResData->mRasterizerDesc.FillMode					= Config.mbWireFrame ? D3D11_FILL_WIREFRAME : D3D11_FILL_SOLID;
+		mrResData->mRasterizerDesc.FrontCounterClockwise	= !Config.mbFrontClockwise;
+		mrResData->mRasterizerDesc.MultisampleEnable		= Config.mbMultisampleEnable;
+		mrResData->mRasterizerDesc.ScissorEnable			= Config.mbScissorEnable;
+		mrResData->mRasterizerDesc.SlopeScaledDepthBias		= Config.mfSlopeScaledDepthBias;
 		return TRUE;
 	}
 
@@ -210,8 +254,7 @@ namespace zcExp
 		ZENAssert(_ePlatform==zenConst::keResPlatform_DX11 && _eType==zenConst::keResType_GfxRasterizer);
 		ZENAssert( _pExportInfo );
 		const ExportInfoGfxStateRasterizer* pExportInfo	= static_cast<const ExportInfoGfxStateRasterizer*>(_pExportInfo);
-		zUInt uSize											= ZENMemberOffsetAfter(ExportInfoGfxStateRasterizer, mfSlopeScaledDepthBias) - ZENMemberOffset(ExportInfoGfxStateRasterizer, mbFrontCounterClockwise);
-		zResID::NameHash hName((void*)&pExportInfo->mbFrontCounterClockwise, uSize);
+		zResID::NameHash hName((void*)&pExportInfo->mRasterConfig, sizeof(zenRes::zGfxStateRasterizer::Config) );
 		return zcExp::ValidateItemID(_ePlatform, _eType, _eSource, hName, _bExistOut);
 	}
 

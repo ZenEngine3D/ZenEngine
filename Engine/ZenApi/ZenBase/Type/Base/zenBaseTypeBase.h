@@ -3,6 +3,7 @@
 #define __zenApi_Base_Type_Base_h__
 
 #include <stdint.h>
+#include <array>
 
 namespace zen { namespace zenType {
 

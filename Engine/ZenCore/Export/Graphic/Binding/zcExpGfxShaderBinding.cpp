@@ -19,7 +19,7 @@ namespace zcExp
 		//! @todo Urgent need sorting re-implemented
 		//aSortedResname.Sort();
 
-		zResID::NameHash hName( aSortedResname.First(), aSortedResname.Size() );
+		zResID::NameHash hName( aSortedResname.First(), aSortedResname.SizeMem() );
 		return zcExp::ValidateItemID(_ePlatform, _eType, _eSource, hName, _bExistOut);
 	}
 

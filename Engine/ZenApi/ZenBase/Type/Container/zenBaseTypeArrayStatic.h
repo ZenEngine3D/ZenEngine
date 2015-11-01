@@ -11,8 +11,10 @@ ZENClassDeclare(zArrayStatic, zArrayBase<TType>)
 public:
 					zArrayStatic();
 					zArrayStatic(zUInt _uCount);
-					zArrayStatic(const TType* _pCopy, zUInt _uCount, zUInt _uExtraCount=0);
+					zArrayStatic(std::initializer_list<TType> _Entries);
 					zArrayStatic(const zArrayStatic& _Copy, zUInt _uExtraCount=0);
+					zArrayStatic(const TType* _pCopy, zUInt _uCount, zUInt _uExtraCount=0);
+					
 	virtual			~zArrayStatic();
 				
 	void			Swap(zArrayStatic<TType>& _Copy);		//!< @brief Exchange content between 2 arrays

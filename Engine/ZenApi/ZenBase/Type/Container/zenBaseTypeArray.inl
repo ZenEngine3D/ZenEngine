@@ -50,13 +50,19 @@ zUInt zArrayBase<TType>::Count()const
 }
 
 template<class TType>
-zUInt zArrayBase<TType>::Size()const
+bool zArrayBase<TType>::IsEmpty()const
+{
+	return muCount == 0;
+}
+
+template<class TType>
+zUInt zArrayBase<TType>::SizeMem()const
 {
 	return muCount*sizeof(TType);
 }	
 
 template<class TType>
-zUInt zArrayBase<TType>::SizeElement()const			
+zUInt zArrayBase<TType>::SizeItem()const			
 {
 	return sizeof(TType);
 }
@@ -166,17 +172,7 @@ zUInt zArrayBase<TType>::Copy(const TType* _pCopy, zUInt _uCount)
 {	
 	Clear();
 	SetCount(_uCount);
-	if( std::is_trivially_copyable<TType>::value )
-	{
-		zenMem::Copy(mpData, _pCopy, sizeof(TType)*_uCount);
-	}	
-	else
-	{
-		TType* pItemCur	= mpData;
-		TType* pItemEnd	= mpData+muCount;
-		while( pItemCur < pItemEnd )
-			*pItemCur++ = *_pCopy++;		
-	}
+	zenMem::Copy(mpData, _pCopy, _uCount);	
 	return muCount;
 }		
 
@@ -239,5 +235,6 @@ void zArrayBase<TType>::SetRange(const TType& _Value, zUInt _uFirst=0, zUInt _uL
 	while( pDataDest < pDataEnd )
 		*pDataDest++ = _Value;
 }
+
 
 } } //namespace zen, Type

@@ -19,18 +19,8 @@ zArrayStatic<TType>::zArrayStatic(const TType* _pCopy, zUInt _uCount, zUInt _uEx
 : zArrayBase()
 {		
 	muCount			= _uCount+_uExtraCount;
-	mpData			= zenNewDefault TType[muCount];			
-	if( std::is_trivially_copyable<TType>::value )	
-	{
-		memcpy(mpData, _pCopy, sizeof(TType)*_uCount);
-	}
-	else				
-	{				
-		TType* pItemCur	= mpData;
-		TType* pItemEnd	= mpData+_uCount;
-		while( pItemCur < pItemEnd )
-			*pItemCur++ = *_pCopy++;
-	}
+	mpData			= zenNewDefault TType[muCount];
+	zenMem::Copy(mpData, _pCopy, _uCount);
 }	
 
 template<class TType>
@@ -39,19 +29,18 @@ zArrayStatic<TType>::zArrayStatic(const zArrayStatic& _Copy, zUInt _uExtraCount=
 	muCount					= _Copy.Count()+_uExtraCount;
 	mpData					= zenNewDefault TType[muCount];		
 	const TType* pItemSrc	= _Copy.First();
-	if( std::is_trivially_copyable<TType>::value )
-	{
-		memcpy(mpData, pItemSrc, sizeof(TType)*muCount);
-	}
-	else				
-	{	
-		TType* pItemCur	= mpData;
-		TType* pItemEnd	= mpData+muCount;
-		while( pItemCur < pItemEnd )
-			*pItemCur++ = *pItemSrc++;
-	}
+	zenMem::Copy(mpData, pItemSrc, muCount);
 }
-		
+
+template<class TType>
+zArrayStatic<TType>::zArrayStatic(std::initializer_list<TType> _Entries)
+{	
+	muCount					= (zUInt)_Entries.size();
+	mpData					= zenNewDefault TType[muCount];		
+	const TType* pItemSrc	= _Entries.begin();
+	zenMem::Copy(mpData, pItemSrc, muCount);
+}		
+
 template<class TType>
 zArrayStatic<TType>::~zArrayStatic()
 {

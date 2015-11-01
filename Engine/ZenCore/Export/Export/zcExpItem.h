@@ -19,13 +19,13 @@ struct ExportInfoBase
 
 typedef zEngineRef<class ResourceData> ResDataRef;
 
+//! @todo Clean Make this use fiber/task system
 class ExporterBase
 {
 public:
 								ExporterBase(const ResDataRef& _rResData);
 	bool						Export( zcExp::ExportInfoBase& _ExportInfo );	//!< @brief	Export this item, from current thread
 	
-
 protected:
 	
 	virtual bool				ExportStart();									//!< @brief Called from Thread:Main before the start of export

@@ -124,7 +124,7 @@ bool SerializerExportMem::Serialize(zI64& _iValue)
 
 bool SerializerExportMem::Serialize(zArrayBase<zU8>& _aValues)
 {
-	zU32 uSize(_aValues.Size());
+	zU32 uSize(_aValues.SizeMem());
 	Serialize(uSize);
 	zU8* pValues	= static_cast<zU8*>(GetMemory(uSize));
 	zenMem::Copy(pValues, _aValues.First(), uSize );				
@@ -133,7 +133,7 @@ bool SerializerExportMem::Serialize(zArrayBase<zU8>& _aValues)
 
 bool SerializerExportMem::Serialize(zArrayBase<zU16>& _aValues)
 {
-	zU32 uSize(_aValues.Size());
+	zU32 uSize(_aValues.SizeMem());
 	Serialize(uSize);
 	zU16* pValues = static_cast<zU16*>(GetMemory(uSize));
 	zenMem::Copy(pValues, _aValues.First(), uSize );
@@ -142,7 +142,7 @@ bool SerializerExportMem::Serialize(zArrayBase<zU16>& _aValues)
 
 bool SerializerExportMem::Serialize(zArrayBase<zU32>& _aValues)
 {
-	zUInt uSize(_aValues.Size());
+	zUInt uSize(_aValues.SizeMem());
 	Serialize(uSize);
 	zU32* pValues = static_cast<zU32*>(GetMemory(uSize));
 	zenMem::Copy(pValues, _aValues.First(), uSize );
@@ -151,7 +151,7 @@ bool SerializerExportMem::Serialize(zArrayBase<zU32>& _aValues)
 
 bool SerializerExportMem::Serialize(zArrayBase<zU64>& _aValues)
 {
-	zUInt uSize(_aValues.Size());
+	zUInt uSize(_aValues.SizeMem());
 	Serialize(uSize);
 	zU64* pValues = static_cast<zU64*>(GetMemory(uSize));
 	zenMem::Copy(pValues, _aValues.First(), uSize );
@@ -160,7 +160,7 @@ bool SerializerExportMem::Serialize(zArrayBase<zU64>& _aValues)
 
 bool SerializerExportMem::Serialize(zArrayBase<zI8>& _aValues)
 {
-	zI8 uSize(_aValues.Size());
+	zI8 uSize(_aValues.SizeMem());
 	Serialize(uSize);
 	zI8* pValues = static_cast<zI8*>(GetMemory(uSize));
 	zenMem::Copy(pValues, _aValues.First(), uSize );
@@ -169,7 +169,7 @@ bool SerializerExportMem::Serialize(zArrayBase<zI8>& _aValues)
 
 bool SerializerExportMem::Serialize(zArrayBase<zI16>& _aValues)
 {
-	zU32 uSize(_aValues.Size());
+	zU32 uSize(_aValues.SizeMem());
 	Serialize(uSize);
 	zI16* pValues = static_cast<zI16*>(GetMemory(uSize));
 	zenMem::Copy(pValues, _aValues.First(), uSize );
@@ -178,7 +178,7 @@ bool SerializerExportMem::Serialize(zArrayBase<zI16>& _aValues)
 
 bool SerializerExportMem::Serialize(zArrayBase<zI32>& _aValues)
 {
-	zU32 uSize(_aValues.Size());
+	zU32 uSize(_aValues.SizeMem());
 	Serialize(uSize);
 	zI32* pValues = static_cast<zI32*>(GetMemory(uSize));
 	zenMem::Copy(pValues, _aValues.First(), uSize );
@@ -187,11 +187,11 @@ bool SerializerExportMem::Serialize(zArrayBase<zI32>& _aValues)
 
 bool SerializerExportMem::Serialize(zArrayBase<zI64>& _aValues)
 {
-	zU32 uSize(_aValues.Size());
+	zU32 uSize(_aValues.SizeMem());
 	if( Serialize(uSize) )
 	{
-		zI64* pValues = static_cast<zI64*>(GetMemory(_aValues.Size()));
-		zenMem::Copy(pValues, _aValues.First(), _aValues.Size() );
+		zI64* pValues = static_cast<zI64*>(GetMemory(_aValues.SizeMem()));
+		zenMem::Copy(pValues, _aValues.First(), _aValues.SizeMem() );
 		return true;
 	}
 	return false;

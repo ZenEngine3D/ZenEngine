@@ -2,46 +2,6 @@
 
 namespace zen { namespace zenRes {
 
-//! @todo Urgent move elsewhere, not a resource per see
-zGfxDrawcall::zGfxDrawcall(const zGfxDrawcall& _Copy)
-{
-	*this = _Copy;
-}
-
-zGfxDrawcall::zGfxDrawcall()
-{
-}
-
-zGfxDrawcall::zGfxDrawcall(zcGfx::Drawcall* _pDrawcall)
-{
-	*this = _pDrawcall;
-}
-
-zGfxDrawcall zGfxDrawcall::Create(const zGfxRenderPass& _rRenderPass, const zGfxMeshStrip& _rMeshStrip, float _fPriority)
-{
-	zcRes::GfxRenderPassRef rRenderpass	= _rRenderPass;
-	zcRes::GfxMeshStripRef rMeshStrip	= _rMeshStrip;
-	zGfxDrawcall rDrawcall				= zcGfx::Drawcall::Create(rRenderpass, rMeshStrip, _fPriority ).GetSafe();	
-	return rDrawcall;
-}
-
-void zGfxDrawcall::Submit(zArrayDynamic<zenRes::zGfxDrawcall>& _aDrawcalls)
-{
-	zcMgr::GfxRender.Render( _aDrawcalls );
-}
-
-zGfxDrawcall& zGfxDrawcall::operator=(const zGfxDrawcall& _Copy)
-{	
-	Super::operator=(_Copy.Get());
-	return *this;
-}
-
-zGfxDrawcall& zGfxDrawcall::operator=(zcGfx::Drawcall* _pCopy)
-{	
-	Super::operator=(_pCopy);
-	return *this;
-}
-
 //=================================================================================================
 // CREATES
 //=================================================================================================
@@ -50,14 +10,6 @@ zGfxMesh zGfxMesh::Create(const zArrayBase<zGfxMeshStrip>& _aMeshStrip)
 	//! @todo Optim: Use a heap allocator instead, for faster creation
 	zArrayStatic<zResID> aMeshStripID;
 	aMeshStripID.Copy<zGfxMeshStrip>(_aMeshStrip);
-	return zcExp::CreateGfxMesh( aMeshStripID );
-}
-
-zGfxMesh zGfxMesh::Create(const zGfxMeshStrip* _aMeshStrip, zUInt _uMeshStripCount)
-{
-	//! @todo Optim: Use a heap allocator instead, for faster creation
-	zArrayStatic<zResID> aMeshStripID;
-	aMeshStripID.Copy<zGfxMeshStrip>(_aMeshStrip, _uMeshStripCount);
 	return zcExp::CreateGfxMesh( aMeshStripID );
 }
 
@@ -70,7 +22,7 @@ void zGfxMesh::Draw(zenRes::zGfxRenderPass& _rRenderpass, float _fPriority, zArr
 	const zUInt uStripCount									= aMeshStrips.Count();
 	_aDrawcallsOut.SetCount( uOldCount + uStripCount );
 	for(zUInt stripIdx(0); stripIdx<uStripCount; ++stripIdx)
-		_aDrawcallsOut[uOldCount+stripIdx] = zcGfx::Drawcall::Create(rRenderpass, aMeshStrips[stripIdx], _fPriority ).GetSafe();
+		_aDrawcallsOut[uOldCount+stripIdx] = zcGfx::Drawcall::Create(rRenderpass, _fPriority, aMeshStrips[stripIdx] ).GetSafe();
 }
 
 zGfxMeshStrip zGfxMeshStrip::Create(const zGfxVertex& _VertexBuffer, const zGfxIndex& _IndexBuffer, const zGfxShaderBinding& _rShaderBinding, const zArrayBase<zResID>& _aShaderParamID, const zArrayBase<zShaderTexture>& _aTexture, zU32 _uIndexFirst, zU32 _uIndexCount)
@@ -95,19 +47,7 @@ void zGfxMeshStrip::Draw(zenRes::zGfxRenderPass& _rRenderpass, float _fPriority,
 {
 	zcRes::GfxRenderPassRef rRenderpass	= _rRenderpass;
 	zcRes::GfxMeshStripRef rMeshStrip	= *this;
-	_aDrawcallsOut.Push( zcGfx::Drawcall::Create(rRenderpass, rMeshStrip, _fPriority ).GetSafe() );
-}
-
-zGfxView zGfxView::Create( const zGfxRenderTarget& _RTColor, const zGfxRenderTarget& _RTDepth, const zVec2U16& _vDim, const zVec2S16& _vOrigin )
-{
-	return zcExp::CreateGfxView(_RTColor.GetResID(), _RTDepth.GetResID(), _vDim, _vOrigin);
-}
-
-zGfxView zGfxView::Create( const zArrayBase<zGfxRenderTarget>& _aRTColor, const zGfxRenderTarget& _RTDepth, const zVec2U16& _vDim, const zVec2S16& _vOrigin )
-{
-	zArrayStatic<zResID> aRTColorID;
-	aRTColorID.Copy<zGfxRenderTarget>(_aRTColor);
-	return zcExp::CreateGfxView(aRTColorID, _RTDepth.GetResID(), _vDim, _vOrigin);
+	_aDrawcallsOut.Push( zcGfx::Drawcall::Create(rRenderpass, _fPriority, rMeshStrip ).GetSafe() );
 }
 
 zGfxWindow zGfxWindow::Create( HWND _WindowHandle )
@@ -125,50 +65,15 @@ zGfxShaderBinding zGfxShaderBinding::Create(const zArrayBase<zenRes::zGfxShader>
 	return zcExp::CreateGfxShaderBinding(aShaderID);
 }
 
-zGfxShaderBinding zGfxShaderBinding::Create(const zenRes::zGfxShader* _pShaders, zUInt _uCount)
-{
-	zArrayStatic<zResID> aShaderID;
-	aShaderID.Copy<zenRes::zGfxShader>(_pShaders, _uCount);	
-	return zcExp::CreateGfxShaderBinding(aShaderID);
-}
-//=================================================================================================
-// GFX RenderPass
-//! @todo Cleanup move this to own file
-//=================================================================================================
-zGfxRenderPass zGfxRenderPass::Create(const zString& _zStageName, const zGfxStateBlend& _rStateBlend, const zGfxStateDepthStencil& _rStateDepthStencil, const zGfxStateRasterizer& _rStateRaster, const zGfxView& _rView)
-{
-	return zcExp::CreateGfxRenderPass(_zStageName, _rStateBlend.GetResID(), _rStateDepthStencil.GetResID(), _rStateRaster.GetResID(), _rView.GetResID());
-}
-
-zGfxRenderPass zGfxRenderPass::Create(const zString& _zStageName, const ViewConfig& _rView, const zGfxTexture2d& _rTargetDepth, const zGfxStateDepthStencil& _rStateDepthStencil, const zGfxStateRasterizer& _rStateRaster)
-{/*
-	zArrayStatic<ViewConfig> aViews(1);
-	aViews[0] = _rView;
-	return zcExp::CreateGfxRenderPass(_zStageName, _rStateBlend.GetResID(), _rStateDepthStencil.GetResID(), _rStateRaster.GetResID(), _rView.GetResID());
-	*/
-	return NULL;
-}
-/*
-struct ViewConfig
-		{
-			zGfxTexture2d	mTargetSurface;
-			zGfxStateBlend	mStateBlend;
-			zVec2S16		mvOrigin;
-			zVec2U16		mvDim;
-		};
-		static zGfxRenderPass			Create(const zString& _zStageName, const zGfxStateBlend& _rStateBlend, const zGfxStateDepthStencil&	_rStateDepthStencil, const zGfxStateRasterizer& _rStateRaster, const zGfxView& _rView);
-		static zGfxRenderPass			Create(const zString& _zStageName, const ViewConfig& _View, const zGfxTexture2d& _TargetDepth, const zGfxStateDepthStencil& _rStateDepthStencil, const zGfxStateRasterizer& _rStateRaster);
-*/
-
 //=================================================================================================
 // GFX WINDOW
 //=================================================================================================
 //! @todo Missing: Convert all mpResouce cast to using Ref Object
-zGfxView zGfxWindow::GetBackbuffer()
+zGfxRenderTarget zGfxWindow::GetBackbuffer()
 {
 	ZENAssertMsg(mpResource, "No valid resource assigned");
-	zcRes::GfxWindow* pWindow = static_cast<zcRes::GfxWindow*>(mpResource);
-	return pWindow->GetBackbuffer();
+	zcRes::GfxWindowRef rWindow = mpResource;	
+	return rWindow->GetBackbuffer();
 }
 
 void zGfxWindow::Resize(const zVec2U16& _vSize)
@@ -176,6 +81,12 @@ void zGfxWindow::Resize(const zVec2U16& _vSize)
 	ZENAssertMsg(mpResource, "No valid resource assigned");
 	zcRes::GfxWindow* pWindow = static_cast<zcRes::GfxWindow*>(mpResource);
 	return pWindow->Resize(_vSize);
+}
+
+bool zGfxWindow::HasPendingResize()
+{
+	zcRes::GfxWindowRef rWindow = mpResource;
+	return !rWindow->GetProxy()->mvPendingResize.IsNull();
 }
 
 void zGfxWindow::FrameBegin()
@@ -195,13 +106,6 @@ void zGfxWindow::FrameEnd()
 //=================================================================================================
 // GFX VIEW
 //=================================================================================================
-void zGfxView::Clear( bool _bClearColor, const zVec4F& _vRGBA, bool _bClearDepth, float _fDepth, bool _bClearStencil, zU8 _uStencil )
-{
-	ZENAssertMsg(mpResource, "No valid resource assigned");
-	zcRes::GfxViewRef rView = mpResource;
-	rView->Clear(_bClearColor, _vRGBA, _bClearDepth, _fDepth, _bClearStencil, _uStencil);
-}
-
 zVec2U16 zGfxView::GetDim()const
 {
 	ZENAssertMsg(mpResource, "No valid resource assigned");

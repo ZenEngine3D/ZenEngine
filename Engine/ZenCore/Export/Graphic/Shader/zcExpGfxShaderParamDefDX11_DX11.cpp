@@ -53,7 +53,7 @@ bool ExporterGfxShaderParamDefDX11_DX11::ExportWork(bool _bIsTHRTask)
 	D3D11_SHADER_BUFFER_DESC				bufferDesc;
 	D3D11_SHADER_INPUT_BIND_DESC			ResourceDesc;	
 	ExportInfoGfxShaderParamDef*			pExportInfo		= static_cast<ExportInfoGfxShaderParamDef*>(mpExportInfo);
-	if( SUCCEEDED( D3DReflect( maCompiledShader.First(), maCompiledShader.Size(), IID_ID3D11ShaderReflection, (void**) &pGfxShaderReflection ) ) )
+	if( SUCCEEDED( D3DReflect( maCompiledShader.First(), maCompiledShader.SizeMem(), IID_ID3D11ShaderReflection, (void**) &pGfxShaderReflection ) ) )
 	{
 		// Find the right Constant Buffer
 		pGfxShaderReflection->GetDesc( &shaderDesc );
@@ -106,7 +106,7 @@ bool ExporterGfxShaderParamDefDX11_DX11::ExportWork(bool _bIsTHRTask)
 				Param.mbInUse				= (VarDesc.uFlags & D3D_SVF_USED) != 0;
 
 				// Copy default value
-				if(VarDesc.DefaultValue)	zenMem::Copy(&mrResData->maParameterDefaults[VarDesc.StartOffset], VarDesc.DefaultValue, VarDesc.Size); 
+				if(VarDesc.DefaultValue)	zenMem::Copy(&mrResData->maParameterDefaults[VarDesc.StartOffset], static_cast<const zU8*>(VarDesc.DefaultValue), VarDesc.Size); 
 				else						zenMem::Set(&mrResData->maParameterDefaults[VarDesc.StartOffset], 0, VarDesc.Size); 
 				mrResData->mdParameters.GetAdd( zHash32(VarDesc.Name) ) = Param;
 			}

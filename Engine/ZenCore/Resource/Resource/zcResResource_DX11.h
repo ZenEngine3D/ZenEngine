@@ -45,8 +45,8 @@ namespace zcRes
 	typedef zcExp::ExporterGfxView::ResData							GfxViewResData;
 
 	typedef class GfxRenderPassProxy_DX11							GfxRenderPassProxy;
-	typedef zcExp::ExporterGfxRenderPass							GfxRenderPassExporterRuntime;
-	typedef zcExp::ExporterGfxRenderPass::ResData					GfxRenderPassResData;
+	typedef zcExp::ExporterGfxRenderPass_DX11						GfxRenderPassExporterRuntime;
+	typedef zcExp::ExporterGfxRenderPass_DX11::ResData				GfxRenderPassResData;
 
 	typedef class GfxWindowProxy_DX11								GfxWindowProxy;
 	typedef zcExp::ResDataGfxWindowDX11								GfxWindowResData;

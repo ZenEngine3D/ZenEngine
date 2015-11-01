@@ -20,6 +20,9 @@ private:																															\
 namespace zcRes
 {	
 
+template<class TClassResource, class TClassResData, class TClassProxy, class TClassExporter>
+zU32 TResource<TClassResource, TClassResData, TClassProxy, TClassExporter>::suCreatedCount;
+	
 template<class TResourceClass, class TReferenceClass>
 ResourceRef<TResourceClass, TReferenceClass>::ResourceRef()
 {

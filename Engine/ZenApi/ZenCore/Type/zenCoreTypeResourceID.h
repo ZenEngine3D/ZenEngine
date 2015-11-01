@@ -3,76 +3,7 @@
 #define __zenCore_Type_ResourceID_h__
 
 namespace zen { namespace zenType {
-	
-	class zBlendDesc
-	{
-	ZENClassDeclareNoParent(zBlendDesc)
-	public:
-		ZENInlineForce zBlendDesc(void)		
-		: mbBlendEnable(false)
-		, muRenderTargetWriteMask(0xFF)
-		, meSrcBlend(zenConst::keBlend_SrcColor)
-		, meDestBlend(zenConst::keBlend_InvSrcColor)
-		, meBlendOp(zenConst::keBlendOp_Add)
-		, meSrcBlendAlpha(zenConst::keBlend_SrcColor)
-		, meDestBlendAlpha(zenConst::keBlend_InvSrcColor)
-		, meBlendOpAlpha(zenConst::keBlendOp_Add)
-		, mbAlphaToCoverageEnable(false)
-		, mbIndependentBlendEnable(false)
-		{
-		}
 
-		bool				mbBlendEnable;
-		zU8					muRenderTargetWriteMask;
-		zenConst::eBlend	meSrcBlend;
-		zenConst::eBlend	meDestBlend;
-		zenConst::eBlendOp	meBlendOp;
-		zenConst::eBlend	meSrcBlendAlpha;
-		zenConst::eBlend	meDestBlendAlpha;
-		zenConst::eBlendOp	meBlendOpAlpha;
-		bool				mbAlphaToCoverageEnable;
-		bool				mbIndependentBlendEnable;
-	};
-	
-	class zDepthStencilDesc
-	{
-	ZENClassDeclareNoParent(zDepthStencilDesc)
-	public:
-		struct DepthStencilOp
-		{
-			DepthStencilOp(void)
-			: meStencilFailOp(zenConst::keStencilOp_Keep)
-			, meStencilDepthFailOp(zenConst::keStencilOp_Keep)
-			, meStencilPassOp(zenConst::keStencilOp_Keep)
-			, meStencilFunc(zenConst::keComparisonFunc_Always)
-			{
-			}
-			zenConst::eStencilOp		meStencilFailOp;
-			zenConst::eStencilOp		meStencilDepthFailOp;
-			zenConst::eStencilOp		meStencilPassOp;
-			zenConst::eComparisonFunc	meStencilFunc;
-		};
-
-		zDepthStencilDesc(void)
-		: mbDepthEnable(false)
-		, mbDepthWrite(false)
-		, mbStencilEnable(false)
-		, muStencilReadMask(0xFF)
-		, muStencilWriteMask(0xFF)
-		, meDepthFunc(zenConst::keComparisonFunc_Always)
-		{
-		}
-
-		bool						mbDepthEnable;
-		bool						mbDepthWrite;
-		bool						mbStencilEnable;
-		zU8							muStencilReadMask;
-		zU8							muStencilWriteMask;
-		zenConst::eComparisonFunc	meDepthFunc;
-		DepthStencilOp				mxFrontFace;
-		DepthStencilOp				mxBackFace;
-	};
-	
 	class zResID
 	{
 	ZENClassDeclareNoParent(zResID)

@@ -21,14 +21,14 @@ namespace zcExp
 		virtual bool	Serialize(zI16&						aiValue){muSerializeSize += sizeof(aiValue); return true;}
 		virtual bool	Serialize(zI32&						aiValue){muSerializeSize += sizeof(aiValue); return true;}
 		virtual bool	Serialize(zI64&						aiValue){muSerializeSize += sizeof(aiValue); return true;}
-		virtual bool	Serialize(zArrayBase<zU8>&	aValues){muSerializeSize += sizeof(zU32)+aValues.Size(); return true;}
-		virtual bool	Serialize(zArrayBase<zU16>&	aValues){muSerializeSize += sizeof(zU32)+aValues.Size(); return true;}
-		virtual bool	Serialize(zArrayBase<zU32>&	aValues){muSerializeSize += sizeof(zU32)+aValues.Size(); return true;}
-		virtual bool	Serialize(zArrayBase<zU64>&	aValues){muSerializeSize += sizeof(zU32)+aValues.Size(); return true;}
-		virtual bool	Serialize(zArrayBase<zI8>&	aValues){muSerializeSize += sizeof(zU32)+aValues.Size(); return true;}
-		virtual bool	Serialize(zArrayBase<zI16>&	aValues){muSerializeSize += sizeof(zU32)+aValues.Size(); return true;}
-		virtual bool	Serialize(zArrayBase<zI32>&	aValues){muSerializeSize += sizeof(zU32)+aValues.Size(); return true;}
-		virtual bool	Serialize(zArrayBase<zI64>&	aValues){muSerializeSize += sizeof(zU32)+aValues.Size(); return true;}
+		virtual bool	Serialize(zArrayBase<zU8>&	aValues){muSerializeSize += sizeof(zU32)+aValues.SizeMem(); return true;}
+		virtual bool	Serialize(zArrayBase<zU16>&	aValues){muSerializeSize += sizeof(zU32)+aValues.SizeMem(); return true;}
+		virtual bool	Serialize(zArrayBase<zU32>&	aValues){muSerializeSize += sizeof(zU32)+aValues.SizeMem(); return true;}
+		virtual bool	Serialize(zArrayBase<zU64>&	aValues){muSerializeSize += sizeof(zU32)+aValues.SizeMem(); return true;}
+		virtual bool	Serialize(zArrayBase<zI8>&	aValues){muSerializeSize += sizeof(zU32)+aValues.SizeMem(); return true;}
+		virtual bool	Serialize(zArrayBase<zI16>&	aValues){muSerializeSize += sizeof(zU32)+aValues.SizeMem(); return true;}
+		virtual bool	Serialize(zArrayBase<zI32>&	aValues){muSerializeSize += sizeof(zU32)+aValues.SizeMem(); return true;}
+		virtual bool	Serialize(zArrayBase<zI64>&	aValues){muSerializeSize += sizeof(zU32)+aValues.SizeMem(); return true;}
 
 		virtual bool	ItemStarted(zcExp::ResourceData& aItem)
 		{

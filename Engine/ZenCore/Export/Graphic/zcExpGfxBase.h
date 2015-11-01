@@ -18,7 +18,7 @@
 #include "Graphic/shader/zcExpGfxShaderInputSignature.h"
 #include "Graphic/Binding/zcExpGfxInputStream.h"
 #include "Graphic/Binding/zcExpGfxShaderBinding.h"
-#include "Graphic/Binding/zcExpGfxRenderPass.h"
+#include "Graphic/Binding/zcExpGfxRenderpass.h"
 #include ZENHeaderRenderer(zcExpGfxExporter)
 
 #endif

@@ -52,7 +52,7 @@ bool GfxVertexProxy_DX11::Initialize(class GfxVertex& _Owner)
 						
 		// Vertex Buffer Data
 		D3D11_BUFFER_DESC vertexDesc;
-		vertexDesc.ByteWidth			= stream.maData.Size();
+		vertexDesc.ByteWidth			= stream.maData.SizeMem();
 		vertexDesc.Usage				= eUsage;
 		vertexDesc.BindFlags			= D3D11_BIND_VERTEX_BUFFER;		
 		vertexDesc.CPUAccessFlags		= uCpuAccess;					
@@ -72,7 +72,7 @@ bool GfxVertexProxy_DX11::Initialize(class GfxVertex& _Owner)
 	}	
 		
 	// Vertex element Definitions
-	zUInt uElemDefCount = maElementDef.Copy( (D3D11_INPUT_ELEMENT_DESC*)rResData->maElementDef.First(), rResData->maElementDef.Size() / sizeof(D3D11_INPUT_ELEMENT_DESC) );
+	zUInt uElemDefCount = maElementDef.Copy( (D3D11_INPUT_ELEMENT_DESC*)rResData->maElementDef.First(), rResData->maElementDef.SizeMem() / sizeof(D3D11_INPUT_ELEMENT_DESC) );
 	for(zUInt elemIdx=0; elemIdx<uElemDefCount; ++elemIdx)
 		maElementDef[elemIdx].SemanticName = zSemanticNames[(zUInt)maElementDef[elemIdx].SemanticName];	//Convert Semantic Name index to string		
 		

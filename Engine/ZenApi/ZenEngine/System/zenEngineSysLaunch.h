@@ -22,7 +22,8 @@ public:
 	zenSig::zSignalEmitter1<zenConst::eUpdatePriority>	msigUpdate;
 
 protected:	
-	zenRes::zGfxWindow									mrMainGfxWindow;	
+	zenRes::zGfxWindow									mrMainGfxWindow;
+
 private:
 	void												MainLoop();
 	friend void	LaunchEngine(zEngineInstance* _pEngineInstance, int argc, const char* const * argv);

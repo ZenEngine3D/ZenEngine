@@ -70,3 +70,10 @@ float4 PS( VS_OUTPUT input) : SV_Target
 	float4 texColor = TextureSample2D( txColor, input.Tex );
 	return float4(vColor.rgb*texColor.rgb,1);
 }
+
+void PS2Output( VS_OUTPUT input, out float4 ColorOut1 : SV_Target0, out float4 ColorOut2 : SV_Target1) 
+{
+	float4 texColor = TextureSample2D( txColor, input.Tex );
+	ColorOut1 = float4(vColor.rgb*texColor.rgb,1);
+	ColorOut2 = float4(input.Tex.x, input.Tex.y, 1, 1);
+}

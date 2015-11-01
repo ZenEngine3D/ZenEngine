@@ -15,10 +15,10 @@ namespace zcRes
 	{
 	ZENClassDeclare(GfxInputSignatureProxy_DX11, zRefCountedAutoDel)
 	public:												
-													GfxInputSignatureProxy_DX11();
-		virtual										~GfxInputSignatureProxy_DX11();												
-		bool										Initialize(class GfxInputSignature& _Owner);
-		zArrayStatic<zU8>							maDummyShaderCode;
+											GfxInputSignatureProxy_DX11();
+		virtual								~GfxInputSignatureProxy_DX11();												
+		bool								Initialize(class GfxInputSignature& _Owner);
+		zArrayStatic<zU8>					maDummyShaderCode;
 		ZENDbgCode(class GfxInputSignature*	mpOwner);
 	};
 
@@ -27,11 +27,11 @@ namespace zcRes
 	{
 	ZENClassDeclare(GfxShaderVertexProxy_DX11, zRefCountedAutoDel)
 	public:												
-													GfxShaderVertexProxy_DX11();
-		virtual										~GfxShaderVertexProxy_DX11();												
-		bool										Initialize(class GfxShaderVertex& _Owner);
-		ID3D11VertexShader*							mpVertexShader;
-		ZENDbgCode(class GfxShaderVertex*		mpOwner);
+											GfxShaderVertexProxy_DX11();
+		virtual								~GfxShaderVertexProxy_DX11();												
+		bool								Initialize(class GfxShaderVertex& _Owner);
+		ID3D11VertexShader*					mpVertexShader;		
+		ZENDbgCode(class GfxShaderVertex*	mpOwner);
 	};
 
 	//=================================================================================================	
@@ -39,11 +39,11 @@ namespace zcRes
 	{
 	ZENClassDeclare(GfxShaderPixelProxy_DX11, zRefCountedAutoDel)
 	public:											
-													GfxShaderPixelProxy_DX11();
-		virtual										~GfxShaderPixelProxy_DX11();												
-		bool										Initialize(class GfxShaderPixel& _Owner);
-		ID3D11PixelShader*							mpPixelShader;
-		ZENDbgCode(class GfxShaderPixel*		mpOwner);
+											GfxShaderPixelProxy_DX11();
+		virtual								~GfxShaderPixelProxy_DX11();												
+		bool								Initialize(class GfxShaderPixel& _Owner);
+		ID3D11PixelShader*					mpPixelShader;
+		ZENDbgCode(class GfxShaderPixel*	mpOwner);
 	};
 }
 

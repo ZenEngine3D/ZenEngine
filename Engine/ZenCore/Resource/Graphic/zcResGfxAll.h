@@ -12,6 +12,7 @@
 #include ZENHeaderRenderer( zcResGfxView )
 #include ZENHeaderRenderer( zcResGfxWindow )
 #include ZENHeaderRenderer( zcResGfxState )
+#include ZENHeaderRenderer( zcResGfxRenderpass )
 
 #include "zcResGfxIndex.h"
 #include "zcResGfxVertex.h"
@@ -23,5 +24,6 @@
 #include "zcResGfxView.h"
 #include "zcResGfxWindow.h"
 #include "zcResGfxBinding.h"
+#include "zcResGfxRenderpass.h"
 
 #endif

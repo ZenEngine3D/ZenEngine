@@ -7,9 +7,9 @@ namespace zen {
 	{
 		enum eResSource
 		{
-			keResSource_Offline,		//!< Being exported in offline mode (converted to 'Loaded' on save)
+			keResSource_Offline,	//!< Being exported in offline mode (converted to 'Loaded' on save)
 			keResSource_Loaded,		//!< Loaded from a package
-			keResSource_Runtime,		//!< Created at runtime, and using generated name
+			keResSource_Runtime,	//!< Created at runtime, and using generated name
 			keResSource__Count,
 			keResSource__Invalid,
 		};
@@ -98,6 +98,7 @@ namespace zen {
 			keTexFormat__Invalid=keTexFormat__Count
 		};
 
+		//! @todo clean remove all those config as much as possible, move it to api res
 		enum eTextureFiltering
 		{
 			keTexFilter_Point,		
@@ -116,78 +117,6 @@ namespace zen {
 			keTexWrap_Border,
 			keTexWrap__Count,
 			keTexWrap__Invalid=keTexWrap__Count
-		};
-
-		enum eBlend
-		{
-			keBlend_Zero,
-			keBlend_One,
-			keBlend_SrcColor,
-			keBlend_InvSrcColor,
-			keBlend_SrcAlpha,
-			keBlend_InvSrcAlpha,
-			keBlend_DestAlpha,
-			keBlend_InvDestAlpha,
-			keBlend_DestColor,
-			keBlend_InvDestColor,
-			keBlend_SrcAlphaSat,
-			keBlend_BlendFactor,
-			keBlend_InvBlendFactor,
-			keBlend_Src1Color,
-			keBlend_InvSrc1Color,
-			keBlend_Src1Alpha,
-			keBlend_InvSrc1Alpha
-		};
-
-		enum eBlendOp
-		{
-			keBlendOp_Add,
-			keBlendOp_Substract,
-			keBlendOp_RevSubstract,
-			keBlendOp_Min,
-			keBlendOp_Max
-		};
-
-		enum eColorWrite
-		{
-			keColorWrite_None	= 0x00,
-			keColorWrite_Red	= 0x01,
-			keColorWrite_Green	= 0x02,
-			keColorWrite_Blue	= 0x04,
-			keColorWrite_Alpha	= 0x08,
-			keColorWrite_RGB	= ( ( keColorWrite_Red | keColorWrite_Green )  | keColorWrite_Blue ),
-			keColorWrite_RGBA	= ( ( ( keColorWrite_Red | keColorWrite_Green )  | keColorWrite_Blue )  | keColorWrite_Alpha ) 
-		};
-
-		enum eComparisonFunc
-		{
-			keComparisonFunc_Never,
-			keComparisonFunc_Less,
-			keComparisonFunc_Equal,
-			keComparisonFunc_LessEqual,
-			keComparisonFunc_Greater,
-			keComparisonFunc_NotEqual,
-			keComparisonFunc_GreaterEqual,
-			keComparisonFunc_Always
-		};
-
-		enum eStencilOp
-		{
-			keStencilOp_Keep,
-			keStencilOp_Zero,
-			keStencilOp_Replace,
-			keStencilOp_IncrSat,
-			keStencilOp_DecrSat,
-			keStencilOp_Invert,
-			keStencilOp_Incr,
-			keStencilOp_Decr
-		};
-
-		enum eCullMode
-		{
-			keCullMode_None,
-			keCullMode_Front,
-			keCullMode_Back
 		};
 
 		enum eTextureUse

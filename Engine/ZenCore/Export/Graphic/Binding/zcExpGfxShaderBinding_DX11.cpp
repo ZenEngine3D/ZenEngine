@@ -53,7 +53,7 @@ namespace zcExp
 		dParamDefPerName.SetDefaultValue(0);
 		for(zUInt paramDefIdx(0), paramDefCount(mrResData->maParamDefID.Count()); paramDefIdx<paramDefCount; ++paramDefIdx )
 		{
-			ZENAssert( paramDefIdx < mrResData->maParameterMask.SizeElement() );			
+			ZENAssert( paramDefIdx < mrResData->maParameterMask.SizeItem() );			
 			zEngineConstRef<ResDataGfxShaderParamDefDX11> rParamDef = zcDepot::ResourceData.GetItem<ResDataGfxShaderParamDefDX11>( mrResData->maParamDefID[paramDefIdx] );
 			if( rParamDef.IsValid() )
 			{

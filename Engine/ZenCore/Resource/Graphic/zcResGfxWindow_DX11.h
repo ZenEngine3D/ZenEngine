@@ -8,22 +8,15 @@ namespace zcRes
 	{
 	ZENClassDeclare(GfxWindowProxy_DX11, zRefCountedAutoDel)
 	public:
-											GfxWindowProxy_DX11();
 		virtual								~GfxWindowProxy_DX11();												
-		bool								Initialize(class GfxWindow& _Owner);
-		
+		bool								Initialize(class GfxWindow& _Owner);		
 		void								PerformResize();
-		zVec2U16							mvPendingResize;
-
-		ZENInline zcRes::GfxViewProxyRef	GetBackbuffer(){ return mrProxBackbufferView; }	//! @todo clean move to non proxy		
-
-		IDXGISwapChain*						mDX11pSwapChain;
-		GfxRenderTargetProxyRef				mrProxBackbufferColor;
-		GfxRenderTargetProxyRef				mrProxBackbufferDepth;
-		GfxViewProxyRef						mrProxBackbufferView;
-		zenConst::eTextureFormat			meBackbufferColorFormat;
-		zenConst::eTextureFormat			meBackbufferDepthFormat;
-		zVec2U16							mvSize;
+		
+		IDXGISwapChain*						mDX11pSwapChain			= nullptr;
+		GfxRenderTargetProxyRef				mrProxBackbufferColor	= nullptr;
+		zenConst::eTextureFormat			meBackbufferColorFormat	= zenConst::keTexFormat_RGBA8; //! @todo clean feature expose desired format in ResData
+		zVec2U16							mvSize					= zVec2U16(0,0);
+		zVec2U16							mvPendingResize			= zVec2U16(0,0);
 		ZENDbgCode(class GfxWindow*			mpOwner);
 	};
 }

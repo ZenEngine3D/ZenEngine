@@ -37,7 +37,7 @@ bool GfxShaderVertexProxy_DX11::Initialize(class GfxShaderVertex& _Owner)
 {		
 	ZENDbgCode(mpOwner = &_Owner);
 	const GfxShaderVertex::ResDataRef& rResData = _Owner.GetResData();	
-	HRESULT hr = zcMgr::GfxRender.DX11GetDevice()->CreateVertexShader( rResData->maCompiledShader.First(), rResData->maCompiledShader.Size(), NULL, &mpVertexShader );
+	HRESULT hr = zcMgr::GfxRender.DX11GetDevice()->CreateVertexShader( rResData->maCompiledShader.First(), rResData->maCompiledShader.SizeMem(), NULL, &mpVertexShader );
 	return SUCCEEDED(hr);
 }
 
@@ -58,7 +58,7 @@ bool GfxShaderPixelProxy_DX11::Initialize(class GfxShaderPixel& _Owner)
 {		
 	ZENDbgCode(mpOwner = &_Owner);
 	const GfxShaderPixel::ResDataRef& rResData = _Owner.GetResData();	
-	HRESULT hr = zcMgr::GfxRender.DX11GetDevice()->CreatePixelShader( rResData->maCompiledShader.First(), rResData->maCompiledShader.Size(), NULL, &mpPixelShader );
+	HRESULT hr = zcMgr::GfxRender.DX11GetDevice()->CreatePixelShader( rResData->maCompiledShader.First(), rResData->maCompiledShader.SizeMem(), NULL, &mpPixelShader );
 	return SUCCEEDED(hr);
 }
 

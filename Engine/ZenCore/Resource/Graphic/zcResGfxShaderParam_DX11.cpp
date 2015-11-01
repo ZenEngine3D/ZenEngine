@@ -53,7 +53,7 @@ bool GfxShaderParamProxy_DX11::Initialize(class GfxShaderParam& _Owner)
 	bufferDesc.Usage			= D3D11_USAGE_DEFAULT;		
 	bufferDesc.BindFlags		= D3D11_BIND_CONSTANT_BUFFER;
 	bufferDesc.CPUAccessFlags	= 0;
-	bufferDesc.ByteWidth		= maParameterValues.Size();	
+	bufferDesc.ByteWidth		= maParameterValues.SizeMem();	
 	initData.pSysMem			= maParameterValues.First();
 	initData.SysMemPitch		= 0;
 	initData.SysMemSlicePitch	= 0;
@@ -84,7 +84,7 @@ void GfxShaderParamProxy_DX11::SetValue(const zcExp::ParameterBase& _Value)
 	if( mrProxShaderParamDef->mdParameters.Get(_Value.mhName, ItemInfo) )
 	{
 		mbUpdated = TRUE;
-		zenMem::Copy( &maParameterValues[ItemInfo.muOffset], _Value.GetData(), zenMath::Min(_Value.muSizeTotal, ItemInfo.muSize) );
+		zenMem::Copy( &maParameterValues[ItemInfo.muOffset], static_cast<const zU8*>(_Value.GetData()), zenMath::Min(_Value.muSizeTotal, ItemInfo.muSize) );
 	}	
 }
 
@@ -95,7 +95,7 @@ void GfxShaderParamProxy_DX11::SetValue(const zenRes::zShaderParameter& _Value)
 	if( mrProxShaderParamDef->mdParameters.Get(_Value.mhName, ItemInfo) )
 	{
 		mbUpdated = TRUE;
-		zenMem::Copy( &maParameterValues[ItemInfo.muOffset], _Value.GetData(), zenMath::Min(_Value.muSizeTotal, ItemInfo.muSize) );
+		zenMem::Copy( &maParameterValues[ItemInfo.muOffset], static_cast<const zU8*>(_Value.GetData()), zenMath::Min(_Value.muSizeTotal, ItemInfo.muSize) );
 	}	
 }
 
@@ -165,7 +165,7 @@ void GfxShaderParamProxy_DX11::SetValue(const zHash32& _hParamName, const zenMat
 	{			
 		mbUpdated		= TRUE;
 		ZENAssertMsg( ItemInfo.muSize >= sizeof(float)*16, "Shader variable declared smaller than 16xFloats" );
-		zenMem::Copy( &maParameterValues[ItemInfo.muOffset], &_matValue.mvRows[0], sizeof(float)*16 );
+		zenMem::Copy( &maParameterValues[ItemInfo.muOffset], reinterpret_cast<const zU8*>(&_matValue.mvRows[0]), sizeof(float)*16 );
 	}	
 }
 

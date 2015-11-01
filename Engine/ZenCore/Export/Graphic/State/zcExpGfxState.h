@@ -14,35 +14,25 @@ namespace zcExp
 		zVec4F						mvBorderColor;
 	};
 
-	//! @todo Urgent remove items below from export logic, just created dynamically with template?
 	struct ExportInfoGfxStateBlend : public ExportInfoBase
 	{
-		zenType::zBlendDesc			mBlendDesc; //! @todo cleanup move zBlendDesc descriptor elsewhere
+		const zArrayBase< zenRes::zGfxRenderPass::ConfigColorRT>* mpaRenderTargetConfig; // Only designed for runtime, makes no copy
 	};
 
 	struct ExportInfoGfxStateDepthStencil : public ExportInfoBase
 	{
-		zenType::zDepthStencilDesc	mDepthStencilDesc; //! @todo cleanup move zDepthStencilDesc descriptor elsewhere
+		const zenRes::zGfxRenderPass::ConfigDepthRT* mpDepthStencilConfig; // Only designed for runtime, makes no copy
 	};
 
 	struct ExportInfoGfxStateRasterizer : public ExportInfoBase
 	{
-		bool				mbFrontCounterClockwise;
-		bool				mbDepthClipEnable;
-		bool				mbScissorEnable;
-		bool				mbMultisampleEnable;
-		bool				mbAntialiasedLineEnable;
-		bool				mbWireFrame;
-		zenConst::eCullMode	meCullMode;
-		zI32				miDepthBias;
-		float				mfDepthBiasClamp;
-		float				mfSlopeScaledDepthBias;
+		zenRes::zGfxStateRasterizer::Config	mRasterConfig;
 	};
-	
-	zResID CreateGfxSampler( zenConst::eTextureFiltering _eFilterMin=zenConst::keTexFilter_Bilinear, zenConst::eTextureFiltering _eFilterMag=zenConst::keTexFilter_Bilinear, zenConst::eTextureWrap _eWrapU=zenConst::keTexWrap_Repeat, zenConst::eTextureWrap _eWrapV=zenConst::keTexWrap_Repeat, float _fLodBias=0, const zVec4F& _vBorderColor=zVec4F(0,0,0,1) );
-	zResID CreateGfxBlend( zenType::zBlendDesc* _pBlendDesc=nullptr );
-	zResID CreateGfxDepthStencil( bool _bDepthEnable = false, bool _bDepthWrite = false, bool _bStencilEnable = false, zU8 _uStencilReadMask = 0xFF, zU8 _uStencilWriteMask = 0xFF, zenConst::eComparisonFunc _eDepthFunc = zenConst::keComparisonFunc_Always, zenType::zDepthStencilDesc::DepthStencilOp _xFrontFace = zenType::zDepthStencilDesc::DepthStencilOp(), zenType::zDepthStencilDesc::DepthStencilOp _xBackFace = zenType::zDepthStencilDesc::DepthStencilOp() );
-	zResID CreateGfxRasterizer( bool _bFrontCounterClockwise = false, bool _bDepthClipEnable = false, bool _bScissorEnable = false, bool _bMultisampleEnable = false, bool _bAntialiasedLineEnable = false, bool _bWireFrame = false, zenConst::eCullMode _eCullMode = zenConst::keCullMode_None, zI32 _iDepthBias = 0, float _fDepthBiasClamp = 0.0f, float _fSlopeScaledDepthBias = 0.0f );	
+		
+	zResID CreateGfxSampler( zenConst::eTextureFiltering _eFilterMin=zenConst::keTexFilter_Bilinear, zenConst::eTextureFiltering _eFilterMag=zenConst::keTexFilter_Bilinear, zenConst::eTextureWrap _eWrapU=zenConst::keTexWrap_Repeat, zenConst::eTextureWrap _eWrapV=zenConst::keTexWrap_Repeat, float _fLodBias=0, const zVec4F& _vBorderColor=zVec4F(0,0,0,1) );	
+	zResID CreateGfxRasterizer( const zenRes::zGfxStateRasterizer::Config& _RasterConfig );
+	zResID CreateGfxDepthStencil( const zenRes::zGfxRenderPass::ConfigDepthRT& _DepthStencilConfig );
+	zResID CreateGfxBlend( const zArrayBase<zenRes::zGfxRenderPass::ConfigColorRT>& _aTargetColorConfig);
 }
 
 #include "zcExpGfxStateDX11.h"

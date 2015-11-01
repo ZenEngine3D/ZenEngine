@@ -191,7 +191,7 @@ const zEngineConstRef<TRefCountedType>& zEngineConstRef<TRefCountedType>::operat
 	template<class TRefCountedType>
 	const TRefCountedType* zEngineConstRef<TRefCountedType>::operator->()const
 	{
-		return static_cast<const TRefCountedType*>(mpReference);;
+		return static_cast<const TRefCountedType*>(mpReference);
 	}
 
 #endif //ZEN_ENGINELIB

@@ -3,53 +3,21 @@
 #define __zCore_Exp_Gfx_RenderPass_Base_h__
 
 namespace zcExp
-{
-	/*
-	struct ExportInfoGfxView : public ExportInfoBase
+{ 
+	struct ExportInfoGfxRenderpass : public ExportInfoBase
 	{
-		zArrayStatic<zResID>	maTargetColorID;
-		zResID					mTargetDepthID;
-		zVec2S16				mvOrigin;
-		zVec2U16				mvDim;
-		static zResID			CallbackGetItemID(zenConst::eResPlatform _ePlatform, zenConst::eResType _eType, zenConst::eResSource _eSource, const ExportInfoBase* _pExportInfo, bool& _bExistOut);
-	};
-	*/
-
-	struct ExportInfoGfxRenderPass : public ExportInfoBase
-	{
-		zString						mzStageName;
-		zResID						mBlendStateID;
-		zResID						mDepthStencilStateID;
-		zResID						mRasterStateID;
-		zResID						mViewStateID;
-	};
-	
-	//! @todo Urgent, Collapse view into this object, remove views
-	class ResDataGfxRenderPass : public ResourceData
-	{
-	ZENClassDeclare(ResDataGfxRenderPass, ResourceData)
-	public:
-		virtual bool				Serialize( zcExp::Serializer_Base& _Serializer ){return true;}		
-		zString						mzStageName;
-		zResID						mBlendStateID;
-		zResID						mDepthStencilStateID;
-		zResID						mRasterStateID;
-		zResID						mViewStateID;
+		zString														mzStageName;
+		zResID														mRasterStateID;	
+		zUInt														muPassPriority;
+		const zArrayBase<zenRes::zGfxRenderPass::ConfigColorRT>*	mpaConfigRTColor;
+		const zenRes::zGfxRenderPass::ConfigDepthRT*				mpConfigRTDepth;
+		zenRes::zGfxStateRasterizer									mrStateRaster;
+		zVec2U16													mvDim;
+		zVec2S16													mvOrigin;
 	};
 
-	class ExporterGfxRenderPass : public ExporterBase
-	{
-	ZENClassDeclare(ExporterGfxRenderPass, ExporterBase)
-	public:				
-	typedef ResDataGfxRenderPass	ResData;
-	typedef zEngineRef<ResData>		ResDataRef;
-									ExporterGfxRenderPass(const ResDataRef& _rResData);
-	protected:	
-		virtual bool				ExportStart();		
-		ResDataRef					mrResData;
-	};
-
-	zResID CreateGfxRenderPass(const zString& _zStageName, zResID _BlendStateID, zResID _DepthStencilStateID, zResID _RasterStateID, zResID _ViewStateID);
+	zResID CreateGfxRenderpass(const zString& _zStageName, zUInt _uPassPriority, const zenRes::zGfxRenderPass::ConfigColorRT& _ConfigRTColor, const zenRes::zGfxRenderPass::ConfigDepthRT& _ConfigRTDepth, zenRes::zGfxStateRasterizer _rStateRaster, const zVec2U16& _vDim = zVec2U16(0xFFFF, 0xFFFF), const zVec2S16& _vOrigin = zVec2S16(0,0));
+	zResID CreateGfxRenderpass(const zString& _zStageName, zUInt _uPassPriority, const zArrayBase<zenRes::zGfxRenderPass::ConfigColorRT>& _aConfigRTColor, const zenRes::zGfxRenderPass::ConfigDepthRT& _ConfigRTDepth, zenRes::zGfxStateRasterizer _rStateRaster, const zVec2U16& _vDim = zVec2U16(0xFFFF, 0xFFFF), const zVec2S16& _vOrigin = zVec2S16(0,0));
 }
 
 #endif

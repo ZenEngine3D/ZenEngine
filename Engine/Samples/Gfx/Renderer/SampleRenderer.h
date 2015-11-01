@@ -24,7 +24,9 @@ public:
 	virtual void Destroy();
 	virtual void Update();
 	virtual bool IsDone();
+
 protected:
+	void							UpdateBackbuffers();
 	zenMath::Matrix					matWorld[4];
 	zenMath::Matrix					matView;
 	zenMath::Matrix					matProjection;
@@ -33,24 +35,25 @@ protected:
 	zenRes::zGfxIndex				mrCubeIndex;	
 	zenRes::zGfxShaderVertex		mrShaderVS;	
 	zenRes::zGfxShaderPixel			mrShaderPS;	
+	zenRes::zGfxShaderPixel			mrShaderPS2Output;		
 	zenRes::zGfxTexture2d			mrTexture;	
 	zenRes::zGfxSampler				mrSampler;	
 	zenRes::zGfxSampler				mrSampler2;		
-	zenRes::zGfxShaderBinding		mrTestShaderBind;
+	zenRes::zGfxShaderBinding		mrShaderBind;
+	zenRes::zGfxShaderBinding		mrShader2OutputBind;
 	zenRes::zGfxMeshStrip			mrCube1MeshStrip;
 	zenRes::zGfxMeshStrip			mrCube2MeshStrip;
 	zenRes::zGfxMeshStrip			mrCube3MeshStrip;
 	zenRes::zGfxMesh				mrCube4Mesh;
 
-	zenRes::zGfxRenderTarget		mrRenderColor;
-	zenRes::zGfxRenderTarget		mrRenderDepth;	
-	zenRes::zGfxView				mrView;
+	zenRes::zGfxRenderTarget		mrRenderToTextureRT1;
+	zenRes::zGfxRenderTarget		mrRenderToTextureRT2;
+	zenRes::zGfxRenderTarget		mrRenderToTextureDepth;
+	zenRes::zGfxRenderTarget		mrBackbufferDepth;
 	zenRes::zGfxStateBlend			mrStateBlend;
-	zenRes::zGfxStateDepthStencil	mrStateDepth;
 	zenRes::zGfxStateRasterizer		mrStateRaster;
 	zenRes::zGfxRenderPass			mrRndPassTexture;
 	zenRes::zGfxRenderPass			mrRndPassFinal;
-
 };
 
 }

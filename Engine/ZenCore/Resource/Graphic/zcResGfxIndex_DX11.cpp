@@ -27,7 +27,7 @@ bool GfxIndexProxy_DX11::Initialize(class GfxIndex& _Owner)
 	D3D11_USAGE eUsage(D3D11_USAGE_DYNAMIC);
 	UINT uCpuAccess(D3D11_CPU_ACCESS_WRITE);
 	D3D11_BUFFER_DESC IndexDesc;
-	IndexDesc.ByteWidth				= rResData->maIndices.Size();
+	IndexDesc.ByteWidth				= rResData->maIndices.SizeMem();
 	IndexDesc.Usage					= eUsage;						
 	IndexDesc.BindFlags				= D3D11_BIND_INDEX_BUFFER;		
 	IndexDesc.CPUAccessFlags		= uCpuAccess;					

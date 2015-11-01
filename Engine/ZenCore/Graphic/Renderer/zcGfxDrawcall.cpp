@@ -3,20 +3,53 @@
 namespace zcGfx
 {
 
-zEngineRef<Drawcall> Drawcall::Create( const zcRes::GfxRenderPassRef& _rRenderPass, const zcRes::GfxMeshStripRef& _rMeshStrip,	const float& _fPriority )
+zEngineRef<Drawcall> Drawcall::Create( const zcRes::GfxRenderPassRef& _rRenderPass, float _fPriority, const zcRes::GfxMeshStripRef& _rMeshStrip )
 {
-	static zenMem::zAllocatorPool sMemPool("Pool Drawcall", sizeof(Drawcall), 2048, 2048 );
+	//! @todo switch this to 3x ring buffer with frame lifespan
+	static zenMem::zAllocatorPool sMemPool("Pool Drawcall", sizeof(Drawcall), 1024, 1024 );
 	Drawcall* pDrawcall						= zenNew(&sMemPool) Drawcall;	
+	pDrawcall->ConfigureBase( _rRenderPass, _fPriority, 0, keGpuPipe_VertexPixel);
 	pDrawcall->mrRenderPass					= _rRenderPass->GetProxy();
 	pDrawcall->mrMeshStrip					= _rMeshStrip->GetProxy();
-	pDrawcall->mSortId.muRenderPassID		= _rRenderPass.GetResID().GetName();
-	pDrawcall->mSortId.muShaderBindingID	= 0; //! @todo Urgent
-	pDrawcall->mSortId.muShaderMode			= 0; //! @todo Urgent feature Support compute/tesselation/vertex only...
-	pDrawcall->mSortId.mfPriority			= _fPriority;
-
-	ZENAssertMsg( pDrawcall->mSortId.muRenderPassID == _rRenderPass.GetResID().GetName(), "Not enought bits to support id range" );
-	
 	return pDrawcall;
+}
+
+zEngineRef<Drawcall> DrawcallClearColor::Create( const zcRes::GfxRenderPassRef& _rRenderPass, float _fPriority, const zcRes::GfxRenderTargetRef& _rRTColor, const zVec4F& _vRGBA, const zColorMask& _ColorMask, const zVec2S16& _vOrigin, const zVec2U16& _vDim )
+{
+	static zenMem::zAllocatorPool sMemPool("Pool Drawcall Clear Color", sizeof(DrawcallClearColor), 128, 128 );
+	DrawcallClearColor* pDrawcallClearColor	= zenNew(&sMemPool) DrawcallClearColor;	
+	pDrawcallClearColor->ConfigureBase( _rRenderPass, _fPriority, 0, keGpuPipe_PreDrawCommand);
+	pDrawcallClearColor->mrRenderPass				= _rRenderPass->GetProxy();
+	pDrawcallClearColor->mrMeshStrip				= nullptr;
+	pDrawcallClearColor->mrRTColor					= _rRTColor;
+	pDrawcallClearColor->mvOrigin					= _vOrigin;
+	pDrawcallClearColor->mvDim						= _vDim;
+	pDrawcallClearColor->mvColor					= _vRGBA;
+	pDrawcallClearColor->mColorMask					= _ColorMask;
+	return pDrawcallClearColor;
+}
+
+void DrawcallClearColor::Invoke()
+{	
+	mrRTColor->Clear(mvColor); //! @todo Urgent Fully implement
+}
+
+zEngineRef<Drawcall> DrawcallClearDepthStencil::Create( const zcRes::GfxRenderPassRef& _rRenderPass, float _fPriority, const zcRes::GfxRenderTargetRef& _rRTDepth, bool _bClearDepth, float _fDepthValue, bool _bClearStencil, zU8 _uStencilValue)
+{
+	static zenMem::zAllocatorPool sMemPool("Pool Drawcall Clear Color", sizeof(DrawcallClearDepthStencil), 128, 128 );
+	DrawcallClearDepthStencil* pDrawcallClearDepthStencil	= zenNew(&sMemPool) DrawcallClearDepthStencil;	
+	pDrawcallClearDepthStencil->ConfigureBase( _rRenderPass, _fPriority, 0, keGpuPipe_PreDrawCommand);
+	pDrawcallClearDepthStencil->mrRTDepthStencil	= _rRTDepth;
+	pDrawcallClearDepthStencil->mbClearDepth		= _bClearDepth;
+	pDrawcallClearDepthStencil->mfDepthValue		= _fDepthValue;
+	pDrawcallClearDepthStencil->mbClearStencil		= _bClearStencil;
+	pDrawcallClearDepthStencil->muStencilValue		= _uStencilValue;
+	return pDrawcallClearDepthStencil;
+}
+
+void DrawcallClearDepthStencil::Invoke()
+{
+	mrRTDepthStencil->Clear(mfDepthValue, muStencilValue, mbClearDepth, mbClearStencil);
 }
 
 }

@@ -66,11 +66,6 @@ namespace zcRes
 	protected:
 		zU32			muRenderPassID;
 	};
-
-	class GfxRenderPass : public TResource<GfxRenderPass, GfxRenderPassResData, GfxRenderPassProxy, GfxRenderPassExporterRuntime>
-	{
-	ZENClassDeclare(GfxRenderPass, TResource)
-	};
 }
 
 #endif

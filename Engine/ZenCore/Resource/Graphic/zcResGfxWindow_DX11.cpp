@@ -2,14 +2,6 @@
 
 namespace zcRes
 {
-	GfxWindowProxy_DX11::GfxWindowProxy_DX11()
-	: mDX11pSwapChain(NULL)
-	, mvPendingResize(0,0)
-	{		
-		mrProxBackbufferColor	= NULL;
-		mrProxBackbufferDepth	= NULL;
-		mvSize				= zVec2U16(0,0);
-	}
 
 	GfxWindowProxy_DX11::~GfxWindowProxy_DX11()
 	{
@@ -26,8 +18,6 @@ namespace zcRes
 		RECT rc;
 		GetClientRect( rResData->mhWindow, &rc );
 		mvSize					= zVec2U16(zU16(rc.right-rc.left), zU16(rc.bottom-rc.top));
-		meBackbufferColorFormat	= zenConst::keTexFormat_RGBA8;	//! @todo feature expose desired format in ResData
-		meBackbufferDepthFormat	= zenConst::keTexFormat_D24S8;
 
 		DXGI_SWAP_CHAIN_DESC swapDesc;
 		ZeroMemory( &swapDesc, sizeof( swapDesc ) );
@@ -63,14 +53,9 @@ namespace zcRes
 						rResData->mpBackbuffer						= mDX11pSwapChain;
 						
 						GfxRenderTargetRef rBackbufferColor			= GfxRenderTarget::RuntimeCreate(rResData);
-						GfxRenderTargetRef rBackbufferDepth			= zcExp::CreateGfxRenderTarget( meBackbufferDepthFormat, mvSize);						
-						GfxViewRef rView							= zcExp::CreateGfxView( rBackbufferColor.GetResID(), rBackbufferDepth.GetResID() );
-						
 						mrProxBackbufferColor						= rBackbufferColor->GetProxy();
-						mrProxBackbufferDepth						= rBackbufferDepth->GetProxy();
-						mrProxBackbufferView						= rView->GetProxy();
-						_Owner.SetBackbuffer(rView);
-						return mrProxBackbufferView.IsValid();
+						mpOwner->SetBackbuffer(rBackbufferColor); //! @todo urgent can't access game thread object here
+						return mrProxBackbufferColor.IsValid();
 					}
 		
 		return false;;
@@ -103,14 +88,9 @@ namespace zcRes
 			rResData->mvDim								= mvSize;
 			rResData->mpBackbuffer						= mDX11pSwapChain;
 			
-			GfxRenderTargetRef rBackbufferColor			= GfxRenderTarget::RuntimeCreate(rResData);
-			GfxRenderTargetRef rBackbufferDepth			= zcExp::CreateGfxRenderTarget(meBackbufferDepthFormat, mvSize);						
-			GfxViewRef rView							= zcExp::CreateGfxView(rBackbufferColor.GetResID(), rBackbufferDepth.GetResID());
-						
+			GfxRenderTargetRef rBackbufferColor			= GfxRenderTarget::RuntimeCreate(rResData);				
 			mrProxBackbufferColor						= rBackbufferColor->GetProxy();
-			mrProxBackbufferDepth						= rBackbufferDepth->GetProxy();
-			mrProxBackbufferView						= rView->GetProxy();
-			mpOwner->SetBackbuffer(rView); //! @todo urgent can't access game thread object here
+			mpOwner->SetBackbuffer(rBackbufferColor); //! @todo urgent can't access game thread object here
 		}		
 		mvPendingResize.SetNull();
 	}

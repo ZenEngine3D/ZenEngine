@@ -18,22 +18,23 @@ bool GfxViewProxy_DX11::Initialize(class GfxView& _Owner)
 	ZENAssert(marProxTargetColor.Count() < D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT);
 	ZENDbgCode(mpOwner = &_Owner);
 	
-	mrProxTargetDepth	= GetResourceProxy<GfxRenderTargetRef>(rResData->mTargetDepthID);
+	zcRes::GfxRenderTargetRef rRTDepthSurface = rResData->mRTDepthConfig.mrTargetSurface;
+	mrProxTargetDepth	= rRTDepthSurface->GetProxy();
 	mpDepthView			= mrProxTargetDepth.IsValid() ? mrProxTargetDepth->mpTargetDepthView : NULL;
 
-	muColorCount = 0;
+	muColorCount		= 0;
 	zenMem::Zero(mpColorViews, sizeof(mpColorViews) );
-	marProxTargetColor.SetCount( rResData->maTargetColorID.Count() );	
+	marProxTargetColor.SetCount( rResData->maRTColorConfig.Count() );	
 	for(int idx(0), count(marProxTargetColor.Count()); idx<count; ++idx)
 	{
-		marProxTargetColor[idx] = GetResourceProxy<GfxRenderTargetRef>(rResData->maTargetColorID[idx]);
+		zcRes::GfxRenderTargetRef rRTColorSurface  = rResData->maRTColorConfig[idx].mrTargetSurface;
+		marProxTargetColor[idx] = rRTColorSurface->GetProxy();
 		if( marProxTargetColor[idx]->mpTargetColorView )
 			mpColorViews[muColorCount++] = marProxTargetColor[idx]->mpTargetColorView;
 	}
 
 	//! @todo Support min/max depth rendering
-	//! @todo Support multiple viewports
-	zenMem::Set(&mViewport, 0, sizeof(mViewport));		
+	zenMem::Zero(&mViewport, sizeof(mViewport));		
 	mViewport.Width		= (FLOAT)rResData->mvDim.x;
 	mViewport.Height	= (FLOAT)rResData->mvDim.y;	
 	mViewport.TopLeftX	= (FLOAT)rResData->mvOrigin.x;

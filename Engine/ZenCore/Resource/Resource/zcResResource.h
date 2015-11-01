@@ -2,6 +2,12 @@
 #ifndef __zCore_Res_Resource_h__
 #define __zCore_Res_Resource_h__
 
+//! @todo Clean : move this to proper location and implement it
+ZENInline bool zenIsResourceCreationThread()
+{
+	return true;
+}
+
 namespace zcRes
 {	
 	//=============================================================================================
@@ -54,8 +60,10 @@ namespace zcRes
 		virtual bool ResourceInit()
 		{
 			ZENAssert( !mrProxy.IsValid() );
+			ZENAssert( zenIsResourceCreationThread() );
 			if( Super::ResourceInit() )
-			{
+			{				
+				muCreatedIndex = suCreatedCount++;
 				static zenMem::zAllocatorPool sMemPool("Pool TResource Proxy", sizeof(ClassProxy), 32, 32 );
 				mrProxy = zenNew(&sMemPool) ClassProxy();
 				if( !mrProxy->Initialize( *static_cast<ClassResource*>(this)) )
@@ -92,24 +100,36 @@ namespace zcRes
 			if( _ExportInfo.IsSuccess() )
 				return RuntimeCreate(rResData);
 			
-			return NULL;				
+			return nullptr;				
 		}
 		
+		//! @todo clean Move gfx state creation to use this ?
 		static ClassResource* RuntimeCreate(const ResDataRef& _rResData) 
 		{ 						
 			ClassResource* pNewResource	= zenNewDefault ClassResource;
-			pNewResource->mrResData	= _rResData;
-			pNewResource->mResID		= _rResData->mResID;
-			if( !pNewResource->Initialize() )
-				zenDelNull(pNewResource)
+			pNewResource->mrResData		= _rResData;
+			pNewResource->mResID		= _rResData->mResID;			
+			if( pNewResource->Initialize() )
+			{
+				if( pNewResource->mrResData.IsValid() && !zcDepot::ResourceData.IsValid(pNewResource->mResID) )
+				{
+					pNewResource->mrResData->muVersion		= zcDepot::ResourceData.GetEngineVersion(pNewResource->mResID.GetType());
+					pNewResource->mrResData->mExportTime	= zenSys::GetTimeStamp();			
+					zcDepot::ResourceData.SetItem(pNewResource->mrResData.Get());
+				}
+				return pNewResource;
+			}
 			
-			return pNewResource;
+			zenDel(pNewResource)
+			return nullptr;			
 		}
 		
 	protected:
 		TResource(){}
-		ProxyRef	mrProxy;
-		ResDataRef	mrResData; //! @todo clean make this constref, and use pointer from resource and proxy
+		ProxyRef	mrProxy			= nullptr;
+		ResDataRef	mrResData		= nullptr;	//!< @todo clean make this constref, and use pointer from resource and proxy
+		zU32		muCreatedIndex	= 0;		//!< Unique index assign per resource type, based on how many resource were created before
+		static zU32	suCreatedCount;				//!< How many resource of this type was created before
 	};
 	
 

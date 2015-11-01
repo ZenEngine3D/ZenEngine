@@ -8,5 +8,6 @@
 #include "zenCoreResGfxShaderParam.h"
 #include "zenCoreResGfxShader.h"
 #include "zenCoreResGfxBinding.h"
+#include "zenCoreResGfxRenderpass.h"
 
 #endif

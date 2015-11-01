@@ -30,37 +30,12 @@ bool GfxInputStreamProxy_DX11::Initialize(class GfxInputStream& _Owner)
 		{
 			//! @todo make sure proxy not accessed gamethread
 			HRESULT hr = zcMgr::GfxRender.DX11GetDevice()->CreateInputLayout( mrVertexProxy->maElementDef.First(), mrVertexProxy->maElementDef.Count(), 
-				mrSignatureProxy->maDummyShaderCode.First(), mrSignatureProxy->maDummyShaderCode.Size(), &mpInputLayout );
+				mrSignatureProxy->maDummyShaderCode.First(), mrSignatureProxy->maDummyShaderCode.SizeMem(), &mpInputLayout );
 			bSuccess = SUCCEEDED( hr );		
 		}
 	}	
 	return bSuccess;
 }
-
-//=================================================================================================
-GfxRenderPassProxy_DX11::GfxRenderPassProxy_DX11()
-: mzStageName("Uninitialized")
-{
-}
-
-GfxRenderPassProxy_DX11::~GfxRenderPassProxy_DX11()
-{
-}
-
-bool GfxRenderPassProxy_DX11::Initialize(class GfxRenderPass& _Owner)
-{
-	const GfxRenderPass::ResDataRef& rResData = _Owner.GetResData();
-	ZENAssert(rResData.IsValid());
-	ZENDbgCode(mpOwner = &_Owner);
-			
-	mzStageName				= rResData->mzStageName;
-	mrProxBlendState		= GetResourceProxy<GfxStateBlendRef>(rResData->mBlendStateID);
-	mrProxDepthStencilState	= GetResourceProxy<GfxStateDepthStencilRef>(rResData->mDepthStencilStateID);
-	mrProxRasterState		= GetResourceProxy<GfxStateRasterizerRef>(rResData->mRasterStateID);
-	mrProxViewState			= GetResourceProxy<GfxViewRef>(rResData->mViewStateID);
-	return true;
-}
-
 
 //=================================================================================================
 
@@ -159,9 +134,9 @@ bool GfxMeshStripProxy_DX11::Initialize(class GfxMeshStrip& _Owner)
 
 	mrIndexBufferProxy		= GetResourceProxy<GfxIndexRef>(rResData->mIndexBufferID);
 	mrInputStreamProxy		= GetResourceProxy<GfxInputStreamRef>(rResData->mStreamBindingID);
-	mrShaderBindingProxy		= GetResourceProxy<GfxShaderBindingRef>(rResData->mShaderBindingID);
-	muIndexFirst		= rResData->muIndexFirst;
-	muIndexCount		= rResData->muIndexCount;
+	mrShaderBindingProxy	= GetResourceProxy<GfxShaderBindingRef>(rResData->mShaderBindingID);
+	muIndexFirst			= rResData->muIndexFirst;
+	muIndexCount			= rResData->muIndexCount;
 	marShaderParamProxy.SetCount(rResData->maShaderParamID.Count());
 	for(zUInt idx(0), count(marShaderParamProxy.Count()); idx<count; ++idx)
 		marShaderParamProxy[idx] = GetResourceProxy<GfxShaderParamRef>(rResData->maShaderParamID[idx]);

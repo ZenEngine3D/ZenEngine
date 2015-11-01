@@ -159,7 +159,7 @@ bool ExporterGfxShaderDX11_DX11::ExportWorkExtractResources()
 	mrResData->meShaderStage			= pExportInfo->mExportResID.meType == zenConst::keResType_GfxShaderPixel ? zenConst::keShaderStage_Pixel : zenConst::keShaderStage_Vertex;
 	mrResData->muTextureSlotCount	= 0;
 	mrResData->maParamDefID.SetCount(zcExp::keShaderParamFreq__Count);
-	if( SUCCEEDED( D3DReflect( mrResData->maCompiledShader.First(), mrResData->maCompiledShader.Size(), IID_ID3D11ShaderReflection, (void**) &pGfxShaderReflection ) ) )
+	if( SUCCEEDED( D3DReflect( mrResData->maCompiledShader.First(), mrResData->maCompiledShader.SizeMem(), IID_ID3D11ShaderReflection, (void**) &pGfxShaderReflection ) ) )
 	{
 		pGfxShaderReflection->GetDesc( &shaderDesc );
 		for( zUInt uResIdx=0; uResIdx<shaderDesc.BoundResources; ++uResIdx )

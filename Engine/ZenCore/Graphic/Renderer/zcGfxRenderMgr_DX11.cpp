@@ -63,7 +63,6 @@ bool ManagerRender::Load()
 	if( FAILED( hr ) )
 		return FALSE;
 	
-	zenMem::Set(muPerStageTextureCount, 0, sizeof(muPerStageTextureCount));
 	return TRUE;
 }
 
@@ -91,86 +90,77 @@ void ManagerRender::Render(const zenRes::zGfxDrawcall& _rDrawcall)
 {
 }
 
-void ManagerRender::Render( zArrayDynamic<zenRes::zGfxDrawcall>& _aDrawcalls)
+void ManagerRender::UpdateGPUState(const zenRes::zGfxDrawcall& _rDrawcall, RenderContext& _Context)
 {
-	//_aDrawcalls.Sort<>(); //SF Sort element before render
-	zenRes::zGfxDrawcall* pDrawcall							= _aDrawcalls.First();
-	bool IsValidLastDraw									= mrPreviousDrawcall.IsValid() && mrPreviousDrawcall->mrRenderPass.IsValid();
-	zcRes::GfxStateBlendProxyRef		rStateBlend			= IsValidLastDraw ? mrPreviousDrawcall->mrRenderPass->mrProxBlendState : NULL;
-	zcRes::GfxStateDepthStencilProxyRef	rStateDepthStencil	= IsValidLastDraw ? mrPreviousDrawcall->mrRenderPass->mrProxDepthStencilState : NULL;
-	zcRes::GfxStateRasterizerProxyRef	rStateRaster		= IsValidLastDraw ? mrPreviousDrawcall->mrRenderPass->mrProxRasterState : NULL;
-	zcRes::GfxViewProxyRef				rStateView			= IsValidLastDraw ? mrPreviousDrawcall->mrRenderPass->mrProxViewState : NULL;
-
-	for(zUInt i(0), count(_aDrawcalls.Count()); i<count; ++i, ++pDrawcall)
-	{	
-		if( (*pDrawcall).IsValid() && (*pDrawcall)->mrRenderPass.IsValid() && (*pDrawcall)->mrMeshStrip.IsValid() )
+	if( _Context.mrRenderpass != _rDrawcall->mrRenderPass )
+	{			
+		zcRes::GfxRenderPassProxyRef& rRenderpass	= _Context.mrRenderpass;
+		_Context.mrRenderpass						= _rDrawcall->mrRenderPass;
+		if( _Context.mrStateRaster != rRenderpass->mrProxRasterState )
 		{
-			// GPU State setting
-			if( rStateRaster != (*pDrawcall)->mrRenderPass->mrProxRasterState )
-			{
-				rStateRaster = (*pDrawcall)->mrRenderPass->mrProxRasterState;
-				mDX11pContextImmediate->RSSetState(rStateRaster->mpRasterizerState);
-			}
-			//! @todo Urgent fix blend
-			/*
-			if( rStateBlend != (*pDrawcall)->mrRenderPass->mrProxBlendState )
-			{
-				rStateBlend = (*pDrawcall)->mrRenderPass->mrProxBlendState;
-				mDX11pContextImmediate->OMSetBlendState( rStateBlend->mpBlendState, rStateBlend->mafBlendFactor, rStateBlend->muSampleMask );
-			}*/
-			if( rStateDepthStencil != (*pDrawcall)->mrRenderPass->mrProxDepthStencilState )
-			{	
-				rStateDepthStencil = (*pDrawcall)->mrRenderPass->mrProxDepthStencilState;
-				mDX11pContextImmediate->OMSetDepthStencilState(rStateDepthStencil->mpDepthStencilState, rStateDepthStencil->muStencilValue);
-			}
-			if( rStateView != (*pDrawcall)->mrRenderPass->mrProxViewState )
-			{
-				UINT maxCount = zenMath::Max( rStateView.IsValid() ? rStateView->muColorCount : 0, (*pDrawcall)->mrRenderPass->mrProxViewState->muColorCount);
-				rStateView = (*pDrawcall)->mrRenderPass->mrProxViewState;
-				zcMgr::GfxRender.UnbindTextures();
-				mDX11pContextImmediate->OMSetRenderTargets(maxCount, rStateView->mpColorViews, rStateView->mpDepthView );
-				mDX11pContextImmediate->RSSetViewports( 1, &rStateView->mViewport );
-			}
-	
-			// Shader Inputs Settings
-
-			//Drawcall
-			Render( (*pDrawcall)->mrMeshStrip );
+			_Context.mrStateRaster = rRenderpass->mrProxRasterState;
+			mDX11pContextImmediate->RSSetState(_Context.mrStateRaster->mpRasterizerState);
+		}
+		if( _Context.mrStateBlend != rRenderpass->mrProxBlendState )
+		{
+			_Context.mrStateBlend = rRenderpass->mrProxBlendState;
+			mDX11pContextImmediate->OMSetBlendState( _Context.mrStateBlend->mpBlendState, _Context.mrStateBlend->mafBlendFactor, _Context.mrStateBlend->muSampleMask );
+		}
+		if( _Context.mrStateDepthStencil != rRenderpass->mrProxDepthStencilState )
+		{	
+			_Context.mrStateDepthStencil = rRenderpass->mrProxDepthStencilState;
+			mDX11pContextImmediate->OMSetDepthStencilState(_Context.mrStateDepthStencil->mpDepthStencilState, _Context.mrStateDepthStencil->muStencilValue);
+		}
+		if( _Context.mrStateView != rRenderpass->mrProxViewState )
+		{
+			UINT maxCount = zenMath::Max( _Context.mrStateView.IsValid() ? _Context.mrStateView->muColorCount : 0, _Context.mrRenderpass->mrProxViewState->muColorCount);
+			_Context.mrStateView = rRenderpass->mrProxViewState;
+			zcMgr::GfxRender.UnbindTextures();
+			mDX11pContextImmediate->OMSetRenderTargets(maxCount, _Context.mrStateView->mpColorViews, _Context.mrStateView->mpDepthView );
+			mDX11pContextImmediate->RSSetViewports( 1, &_Context.mrStateView->mViewport );
 		}
 	}
-	mrPreviousDrawcall = *_aDrawcalls.Last();
 }
 
-void ManagerRender::Render(zcRes::GfxMeshProxyRef _rMesh)
+void ManagerRender::UpdateShaderState(const zenRes::zGfxDrawcall& _rDrawcall, RenderContext& _Context)
 {
-	for(zUInt stripIdx(0), stripCount(_rMesh->marProxGfxMeshStrip.Count()); stripIdx<stripCount; ++stripIdx )
-		Render( _rMesh->marProxGfxMeshStrip[stripIdx] );
-}
-
-void ManagerRender::Render(zcRes::GfxMeshStripProxyRef _rMeshStrip)
-{	
-	UINT offset = 0;
-	const zcRes::GfxVertexProxyRef rVertex			= _rMeshStrip->mrInputStreamProxy->mrVertexProxy;
-	const zcRes::GfxIndexProxyRef rIndex			= _rMeshStrip->mrIndexBufferProxy;
-	mDX11pContextImmediate->IASetInputLayout		( _rMeshStrip->mrInputStreamProxy->mpInputLayout );
-	mDX11pContextImmediate->IASetPrimitiveTopology	( rIndex->mePrimitiveType );
-	mDX11pContextImmediate->IASetIndexBuffer		( rIndex->mpIndiceBuffer, rIndex->meIndiceFormat, 0 );
-	mDX11pContextImmediate->IASetVertexBuffers		( 0, 1, rVertex->maStreamBuffer.First(), rVertex->maStreamStride.First(), &offset );
-
-	const zcRes::GfxShaderBindingProxyRef	rShaderBind		= _rMeshStrip->mrShaderBindingProxy;
-	const zcRes::GfxShaderVertexProxyRef	rShaderVertex	= rShaderBind->mrProxShaderVertex;
-	const zcRes::GfxShaderPixelProxyRef		rShaderPixel	= rShaderBind->mrProxShaderPixel;
-	zUInt uBufferCount										= _rMeshStrip->marShaderParamProxy.Count();
-	mDX11pContextImmediate->VSSetShader( rShaderVertex->mpVertexShader, NULL, 0 );
-	mDX11pContextImmediate->PSSetShader( rShaderPixel->mpPixelShader, NULL, 0 );
-
-	for(zUInt bufferIdx=0; bufferIdx<uBufferCount; ++bufferIdx)
+	UINT UnusedOffset = 0;
+	const zcRes::GfxMeshStripProxyRef& rMeshStrip		= _rDrawcall->mrMeshStrip;
+	const zcRes::GfxVertexProxyRef& rVertex				= rMeshStrip->mrInputStreamProxy->mrVertexProxy;
+	const zcRes::GfxIndexProxyRef& rIndex				= rMeshStrip->mrIndexBufferProxy;
+	const zcRes::GfxShaderBindingProxyRef rShaderBind	= rMeshStrip->mrShaderBindingProxy;
+	if( _Context.mrInputStream != rMeshStrip->mrInputStreamProxy )
+	{
+		_Context.mrInputStream = rMeshStrip->mrInputStreamProxy;
+		mDX11pContextImmediate->IASetInputLayout( rMeshStrip->mrInputStreamProxy->mpInputLayout );
+	}
+	if( _Context.mePrimitiveType != rIndex->mePrimitiveType )
+	{
+		_Context.mePrimitiveType = rIndex->mePrimitiveType;
+		mDX11pContextImmediate->IASetPrimitiveTopology( rIndex->mePrimitiveType );
+	}		
+	if( _Context.mrShaderVertex != rShaderBind->mrProxShaderVertex )
+	{
+		_Context.mrShaderVertex = rShaderBind->mrProxShaderVertex;
+		mDX11pContextImmediate->VSSetShader( _Context.mrShaderVertex->mpVertexShader, NULL, 0 );
+	}
+	if( _Context.mrShaderPixel != rShaderBind->mrProxShaderPixel )
+	{
+		_Context.mrShaderPixel = rShaderBind->mrProxShaderPixel;
+		mDX11pContextImmediate->PSSetShader( _Context.mrShaderPixel->mpPixelShader, NULL, 0 );
+	}
+	
+	//! @todo clean revise this
+	for(zUInt bufferIdx=0, bufferCount(rMeshStrip->marShaderParamProxy.Count()); bufferIdx<bufferCount; ++bufferIdx)
 	{
 		zU32 uShaderMask = rShaderBind->maStagePerParamDef[bufferIdx];
 		for(zUInt stageIdx=0; stageIdx<zenConst::keShaderStage__Count; ++stageIdx)
 			if( uShaderMask & (1<<stageIdx) )
-				_rMeshStrip->marShaderParamProxy[bufferIdx]->Bind(static_cast<zenConst::eShaderStage>(stageIdx));
+				rMeshStrip->marShaderParamProxy[bufferIdx]->Bind(static_cast<zenConst::eShaderStage>(stageIdx));
 	}
+
+	mDX11pContextImmediate->IASetIndexBuffer		( rIndex->mpIndiceBuffer, rIndex->meIndiceFormat, 0 );
+	mDX11pContextImmediate->IASetVertexBuffers		( 0, 1, rVertex->maStreamBuffer.First(), rVertex->maStreamStride.First(), &UnusedOffset );
 
 	//----------------------------------------------------------------------------
 	// Assign texture/sampler input for each shader stage
@@ -180,68 +170,96 @@ void ManagerRender::Render(zcRes::GfxMeshStripProxyRef _rMeshStrip)
 	bool						abSamplerChanged[zenConst::keShaderStage__Count];
 	bool						abTextureChanged[zenConst::keShaderStage__Count];
 	zU16						auPerStageTextureCount[zenConst::keShaderStage__Count];
-	zUInt						stageCount(_rMeshStrip->marTextureProxy.Count());
+	zUInt						stageCount(rMeshStrip->marTextureProxy.Count());
 	
+	//! @todo Clean : avoid this loop for each drawcall?
 	for(zUInt stageIdx(0); stageIdx<stageCount; ++stageIdx)
 	{		
-		zUInt textureCount					= _rMeshStrip->marTextureProxy[stageIdx].Count();
+		zUInt textureCount					= rMeshStrip->marTextureProxy[stageIdx].Count();
 		auPerStageTextureCount[stageIdx]	= 0;
 		abSamplerChanged[stageIdx]			= false;
-		abTextureChanged[stageIdx]			= false;
+		abTextureChanged[stageIdx]			= mbTextureUnbound;
 		for( zUInt textureIdx(0); textureIdx<textureCount; ++textureIdx )
 		{
-			zcRes::GfxTexture2dProxyRef rTexture			= _rMeshStrip->marTextureProxy[stageIdx][textureIdx];
-			zcRes::GfxSamplerProxyRef rSampler				= _rMeshStrip->marGfxSamplerProxy[stageIdx][textureIdx];
+			zcRes::GfxTexture2dProxyRef rTexture			= rMeshStrip->marTextureProxy[stageIdx][textureIdx];
+			zcRes::GfxSamplerProxyRef rSampler				= rMeshStrip->marGfxSamplerProxy[stageIdx][textureIdx];
 			if( rTexture.IsValid() && rSampler.IsValid() ) //! @todo Missing: remove test, and make sure we always have default object at worst
 			{
-				abSamplerChanged[stageIdx]					|= maCurrentSampler[stageIdx][textureIdx] != rSampler;
-				abTextureChanged[stageIdx]					|= maCurrentTexture[stageIdx][textureIdx] != rTexture;
-				maCurrentSampler[stageIdx][textureIdx]		= rSampler;
-				maCurrentTexture[stageIdx][textureIdx]		= rTexture;
-				aStageTextureViews[stageIdx][textureIdx]	= rTexture->mpTextureView;
-				aStageSamplerState[stageIdx][textureIdx]	= rSampler->mpSamplerState;
-				auPerStageTextureCount[stageIdx]			= textureIdx+1;
+				abSamplerChanged[stageIdx]						|= _Context.maCurrentSampler[stageIdx][textureIdx] != rSampler;
+				abTextureChanged[stageIdx]						|= _Context.maCurrentTexture[stageIdx][textureIdx] != rTexture;
+				_Context.maCurrentSampler[stageIdx][textureIdx]	= rSampler;
+				_Context.maCurrentTexture[stageIdx][textureIdx]	= rTexture;
+				aStageTextureViews[stageIdx][textureIdx]		= rTexture->mpTextureView;
+				aStageSamplerState[stageIdx][textureIdx]		= rSampler->mpSamplerState;
+				auPerStageTextureCount[stageIdx]				= textureIdx+1;
 			}
 		}
 	}
 
-	// Assign vertex shader textures
-	zU16 uTextureCount									= zenMath::Max<zU16>( muPerStageTextureCount[zenConst::keShaderStage_Vertex], auPerStageTextureCount[zenConst::keShaderStage_Vertex]);	
-	muPerStageTextureCount[zenConst::keShaderStage_Vertex]	= auPerStageTextureCount[zenConst::keShaderStage_Vertex];
+	// Assign vertex shader textures	
+	zU16 uTextureCount												= zenMath::Max<zU16>( _Context.muPerStageTextureCount[zenConst::keShaderStage_Vertex], auPerStageTextureCount[zenConst::keShaderStage_Vertex]);	
+	_Context.muPerStageTextureCount[zenConst::keShaderStage_Vertex] = auPerStageTextureCount[zenConst::keShaderStage_Vertex];
 	if( abTextureChanged[zenConst::keShaderStage_Vertex] )	
 		DX11GetDeviceContext()->VSSetShaderResources( 0, uTextureCount, aStageTextureViews[zenConst::keShaderStage_Vertex] );
 	if( abSamplerChanged[zenConst::keShaderStage_Vertex] )	
 		DX11GetDeviceContext()->VSSetSamplers( 0, uTextureCount, aStageSamplerState[zenConst::keShaderStage_Vertex] );	
 	
 	// Assign pixel shader texture
-	uTextureCount										= zenMath::Max<zU16>( muPerStageTextureCount[zenConst::keShaderStage_Pixel], auPerStageTextureCount[zenConst::keShaderStage_Pixel]);	
-	muPerStageTextureCount[zenConst::keShaderStage_Pixel]	= auPerStageTextureCount[zenConst::keShaderStage_Pixel];
+	uTextureCount													= zenMath::Max<zU16>( _Context.muPerStageTextureCount[zenConst::keShaderStage_Pixel], auPerStageTextureCount[zenConst::keShaderStage_Pixel]);	
+	_Context.muPerStageTextureCount[zenConst::keShaderStage_Pixel]	= auPerStageTextureCount[zenConst::keShaderStage_Pixel];
 	if( abTextureChanged[zenConst::keShaderStage_Pixel] )	
 		DX11GetDeviceContext()->PSSetShaderResources( 0, uTextureCount, aStageTextureViews[zenConst::keShaderStage_Pixel] );
 	if( abSamplerChanged[zenConst::keShaderStage_Pixel] )	
 		DX11GetDeviceContext()->PSSetSamplers( 0, uTextureCount, aStageSamplerState[zenConst::keShaderStage_Pixel] );
+	
+	uTextureCount													= zenMath::Max<zU16>( _Context.muPerStageTextureCount[zenConst::keShaderStage_Vertex], auPerStageTextureCount[zenConst::keShaderStage_Vertex]);	
+	if( abTextureChanged[zenConst::keShaderStage_Vertex] )	
+		DX11GetDeviceContext()->VSSetShaderResources( 0, uTextureCount, aStageTextureViews[zenConst::keShaderStage_Vertex] );
+	if( abSamplerChanged[zenConst::keShaderStage_Vertex] )	
+		DX11GetDeviceContext()->VSSetSamplers( 0, uTextureCount, aStageSamplerState[zenConst::keShaderStage_Vertex] );
 
-	//----------------------------------------------------------------------------
-	// Draw geometry
-	//----------------------------------------------------------------------------
-	mDX11pContextImmediate->DrawIndexed( _rMeshStrip->muIndexCount, _rMeshStrip->muIndexFirst, 0 );
+	mbTextureUnbound = false;
+
 }
+
+void ManagerRender::Render( zArrayDynamic<zenRes::zGfxDrawcall>& _aDrawcalls)
+{
+	//_aDrawcalls.Sort<>(); //! @todo urgent : Sort element before render
+	RenderContext						Context;
+	zenRes::zGfxDrawcall*				pDrawcall			= _aDrawcalls.First();
+	for(zUInt i(0), count(_aDrawcalls.Count()); i<count; ++i, ++pDrawcall)
+	{	
+		if( (*pDrawcall).IsValid() && (*pDrawcall)->mrRenderPass.IsValid() )
+		{	
+			// Render Commands other than Draw/Compute
+			if( (*pDrawcall)->mSortId.muGPUPipelineMode == Drawcall::keGpuPipe_PreDrawCommand || 
+				(*pDrawcall)->mSortId.muGPUPipelineMode == Drawcall::keGpuPipe_PostDrawCommand )
+			{
+				(*pDrawcall)->Invoke();					
+			}
+			else if( (*pDrawcall)->mrMeshStrip.IsValid() )
+			{
+				const zcRes::GfxMeshStripProxyRef& rMeshStrip = (*pDrawcall)->mrMeshStrip;
+				UpdateGPUState(*pDrawcall, Context);
+				UpdateShaderState(*pDrawcall, Context);
+				mDX11pContextImmediate->DrawIndexed( rMeshStrip->muIndexCount, rMeshStrip->muIndexFirst, 0 );
+			}
+		}
+	}
+	mrPreviousDrawcall = *_aDrawcalls.Last();
+}
+
 
 void ManagerRender::UnbindTextures()
 {
-	ID3D11ShaderResourceView* StageTextureViews[zcExp::kuDX11_TexturePerStageMax];
-	zenMem::Set(StageTextureViews, 0, sizeof(StageTextureViews) );
-
-	for(zUInt stageIdx(0); stageIdx<zenConst::keShaderStage__Count; ++stageIdx)
-		for(zUInt texIdx(0); texIdx<zcExp::kuDX11_TexturePerStageMax; ++texIdx)
-			maCurrentTexture[stageIdx][texIdx] = NULL;
-	
-	if( muPerStageTextureCount[zenConst::keShaderStage_Vertex] )
-		DX11GetDeviceContext()->VSSetShaderResources( 0, muPerStageTextureCount[zenConst::keShaderStage_Vertex], StageTextureViews );
-	if( muPerStageTextureCount[zenConst::keShaderStage_Pixel] )
-		DX11GetDeviceContext()->PSSetShaderResources( 0, muPerStageTextureCount[zenConst::keShaderStage_Pixel], StageTextureViews );
-
-	zenMem::Set(muPerStageTextureCount, 0, sizeof(muPerStageTextureCount) );
+	if( mbTextureUnbound == false )
+	{
+		ID3D11ShaderResourceView* StageTextureViews[zcExp::kuDX11_TexturePerStageMax];
+		zenMem::Set(StageTextureViews, 0, sizeof(StageTextureViews) );	
+		DX11GetDeviceContext()->VSSetShaderResources( 0, zcExp::kuDX11_TexturePerStageMax, StageTextureViews );
+		DX11GetDeviceContext()->PSSetShaderResources( 0, zcExp::kuDX11_TexturePerStageMax, StageTextureViews );
+		mbTextureUnbound = true;
+	}
 }
 
 }

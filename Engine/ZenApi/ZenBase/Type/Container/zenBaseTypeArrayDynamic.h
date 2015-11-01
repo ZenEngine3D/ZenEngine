@@ -16,6 +16,7 @@ namespace zen { namespace zenType
 	public:
 									zArrayDynamic();
 									zArrayDynamic(zU32 _uCount);
+									zArrayDynamic(std::initializer_list<TType> _Entries);
 									zArrayDynamic(const TType* _pCopy, zUInt _uCount, zUInt _uExtraCount=0);
 									zArrayDynamic(const zArrayDynamic& _Copy, zUInt _uExtraCount=0);
 		virtual						~zArrayDynamic();
@@ -32,7 +33,9 @@ namespace zen { namespace zenType
 		void						Reserve(zUInt _uCount);		
 		zUInt						ReservedCount()const;
 		zUInt						ReservedSize()const;
+	
 	protected:
+		ZENInline zUInt				AppendInternal(const TType* _pCopy, zUInt _uCount);		
 		void						Shrink( );											//!< @brief	Reduce array size when needed
 		void						Grow( zUInt _auCountNeeded );						//!< @brief Increase array size when needed
 		void						GrowNoConstructor( zUInt _auCountNeeded );			//!< @brief Increase array size without calling TType's constructors

@@ -18,8 +18,7 @@ zResID ExporterGfxInputSignatureDX11_DX11::CallbackGetItemID(zenConst::eResPlatf
 	if( rParentShader.IsValid() )
 	{
 		ID3D11ShaderReflection* pGfxShaderReflection = NULL;	
-		//SF if ( SUCCEEDED( D3DReflect( &pParentShader->mSerialCommon.maCompiledShader[0], pParentShader->mSerialCommon.maCompiledShader.Size(), IID_ID3D11ShaderReflection, (void**)&pGfxShaderReflection ) ) ) 
-		if ( SUCCEEDED( D3DReflect( &rParentShader->maCompiledShader[0], rParentShader->maCompiledShader.Size(), IID_ID3D11ShaderReflection, (void**)&pGfxShaderReflection ) ) ) 
+		if ( SUCCEEDED( D3DReflect( &rParentShader->maCompiledShader[0], rParentShader->maCompiledShader.SizeMem(), IID_ID3D11ShaderReflection, (void**)&pGfxShaderReflection ) ) ) 
 		{
 			// Get zResID of Input Signature
 			D3D11_SHADER_DESC shaderDesc;
@@ -60,7 +59,7 @@ bool ExporterGfxInputSignatureDX11_DX11::ExportStart()
 		return false;
 
 	ExportInfoGfxInputSignature*			pExportInfo		= static_cast<ExportInfoGfxInputSignature*>(mpExportInfo);
-	zEngineConstRef<ResDataGfxShaderDX11>	rShaderParent	= zcDepot::ResourceData.GetItem<zcExp::ResDataGfxShaderDX11>( pExportInfo->mParentShaderID);
+	zEngineConstRef<ResDataGfxShaderDX11>	rShaderParent	= zcDepot::ResourceData.GetItem<zcExp::ResDataGfxShaderDX11>(pExportInfo->mParentShaderID);
 	if( rShaderParent.IsValid() )
 		maParentCompiledShader = rShaderParent->maCompiledShader;
 	
@@ -85,7 +84,7 @@ bool ExporterGfxInputSignatureDX11_DX11::ExportWork(bool _bIsTHRTask)
 	//---------------------------------------------------------------------------------------------
 	ID3D11ShaderReflection* pGfxShaderReflection = NULL;	
 	bool bSuccess(FALSE);
-	if ( SUCCEEDED( D3DReflect( maParentCompiledShader.First(), maParentCompiledShader.Size(), IID_ID3D11ShaderReflection, (void**)&pGfxShaderReflection ) ) ) 
+	if ( SUCCEEDED( D3DReflect( maParentCompiledShader.First(), maParentCompiledShader.SizeMem(), IID_ID3D11ShaderReflection, (void**)&pGfxShaderReflection ) ) ) 
 	{	
 		char zShaderText[4096];
 

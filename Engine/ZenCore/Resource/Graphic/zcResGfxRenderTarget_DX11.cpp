@@ -35,8 +35,8 @@ namespace zcRes
 		ID3D11Texture2D* pTexture(NULL);
 
 		mrProxParentTexture	= _Owner.GetTexture2D().IsValid() ? _Owner.GetTexture2D()->GetProxy() : NULL;
-		meFormat				= rResData->meFormat;
-		mvDim					= rResData->mvDim;
+		meFormat			= rResData->meFormat;
+		mvDim				= rResData->mvDim;
 
 		if( rResData->mpBackbuffer )
 			rResData->mpBackbuffer->GetBuffer( 0, __uuidof(ID3D11Texture2D), (LPVOID*)&pTexture );
