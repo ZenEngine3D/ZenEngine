@@ -8,11 +8,11 @@ namespace zcRes
 	{
 	ZENClassDeclare(GfxWindow, TResource)
 	public:
-		void						Resize(const zVec2U16& _vSize){mrProxy->mvPendingResize	 = _vSize; } //! @todo safety make this multithread safe
+		void						Resize(const zVec2U16& _vSize){ mrProxy->mvPendingResize	 = _vSize; } //! @todo safety make this multithread safe
 		void						SetBackbuffer(const GfxRenderTargetRef& _rBackbufferColor){mrBackbufferColor = _rBackbufferColor;}
 		const GfxRenderTargetRef&	GetBackbuffer(){return mrBackbufferColor;}
 	protected:
-		GfxRenderTargetRef mrBackbufferColor;
+		GfxRenderTargetRef			mrBackbufferColor;
 	};
 
 }

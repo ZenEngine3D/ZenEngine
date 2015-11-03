@@ -95,7 +95,7 @@ bool SampleRendererInstance::Init()
 	}
 
 	zArrayStatic<zenRes::zShaderDefine> aShaderDefines			= {	zenRes::zShaderDefine("DEFINETEST", "1"), zenRes::zShaderDefine("DEFINETEST1", "0")};
-	zArrayStatic<const zenRes::zShaderParameter*>	aParamAll	= {	&zenRes::zShaderFloat4(zHash32("vMeshColor"),	zVec4F(.7f,.7f,.7f,1)),
+	zArrayStatic<const zenRes::zShaderParameter*> aParamAll		= {	&zenRes::zShaderFloat4(zHash32("vMeshColor"),	zVec4F(.7f,.7f,.7f,1)),
 																	&zenRes::zShaderFloat4(zHash32("vColor"),		zVec4F(1,1,1,1)) };
 
 	//---------------------------------------------------------------------
@@ -208,13 +208,13 @@ bool SampleRendererInstance::Init()
 
 void SampleRendererInstance::UpdateBackbuffers()
 {
-	if( !mrRndPassFinal.IsValid() || mrMainGfxWindow.HasPendingResize() )
-	{		
+	if( !mrRndPassFinal.IsValid() || mrMainWindowGfx.PerformResize() )
+	{	
 		zenRes::zGfxRenderPass::ConfigColorRT	FinalColorRTConfig;
 		zenRes::zGfxRenderPass::ConfigDepthRT	FinalDepthRTConfig;		
-		zVec2U16 vBackbufferDim					= mrMainGfxWindow.GetBackbuffer().GetDim();
+		zVec2U16 vBackbufferDim					= mrMainWindowGfx.GetBackbuffer().GetDim();
 		mrBackbufferDepth						= zenRes::zGfxRenderTarget::Create(zenConst::keTexFormat_D24S8, vBackbufferDim ); 
-		FinalColorRTConfig.mrTargetSurface		= mrMainGfxWindow.GetBackbuffer();
+		FinalColorRTConfig.mrTargetSurface		= mrMainWindowGfx.GetBackbuffer();
 		FinalDepthRTConfig.mrTargetSurface		= mrBackbufferDepth;
 		FinalDepthRTConfig.mbDepthEnable		= true;
 		FinalDepthRTConfig.mbDepthWrite			= true;
@@ -240,7 +240,8 @@ zU64 timeFrame = zenSys::GetTimeUSec();
 	// Render loop
 	//---------------------------------------------------------------------
 	UpdateBackbuffers();
-	mrMainGfxWindow.FrameBegin();
+	mrMainWindowGfx.FrameBegin();
+	
 	float t = static_cast<float>(zenSys::GetElapsedSec() / 3.0);	// Update our time animation
 	
 
@@ -263,7 +264,7 @@ zU64 timeFrame = zenSys::GetTimeUSec();
 	// Render cubes in main render target
 	//-----------------------------------------------------------------
 	zVec4F vClearColor = zenMath::TriLerp( zVec4F(0.05f,0.05f,0.05f,1), zVec4F(0.1f,0.1f,0.20f,1), zVec4F(0.05f,0.05f,0.05f,1), zenMath::Fract(t) );
-	aDrawcalls.Push( zenRes::zGfxDrawcall::ClearColor(mrRndPassFinal, 0, mrMainGfxWindow.GetBackbuffer(), vClearColor) );
+	aDrawcalls.Push( zenRes::zGfxDrawcall::ClearColor(mrRndPassFinal, 0, mrMainWindowGfx.GetBackbuffer(), vClearColor) );
 	aDrawcalls.Push( zenRes::zGfxDrawcall::ClearDepthStencil(mrRndPassFinal, 0, mrBackbufferDepth) );
 
 	// Render the cube with rendertarget as texture
@@ -294,7 +295,7 @@ zU64 timeFrame = zenSys::GetTimeUSec();
 //timeDraw = zenSys::GetTimeUSec() - timeDraw;
 	
 //zU64 timeEnd = zenSys::GetTimeUSec();
-	mrMainGfxWindow.FrameEnd();
+	mrMainWindowGfx.FrameEnd();
 //timeEnd = zenSys::GetTimeUSec() - timeEnd;
 
 //timeFrame = zenSys::GetTimeUSec() - timeFrame;

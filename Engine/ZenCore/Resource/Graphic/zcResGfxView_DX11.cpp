@@ -19,9 +19,11 @@ bool GfxViewProxy_DX11::Initialize(class GfxView& _Owner)
 	ZENDbgCode(mpOwner = &_Owner);
 	
 	zcRes::GfxRenderTargetRef rRTDepthSurface = rResData->mRTDepthConfig.mrTargetSurface;
-	mrProxTargetDepth	= rRTDepthSurface->GetProxy();
-	mpDepthView			= mrProxTargetDepth.IsValid() ? mrProxTargetDepth->mpTargetDepthView : NULL;
-
+	if( rRTDepthSurface.IsValid() )
+	{
+		mrProxTargetDepth	= rRTDepthSurface->GetProxy();
+		mpDepthView			= mrProxTargetDepth.IsValid() ? mrProxTargetDepth->mpTargetDepthView : nullptr;
+	}
 	muColorCount		= 0;
 	zenMem::Zero(mpColorViews, sizeof(mpColorViews) );
 	marProxTargetColor.SetCount( rResData->maRTColorConfig.Count() );	

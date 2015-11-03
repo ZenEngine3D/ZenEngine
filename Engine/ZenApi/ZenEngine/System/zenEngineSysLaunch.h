@@ -2,6 +2,8 @@
 #ifndef __zenEngine_System_Launch_h__
 #define __zenEngine_System_Launch_h__
 
+namespace FWnd { class Window; }
+
 namespace zen { namespace zenSys {	
 
 //=============================================================================
@@ -17,13 +19,14 @@ public:
 	virtual void										Update();
 	virtual bool										IsDone()=0;
 	void												CreateGfxWindow(const zVec2U16& _vDim, const zVec2U16& _vPos);
-	void												SetWindow(const zenRes::zGfxWindow& _rGfxWindow);
+	//void												SetWindow(const zenRes::zGfxWindow& _rGfxWindow);
 	zenSig::zSignalEmitter1<zenConst::eUpdatePriority>&	GetSignalUpdate();
 	zenSig::zSignalEmitter1<zenConst::eUpdatePriority>	msigUpdate;
 
 protected:	
-	zenRes::zGfxWindow									mrMainGfxWindow;
-
+	zenRes::zGfxWindow									mrMainWindowGfx	= nullptr;
+	FWnd::Window*										mpMainWindowOS	= nullptr;
+	zVec2U16											muWindowSize;
 private:
 	void												MainLoop();
 	friend void	LaunchEngine(zEngineInstance* _pEngineInstance, int argc, const char* const * argv);

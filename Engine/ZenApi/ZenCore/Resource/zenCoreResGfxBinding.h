@@ -24,8 +24,8 @@ namespace zen { namespace zenRes {
 		void							FrameBegin();
 		void							FrameEnd();
 		zGfxRenderTarget				GetBackbuffer();
-		void							Resize(const zVec2U16& _vSize);
-		bool							HasPendingResize();
+		void							Resize(const zVec2U16& _vSize);		
+		bool							PerformResize();
 		static zGfxWindow				Create( HWND _WindowHandle );
 	};
 		

@@ -3,7 +3,6 @@
 namespace zen { namespace zenSys {	
 
 static zEngineInstance*		gpActiveEngine(NULL);
-static FWnd::Window*		gpMainWindow;			//! @todo Clean: Wrap this inside EngineInstance
 
 void LaunchEngine(zEngineInstance* _pEngineInstance, int argc, const char* const* argv)
 {	
@@ -32,20 +31,26 @@ bool zEngineInstance::Init()
 
 void zEngineInstance::Destroy()
 {
-	FSys::EngineStop();
+	mrMainWindowGfx = nullptr;
+	zenDelNull(mpMainWindowOS);		
+	FSys::EngineStop();	
 	gpActiveEngine = NULL;
 }
 
 void zEngineInstance::MainLoop()
 {
-//	zcMgr::Job.Update();	
+//	zcMgr::Job.Update();
+	zVec2U16 vWindowSize = mpMainWindowOS->GetSize();
+	if( muWindowSize != vWindowSize )
+	{
+		muWindowSize = vWindowSize;
+		mrMainWindowGfx.Resize(muWindowSize);
+	}
 	zcMgr::Updater.Update(zenConst::keUpdt_FrameStart);
 	msigUpdate.Emit(zenConst::keUpdt_FrameStart);
-
+	Update(); //! @todo Clean remove this and use signals
 	zcMgr::Updater.Update(zenConst::keUpdt_FrameEnd);
 	msigUpdate.Emit(zenConst::keUpdt_FrameEnd);
-
-	Update(); //! @todo Clean remove this and use signals
 }
 
 void zEngineInstance::Update()
@@ -55,16 +60,11 @@ void zEngineInstance::Update()
 void zEngineInstance::CreateGfxWindow(const zVec2U16& _vDim, const zVec2U16& _vPos)
 {
 	ZENAssert(gpActiveEngine==NULL);
-	gpMainWindow	= zenNewDefault FWnd::Window(L"MainWindow", _vDim);
-	gpMainWindow->Initialize();
-	mrMainGfxWindow = zenRes::zGfxWindow::Create( gpMainWindow->GetHandle() );
+	mpMainWindowOS	= zenNewDefault FWnd::Window(L"MainWindow", _vDim);
+	mpMainWindowOS->Initialize();
+	mrMainWindowGfx = zenRes::zGfxWindow::Create( mpMainWindowOS->GetHandle() );
+	muWindowSize	= _vDim;
 }
-
-void zEngineInstance::SetWindow(const zenRes::zGfxWindow& _rGfxWindow)
-{
-	mrMainGfxWindow = _rGfxWindow;
-}
-
 
 zSampleEngineInstance::zSampleEngineInstance( void (*_pFunctionToCall)() )
 : mpFunctionToCall(_pFunctionToCall)

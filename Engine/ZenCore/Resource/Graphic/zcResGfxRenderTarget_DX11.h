@@ -18,7 +18,6 @@ namespace zcRes
 		void							ReleaseBackbuffer();
 	
 	//protected:
-		ID3D11Texture2D*				mpSwapchainBackbuffer;	//!< Only set when create with CreateFromBackuffer 		
 		ID3D11RenderTargetView*			mpTargetColorView;
 		ID3D11DepthStencilView*			mpTargetDepthView;
 		zenConst::eTextureFormat		meFormat;

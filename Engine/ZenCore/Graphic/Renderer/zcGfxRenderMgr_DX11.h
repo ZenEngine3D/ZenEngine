@@ -54,7 +54,7 @@ public:
 	ID3D11DeviceContext*			DX11GetDeviceContext(){return mDX11pContextImmediate;}
 	DXGI_FORMAT						ZenFormatToNative( zenConst::eTextureFormat _eTexFormat )const { return meFormatConversion[_eTexFormat]; }
 	void							UnbindTextures();
-
+	void							UnbindResources();
 protected:
 	ZENInline void					UpdateGPUState(const zenRes::zGfxDrawcall& _rDrawcall, RenderContext& _Context);
 	ZENInline void					UpdateShaderState(const zenRes::zGfxDrawcall& _rDrawcall, RenderContext& _Context);
@@ -66,7 +66,7 @@ protected:
 	ID3D11Device*					mDX11pDevice;
 	ID3D11DeviceContext*			mDX11pContextImmediate;	
 	bool							mbTextureUnbound = false;
-	
+	bool							mbResourceUnbound = false;
 //---------------------------------------------------------
 // ManagerBase Section
 //---------------------------------------------------------

@@ -83,6 +83,7 @@ void ManagerRender::FrameBegin(zcRes::GfxWindowRef _FrameWindow)
 void ManagerRender::FrameEnd()
 {	
 	mrWindowCurrent->GetProxy()->mDX11pSwapChain->Present( 1, 0 );
+	UnbindResources();
 	Super::FrameEnd();
 }
 
@@ -106,12 +107,12 @@ void ManagerRender::UpdateGPUState(const zenRes::zGfxDrawcall& _rDrawcall, Rende
 			_Context.mrStateBlend = rRenderpass->mrProxBlendState;
 			mDX11pContextImmediate->OMSetBlendState( _Context.mrStateBlend->mpBlendState, _Context.mrStateBlend->mafBlendFactor, _Context.mrStateBlend->muSampleMask );
 		}
-		if( _Context.mrStateDepthStencil != rRenderpass->mrProxDepthStencilState )
+		if( mbResourceUnbound || _Context.mrStateDepthStencil != rRenderpass->mrProxDepthStencilState )
 		{	
 			_Context.mrStateDepthStencil = rRenderpass->mrProxDepthStencilState;
 			mDX11pContextImmediate->OMSetDepthStencilState(_Context.mrStateDepthStencil->mpDepthStencilState, _Context.mrStateDepthStencil->muStencilValue);
 		}
-		if( _Context.mrStateView != rRenderpass->mrProxViewState )
+		if( mbResourceUnbound || _Context.mrStateView != rRenderpass->mrProxViewState )
 		{
 			UINT maxCount = zenMath::Max( _Context.mrStateView.IsValid() ? _Context.mrStateView->muColorCount : 0, _Context.mrRenderpass->mrProxViewState->muColorCount);
 			_Context.mrStateView = rRenderpass->mrProxViewState;
@@ -218,15 +219,15 @@ void ManagerRender::UpdateShaderState(const zenRes::zGfxDrawcall& _rDrawcall, Re
 	if( abSamplerChanged[zenConst::keShaderStage_Vertex] )	
 		DX11GetDeviceContext()->VSSetSamplers( 0, uTextureCount, aStageSamplerState[zenConst::keShaderStage_Vertex] );
 
-	mbTextureUnbound = false;
-
+	mbTextureUnbound	= false;
+	mbResourceUnbound	= false;
 }
 
-void ManagerRender::Render( zArrayDynamic<zenRes::zGfxDrawcall>& _aDrawcalls)
+void ManagerRender::Render(zArrayDynamic<zenRes::zGfxDrawcall>& _aDrawcalls)
 {
 	//_aDrawcalls.Sort<>(); //! @todo urgent : Sort element before render
-	RenderContext						Context;
-	zenRes::zGfxDrawcall*				pDrawcall			= _aDrawcalls.First();
+	RenderContext			Context;
+	zenRes::zGfxDrawcall*	pDrawcall = _aDrawcalls.First();
 	for(zUInt i(0), count(_aDrawcalls.Count()); i<count; ++i, ++pDrawcall)
 	{	
 		if( (*pDrawcall).IsValid() && (*pDrawcall)->mrRenderPass.IsValid() )
@@ -260,6 +261,17 @@ void ManagerRender::UnbindTextures()
 		DX11GetDeviceContext()->PSSetShaderResources( 0, zcExp::kuDX11_TexturePerStageMax, StageTextureViews );
 		mbTextureUnbound = true;
 	}
+}
+
+void ManagerRender::UnbindResources()
+{
+	if( mbResourceUnbound == false )
+	{
+		UnbindTextures();
+		//mDX11pContextImmediate->OMSetRenderTargets(0, nullptr, nullptr );
+		//mbResourceUnbound = true;
+	}
+
 }
 
 }

@@ -3,45 +3,44 @@
 namespace zcRes
 {
 	GfxRenderTargetProxy_DX11::GfxRenderTargetProxy_DX11()
-	: mpSwapchainBackbuffer(NULL)
-	, mpTargetColorView(NULL)
-	, mpTargetDepthView(NULL)
+	: mpTargetColorView(nullptr)
+	, mpTargetDepthView(nullptr)
 	, mbNeedResolve(false)
 	{	
 	}
 
 	GfxRenderTargetProxy_DX11::~GfxRenderTargetProxy_DX11()
 	{		
-		if(mpSwapchainBackbuffer)
-			mpSwapchainBackbuffer->Release();
-			
 		if(mpTargetColorView)
 			mpTargetColorView->Release();			
 
 		if(mpTargetDepthView)
 			mpTargetDepthView->Release();
 			
-		mpTargetDepthView		= NULL;
-		mpTargetColorView		= NULL;
-		mpSwapchainBackbuffer	= NULL;
+		mpTargetDepthView		= nullptr;
+		mpTargetColorView		= nullptr;
 	}
 
 	bool GfxRenderTargetProxy_DX11::Initialize(class GfxRenderTarget& _Owner)
 	{
 		HRESULT hr(S_FALSE);
 		ZENDbgCode(mpOwner = &_Owner);
-		const GfxRenderTargetResDataRef& rResData	= _Owner.GetResData();
+		const GfxRenderTargetResDataRef& rResData = _Owner.GetResData();
 		ZENAssert(rResData.IsValid());
 		ID3D11Texture2D* pTexture(NULL);
 
-		mrProxParentTexture	= _Owner.GetTexture2D().IsValid() ? _Owner.GetTexture2D()->GetProxy() : NULL;
-		meFormat			= rResData->meFormat;
-		mvDim				= rResData->mvDim;
+		mrProxParentTexture		= _Owner.GetTexture2D().IsValid() ? _Owner.GetTexture2D()->GetProxy() : NULL;
+		meFormat				= rResData->meFormat;
+		mvDim					= rResData->mvDim;
 
 		if( rResData->mpBackbuffer )
+		{
 			rResData->mpBackbuffer->GetBuffer( 0, __uuidof(ID3D11Texture2D), (LPVOID*)&pTexture );
+		}
 		else if(mrProxParentTexture.IsValid() )
+		{
 			pTexture = mrProxParentTexture->mpTextureBuffer;
+		}
 
 		if( pTexture )
 		{
@@ -56,8 +55,11 @@ namespace zcRes
 			}
 			else
 			{
-				hr = zcMgr::GfxRender.DX11GetDevice()->CreateRenderTargetView( pTexture, NULL, &mpTargetColorView );			
+				hr = zcMgr::GfxRender.DX11GetDevice()->CreateRenderTargetView( pTexture, NULL, &mpTargetColorView );				
 			}
+			
+			if( rResData->mpBackbuffer )
+				pTexture->Release();
 		}
 
 		return SUCCEEDED(hr);
@@ -74,12 +76,7 @@ namespace zcRes
 	{
 		if( mpTargetColorView )
 			mpTargetColorView->Release();
-		
-		if(mpSwapchainBackbuffer)
-			mpSwapchainBackbuffer->Release();
-		
-		mpSwapchainBackbuffer	= NULL;
-		mpTargetColorView		= NULL;
+		mpTargetColorView = nullptr;
 	}
 
 	void GfxRenderTargetProxy_DX11::Clear(const zVec4F& _vRGBA)

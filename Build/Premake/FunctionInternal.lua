@@ -1,6 +1,6 @@
-vDefaultCppExt			= {"**.h", "**.inl", "**.cpp"}
-vLibEngineGame 			= {"libZenBase", "libZenCore", "libZenEngine", "libZenExternal"  }
-vLibEngineTool 			= {"libZenBase", "libZenCore", "libZenEngine", "libZenExternal", "libThirdParty" }
+vDefaultCppExt			= {".h", ".inl", ".cpp"}
+vLibEngineGame 			= {"libZenBase", "libZenCore", "libZenEngine", "libZenExternal", "lib3rdImgui"  }
+vLibEngineTool 			= {"libZenBase", "libZenCore", "libZenEngine", "libZenExternal", "lib3rdImgui", "lib3rdPugiXml" }
 bLibEngineGameRender	= {"d3d11", "d3dcompiler", "dxguid"}	--TODO per platform config
 bLibEngineToolRender	= {"d3d11", "d3dcompiler", "dxguid"}
 
@@ -72,8 +72,9 @@ function Orion_ConfigurePCH(aPathList, aPchFile)
 		vPchDir	= path.getdirectory(vSourceRoot .. "/" .. aPchFile)
 	end
 	i 				= 1	
-	while i <= #aPathList and #vPchDir == 0 do 		
-		vFilename = vSourceRoot .. "/" .. aPathList[i] .. "/" .. vPchNameHeader
+	while i <= #aPathList and #vPchDir == 0 do 
+		vPathStriped = path.getdirectory(aPathList[i])
+		vFilename = vSourceRoot .. "/" .. vPathStriped .. "/" .. vPchNameHeader
 		if os.isfile(vFilename) then
 			vPchDir = path.getdirectory(vFilename)
 		end

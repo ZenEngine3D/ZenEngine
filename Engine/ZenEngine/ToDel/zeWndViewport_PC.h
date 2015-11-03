@@ -2,6 +2,7 @@
 #ifndef __LibFramework_Window_Viewport_PC_h__
 #define __LibFramework_Window_Viewport_PC_h__
 
+//! @todo Clean : rename namespace to follow new naming
 namespace FWnd
 {
 	//=================================================================================================
@@ -16,14 +17,14 @@ namespace FWnd
 								Window(const WCHAR* _zWindowName, zVec2U16 _ClientSize);
 		bool					Initialize();
 		virtual void			SetSize(const zVec2U16 _vSize){mvSize = _vSize;}
-		const zVec2U16&		GetSize()const {return mvSize;}
+		zVec2U16				GetSize()const {return mvSize;}
 		HWND					GetHandle(){return mhMainWindow;}
 	protected:		
 		static DWORD WINAPI		WndThread( LPVOID lpParam );
 		static LRESULT CALLBACK WndEventCallback(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 		
 		
-		zVec2U16				mvSize;
+		std::atomic<zVec2U16>	mvSize;
 		WCHAR					mzWindowName[64];
 		HWND					mhMainWindow;
 		HANDLE					mhMainWindowThread;			//!< Handle on main window thread (process windows messages)

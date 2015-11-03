@@ -83,10 +83,15 @@ void zGfxWindow::Resize(const zVec2U16& _vSize)
 	return pWindow->Resize(_vSize);
 }
 
-bool zGfxWindow::HasPendingResize()
+bool zGfxWindow::PerformResize()
 {
 	zcRes::GfxWindowRef rWindow = mpResource;
-	return !rWindow->GetProxy()->mvPendingResize.IsNull();
+	if( !rWindow->GetProxy()->mvPendingResize.IsNull() )
+	{
+		rWindow->GetProxy()->PerformResize();	
+		return true;
+	}
+	return false;
 }
 
 void zGfxWindow::FrameBegin()

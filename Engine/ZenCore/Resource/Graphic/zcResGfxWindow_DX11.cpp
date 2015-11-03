@@ -39,8 +39,11 @@ namespace zcRes
 		
 		ID3D11Device*   DX11pDevice = zcMgr::GfxRender.DX11GetDevice();
 		if( SUCCEEDED(DX11pDevice->QueryInterface(__uuidof(IDXGIDevice), (void **)&pDXGIDevice)) )
+		{
 			if( SUCCEEDED(pDXGIDevice->GetParent(__uuidof(IDXGIAdapter), (void **)&pDXGIAdapter)) )
+			{
 				if( SUCCEEDED(pDXGIAdapter->GetParent(__uuidof(IDXGIFactory), (void **)&pIDXGIFactory)) )
+				{
 					if( SUCCEEDED(pIDXGIFactory->CreateSwapChain( DX11pDevice, &swapDesc, &mDX11pSwapChain)) )
 					{
 						//! @todo can't allow access to owner in renderthread, fix this
@@ -57,7 +60,9 @@ namespace zcRes
 						mpOwner->SetBackbuffer(rBackbufferColor); //! @todo urgent can't access game thread object here
 						return mrProxBackbufferColor.IsValid();
 					}
-		
+				}
+			}
+		}		
 		return false;;
 	}
 
@@ -76,12 +81,12 @@ namespace zcRes
 		ZENAssertMsg(rWindowCur.IsValid()==false || rWindowCur->GetProxy() != this, "This method should only be called in ManagerBase::FrameStart()");
 
 		if( !mvPendingResize.IsNull() && mvPendingResize != mvSize )
-		{
-			mvSize								= mvPendingResize;			
+		{			
 			mrProxBackbufferColor->ReleaseBackbuffer();
 			mDX11pSwapChain->ResizeBuffers(0, mvPendingResize.x, mvPendingResize.y, DXGI_FORMAT_UNKNOWN, 0);
 
 			zEngineRef<GfxRenderTargetResData> rResData	= zenNewDefault GfxRenderTargetResData();
+			mvSize										= mvPendingResize;
 			rResData->mResID							= zcMgr::Export.GetNewResourceID( zenConst::keResType_GfxRenderTarget );
 			rResData->mbSRGB							= TRUE;
 			rResData->meFormat							= meBackbufferColorFormat;

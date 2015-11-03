@@ -2,18 +2,6 @@
 
 namespace FWnd
 {	
-	/*
-	Viewport_PC::Viewport_PC()
-	: mhMainWindow(NULL)
-	{
-	}
-
-	void Viewport_PC::Initialize(HWND _hWndHandle, zVec2U16 _vSize)
-	{
-		mhMainWindow	= _hWndHandle;
-		mvSize			= _vSize;
-	}
-	*/
 	Window::Window(const WCHAR* _zWindowName, zVec2U16 _ClientSize)
 	: mhMainWindowThread(NULL)
 	, mhWindowInstance(NULL)
@@ -43,17 +31,15 @@ namespace FWnd
 		Window* pParentWindow = (Window*)GetWindowLongPtr(hwnd, 0);
 		switch(msg)
 		{
-		case WM_CLOSE:	{ DestroyWindow(hwnd);	break;	}
-		case WM_DESTROY:{ pParentWindow->meMainWindowThreadStatus = keThread_Ended; break; }
-		case WM_SIZING:	{ 
-			RECT* pSize = (RECT*)lParam; 
-			pParentWindow->SetSize(zVec2U16(zU16(pSize->right-pSize->left), zU16(pSize->bottom-pSize->top)));
-			break; }
-		case WM_PAINT:	{
-				PAINTSTRUCT ps;
-				HDC hdc = BeginPaint( hwnd, &ps );	
-				EndPaint( hwnd, &ps );
-				break; }		
+		case WM_CLOSE:
+			DestroyWindow(hwnd);	
+			break;
+		case WM_DESTROY:
+			pParentWindow->meMainWindowThreadStatus = keThread_Ended; 
+			break; 
+		case WM_SIZE:
+			pParentWindow->SetSize(*(zVec2U16*)&lParam); 
+			break; 
 		default:
 			return DefWindowProc(hwnd, msg, wParam, lParam);
 		}
@@ -83,7 +69,7 @@ namespace FWnd
 		}
 
 		//Step 1: Registering the Window Class
-		const TCHAR zClassName[] = L"AWWindowClass";
+		const TCHAR zClassName[] = L"ZenWindowClass";
 		wc.cbSize        = sizeof(WNDCLASSEX);
 		wc.style         = CS_HREDRAW | CS_VREDRAW;
 		wc.lpfnWndProc   = WndEventCallback;
@@ -104,12 +90,13 @@ namespace FWnd
 			return false;
 		}
 
+		zVec2U16 vSize = pParentWindow->mvSize;
 		pParentWindow->mhMainWindow = CreateWindowEx(
 			WS_EX_CLIENTEDGE,
 			zClassName,
 			L"Zen Engine",
 			WS_OVERLAPPEDWINDOW,
-			CW_USEDEFAULT, CW_USEDEFAULT, pParentWindow->mvSize.x, pParentWindow->mvSize.y,
+			CW_USEDEFAULT, CW_USEDEFAULT, vSize.x, vSize.y,
 			NULL, NULL, pParentWindow->mhWindowInstance, NULL);
 
 		if(pParentWindow->mhMainWindow == NULL)

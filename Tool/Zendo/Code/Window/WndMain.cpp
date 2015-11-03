@@ -10,7 +10,13 @@ public:
 	MyRenderWindow(wxWindow* _pParent)
 	: wxWindow(_pParent,-1)	
 	{
-		mrGfxWindow = zenRes::zGfxWindow::Create(GetHWND());
+		zenRes::zGfxStateRasterizer::Config	DefaultRasterConfig;
+		zenRes::zGfxRenderPass::ConfigColorRT	ColorRTConfig;
+		zenRes::zGfxRenderPass::ConfigDepthRT	DepthRTConfig;				
+		mrGfxWindow							= zenRes::zGfxWindow::Create(GetHWND());		
+		mrStateRaster						= zenRes::zGfxStateRasterizer::Create(DefaultRasterConfig);
+		ColorRTConfig.mrTargetSurface		= mrGfxWindow.GetBackbuffer();
+		mrRndPassGeneric					= zenRes::zGfxRenderPass::Create("Generic",0,ColorRTConfig,DepthRTConfig, mrStateRaster );
 		mTimer.SetOwner(this);
 		Bind(wxEVT_TIMER, &MyRenderWindow::onTimer, this);
 		mTimer.Start(16);
@@ -26,12 +32,14 @@ public:
 	}
 	void Render()
 	{
-		//zcMgr::GfxRender.FrameBegin(mrGfxWindow);
-		//zcMgr::GfxState.PipelineReset();
+		zArrayDynamic<zenRes::zGfxDrawcall> aDrawcalls;
+		aDrawcalls.Reserve(2000);
 		float t = static_cast<float>(zenSys::GetElapsedSec() / 3.0);	// Update our time animation
 		mrGfxWindow.FrameBegin();
 		zVec4F vClearColor = zenMath::TriLerp<zVec4F>( zVec4F(0.5f,0.5f,0.5f,1), zVec4F(0.1f,0.1f,0.20f,1), zVec4F(0.5f,0.5f,0.5f,1), zenMath::Fract(t) );
-		mrGfxWindow.GetBackbuffer().Clear( true, vClearColor, true, 0 );
+		//mrGfxWindow.GetBackbuffer().Clear( true, vClearColor, true, 0 );
+		aDrawcalls.Push( zenRes::zGfxDrawcall::ClearColor(mrRndPassGeneric, 0, mrGfxWindow.GetBackbuffer(), vClearColor) );
+		zenRes::zGfxDrawcall::Submit(aDrawcalls);
 		mrGfxWindow.FrameEnd();
 		
 	}
@@ -43,8 +51,10 @@ protected:
 		Render();		
 	}
 
-	wxTimer				mTimer;
-	zenRes::zGfxWindow	mrGfxWindow;
+	wxTimer							mTimer;
+	zenRes::zGfxWindow				mrGfxWindow;
+	zenRes::zGfxStateRasterizer		mrStateRaster;
+	zenRes::zGfxRenderPass			mrRndPassGeneric;
 	wxDECLARE_NO_COPY_CLASS(MyRenderWindow);
 	DECLARE_EVENT_TABLE()
 };
