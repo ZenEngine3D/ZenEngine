@@ -34,8 +34,8 @@ public:
 				void*		Allocate();
 				void		Deallocate(void* _pAlloc);
 protected:	
-	zUInt					muAllocatedCount;	//!< Number of items currently allocated
-	zUInt					muReservedCount;	//!< Number of pool item reserved	
+	zU32					muAllocatedCount;	//!< Number of items currently allocated
+	zU32					muReservedCount;	//!< Number of pool item reserved	
 	size_t					muItemSize;			//!< Size of each pool item
 	zU32					muItemIncrease;		//!< Amount of new item when pool runs out of item (0 for none)
 	zList1x					mlstFreeItems;		//!< List of the free pre-allocated items	

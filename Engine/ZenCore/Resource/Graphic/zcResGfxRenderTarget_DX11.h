@@ -4,26 +4,26 @@
 
 namespace zcRes
 {
-	class GfxRenderTargetProxy_DX11 : public zRefCountedAutoDel
+	class GfxRenderTargetProxy_DX11 : public zRefCounted
 	{
-	ZENClassDeclare(GfxRenderTargetProxy_DX11, zRefCountedAutoDel)
+	ZENClassDeclare(GfxRenderTargetProxy_DX11, zRefCounted)
 	public:
-										GfxRenderTargetProxy_DX11();
-		virtual							~GfxRenderTargetProxy_DX11();												
-		bool							Initialize(class GfxRenderTarget& _Owner);
+									GfxRenderTargetProxy_DX11();
+		virtual						~GfxRenderTargetProxy_DX11();												
+		bool						Initialize(class GfxRenderTarget& _Owner);
 
-		ZENInline bool					IsDepth()	{ return mpTargetDepthView != NULL; }
-		void							Clear(const zVec4F& _vRGBA);
-		void							Clear(float _fDepth=1, zU8 _uStencil=0, bool _bClearDepth=true, bool _bClearStencil=false);
-		void							ReleaseBackbuffer();
+		ZENInline bool				IsDepth()	{ return mpTargetDepthView != NULL; }
+		void						Clear(const zVec4F& _vRGBA);
+		void						Clear(float _fDepth=1, zU8 _uStencil=0, bool _bClearDepth=true, bool _bClearStencil=false);
+		void						ReleaseBackbuffer();
 	
 	//protected:
-		ID3D11RenderTargetView*			mpTargetColorView;
-		ID3D11DepthStencilView*			mpTargetDepthView;
-		zenConst::eTextureFormat		meFormat;
-		zVec2U16						mvDim;
-		bool							mbNeedResolve;
-		GfxTexture2dProxyRef			mrProxParentTexture;
+		ID3D11RenderTargetView*		mpTargetColorView;
+		ID3D11DepthStencilView*		mpTargetDepthView;
+		zenConst::eTextureFormat	meFormat;
+		zVec2U16					mvDim;
+		bool						mbNeedResolve;
+		GfxTexture2dRef				mrProxParentTexture;
 		ZENDbgCode(class GfxRenderTarget*	mpOwner);
 	};
 }

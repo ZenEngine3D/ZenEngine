@@ -17,7 +17,7 @@ namespace zcExp
 		mrResData->mzStageName					= pExportInfo->mzStageName;
 		mrResData->mRasterStateID				= pExportInfo->mRasterStateID;
 		mrResData->muPassPriority				= pExportInfo->muPassPriority;
-		mrResData->mRasterStateID				= pExportInfo->mrStateRaster.GetResID();
+		mrResData->mRasterStateID				= pExportInfo->mrStateRaster.GetResID(); //! @todo missing : Create a RasterState per culling config
 		mrResData->mViewStateID					= CreateGfxView(*pExportInfo->mpaConfigRTColor, *pExportInfo->mpConfigRTDepth, pExportInfo->mvDim, pExportInfo->mvOrigin);		
 		mrResData->mBlendStateID				= CreateGfxBlend(*pExportInfo->mpaConfigRTColor); 
 		mrResData->mDepthStencilStateID			= CreateGfxDepthStencil(*pExportInfo->mpConfigRTDepth);			

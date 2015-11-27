@@ -22,7 +22,7 @@ namespace sample
 			keSample__Count
 		};
 		typedef zFlag<enumSample, keSample__Count>	FlagSample;
-		typedef zFlag<enumSample, 10, zU8>				FlagSampleWrong;
+		typedef zFlag<enumSample, 10, zU8>			FlagSampleWrong;
 		
 		//Test to make sure storage is enough for max value
 		//FlagSampleWrong testWrongEnum; 
@@ -65,8 +65,10 @@ namespace sample
 		flagTestA.Invert();
 
 		// Concatenated operations
-		flagTestA = FlagSample( keSample_Val1, keSample_Val2 ) | FlagSample( keSample_Val3 );
-		flagTestA = FlagSample( keSample_Val1, keSample_Val2 ) & FlagSample( keSample_Val1 );
+		flagTestA = FlagSample( keSample_Val1, keSample_Val2 ) | keSample_Val3;
+		flagTestA = FlagSample( keSample_Val1, keSample_Val2 ) & keSample_Val1;
 		flagTestA = FlagSample( keSample_Val1, keSample_Val2 ) ^ FlagSample( keSample_Val1, keSample_Val3 );
+		flagTestA += keSample_Val4;
+		flagTestA = FlagSample(keSample_Val1) + FlagSample(keSample_Val2, keSample_Val3) - FlagSample(keSample_Val3);
 	}
 }

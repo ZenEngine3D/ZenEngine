@@ -14,7 +14,7 @@ namespace zcExp
 	//! @param _uIndexCount		- Number of Index to use in IndexBuffer
 	//! @return 				- Created MeshStrip
 	//=================================================================================================
-	zResID CreateGfxMeshStrip(zResID _VertexBufferID, zResID _IndexBufferID, zResID _ShaderBindingID, zU32 _uIndexFirst, zU32 _uIndexCount, const zArrayBase<zResID>& _aShaderParamID, const zArrayBase<zenRes::zShaderTexture>& _aTexture)
+	zResID CreateGfxMeshStrip(zResID _VertexBufferID, zResID _IndexBufferID, zResID _ShaderBindingID, zU32 _uIndexFirst, zU32 _uIndexCount, zU32 _uVertexFirst, const zArrayBase<zResID>& _aShaderParamID, const zArrayBase<zenRes::zShaderTexture>& _aTexture)
 	{
 		static zenMem::zAllocatorPool sMemPool("Pool CreateMeshStrip", sizeof(ExportInfoGfxMeshStrip), 1, 5 );
 		ExportInfoGfxMeshStrip* pExportInfo	= zenNew(&sMemPool) ExportInfoGfxMeshStrip;
@@ -22,9 +22,10 @@ namespace zcExp
 		pExportInfo->mIndexBufferID				= _IndexBufferID;
 		pExportInfo->mShaderBindingID			= _ShaderBindingID;
 		pExportInfo->maTexture					= _aTexture;				
-		pExportInfo->maShaderParamID			= _aShaderParamID;		
+		pExportInfo->maShaderParamID			= _aShaderParamID;
+		pExportInfo->muVertexFirst				= _uVertexFirst;
 		pExportInfo->muIndexFirst				= _uIndexFirst;
-		pExportInfo->muIndexCount				= _uIndexCount;
+		pExportInfo->muIndexCount				= _uIndexCount;		
 		return zcMgr::Export.CreateItem( zResID::kePlatformType_GFX, zenConst::keResType_GfxMeshStrip, pExportInfo );
 	}
 

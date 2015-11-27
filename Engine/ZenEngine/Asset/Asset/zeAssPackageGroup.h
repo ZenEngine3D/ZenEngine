@@ -5,9 +5,9 @@
 #if ZEN_ENGINETOOL
 namespace zen { namespace zeAss
 {
-	class PackageGroup : public zRefCountedAutoDel
+	class PackageGroup : public zRefCounted
 	{
-	ZENClassDeclare(PackageGroup, zRefCountedAutoDel)
+	ZENClassDeclare(PackageGroup, zRefCounted)
 	public:		
 																	PackageGroup	(const zWString& _zName, zenAss::zPackageGroupRef _Parent);
 		virtual														~PackageGroup	();		

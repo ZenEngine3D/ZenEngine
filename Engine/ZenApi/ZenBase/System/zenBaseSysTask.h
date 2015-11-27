@@ -22,7 +22,7 @@ public:
 	
 	ZENInline bool				IsRunning();
 	ZENInline bool				CanResume();
-	ZENInline zU32				GetElapsedUSec();
+	ZENInline zUInt				GetElapsedUSec();
 	static zUInt				GetCPUCoreCount();
 
 	void						ProcessingStart();

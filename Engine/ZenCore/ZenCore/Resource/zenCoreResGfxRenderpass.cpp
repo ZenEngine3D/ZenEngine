@@ -59,6 +59,18 @@ zGfxDrawcall& zGfxDrawcall::operator=(zcGfx::Drawcall* _pCopy)
 	return *this;
 }
 
+bool zGfxDrawcall::operator>(const zenRes::zGfxDrawcall& _Cmp)const
+{
+	return	(Get()->mSortId.mSortKeyHi > _Cmp->mSortId.mSortKeyHi) ||
+			(Get()->mSortId.mSortKeyHi == _Cmp->mSortId.mSortKeyHi && Get()->mSortId.mSortKeyLo > _Cmp->mSortId.mSortKeyLo);
+}
+
+bool zGfxDrawcall::operator>=(const zenRes::zGfxDrawcall& _Cmp)const
+{
+	return	(Get()->mSortId.mSortKeyHi > _Cmp->mSortId.mSortKeyHi) ||
+			(Get()->mSortId.mSortKeyHi == _Cmp->mSortId.mSortKeyHi && Get()->mSortId.mSortKeyLo >= _Cmp->mSortId.mSortKeyLo);
+}
+
 //=================================================================================================
 // GFX RenderPass
 //=================================================================================================

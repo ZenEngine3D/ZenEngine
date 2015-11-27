@@ -210,14 +210,14 @@ void SavePropertyValue(const zenAss::PropertyValueRef& _rValue, pugi::xml_node& 
 	case zenConst::keAssProp_Array:	{	
 		zenAss::PropertyArray::ValueRef rValueTyped(_rValue);
 		const zenAss::PropertyArray::ValueStorage& aValues = rValueTyped.GetValue();
-		_Node.append_attribute("Num").set_value( aValues.Count() );
+		_Node.append_attribute("Num").set_value((unsigned int)aValues.Count());
 		_Node.append_attribute("ElementType").set_value( rValueTyped.GetDefinition().mrArrayPropertyDef->GetTypeName() );
 		for(zUInt idx(0), count(aValues.Count()); idx<count; ++idx)
 		{
 			if( !aValues[idx].IsDefault() )
 			{
 				pugi::xml_node nodeChild = _Node.append_child(kzXmlName_Node_Property);
-				nodeChild.append_attribute("Index").set_value(idx+1);
+				nodeChild.append_attribute("Index").set_value((unsigned int)idx+1);
 				SavePropertyValue( aValues[idx], nodeChild );
 			}			
 		}

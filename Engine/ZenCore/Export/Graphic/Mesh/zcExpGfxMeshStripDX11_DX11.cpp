@@ -3,7 +3,7 @@
 namespace zcExp
 {
 	ExporterGfxMeshStripDX11_DX11::ExporterGfxMeshStripDX11_DX11(const ResDataRef& _rResData)
-	: Super(_rResData.GetSafe())
+	: Super(_rResData.Get())
 	, mrResData(_rResData)
 	{
 	}
@@ -14,6 +14,7 @@ namespace zcExp
 		ExportInfoGfxMeshStrip* pExportInfo	= static_cast<ExportInfoGfxMeshStrip*>(mpExportInfo);
 		mrResData->mIndexBufferID			= pExportInfo->mIndexBufferID;				
 		mrResData->mShaderBindingID			= pExportInfo->mShaderBindingID;
+		mrResData->muVertexFirst			= pExportInfo->muVertexFirst;
 		mrResData->muIndexFirst				= pExportInfo->muIndexFirst;
 		mrResData->muIndexCount				= pExportInfo->muIndexCount;
 		return TRUE;

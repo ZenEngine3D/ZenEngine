@@ -25,6 +25,8 @@ public:
 	using zArrayBase<TType>::operator=;
 };
 
+//! @todo Optim : Create a zArrayStackStatic that doesn't use heap, to wrap std::array
+
 } } //namespace zen, Type
 
 #include "zenBaseTypeArrayStatic.inl"

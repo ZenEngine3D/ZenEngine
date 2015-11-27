@@ -35,7 +35,7 @@ bool GfxTexture2dProxy_DX11::Initialize(class GfxTexture2d& _Owner)
 	bool bIsDepth							= zcMgr::GfxRender.IsDepth(rResData->meFormat);
 	bufferDesc.Width						= rResData->maMipData[0].mvDim.x;
 	bufferDesc.Height						= rResData->maMipData[0].mvDim.y;
-	bufferDesc.MipLevels					= rResData->maMipData.Count();
+	bufferDesc.MipLevels					= static_cast<UINT>(rResData->maMipData.Count());
 	bufferDesc.ArraySize					= 1;
 	bufferDesc.Format						= zcMgr::GfxRender.ZenFormatToNative(rResData->meFormat);
 	bufferDesc.SampleDesc.Count				= 1;

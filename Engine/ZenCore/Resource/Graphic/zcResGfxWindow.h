@@ -9,10 +9,20 @@ namespace zcRes
 	ZENClassDeclare(GfxWindow, TResource)
 	public:
 		void						Resize(const zVec2U16& _vSize){ mrProxy->mvPendingResize	 = _vSize; } //! @todo safety make this multithread safe
-		void						SetBackbuffer(const GfxRenderTargetRef& _rBackbufferColor){mrBackbufferColor = _rBackbufferColor;}
-		const GfxRenderTargetRef&	GetBackbuffer(){return mrBackbufferColor;}
+		void						SetBackbuffer(zU8 _uBackbufferIndex, const GfxRenderTargetRef& _rBackbufferColor);
+		const GfxRenderTargetRef&	GetBackbuffer();
+	
 	protected:
-		GfxRenderTargetRef			mrBackbufferColor;
+		GfxRenderTargetRef			mrBackbufferColor[2];
+		zenRes::zGfxRenderPass		mrImGuiRndPass;
+		zenRes::zGfxTexture2d		mrImGuiTexFont;
+		zenRes::zGfxVertex			mrImGuiVertex;
+		zenRes::zGfxIndex			mrImGuiIndex;
+		zenRes::zGfxShaderVertex	mrImGuiVS;
+		zenRes::zGfxShaderPixel		mrImGuiPS;
+		zenRes::zGfxShaderBinding	mrImGuiShaderBind;
+		zenRes::zGfxMesh			mrImGuiMesh;
+		zenMath::Matrix				matUIOrthographic;
 	};
 
 }

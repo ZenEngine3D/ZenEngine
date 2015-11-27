@@ -8,7 +8,7 @@ namespace zen { namespace zenType {
 //! @brief Get count of valid Slots in this node
 //-------------------------------------------------------------------------------------------------
 template<class TKey, class TValue, class TIndex, int TIndexBits>
-zUInt zHamt<TKey, TValue, TIndex, TIndexBits>::Node::GetSlotCount() const 
+zU32 zHamt<TKey, TValue, TIndex, TIndexBits>::Node::GetSlotCount() const 
 {	
 	return zenMath::BitsCount( mIndexUsed ); 
 }
@@ -35,7 +35,7 @@ bool zHamt<TKey, TValue, TIndex, TIndexBits>::Node::IsUsedIndex( zUInt _uNodeInd
 //! @brief Get in which slot a Node Index is stored
 //-------------------------------------------------------------------------------------------------
 template<class TKey, class TValue, class TIndex, int TIndexBits>
-zUInt zHamt<TKey, TValue, TIndex, TIndexBits>::Node::GetSlotID( zUInt _uNodeIndex ) const 
+zU32 zHamt<TKey, TValue, TIndex, TIndexBits>::Node::GetSlotID( zUInt _uNodeIndex ) const 
 { 
 	// SlotID is amount of Active Index up to this NodeIndex
 	return zenMath::BitsCount( static_cast<TIndex>(mIndexUsed & ((TIndex(1)<<_uNodeIndex)-1)) ); 
@@ -165,9 +165,9 @@ void zHamt<TKey, TValue, TIndex, TIndexBits>::Iterator::operator--()
 //==================================================================================================
 template<class TKey, class TValue, class TIndex, int TIndexBits>
 zHamt< TKey, TValue, TIndex, TIndexBits>::zHamt()
-: mpRootNode(NULL)
+: mpRootNode(nullptr)
 , muCount(0)
-, mpDeleteItemCB(NULL)
+, mpDeleteItemCB(nullptr)
 { 
 	ZENStaticAssertMsg( kuKeyBits >= kuSlotCount,"Size of Index not big enough to contain '1<<TIndexBits' Index, check template definition" ); 
 }
@@ -180,9 +180,9 @@ zHamt< TKey, TValue, TIndex, TIndexBits>::zHamt()
 //==================================================================================================
 template<class TKey, class TValue, class TIndex, int TIndexBits>
 zHamt< TKey, TValue, TIndex, TIndexBits>::zHamt( zUInt _uReservePool )
-: mpRootNode(NULL)
+: mpRootNode(nullptr)
 , muCount(0)
-, mpDeleteItemCB(NULL)
+, mpDeleteItemCB(nullptr)
 {
 	ZENStaticAssertMsg( kuKeyBits >= kuSlotCount,"Size of Index not big enough to contain '1<<TIndexBits' Index, check template definition" ); 
 	Init(_uReservePool);
@@ -317,7 +317,10 @@ bool zHamt< TKey, TValue, TIndex, TIndexBits>::SetReplace(const TKey _Key, const
 	bool bFound = GetNode( _Key, ppParentNode, uNodeIndex, uSlotID, uDepth );
 	muCount		+= bFound ? 0 : 1;
 	if( bFound )
+	{
 		_OldValueOut = (*ppParentNode)->mpSlots[uSlotID].Value();
+
+	}
 	SetSlotValue( _Key, _Value, ppParentNode, uNodeIndex, uSlotID, uDepth );
 	return bFound;
 }
@@ -444,7 +447,7 @@ bool zHamt< TKey, TValue, TIndex, TIndexBits>::Unset(const TKey _Key)
 
 	while( pNode )
 	{
-		zUInt uNewSlotCount = pNode->GetSlotCount()-1;
+		zU32 uNewSlotCount = pNode->GetSlotCount()-1;
 		// No slot left in child node, after we remove the entry, update parent to refer to it
 		if( uNewSlotCount == 0 && uDepth>0 )
 		{
@@ -459,7 +462,7 @@ bool zHamt< TKey, TValue, TIndex, TIndexBits>::Unset(const TKey _Key)
 			//Copy previous elements to new node
 			for(zUInt i=0; i<uNewSlotCount; ++i)
 			{
-				zU32 uOldSlotID			= (i >= uSlotID[uDepth]) ? i+1 : i;
+				zUInt uOldSlotID		= (i >= uSlotID[uDepth]) ? i+1 : i;
 				pNewNode->mpSlots[i]	= pNode->mpSlots[uOldSlotID];
 				pNewNode->mSlotLeaf		|= TIndex(pNode->IsLeafSlot(uOldSlotID)) << i;
 			}
@@ -531,7 +534,7 @@ TKey zHamt< TKey, TValue, TIndex, TIndexBits>::GetFirstUnusedKey()const
 {
 	Iterator It;
 	GetFirst(It);
-	zUInt currentKey(0);	
+	TIndex currentKey(0);
 	while( currentKey == It.GetKey() )
 	{
 		currentKey += 1;
@@ -670,7 +673,7 @@ void zHamt< TKey, TValue, TIndex, TIndexBits>::Import( const zArrayBase<TKey>& _
 //! @return		- Item count
 //==================================================================================================
 template<class TKey, class TValue, class TIndex, int TIndexBits>
-zUInt zHamt< TKey, TValue, TIndex, TIndexBits>::Count() const
+zU32 zHamt< TKey, TValue, TIndex, TIndexBits>::Count() const
 {
 	return muCount;
 }
@@ -704,7 +707,7 @@ typename zHamt<TKey, TValue, TIndex, TIndexBits>::Node* zHamt<TKey, TValue, TInd
 //! @return		The NodeIndex of this key, at depth 'auDepth'
 //==================================================================================================
 template<class TKey, class TValue, class TIndex, int TIndexBits>
-zUInt zHamt< TKey, TValue, TIndex, TIndexBits>::GetNodeIndex( const TKey _uKey, zUInt _uDepth ) const
+zU32 zHamt< TKey, TValue, TIndex, TIndexBits>::GetNodeIndex( const TKey _uKey, zUInt _uDepth ) const
 {
 	int iShift	= (kuKeyBits-TIndexBits)-(_uDepth*TIndexBits);
 	iShift		= iShift > 0 ? iShift : 0;
@@ -869,6 +872,7 @@ TValue* zHamt< TKey, TValue, TIndex, TIndexBits>::SetSlotValue(TKey _Key, const 
 			uNodeIndexOld							= GetNodeIndex(prevSlot.Key, ++_uDepth);
 			uNodeIndexNew							= GetNodeIndex(_Key, _uDepth);
 		}
+		
 		// Store the value and displaced value into this node
 		pNewNode													= CreateEmptyNode(2);
 		pNewNode->mIndexUsed										= (TIndex(1)<<uNodeIndexOld) | (TIndex(1)<<uNodeIndexNew);
@@ -879,7 +883,6 @@ TValue* zHamt< TKey, TValue, TIndex, TIndexBits>::SetSlotValue(TKey _Key, const 
 		pNewNode->mpSlots[(uNodeIndexNew > uNodeIndexOld)].Value()	= _Value;
 		pValue														= &pNewNode->mpSlots[(uNodeIndexNew > uNodeIndexOld)].Value();
 		pNode->mpSlots[_uSlotID].pChildNode							= pNewNode;
-				
 	}	
 	return pValue;
 }

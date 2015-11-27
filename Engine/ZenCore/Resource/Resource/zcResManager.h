@@ -12,7 +12,9 @@ namespace zcRes
 	public:		
 		zenRes::zResourceRef				GetResource				(const zResID& _ResID, bool _bSupportDefault=TRUE);
 		zenRes::zResourceRef				GetResourceAnySource	(const zResID& _ResID, bool _bSupportDefault=TRUE);		
-		zenRes::zResourceRef				Add						(zenRes::zResource* _pResource);
+		void								Add						(zenRes::zResource* _pResource);
+		void								Remove					(const zResID& _ResID);
+
 	protected:
 		zMap<zenRes::zResource*>::Key64		mdResources;										//!< All resource currently loaded
 		zenRes::zResource*					maResourcesDefault[zenConst::keResType__Invalid+1];	//!< Default resource used when resource at a key entry isn't loaded

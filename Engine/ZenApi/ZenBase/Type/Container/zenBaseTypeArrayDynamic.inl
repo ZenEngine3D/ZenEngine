@@ -71,6 +71,12 @@ zUInt zArrayDynamic<TType, TGrowthPolicy>::SetCount(zUInt _uCount)
 }
 
 template<class TType, GrowthPolicyFunction TGrowthPolicy>
+zUInt zArrayDynamic<TType, TGrowthPolicy>::IncCount(zUInt _uCountAddtional)
+{
+	return SetCount( muCount + _uCountAddtional);
+}
+
+template<class TType, GrowthPolicyFunction TGrowthPolicy>
 zUInt zArrayDynamic<TType, TGrowthPolicy>::SetCountNoConstructor(zUInt _uCount)
 {
 	if( _uCount > muCountReserved )	{GrowNoConstructor(_uCount); muCount = _uCount;}

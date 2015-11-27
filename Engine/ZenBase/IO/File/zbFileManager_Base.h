@@ -42,9 +42,9 @@ namespace zbFile
 	protected:	
 		ZENInline void					FindOffsets();
 		mutable zArrayDynamic<wchar_t>	mzFilename;			//!< Contains filename string, +2 chars to handle no offset for some filename component (ext, parentdir, ...)
-		zU16							muOffsetName;		//!< Offset to filename,extension
-		zU16							muOffsetParentPath;	//!< Offset to parent folder, filename, extension
-		zU16							muOffsetExt;		//!< Offset to extension
+		zI16							muOffsetName;		//!< Offset to filename,extension
+		zI16							muOffsetParentPath;	//!< Offset to parent folder, filename, extension
+		zI16							muOffsetExt;		//!< Offset to extension
 	};
 
 }

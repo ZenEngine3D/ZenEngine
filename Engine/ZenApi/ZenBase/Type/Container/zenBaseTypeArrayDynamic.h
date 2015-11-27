@@ -21,7 +21,8 @@ namespace zen { namespace zenType
 									zArrayDynamic(const zArrayDynamic& _Copy, zUInt _uExtraCount=0);
 		virtual						~zArrayDynamic();
 		virtual zUInt				SetCount(zUInt _uCount);
-		
+		zUInt						IncCount(zUInt _uCountAddtional);
+
 		void						operator+=( const zArrayBase<TType>& _ArrayAdd );
 		void						Push(const TType& _Copy);
 		void						Push(const TType* _Copy, zUInt _uCount);
@@ -33,7 +34,7 @@ namespace zen { namespace zenType
 		void						Reserve(zUInt _uCount);		
 		zUInt						ReservedCount()const;
 		zUInt						ReservedSize()const;
-	
+		
 	protected:
 		ZENInline zUInt				AppendInternal(const TType* _pCopy, zUInt _uCount);		
 		void						Shrink( );											//!< @brief	Reduce array size when needed

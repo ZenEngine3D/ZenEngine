@@ -23,9 +23,9 @@ zFlag<TEnumFlag, TEnumMax, TStorage>::zFlag(TStorage _Mask)
 };
 
 template<typename TEnumFlag, int TEnumMax, typename TStorage>
-const zFlag<TEnumFlag, TEnumMax, TStorage>& zFlag<TEnumFlag, TEnumMax, TStorage>::operator= (const zFlag<TEnumFlag, TEnumMax, TStorage>& _Cpy)		
+const zFlag<TEnumFlag, TEnumMax, TStorage>& zFlag<TEnumFlag, TEnumMax, TStorage>::operator= (const zFlag<TEnumFlag, TEnumMax, TStorage>& _Copy)		
 { 
-	muFlags  = _Cpy.muFlags;	
+	muFlags  = _Copy.muFlags;
 	return *this;
 }
 
@@ -65,21 +65,37 @@ const zFlag<TEnumFlag, TEnumMax, TStorage>& zFlag<TEnumFlag, TEnumMax, TStorage>
 }
 
 template<typename TEnumFlag, int TEnumMax, typename TStorage>
-zFlag<TEnumFlag, TEnumMax, TStorage> zFlag<TEnumFlag, TEnumMax, TStorage>::operator&(const zFlag<TEnumFlag, TEnumMax, TStorage>& _And)		
-{ 
-	return zFlag(muFlags & _And.muFlags);
+zFlag<TEnumFlag, TEnumMax, TStorage> zFlag<TEnumFlag, TEnumMax, TStorage>::operator+ (const zFlag<TEnumFlag, TEnumMax, TStorage>& _Add)const
+{
+	zFlag Copy = *this;
+	Copy += _Add;
+	return Copy;
 }
 
 template<typename TEnumFlag, int TEnumMax, typename TStorage>
-zFlag<TEnumFlag, TEnumMax, TStorage> zFlag<TEnumFlag, TEnumMax, TStorage>::operator|(const zFlag<TEnumFlag, TEnumMax, TStorage>& _And)		
-{ 
-	return zFlag(muFlags | _And.muFlags);
+zFlag<TEnumFlag, TEnumMax, TStorage> zFlag<TEnumFlag, TEnumMax, TStorage>::operator- (const zFlag<TEnumFlag, TEnumMax, TStorage>& _Rem)const
+{
+	zFlag Copy = *this;
+	Copy -= _Rem;
+	return Copy;
 }
 
 template<typename TEnumFlag, int TEnumMax, typename TStorage>
-zFlag<TEnumFlag, TEnumMax, TStorage> zFlag<TEnumFlag, TEnumMax, TStorage>::operator^(const zFlag<TEnumFlag, TEnumMax, TStorage>& _And)		
+zFlag<TEnumFlag, TEnumMax, TStorage> zFlag<TEnumFlag, TEnumMax, TStorage>::operator&(const zFlag<TEnumFlag, TEnumMax, TStorage>& _CmpFlag)const
 { 
-	return zFlag(muFlags ^ _And.muFlags);
+	return zFlag(muFlags & _CmpFlag.muFlags);
+}
+
+template<typename TEnumFlag, int TEnumMax, typename TStorage>
+zFlag<TEnumFlag, TEnumMax, TStorage> zFlag<TEnumFlag, TEnumMax, TStorage>::operator|(const zFlag<TEnumFlag, TEnumMax, TStorage>& _CmpFlag)const
+{ 
+	return zFlag(muFlags | _CmpFlag.muFlags);
+}
+
+template<typename TEnumFlag, int TEnumMax, typename TStorage>
+zFlag<TEnumFlag, TEnumMax, TStorage> zFlag<TEnumFlag, TEnumMax, TStorage>::operator^(const zFlag<TEnumFlag, TEnumMax, TStorage>& _CmpFlag)const
+{ 
+	return zFlag(muFlags ^ _CmpFlag.muFlags);
 }
 
 template<typename TEnumFlag, int TEnumMax, typename TStorage>
@@ -127,45 +143,52 @@ bool zFlag<TEnumFlag, TEnumMax, TStorage>::operator!=( const zFlag<TEnumFlag, TE
 }
 
 template<typename TEnumFlag, int TEnumMax, typename TStorage>
-zUInt zFlag<TEnumFlag, TEnumMax, TStorage>::CountActive()
+zU8 zFlag<TEnumFlag, TEnumMax, TStorage>::CountActive()
 {
 	return zenMath::BitsCount(muFlags);
 }
 
 template<typename TEnumFlag, int TEnumMax, typename TStorage>
-zUInt zFlag<TEnumFlag, TEnumMax, TStorage>::CountInactive()
+zU8 zFlag<TEnumFlag, TEnumMax, TStorage>::CountInactive()
 {
 	return (TEnumMax-1) - zenMath::BitsCount(muFlags);
 }
 
-/*
 template<typename TEnumFlag, int TEnumMax, typename TStorage>
-const zFlag<TEnumFlag, TEnumMax, TStorage>& zFlag<TEnumFlag, TEnumMax, TStorage>::ForceSet(TStorage _FlagValues)
+template<typename... Ts>
+zFlag<TEnumFlag, TEnumMax, TStorage>::zFlag(Ts... r)
 {
-	CheckValid(_FlagValues);
-	muFlags = _FlagValues;
-	return *this;
-}
-*/
-
-template<typename TEnumFlag, int TEnumMax, typename TStorage>
-ZENInlineForce void zFlag<TEnumFlag, TEnumMax, TStorage>::CheckValid(TStorage _Value)
-{
-	ZENAssertMsg( (_Value & (~((TStorage(1)<<TEnumMax)-1)))==0, "Using an enum value higher than allowed");
+	muFlags = MakeFlag(r...);
 }
 
 template<typename TEnumFlag, int TEnumMax, typename TStorage>
-bool zFlag<TEnumFlag, TEnumMax, TStorage>::Any( TStorage _uFlags )
+template<typename... Ts>
+bool zFlag<TEnumFlag, TEnumMax, TStorage>::Any(Ts... r)const
 {
-	CheckValid(_uFlags);		
-	return (muFlags & _uFlags) != 0;
+	TStorage uFlagCmp = MakeFlag(r...);
+	return (muFlags & uFlagCmp) != 0;
 }
 
 template<typename TEnumFlag, int TEnumMax, typename TStorage>
-bool zFlag<TEnumFlag, TEnumMax, TStorage>::All( TStorage _uFlags )
+template<typename... Ts>
+bool zFlag<TEnumFlag, TEnumMax, TStorage>::All(Ts... r)const
 {
-	CheckValid(_uFlags);		
-	return (muFlags & _uFlags) == _uFlags;
+	TStorage uFlagCmp = MakeFlag(r...);
+	return (muFlags & uFlagCmp) == uFlagCmp;
+}
+
+template<typename TEnumFlag, int TEnumMax, typename TStorage>
+constexpr TStorage zFlag<TEnumFlag, TEnumMax, TStorage>::MakeFlag(TEnumFlag _Value)
+{
+	ZENAssertMsg((_Value & (~((TStorage(1) << TEnumMax) - 1))) == 0, "Using an enum value higher than allowed");
+	return TStorage(1) << _Value;
+}
+
+template<typename TEnumFlag, int TEnumMax, typename TStorage>
+template<typename... Ts>
+constexpr TStorage zFlag<TEnumFlag, TEnumMax, TStorage>::MakeFlag(TEnumFlag Value, Ts... r)
+{
+	return MakeFlag(Value) | MakeFlag(r...);
 }
 
 } } //namespace zen, Type

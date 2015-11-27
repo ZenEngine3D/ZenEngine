@@ -15,9 +15,9 @@ bool zTask::IsRunning()
 	return mbRunning.load() == true;
 }
 
-zU32 zTask::GetElapsedUSec()
+zUInt zTask::GetElapsedUSec()
 {
-	return muElapsed + (IsRunning() ? zU32(zenSys::GetTimeUSec() - muProfilingTimer) : 0);
+	return muElapsed + (IsRunning() ? (zenSys::GetTimeUSec() - muProfilingTimer) : 0);
 }
 
 }}

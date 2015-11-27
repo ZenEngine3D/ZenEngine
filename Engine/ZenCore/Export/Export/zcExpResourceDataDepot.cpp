@@ -30,13 +30,18 @@ const zenConst::eEngineVersion gResourceVersions[]=
 	zenConst::keEngineVersion_Initial,		//keResType_GfxRenderPass,
 };
 
+void ResetResourceDataReference(zMap<zEngineRef<ResourceData>>::Key64& _dResData, zEngineRef<ResourceData>& _rResDataDel)
+{
+	_rResDataDel = nullptr;
+}
+
 //=================================================================================================
 //! @brief		Constructor
 //=================================================================================================
 DepotResourceData::DepotResourceData()
-: mdResourceData(256)
+//: mdResourceData(256)
 {	
-	ZENStaticAssert( ZENArrayCount(gResourceVersions)==zenConst::keResType__Count );
+	ZENStaticAssert( ZENArrayCount(gResourceVersions)==zenConst::keResType__Count );	
 }
 
 //=================================================================================================
@@ -47,7 +52,8 @@ DepotResourceData::DepotResourceData()
 //=================================================================================================
 bool DepotResourceData::Load()
 {	
-	mdResourceData.SetDefaultValue(NULL);
+	//mdResourceData.SetDefaultValue(nullptr);
+	//mdResourceData.SetDeleteItemCB(ResetResourceDataReference);
 	return true;
 }
 
@@ -69,9 +75,16 @@ bool DepotResourceData::Unload()
 void DepotResourceData::SetItem(const zEngineRef<ResourceData>& _rResData)
 {
 	ZENAssert(_rResData.IsValid());
-	zEngineRef<ResourceData> rResDataOld;
-	mdResourceData.SetReplace(_rResData->mResID.GetHashID(), _rResData, rResDataOld);
+	//mdResourceData.Set(_rResData->mResID.GetHashID(), _rResData);
+	mdResourceData[_rResData->mResID.GetHashID()] = _rResData;
 } 
+
+void DepotResourceData::ClearItem(const zResID& _ResID)
+{
+	ZENAssert(_ResID.IsValid());
+	//mdResourceData.Unset(_ResID.GetHashID());
+	mdResourceData.erase(_ResID.GetHashID());
+}
 
 //=================================================================================================
 //! @brief		
@@ -79,10 +92,11 @@ void DepotResourceData::SetItem(const zEngineRef<ResourceData>& _rResData)
 //-------------------------------------------------------------------------------------------------
 //! @return 	
 //=================================================================================================
-zEngineConstRef<ResourceData> DepotResourceData::GetItemBase(const zResID _ResID)
+zEngineConstRef<ResourceData> DepotResourceData::GetItemBase(const zResID& _ResID)
 {
 	zEngineRef<ResourceData> rResData;
-	mdResourceData.Get( _ResID.GetHashID(), rResData );
+	//mdResourceData.Get( _ResID.GetHashID(), rResData );
+	rResData = mdResourceData[_ResID.GetHashID()];
 	return rResData;
 } 
 
@@ -96,12 +110,29 @@ zEngineConstRef<ResourceData> DepotResourceData::GetItemBase(const zResID _ResID
 //! @param		_ResID				- zResID to look for
 //! @return 	void* to ResourceData
 //=================================================================================================
-zEngineConstRef<ResourceData> DepotResourceData::GetItemBaseAnySource(const zResID _ResID)
+zEngineConstRef<ResourceData> DepotResourceData::GetItemBaseAnySource(const zResID& _ResID)
 {
 	ZENAssert(_ResID.IsValid());
 	zEngineRef<ResourceData> rResData;
 	zResID anySourceResID(_ResID);
 
+	std::map<zU64, zEngineRef<ResourceData>, std::less<zU64>>::iterator itemIt;
+	anySourceResID.SetSource(zenConst::keResSource_Loaded);
+	itemIt = mdResourceData.find( _ResID.GetHashID() );
+	if( itemIt != mdResourceData.end() )
+		return itemIt->second;
+
+	anySourceResID.SetSource(zenConst::keResSource_Runtime);
+	itemIt = mdResourceData.find(_ResID.GetHashID());
+	if (itemIt != mdResourceData.end())
+		return itemIt->second;
+
+	anySourceResID.SetSource(zenConst::keResSource_Offline);
+	itemIt = mdResourceData.find(_ResID.GetHashID());
+	if (itemIt != mdResourceData.end())
+		return itemIt->second;
+
+	/*
 	anySourceResID.SetSource(zenConst::keResSource_Loaded);
 	if( mdResourceData.Get(_ResID.GetHashID(), rResData) )	
 		return rResData;
@@ -113,7 +144,7 @@ zEngineConstRef<ResourceData> DepotResourceData::GetItemBaseAnySource(const zRes
 	anySourceResID.SetSource(zenConst::keResSource_Offline);	
 	if( mdResourceData.Get(_ResID.GetHashID(), rResData) )	
 		return rResData;
-		
+	*/
 	return NULL;	
 }
 
@@ -124,9 +155,10 @@ zEngineConstRef<ResourceData> DepotResourceData::GetItemBaseAnySource(const zRes
 //! @param		_ResID				- zResID to look for
 //! @return 	true if valid
 //=================================================================================================
-bool DepotResourceData::IsValid(const zResID _ResID)
+bool DepotResourceData::IsValid(const zResID& _ResID)
 {
-	return mdResourceData.Exist(_ResID.GetHashID());
+	return mdResourceData.find(_ResID.GetHashID()) != mdResourceData.end();
+	//return mdResourceData.Exist(_ResID.GetHashID());
 }
 
 //=================================================================================================
@@ -142,7 +174,8 @@ bool DepotResourceData::IsValid(const zArrayBase<zResID>& _aResID)
 	const zResID* pResIDEnd	= _aResID.Last()+1;
 	while( pResIdCur < pResIDEnd )
 	{
-		if( !mdResourceData.Exist(pResIdCur->GetHashID()) )
+		//if( !mdResourceData.Exist(pResIdCur->GetHashID()) )
+		if( mdResourceData.find(pResIdCur->GetHashID()) == mdResourceData.end() )
 			return false;
 		++pResIdCur;
 	}

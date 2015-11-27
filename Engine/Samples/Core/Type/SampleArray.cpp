@@ -45,8 +45,7 @@ namespace sample
 		zenIO::Log(zenConst::keLog_Game, "Unsorted  :");
 		for(zUInt idx(0), count(uTestSort.Count()); idx<count; ++idx )
 			zenIO::Printf(zenConst::keLog_Game, " %03i", uTestSort[idx] );
-	#if 0
-	//! @todo feature re-add sorting
+
 		uTestSort.Sort();
 		zUInt uPrevValue(0);
 		zenIO::Log(zenConst::keLog_Game, "Sorted    :");
@@ -55,7 +54,7 @@ namespace sample
 			ZENAssert(	(uPrevValue < uTestSort[idx]) ||					//Previous value always smaller than current
 						(uPrevValue == uTestSort[idx] && uPrevValue==2));	//Or current is equal to previous when it's 2 (only double inserted in array)
 			zenIO::Printf(zenConst::keLog_Game, " %03i", uTestSort[idx] );
+			uPrevValue = uTestSort[idx];
 		}
-	#endif
 	}
 }

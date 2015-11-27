@@ -89,6 +89,7 @@ namespace zen { namespace zenRes {
 			ConfigStencil		meStencilConfigBack;
 		};
 		
+		//! @todo Clean Use Raster Config instead of reference?
 		static zGfxRenderPass	Create(const zString& _zStageName, zU8 _uPassPriority, const ConfigColorRT& _RTColor, const ConfigDepthRT& _RTDepth, const zGfxStateRasterizer& _rStateRaster, const zVec2U16& _vDim = zVec2U16(0xFFFF, 0xFFFF), const zVec2S16& _vOrigin = zVec2S16(0,0));
 		static zGfxRenderPass	Create(const zString& _zStageName, zU8 _uPassPriority, const zArrayBase<zenRes::zGfxRenderPass::ConfigColorRT>& _aRTColors, const ConfigDepthRT& _RTDepth, const zGfxStateRasterizer& _rStateRaster, const zVec2U16& _vDim = zVec2U16(0xFFFF, 0xFFFF), const zVec2S16& _vOrigin = zVec2S16(0,0));
 	};	
@@ -106,10 +107,11 @@ namespace zen { namespace zenRes
 										zGfxDrawcall();
 										zGfxDrawcall(const zGfxDrawcall& _Copy);		
 										zGfxDrawcall(zcGfx::Drawcall* _Drawcall);
-
-		zGfxDrawcall&					operator=(const zGfxDrawcall& _Copy);
-		zGfxDrawcall&					operator=(zcGfx::Drawcall* _pCopy);
 		
+		zGfxDrawcall&					operator=(zcGfx::Drawcall* _pCopy);
+		zGfxDrawcall&					operator=(const zGfxDrawcall& _Copy);
+		bool							zGfxDrawcall::operator>(const zenRes::zGfxDrawcall& _Cmp)const;
+		bool							zGfxDrawcall::operator>=(const zenRes::zGfxDrawcall& _Cmp)const;
 		static zGfxDrawcall				DrawMesh			(const zGfxRenderPass& _rRenderPass, float _fPriority, const zGfxMeshStrip&	_rMeshStrip);
 		static zGfxDrawcall				ClearColor			(const zGfxRenderPass& _rRenderPass, const float& _fPriority, const zGfxRenderTarget& _RTColor, const zVec4F& _vRGBA,  const zColorMask& _ColorMask=zenConst::kColorMaskRGBA, const zVec2S16& _vOrigin=zVec2S16(0,0), const zVec2U16& _vDim=zVec2U16(0,0) );
 		static zGfxDrawcall				ClearDepthStencil	(const zGfxRenderPass& _rRenderPass, float _fPriority, const zGfxRenderTarget& _rRTDepthStencil, bool _bClearDepth=true, float _fDepthValue=1, bool _bClearStencil=false, zU8 _uStencilValue=128);

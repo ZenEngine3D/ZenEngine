@@ -90,10 +90,10 @@ bool ExporterGfxShaderParamDefDX11_DX11::ExportWork(bool _bIsTHRTask)
 				zcExp::ShaderParamItemInfo Param;
 				switch( TypeDesc.Type )
 				{
-				case D3D_SVT_FLOAT:	Param.meType = zenConst::keShaderElemType_Float;	break;			
+				case D3D_SVT_FLOAT:	Param.meType = zenConst::keShaderElemType_Float;break;			
 				case D3D_SVT_INT:	Param.meType = zenConst::keShaderElemType_SInt;	break;
 				case D3D_SVT_UINT:	Param.meType = zenConst::keShaderElemType_UInt;	break;
-				case D3D_SVT_UINT8:	Param.meType = zenConst::keShaderElemType_UByte;	break;
+				case D3D_SVT_UINT8:	Param.meType = zenConst::keShaderElemType_UByte;break;
 				default: 			bValid = false;									break; 	//! @todo Missing: Support structure
 				//default: 			bValid = false; strncpy( mzLogDetail, "Unsupported Shader variable type.", keLogSizeDetail );	break;
 				}

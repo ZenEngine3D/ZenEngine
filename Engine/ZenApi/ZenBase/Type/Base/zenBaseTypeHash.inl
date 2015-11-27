@@ -5,12 +5,12 @@ namespace zen { namespace zenType {
 //=================================================================================================
 // HASH32
 //=================================================================================================
-zHash32& zHash32::Append(const char* _zString)
-{		
-	while( *_zString )
+zHash32& zHash32::Append(const char*  _zString)
+{
+	while (*_zString)
 	{
 		muHash ^= *_zString++;
-		muHash *= FNV32_Prime;
+		muHash *= keFNV32_Prime;
 	}
 	return *this;
 }
@@ -20,10 +20,10 @@ zHash32& zHash32::Append(const wchar_t* _zString)
 	while( *_zString )
 	{
 		muHash ^= (*_zString) & 0xFF;				
-		muHash *= FNV32_Prime;
+		muHash *= keFNV32_Prime;
 		++_zString;
 		muHash ^= (*_zString >> 8) & 0xFF;
-		muHash *= FNV32_Prime;
+		muHash *= keFNV32_Prime;
 		++_zString;
 	}
 	return *this;
@@ -36,22 +36,10 @@ zHash32& zHash32::Append(const void* _pData, zUInt _uSize)
 	while( pDataCur < pDataEnd )
 	{
 		muHash ^= *pDataCur++;
-		muHash *= FNV32_Prime;
+		muHash *= keFNV32_Prime;
 	}
 	return *this;
 }
-		
-/*
-zHash32& zHash32::Append( zHash32 _hHashToAdd)
-{	
-	zU8* pData = reinterpret_cast<zU8*>(&_hHashToAdd);
-	muHash ^= pData[0];	muHash *= FNV32_Prime;
-	muHash ^= pData[1];	muHash *= FNV32_Prime;
-	muHash ^= pData[2];	muHash *= FNV32_Prime;
-	muHash ^= pData[3];	muHash *= FNV32_Prime;
-	return *this;
-}
-*/
 
 bool zHash32::operator==(const zHash32& _hCmpr)	
 { 
@@ -79,7 +67,7 @@ zHash32::operator const zU32&()const
 }
 
 zHash32::zHash32()						
-: muHash(FNV32_Seed){}
+: muHash(keFNV32_Seed){}
 
 zHash32::zHash32(const zU32& _uCopy)				
 : muHash(_uCopy){}
@@ -87,26 +75,32 @@ zHash32::zHash32(const zU32& _uCopy)
 zHash32::zHash32(const zI32& _iCopy)				
 : muHash(_iCopy){}
 
+template<std::size_t TLen>
+zHash32::zHash32(const char(&_zString)[TLen])
+: muHash(HashFNV<zU32, keFNV32_Seed, keFNV32_Prime>(_zString))
+{
+}
+
 zHash32::zHash32(ConstCharWrapper _zStr)		
-: muHash(FNV32_Seed)
+: muHash(keFNV32_Seed)
 { 
 	Append(_zStr.mzStr); 
 }
 
-zHash32::zHash32(char* _zStr)					
-: muHash(FNV32_Seed)
-{ 
-	Append(_zStr); 
+zHash32::zHash32(char* _zString)
+: muHash(keFNV32_Seed)
+{
+	Append(_zString);
 }
 
 zHash32::zHash32(const wchar_t* _zStr)			
-: muHash(FNV32_Seed)
+: muHash(keFNV32_Seed)
 { 
 	Append(_zStr); 
 }
 
 zHash32::zHash32(const void* _pData, zUInt _uSize)
-: muHash(FNV32_Seed)
+: muHash(keFNV32_Seed)
 { 
 	Append(_pData, _uSize); 
 }
@@ -115,11 +109,11 @@ zHash32::zHash32(const void* _pData, zUInt _uSize)
 // HASH64
 //=================================================================================================		
 zHash64& zHash64::Append(const char* _zString)
-{		
-	while( *_zString )
+{
+	while (*_zString)
 	{
 		muHash ^= *_zString++;
-		muHash *= FNV64_Prime;
+		muHash *= keFNV64_Prime;
 	}
 	return *this;
 }
@@ -129,10 +123,10 @@ zHash64& zHash64::Append(const wchar_t* _zString)
 	while( *_zString )
 	{
 		muHash ^= (*_zString) & 0xFF;				
-		muHash *= FNV64_Prime;
+		muHash *= keFNV64_Prime;
 		++_zString;
 		muHash ^= (*_zString >> 8) & 0xFF;
-		muHash *= FNV64_Prime;
+		muHash *= keFNV64_Prime;
 		++_zString;
 	}
 	return *this;
@@ -145,24 +139,10 @@ zHash64& zHash64::Append(const void* _pData, zUInt _uSize )
 	while( pDataCur < pDataEnd )
 	{
 		muHash ^= *pDataCur++;
-		muHash *= FNV64_Prime;
+		muHash *= keFNV64_Prime;
 	}
 	return *this;
 }
-/*
-zHash64& zHash64::Append(zHash64 _hHashToAdd)
-{	
-	zU8* pData = reinterpret_cast<zU8*>(&_hHashToAdd);
-	muHash ^= pData[0];	muHash *= FNV64_Prime;
-	muHash ^= pData[1];	muHash *= FNV64_Prime;
-	muHash ^= pData[2];	muHash *= FNV64_Prime;
-	muHash ^= pData[3];	muHash *= FNV64_Prime;
-	muHash ^= pData[4];	muHash *= FNV64_Prime;
-	muHash ^= pData[5];	muHash *= FNV64_Prime;
-	muHash ^= pData[6];	muHash *= FNV64_Prime;
-	muHash ^= pData[7];	muHash *= FNV64_Prime;
-	return *this;
-}*/
 
 bool zHash64::operator==(const zHash64& _hCmpr)	
 { 
@@ -190,7 +170,7 @@ zHash64::operator const zU64&()const
 }
 
 zHash64::zHash64()								
-: muHash(FNV64_Seed)
+: muHash(keFNV64_Seed)
 {}
 
 zHash64::zHash64(const zHash64& _hCopy)			
@@ -205,26 +185,31 @@ zHash64::zHash64(const zI64& _iCopy)
 : muHash(_iCopy)
 {}
 
+template<std::size_t TLen>
+zHash64::zHash64(const char(&_zString)[TLen])
+: muHash(HashFNV<zU64, keFNV64_Seed, keFNV64_Prime>(_zString))
+{}
+
 zHash64::zHash64(ConstCharWrapper _zStr)		
-: muHash(FNV64_Seed)
+: muHash(keFNV64_Seed)
 { 
 	Append(_zStr.mzStr);	
 }
 
-zHash64::zHash64(char* _zStr)					
-: muHash(FNV64_Seed)
-{ 
-	Append(_zStr);			
+zHash64::zHash64(char* _zString)
+: muHash(keFNV64_Seed)
+{
+	Append(_zString);
 }
 
 zHash64::zHash64(const wchar_t* _zStr)				
-: muHash(FNV64_Seed)
+: muHash(keFNV64_Seed)
 { 
 	Append(_zStr);			
 }
 
 zHash64::zHash64(const void* _pData, zUInt _uSize)	
-: muHash(FNV64_Seed)
+: muHash(keFNV64_Seed)
 { 
 	Append(_pData, _uSize); 
 }

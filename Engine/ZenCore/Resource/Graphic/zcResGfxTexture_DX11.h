@@ -5,9 +5,9 @@
 namespace zcRes
 {
 
-class GfxTexture2dProxy_DX11 : public zRefCountedAutoDel
+class GfxTexture2dProxy_DX11 : public zRefCounted
 {
-ZENClassDeclare(GfxTexture2dProxy_DX11, zRefCountedAutoDel)
+ZENClassDeclare(GfxTexture2dProxy_DX11, zRefCounted)
 public:
 											GfxTexture2dProxy_DX11();
 	virtual									~GfxTexture2dProxy_DX11();												

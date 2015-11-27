@@ -18,13 +18,6 @@ namespace zen { namespace zenType {
 		zI32				miRefCount;		
 	};
 	
-	class zRefCountedAutoDel : public zRefCounted
-	{
-	ZENClassDeclare(zRefCountedAutoDel, zRefCounted);
-	protected:
-		virtual	 void		ReferenceNoneCB();
-	};
-
 	class zReference
 	{
 	ZENClassDeclareNoParent(zReference)

@@ -4,20 +4,20 @@
 
 namespace zcRes
 {
-	class GfxWindowProxy_DX11 : public zRefCountedAutoDel
+	class GfxWindowProxy_DX11 : public zRefCounted
 	{
-	ZENClassDeclare(GfxWindowProxy_DX11, zRefCountedAutoDel)
+	ZENClassDeclare(GfxWindowProxy_DX11, zRefCounted)
 	public:
-		virtual								~GfxWindowProxy_DX11();												
-		bool								Initialize(class GfxWindow& _Owner);		
-		void								PerformResize();
+		virtual							~GfxWindowProxy_DX11();												
+		bool							Initialize(class GfxWindow& _Owner);		
+		void							PerformResize();
 		
-		IDXGISwapChain*						mDX11pSwapChain			= nullptr;
-		GfxRenderTargetProxyRef				mrProxBackbufferColor	= nullptr;
-		zenConst::eTextureFormat			meBackbufferColorFormat	= zenConst::keTexFormat_RGBA8; //! @todo clean feature expose desired format in ResData
-		zVec2U16							mvSize					= zVec2U16(0,0);
-		zVec2U16							mvPendingResize			= zVec2U16(0,0);
-		ZENDbgCode(class GfxWindow*			mpOwner);
+		IDXGISwapChain*					mDX11pSwapChain				= nullptr;
+		GfxRenderTargetRef				mrProxBackbufferColor[2]	= {nullptr, nullptr};
+		zenConst::eTextureFormat		meBackbufferColorFormat		= zenConst::keTexFormat_RGBA8; //! @todo clean feature expose desired format in ResData
+		zVec2U16						mvSize						= zVec2U16(0,0);
+		zVec2U16						mvPendingResize				= zVec2U16(0,0);
+		ZENDbgCode(class GfxWindow*		mpOwner);
 	};
 }
 

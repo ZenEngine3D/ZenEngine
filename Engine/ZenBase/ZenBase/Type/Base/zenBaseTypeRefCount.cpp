@@ -8,33 +8,29 @@ zRefCounted::~zRefCounted()
 
 void zRefCounted::ReferenceNoneCB()
 {
-}
-	
-void zRefCountedAutoDel::ReferenceNoneCB()
-{
 	delete this;
 }
-
+	
 zReference::zReference()
-: mpReference(NULL)
+: mpReference(nullptr)
 {
 }
 
 zReference::zReference(zRefCounted* _pReference)
-: mpReference(NULL)
+: mpReference(nullptr)
 {
 	*this = _pReference;	
 }
 
 zReference::zReference(const zReference& _Copy)
-: mpReference(NULL)
+: mpReference(nullptr)
 {
 	*this = _Copy.mpReference;
 }
 
 zReference::~zReference()
 {
-	*this = NULL;
+	*this = nullptr;
 }
 
 const zReference& zReference::operator=(zRefCounted* _pReference)

@@ -97,22 +97,22 @@ namespace zen { namespace zenMath
 				sBitReverseTable64bits[ (_uValue>>32)&0xFF ]<<24	| sBitReverseTable64bits[ (_uValue>>40)&0xFF ]<<16 | sBitReverseTable64bits[ (_uValue>>48)&0xFF ]<<8| sBitReverseTable64bits[ (_uValue>>56)&0xFF ];
 	}
 
-	zUInt BitsCount( zU8 _uValue )
+	zU8 BitsCount( zU8 _uValue )
 	{
-		return __popcnt16((zU16)_uValue);
+		return static_cast<zU8>( __popcnt16((zU16)_uValue) );
 	}
 
-	zUInt BitsCount( zU16 _uValue )
+	zU8 BitsCount( zU16 _uValue )
 	{
-		return __popcnt16(_uValue);
+		return static_cast<zU8>(__popcnt16(_uValue));
 	}
 
-	zUInt BitsCount( zU32 _uValue )
+	zU8 BitsCount( zU32 _uValue )
 	{
-		return __popcnt(_uValue);
+		return static_cast<zU8>(__popcnt(_uValue));
 	}
 
-	zUInt BitsCount( zU64 _uValue )
+	zU8 BitsCount( zU64 _uValue )
 	{
 	#if _M_AMD64
 		return static_cast<zUInt>(__popcnt64(_uValue));

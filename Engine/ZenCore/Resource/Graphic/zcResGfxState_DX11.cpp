@@ -101,7 +101,8 @@ namespace zcRes
 		const GfxStateRasterizer::ResDataRef& rResData = _Owner.GetResData();
 		ZENAssert(rResData.IsValid());
 		ZENDbgCode(mpOwner = &_Owner);
-		HRESULT hr = zcMgr::GfxRender.DX11GetDevice()->CreateRasterizerState( &rResData->mRasterizerDesc, &mpRasterizerState );
+		HRESULT hr			= zcMgr::GfxRender.DX11GetDevice()->CreateRasterizerState( &rResData->mRasterizerDesc, &mpRasterizerState );
+		mbScreenScissorOn	= rResData->mRasterizerDesc.ScissorEnable > 0;
 		return SUCCEEDED(hr);
 	}
 }

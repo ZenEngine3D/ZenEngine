@@ -34,19 +34,26 @@ protected:
 	zenRes::zGfxIndex				mrCubeIndex;	
 	zenRes::zGfxShaderVertex		mrShaderVS;	
 	zenRes::zGfxShaderPixel			mrShaderPS;	
-	zenRes::zGfxShaderPixel			mrShaderPS2Output;		
 	zenRes::zGfxTexture2d			mrTexture;	
 	zenRes::zGfxSampler				mrSampler;	
 	zenRes::zGfxSampler				mrSampler2;		
 	zenRes::zGfxShaderBinding		mrShaderBind;
-	zenRes::zGfxShaderBinding		mrShader2OutputBind;
 	zenRes::zGfxMeshStrip			mrCube3MeshStrip;	
 
 	zenRes::zGfxRenderTarget		mrBackbufferDepth;
-	zenRes::zGfxStateBlend			mrStateBlend;
 	zenRes::zGfxStateRasterizer		mrStateRaster;
-	zenRes::zGfxRenderPass			mrRndPassTexture;
 	zenRes::zGfxRenderPass			mrRndPassFinal;
+
+	zenRes::zGfxStateRasterizer		mrUIRaster;  //! need to keep ref on it, untillref counting with only proxy fixed
+	zenRes::zGfxRenderPass			mrUIRndPass;
+	zenRes::zGfxTexture2d			mrUITexture;
+	zenRes::zGfxVertex				mrUIVertex;
+	zenRes::zGfxIndex				mrUIIndex;
+	zenRes::zGfxShaderVertex		mrUIVS;
+	zenRes::zGfxShaderPixel			mrUIPS;
+	zenRes::zGfxShaderBinding		mrUIShaderBind;
+	zenRes::zGfxMesh				mrUIMesh;
+	zenMath::Matrix					matUIOrthographic;
 };
 
 }

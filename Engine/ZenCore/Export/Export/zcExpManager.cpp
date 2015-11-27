@@ -65,7 +65,9 @@ zResID ManagerExport::CreateItem( zResID::ePlatformType _ePlatformType, zenConst
 	bool bExist(false);
 	zenConst::eResPlatform eExportPlatform	= maPlatforms[_ePlatformType];
 	_pExportInfoBase->mExportResID			= mpCallbackGetItemID[eExportPlatform][_eResourceType](eExportPlatform, _eResourceType, meSource, _pExportInfoBase, bExist);
-	return bExist ? _pExportInfoBase->mExportResID : mpCallbackCreateItem(_pExportInfoBase); 
+	zResID NewResID							= bExist ? _pExportInfoBase->mExportResID : mpCallbackCreateItem(_pExportInfoBase);
+	zenDel(_pExportInfoBase); //! @todo safety manage this better. RefCount? Stack Allocate without pool?
+	return NewResID;
 }
 
 //=================================================================================================

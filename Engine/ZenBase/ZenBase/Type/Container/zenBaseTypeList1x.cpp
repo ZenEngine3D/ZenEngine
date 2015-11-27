@@ -60,20 +60,10 @@ void zList1x::InsertAfter( zList1xNode* ZENRestrict _pAdd, zList1xNode* ZENRestr
 
 //==================================================================================================
 //! @brief		Return the first item of the list.
-//!-----------------------------------------------------------------------------
-//! @return		Next item. Equal to GetInvalid() if last item of the list.
-//==================================================================================================
-zList1xNode*	zList1xNode::LstNext()
-{
-	return mpLstNext;
-}
-
-//==================================================================================================
-//! @brief		Return the first item of the list.
 //--------------------------------------------------------------------------------------------------
 //! @return		First item of the list (check if == GetInvalid() for empty list).
 //==================================================================================================
-zList1xNode*	zList1x::GetHead() const
+zList1xNode* zList1x::GetHead() const
 {
 	return moFirst.mpLstNext;
 }
@@ -86,7 +76,7 @@ zList1xNode*	zList1x::GetHead() const
 //==================================================================================================
 const zList1xNode* zList1x::GetInvalid() const
 {
-	return NULL;
+	return nullptr;
 }
 
 //==================================================================================================
@@ -107,7 +97,7 @@ bool zList1x::IsEmpty() const
 zList1xNode*	zList1x::PopHead()
 {
 	zList1xNode* pItem	= moFirst.mpLstNext;
-	moFirst.mpLstNext	= moFirst.mpLstNext ? moFirst.mpLstNext->mpLstNext : &moFirst;
+	moFirst.mpLstNext	= pItem ? pItem->mpLstNext : nullptr;
 	return pItem;
 }
 
@@ -119,7 +109,7 @@ zList1xNode*	zList1x::PopHead()
 bool zList1x::Remove( zList1xNode* _pRemove )
 {
 	zList1xNode* pItemCur	= &moFirst;
-	zList1xNode* pItemPrev	= NULL;
+	zList1xNode* pItemPrev	= nullptr;
 	while( pItemCur )
 	{
 		pItemPrev	= pItemCur;
@@ -127,7 +117,7 @@ bool zList1x::Remove( zList1xNode* _pRemove )
 		if( pItemCur == _pRemove)
 		{
 			pItemPrev->mpLstNext	= pItemCur->mpLstNext;
-			pItemCur				= NULL;
+			pItemCur				= nullptr;
 			return true;
 		}		
 	}

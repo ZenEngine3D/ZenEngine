@@ -15,12 +15,12 @@ namespace zcExp
 	{
 	ZENClassDeclare(ResDataGfxRenderTarget, ResourceData)
 	public:
-											ResDataGfxRenderTarget(){mpBackbuffer=NULL;}
 		virtual bool						Serialize( zcExp::Serializer_Base& _Serializer ){return true;}		
-		IDXGISwapChain*						mpBackbuffer; //! @todo Change to windows res pointer
-		zenConst::eTextureFormat			meFormat;	
-		zVec2U16							mvDim;
-		bool								mbSRGB;
+		IDXGISwapChain*						mpBackbuffer	= nullptr; //! @todo Change to windows res pointer
+		zU8									muBackbufferId	= 0;
+		zenConst::eTextureFormat			meFormat		= zenConst::keTexFormat_RGBA8;	
+		zVec2U16							mvDim			= zVec2U16(1024,800);
+		bool								mbSRGB			= true;
 	};
 
 	class ExporterGfxRenderTarget : public ExporterBase

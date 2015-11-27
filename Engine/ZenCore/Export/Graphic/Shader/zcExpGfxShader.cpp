@@ -10,12 +10,12 @@ namespace zcExp
 		const zenRes::zShaderDefine* pEntry			= pExportInfo->maDefines.First();
 
 		zResID::NameHash hName;
-		hName.Append( pExportInfo->mzFilename );
-		hName.Append( pExportInfo->mzEntryname );
+		hName.Append((const char*)pExportInfo->mzFilename );
+		hName.Append((const char*)pExportInfo->mzEntryname );
 		for(zUInt idx(0), count(pExportInfo->maDefines.Count()); idx<count; ++idx, ++pEntry)
 		{
-			hName.Append(pEntry->mzName);
-			hName.Append(pEntry->mzValue);
+			hName.Append((const char*)pEntry->mzName);
+			hName.Append((const char*)pEntry->mzValue);
 		}
 
 		return zcExp::ValidateItemID(_ePlatform, _eType, _eSource, hName, _bExistOut);

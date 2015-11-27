@@ -4,9 +4,9 @@
 
 namespace zcRes
 {
-	class GfxSamplerProxy_DX11 : public zRefCountedAutoDel
+	class GfxSamplerProxy_DX11 : public zRefCounted
 	{
-	ZENClassDeclare(GfxSamplerProxy_DX11, zRefCountedAutoDel)
+	ZENClassDeclare(GfxSamplerProxy_DX11, zRefCounted)
 	public:
 												GfxSamplerProxy_DX11();
 		virtual									~GfxSamplerProxy_DX11();												
@@ -15,9 +15,9 @@ namespace zcRes
 		ZENDbgCode(class GfxSampler*			mpOwner);
 	};
 
-	class GfxStateBlendProxy_DX11 : public zRefCountedAutoDel
+	class GfxStateBlendProxy_DX11 : public zRefCounted
 	{
-	ZENClassDeclare(GfxStateBlendProxy_DX11, zRefCountedAutoDel)
+	ZENClassDeclare(GfxStateBlendProxy_DX11, zRefCounted)
 	public:
 												GfxStateBlendProxy_DX11();
 		virtual									~GfxStateBlendProxy_DX11();												
@@ -28,9 +28,9 @@ namespace zcRes
 		ZENDbgCode(class GfxStateBlend*			mpOwner);
 	};
 
-	class GfxStateDepthStencilProxy_DX11 : public zRefCountedAutoDel
+	class GfxStateDepthStencilProxy_DX11 : public zRefCounted
 	{
-	ZENClassDeclare(GfxStateDepthStencilProxy_DX11, zRefCountedAutoDel)
+	ZENClassDeclare(GfxStateDepthStencilProxy_DX11, zRefCounted)
 	public:
 												GfxStateDepthStencilProxy_DX11();
 		virtual									~GfxStateDepthStencilProxy_DX11();												
@@ -40,14 +40,15 @@ namespace zcRes
 		ZENDbgCode(class GfxStateDepthStencil*	mpOwner);
 	};
 
-	class GfxStateRasterizerProxy_DX11 : public zRefCountedAutoDel
+	class GfxStateRasterizerProxy_DX11 : public zRefCounted
 	{
-	ZENClassDeclare(GfxStateRasterizerProxy_DX11, zRefCountedAutoDel)
+	ZENClassDeclare(GfxStateRasterizerProxy_DX11, zRefCounted)
 	public:
 												GfxStateRasterizerProxy_DX11();
 		virtual									~GfxStateRasterizerProxy_DX11();												
 		bool									Initialize(class GfxStateRasterizer& _Owner);
-		ID3D11RasterizerState*					mpRasterizerState;
+		ID3D11RasterizerState*					mpRasterizerState;	
+		bool									mbScreenScissorOn;	//! @todo clean : remove this once proxy is collapsed with owner
 		ZENDbgCode(class GfxStateRasterizer*	mpOwner);
 	};
 

@@ -5,9 +5,9 @@
 namespace zcRes
 {
 
-class GfxVertexProxy_DX11 : public zRefCountedAutoDel
+class GfxVertexProxy_DX11 : public zRefCounted
 {
-ZENClassDeclare(GfxVertexProxy_DX11, zRefCountedAutoDel)
+ZENClassDeclare(GfxVertexProxy_DX11, zRefCounted)
 public:
 											GfxVertexProxy_DX11();
 	virtual									~GfxVertexProxy_DX11();												

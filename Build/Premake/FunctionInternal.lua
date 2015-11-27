@@ -84,7 +84,8 @@ function Orion_ConfigurePCH(aPathList, aPchFile)
 	includedirs 	( vPchDir )
 		
 	--Generate a cpp file used to compile pch	
-	vPchNameSource 	= location() .. "/PrecompileHeader.cpp"
+	vLocation = vOutputRoot .. "/" .. project().name
+	vPchNameSource 	= vLocation .. "/PrecompileHeader.cpp"
 	if vPlatform == "Window" then
 		vPchNameSource = string.gsub(vPchNameSource, "/", "\\")
 	end		

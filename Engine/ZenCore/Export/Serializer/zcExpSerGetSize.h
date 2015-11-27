@@ -10,7 +10,7 @@ namespace zcExp
 	public:
 						SerializerGetSize():muSerializeSize(0){}
 		virtual eStatus	GetStatus(){return keStatus_GetSize;}
-		zU32				GetSerializeSize(){return muSerializeSize;}
+		zUInt			GetSerializeSize(){return muSerializeSize;}
 		
 		// Implement Serializer_Base
 		virtual bool	Serialize(zU8&						auValue){muSerializeSize += sizeof(auValue); return true;}
@@ -37,7 +37,7 @@ namespace zcExp
 		}
 		
 	protected:
-		zU32				muSerializeSize;
+		zUInt			muSerializeSize;
 	};
 	
 }

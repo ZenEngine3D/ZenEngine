@@ -136,11 +136,13 @@ namespace zen {
 			kePrimType__Count
 		};
 
+		//! @todo optim proper buffer access config
 		enum eResourceUse
 		{
-			keResUse_Static,		// Never updated once created
-			keResUse_Dynamic,		// Can be updated once per frame
-			keResUse_Volatile,		// Can be updated multiple time per frame
+			keResUse_Static,			// Never updated once created
+			keResUse_Dynamic,			// Can be updated once per frame
+			keResUse_DynamicDiscard,	// Can be updated once per frame, and don't care about previous frame content
+			keResUse_Volatile,			// Can be updated multiple time per frame
 			keResUse__Count,
 			keResUse__Invalid
 		};

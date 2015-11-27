@@ -49,7 +49,7 @@ bool GfxShaderParamProxy_DX11::Initialize(class GfxShaderParam& _Owner)
 	ZENDbgCode(mpOwner = &_Owner);
 
 	maParameterValues			= rResData->maParameterValues;
-	mrProxShaderParamDef		= GetResourceProxy<GfxShaderParamDefRef>(rResData->mParentParamDefID);
+	mrProxShaderParamDef		= rResData->mParentParamDefID;
 	bufferDesc.Usage			= D3D11_USAGE_DEFAULT;		
 	bufferDesc.BindFlags		= D3D11_BIND_CONSTANT_BUFFER;
 	bufferDesc.CPUAccessFlags	= 0;
@@ -72,8 +72,8 @@ void GfxShaderParamProxy_DX11::Bind(zenConst::eShaderStage _eShaderStage)const
 
 	switch( _eShaderStage )
 	{
-	case zenConst::keShaderStage_Vertex:	pContext->VSSetConstantBuffers( mrProxShaderParamDef->meFrequence, 1, &mpBufferBinding );	break;
-	case zenConst::keShaderStage_Pixel:		pContext->PSSetConstantBuffers( mrProxShaderParamDef->meFrequence, 1, &mpBufferBinding );	break;	
+	case zenConst::keShaderStage_Vertex:	pContext->VSSetConstantBuffers( mrProxShaderParamDef->GetProxy()->meFrequence, 1, &mpBufferBinding );	break;
+	case zenConst::keShaderStage_Pixel:		pContext->PSSetConstantBuffers( mrProxShaderParamDef->GetProxy()->meFrequence, 1, &mpBufferBinding );	break;
 	}
 }
 
@@ -81,7 +81,7 @@ void GfxShaderParamProxy_DX11::SetValue(const zcExp::ParameterBase& _Value)
 {
 	ZENAssert( mrProxShaderParamDef.IsValid() )
 	zcExp::ShaderParamItemInfo ItemInfo;
-	if( mrProxShaderParamDef->mdParameters.Get(_Value.mhName, ItemInfo) )
+	if( mrProxShaderParamDef->GetProxy()->mdParameters.Get(_Value.mhName, ItemInfo) )
 	{
 		mbUpdated = TRUE;
 		zenMem::Copy( &maParameterValues[ItemInfo.muOffset], static_cast<const zU8*>(_Value.GetData()), zenMath::Min(_Value.muSizeTotal, ItemInfo.muSize) );
@@ -92,7 +92,7 @@ void GfxShaderParamProxy_DX11::SetValue(const zenRes::zShaderParameter& _Value)
 {
 	ZENAssert( mrProxShaderParamDef.IsValid() )
 	zcExp::ShaderParamItemInfo ItemInfo;
-	if( mrProxShaderParamDef->mdParameters.Get(_Value.mhName, ItemInfo) )
+	if( mrProxShaderParamDef->GetProxy()->mdParameters.Get(_Value.mhName, ItemInfo) )
 	{
 		mbUpdated = TRUE;
 		zenMem::Copy( &maParameterValues[ItemInfo.muOffset], static_cast<const zU8*>(_Value.GetData()), zenMath::Min(_Value.muSizeTotal, ItemInfo.muSize) );
@@ -103,7 +103,7 @@ void GfxShaderParamProxy_DX11::SetValue(const zHash32& _hParamName, const float&
 {
 	ZENAssert( mrProxShaderParamDef.IsValid() )
 	zcExp::ShaderParamItemInfo ItemInfo;
-	if( mrProxShaderParamDef->mdParameters.Get(_hParamName, ItemInfo) )
+	if( mrProxShaderParamDef->GetProxy()->mdParameters.Get(_hParamName, ItemInfo) )
 	{	
 		mbUpdated		= TRUE;
 		ZENAssertMsg( ItemInfo.muSize >= sizeof(float), "Shader variable declared smaller than 1xFloat" );
@@ -116,7 +116,7 @@ void GfxShaderParamProxy_DX11::SetValue(const zHash32& _hParamName, const zVec2F
 {
 	ZENAssert( mrProxShaderParamDef.IsValid() )
 	zcExp::ShaderParamItemInfo ItemInfo;
-	if( mrProxShaderParamDef->mdParameters.Get(_hParamName, ItemInfo) )
+	if( mrProxShaderParamDef->GetProxy()->mdParameters.Get(_hParamName, ItemInfo) )
 	{			
 		mbUpdated		= TRUE;
 		ZENAssertMsg( ItemInfo.muSize >= sizeof(float)*2, "Shader variable declared smaller than 2xFloats" );
@@ -130,7 +130,7 @@ void GfxShaderParamProxy_DX11::SetValue(const zHash32& _hParamName, const zVec3F
 {
 	ZENAssert( mrProxShaderParamDef.IsValid() )
 	zcExp::ShaderParamItemInfo ItemInfo;
-	if( mrProxShaderParamDef->mdParameters.Get(_hParamName, ItemInfo) )
+	if( mrProxShaderParamDef->GetProxy()->mdParameters.Get(_hParamName, ItemInfo) )
 	{			
 		mbUpdated		= TRUE;
 		ZENAssertMsg( ItemInfo.muSize >= sizeof(float)*3, "Shader variable declared smaller than 3xFloats" );
@@ -145,7 +145,7 @@ void GfxShaderParamProxy_DX11::SetValue(const zHash32& _hParamName, const zVec4F
 {
 	ZENAssert( mrProxShaderParamDef.IsValid() )			
 	zcExp::ShaderParamItemInfo ItemInfo;
-	if( mrProxShaderParamDef->mdParameters.Get(_hParamName, ItemInfo) )
+	if( mrProxShaderParamDef->GetProxy()->mdParameters.Get(_hParamName, ItemInfo) )
 	{			
 		mbUpdated		= TRUE;
 		ZENAssertMsg( ItemInfo.muSize >= sizeof(float)*4, "Shader variable declared smaller than 4xFloats" );
@@ -161,7 +161,7 @@ void GfxShaderParamProxy_DX11::SetValue(const zHash32& _hParamName, const zenMat
 {
 	ZENAssert( mrProxShaderParamDef.IsValid() )			
 	zcExp::ShaderParamItemInfo ItemInfo;
-	if( mrProxShaderParamDef->mdParameters.Get(_hParamName, ItemInfo) )
+	if( mrProxShaderParamDef->GetProxy()->mdParameters.Get(_hParamName, ItemInfo) )
 	{			
 		mbUpdated		= TRUE;
 		ZENAssertMsg( ItemInfo.muSize >= sizeof(float)*16, "Shader variable declared smaller than 16xFloats" );

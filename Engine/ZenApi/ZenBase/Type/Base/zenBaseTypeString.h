@@ -52,7 +52,6 @@ struct zStringHash
 	ZENInline bool operator!=(const THashType& _hCompare)const;
 	zString		mzName; 
 	THashType	mhName; 
-
 	static zUInt Find( THashType _HashName, const zStringHash* _pFirst, zUInt _uCount );
 };
 

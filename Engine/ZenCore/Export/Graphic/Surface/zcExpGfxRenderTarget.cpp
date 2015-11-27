@@ -15,7 +15,7 @@ namespace zcExp
 		{
 			ExportInfoGfxRendertarget* pExportInfo	= static_cast<ExportInfoGfxRendertarget*>(mpExportInfo);		
 			mrResData->meFormat						= pExportInfo->meFormat;
-			mrResData->mvDim							= pExportInfo->mvDim;
+			mrResData->mvDim						= pExportInfo->mvDim;
 			mrResData->mbSRGB						= pExportInfo->mbSRGB;
 			return true;
 		}

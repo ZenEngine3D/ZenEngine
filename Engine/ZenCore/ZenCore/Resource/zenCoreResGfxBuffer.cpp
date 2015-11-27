@@ -39,6 +39,7 @@ zGfxIndex zGfxIndex::Create(const zArrayBase<zU32>& _Indices, zenConst::ePrimiti
 //=================================================================================================
 // GFX VERTEX
 //=================================================================================================
+//! @todo safe return array for bound safety
 zU8* zGfxVertex::Lock()
 {
 	ZENAssertMsg(mpResource, "No valid resource assigned");

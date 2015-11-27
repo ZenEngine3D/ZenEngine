@@ -25,7 +25,6 @@ public:
 //==================================================================================================	
 public:
 										zArrayBase();
-	//void								Sort();											//!< @brief Sort every element in array
 	int									Find(const TType& _Value);	
 	void								SetAll(const TType& _Value);					//!< @brief Set every array element to specific value
 	void								Clear();										//!< @brief Remove all element from array
@@ -49,7 +48,7 @@ public:
 	template<class TTypeImport> zUInt	Copy(const zArrayBase<TTypeImport>& _ImportArray );		//!< @brief Copy the value of another Array	
 	
 	void								SetRange(const TType& _Value, zUInt _uFirst=0, zUInt _uLast=0xFFFFFFFF);	//!< @brief Set a range of array elements, to a specific value
-
+	void								Sort();
 protected:	
 	TType*								mpData;											//!< Data array
 	zUInt								muCount;										//!< Current number of elements

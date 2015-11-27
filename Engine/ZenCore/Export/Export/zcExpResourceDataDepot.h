@@ -2,6 +2,8 @@
 #ifndef __zCore_Exp_ResourceData_Manager_h__
 #define __zCore_Exp_ResourceData_Manager_h__
 
+#include <map>
+
 namespace zcExp
 {
 
@@ -11,10 +13,11 @@ ZENClassDeclare(DepotResourceData, zbType::Manager)
 public:
 										DepotResourceData();			
 	void								SetItem(const zEngineRef<ResourceData>& _rResData);
-	
-	zEngineConstRef<ResourceData>		GetItemBase(const zResID _ResID);
-	zEngineConstRef<ResourceData>		GetItemBaseAnySource(const zResID _ResID);
-	bool								IsValid(const zResID _ResID);
+	void								ClearItem(const zResID& _ResID);
+
+	zEngineConstRef<ResourceData>		GetItemBase(const zResID& _ResID);
+	zEngineConstRef<ResourceData>		GetItemBaseAnySource(const zResID& _ResID);
+	bool								IsValid(const zResID& _ResID);
 	bool								IsValid(const zArrayBase<zResID>& _aResID);
 
 	zenConst::eEngineVersion			GetEngineVersion(zenConst::eResType _eResType)const;
@@ -39,7 +42,8 @@ public:
 	}
 	
 protected:
-	zMap<zEngineRef<ResourceData>>::Key64	mdResourceData;		
+	//zMap<zEngineRef<ResourceData>>::Key64	mdResourceData;		//! @todo Urgent need to fix hamt implementation to properly support non plain data type
+	std::map<zU64, zEngineRef<ResourceData>, std::less<zU64>> mdResourceData;
 	
 //---------------------------------------------------------
 // ManagerBase Section

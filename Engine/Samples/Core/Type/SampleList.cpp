@@ -58,7 +58,7 @@ void SampleList1x()
 		moList.AddSort<int>(&oItems[uIndex], &oItems[uIndex].miVal);
 		zenIO::Printf(zenConst::keLog_Game, " %02i", uIndex);
 	}
-
+	
 	//-----------------------------------------------------
 	// Output the result, making sure it is sorted
 	//-----------------------------------------------------

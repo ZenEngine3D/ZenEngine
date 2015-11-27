@@ -20,10 +20,10 @@ namespace zen { namespace zenType
 template<class _Type_>
 void zList2x::AddSort( zList2xNode* _pAdd,  _Type_* _pReference )
 {
-	zList2xNode*	pItemCur	= moRoot.LstNext();	// 1st element
+	zList2xNode* pItemCur	= moRoot.LstNext();	// 1st element
 	zList2xNode* pItemPrev	= &moRoot;
-	zU32 uOffset				= (zU32)_pReference - (zU32)_pAdd;
-	while( (pItemCur != GetInvalid() ) && *(_Type_*)((zU32)pItemCur+uOffset) < *_pReference )
+	zU32 uOffset			= static_cast<zU32>(reinterpret_cast<zUInt>(_pReference) - reinterpret_cast<zUInt>(_pAdd));
+	while( (pItemCur != GetInvalid() ) && *(_Type_*)(reinterpret_cast<zUInt>(pItemCur)+uOffset) < *_pReference )
 	{
 		pItemPrev   = pItemCur;
 		pItemCur    = pItemCur->LstNext();

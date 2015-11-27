@@ -196,16 +196,51 @@ namespace zen { namespace zenMath
 	//=================================================================================================
 	ZENInline void MatrixProjectionLH( Matrix& _matProjectionOut, float _fFovDegreeWidth, float _fAspectRatio, float _fNearZ, float _fFarZ )
 	{
-		ZENAssert( _fFovDegreeWidth > zenConst::kfSmallNumber )
-		ZENAssert( _fAspectRatio > zenConst::kfSmallNumber )
-		ZENAssert( _fNearZ > zenConst::kfSmallNumber && _fFarZ > _fNearZ )
+		ZENAssert( _fFovDegreeWidth > zenConst::kfSmallNumber );
+		ZENAssert( _fAspectRatio > zenConst::kfSmallNumber );
+		ZENAssert( _fNearZ > zenConst::kfSmallNumber && _fFarZ > _fNearZ );
 		
-		float ScaleX			= 1.f / tanf(_fFovDegreeWidth/180.0f*zenMath::kfPI);		
+		float ScaleX				= 1.f / tanf(_fFovDegreeWidth/180.0f*zenMath::kfPI);		
 		_matProjectionOut.mvRows[0]	= simdXYZW( ScaleX,		0,						0,									0);
 		_matProjectionOut.mvRows[1]	= simdXYZW( 0,			ScaleX/_fAspectRatio,	0,									0);
 		_matProjectionOut.mvRows[2]	= simdXYZW( 0,			0,						_fFarZ/(_fFarZ-_fNearZ),			1);
 		_matProjectionOut.mvRows[3]	= simdXYZW( 0,			0,						-_fFarZ/(_fFarZ-_fNearZ)*_fNearZ,	0);
-		//_matProjectionOut.Transpose();
 	}
+
+	//=================================================================================================
+	//! @brief		Create a view matrix
+	//! @details	
+	//-------------------------------------------------------------------------------------------------
+	//! @param[out] _matProjectionOut	- Result projection matrix
+	//! @param _vfViewportSize			- Viewport size in pixels
+	//! @param _fNearZ					- Near clipping distance
+	//! @param _fFarZ					- Far clipping distance
+	//=================================================================================================
+	void MatrixProjectionOrthoLH(Matrix& _matProjectionOut, zVec2F _vfViewportSize, float _fNearZ, float _fFarZ)
+	{
+		return MatrixProjectionOrthoLH(_matProjectionOut, _vfViewportSize.x, _vfViewportSize.y, _fNearZ, _fFarZ);
+	}
+
+	//=================================================================================================
+	//! @brief		Create a view matrix
+	//! @details	
+	//-------------------------------------------------------------------------------------------------
+	//! @param[out] _matProjectionOut	- Result projection matrix
+	//! @param _fWidth					- Viewport width in pixels
+	//! @param _fHeight					- Viewport height in pixels
+	//! @param _fNearZ					- Near clipping distance
+	//! @param _fFarZ					- Far clipping distance
+	//=================================================================================================
+	void MatrixProjectionOrthoLH(Matrix& _matProjectionOut, float _fWidth, float _fHeight, float _fNearZ, float _fFarZ)
+	{
+		ZENAssert(_fWidth > zenConst::kfSmallNumber);
+		ZENAssert(_fHeight > zenConst::kfSmallNumber);
+		ZENAssert(_fFarZ > _fNearZ);		
+		_matProjectionOut.mvRows[0] = zenMath::simdXYZW( 2.0f/_fWidth,	 0.0f,			 0.0f,						0.0f);
+		_matProjectionOut.mvRows[1] = zenMath::simdXYZW( 0.0f,			-2.0f/_fHeight,  0.0f,						0.0f);
+		_matProjectionOut.mvRows[2] = zenMath::simdXYZW( 0.0f,			 0.0f,			 1.0f/(_fFarZ-_fNearZ),		0.0f);
+		_matProjectionOut.mvRows[3] = zenMath::simdXYZW(-1.0f,			 1.0f,			_fNearZ/(_fFarZ - _fNearZ), 1.0f);
+	}
+
 }  } // namespace zen, zenMath
 

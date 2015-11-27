@@ -18,6 +18,7 @@ namespace zen { namespace zenType
 	//!				-# Pool : Each node is created from a memory pool. There's 'kuSlotCount+1' memory pool (1 per possible slot count in a node)
 	//! @todo Optim:		Specify pool size increase	
 	//! @todo Clean:		Support object better, not just pointer. At the moment, need to set a callback when removing object, to call custom destructor, not very programmer error safe
+	//! @todo Urgent:		Make this call destructor/constructor properly, when node unset, or moved around
 	//! @tparam TKey		Datatype of Keys used to find/retrieve entries
 	//! @tparam TValue		Datatype of Values stored
 	//! @tparam TIndex		Datatype bitfield used to store info of each slot in a node. Must be big enough to contain 1<<TIndexBits bits.
@@ -52,10 +53,10 @@ namespace zen { namespace zenType
 			struct Slot	{	TKey Key; union { Node* pChildNode; zU8 aValue[sizeof(TValue)]; }; 
 							ZENInline TValue& Value(){return *(TValue*)aValue;} };
 
-			zUInt				GetSlotCount() const;						//! @brief Get count of valid Slots in this node
+			zU32				GetSlotCount() const;						//! @brief Get count of valid Slots in this node
 			bool				IsLeafSlot( zUInt _uSlotID ) const;			//! @brief Check if a Node Slot is a leaf (contains value) or point to child node
 			bool				IsUsedIndex( zUInt _uNodeIndex ) const;		//! @brief Check if Node Index is being used in this Node 
-			zUInt				GetSlotID( zUInt _uNodeIndex ) const;		//! @brief Get in which slot a Node Index is stored
+			zU32				GetSlotID( zUInt _uNodeIndex ) const;		//! @brief Get in which slot a Node Index is stored
 			int					GetFirstUsedSlotID()const;					//! @brief Return first used slotID (-1 if none)			
 			int					GetLastUsedSlotID()const;					//! @brief Return last used slotID (-1 if none)
 
@@ -102,7 +103,7 @@ namespace zen { namespace zenType
 		void					Init( zUInt _uReservePool);													//!< @brief Initialize the HashTable
 		ZENInline bool			Exist(const TKey _Key)const;															    
 		ZENInline bool			IsInit()const;																			    
-		ZENInline zUInt			Count() const;																	//!< @brief Number of element (leaf node) stored in hashmap		
+		ZENInline zU32			Count() const;																	//!< @brief Number of element (leaf node) stored in hashmap		
 																														    
 		void					Clear();																				    
 		void					SetDefaultValue( const TValue& _Value );										//!< @brief Set value return when no value found
@@ -121,16 +122,16 @@ namespace zen { namespace zenType
 		void					Import( const zArrayBase<TKey>& _aKey, const zArrayBase<TValue>& _aValue );	//!< @brief Copy the content key/value from arrays to this hamt
 		const zHamt&			operator=(const zHamt& _Copy);													//!< @brief Copy the content of another Hamt
 																														    																														    
-		void					GetFirst(Iterator& _It) const;													//!< @brief Initialize iteator to first element of the hamt
+		void					GetFirst(Iterator& _It) const;													//!< @brief Initialize iterator to first element of the hamt
 		void					GetLast(Iterator& _It) const;													//!< @brief Initialize iterator to last element of the hamt
 		TKey					GetFirstUnusedKey()const;														//!< @brief Find the first available key in the hashmap
 		void					DebugPrint(const TKey _First, TKey _Last) const;								//!< @brief Print structure of the tree
 		size_t					GetMemoryFootprint();															//!< @brief Return the amount of memory used by this structure		
-		void					SetDeleteItemCB(DeleteItemCB _pCallback){mpDeleteItemCB = _pCallback;}
+		void					SetDeleteItemCB(DeleteItemCB _pCallback){mpDeleteItemCB = _pCallback;}			//!< @todo clean Call constructor/destructor by default instead of relying callback, too unreliable/forgetfull
 	protected:
 		
 		Node*					CreateNodeCopy( const Node* _pNodeCopy );										//!< @brief	Create a copy of a node
-		zUInt					GetNodeIndex( const TKey _uKey, zUInt _uDepth ) const;							//!< @brief	Return the key NodeIndex at a certain tree depth
+		zU32					GetNodeIndex( const TKey _uKey, zUInt _uDepth ) const;							//!< @brief	Return the key NodeIndex at a certain tree depth
 		Node*					CreateEmptyNode(zU32 _uSlotCount);												//!< @brief	Return a new empty node with requested number of slots
 		void					ClearNode( Node* _pNode );														//!< @brief	Remove every child node of this node
 		TValue*					SetSlotValue(TKey _Key, const TValue& _Value, Node** _ppParentNode, zUInt _uNodeIndex, zUInt _uSlotID, zUInt _uDepth);	//!< @brief		Get the slot in a node associated to a Key. 

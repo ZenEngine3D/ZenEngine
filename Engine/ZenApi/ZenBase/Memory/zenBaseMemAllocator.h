@@ -72,10 +72,10 @@ void* operator new(size_t _uSize,		zenMem::zAllocator* _pAllocator );
 void* operator new[](size_t _uSize,		zenMem::zAllocator* _pAllocator );
 void operator delete(void* _pAlloc,		zenMem::zAllocator* _pAllocator );
 void operator delete[](void* _pAlloc,	zenMem::zAllocator* _pAllocator );
-void* operator new(size_t _uSize,		zenMem::zAllocator* _pAllocator, zUInt _uAlign );
-void* operator new[](size_t _uSize,		zenMem::zAllocator* _pAllocator, zUInt _uAlign );
-void operator delete(void* _pAlloc,		zenMem::zAllocator* _pAllocator, zUInt _uAlign );
-void operator delete[](void* _pAlloc,	zenMem::zAllocator* _pAllocator, zUInt _uAlign );
+void* operator new(size_t _uSize,		zenMem::zAllocator* _pAllocator, zU32 _uAlign );
+void* operator new[](size_t _uSize,		zenMem::zAllocator* _pAllocator, zU32 _uAlign );
+void operator delete(void* _pAlloc,		zenMem::zAllocator* _pAllocator, zU32 _uAlign );
+void operator delete[](void* _pAlloc,	zenMem::zAllocator* _pAllocator, zU32 _uAlign );
 void operator delete(void* _pAlloc);
 void operator delete[](void* _pAlloc);
 

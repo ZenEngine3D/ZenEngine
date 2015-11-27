@@ -14,13 +14,17 @@ bool ExporterGfxVertexDX11_DX11::ExportWork(bool _bIsTHRTask)
 	ZENAssert(mrResData.IsValid());	
 	ExportInfoGfxVertex* pExportInfo = static_cast<ExportInfoGfxVertex*>(mpExportInfo);
 	zUInt uSemanticIndex[]	= {	0,0,0,0,0,0,0,0 };
-	const DXGI_FORMAT eFormats[zenConst::keShaderElemType__Count][4]= {
+	const DXGI_FORMAT eFormats[][4]= {
 		{DXGI_FORMAT_R32_FLOAT,	DXGI_FORMAT_R32G32_FLOAT,	DXGI_FORMAT_R32G32B32_FLOAT,	DXGI_FORMAT_R32G32B32A32_FLOAT},
 		{DXGI_FORMAT_R32_SINT,	DXGI_FORMAT_R32G32_SINT,	DXGI_FORMAT_R32G32B32_SINT,		DXGI_FORMAT_R32G32B32A32_SINT},
-		{DXGI_FORMAT_R32_UINT,	DXGI_FORMAT_R32G32_UINT,	DXGI_FORMAT_R32G32B32_UINT,		DXGI_FORMAT_R32G32B32A32_UINT}};	
+		{DXGI_FORMAT_R32_UINT,	DXGI_FORMAT_R32G32_UINT,	DXGI_FORMAT_R32G32B32_UINT,		DXGI_FORMAT_R32G32B32A32_UINT},
+		{DXGI_FORMAT_R8_UNORM,	DXGI_FORMAT_R8G8_UNORM,		DXGI_FORMAT_UNKNOWN,			DXGI_FORMAT_R8G8B8A8_UNORM},
+		{DXGI_FORMAT_R8_SNORM,	DXGI_FORMAT_R8G8_SNORM,		DXGI_FORMAT_UNKNOWN,			DXGI_FORMAT_R8G8B8A8_SNORM },
+		};	
 	
 	ZENStaticAssert( ZENArrayCount(uSemanticIndex)==zenConst::keShaderSemantic__Count );
-	
+	ZENStaticAssert( sizeof(eFormats)/sizeof(DXGI_FORMAT)/4 == zenConst::keShaderElemType__Count);
+
 	zU8 uElementTotal(0);
 	zU8 uElementCur(0);
 	for(zUInt i=0; i<pExportInfo->maStreams.Count(); ++i)

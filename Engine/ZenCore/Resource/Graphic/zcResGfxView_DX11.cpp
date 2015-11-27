@@ -19,20 +19,23 @@ bool GfxViewProxy_DX11::Initialize(class GfxView& _Owner)
 	ZENDbgCode(mpOwner = &_Owner);
 	
 	zcRes::GfxRenderTargetRef rRTDepthSurface = rResData->mRTDepthConfig.mrTargetSurface;
+	mpDepthView			= nullptr;
+	mrProxTargetDepth	= nullptr;
 	if( rRTDepthSurface.IsValid() )
 	{
-		mrProxTargetDepth	= rRTDepthSurface->GetProxy();
-		mpDepthView			= mrProxTargetDepth.IsValid() ? mrProxTargetDepth->mpTargetDepthView : nullptr;
+		mrProxTargetDepth	= rRTDepthSurface;
+		mpDepthView			= mrProxTargetDepth.IsValid() ? mrProxTargetDepth->GetProxy()->mpTargetDepthView : nullptr;
 	}
+
 	muColorCount		= 0;
 	zenMem::Zero(mpColorViews, sizeof(mpColorViews) );
 	marProxTargetColor.SetCount( rResData->maRTColorConfig.Count() );	
 	for(int idx(0), count(marProxTargetColor.Count()); idx<count; ++idx)
 	{
 		zcRes::GfxRenderTargetRef rRTColorSurface  = rResData->maRTColorConfig[idx].mrTargetSurface;
-		marProxTargetColor[idx] = rRTColorSurface->GetProxy();
-		if( marProxTargetColor[idx]->mpTargetColorView )
-			mpColorViews[muColorCount++] = marProxTargetColor[idx]->mpTargetColorView;
+		marProxTargetColor[idx] = rRTColorSurface;
+		if( marProxTargetColor[idx]->GetProxy()->mpTargetColorView )
+			mpColorViews[muColorCount++] = marProxTargetColor[idx]->GetProxy()->mpTargetColorView;
 	}
 
 	//! @todo Support min/max depth rendering

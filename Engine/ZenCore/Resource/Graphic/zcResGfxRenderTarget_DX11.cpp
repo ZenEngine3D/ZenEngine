@@ -29,7 +29,7 @@ namespace zcRes
 		ZENAssert(rResData.IsValid());
 		ID3D11Texture2D* pTexture(NULL);
 
-		mrProxParentTexture		= _Owner.GetTexture2D().IsValid() ? _Owner.GetTexture2D()->GetProxy() : NULL;
+		mrProxParentTexture		= _Owner.GetTexture2D().IsValid() ? _Owner.GetTexture2D() : NULL;
 		meFormat				= rResData->meFormat;
 		mvDim					= rResData->mvDim;
 
@@ -39,7 +39,7 @@ namespace zcRes
 		}
 		else if(mrProxParentTexture.IsValid() )
 		{
-			pTexture = mrProxParentTexture->mpTextureBuffer;
+			pTexture = mrProxParentTexture->GetProxy()->mpTextureBuffer;
 		}
 
 		if( pTexture )

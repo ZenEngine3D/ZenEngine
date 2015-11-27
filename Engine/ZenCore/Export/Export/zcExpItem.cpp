@@ -62,7 +62,7 @@ namespace zcExp
 			mrResData->mExportTime	= zenSys::GetTimeStamp();			
 			zcDepot::ResourceData.SetItem(mrResData);
 		}		
-		zcMgr::Export.ExportDone(mrResData.Get()); //! @todo replug this with new system
+		zcMgr::Export.ExportDone(mrResData); //! @todo replug this with new system
 		return true;
 	}
 	

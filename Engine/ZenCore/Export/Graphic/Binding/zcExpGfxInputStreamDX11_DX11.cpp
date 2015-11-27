@@ -33,8 +33,8 @@ bool ExporterGfxInputStreamDX11_DX11::ExportWork(bool _bIsTHRTask)
 {
 	bool bSuccess(FALSE);
 	ExportInfoGfxInputStream* pExportInfo	= static_cast<ExportInfoGfxInputStream*>(mpExportInfo);				
-	mrResData->mVertexBufferID			= pExportInfo->mVertexBufferID;
-	mrResData->mShaderInputSignatureID	= pExportInfo->mShaderInputSignatureID;
+	mrResData->mVertexBufferID				= pExportInfo->mVertexBufferID;
+	mrResData->mShaderInputSignatureID		= pExportInfo->mShaderInputSignatureID;
 	return true;
 }
 

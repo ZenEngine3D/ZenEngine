@@ -1,18 +1,57 @@
 namespace zen { namespace zenType {
 
+//! @todo Multihread and move this elsewhere
+template<class TType>
+void QuicksortAsc(TType* _pDataFirst, TType* _pDataLast)
+{
+	zInt iCount =(zInt)(_pDataLast - _pDataFirst + 1);
+
+	// Bubblesort for last few elements
+	if(iCount <= 10)
+	{
+		for(zInt i(0); i<iCount; ++i)
+			for(zInt j(1); j<iCount-i; ++j)
+				if( _pDataFirst[j-1] > _pDataFirst[j] )
+					zenSwap(_pDataFirst[j-1], _pDataFirst[j]);
+		return;
+	}
+
+	// Quicksort proper
+	zenSwap(_pDataFirst[0], _pDataFirst[iCount/2]);	//Move pivot value at start
+	TType& PivotVal		= _pDataFirst[0];
+	TType* pDataLeft	= _pDataFirst+1;
+	TType* pDataRight	= _pDataLast;	
+	while( pDataLeft < pDataRight )
+	{
+		if( (*pDataLeft > PivotVal) && !(*pDataRight > PivotVal) )
+			zenSwap(*pDataLeft, *pDataRight);
+
+		pDataLeft	+= (*pDataLeft > PivotVal)	? 0 : 1;
+		pDataRight	-= (*pDataRight > PivotVal)	? 1 : 0;
+	}
+
+	// Move pivot value to final position
+	pDataLeft -= *pDataLeft > PivotVal ? 1 : 0;
+	zenSwap(PivotVal, *pDataLeft);
+	
+	// Recursive sorting
+	QuicksortAsc(_pDataFirst, pDataLeft-1);
+	QuicksortAsc(pDataLeft+1, _pDataLast);
+}
+
 template<class TType>
 zArrayBase<TType>::zArrayBase()
 : mpData(NULL)
 , muCount(0)
 {
 }
-/*
+
 template<class TType>
 void zArrayBase<TType>::Sort()
 {
-	CAlg::Quicksort<TType>(mpData, &mpData[muCount-1]);	
+	QuicksortAsc(mpData, &mpData[muCount-1]);	
 }
-*/
+
 template<class TType>
 void zArrayBase<TType>::Clear()
 {

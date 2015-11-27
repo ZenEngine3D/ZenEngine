@@ -1,8 +1,6 @@
 #include "zenEngine.h"
 #include "SampleRenderer.h"
 
-//Test merge
-
 //=================================================================================================
 //! @example SampleGfxRenderer.cpp
 //! Renderer initialization and test
@@ -58,7 +56,6 @@ zU16 CubeIndices[] =
 	22,20,21,	23,20,22
 };
 
-
 bool SampleRendererInstance::IsDone()
 {
 	return false;
@@ -111,10 +108,8 @@ bool SampleRendererInstance::Init()
 	mrSampler2										= zenRes::zGfxSampler::Create(zenConst::keTexFilter_Point, zenConst::keTexFilter_Point, zenConst::keTexWrap_Clamp, zenConst::keTexWrap_Clamp, 0);	
 	
 	// Some bindings of render resource together
-	zArrayStatic<zenRes::zGfxShader> aShaders		= {zenRes::zGfxShader(mrShaderVS), zenRes::zGfxShader(mrShaderPS)};
-	mrShaderBind									= zenRes::zGfxShaderBinding::Create( aShaders );
-	zArrayStatic<zenRes::zGfxShader> aShader2Output	= {zenRes::zGfxShader(mrShaderVS), zenRes::zGfxShader(mrShaderPS2Output)};
-	mrShader2OutputBind								= zenRes::zGfxShaderBinding::Create( aShader2Output );
+	mrShaderBind									= zenRes::zGfxShaderBinding::Create(mrShaderVS, mrShaderPS);
+	mrShader2OutputBind								= zenRes::zGfxShaderBinding::Create(mrShaderVS, mrShaderPS2Output);
 	mrCube1MeshStrip								= zenRes::zGfxMeshStrip::Create( mrCubeVertex, mrCubeIndex, mrShader2OutputBind );
 	mrCube2MeshStrip								= zenRes::zGfxMeshStrip::Create( mrCubeVertex, mrCubeIndex, mrShaderBind );
 	mrCube3MeshStrip								= zenRes::zGfxMeshStrip::Create( mrCubeVertex, mrCubeIndex, mrShaderBind );
@@ -229,9 +224,9 @@ void SampleRendererInstance::Destroy()
 	Super::Destroy();
 }
 
+
 void SampleRendererInstance::Update()
 {	
-zU64 timeFrame = zenSys::GetTimeUSec();
 	Super::Update();
 	zArrayDynamic<zenRes::zGfxDrawcall> aDrawcalls;
 	aDrawcalls.Reserve(48000);
@@ -244,22 +239,6 @@ zU64 timeFrame = zenSys::GetTimeUSec();
 	
 	float t = static_cast<float>(zenSys::GetElapsedSec() / 3.0);	// Update our time animation
 	
-
-	//-----------------------------------------------------------------
-	// Render cube in RenderTarget
-	//-----------------------------------------------------------------
-	{				
-		aDrawcalls.Push( zenRes::zGfxDrawcall::ClearColor(mrRndPassTexture, 0, mrRenderToTextureRT1, zVec4F(0,0,0,1)) );
-		aDrawcalls.Push( zenRes::zGfxDrawcall::ClearColor(mrRndPassTexture, 0, mrRenderToTextureRT2, zVec4F(0,0,0,1)) ); 
-		aDrawcalls.Push( zenRes::zGfxDrawcall::ClearDepthStencil(mrRndPassTexture, 0, mrRenderToTextureDepth) );
-
-		zVec4F vShaderColor = zenMath::TriLerp<zVec4F>( zVec4F(1,1,1,1), zVec4F(0.15f,0.15f,1.0f,1), zVec4F(1,1,1,1), zenMath::Fract(t*2) );
-		matWorld[0].SetRotationY( t );							// Rotate cube around the origin
-		mrCube1MeshStrip.SetValue( zHash32("World"),	matWorld[0] );
-		mrCube1MeshStrip.SetValue( zHash32("vColor"),	vShaderColor);
-		mrCube1MeshStrip.Draw(mrRndPassTexture, 0, aDrawcalls);
-	}
-
 	//-----------------------------------------------------------------
 	// Render cubes in main render target
 	//-----------------------------------------------------------------
@@ -276,12 +255,7 @@ zU64 timeFrame = zenSys::GetTimeUSec();
 	matWorld[2].SetRotationY( t );						// Rotate cube around the origin 				
 	mrCube3MeshStrip.SetValue( zHash32("World"),		matWorld[2] );
 	mrCube3MeshStrip.SetValue( zHash32("Projection"),	matProjection );
-
-//! @todo clean create another sample for this
-//zU64 timeEmit = zenSys::GetTimeUSec();	
-//for(int i=0; i<8000; ++i)
 	mrCube3MeshStrip.Draw(mrRndPassFinal, 0, aDrawcalls);
-//timeEmit = zenSys::GetTimeUSec()-timeEmit;
 
 	matWorld[3].SetRotationX( t );						// Rotate cube around the origin 				
 	mrCube4Mesh.SetValue( zHash32("World"),				matWorld[3] );
@@ -290,22 +264,22 @@ zU64 timeFrame = zenSys::GetTimeUSec();
 	mrCube4Mesh.SetValue( zHash32("Projection"),		matProjection );	
 	mrCube4Mesh.Draw(mrRndPassFinal, 0, aDrawcalls);
 
-//zU64 timeDraw = zenSys::GetTimeUSec();
+	//-----------------------------------------------------------------
+	// Render cube in RenderTarget
+	//-----------------------------------------------------------------
+	{
+		aDrawcalls.Push(zenRes::zGfxDrawcall::ClearColor(mrRndPassTexture, 0, mrRenderToTextureRT1, zVec4F(0, 0, 0, 1)));
+		aDrawcalls.Push(zenRes::zGfxDrawcall::ClearColor(mrRndPassTexture, 0, mrRenderToTextureRT2, zVec4F(0, 0, 0, 1)));
+		aDrawcalls.Push(zenRes::zGfxDrawcall::ClearDepthStencil(mrRndPassTexture, 0, mrRenderToTextureDepth));
+
+		zVec4F vShaderColor = zenMath::TriLerp<zVec4F>(zVec4F(1, 1, 1, 1), zVec4F(0.15f, 0.15f, 1.0f, 1), zVec4F(1, 1, 1, 1), zenMath::Fract(t * 2));
+		matWorld[0].SetRotationY(t);							// Rotate cube around the origin
+		mrCube1MeshStrip.SetValue(zHash32("World"), matWorld[0]);
+		mrCube1MeshStrip.SetValue(zHash32("vColor"), vShaderColor);
+		mrCube1MeshStrip.Draw(mrRndPassTexture, 0, aDrawcalls);
+	}
+
 	zenRes::zGfxDrawcall::Submit(aDrawcalls);
-//timeDraw = zenSys::GetTimeUSec() - timeDraw;
-	
-//zU64 timeEnd = zenSys::GetTimeUSec();
 	mrMainWindowGfx.FrameEnd();
-//timeEnd = zenSys::GetTimeUSec() - timeEnd;
-
-//timeFrame = zenSys::GetTimeUSec() - timeFrame;
-
-// float EmitMs	= timeEmit / 1000.f;
-// float DrawMs	= timeDraw / 1000.f;
-// float TimeMs	= timeFrame / 1000.f;
-// float EndMs		= timeEnd / 1000.f;
-// static zU32 sCounter(0);
-// if( (sCounter++ & 0x0F) == 0 )
-// 	printf("\n Emit %06.04fms - Draw %06.04fms - End %06.04fms - Frame %06.04fms", EmitMs, DrawMs, EndMs, TimeMs);
 }
 }

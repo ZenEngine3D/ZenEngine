@@ -18,26 +18,23 @@ ZENClassDeclare(ManagerRender, ManagerRender_Base)
 public:
 	struct RenderContext
 	{
-		RenderContext()
-		{
-			zenMem::Zero(maCurrentSampler, sizeof(maCurrentSampler));
-			zenMem::Zero(maCurrentTexture, sizeof(maCurrentTexture));
-			zenMem::Zero(muPerStageTextureCount, sizeof(muPerStageTextureCount));
-		}
-		zcRes::GfxRenderPassProxyRef		mrRenderpass		= nullptr;
-		zcRes::GfxStateBlendProxyRef		mrStateBlend		= nullptr;
-		zcRes::GfxStateDepthStencilProxyRef	mrStateDepthStencil	= nullptr;
-		zcRes::GfxStateRasterizerProxyRef	mrStateRaster		= nullptr;
-		zcRes::GfxViewProxyRef				mrStateView			= nullptr;
+		RenderContext();
+		zVec4U16						mvScreenScissor		= zVec4U16(0, 0, 0, 0);
+		bool							mbScreenScissorOn	= false;
+		zcRes::GfxRenderPassRef			mrRenderpass		= nullptr;
+		zcRes::GfxStateBlendRef			mrStateBlend		= nullptr;
+		zcRes::GfxStateDepthStencilRef	mrStateDepthStencil	= nullptr;
+		zcRes::GfxStateRasterizerRef	mrStateRaster		= nullptr;
+		zcRes::GfxViewRef				mrStateView			= nullptr;
 		
-		zcRes::GfxInputStreamProxyRef		mrInputStream		= nullptr;
-		D3D11_PRIMITIVE_TOPOLOGY			mePrimitiveType		= D3D_PRIMITIVE_TOPOLOGY_UNDEFINED;
-		zcRes::GfxShaderVertexProxyRef		mrShaderVertex		= nullptr;
-		zcRes::GfxShaderPixelProxyRef		mrShaderPixel		= nullptr;
-
-		zcRes::GfxSamplerProxyRef			maCurrentSampler[zenConst::keShaderStage__Count][zcExp::kuDX11_TexturePerStageMax];
-		zcRes::GfxTexture2dProxyRef			maCurrentTexture[zenConst::keShaderStage__Count][zcExp::kuDX11_TexturePerStageMax];
-		zU16								muPerStageTextureCount[zenConst::keShaderStage__Count];
+		zcRes::GfxInputStreamRef		mrInputStream		= nullptr;
+		D3D11_PRIMITIVE_TOPOLOGY		mePrimitiveType		= D3D_PRIMITIVE_TOPOLOGY_UNDEFINED;
+		zcRes::GfxShaderVertexRef		mrShaderVertex		= nullptr;
+		zcRes::GfxShaderPixelRef		mrShaderPixel		= nullptr;
+		
+		zcRes::GfxSamplerRef			maCurrentSampler[zenConst::keShaderStage__Count][zcExp::kuDX11_TexturePerStageMax];
+		zcRes::GfxTexture2dRef			maCurrentTexture[zenConst::keShaderStage__Count][zcExp::kuDX11_TexturePerStageMax];
+		zU16							muPerStageTextureCount[zenConst::keShaderStage__Count];
 	};
 
 									ManagerRender();

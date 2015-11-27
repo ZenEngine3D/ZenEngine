@@ -17,27 +17,26 @@ zResID RuntimeCreateResource(zcExp::ExportInfoBase* _pExportInfo)
 	zenRes::zResourceRef rResource;
 	switch( _pExportInfo->mExportResID.GetType() )
 	{	
-	case zenConst::keResType_GfxSampler:				rResource = GfxSampler::RuntimeExport(*_pExportInfo);			break;
-	case zenConst::keResType_GfxBlend:					rResource = GfxStateBlend::RuntimeExport(*_pExportInfo);		break;
-	case zenConst::keResType_GfxDepthStencil:			rResource = GfxStateDepthStencil::RuntimeExport(*_pExportInfo);	break;
-	case zenConst::keResType_GfxRasterizer:				rResource = GfxStateRasterizer::RuntimeExport(*_pExportInfo);	break;
-	case zenConst::keResType_GfxShaderPixel:			rResource = GfxShaderPixel::RuntimeExport(*_pExportInfo);		break;
-	case zenConst::keResType_GfxShaderVertex:			rResource = GfxShaderVertex::RuntimeExport(*_pExportInfo);		break;
-	case zenConst::keResType_GfxIndex:					rResource = GfxIndex::RuntimeExport(*_pExportInfo);				break;
-	case zenConst::keResType_GfxVertex:					rResource = GfxVertex::RuntimeExport(*_pExportInfo);			break;
-	case zenConst::keResType_GfxView:					rResource = GfxView::RuntimeExport(*_pExportInfo);				break;
-	case zenConst::keResType_GfxRenderTarget:			rResource = GfxRenderTarget::RuntimeExport(*_pExportInfo);		break;
-	case zenConst::keResType_GfxTexture2D:				rResource = GfxTexture2d::RuntimeExport(*_pExportInfo);			break;
-	case zenConst::keResType_GfxInputStream:			rResource = GfxInputStream::RuntimeExport(*_pExportInfo);		break;
-	case zenConst::keResType_GfxInputSignature:			rResource = GfxInputSignature::RuntimeExport(*_pExportInfo);	break;
-	case zenConst::keResType_GfxMeshStrip:				rResource = GfxMeshStrip::RuntimeExport(*_pExportInfo);			break;
-	case zenConst::keResType_GfxMesh:					rResource = GfxMesh::RuntimeExport(*_pExportInfo);				break;
-	case zenConst::keResType_GfxShaderParamDef:			rResource = GfxShaderParamDef::RuntimeExport(*_pExportInfo);	break;
-	case zenConst::keResType_GfxShaderParam:			rResource = GfxShaderParam::RuntimeExport(*_pExportInfo);		break;
-	case zenConst::keResType_GfxShaderBinding:			rResource = GfxShaderBinding::RuntimeExport(*_pExportInfo);		break;
-	case zenConst::keResType_GfxRenderPass:				rResource = GfxRenderPass::RuntimeExport(*_pExportInfo);		break;
-	}
-	zenDelNull(_pExportInfo);
+	case zenConst::keResType_GfxSampler:				rResource = GfxSampler::RuntimeExport(*_pExportInfo).Get();				break;
+	case zenConst::keResType_GfxBlend:					rResource = GfxStateBlend::RuntimeExport(*_pExportInfo).Get();			break;
+	case zenConst::keResType_GfxDepthStencil:			rResource = GfxStateDepthStencil::RuntimeExport(*_pExportInfo).Get();	break;
+	case zenConst::keResType_GfxRasterizer:				rResource = GfxStateRasterizer::RuntimeExport(*_pExportInfo).Get();		break;
+	case zenConst::keResType_GfxShaderPixel:			rResource = GfxShaderPixel::RuntimeExport(*_pExportInfo).Get();			break;
+	case zenConst::keResType_GfxShaderVertex:			rResource = GfxShaderVertex::RuntimeExport(*_pExportInfo).Get();		break;
+	case zenConst::keResType_GfxIndex:					rResource = GfxIndex::RuntimeExport(*_pExportInfo).Get();				break;
+	case zenConst::keResType_GfxVertex:					rResource = GfxVertex::RuntimeExport(*_pExportInfo).Get();				break;
+	case zenConst::keResType_GfxView:					rResource = GfxView::RuntimeExport(*_pExportInfo).Get();				break;
+	case zenConst::keResType_GfxRenderTarget:			rResource = GfxRenderTarget::RuntimeExport(*_pExportInfo).Get();		break;
+	case zenConst::keResType_GfxTexture2D:				rResource = GfxTexture2d::RuntimeExport(*_pExportInfo).Get();			break;
+	case zenConst::keResType_GfxInputStream:			rResource = GfxInputStream::RuntimeExport(*_pExportInfo).Get();			break;
+	case zenConst::keResType_GfxInputSignature:			rResource = GfxInputSignature::RuntimeExport(*_pExportInfo).Get();		break;
+	case zenConst::keResType_GfxMeshStrip:				rResource = GfxMeshStrip::RuntimeExport(*_pExportInfo).Get();			break;
+	case zenConst::keResType_GfxMesh:					rResource = GfxMesh::RuntimeExport(*_pExportInfo).Get();				break;
+	case zenConst::keResType_GfxShaderParamDef:			rResource = GfxShaderParamDef::RuntimeExport(*_pExportInfo).Get();		break;
+	case zenConst::keResType_GfxShaderParam:			rResource = GfxShaderParam::RuntimeExport(*_pExportInfo).Get();			break;
+	case zenConst::keResType_GfxShaderBinding:			rResource = GfxShaderBinding::RuntimeExport(*_pExportInfo).Get();		break;
+	case zenConst::keResType_GfxRenderPass:				rResource = GfxRenderPass::RuntimeExport(*_pExportInfo).Get();			break;
+	}	
 	return rResource.GetResID();
 }
 
@@ -76,11 +75,10 @@ bool ManagerResource::Unload()
 //=================================================================================================
 zenRes::zResourceRef ManagerResource::GetResource(const zResID& _ResID, bool _bSupportDefault)
 {
-	//ZENAssert(_ResID.IsValid());
 	zenRes::zResource* pResource;
 	if( mdResources.Get(_ResID.GetHashID(), pResource) )	return pResource;
 	else if(_bSupportDefault )								return maResourcesDefault[_ResID.GetType()];
-	else													return (zenRes::zResource*)NULL;
+	else													return (zenRes::zResource*)nullptr;
 }
 
 //=================================================================================================
@@ -106,23 +104,31 @@ zenRes::zResourceRef ManagerResource::GetResourceAnySource(const zResID& _ResID,
 		anySourceResID.SetSource(zenConst::keResSource_Runtime);	
 		if( mdResources.Get(_ResID.GetHashID(), pResource) )	return pResource;
 		else if(_bSupportDefault )								return maResourcesDefault[_ResID.GetType()];
-		else													return (zenRes::zResource*)NULL;
+		else													return (zenRes::zResource*)nullptr;
 	}
 }
 
 //=================================================================================================
 //! @brief		Add a resource to our resource dictionary
-//! @details	This manager takes ownership of the resource and will free it once unneeded
+//! @details	This manager takes ownership of the resource and will free it once unneeded (not done at the moment)
 //! @param		_pResource - Resource asset
 //! @return 	Reference to resource
 //=================================================================================================
-zenRes::zResourceRef ManagerResource::Add(zenRes::zResource* _pResource)
+void ManagerResource::Add(zenRes::zResource* _pResource)
 {
 	if( _pResource && _pResource->IsValid() )	
-	{
 		mdResources.Set(_pResource->GetResID().GetHashID(), _pResource);
-		return _pResource;
-	}
-	return (zenRes::zResource*)NULL;
 }
+
+//=================================================================================================
+//! @brief		
+//! @details	
+//! @param		
+//! @return 	
+//=================================================================================================
+void ManagerResource::Remove(const zResID& _ResID)
+{
+	mdResources.Unset(_ResID.GetHashID());
+}
+
 }

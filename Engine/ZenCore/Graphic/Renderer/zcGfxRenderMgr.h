@@ -17,21 +17,25 @@ class ManagerRender_Base : public zbType::Manager
 {
 ZENClassDeclare(ManagerRender_Base, zbType::Manager)
 public:	
-									ManagerRender_Base();
+											ManagerRender_Base();
 
-	virtual void					FrameBegin( zcRes::GfxWindowRef _FrameWindow );
-	virtual void					FrameEnd();
+	virtual void							FrameBegin( zcRes::GfxWindowRef _FrameWindow );
+	virtual void							FrameEnd();
 	
-	zU64							GetFrameCount();
-	ZENInline zcRes::GfxWindowRef	GetWindowCurrent(){return mrWindowCurrent;}
+	zU64									GetFrameCount();
+	ZENInline zcRes::GfxWindowRef			GetWindowCurrent(){return mrWindowCurrent;}
+	ZENInline const zArrayStatic<float>&	GetFrameTimeHistory() { return mafFrameElapsedMs; }
+	ZENInline double						GetFrameTimeAvg() { return mfFrameAverageMs; }
 
 	//! @todo Clean: move to more generic AWformat testing functions file?
-	bool							IsDepth( zenConst::eTextureFormat _eTexFormat ) const { return _eTexFormat>=zenConst::keTexFormat__DepthFirst && _eTexFormat<=zenConst::keTexFormat__DepthLast; }
+	bool									IsDepth( zenConst::eTextureFormat _eTexFormat ) const { return _eTexFormat>=zenConst::keTexFormat__DepthFirst && _eTexFormat<=zenConst::keTexFormat__DepthLast; }
 	
-protected:
-	enum eConstants{kuFramesSaved=10};
-	zU64						muFrameCount;	
-	zcRes::GfxWindowRef			mrWindowCurrent;
+protected:		
+	zcRes::GfxWindowRef			mrWindowCurrent = nullptr; 
+	zU64						muFrameCount		= 0;
+	zU64						muFramePreviousTime = 0;
+	float						mfFrameAverageMs	= 0;
+	zArrayStatic<float>			mafFrameElapsedMs;
 };
 
 }

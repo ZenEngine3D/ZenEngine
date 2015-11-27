@@ -19,8 +19,8 @@ namespace zen { namespace zenRes {
 	//! @todo Clean: Expose shader compiling to runtime?
 	ZENClassResourceRefDeclare(zGfxShaderVertex, zenConst::keResType_GfxShaderVertex) 
 	public:
-		static zGfxShaderVertex Create( const char* _zFilename, const char* _zEntryname );
-		static zGfxShaderVertex Create( const char* _zFilename, const char* _zEntryname, const zArrayBase<zShaderDefine>& _aDefines);
+		static zGfxShaderVertex Create(const char* _zFilename, const char* _zEntryname );
+		static zGfxShaderVertex Create(const char* _zFilename, const char* _zEntryname, const zArrayBase<zShaderDefine>& _aDefines);
 	};
 
 	ZENClassResourceRefDeclare(zGfxShaderPixel, zenConst::keResType_GfxShaderPixel) 

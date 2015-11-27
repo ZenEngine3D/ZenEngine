@@ -28,10 +28,12 @@ namespace zcRes
 		swapDesc.BufferDesc.RefreshRate.Numerator	= 60;
 		swapDesc.BufferDesc.RefreshRate.Denominator	= 1;
 		swapDesc.BufferUsage						= DXGI_USAGE_RENDER_TARGET_OUTPUT;
+		swapDesc.BufferCount						= 2;
 		swapDesc.OutputWindow						= rResData->mhWindow;
 		swapDesc.SampleDesc.Count					= 1;
 		swapDesc.SampleDesc.Quality					= 0;
 		swapDesc.Windowed							= TRUE;
+		swapDesc.SwapEffect							= DXGI_SWAP_EFFECT_DISCARD;
 		
 		IDXGIDevice*	pDXGIDevice;
 		IDXGIAdapter*	pDXGIAdapter;
@@ -46,19 +48,24 @@ namespace zcRes
 				{
 					if( SUCCEEDED(pIDXGIFactory->CreateSwapChain( DX11pDevice, &swapDesc, &mDX11pSwapChain)) )
 					{
-						//! @todo can't allow access to owner in renderthread, fix this
-						//! @todo clean move code to resize and avoid duplicate
+						//! @todo can't allow access to owner in render thread, fix this
+						//! @todo clean move code to resize and avoid duplicate						
 						zEngineRef<GfxRenderTargetResData> rResData	= zenNewDefault GfxRenderTargetResData();
-						rResData->mResID							= zcMgr::Export.GetNewResourceID( zenConst::keResType_GfxRenderTarget );
-						rResData->mbSRGB							= TRUE;
-						rResData->meFormat							= meBackbufferColorFormat;
-						rResData->mvDim								= mvSize;
-						rResData->mpBackbuffer						= mDX11pSwapChain;
-						
-						GfxRenderTargetRef rBackbufferColor			= GfxRenderTarget::RuntimeCreate(rResData);
-						mrProxBackbufferColor						= rBackbufferColor->GetProxy();
-						mpOwner->SetBackbuffer(rBackbufferColor); //! @todo urgent can't access game thread object here
-						return mrProxBackbufferColor.IsValid();
+						bool bValid				= true;
+						rResData->mResID		= zcMgr::Export.GetNewResourceID(zenConst::keResType_GfxRenderTarget);
+						rResData->mbSRGB		= TRUE;
+						rResData->meFormat		= meBackbufferColorFormat;
+						rResData->mvDim			= mvSize;
+						rResData->mpBackbuffer	= mDX11pSwapChain;
+						for(zUInt idx(0); idx<ZENArrayCount(mrProxBackbufferColor) && bValid; ++idx)
+						{
+							rResData->muBackbufferId			= idx;
+							GfxRenderTargetRef rBackbufferColor = GfxRenderTarget::RuntimeCreate(rResData).GetSafe();
+							mrProxBackbufferColor[idx]			= rBackbufferColor;
+							bValid								= mrProxBackbufferColor[idx].IsValid();
+							mpOwner->SetBackbuffer(idx, rBackbufferColor); //! @todo urgent can't access game thread object here							
+						}																	
+						return bValid;
 					}
 				}
 			}
@@ -82,7 +89,9 @@ namespace zcRes
 
 		if( !mvPendingResize.IsNull() && mvPendingResize != mvSize )
 		{			
-			mrProxBackbufferColor->ReleaseBackbuffer();
+			for(zUInt idx(0); idx<ZENArrayCount(mrProxBackbufferColor); ++idx)
+				mrProxBackbufferColor[idx]->GetProxy()->ReleaseBackbuffer();
+
 			mDX11pSwapChain->ResizeBuffers(0, mvPendingResize.x, mvPendingResize.y, DXGI_FORMAT_UNKNOWN, 0);
 
 			zEngineRef<GfxRenderTargetResData> rResData	= zenNewDefault GfxRenderTargetResData();
@@ -93,9 +102,13 @@ namespace zcRes
 			rResData->mvDim								= mvSize;
 			rResData->mpBackbuffer						= mDX11pSwapChain;
 			
-			GfxRenderTargetRef rBackbufferColor			= GfxRenderTarget::RuntimeCreate(rResData);				
-			mrProxBackbufferColor						= rBackbufferColor->GetProxy();
-			mpOwner->SetBackbuffer(rBackbufferColor); //! @todo urgent can't access game thread object here
+			for (zUInt idx(0); idx<ZENArrayCount(mrProxBackbufferColor); ++idx)
+			{
+				rResData->muBackbufferId				= idx;
+				GfxRenderTargetRef rBackbufferColor		= GfxRenderTarget::RuntimeCreate(rResData).GetSafe();
+				mrProxBackbufferColor[idx]				= rBackbufferColor;
+				mpOwner->SetBackbuffer(idx, rBackbufferColor); //! @todo urgent can't access game thread object here							
+			}
 		}		
 		mvPendingResize.SetNull();
 	}

@@ -4,10 +4,10 @@
 
 namespace zen { namespace zenMath 
 {
-	zUInt	BitsCount( zU8 _uValue );			// Number of bits set to 1 in value
-	zUInt	BitsCount( zU16 _uValue );			
-	zUInt	BitsCount( zU32 _uValue );
-	zUInt	BitsCount( zU64 _uValue );
+	zU8		BitsCount( zU8 _uValue );			// Number of bits set to 1 in value
+	zU8		BitsCount( zU16 _uValue );
+	zU8		BitsCount( zU32 _uValue );
+	zU8		BitsCount( zU64 _uValue );
 	zU8		BitsReverse( zU8 _uValue );			// Reverser bits order (0x0100 -> 0x0010)
 	zU16	BitsReverse( zU16 _uValue );
 	zU32	BitsReverse( zU32 _uValue );

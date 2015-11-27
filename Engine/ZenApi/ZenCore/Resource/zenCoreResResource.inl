@@ -25,36 +25,44 @@ bool zResource::IsValid()const
 // RESOURCE REF
 //#################################################################################################
 zResourceRef::zResourceRef()
-: mpResource(NULL)
 { 
 	ZENDbgCode( mSupportedTypeMask.Invert(); )	//Set default value to support all resource type
 }
 
-zResourceRef::zResourceRef(zResource* _pResource)
-: mpResource(NULL)
-{ 
-	ZENDbgCode( mSupportedTypeMask.Invert(); );	//Set default value to support all resource type
-	SetResource(_pResource); 
-}
-
 void zResourceRef::SetResource(zResource* _pResource)
 {
-	if( mpResource )
+	if( mpResource != nullptr)
 		mpResource->ReferenceRem();
-	ZENAssert(!_pResource || mSupportedTypeMask.Any(_pResource->GetResID().GetType()) );
+	ZENAssert(_pResource==nullptr || mSupportedTypeMask.Any(_pResource->GetResID().GetType()) );
 	mpResource = _pResource;
-	if( mpResource )
+	if( mpResource != nullptr)
 		mpResource->ReferenceAdd();
 }	
 
+zResourceRef::zResourceRef(zResource* _pResource)
+{
+	ZENDbgCode(mSupportedTypeMask.Invert(); );	//Set default value to support all resource type
+	SetResource(_pResource);
+}
+
+zResourceRef::zResourceRef(const zResourceRef& _rResource)
+{
+	ZENDbgCode(mSupportedTypeMask.Invert(); );	//Set default value to support all resource type
+	SetResource(_rResource.mpResource);
+}
+
+zResourceRef::zResourceRef(zFlagResType _SupportedTypes, const zResourceRef& _rResource)
+{
+	ZENDbgCode(mSupportedTypeMask = _SupportedTypes;)
+	SetResource(_rResource.mpResource);
+}
+
 zResourceRef::zResourceRef(zFlagResType _SupportedTypes)
-: mpResource(NULL)
 {
 	ZENDbgCode( mSupportedTypeMask = _SupportedTypes; )
 }
 
 zResourceRef::zResourceRef(zFlagResType _SupportedTypes, zResource* _pResource)
-: mpResource(NULL)
 {
 	ZENDbgCode( mSupportedTypeMask = _SupportedTypes; )
 	SetResource( _pResource );
@@ -74,12 +82,12 @@ const zResourceRef& zResourceRef::operator=(const zResourceRef& _ResourceRef)
 
 bool zResourceRef::IsValid()const		
 { 
-	return mpResource!=NULL; 
+	return mpResource!= nullptr;
 }
 
 zResID zResourceRef::GetResID()const		
 { 
-	return mpResource ? mpResource->GetResID() : zResID(); 
+	return mpResource!=nullptr ? mpResource->GetResID() : zResID(); 
 }
 
 bool zResourceRef::operator==(const zResourceRef& _rCmp)const	
@@ -103,7 +111,14 @@ zResourceRef::operator zResID()const
 template<zenConst::eResType TType>
 zResourceTypedRef<TType>::zResourceTypedRef()								
 : zResourceRef(zFlagResType(TType))
-{}
+{
+}
+
+template<zenConst::eResType TType>
+zResourceTypedRef<TType>::zResourceTypedRef(const zResourceTypedRef& _rResource)
+: zResourceRef(zFlagResType(TType), _rResource)
+{
+}
 
 template<zenConst::eResType TType>
 zResourceTypedRef<TType>::zResourceTypedRef(zResource* _pResource)	
@@ -121,6 +136,11 @@ zResourceTypedRef<TType>::zResourceTypedRef(zResID _ResourceID)
 template<zenConst::eResType TType1, zenConst::eResType TType2>
 zResourceTyped2Ref<TType1,TType2>::zResourceTyped2Ref()							
 : zResourceRef(zFlagResType(TType1,TType2))
+{}
+
+template<zenConst::eResType TType1, zenConst::eResType TType2>
+zResourceTyped2Ref<TType1, TType2>::zResourceTyped2Ref(const zResourceTyped2Ref& _rResource)
+: zResourceRef(zFlagResType(TType1, TType2), _rResource)
 {}
 
 template<zenConst::eResType TType1, zenConst::eResType TType2>
@@ -143,7 +163,8 @@ class _ClassName_ : public zenRes::zResourceTypedRef<_Type_>						\
 {																					\
 ZENClassDeclare(_ClassName_, zenRes::zResourceTypedRef<_Type_>)						\
 public:																				\
-	ZENInline	_ClassName_(){}														\
+	ZENInline	_ClassName_():Super(){}												\
+	ZENInline	_ClassName_(const _ClassName_& _rResource):Super(_rResource){}		\
 	ZENInline	_ClassName_(zenRes::zResource* _pResource):Super(_pResource){}		\
 	ZENInline	_ClassName_(zResID _ResourceID):Super(_ResourceID){}
 
@@ -155,6 +176,7 @@ class _ClassName_ : public zenRes::zResourceTyped2Ref<_Type1_ , _Type2_>			\
 {																					\
 ZENClassDeclare(_ClassName_, zenRes::zResourceTyped2Ref<_Type1_ ZENComma _Type2_> )	\
 public:																				\
-	ZENInline	_ClassName_(){}														\
+	ZENInline	_ClassName_():Super(){}												\
+	ZENInline	_ClassName_(const _ClassName_& _rResource):Super(_rResource){}		\
 	ZENInline	_ClassName_(zenRes::zResource* _pResource):Super(_pResource){}		\
 	ZENInline	_ClassName_(zResID _ResourceID):Super(_ResourceID){}

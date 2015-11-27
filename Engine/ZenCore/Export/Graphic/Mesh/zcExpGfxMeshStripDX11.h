@@ -15,6 +15,7 @@ namespace zcExp
 		zArrayStatic<zResID>				maShaderParamID;		//!< Array of all ShaderParam used by all Shaders stage
 		zArrayStatic<zArrayStatic<zResID>>	maTextureID;			//!< Per Shader stage texture input for each slot
 		zArrayStatic<zArrayStatic<zResID>>	maSamplerID;			//!< Per Shader stage sampler state for each slot
+		zU32								muVertexFirst;
 		zU32								muIndexFirst;
 		zU32								muIndexCount;
 	};	

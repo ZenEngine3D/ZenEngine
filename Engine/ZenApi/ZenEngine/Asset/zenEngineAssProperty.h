@@ -13,9 +13,9 @@ namespace zen { namespace zenAss
 	// PropertyValue 
 	//! @todo Asset: move to engine side?
 	//=============================================================================
-	class PropertyValue : public zRefCountedAutoDel
+	class PropertyValue : public zRefCounted
 	{
-	ZENClassDeclare(PropertyValue, zRefCountedAutoDel);
+	ZENClassDeclare(PropertyValue, zRefCounted);
 	public:
 							PropertyValue(const zAssetItemRef& _rOwnerAsset, const PropertyDefRef& _rOwnerDefinition);
 												//!< @todo Cleanup : Asset ptr really needed? Pointer to signal object instead?
@@ -71,9 +71,9 @@ namespace zen { namespace zenAss
 	//=============================================================================
 	// Property Definition
 	//=============================================================================
-	class PropertyDefinition : public zRefCountedAutoDel
+	class PropertyDefinition : public zRefCounted
 	{
-	ZENClassDeclare(PropertyDefinition, zRefCountedAutoDel);
+	ZENClassDeclare(PropertyDefinition, zRefCounted);
 	public:												
 		virtual PropertyValueRef				Allocate(const zAssetItemRef& _rOwnerAsset)const=0;
 		virtual zenConst::eAssetPropertyType	GetType()const=0;

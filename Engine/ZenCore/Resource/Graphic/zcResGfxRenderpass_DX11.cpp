@@ -19,10 +19,10 @@ bool GfxRenderPassProxy_DX11::Initialize(class GfxRenderPass& _Owner)
 	ZENDbgCode(mpOwner = &_Owner);
 			
 	mzStageName				= rResData->mzStageName;
-	mrProxBlendState		= GetResourceProxy<GfxStateBlendRef>(rResData->mBlendStateID);
-	mrProxDepthStencilState	= GetResourceProxy<GfxStateDepthStencilRef>(rResData->mDepthStencilStateID);
-	mrProxRasterState		= GetResourceProxy<GfxStateRasterizerRef>(rResData->mRasterStateID);
-	mrProxViewState			= GetResourceProxy<GfxViewRef>(rResData->mViewStateID);
+	mrProxBlendState		= rResData->mBlendStateID;
+	mrProxDepthStencilState	= rResData->mDepthStencilStateID;
+	mrProxRasterState		= rResData->mRasterStateID;
+	mrProxViewState			= rResData->mViewStateID;
 
 	return true;
 }

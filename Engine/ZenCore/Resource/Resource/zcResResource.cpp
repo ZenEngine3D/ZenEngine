@@ -11,11 +11,12 @@ static zUInt guDeleteIndex(0);
 //=================================================================================
 Resource::Resource()
 {
-	//spActiveToDelete[suDeleteIndex].AddHead(this);	//Mark to delete, until created properly
 }
 
 Resource::~Resource()
 {
+	zcDepot::ResourceData.ClearItem(mResID);
+	zcDepot::Resources.Remove(mResID);
 }
 
 bool Resource::ResourceInit()		
@@ -25,9 +26,9 @@ bool Resource::ResourceInit()
 
 bool Resource::Initialize( )
 {
-	if( ResourceInit() && zcDepot::Resources.Add(this).IsValid() )
+	if( ResourceInit() )
 	{
-		glstResourceActive[mResID.GetType()].PushHead(*this);
+		zcDepot::Resources.Add(this);
 		return true;
 	}
 	return false;

@@ -14,7 +14,7 @@ class Drawcall : public zRefCounted
 {
 ZENClassDeclare(Drawcall, zRefCounted)
 public:											
-	static zEngineRef<Drawcall> Create(	const zcRes::GfxRenderPassRef& _rRenderPass, float _fPriority, const zcRes::GfxMeshStripRef& _rMeshStrip );
+	static zEngineRef<Drawcall> Create(	const zcRes::GfxRenderPassRef& _rRenderPass, float _fPriority, const zcRes::GfxMeshStripRef& _rMeshStrip, const zVec4U16& _vScreenScissor =zVec4U16(0,0,0xFFFF,0xFFFF));
 	virtual void Invoke(){};
 
 //protected:			
@@ -36,22 +36,28 @@ public:
 		struct
 		{
 			float	mfPriority;
-			zU32	muShaderBindingID	: 21;	//!< Use leftover bits to sort by shader binding
-			//zU32	VertexShaderID		: 12;
-			//zU32	InputShaderID		: 12;
-			//zU32	muRasterStateID		:		//! @todo Urgent finish sorting ID
-			zU32	mbCullingFrontface	: 1;	//!< Meshstrip wants frontface culling
-			zU32	mbCullingBackface	: 1;	//!< Meshstrip wants backface culling
-			zU32	muGPUPipelineMode	: 3;	//!< One of eGPUPipelineMode enum value			
-			zU32	muRenderPassID		: 8;	//!< Rendering pass ID		
+			zU32	muShaderBindingID : 32;	//!< Use leftover bits to sort by shader binding
+			zU32	VertexShaderID : 16;
+			zU32	InputShaderID : 16;
+			zU32	muRasterStateID : 12;	//! @todo Urgent finish sorting ID
+			zU32	mbCullingFrontface : 1;	//!< Meshstrip wants frontface culling
+			zU32	mbCullingBackface : 1;	//!< Meshstrip wants backface culling
+			zU32	muGPUPipelineMode : 3;	//!< One of eGPUPipelineMode enum value			
+			zU32	muRenderPassID : 10;	//!< Rendering pass ID
+			zU32	UnusedBits : 5;	//!< Available for other uses
 		};
-		zU64	mSortKey;
+		struct 
+		{
+			zU64	mSortKeyLo;
+			zU64	mSortKeyHi;
+		};
+		
 	};
 
-	RenderStateSortID				mSortId;
-	zcRes::GfxRenderPassProxyRef	mrRenderPass;
-	zcRes::GfxMeshStripProxyRef		mrMeshStrip;
-		
+	RenderStateSortID		mSortId;
+	zcRes::GfxRenderPassRef	mrRenderPass;
+	zcRes::GfxMeshStripRef	mrMeshStrip;
+	zVec4U16				mvScreenScissor;		
 protected:
 
 	ZENInline void ConfigureBase( const zcRes::GfxRenderPassRef& _rRenderPass, float _fPriority, zU32 _uShaderBindingID, eGPUPipelineMode _eGPUPipelineMode ); 

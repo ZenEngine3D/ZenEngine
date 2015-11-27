@@ -11,11 +11,16 @@ namespace zen { namespace zenRes {
 	{
 	ZENClassDeclare(zResource, zRefCounted)
 	public:									
-		ZENInline const zResID&	GetResID()const;	//!< @brief return resource ID of resource
-		ZENInline bool			IsValid()const;		//!< @brief true if the object is a valid resource
+		ZENInline const zResID&				GetResID()const;	//!< @brief return resource ID of resource
+		ZENInline bool						IsValid()const;		//!< @brief true if the object is a valid resource
+		static void							ReleaseUnused();
 	protected:
-		ZENInline				zResource();
-		zResID					mResID;
+		virtual	 void						ReferenceNoneCB();	//!< Called when no reference are left on object
+		ZENInline							zResource();
+		zResID								mResID;
+		bool								mbIsPendingDelete	= false;
+		static zU8							suPendingDeleteIndex;
+		static zArrayDynamic<zResource*>	saPendingDelete[2];	//! @todo safe multithread support		
 	};
 
 	//=============================================================================================
@@ -26,12 +31,15 @@ namespace zen { namespace zenRes {
 	{
 	ZENClassDeclareNoParent(zResourceRef)
 	public:
-		ZENInline			zResourceRef();
+		ZENInline			zResourceRef();	
+		ZENInline			zResourceRef(const zResourceRef& _rResource);
 		ZENInline			zResourceRef(zResource* _pResource);
 		ZENInline			zResourceRef(zFlagResType _SupportedTypes);		
+		ZENInline			zResourceRef(zFlagResType _SupportedTypes, const zResourceRef& _rResource);
 		ZENInline			zResourceRef(zFlagResType _SupportedTypes, zResource* _pResource);
 							zResourceRef(zFlagResType _SupportedTypes, zResID _ResourceID);
-		
+		virtual				~zResourceRef();
+
 		ZENInline const		zResourceRef&	operator=(zResource* _pResource);
 		ZENInline const		zResourceRef&	operator=(const zResourceRef& _ResourceRef);
 		 const				zResourceRef&	operator=(const zResID& _ResourceID);
@@ -44,13 +52,14 @@ namespace zen { namespace zenRes {
 		
 	protected:
 		ZENInline void		SetResource(zResource* _pResource);
-		zResource*			mpResource;
+		zResource*			mpResource = nullptr;
 		ZENDbgCode( zFlagResType mSupportedTypeMask; )
 	};
 
 	//=============================================================================================
 	//! @class	Specialized version of zResourceRef, that supports 1 resource type for this
 	//!			object, when checking validity of resource type
+	//! @todo clean : Change template so support unlimited flags numbers instead of a different class
 	//=============================================================================================	
 	template<zenConst::eResType TType>
 	class zResourceTypedRef : public zResourceRef
@@ -58,8 +67,10 @@ namespace zen { namespace zenRes {
 	ZENClassDeclare(zResourceTypedRef, zResourceRef)
 	public:
 		ZENInline				zResourceTypedRef();
+		ZENInline				zResourceTypedRef(const zResourceTypedRef& _rResource);
 		ZENInline				zResourceTypedRef(zResource* _pResource);
 		ZENInline				zResourceTypedRef(zResID _ResourceID);
+		
 	};
 
 	//=============================================================================================
@@ -71,7 +82,8 @@ namespace zen { namespace zenRes {
 	{
 	ZENClassDeclare(zResourceTyped2Ref, zResourceRef)
 	public:
-		ZENInline				zResourceTyped2Ref();		
+		ZENInline				zResourceTyped2Ref();
+		ZENInline				zResourceTyped2Ref(const zResourceTyped2Ref& _rResource);
 		ZENInline				zResourceTyped2Ref(zResource* _pResource);
 		ZENInline				zResourceTyped2Ref(zResID _ResourceID);
 	};

@@ -26,7 +26,7 @@ bool SerializerExportMem::ItemStarted(zcExp::ResourceData& aItem)
 		if( pAlloc == mlstAllocs.GetInvalid() || pAlloc->pMemoryCur+aItem.muSize >= pAlloc->pMemoryEnd )
 		{
 			Alloc* pAlloc;
-			zU32	uAllocSize		= zenMath::Max(muAllocSize, aItem.muSize);
+			zU32	uAllocSize		= zenMath::Max<zU32>(muAllocSize, aItem.muSize);
 			pAlloc					= (Alloc*) zenNewDefault zU8[ uAllocSize + sizeof(Alloc)] ;
 			pAlloc->pMemoryStart	= (zU8*)pAlloc + sizeof(Alloc);
 			pAlloc->pMemoryCur		= pAlloc->pMemoryStart;

@@ -74,11 +74,11 @@ namespace zcRes
 			return mrProxy.IsValid();
 		}
 		
-	public:	
+	public:			
+
 		//! @Brief Child class should override this if some ResData can be stripped out for runtime, after proxy init
 		virtual void StripResData()
 		{
-			//mrResData = NULL;
 		}
 
 		ZENInline const ResDataRef& GetResData()const									
@@ -91,10 +91,18 @@ namespace zcRes
 			return mrProxy;
 		}
 
-		static ClassResource* RuntimeExport(zcExp::ExportInfoBase& _ExportInfo) 
+		static ResourceRef RuntimeExport(zcExp::ExportInfoBase& _ExportInfo)
 		{ 	
 			static zenMem::zAllocatorPool sMemPool("Pool TResource SeriaData", sizeof(ClassResData), 32, 32 );			
-			ResDataRef rResData = zenNew(&sMemPool) ClassResData();
+			ClassResData* pData = zenNew(&sMemPool) ClassResData();
+
+			#if 0 //SF Temp code to help find memory leak of export data..
+			if( _ExportInfo.mExportResID.GetType() == zenConst::keResType_GfxShaderParam )
+			{				
+				printf(""); 
+			}
+			#endif
+			ResDataRef rResData = pData;
 			ClassExporter Exporter(rResData);
 			Exporter.Export( _ExportInfo );
 			if( _ExportInfo.IsSuccess() )
@@ -104,23 +112,23 @@ namespace zcRes
 		}
 		
 		//! @todo clean Move gfx state creation to use this ?
-		static ClassResource* RuntimeCreate(const ResDataRef& _rResData) 
+		static ResourceRef RuntimeCreate(const ResDataRef& _rResData)
 		{ 						
-			ClassResource* pNewResource	= zenNewDefault ClassResource;
-			pNewResource->mrResData		= _rResData;
-			pNewResource->mResID		= _rResData->mResID;			
-			if( pNewResource->Initialize() )
+			ResourceRef rNewResource	= zenNewDefault ClassResource;
+			rNewResource->mrResData		= _rResData;
+			rNewResource->mResID		= _rResData->mResID;
+			if(rNewResource->Initialize() )
 			{
-				if( pNewResource->mrResData.IsValid() && !zcDepot::ResourceData.IsValid(pNewResource->mResID) )
+				if(rNewResource->mrResData.IsValid() && !zcDepot::ResourceData.IsValid(rNewResource->mResID) )
 				{
-					pNewResource->mrResData->muVersion		= zcDepot::ResourceData.GetEngineVersion(pNewResource->mResID.GetType());
-					pNewResource->mrResData->mExportTime	= zenSys::GetTimeStamp();			
-					zcDepot::ResourceData.SetItem(pNewResource->mrResData.Get());
+					zenConst::eResType eType				= rNewResource->mResID.GetType();
+					rNewResource->mrResData->muVersion		= zcDepot::ResourceData.GetEngineVersion(eType);
+					rNewResource->mrResData->mExportTime	= zenSys::GetTimeStamp();
+					zcDepot::ResourceData.SetItem(rNewResource->mrResData.Get());
 				}
-				return pNewResource;
+				return rNewResource;
 			}
 			
-			zenDel(pNewResource)
 			return nullptr;			
 		}
 		
@@ -152,21 +160,6 @@ namespace zcRes
 		ZENInline TResourceClass*				Get();				//!< Return a pointer to resource
 		ZENInline const TResourceClass*			Get()const;			//!< Return a const pointer to resource
 	};
-
-	//=============================================================================================
-	//! @brief	Retrieve the proxy associated with a resource, from its ResourceID
-	//!			before use, making sure we're not mis-casting to wrong ResourceType
-	//! @todo safety Add thread check (only use in main thread)
-	//! @todo clean Review template class. Use proxy class straight?
-	//=============================================================================================
-	template<class TResourceRef>
-	typename TResourceRef::Resource::ProxyRef GetResourceProxy(zResID _ResourceID)
-	{
-		TResourceRef rResource = _ResourceID.IsValid() ? zcDepot::Resources.GetResource(_ResourceID) : NULL;
-		if( rResource.IsValid() )
-			return rResource->GetProxy();
-		return NULL;
-	}
 }
 
 #include "zcResResource.inl"
@@ -215,27 +208,6 @@ namespace zcRes
 	typedef zEngineConstRef<GfxShaderParamDefResData>								GfxShaderParamDefResDataRef;
 	typedef zEngineConstRef<GfxShaderParamResData>									GfxShaderParamResDataRef;
 	typedef zEngineConstRef<GfxShaderBindingResData>								GfxShaderBindingResDataRef;	
-			 
-	typedef zEngineRef<GfxSamplerProxy>												GfxSamplerProxyRef;
-	typedef zEngineRef<GfxStateBlendProxy>											GfxStateBlendProxyRef;
-	typedef zEngineRef<GfxStateDepthStencilProxy>									GfxStateDepthStencilProxyRef;
-	typedef zEngineRef<GfxStateRasterizerProxy>										GfxStateRasterizerProxyRef;
-	typedef zEngineRef<GfxIndexProxy>												GfxIndexProxyRef;
-	typedef zEngineRef<GfxVertexProxy>												GfxVertexProxyRef;
-	typedef zEngineRef<GfxTexture2dProxy>											GfxTexture2dProxyRef;
-	typedef zEngineRef<GfxRenderTargetProxy>										GfxRenderTargetProxyRef;
-	typedef zEngineRef<GfxViewProxy>												GfxViewProxyRef;	
-	typedef zEngineRef<GfxWindowProxy>												GfxWindowViewProxyRef;
-	typedef zEngineRef<GfxRenderPassProxy>											GfxRenderPassProxyRef;
-	typedef zEngineRef<GfxShaderVertexProxy>										GfxShaderVertexProxyRef;
-	typedef zEngineRef<GfxShaderPixelProxy>											GfxShaderPixelProxyRef;
-	typedef zEngineRef<GfxInputStreamProxy>											GfxInputStreamProxyRef;
-	typedef zEngineRef<GfxInputSignatureProxy>										GfxInputSignatureProxyRef;
-	typedef zEngineRef<GfxMeshStripProxy>											GfxMeshStripProxyRef;
-	typedef zEngineRef<GfxMeshProxy>												GfxMeshProxyRef;
-	typedef zEngineRef<GfxShaderParamDefProxy>										GfxShaderParamDefProxyRef;
-	typedef zEngineRef<GfxShaderParamProxy>											GfxShaderParamProxyRef;
-	typedef zEngineRef<GfxShaderBindingProxy>										GfxShaderBindingProxyRef;	
 }
 
 #endif

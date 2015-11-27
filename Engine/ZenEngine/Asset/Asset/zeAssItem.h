@@ -10,7 +10,7 @@ namespace zen { namespace zeAss
 //=================================================================================================
 // CLASS: Asset
 //=================================================================================================
-class Asset : public zRefCountedAutoDel, public zenSig::zSlot
+class Asset : public zRefCounted, public zenSig::zSlot
 {
 ZENClassDeclareNoParent(Asset)
 public:

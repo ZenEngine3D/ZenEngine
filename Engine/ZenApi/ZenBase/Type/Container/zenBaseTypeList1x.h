@@ -70,7 +70,7 @@ template<class _Type_> void	AddSort		( zList1xNode* _pAdd,  _Type_* _pReference	
 	void					InsertAfter ( zList1xNode* ZENRestrict _pAdd, zList1xNode* ZENRestrict _pItem	); 
 
 protected:
-	zList1xNode			moFirst;	//!< Store reference to first(moRoot.mpLstNext) of the list.
+	zList1xNode				moFirst;	//!< Store reference to first(moRoot.mpLstNext) of the list.
 };
 
 } } //namespace zen, Type

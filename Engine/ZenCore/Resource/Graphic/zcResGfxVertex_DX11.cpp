@@ -52,7 +52,7 @@ bool GfxVertexProxy_DX11::Initialize(class GfxVertex& _Owner)
 						
 		// Vertex Buffer Data
 		D3D11_BUFFER_DESC vertexDesc;
-		vertexDesc.ByteWidth			= stream.maData.SizeMem();
+		vertexDesc.ByteWidth			= static_cast<UINT>(stream.maData.SizeMem());
 		vertexDesc.Usage				= eUsage;
 		vertexDesc.BindFlags			= D3D11_BIND_VERTEX_BUFFER;		
 		vertexDesc.CPUAccessFlags		= uCpuAccess;					

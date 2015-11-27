@@ -3,14 +3,15 @@
 namespace zcGfx
 {
 
-zEngineRef<Drawcall> Drawcall::Create( const zcRes::GfxRenderPassRef& _rRenderPass, float _fPriority, const zcRes::GfxMeshStripRef& _rMeshStrip )
+zEngineRef<Drawcall> Drawcall::Create( const zcRes::GfxRenderPassRef& _rRenderPass, float _fPriority, const zcRes::GfxMeshStripRef& _rMeshStrip, const zVec4U16& _vScreenScissor)
 {
 	//! @todo switch this to 3x ring buffer with frame lifespan
 	static zenMem::zAllocatorPool sMemPool("Pool Drawcall", sizeof(Drawcall), 1024, 1024 );
 	Drawcall* pDrawcall						= zenNew(&sMemPool) Drawcall;	
-	pDrawcall->ConfigureBase( _rRenderPass, _fPriority, 0, keGpuPipe_VertexPixel);
-	pDrawcall->mrRenderPass					= _rRenderPass->GetProxy();
-	pDrawcall->mrMeshStrip					= _rMeshStrip->GetProxy();
+	pDrawcall->ConfigureBase( _rRenderPass, _fPriority, _rMeshStrip);
+	pDrawcall->mrRenderPass					= _rRenderPass;
+	pDrawcall->mrMeshStrip					= _rMeshStrip;
+	pDrawcall->mvScreenScissor				= _vScreenScissor;
 	return pDrawcall;
 }
 
@@ -19,7 +20,7 @@ zEngineRef<Drawcall> DrawcallClearColor::Create( const zcRes::GfxRenderPassRef& 
 	static zenMem::zAllocatorPool sMemPool("Pool Drawcall Clear Color", sizeof(DrawcallClearColor), 128, 128 );
 	DrawcallClearColor* pDrawcallClearColor	= zenNew(&sMemPool) DrawcallClearColor;	
 	pDrawcallClearColor->ConfigureBase( _rRenderPass, _fPriority, 0, keGpuPipe_PreDrawCommand);
-	pDrawcallClearColor->mrRenderPass				= _rRenderPass->GetProxy();
+	pDrawcallClearColor->mrRenderPass				= _rRenderPass;
 	pDrawcallClearColor->mrMeshStrip				= nullptr;
 	pDrawcallClearColor->mrRTColor					= _rRTColor;
 	pDrawcallClearColor->mvOrigin					= _vOrigin;

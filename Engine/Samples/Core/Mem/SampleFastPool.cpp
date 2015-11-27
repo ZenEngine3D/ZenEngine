@@ -73,7 +73,7 @@ void SampleFastPool()
 	StructTestPool* pValues[5];
 	zenMem::Set( pValues, 0, sizeof(pValues) );
 	
-	for(zUInt idx(0); idx<ZENArrayCount(pValues); idx++)
+	for(zU32 idx(0); idx<ZENArrayCount(pValues); idx++)
 	{
 		pValues[idx]		= PoolAlloc.Allocate();
 		pValues[idx]->value = idx;

@@ -11,9 +11,9 @@ namespace zcRes
 	typedef zMap<zcExp::ResDataGfxShaderDX11::BindInfo>::Key32	MapBindInfo;
 
 	//=================================================================================================
-	class GfxInputSignatureProxy_DX11 : public zRefCountedAutoDel
+	class GfxInputSignatureProxy_DX11 : public zRefCounted
 	{
-	ZENClassDeclare(GfxInputSignatureProxy_DX11, zRefCountedAutoDel)
+	ZENClassDeclare(GfxInputSignatureProxy_DX11, zRefCounted)
 	public:												
 											GfxInputSignatureProxy_DX11();
 		virtual								~GfxInputSignatureProxy_DX11();												
@@ -23,9 +23,9 @@ namespace zcRes
 	};
 
 	//=================================================================================================
-	class GfxShaderVertexProxy_DX11 : public zRefCountedAutoDel
+	class GfxShaderVertexProxy_DX11 : public zRefCounted
 	{
-	ZENClassDeclare(GfxShaderVertexProxy_DX11, zRefCountedAutoDel)
+	ZENClassDeclare(GfxShaderVertexProxy_DX11, zRefCounted)
 	public:												
 											GfxShaderVertexProxy_DX11();
 		virtual								~GfxShaderVertexProxy_DX11();												
@@ -35,9 +35,9 @@ namespace zcRes
 	};
 
 	//=================================================================================================	
-	class GfxShaderPixelProxy_DX11 : public zRefCountedAutoDel
+	class GfxShaderPixelProxy_DX11 : public zRefCounted
 	{
-	ZENClassDeclare(GfxShaderPixelProxy_DX11, zRefCountedAutoDel)
+	ZENClassDeclare(GfxShaderPixelProxy_DX11, zRefCounted)
 	public:											
 											GfxShaderPixelProxy_DX11();
 		virtual								~GfxShaderPixelProxy_DX11();												

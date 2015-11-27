@@ -20,6 +20,17 @@ namespace FWnd
 		return meMainWindowThreadStatus == keThread_Running;
 	}
 	
+	void Window::GetInput(WindowInputState& _WindowInputOut, zU8 _uMaxKeyProcessed)
+	{
+		mWindowMutex.lock();
+		_WindowInputOut = mWindowInput;		
+		mWindowInput.Reset(_uMaxKeyProcessed);
+		mWindowMutex.unlock();
+
+		if (_WindowInputOut.maCharacterPressed.Count() > _uMaxKeyProcessed)
+			_WindowInputOut.maCharacterPressed.SetCount(_uMaxKeyProcessed);
+	}
+
 	//==================================================================================================
 	//! @brief		Receives Windows OS messages and process them
 	//! @details	[MainWindowThread] 
@@ -29,21 +40,93 @@ namespace FWnd
 	LRESULT CALLBACK Window::WndEventCallback(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	{
 		Window* pParentWindow = (Window*)GetWindowLongPtr(hwnd, 0);
-		switch(msg)
+		if( pParentWindow )
 		{
-		case WM_CLOSE:
-			DestroyWindow(hwnd);	
-			break;
-		case WM_DESTROY:
-			pParentWindow->meMainWindowThreadStatus = keThread_Ended; 
-			break; 
-		case WM_SIZE:
-			pParentWindow->SetSize(*(zVec2U16*)&lParam); 
-			break; 
-		default:
-			return DefWindowProc(hwnd, msg, wParam, lParam);
+			switch(msg)
+			{
+			case WM_CLOSE:			
+				DestroyWindow(hwnd); 
+				pParentWindow->meMainWindowThreadStatus = keThread_Ended;
+				break;
+			case WM_DESTROY:		
+				pParentWindow->meMainWindowThreadStatus = keThread_Ended; 
+				break; 
+			case WM_SIZE:			
+				pParentWindow->SetSize(*(zVec2U16*)&lParam); 
+				break; 
+			
+			// Input processing
+			case WM_LBUTTONDOWN:
+				pParentWindow->mWindowMutex.lock();
+				pParentWindow->mWindowInput.mbIsMouseDown[WindowInputState::keMouseBtn_Left] = true;
+				pParentWindow->mWindowMutex.unlock();
+				break;
+			case WM_LBUTTONUP:
+				pParentWindow->mWindowMutex.lock();
+				pParentWindow->mWindowInput.mbIsMouseDown[WindowInputState::keMouseBtn_Left] = false;
+				pParentWindow->mWindowMutex.unlock();
+				break;
+			case WM_RBUTTONDOWN:
+				pParentWindow->mWindowMutex.lock();
+				pParentWindow->mWindowInput.mbIsMouseDown[WindowInputState::keMouseBtn_Right] = true;
+				pParentWindow->mWindowMutex.unlock();				
+				break;
+			case WM_RBUTTONUP:
+				pParentWindow->mWindowMutex.lock();
+				pParentWindow->mWindowInput.mbIsMouseDown[WindowInputState::keMouseBtn_Right] = false;
+				pParentWindow->mWindowMutex.unlock();
+				break;
+			case WM_MBUTTONDOWN:
+				pParentWindow->mWindowMutex.lock();
+				pParentWindow->mWindowInput.mbIsMouseDown[WindowInputState::keMouseBtn_Middle] = true;
+				pParentWindow->mWindowMutex.unlock();
+				break;
+			case WM_MBUTTONUP:
+				pParentWindow->mWindowMutex.lock();
+				pParentWindow->mWindowInput.mbIsMouseDown[WindowInputState::keMouseBtn_Middle] = false;
+				pParentWindow->mWindowMutex.unlock();
+				break;
+			case WM_MOUSEWHEEL:
+				pParentWindow->mWindowMutex.lock();
+				pParentWindow->mWindowInput.mfMouseWheel += GET_WHEEL_DELTA_WPARAM(wParam) > 0 ? +1.0f : -1.0f;
+				pParentWindow->mWindowMutex.unlock();
+				break;
+			case WM_MOUSEMOVE:
+				pParentWindow->mWindowMutex.lock();
+				pParentWindow->mWindowInput.mvMousePos = zVec2S16((zI16)(lParam&0xFFFF), (zI16)((lParam >> 16)&0xFFFF));
+				pParentWindow->mWindowMutex.unlock();
+				break;
+			case WM_KEYDOWN:				
+				if(wParam <= 0xFF)
+				{
+					pParentWindow->mWindowMutex.lock();
+					pParentWindow->mWindowInput.mbIsKeyDown[wParam] = true;
+					pParentWindow->mWindowInput.mbIsKeyPressed[wParam] = (lParam & 0x40000000) == 0;
+					pParentWindow->mWindowMutex.unlock();
+				}			
+				break;
+			case WM_KEYUP:
+				if(wParam <= 0xFF)
+				{
+					pParentWindow->mWindowMutex.lock();
+					pParentWindow->mWindowInput.mbIsKeyDown[wParam] = false;
+					pParentWindow->mWindowInput.mbIsKeyReleased[wParam] = true;
+					pParentWindow->mWindowMutex.unlock();
+				}
+				break;
+			case WM_CHAR:
+				// You can also use ToAscii()+GetKeyboardState() to retrieve characters.
+				pParentWindow->mWindowMutex.lock();
+				pParentWindow->mWindowInput.maCharacterPressed.Push((zU16)wParam);
+				pParentWindow->mWindowMutex.unlock();				
+				break;
+
+			default:
+				return DefWindowProc(hwnd, msg, wParam, lParam);
+			}
 		}
-		return 0;
+		
+		return DefWindowProc(hwnd, msg, wParam, lParam);
 	}
 
 	//==================================================================================================
