@@ -2,7 +2,7 @@
 #ifndef __zenEngine_System_Launch_h__
 #define __zenEngine_System_Launch_h__
 
-namespace FWnd { class Window; }
+namespace zen { namespace zenWnd {class Window;} } 
 
 namespace zen { namespace zenSys {	
 
@@ -10,43 +10,43 @@ namespace zen { namespace zenSys {
 //! @class	Game should derive from this class, to start the engine
 //! @todo cleanup Rely on update callback instead of virtual function?
 //=============================================================================
-class zEngineInstance
+class zEngineInstance : public zenSig::zSlot
 {
-ZENClassDeclareNoParent(zEngineInstance)
+ZENClassDeclare(zEngineInstance, zenSig::zSlot)
 public:
 	virtual bool										Init();
 	virtual void										Destroy();
 	virtual void										Update();
-	virtual bool										IsDone()=0;
+	virtual bool										IsDone()=0;	
+	virtual const char*									GetAppName()const=0;
 	void												CreateGfxWindow(const zVec2U16& _vDim, const zVec2U16& _vPos);
-
-	void												TempUpdateUIFps();
-
-	//void												SetWindow(const zenRes::zGfxWindow& _rGfxWindow);
-	zenSig::zSignalEmitter1<zenConst::eUpdatePriority>&	GetSignalUpdate();
-	zenSig::zSignalEmitter1<zenConst::eUpdatePriority>	msigUpdate;
+	zenSig::zSignalEmitter1<zenConst::eUpdatePriority>&	GetSignalUpdate();	
 
 protected:	
-	zenRes::zGfxWindow									mrMainWindowGfx	= nullptr;
-	FWnd::Window*										mpMainWindowOS	= nullptr;
+	virtual void										UIRender();
+	void												UIRenderStats();
+	zenRes::zGfxWindow									mrMainWindowGfx		= nullptr;
+	zenWnd::Window*										mpMainWindowOS		= nullptr;
 	zVec2U16											muWindowSize;
+	zenSig::zSignalEmitter1<zenConst::eUpdatePriority>	msigUpdate;	
+
 private:
+	void												UIRenderCB();
 	void												MainLoop();
-	friend void	LaunchEngine(zEngineInstance* _pEngineInstance, int argc, const char* const * argv);
+	friend void											LaunchEngine(zEngineInstance* _pEngineInstance, int argc, const char* const * argv);
 };
 
-//! @todo move this to a more appropriate location
+//! @todo clean move this to a more appropriate location
 class zSampleEngineInstance : public zEngineInstance
 {
 ZENClassDeclare(zSampleEngineInstance, zEngineInstance)
 public:
-							zSampleEngineInstance( void (*_pFunctionToCall)() );
 	virtual bool			IsDone();
-	virtual void			Update();	
+	void					SetDone();
 
-protected:
-	void					(*mpFunctionToCall)();
-	bool					mbDone;
+protected:	
+	virtual void			UIRender();
+	bool					mbDone = false;
 };
 
 void						LaunchEngine(zEngineInstance* _pEngineInstance, int argc, const char* const * argv);

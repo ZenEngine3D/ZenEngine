@@ -16,8 +16,7 @@ namespace zcExp
 			if( pExportInfo->maShaderID[idx].IsValid() )
 				aSortedResname[uValidCount++] = pExportInfo->maShaderID[idx].GetHashID();
 
-		//! @todo Urgent need sorting re-implemented
-		//aSortedResname.Sort();
+		aSortedResname.Sort();
 
 		zResID::NameHash hName( aSortedResname.First(), aSortedResname.SizeMem() );
 		return zcExp::ValidateItemID(_ePlatform, _eType, _eSource, hName, _bExistOut);
@@ -45,10 +44,10 @@ namespace zcExp
 		// Set Shader used for each stage, and needed ShaderParam for each
 		//---------------------------------------------------------------------	
 		ExportInfoGfxShaderBinding*	pExport = static_cast<ExportInfoGfxShaderBinding*>(mpExportInfo);
-		const zResID					aShaderIdNull[]={zResID(),zResID()};
+		const zResID					aShaderIdnullptr[]={zResID(),zResID()};
 		zArrayStatic<zResID>			aShaderID;
-		ZENStaticAssert(ZENArrayCount(aShaderIdNull) == zenConst::keShaderStage__Count);
-		aShaderID.Copy(aShaderIdNull, ZENArrayCount(aShaderIdNull));
+		ZENStaticAssert(ZENArrayCount(aShaderIdnullptr) == zenConst::keShaderStage__Count);
+		aShaderID.Copy(aShaderIdnullptr, ZENArrayCount(aShaderIdnullptr));
 		mdStagePerParamDef.Init(8);
 		mdStagePerParamDef.SetDefaultValue(0);
 		for(zUInt idx=0; idx<pExport->maShaderID.Count(); ++idx)

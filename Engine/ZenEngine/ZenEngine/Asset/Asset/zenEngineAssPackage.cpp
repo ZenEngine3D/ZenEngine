@@ -26,7 +26,7 @@ zPackageRef zPackageRef::sCreate(const zWString& _zName, const zPackageGroupRef&
 			return rNewPackage;
 		}
 	}
-	return NULL;
+	return nullptr;
 }
 
 zPackageRef::zPackageRef()

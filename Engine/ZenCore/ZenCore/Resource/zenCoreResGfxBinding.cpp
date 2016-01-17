@@ -1,4 +1,5 @@
 #include "zcCore.h"
+#include "Engine/ZenExternal/UI/zxUIImgui.h"
 
 namespace zen { namespace zenRes {
 
@@ -94,9 +95,12 @@ void zGfxWindow::Resize(const zVec2U16& _vSize)
 }
 
 bool zGfxWindow::PerformResize()
-{
-	zcRes::GfxWindowRef rWindow = mpResource;
-	if( !rWindow->GetProxy()->mvPendingResize.IsNull() )
+{	
+	//! @todo Clean : Decide if we use ref object or pointer conversion (safer/simpler with ref, but uses ref counting without need
+	// zcRes::GfxWindowRef rWindow = mpResource; 	 OR
+	// zcRes::GfxWindow* pWindow = static_cast<zcRes::GfxWindow*>(mpResource);
+	zcRes::GfxWindowRef rWindow = mpResource; 	
+	if( !rWindow->GetProxy()->mvPendingResize.IsZero() )
 	{
 		rWindow->GetProxy()->PerformResize();	
 		return true;
@@ -108,14 +112,14 @@ void zGfxWindow::FrameBegin()
 {
 	ZENAssertMsg(mpResource, "No valid resource assigned");
 	zcRes::GfxWindow* pWindow = static_cast<zcRes::GfxWindow*>(mpResource);
-	zcMgr::GfxRender.FrameBegin(pWindow);
+	pWindow->FrameBegin();
 }
 
 void zGfxWindow::FrameEnd()
 {
 	ZENAssertMsg(mpResource, "No valid resource assigned");
 	zcRes::GfxWindow* pWindow = static_cast<zcRes::GfxWindow*>(mpResource);
-	zcMgr::GfxRender.FrameEnd();
+	pWindow->FrameEnd();
 }
 
 //=================================================================================================

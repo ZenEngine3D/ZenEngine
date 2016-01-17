@@ -35,7 +35,7 @@ void Assert( const char* _zCond, const char* _zFilename, unsigned int _uLine, eE
 	if( _eErrorType == keErrorLevel_AssertBreak )
 	{
 		#ifdef _DEBUG
-			switch (_CrtDbgReport(_CRT_ERROR, NULL, 0, NULL, "(Abort) Stop\n(Retry) Break\n(Ignore) Continue"))
+			switch (_CrtDbgReport(_CRT_ERROR, nullptr, 0, nullptr, "(Abort) Stop\n(Retry) Break\n(Ignore) Continue"))
 			{
 			case 2: exit(-1);
 			case 1: __debugbreak();
@@ -52,4 +52,4 @@ void Assert( const char* _zCond, const char* _zFilename, unsigned int _uLine, eE
 	
 }
 
-} 
+}  

@@ -1529,7 +1529,7 @@ PUGI__NS_BEGIN
 
 		if (source_length == 0)
 		{
-			// empty string and null pointer are equivalent, so just deallocate old memory
+			// empty string and nullptr pointer are equivalent, so just deallocate old memory
 			xml_allocator* alloc = reinterpret_cast<xml_memory_page*>(header & xml_memory_page_pointer_mask)->allocator;
 
 			if (header & header_mask) alloc->deallocate_string(dest);
@@ -2503,7 +2503,7 @@ PUGI__NS_BEGIN
 						}
 						else if (ch == 0)
 						{
-							// we stepped over null terminator, backtrack & handle closing tag
+							// we stepped over nullptr terminator, backtrack & handle closing tag
 							--s;
 							
 							if (endch != '>') PUGI__THROW_ERROR(status_bad_start_element, s);
@@ -6107,7 +6107,7 @@ PUGI__NS_BEGIN
 			rn = rn.parent();
 		}
 
-		// there is no common ancestor (the shared parent is null), nodes are from different documents
+		// there is no common ancestor (the shared parent is nullptr), nodes are from different documents
 		if (!ln.parent()) return ln < rn;
 
 		// determine sibling order

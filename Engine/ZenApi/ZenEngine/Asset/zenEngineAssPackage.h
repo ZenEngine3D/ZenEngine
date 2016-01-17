@@ -4,7 +4,7 @@
 
 #if ZEN_ENGINETOOL
 
-namespace zen { namespace zeAss  { class Package; } }	//Forward declare
+namespace zeAss  { class Package; }	//Forward declare
 
 namespace zen { namespace zenAss 
 {

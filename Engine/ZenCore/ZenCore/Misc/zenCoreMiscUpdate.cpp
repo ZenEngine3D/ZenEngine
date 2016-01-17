@@ -26,9 +26,9 @@ void IUpdate::Update()
 void IUpdate::Activate(zenConst::eUpdatePriority _ePriorityGroup, zU32 _uPriority)
 {
 	ZENAssert(mePriorityGroup<zenConst::keUpdt__Count);
-	mePriorityGroup				= _ePriorityGroup;
-	muPriority					= _uPriority;
-	zList<IUpdate>::Iterator it	= zcMgr::Updater.mlstUpdateable[mePriorityGroup].GetHeadIt();
+	mePriorityGroup		= _ePriorityGroup;
+	muPriority			= _uPriority;
+	auto it				= zcMgr::Updater.mlstUpdateable[mePriorityGroup].GetHeadIt();
 	while( it->muPriority > _uPriority )
 		++it;
 
@@ -40,7 +40,7 @@ void IUpdate::Activate(zenConst::eUpdatePriority _ePriorityGroup, zU32 _uPriorit
 
 void IUpdate::Deactivate()
 {
-	mLink.Unlink();
+	List::Remove( *this );
 }
 
 void IUpdate::Reactivate()

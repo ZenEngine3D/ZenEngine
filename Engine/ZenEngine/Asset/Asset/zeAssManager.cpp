@@ -4,7 +4,7 @@
 #if ZEN_ENGINETOOL
 namespace zeMgr{ zeAss::ManagerAsset Asset; }
 
-namespace zen { namespace zeAss
+namespace zeAss
 {
 //=================================================================================================
 //! @brief		Called by AssetMap, when asset is removed from it
@@ -15,11 +15,11 @@ namespace zen { namespace zeAss
 //=================================================================================================
 void ResetAssetReference( zenAss::zArrayAsset& _dAsset, zenAss::zAssetItemRef& _rAssetDel)
 {
-	_rAssetDel = NULL;
+	_rAssetDel = nullptr;
 }
 void ResetPackageReference( zenAss::zArrayPackage& _dPackage, zenAss::zPackageRef& _rPackageDel)
 {
-	_rPackageDel = NULL;
+	_rPackageDel = nullptr;
 }
 
 //=================================================================================================
@@ -30,14 +30,14 @@ ManagerAsset::ManagerAsset()
 , muPackageNextID(0)
 , mbLoading(false)
 {	
-	mdPackage.SetDefaultValue(NULL);
+	mdPackage.SetDefaultValue(nullptr);
 	mdPackage.SetDeleteItemCB( ResetPackageReference );
 
 	zenMem::Zero(maAssetNextID, sizeof(maAssetNextID) );
 	for(zUInt idx(0); idx<zenConst::keAssType__Count; ++idx)
 	{
 		madAsset[idx].Init(1000);
-		madAsset[idx].SetDefaultValue(NULL);
+		madAsset[idx].SetDefaultValue(nullptr);
 		madAsset[idx].SetDeleteItemCB( ResetAssetReference );			
 	}
 	
@@ -51,7 +51,7 @@ ManagerAsset::ManagerAsset()
 //=================================================================================================
 bool ManagerAsset::Load()
 {		
-	mrGroupRoot	= zenNewDefault zeAss::PackageGroup(zenT("Root"), NULL );
+	mrGroupRoot	= zenNewDefault zeAss::PackageGroup(zenT("Root"), nullptr );
 	PackageLoad();
 	return true;
 }
@@ -159,7 +159,7 @@ void ManagerAsset::AssetDelete( zenAss::zAssetItemRef _rAsset )
 {
 	if( _rAsset.IsValid() )
 	{
-		_rAsset->SetPackage( zenAss::zPackageRef(NULL) );
+		_rAsset->SetPackage( zenAss::zPackageRef(nullptr) );
 		madAsset[_rAsset.GetType()].Unset(_rAsset.GetIDUInt());
 	}
 }
@@ -170,6 +170,6 @@ bool ManagerAsset::SaveAll()
 	return mrGroupRoot->Save(xmlLoader, false);
 }
 
-}} //namespace zen { namespace zeAss
+} //namespace zeAss
 
 #endif //ZEN_ENGINETOOL

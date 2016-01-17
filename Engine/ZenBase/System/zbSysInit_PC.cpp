@@ -4,8 +4,8 @@ namespace zbSys
 {		
 	static bool			sbSystemStarted(false);						//!< True if the system has been initialized
 	static bool			sbEngineStarted(false);						//!< True if the engine's managers have been initialized
-	static bool			(*spFuncEngineStart)(void)=NULL;
-	static bool			(*spFuncEngineStop)(void)=NULL;
+	static bool			(*spFuncEngineStart)(void)=nullptr;
+	static bool			(*spFuncEngineStop)(void)=nullptr;
 	
 	//==================================================================================================
 	//! @brief		Called at the program start, initializing the OS functionalities
@@ -63,4 +63,4 @@ namespace zbSys
 	{
 		return sbEngineStarted; //@todo gWindowsInfos.eMainWindowThreadStatus == keThread_Running && sbEngineStarted;
 	}
-}  
+}

@@ -1,8 +1,5 @@
 #include "zenEngine.h"
 #include "SampleDebugUI.h"
-//#include <initializer_list>
-
-#include <Engine/ThirdParty/imgui/imgui.h> //! @todo Urgent remove this
 
 //=================================================================================================
 //! @example SampleGfxRenderer.cpp
@@ -59,16 +56,23 @@ const zArrayStatic<zenRes::zGfxVertex::Element> aCubeVerticeInfos = {
 	zenRes::zGfxVertex::Element(zenConst::keShaderElemType_Float, 2, zenConst::keShaderSemantic_UV,			ZENMemberOffset(SimpleVertex, Tex) ) 
 };
 
+//SF++
+#if IMGUION
 const zArrayStatic<zenRes::zGfxVertex::Element> aUIVerticeInfos = {
 	zenRes::zGfxVertex::Element(zenConst::keShaderElemType_Float, 2, zenConst::keShaderSemantic_Position,	ZENMemberOffset(ImDrawVert, pos)),
 	zenRes::zGfxVertex::Element(zenConst::keShaderElemType_Float, 2, zenConst::keShaderSemantic_UV,			ZENMemberOffset(ImDrawVert, uv)),
 	zenRes::zGfxVertex::Element(zenConst::keShaderElemType_UByte, 4, zenConst::keShaderSemantic_Color,		ZENMemberOffset(ImDrawVert, col))
 };
-
+#endif
 
 bool SampleDebugUIInstance::IsDone()
 {
 	return false;
+}
+
+const char* SampleDebugUIInstance::GetAppName() const
+{
+	return "Sample UI";
 }
 
 bool SampleDebugUIInstance::Init()
@@ -101,45 +105,9 @@ bool SampleDebugUIInstance::Init()
 		}
 	}
 
-	zArrayStatic<zenRes::zShaderDefine> aShaderDefines			= {	zenRes::zShaderDefine("DEFINETEST", "1"), zenRes::zShaderDefine("DEFINETEST1", "0")};
-	zArrayStatic<const zenRes::zShaderParameter*> aParamAll		= {	&zenRes::zShaderFloat4(zHash32("vMeshColor"),	zVec4F(.7f,.7f,.7f,1)),
-																	&zenRes::zShaderFloat4(zHash32("vColor"),		zVec4F(1,1,1,1)) };
-	{
-		ImGuiIO& io = ImGui::GetIO();
-
-		// Build
-		unsigned char* pixels;
-		int width, height;
-		io.Fonts->GetTexDataAsRGBA32(&pixels, &width, &height);
-		zArrayStatic<zU8> aFontRGBA;
-		aFontRGBA.Copy(pixels, width*height * 4);
-		mrUITexture = zenRes::zGfxTexture2d::Create(zenConst::keTexFormat_RGBA8, zVec2U16(width, height), aFontRGBA);
-
-		// Store our identifier
-		io.Fonts->TexID = 0;
-
-		// Cleanup (don't clear the input data if you want to append new fonts later)
-		io.Fonts->ClearInputData();
-		io.Fonts->ClearTexData();
-
-		mrUIVS	= zenRes::zGfxShaderVertex::Create("Shader/ImGui.sl", "VSMain");
-		mrUIPS	= zenRes::zGfxShaderPixel::Create("Shader/ImGui.sl", "PSMain");
-		mrUIShaderBind = zenRes::zGfxShaderBinding::Create(mrUIVS, mrUIPS);
-
-		io.KeyMap[ImGuiKey_Tab] = VK_TAB;                       // Keyboard mapping. ImGui will use those indices to peek into the io.KeyDown[] array that we will update during the application lifetime.
-		io.KeyMap[ImGuiKey_LeftArrow] = VK_LEFT;
-		io.KeyMap[ImGuiKey_RightArrow] = VK_RIGHT;
-		io.KeyMap[ImGuiKey_UpArrow] = VK_UP;
-		io.KeyMap[ImGuiKey_DownArrow] = VK_DOWN;
-		io.KeyMap[ImGuiKey_PageUp] = VK_PRIOR;
-		io.KeyMap[ImGuiKey_PageDown] = VK_NEXT;
-		io.KeyMap[ImGuiKey_Home] = VK_HOME;
-		io.KeyMap[ImGuiKey_End] = VK_END;
-		io.KeyMap[ImGuiKey_Delete] = VK_DELETE;
-		io.KeyMap[ImGuiKey_Backspace] = VK_BACK;
-		io.KeyMap[ImGuiKey_Enter] = VK_RETURN;
-		io.KeyMap[ImGuiKey_Escape] = VK_ESCAPE;
-	}
+	zArrayStatic<zenRes::zShaderDefine> aShaderDefines = { zenRes::zShaderDefine("DEFINETEST", "1"), zenRes::zShaderDefine("DEFINETEST1", "0") };
+	zArrayStatic<const zenRes::zShaderParameter*> aParamAll = { &zenRes::zShaderFloat4(zHash32("vMeshColor"),	zVec4F(.7f,.7f,.7f,1)),
+																&zenRes::zShaderFloat4(zHash32("vColor"),		zVec4F(1,1,1,1)) };
 
 
 	//---------------------------------------------------------------------
@@ -194,7 +162,7 @@ void SampleDebugUIInstance::UpdateBackbuffers()
 			mrRndPassFinal							= zenRes::zGfxRenderPass::Create("RenderBackbufferFinal", 2, FinalColorRTConfig, FinalDepthRTConfig, mrStateRaster);	
 			zenMath::MatrixProjectionLH( matProjection, 60, float(vBackbufferDim.y)/float(vBackbufferDim.x), 0.01f, 100.f );
 		}
-
+	#if IMGUION
 		{	// Rendering to UI
 			zenRes::zGfxRenderPass::ConfigColorRT	UIColorRTConfig;
 			zenRes::zGfxRenderPass::ConfigDepthRT	UIDepthRTConfig;
@@ -215,6 +183,7 @@ void SampleDebugUIInstance::UpdateBackbuffers()
 			mrUIRndPass								= zenRes::zGfxRenderPass::Create("RenderUI", 100, UIColorRTConfig, UIDepthRTConfig, mrUIRaster);
 			zenMath::MatrixProjectionOrthoLH(matUIOrthographic, vBackbufferDim.x, vBackbufferDim.y, 0, 1);
 		}
+	#endif
 	}
 }
 
@@ -226,97 +195,11 @@ void SampleDebugUIInstance::Destroy()
 void SampleDebugUIInstance::Update()
 {	
 	Super::Update();
-	{
-
-	
+		
 	zArrayDynamic<zenRes::zGfxDrawcall> aDrawcalls;
 	aDrawcalls.Reserve(1000);
 	UpdateBackbuffers();
 
-#if 1
-	//============================================================================	
-	// Start the frame
-	ImGui::NewFrame();
-	ImGui::ShowTestWindow();
-	TempUpdateUIFps();
-	ImGui::Render();
-	ImDrawData* pUiData = ImGui::GetDrawData();
-	static zUInt VtxCount = 0; //! @todo Urgent have buffer accessors available 
-	static zUInt IdxCount = 0;
-
-	// UI: Grow Vertex/Index buffer when needed
-	if (VtxCount < pUiData->TotalVtxCount)
-	{
-		zArrayStatic<zenRes::zGfxVertex::Stream> aUIVerticeStreams(1);
-		VtxCount						= static_cast<zUInt>(pUiData->TotalVtxCount*1.25);		
-		aUIVerticeStreams[0].muStride	= static_cast<zU32>(sizeof(ImDrawVert));		
-		aUIVerticeStreams[0].maElements	= aUIVerticeInfos;
-		aUIVerticeStreams[0].maData.SetCount(VtxCount*sizeof(ImDrawVert));
-		mrUIVertex						= zenRes::zGfxVertex::Create(aUIVerticeStreams, zFlagResUse(zenConst::keResUse_DynamicDiscard));
-	}
-	if (IdxCount < pUiData->TotalIdxCount)
-	{		
-		IdxCount = static_cast<zUInt>(pUiData->TotalIdxCount*1.25);
-		if( sizeof(ImDrawIdx) == sizeof(zU16) )
-		{
-			zArrayStatic<zU16> aIndices;
-			aIndices.SetCount(IdxCount);
-			mrUIIndex = zenRes::zGfxIndex::Create(aIndices, zenConst::kePrimType_TriangleList);
-		}
-		else if (sizeof(ImDrawIdx) == sizeof(zU32))
-		{
-			zArrayStatic<zU32> aIndices;
-			aIndices.SetCount(IdxCount);
-			mrUIIndex = zenRes::zGfxIndex::Create(aIndices, zenConst::kePrimType_TriangleList);
-		}		
-	}
-	
-	// UI: Update content of vertex/index
-	ImDrawVert* pUIVertices	= reinterpret_cast<ImDrawVert*>(mrUIVertex.Lock());
-	ImDrawIdx* pUIIndices	= reinterpret_cast<ImDrawIdx*>(mrUIIndex.Lock());
-	for (int n = 0; n < pUiData->CmdListsCount; ++n)
-	{
-		const ImDrawList* cmd_list = pUiData->CmdLists[n];
-		zenMem::Copy(pUIVertices, &cmd_list->VtxBuffer[0], cmd_list->VtxBuffer.size());
-		zenMem::Copy(pUIIndices, &cmd_list->IdxBuffer[0], cmd_list->IdxBuffer.size());
-		pUIVertices += cmd_list->VtxBuffer.size();
-		pUIIndices += cmd_list->IdxBuffer.size();
-	}
-	mrUIVertex.Unlock();
-	mrUIIndex.Unlock();
-	
-	// UI: Emit drawcalls
-	int vtx_offset = 0;
-	int idx_offset = 0;
-	zArrayDynamic<zenRes::zGfxMeshStrip> aUIMeshStrip;
-	aUIMeshStrip.Reserve(pUiData->CmdListsCount*2);
-	for (int n = 0; n < pUiData->CmdListsCount; n++)
-	{
-		const ImDrawList* cmd_list = pUiData->CmdLists[n];
-		for (int cmd_i = 0; cmd_i < cmd_list->CmdBuffer.size(); cmd_i++)
-		{
-			const ImDrawCmd* pcmd = &cmd_list->CmdBuffer[cmd_i];
-			if (pcmd->UserCallback)
-			{
-				pcmd->UserCallback(cmd_list, pcmd);
-			}
-			else
-			{
-				zenRes::zGfxMeshStrip rMeshStrip = zenRes::zGfxMeshStrip::Create(mrUIVertex, mrUIIndex, mrUIShaderBind, idx_offset, pcmd->ElemCount, vtx_offset);
-				//! @todo optim create shaderparam and reuse it instead of recreating it for all mesh strip
-				rMeshStrip.SetValue(zHash32("txFont"), mrUITexture, mrSampler);
-				rMeshStrip.SetValue(zHash32("ProjectionMatrix"), matUIOrthographic);
-				rMeshStrip.Draw(mrUIRndPass, float(aDrawcalls.Count()), aDrawcalls, zVec4U16( zU16(pcmd->ClipRect.x), zU16(pcmd->ClipRect.y), zU16(pcmd->ClipRect.z), zU16(pcmd->ClipRect.w)));
-			}
-			idx_offset += pcmd->ElemCount;
-		}
-		vtx_offset += cmd_list->VtxBuffer.size();
-	}
-	//mrUIMesh = zenRes::zGfxMesh::Create(aUIMeshStrip);
-	//mrUIMesh.SetValue(zHash32("txFont"), mrUITexture, mrSampler );
-	//mrUIMesh.SetValue(zHash32("ProjectionMatrix"), matUIOrthographic);
-	//============================================================================
-#endif
 	// Testing memory leaking
 	#if 0
 	{
@@ -341,11 +224,9 @@ void SampleDebugUIInstance::Update()
 	mrCube3MeshStrip.SetValue( zHash32("World"), matWorld );
 	mrCube3MeshStrip.SetValue( zHash32("Projection"), matProjection );
 	mrCube3MeshStrip.Draw(mrRndPassFinal, 0, aDrawcalls);
-
-	zenRes::zGfxDrawcall::Submit(aDrawcalls);
+	
+	zenRes::zGfxDrawcall::Submit(aDrawcalls);	
 	mrMainWindowGfx.FrameEnd();
-	}
-
 
 }
 }

@@ -10,7 +10,7 @@ public:																																\
 	ZENInline const _ClassInstance_&	Get()const									{	return mInstanceInfo;};						\
 	ZENInline _ClassInstance_&			Get()										{	return mInstanceInfo;};						\
 	static _Class_*						Create(zcExp::ExportInfoBase& _ExportInfo)	{	_Class_* pNewRes = zenNewDefault _Class_();	\
-																					return pNewRes->ResourceCreate(pNewRes->mInstanceInfo, _ExportInfo) ? pNewRes : NULL; }\
+																					return pNewRes->ResourceCreate(pNewRes->mInstanceInfo, _ExportInfo) ? pNewRes : nullptr; }\
 	static zenConst::eResType			GetResourceType()							{	return _ResourceType_; }					\
 protected:																															\
 	_ClassInstance_						mInstanceInfo;																				\

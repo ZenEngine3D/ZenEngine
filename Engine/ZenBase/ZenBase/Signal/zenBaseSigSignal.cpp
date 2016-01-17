@@ -4,7 +4,7 @@ namespace zen { namespace zenSig
 {
 
 zSignal::ConnectionBase::ConnectionBase()
-: mpSignal(NULL)
+: mpSignal(nullptr)
 {
 }
 
@@ -23,13 +23,13 @@ void zSignal::Connect(zSlot& _Object, zSignal::ConnectionBase& _Connection)
 
 void zSignal::Disconnect(zSlot& _Object)
 {
-	zList<ConnectionBase>::Iterator it = _Object.mlstEmitters.GetHeadIt();
+	auto it = _Object.mlstEmitters.GetHeadIt();
 	while( *it )
 	{
 		if( it->mpSignal == this )
 		{
-			it->mlnkSignal.Unlink();
-			it->mlnkSlot.Unlink();
+			zSignal::ConnectionBase::ListSignal::Remove(**it);
+			zSignal::ConnectionBase::ListSlot::Remove(**it);
 			break;
 		}		
 	}

@@ -4,7 +4,7 @@
 
 #if ZEN_ENGINETOOL
 
-namespace zen { namespace zeAss
+namespace zeAss
 {
 	class GfxTexture2D : public AssetTyped<zenConst::keAssType_Texture2D>
 	{
@@ -13,7 +13,7 @@ namespace zen { namespace zeAss
 		virtual const zenAss::PropertyDefArray&	GetProperties()const;
 	};	
 
-}} //namespace zen { namespace zeAss
+} //namespace zeAss
 
 #endif
 #endif

@@ -24,13 +24,16 @@ public:
 protected:
 	struct SignalInfo
 	{
-		zSignalEmitterAsync*				mpEmitter;		
-		zList<SignalInfo>::Link				mlnkPendingInGroup;
-		zList<SignalInfo>::Link				mlnkPendingInEmitter;
-		virtual void Send() = 0;
+		zSignalEmitterAsync*	mpEmitter;		
+		zListLink				mlnkPendingInGroup;
+		zListLink				mlnkPendingInEmitter;
+		virtual void			Send() = 0;
+
+		typedef zList<SignalInfo, &SignalInfo::mlnkPendingInGroup>		ListGroup;
+		typedef zList<SignalInfo, &SignalInfo::mlnkPendingInEmitter>	ListEmitter;
 	};
-	class zSignalEmitterAsyncGroup*					mpEmitterGroup;
-	zListDeclare(SignalInfo, mlnkPendingInEmitter)	mlstPendingSignal;
+	class zSignalEmitterAsyncGroup*	mpEmitterGroup;
+	SignalInfo::ListEmitter			mlstPendingSignal;
 	friend class zSignalEmitterAsyncGroup;
 };
 
@@ -42,7 +45,7 @@ public:
 	void			EmitAllSignals();				//!< Send all signal that have been emitted in this group
 	void			ClearPendingSignals();			//!< @Brief Delete all pending signal owned by this emitter group
 //protected:
-	zListDeclare(zSignalEmitterAsync::SignalInfo, mlnkPendingInGroup) mlstPendingSignal;
+	zSignalEmitterAsync::SignalInfo::ListGroup mlstPendingSignal;
 };
 
 //=================================================================================================
@@ -56,7 +59,7 @@ class zSignalEmitterAsync0 : public zSignal0, public zSignalEmitterAsync
 ZENClassDeclare(zSignalEmitterAsync0, zSignal0)
 public:
 	zSignalEmitterAsync0()
-	: zSignalEmitterAsync(NULL)
+	: zSignalEmitterAsync(nullptr)
 	{
 	}
 

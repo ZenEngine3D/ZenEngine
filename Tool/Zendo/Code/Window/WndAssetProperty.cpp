@@ -10,10 +10,10 @@ END_EVENT_TABLE()
 
 WndAssetProperty::WndAssetProperty(wxWindow *parent, const wxString& title)
 : wxPanel(parent, wxID_ANY)
-, mpNotebook(NULL)
+, mpNotebook(nullptr)
 {	
 	mdTabPerAsset.Init(50);
-	mdTabPerAsset.SetDefaultValue(NULL);
+	mdTabPerAsset.SetDefaultValue(nullptr);
 
 	wxBoxSizer* sizer		= zenNewDefault wxBoxSizer(wxVERTICAL);
 	mpNotebook				= zenNewDefault wxAuiNotebook(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxAUI_NB_DEFAULT_STYLE | wxAUI_NB_TAB_EXTERNAL_MOVE | wxNO_BORDER);

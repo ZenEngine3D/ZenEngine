@@ -86,7 +86,7 @@ BEGIN_EVENT_TABLE(WndMain, wxFrame)
 END_EVENT_TABLE()
 
 WndMain::WndMain(const wxString& title)
-: wxFrame(NULL, wxID_ANY, title)
+: wxFrame(nullptr, wxID_ANY, title)
 , mLayoutMgr(this, wxAUI_MGR_DEFAULT|wxAUI_MGR_TRANSPARENT_DRAG)
 {	
 	// create several text controls

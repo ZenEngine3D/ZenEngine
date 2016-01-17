@@ -27,9 +27,9 @@ namespace zcRes
 		ZENDbgCode(mpOwner = &_Owner);
 		const GfxRenderTargetResDataRef& rResData = _Owner.GetResData();
 		ZENAssert(rResData.IsValid());
-		ID3D11Texture2D* pTexture(NULL);
+		ID3D11Texture2D* pTexture(nullptr);
 
-		mrProxParentTexture		= _Owner.GetTexture2D().IsValid() ? _Owner.GetTexture2D() : NULL;
+		mrProxParentTexture		= _Owner.GetTexture2D().IsValid() ? _Owner.GetTexture2D() : nullptr;
 		meFormat				= rResData->meFormat;
 		mvDim					= rResData->mvDim;
 
@@ -55,7 +55,7 @@ namespace zcRes
 			}
 			else
 			{
-				hr = zcMgr::GfxRender.DX11GetDevice()->CreateRenderTargetView( pTexture, NULL, &mpTargetColorView );				
+				hr = zcMgr::GfxRender.DX11GetDevice()->CreateRenderTargetView( pTexture, nullptr, &mpTargetColorView );				
 			}
 			
 			if( rResData->mpBackbuffer )

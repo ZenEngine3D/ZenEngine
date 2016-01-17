@@ -3,7 +3,7 @@
 #define __LibZenEngine_Asset_PackageGroup_h__
 
 #if ZEN_ENGINETOOL
-namespace zen { namespace zeAss
+namespace zeAss
 {
 	class PackageGroup : public zRefCounted
 	{
@@ -49,7 +49,7 @@ namespace zen { namespace zeAss
 		friend class ManagerAsset;
 		friend class Package;		
 	};
-}} //namespace zen { namespace zeAss
+} //namespace zeAss
 
 #endif
 

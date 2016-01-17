@@ -152,7 +152,7 @@ namespace zen { namespace zenType
 	//-------------------------------------------------------------------------------------------------
 	//! @brief				PreConfigured Hamt for use as a zMap
 	//! @tparam _Data_		Datatype of Values stored
-	//! @tparam _Null_		Value to return when a Key entry isn't found
+	//! @tparam _nullptr_		Value to return when a Key entry isn't found
 	//=================================================================================================
 	template<class _Value_>
 	struct zMap
@@ -167,7 +167,7 @@ namespace zen { namespace zenType
 	//-------------------------------------------------------------------------------------------------
 	//! @brief				PreConfigured Hamt for use as a zMap
 	//! @tparam _Data_		Datatype of Values stored
-	//! @tparam _Null_		Value to return when a Key entry isn't found
+	//! @tparam _nullptr_		Value to return when a Key entry isn't found
 	//=================================================================================================
 	template<class _Value_>
 	struct zArraySparse

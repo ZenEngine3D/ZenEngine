@@ -3,7 +3,7 @@
 #define __LibZenEngine_Asset_Manager_h__
 
 #if ZEN_ENGINETOOL
-namespace zen { namespace zeAss
+namespace zeAss
 {	
 
 class ManagerAsset : public zbType::Manager
@@ -53,7 +53,7 @@ public:
 
 void ResetAssetReference( zenAss::zArrayAsset& _dAssets, zenAss::zAssetItemRef& _rAssetDel);
 
-}} //namespace zen { namespace zeAss
+} //namespace zeAss
 
 #include "zeAssManager.inl"
 

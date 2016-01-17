@@ -147,16 +147,16 @@ void WndAssetBrowser::OnPackageDragDrop(wxDataViewEvent& event)
 WndAssetBrowser::WndAssetBrowser(wxWindow *parent, const wxString& title)
 : wxPanel(parent, wxID_ANY)
 , mLayoutMgr(this, wxAUI_MGR_ALLOW_FLOATING|wxAUI_MGR_TRANSPARENT_HINT|wxAUI_MGR_HINT_FADE|wxAUI_MGR_VENETIAN_BLINDS_HINT)
-, mpPanelType(NULL)
-, mpPanelPackage(NULL)
-, mpPanelAsset(NULL)
-, mpTreeTypes(NULL)
-, mpTreePackage(NULL)
-, mpTxtPackagesFilter(NULL)
-, mpLstAsset(NULL)
-, mpTxtAssetFilter(NULL)
-, mpIconAsset(NULL)
-, mpIconPackage(NULL)
+, mpPanelType(nullptr)
+, mpPanelPackage(nullptr)
+, mpPanelAsset(nullptr)
+, mpTreeTypes(nullptr)
+, mpTreePackage(nullptr)
+, mpTxtPackagesFilter(nullptr)
+, mpLstAsset(nullptr)
+, mpTxtAssetFilter(nullptr)
+, mpIconAsset(nullptr)
+, mpIconPackage(nullptr)
 , mbPackageViewFlat(FALSE)
 , meAssetView(keAssetView_Details)
 {	
@@ -251,7 +251,7 @@ void WndAssetBrowser::SelectItem(zenAss::zAssetItemRef _rItem)
 	while( itemCurrent.IsOk() && iGroupCount-- >= 0 )
 	{
 		itemCurrent							= mpTreePackage->GetFirstChild(itemCurrent);
-		rPkgGroup							= iGroupCount >= 0 ? rGroupHierarchy[iGroupCount] : NULL;
+		rPkgGroup							= iGroupCount >= 0 ? rGroupHierarchy[iGroupCount] : nullptr;
 		wxPackageClientData* pPkgTypeData	= static_cast<wxPackageClientData*>(mpTreePackage->GetItemData(itemCurrent));
 		while( itemCurrent.IsOk() && pPkgTypeData->mrGroup != rPkgGroup && pPkgTypeData->mrPackage != rPackage )
 			itemCurrent = mpTreePackage->GetNextSibling(itemCurrent);
@@ -376,7 +376,7 @@ void WndAssetBrowser::RecreateSectionAsset()
 	{
 		ClearAssetList();
 		mpPanelAsset->GetSizer()->Detach(mpLstAsset);
-		zenDelNull(mpLstAsset);
+		zenDelnullptr(mpLstAsset);
 	}
 
 	int styleFlags	= wxBORDER_THEME | wxLC_AUTOARRANGE;
@@ -525,7 +525,7 @@ void WndAssetBrowser::UpdatePackageList(wxTreeListItem _treeParentID, const zenA
 	wxTreeListItem treeIDGroup(_treeParentID);
 	if (!mbPackageViewFlat)
 	{
-		wxPackageClientData* pClientData	= zenNewDefault wxPackageClientData(_rGroupToAdd, NULL);
+		wxPackageClientData* pClientData	= zenNewDefault wxPackageClientData(_rGroupToAdd, nullptr);
 		treeIDGroup							= mpTreePackage->AppendItem(_treeParentID, _rGroupToAdd.GetName(), IcoPkg_Folder, IcoPkg_FolderOpen);
 		mpTreePackage->SetItemData(treeIDGroup, pClientData);
 		mpTreePackage->CheckItem(treeIDGroup, _dSelectedItems.Exist(pClientData->mHashID) ? wxCHK_CHECKED : wxCHK_UNCHECKED);
@@ -537,7 +537,7 @@ void WndAssetBrowser::UpdatePackageList(wxTreeListItem _treeParentID, const zenA
 	for (zUInt idx(0), count(_rGroupToAdd.GetPackages().Count()); idx < count; ++idx)
 	{
 		const zenAss::zPackageRef& rPackage			= _rGroupToAdd.GetPackages()[idx];
-		wxPackageClientData* pClientData			= zenNewDefault wxPackageClientData(NULL, rPackage);		
+		wxPackageClientData* pClientData			= zenNewDefault wxPackageClientData(nullptr, rPackage);		
 		wxTreeListItem treeIDPackage				= mpTreePackage->AppendItem(_treeParentID, rPackage.GetName(), IcoPkg_Package, IcoPkg_Package);		
 		mpTreePackage->SetItemData(treeIDPackage, pClientData );
 		mpTreePackage->CheckItem(treeIDPackage, _dSelectedItems.Exist(pClientData->mHashID) ? wxCHK_CHECKED : wxCHK_UNCHECKED );
@@ -576,7 +576,7 @@ void WndAssetBrowser::UpdateChildPackageChecked(wxTreeListItem _ParentTreeID)
 void WndAssetBrowser::UpdateAssetCount()
 {
 	// Update per Packages asset count --------------------------------------------------------
-	wxTreeListItem itemCurrent	= mpTreePackage ? mpTreePackage->GetFirstItem() : NULL;
+	wxTreeListItem itemCurrent	= mpTreePackage ? mpTreePackage->GetFirstItem() : nullptr;
 	while( itemCurrent.IsOk() )
 	{
 		const wxPackageClientData* pClient = static_cast<const wxPackageClientData*>(mpTreePackage->GetItemData(itemCurrent));
@@ -586,7 +586,7 @@ void WndAssetBrowser::UpdateAssetCount()
 
 	// Update per Type asset count ------------------------------------------------------------
 	zUInt idx(0);
-	itemCurrent = mpTreeTypes ? mpTreeTypes->GetFirstItem() : NULL;
+	itemCurrent = mpTreeTypes ? mpTreeTypes->GetFirstItem() : nullptr;
 	while( itemCurrent.IsOk() )
 	{
 		mpTreeTypes->SetItemText(itemCurrent, 1, wxString::Format("%i", maCountPerType[idx++] ) );

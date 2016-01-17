@@ -36,15 +36,15 @@ public:
 		struct
 		{
 			float	mfPriority;
-			zU32	muShaderBindingID : 32;	//!< Use leftover bits to sort by shader binding
-			zU32	VertexShaderID : 16;
-			zU32	InputShaderID : 16;
-			zU32	muRasterStateID : 12;	//! @todo Urgent finish sorting ID
-			zU32	mbCullingFrontface : 1;	//!< Meshstrip wants frontface culling
-			zU32	mbCullingBackface : 1;	//!< Meshstrip wants backface culling
-			zU32	muGPUPipelineMode : 3;	//!< One of eGPUPipelineMode enum value			
-			zU32	muRenderPassID : 10;	//!< Rendering pass ID
-			zU32	UnusedBits : 5;	//!< Available for other uses
+			zU32	muShaderBindingID	: 32;	
+			zU32	VertexShaderID		: 16;
+			zU32	InputShaderID		: 16;
+			zU32	muRasterStateID		: 12;	//! @todo Urgent finish sorting ID
+			zU32	mbCullingFrontface	: 1;	//!< Meshstrip wants frontface culling
+			zU32	mbCullingBackface	: 1;	//!< Meshstrip wants backface culling
+			zU32	muGPUPipelineMode	: 3;	//!< One of eGPUPipelineMode enum value			
+			zU32	muRenderPassID		: 10;	//!< Rendering pass ID
+			zU32	UnusedBits			: 5;	//!< Available for other uses
 		};
 		struct 
 		{

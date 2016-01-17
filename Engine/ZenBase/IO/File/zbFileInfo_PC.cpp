@@ -27,7 +27,7 @@ void FileInfo_PC::Seek(zI64& iNewFilePos, const zI64 iFilePos)
 	if( mhFileHandle != INVALID_HANDLE_VALUE )
 	{
 		LONG iPos = (LONG)iFilePos;
-		DWORD dwFilePointer = SetFilePointer( mhFileHandle, iPos, NULL, FILE_BEGIN );
+		DWORD dwFilePointer = SetFilePointer( mhFileHandle, iPos, nullptr, FILE_BEGIN );
 		if( dwFilePointer != INVALID_SET_FILE_POINTER )
 		{
 			//Ares_ErrorSystem::SetError( eAres_Error_SeekOutsideOfFile );
@@ -43,7 +43,7 @@ void FileInfo_PC::Skip(zI64& iFilePos, const zI32 iNumOfBytes)
 {
 	if( mhFileHandle != INVALID_HANDLE_VALUE )
 	{
-		DWORD dwFilePointer = SetFilePointer( mhFileHandle, iNumOfBytes, NULL, FILE_CURRENT );
+		DWORD dwFilePointer = SetFilePointer( mhFileHandle, iNumOfBytes, nullptr, FILE_CURRENT );
 		if( dwFilePointer != INVALID_SET_FILE_POINTER )
 		{
 			//Ares_ErrorSystem::SetError( eAres_Error_SeekOutsideOfFile );
@@ -60,7 +60,7 @@ void FileInfo_PC::Read(zI64& iFilePos, void* pxDest, const zU32 uNumBytes)
 	if( mhFileHandle != INVALID_HANDLE_VALUE )
 	{
 		DWORD dwBytesRead = 0;
-		BOOL bResult = ReadFile( mhFileHandle, pxDest, uNumBytes, &dwBytesRead, NULL );
+		BOOL bResult = ReadFile( mhFileHandle, pxDest, uNumBytes, &dwBytesRead, nullptr );
 		if( !( bResult && ( dwBytesRead == uNumBytes ) ) )
 		{
 			//Ares_ErrorSystem::SetError( eAres_Error_Read );
@@ -77,7 +77,7 @@ void FileInfo_PC::Write(zI64& iFilePos, zI64& iFileSize, const void* pxSource, c
 	if( mhFileHandle != INVALID_HANDLE_VALUE )
 	{
 		DWORD dwBytesWriten = 0;
-		BOOL bResult = WriteFile( mhFileHandle, pxSource, uNumBytes, &dwBytesWriten, NULL );
+		BOOL bResult = WriteFile( mhFileHandle, pxSource, uNumBytes, &dwBytesWriten, nullptr );
 
 		if( !( bResult && ( dwBytesWriten == uNumBytes ) ) )
 		{

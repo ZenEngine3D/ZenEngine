@@ -22,7 +22,7 @@ bool GfxInputSignatureProxy_DX11::Initialize(class GfxInputSignature& _Owner)
 
 //=================================================================================================
 GfxShaderVertexProxy_DX11::GfxShaderVertexProxy_DX11()
-: mpVertexShader(NULL)
+: mpVertexShader(nullptr)
 {
 }
 
@@ -30,20 +30,20 @@ GfxShaderVertexProxy_DX11::~GfxShaderVertexProxy_DX11()
 {
 	if( mpVertexShader )
 		mpVertexShader->Release();
-	mpVertexShader = NULL;
+	mpVertexShader = nullptr;
 }
 
 bool GfxShaderVertexProxy_DX11::Initialize(class GfxShaderVertex& _Owner)
 {		
 	ZENDbgCode(mpOwner = &_Owner);
 	const GfxShaderVertex::ResDataRef& rResData = _Owner.GetResData();	
-	HRESULT hr = zcMgr::GfxRender.DX11GetDevice()->CreateVertexShader( rResData->maCompiledShader.First(), rResData->maCompiledShader.SizeMem(), NULL, &mpVertexShader );
+	HRESULT hr = zcMgr::GfxRender.DX11GetDevice()->CreateVertexShader( rResData->maCompiledShader.First(), rResData->maCompiledShader.SizeMem(), nullptr, &mpVertexShader );
 	return SUCCEEDED(hr);
 }
 
 //=================================================================================================
 GfxShaderPixelProxy_DX11::GfxShaderPixelProxy_DX11()
-: mpPixelShader(NULL)
+: mpPixelShader(nullptr)
 {
 }
 
@@ -51,14 +51,14 @@ GfxShaderPixelProxy_DX11::~GfxShaderPixelProxy_DX11()
 {
 	if( mpPixelShader )
 		mpPixelShader->Release();
-	mpPixelShader = NULL;
+	mpPixelShader = nullptr;
 }
 
 bool GfxShaderPixelProxy_DX11::Initialize(class GfxShaderPixel& _Owner)
 {		
 	ZENDbgCode(mpOwner = &_Owner);
 	const GfxShaderPixel::ResDataRef& rResData = _Owner.GetResData();	
-	HRESULT hr = zcMgr::GfxRender.DX11GetDevice()->CreatePixelShader( rResData->maCompiledShader.First(), rResData->maCompiledShader.SizeMem(), NULL, &mpPixelShader );
+	HRESULT hr = zcMgr::GfxRender.DX11GetDevice()->CreatePixelShader( rResData->maCompiledShader.First(), rResData->maCompiledShader.SizeMem(), nullptr, &mpPixelShader );
 	return SUCCEEDED(hr);
 }
 

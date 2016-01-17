@@ -3,7 +3,7 @@
 #define __LibZenEngine_Asset_Serializer_h__
 
 #if ZEN_ENGINETOOL
-namespace zen { namespace zeAss
+namespace zeAss
 {	
 
 class AssetSerializer
@@ -21,7 +21,7 @@ protected:
 	void			AddAsset	(const zenAss::zAssetItemRef& _rAsset);
 };
 
-}} //namespace zen { namespace zeAss
+} //namespace zeAss
 
 
 #endif

@@ -2,7 +2,7 @@
 
 #if ZEN_ENGINETOOL
 
-namespace zen { namespace zeAss
+namespace zeAss
 {
 
 //=================================================================================================
@@ -22,11 +22,11 @@ Asset* Asset::CreateItem( zenConst::eAssetType _eAssetType )
 	case zenConst::keAssType_Mesh:			return zenNewDefault GfxMesh();
 	default:								ZENAssertMsg(0, "Unsupported Asset Type");
 	}
-	return NULL;
+	return nullptr;
 }
 
 Asset::Asset()	
-: mrPackage(NULL)
+: mrPackage(nullptr)
 , mID(zenConst::keAssType__Invalid, 0)
 {
 	msigUpdatedProperty.Connect(*this, &Asset::slotPropertyUpdate);	
@@ -163,6 +163,6 @@ void TestProperty::slotPropertyUpdate(zenAss::PropertyValueRef _rUpdated)
 	}
 }
 
-}} //namespace zen { namespace zeAss
+} //namespace zeAss
 
 #endif //ZEN_ENGINETOOL

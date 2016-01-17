@@ -1,36 +1,41 @@
 #include "zenEngine.h"
 
 namespace sample
-{	
-	void SampleList1x();
-	void SampleList2x();
-	void SampleListIntrusive();
-	void SampleHash();
-	void SampleHamt();
-	void SampleArray();
-	void SampleFlags();
-	void SampleTypeMisc();
+{
+	extern void SampleList1x();
+	extern void SampleList2x();
+	extern void SampleListIntrusive();
+	extern void SampleHash();
+	extern void SampleHamt();
+	extern void SampleArray();
+	extern void SampleFlags();
+	extern void SampleTypeMisc();
 
-	void RunSamples()
+	class SampleBaseType : public zenSys::zSampleEngineInstance
 	{
-		SampleFlags();
-		SampleList1x();
-		SampleList2x(); 
-		SampleListIntrusive();
-		SampleHash();
-		SampleHamt();
-		SampleArray();
-		SampleTypeMisc();
-	}
+	public:
+		virtual const char* GetAppName()const
+		{
+			return "Sample Datatypes";
+		}
+		virtual void Update()
+		{
+			SampleFlags();			
+			SampleHash();
+			SampleHamt();
+			SampleArray();
+			SampleTypeMisc();
+			SampleList1x();
+			SampleList2x();
+			SampleListIntrusive();
+			SetDone();
+		}
+	};
 }
 
-
-
-int main (int argc, char * const argv[])
-{	
-	zenSys::zSampleEngineInstance SampleEngine( &sample::RunSamples );
-	zenSys::LaunchEngine(&SampleEngine, argc,argv);
-	return 0;	
+int main(int argc, char * const argv[])
+{
+	sample::SampleBaseType Sample;
+	zenSys::LaunchEngine(&Sample, argc, argv);
+	return 0;
 }
-
-

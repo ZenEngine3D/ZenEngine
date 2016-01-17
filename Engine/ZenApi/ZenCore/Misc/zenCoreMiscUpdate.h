@@ -29,12 +29,15 @@ public:
 	void						Activate(zenConst::eUpdatePriority _ePriorityGroup, zU32 _uPriority=0);
 	void						Deactivate();
 	void						Reactivate();
-
-	zList<IUpdate>::Link		mLink;
+	
 protected:
 	zU64						mTimeLastUpdate;
 	zenConst::eUpdatePriority	mePriorityGroup;
 	zU32						muPriority;
+	zListLink					mLink;
+
+public:
+	typedef zList<IUpdate, &IUpdate::mLink> List;
 };
 
 

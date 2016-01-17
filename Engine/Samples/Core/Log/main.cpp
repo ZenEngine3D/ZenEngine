@@ -1,20 +1,31 @@
 #include "zenEngine.h"
 
 namespace sample
-{	
-	void SampleLog();
-	void SampleAssert();
+{
+	extern void SampleLog();
+	extern void SampleAssert();
 
-	void RunSamples()
+	class SampleBaseLog : public zenSys::zSampleEngineInstance
 	{
-		SampleLog();
-		SampleAssert();
-	}
+	public:
+		virtual const char* GetAppName()const
+		{
+			return "Sample Logging";
+		}
+		virtual void Update()
+		{
+			SampleLog();
+			SampleAssert();
+			SetDone();
+		}
+	};
+
 }
 
-int main (int argc, char * const argv[])
-{	
-	zenSys::zSampleEngineInstance SampleEngine( &sample::RunSamples );
-	zenSys::LaunchEngine(&SampleEngine, argc,argv);
+int main(int argc, char * const argv[])
+{
+	sample::SampleBaseLog Sample;
+	zenSys::LaunchEngine(&Sample, argc, argv);
 	return 0;
 }
+

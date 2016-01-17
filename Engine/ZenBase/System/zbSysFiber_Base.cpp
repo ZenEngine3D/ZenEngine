@@ -4,7 +4,7 @@ namespace zbSys
 {
 
 zbFiber_Base::zbFiber_Base(zUInt _uStackSize)
-: mpRunningTask(NULL)
+: mpRunningTask(nullptr)
 , muThreadId(0)
 , muStackSize(_uStackSize)
 {
@@ -29,7 +29,7 @@ void zbFiber_Base::Deactivate()
 {
 	ZENAssert(mpRunningTask);
 	mpRunningTask->muElapsed	+= zUInt(zenSys::GetTimeUSec() - mpRunningTask->muProfilingTimer);
-	mpRunningTask				= NULL; //! @todo cleanup fiber Free data ?
+	mpRunningTask				= nullptr; //! @todo cleanup fiber Free data ?
 	gQueueAvailableFiber.Push(this);
 }
 

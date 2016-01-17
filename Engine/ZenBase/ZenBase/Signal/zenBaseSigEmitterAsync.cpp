@@ -5,7 +5,7 @@ namespace zen { namespace zenSig
 
 	
 zSignalEmitterAsync::zSignalEmitterAsync()
-: mpEmitterGroup(NULL)
+: mpEmitterGroup(nullptr)
 {
 }
 
@@ -25,7 +25,7 @@ void zSignalEmitterAsync::ClearPendingSignals() //!< @Brief Delete all pending s
 	SignalInfo* pSignalCur = mlstPendingSignal.PopTail();
 	while (pSignalCur)
 	{
-		pSignalCur->mlnkPendingInGroup.Unlink();
+		decltype(mlstPendingSignal)::Remove( *pSignalCur );
 		pSignalCur = mlstPendingSignal.PopTail();
 	}
 }
@@ -62,7 +62,7 @@ void zSignalEmitterAsyncGroup::EmitAllSignals()
 	zSignalEmitterAsync::SignalInfo* pCurrent = mlstPendingSignal.PopHead();
 	while( pCurrent )
 	{
-		pCurrent->mlnkPendingInEmitter.Unlink();
+		zSignalEmitterAsync::SignalInfo::ListEmitter::Remove(*pCurrent);
 		pCurrent->Send();		
 		zenDel(pCurrent);
 		pCurrent = mlstPendingSignal.PopHead();
@@ -75,7 +75,7 @@ void zSignalEmitterAsyncGroup::ClearPendingSignals()
 	zSignalEmitterAsync::SignalInfo* pSignalCur = mlstPendingSignal.PopTail();
 	while (pSignalCur)
 	{
-		pSignalCur->mlnkPendingInEmitter.Unlink();
+		zSignalEmitterAsync::SignalInfo::ListEmitter::Remove(*pSignalCur);
 		pSignalCur = mlstPendingSignal.PopTail();
 	}
 }
@@ -99,7 +99,7 @@ void zSignalEmitterAsync0::Emit()
 
 void zSignalEmitterAsync0::SignalInfo::Send()
 {
-	zList<zSignal::ConnectionBase>::Iterator it = dynamic_cast<const zSignal*>(mpEmitter)->mlstListeners.GetHeadIt();
+	auto it = dynamic_cast<const zSignal*>(mpEmitter)->mlstListeners.GetHeadIt();
 	while (*it)
 	{
 		zSignal0::Connection* pConnection = static_cast<zSignal0::Connection*>(*it);

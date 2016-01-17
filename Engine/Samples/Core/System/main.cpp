@@ -1,21 +1,28 @@
 #include "zenEngine.h"
 
 namespace sample
-{	
-
-void SampleThread();
-	
-void RunSamples()
 {
-	SampleThread();
+	extern void SampleThread();
+
+	class SampleBaseThread : public zenSys::zSampleEngineInstance
+	{
+	public:
+		virtual const char* GetAppName()const
+		{
+			return "Sample Thread";
+		}
+
+		virtual void Update()
+		{
+			SampleThread();
+			SetDone();
+		}
+	};
 }
 
-}
-
-int main (int argc, char * const argv[])
-{	
-	zenSys::zSampleEngineInstance SampleEngine( &sample::RunSamples );
-	zenSys::LaunchEngine(&SampleEngine, argc,argv);
-	getchar();
-	return 0;	
+int main(int argc, char * const argv[])
+{
+	sample::SampleBaseThread Sample;
+	zenSys::LaunchEngine(&Sample, argc, argv);
+	return 0;
 }

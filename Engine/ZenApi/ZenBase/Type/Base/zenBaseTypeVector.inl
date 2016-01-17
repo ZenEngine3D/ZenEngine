@@ -78,6 +78,16 @@ zVector2<TType> zVector2<TType>::operator+(const zVector2& _vAdd)const
 }
 
 template<typename TType>
+zVector2<TType> zVector2<TType>::operator-(const zVector2& _vAdd)const
+{
+	zVector2 vNewVal(_vAdd);
+	vNewVal.xy[0] -= xy[0];
+	vNewVal.xy[1] -= xy[1];
+	return vNewVal;
+}
+
+
+template<typename TType>
 bool zVector2<TType>::operator==(const zVector2& _vCompare)const
 {
 	return x==_vCompare.x && y==_vCompare.y;
@@ -90,13 +100,13 @@ bool zVector2<TType>::operator!=(const zVector2& _vCompare)const
 }
 
 template<typename TType>
-bool zVector2<TType>::IsNull()
+bool zVector2<TType>::IsZero()
 {
 	return x==0 && y==0;
 }
 
 template<typename TType>
-const zVector2<TType>& zVector2<TType>::SetNull()
+const zVector2<TType>& zVector2<TType>::SetZero()
 {
 	x = y = 0;
 	return *this;
@@ -182,13 +192,13 @@ bool zVector3<TType>::operator!=(const zVector3& _vCompare)const
 }
 
 template<typename TType>
-bool zVector3<TType>::IsNull()
+bool zVector3<TType>::IsZero()
 {
 	return x==0 && y==0 && z==0;
 }
 
 template<typename TType>
-const zVector3<TType>& zVector3<TType>::SetNull()
+const zVector3<TType>& zVector3<TType>::SetZero()
 {
 	x = y = z = 0;
 	return *this;
@@ -281,13 +291,13 @@ bool zVector4<TType>::operator!=(const zVector4& _vCompare)const
 }
 
 template<typename TType>
-bool zVector4<TType>::IsNull()
+bool zVector4<TType>::IsZero()
 {
 	return x==0 && y==0 && z==0 && w==0;
 }
 
 template<typename TType>
-const zVector4<TType>& zVector4<TType>::SetNull()
+const zVector4<TType>& zVector4<TType>::SetZero()
 {
 	x = y = z = w = 0;
 	return *this;

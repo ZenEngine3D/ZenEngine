@@ -5,7 +5,7 @@
 #include <mutex>
 
 //! @todo Clean : rename namespace to follow new naming
-namespace FWnd
+namespace zen { namespace zenWnd
 {
 	//=================================================================================================
 	//! @brief		Window wrapper for each OS
@@ -42,10 +42,7 @@ namespace FWnd
 		volatile eThreadStatus			meMainWindowThreadStatus;	//!< Status of the Main window thread (main thread should only read from it)
 		WindowInputState				mWindowInput;				//!< Belongs to main window thread
 		std::mutex						mWindowMutex;
-		zArrayDynamic<PendingMessage>	mUIMessages;
-		
-		
-//		zxImGui::UiInputState			mUIInputState;
+		zArrayDynamic<PendingMessage>	mOSMessages;
 	};
-}
+}}
 #endif

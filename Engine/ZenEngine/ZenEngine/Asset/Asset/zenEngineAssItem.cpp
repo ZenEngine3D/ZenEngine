@@ -23,7 +23,7 @@ zAssetItemRef AssetCreate( zenConst::eAssetType _eAssetType, zPackageRef& _rPack
 		pNewItem->Init( assetID, zName, _rPackage );
 		return pNewItem;
 	}
-	return NULL;
+	return nullptr;
 }
 
 const char* AssetTypeToString(zenConst::eAssetType _eAssetType)
@@ -107,7 +107,7 @@ void zAssetItemRef::InitDefault()
 void zAssetItemRef::Delete()
 {
 	zeMgr::Asset.AssetDelete( *this );
-	*this = NULL;
+	*this = nullptr;
 }
 
 zPackageRef zAssetItemRef::GetPackage()

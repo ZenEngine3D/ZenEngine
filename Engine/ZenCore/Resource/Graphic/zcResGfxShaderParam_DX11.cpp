@@ -26,7 +26,7 @@ bool GfxShaderParamDefProxy_DX11::Initialize(class GfxShaderParamDef& _Owner)
 
 //=================================================================================================
 GfxShaderParamProxy_DX11::GfxShaderParamProxy_DX11()
-: mpBufferBinding(NULL)
+: mpBufferBinding(nullptr)
 , mbUpdated(false)
 {	
 }
@@ -35,7 +35,7 @@ GfxShaderParamProxy_DX11::~GfxShaderParamProxy_DX11()
 {
 	if(mpBufferBinding)
 		mpBufferBinding->Release();
-	mpBufferBinding = NULL;
+	mpBufferBinding = nullptr;
 }
 
 bool GfxShaderParamProxy_DX11::Initialize(class GfxShaderParam& _Owner)
@@ -66,7 +66,7 @@ void GfxShaderParamProxy_DX11::Bind(zenConst::eShaderStage _eShaderStage)const
 	ID3D11DeviceContext* pContext = zcMgr::GfxRender.DX11GetDeviceContext();
 	if( mbUpdated )
 	{
-		pContext->UpdateSubresource( mpBufferBinding, 0, NULL, maParameterValues.First(), 0, 0 );
+		pContext->UpdateSubresource( mpBufferBinding, 0, nullptr, maParameterValues.First(), 0, 0 );
 		mbUpdated = FALSE;
 	}
 

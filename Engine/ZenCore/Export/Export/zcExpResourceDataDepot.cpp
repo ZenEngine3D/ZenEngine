@@ -145,7 +145,7 @@ zEngineConstRef<ResourceData> DepotResourceData::GetItemBaseAnySource(const zRes
 	if( mdResourceData.Get(_ResID.GetHashID(), rResData) )	
 		return rResData;
 	*/
-	return NULL;	
+	return nullptr;	
 }
 
 //=================================================================================================

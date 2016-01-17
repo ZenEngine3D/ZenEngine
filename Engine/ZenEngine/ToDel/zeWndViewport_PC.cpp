@@ -1,10 +1,10 @@
 #include "zeEngine.h"
 
-namespace FWnd
+namespace zen { namespace zenWnd
 {	
 	Window::Window(const WCHAR* _zWindowName, zVec2U16 _ClientSize)
-	: mhMainWindowThread(NULL)
-	, mhWindowInstance(NULL)
+	: mhMainWindowThread(nullptr)
+	, mhWindowInstance(nullptr)
 	, meMainWindowThreadStatus(keThread_Ended)
 	{
 		wcscpy_s(mzWindowName, _countof(mzWindowName), _zWindowName);
@@ -14,7 +14,7 @@ namespace FWnd
 	bool Window::Initialize()
 	{
 		meMainWindowThreadStatus = keThread_Starting;
-		mhMainWindowThread		= CreateThread( NULL, 0,  WndThread, this, 0, NULL);  
+		mhMainWindowThread		= CreateThread( nullptr, 0,  WndThread, this, 0, nullptr);  
 		while( meMainWindowThreadStatus == keThread_Starting )
 			SleepEx(1, false);
 		return meMainWindowThreadStatus == keThread_Running;
@@ -141,7 +141,7 @@ namespace FWnd
 	{		
 		WNDCLASSEX	wc;
 		MSG			Msg;
-		HANDLE		hStdout(NULL);
+		HANDLE		hStdout(nullptr);
 		Window* pParentWindow = (Window*)lpParam;
 
 		hStdout = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -159,16 +159,16 @@ namespace FWnd
 		wc.cbClsExtra    = 0;
 		wc.cbWndExtra    = sizeof(Window*);
 		wc.hInstance     = pParentWindow->mhWindowInstance;
-		wc.hIcon         = LoadIcon(NULL, IDI_APPLICATION);
-		wc.hCursor       = LoadCursor(NULL, IDC_ARROW);
+		wc.hIcon         = LoadIcon(nullptr, IDI_APPLICATION);
+		wc.hCursor       = LoadCursor(nullptr, IDC_ARROW);
 		wc.hbrBackground = (HBRUSH)(COLOR_WINDOW+1);
-		wc.lpszMenuName  = NULL;
+		wc.lpszMenuName  = nullptr;
 		wc.lpszClassName = zClassName;
-		wc.hIconSm       = LoadIcon(NULL, IDI_APPLICATION);
+		wc.hIconSm       = LoadIcon(nullptr, IDI_APPLICATION);
 		
 		if(!RegisterClassEx(&wc))
 		{
-			MessageBox(NULL, L"Window Registration Failed!", L"Error!",	MB_ICONEXCLAMATION | MB_OK);
+			MessageBox(nullptr, L"Window Registration Failed!", L"Error!",	MB_ICONEXCLAMATION | MB_OK);
 			pParentWindow->meMainWindowThreadStatus = keThread_Error;
 			return false;
 		}
@@ -180,11 +180,11 @@ namespace FWnd
 			L"Zen Engine",
 			WS_OVERLAPPEDWINDOW,
 			CW_USEDEFAULT, CW_USEDEFAULT, vSize.x, vSize.y,
-			NULL, NULL, pParentWindow->mhWindowInstance, NULL);
+			nullptr, nullptr, pParentWindow->mhWindowInstance, nullptr);
 
-		if(pParentWindow->mhMainWindow == NULL)
+		if(pParentWindow->mhMainWindow == nullptr)
 		{
-			MessageBox(NULL, L"Window Creation Failed!", L"Error!", MB_ICONEXCLAMATION | MB_OK);
+			MessageBox(nullptr, L"Window Creation Failed!", L"Error!", MB_ICONEXCLAMATION | MB_OK);
 			pParentWindow->meMainWindowThreadStatus = keThread_Error;
 			return false;
 		}
@@ -195,7 +195,7 @@ namespace FWnd
 		UpdateWindow(pParentWindow->mhMainWindow);
 
 		pParentWindow->meMainWindowThreadStatus = keThread_Running;
-		while(GetMessage(&Msg, NULL, 0, 0) > 0 && pParentWindow->meMainWindowThreadStatus == keThread_Running )
+		while(GetMessage(&Msg, nullptr, 0, 0) > 0 && pParentWindow->meMainWindowThreadStatus == keThread_Running )
 		{
 			TranslateMessage(&Msg);
 			DispatchMessage(&Msg);
@@ -204,4 +204,4 @@ namespace FWnd
 		return true;
 	}
 
-}
+}}

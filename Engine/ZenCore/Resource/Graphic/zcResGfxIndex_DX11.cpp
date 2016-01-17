@@ -4,7 +4,7 @@ namespace zcRes
 {
 
 GfxIndexProxy_DX11::GfxIndexProxy_DX11()
-: mpIndiceBuffer(NULL)
+: mpIndiceBuffer(nullptr)
 {
 }
 
@@ -12,7 +12,7 @@ GfxIndexProxy_DX11::~GfxIndexProxy_DX11()
 {
 	if( mpIndiceBuffer )
 		mpIndiceBuffer->Release();
-	mpIndiceBuffer = NULL;
+	mpIndiceBuffer = nullptr;
 }
 
 bool GfxIndexProxy_DX11::Initialize(class GfxIndex& _Owner)
@@ -56,16 +56,16 @@ zU8* GfxIndexProxy_DX11::Lock()
 	if( mpIndiceBuffer )
 	{
 		D3D11_MAPPED_SUBRESOURCE mapRes;
-		zcMgr::GfxRender.DX11GetDeviceContext()->Map(mpIndiceBuffer, 0, D3D11_MAP_WRITE_DISCARD, NULL, &mapRes);
+		zcMgr::GfxRender.DX11GetDeviceContext()->Map(mpIndiceBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mapRes);
 		return (zU8*)mapRes.pData;
 	}
-	return NULL;
+	return nullptr;
 }
 
 void GfxIndexProxy_DX11::Unlock()
 {
 	if( mpIndiceBuffer )
-		zcMgr::GfxRender.DX11GetDeviceContext()->Unmap(mpIndiceBuffer, NULL);
+		zcMgr::GfxRender.DX11GetDeviceContext()->Unmap(mpIndiceBuffer, 0);
 }
 
 }

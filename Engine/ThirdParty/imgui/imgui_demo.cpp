@@ -158,21 +158,21 @@ void ImGui::ShowTestWindow(bool* opened)
         }
         if (ImGui::BeginMenu("Examples"))
         {
-            ImGui::MenuItem("Main menu bar", NULL, &show_app_main_menu_bar);
-            ImGui::MenuItem("Console", NULL, &show_app_console);
-            ImGui::MenuItem("Log", NULL, &show_app_log);
-            ImGui::MenuItem("Simple layout", NULL, &show_app_layout);
-            ImGui::MenuItem("Long text display", NULL, &show_app_long_text);
-            ImGui::MenuItem("Auto-resizing window", NULL, &show_app_auto_resize);
-            ImGui::MenuItem("Simple overlay", NULL, &show_app_fixed_overlay);
-            ImGui::MenuItem("Manipulating window title", NULL, &show_app_manipulating_window_title);
-            ImGui::MenuItem("Custom rendering", NULL, &show_app_custom_rendering);
+            ImGui::MenuItem("Main menu bar", nullptr, &show_app_main_menu_bar);
+            ImGui::MenuItem("Console", nullptr, &show_app_console);
+            ImGui::MenuItem("Log", nullptr, &show_app_log);
+            ImGui::MenuItem("Simple layout", nullptr, &show_app_layout);
+            ImGui::MenuItem("Long text display", nullptr, &show_app_long_text);
+            ImGui::MenuItem("Auto-resizing window", nullptr, &show_app_auto_resize);
+            ImGui::MenuItem("Simple overlay", nullptr, &show_app_fixed_overlay);
+            ImGui::MenuItem("Manipulating window title", nullptr, &show_app_manipulating_window_title);
+            ImGui::MenuItem("Custom rendering", nullptr, &show_app_custom_rendering);
             ImGui::EndMenu();
         }
         if (ImGui::BeginMenu("Help"))
         {
-            ImGui::MenuItem("Metrics", NULL, &show_app_metrics);
-            ImGui::MenuItem("About ImGui", NULL, &show_app_about);
+            ImGui::MenuItem("Metrics", nullptr, &show_app_metrics);
+            ImGui::MenuItem("About ImGui", nullptr, &show_app_about);
             ImGui::EndMenu();
         }
         ImGui::EndMenuBar();
@@ -690,7 +690,7 @@ void ImGui::ShowTestWindow(bool* opened)
         ImGui::Text("Lines");
         ImGui::Checkbox("pause", &pause);
         ImGui::EndGroup();
-        ImGui::PlotHistogram("Histogram", arr, IM_ARRAYSIZE(arr), 0, NULL, 0.0f, 1.0f, ImVec2(0,80));
+        ImGui::PlotHistogram("Histogram", arr, IM_ARRAYSIZE(arr), 0, nullptr, 0.0f, 1.0f, ImVec2(0,80));
 
         // Use functions to generate output
         // FIXME: This is rather awkward because current plot API only pass in indices. We probably want an API passing floats and user provide sample rate/count.
@@ -705,8 +705,8 @@ void ImGui::ShowTestWindow(bool* opened)
         ImGui::SameLine();
         ImGui::SliderInt("Sample count", &display_count, 1, 500);
         float (*func)(void*, int) = (func_type == 0) ? Funcs::Sin : Funcs::Saw;
-        ImGui::PlotLines("Lines", func, NULL, display_count, 0, NULL, -1.0f, 1.0f, ImVec2(0,80));
-        ImGui::PlotHistogram("Histogram", func, NULL, display_count, 0, NULL, -1.0f, 1.0f, ImVec2(0,80));
+        ImGui::PlotLines("Lines", func, nullptr, display_count, 0, nullptr, -1.0f, 1.0f, ImVec2(0,80));
+        ImGui::PlotHistogram("Histogram", func, nullptr, display_count, 0, nullptr, -1.0f, 1.0f, ImVec2(0,80));
     }
 
     if (ImGui::CollapsingHeader("Layout"))
@@ -872,7 +872,7 @@ void ImGui::ShowTestWindow(bool* opened)
             // Capture the group size and create widgets using the same size
             ImVec2 size = ImGui::GetItemRectSize();
             const float values[5] = { 0.5f, 0.20f, 0.80f, 0.60f, 0.25f };
-            ImGui::PlotHistogram("##values", values, IM_ARRAYSIZE(values), 0, NULL, 0.0f, 1.0f, size);
+            ImGui::PlotHistogram("##values", values, IM_ARRAYSIZE(values), 0, nullptr, 0.0f, 1.0f, size);
 
             ImGui::Button("ACTION", ImVec2((size.x - ImGui::GetStyle().ItemSpacing.x)*0.5f,size.y));
             ImGui::SameLine();
@@ -1014,7 +1014,7 @@ void ImGui::ShowTestWindow(bool* opened)
             ImVec2 pos = ImGui::GetCursorScreenPos();
             ImVec4 clip_rect(pos.x, pos.y, pos.x+size.x, pos.y+size.y);
             ImGui::GetWindowDrawList()->AddRectFilled(pos, ImVec2(pos.x+size.x,pos.y+size.y), ImColor(90,90,120,255));
-            ImGui::GetWindowDrawList()->AddText(ImGui::GetWindowFont(), ImGui::GetWindowFontSize()*2.0f, ImVec2(pos.x+offset.x,pos.y+offset.y), ImColor(255,255,255,255), "Line 1 hello\nLine 2 clip me!", NULL, 0.0f, &clip_rect);
+            ImGui::GetWindowDrawList()->AddText(ImGui::GetWindowFont(), ImGui::GetWindowFontSize()*2.0f, ImVec2(pos.x+offset.x,pos.y+offset.y), ImColor(255,255,255,255), "Line 1 hello\nLine 2 clip me!", nullptr, 0.0f, &clip_rect);
             ImGui::InvisibleButton("##dummy", size);
             if (ImGui::IsItemActive() && ImGui::IsMouseDragging()) { offset.x += ImGui::GetIO().MouseDelta.x; offset.y += ImGui::GetIO().MouseDelta.y; }
             ImGui::TreePop();
@@ -1131,7 +1131,7 @@ void ImGui::ShowTestWindow(bool* opened)
 
             if (ImGui::Button("Delete.."))
                 ImGui::OpenPopup("Delete?");
-            if (ImGui::BeginPopupModal("Delete?", NULL, ImGuiWindowFlags_AlwaysAutoResize))
+            if (ImGui::BeginPopupModal("Delete?", nullptr, ImGuiWindowFlags_AlwaysAutoResize))
             {
                 ImGui::Text("All those beautiful files will be deleted.\nThis operation cannot be undone!\n\n");
                 ImGui::Separator();
@@ -1302,7 +1302,7 @@ void ImGui::ShowTestWindow(bool* opened)
             }
             if (ImGui::TreeNode("node 2 (without borders)"))
             {
-                ImGui::Columns(4, NULL, false);
+                ImGui::Columns(4, nullptr, false);
                 for (int i = 0; i < 8; i++)
                 {
                     ImGui::Text("%c%c%c", 'a'+i, 'a'+i, 'a'+i);
@@ -1463,7 +1463,7 @@ void ImGui::ShowStyleEditor(ImGuiStyle* ref)
         ImGui::Checkbox("Anti-aliased lines", &style.AntiAliasedLines);
         ImGui::Checkbox("Anti-aliased shapes", &style.AntiAliasedShapes);
         ImGui::PushItemWidth(100);
-        ImGui::DragFloat("Curve Tessellation Tolerance", &style.CurveTessellationTol, 0.02f, 0.10f, FLT_MAX, NULL, 2.0f);
+        ImGui::DragFloat("Curve Tessellation Tolerance", &style.CurveTessellationTol, 0.02f, 0.10f, FLT_MAX, nullptr, 2.0f);
         if (style.CurveTessellationTol < 0.0f) style.CurveTessellationTol = 0.10f;
         ImGui::PopItemWidth();
         ImGui::TreePop();
@@ -1573,7 +1573,7 @@ static void ShowExampleAppMainMenuBar()
 
 static void ShowExampleMenuFile()
 {
-    ImGui::MenuItem("(dummy menu)", NULL, false, false);
+    ImGui::MenuItem("(dummy menu)", nullptr, false, false);
     if (ImGui::MenuItem("New")) {}
     if (ImGui::MenuItem("Open", "Ctrl+O")) {}
     if (ImGui::BeginMenu("Open Recent"))
@@ -1622,7 +1622,7 @@ static void ShowExampleMenuFile()
     {
         IM_ASSERT(0);
     }
-    if (ImGui::MenuItem("Checked", NULL, true)) {}
+    if (ImGui::MenuItem("Checked", nullptr, true)) {}
     if (ImGui::MenuItem("Quit", "Alt+F4")) {}
 }
 
@@ -2049,7 +2049,7 @@ struct ExampleAppLog
         ScrollToBottom = true;
     }
 
-    void    Draw(const char* title, bool* p_opened = NULL)
+    void    Draw(const char* title, bool* p_opened = nullptr)
     {
         ImGui::SetNextWindowSize(ImVec2(500,400), ImGuiSetCond_FirstUseEver);
         ImGui::Begin(title, p_opened);
@@ -2066,12 +2066,12 @@ struct ExampleAppLog
         {
             const char* buf_begin = Buf.begin();
             const char* line = buf_begin;
-            for (int line_no = 0; line != NULL; line_no++)
+            for (int line_no = 0; line != nullptr; line_no++)
             {
-                const char* line_end = (line_no < LineOffsets.Size) ? buf_begin + LineOffsets[line_no] : NULL;
+                const char* line_end = (line_no < LineOffsets.Size) ? buf_begin + LineOffsets[line_no] : nullptr;
                 if (Filter.PassFilter(line, line_end))
                     ImGui::TextUnformatted(line, line_end);
-                line = line_end && line_end[1] ? line_end + 1 : NULL;
+                line = line_end && line_end[1] ? line_end + 1 : nullptr;
             }
         }
         else

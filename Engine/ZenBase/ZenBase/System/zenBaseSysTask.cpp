@@ -5,12 +5,12 @@ namespace zen { namespace zenSys
 {
 
 zTask::zTask()
-: mpOwnerFiber(NULL)
+: mpOwnerFiber(nullptr)
 , muElapsed(0)
 , muProfilingTimer(0)
 , mbRunning(0)
 , mGate(0)
-, mpGateParent(NULL)
+, mpGateParent(nullptr)
 {
 }
 

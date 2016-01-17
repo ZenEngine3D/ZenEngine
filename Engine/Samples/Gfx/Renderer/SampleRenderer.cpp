@@ -56,6 +56,11 @@ zU16 CubeIndices[] =
 	22,20,21,	23,20,22
 };
 
+const char* SampleRendererInstance::GetAppName() const
+{
+	return "Sample Renderer";
+}
+
 bool SampleRendererInstance::IsDone()
 {
 	return false;

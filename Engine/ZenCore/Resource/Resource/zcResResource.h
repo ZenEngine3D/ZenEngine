@@ -18,13 +18,15 @@ namespace zcRes
 	ZENClassDeclare(Resource, zenRes::zResource)
 	public:									
 		virtual								~Resource();	
-		bool								Initialize();
-		zList<Resource>::Link				mlnkList;
-	protected:			
-		
+		bool								Initialize();		
+
+	protected:					
 		virtual bool						ResourceInit();		//!< @todo cleanup rename this.  Initialize and Resourcinit confusing
-		virtual void						StripResData(){} //!< @Brief Child class should override this if some ResData can be stripped out for runtime, after proxy init
+		virtual void						StripResData(){}	//!< @Brief Child class should override this if some ResData can be stripped out for runtime, after proxy init
 											Resource();
+		zListLink							mlnkList;
+	public:
+		typedef zList<Resource, &Resource::mlnkList> TypeList;
 	};
 	
 	//=============================================================================================
@@ -67,7 +69,7 @@ namespace zcRes
 				static zenMem::zAllocatorPool sMemPool("Pool TResource Proxy", sizeof(ClassProxy), 32, 32 );
 				mrProxy = zenNew(&sMemPool) ClassProxy();
 				if( !mrProxy->Initialize( *static_cast<ClassResource*>(this)) )
-					mrProxy = NULL; //! @todo assign a default value
+					mrProxy = nullptr; //! @todo assign a default value
 
 				StripResData();				
 			}

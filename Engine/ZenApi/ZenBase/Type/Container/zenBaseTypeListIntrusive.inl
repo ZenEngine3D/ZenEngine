@@ -5,370 +5,332 @@
 namespace zen {	namespace zenType 
 {
 
+template<class TItem>
+TItem& zListGetItem(const zListLink& _ItemLink, size_t _uOffset)
+{
+	return *reinterpret_cast<TItem*>((size_t)&_ItemLink - _uOffset);
+}
+
+template<class TItem>
+zListLink& zListGetLink(const TItem& _Item, size_t _uOffset)
+{
+	return *reinterpret_cast<zListLink*>((size_t)&_Item + _uOffset);
+}
+
 //#################################################################################################
 // LINK
 //#################################################################################################
-template<class TListItem>
-zList<TListItem>::Link::Link()
-: mpPrevLink(NULL)
-, mpNextItem(NULL)
-{}
 
-template<class TListItem>
-zList<TListItem>::Link::~Link()
+zListLink::~zListLink()
 {
-	Unlink();
+	Remove();
 }
 
-template<class TListItem>
-TListItem* zList<TListItem>::Link::Get()
+bool zListLink::IsInList()const
 {
-	ZENAssert(IsLinked());
-	return mpPrevLink->GetNext();
+	return mpNextLink != nullptr;
 }
 
-template<class TListItem>
-TListItem* zList<TListItem>::Link::GetNext()
+zListLink* zListLink::GetNext()const
 {
-	ZENAssert(IsLinked());
-	return ((size_t)mpNextItem & 0x01) ? NULL : mpNextItem;
+	return ((size_t)mpNextLink & 0x1) ? nullptr : mpNextLink;
 }
 
-template<class TListItem>
-TListItem* zList<TListItem>::Link::GetPrev()
+zListLink* zListLink::GetPrev()const
 {
-	ZENAssert(IsLinked());
-	return mpPrevLink->mpPrevLink->GetNext();
+	return ((size_t)mpPrevLink & 0x1) ? nullptr : mpPrevLink;
 }
 
-template<class TListItem>
-const TListItem* zList<TListItem>::Link::Get() const
+zListLink* zListLink::GetNextValid()const
 {
-	ZENAssert(IsLinked());
-	return mpPrevLink->GetNext();
+	return reinterpret_cast<zListLink*>((size_t)mpNextLink & ~0x1);
 }
 
-template<class TListItem>
-const TListItem* zList<TListItem>::Link::GetNext()const
+zListLink* zListLink::GetPrevValid()const
 {
-	ZENAssert(IsLinked());
-	return ((size_t)mpNextItem & 0x01) ? NULL : mpNextItem;
+	return reinterpret_cast<zListLink*>((size_t)mpPrevLink & ~0x1);
 }
-
-template<class TListItem>
-const TListItem* zList<TListItem>::Link::GetPrev()const
+void zListLink::Remove()
 {
-	ZENAssert(IsLinked());
-	return mpPrevLink->mpPrevLink->GetNext();
-}
-
-
-template<class TListItem>
-void zList<TListItem>::Link::Unlink()
-{
-	if (IsLinked())
+	if (IsInList())
 	{
-		GetNextItemLink()->mpPrevLink = mpPrevLink;
-		mpPrevLink->mpNextItem = mpNextItem;
-		mpNextItem = NULL;
-		mpPrevLink = NULL;
+		GetNextValid()->mpPrevLink	= mpPrevLink;
+		GetPrevValid()->mpNextLink	= mpNextLink;
+		mpNextLink					= nullptr;
+		mpPrevLink					= nullptr;
 	}
 }
 
-template<class TListItem>
-void zList<TListItem>::Link::InsertBefore(TListItem& _NewItem)
-{
-	Link* pNewLink = reinterpret_cast<Link*>((size_t)&_NewItem + GetOffset());
-	pNewLink->Unlink();
-	pNewLink->mpPrevLink = mpPrevLink;
-	pNewLink->mpNextItem = mpPrevLink->mpNextItem;
-	mpPrevLink->mpNextItem = &_NewItem;
-	mpPrevLink = pNewLink;
+void zListLink::InsertBefore(zListLink& _NewLink)
+{	
+	_NewLink.Remove();
+	_NewLink.mpPrevLink				= mpPrevLink;
+	_NewLink.mpNextLink				= this;
+	GetPrevValid()->mpNextLink		= &_NewLink;
+	mpPrevLink						= &_NewLink;
 }
 
-template<class TListItem>
-void zList<TListItem>::Link::InsertAfter(TListItem& _NewItem)
+void zListLink::InsertAfter(zListLink& _NewLink)
 {
-	GetNextItemLink()->InsertBefore(_NewItem);
-}
-
-template<class TListItem>
-bool zList<TListItem>::Link::IsLinked()const
-{
-	return mpPrevLink != NULL;
-}
-
-
-template<class TListItem>
-typename zList<TListItem>::Link* zList<TListItem>::Link::GetNextItemLink()const
-{
-	ZENAssert(IsLinked());
-	return reinterpret_cast<Link*>((((size_t)mpNextItem) & ~0x1) + GetOffset());
-}
-
-template<class TListItem>
-size_t zList<TListItem>::Link::GetOffset()const
-{
-	ZENAssert(IsLinked());
-	return (size_t)this - (((size_t)mpPrevLink->mpNextItem) & ~0x1);
+	_NewLink.Remove();
+	_NewLink.mpNextLink				= mpNextLink;
+	_NewLink.mpPrevLink				= this;
+	GetNextValid()->mpPrevLink		= &_NewLink;
+	mpNextLink						= &_NewLink;
 }
 
 //#################################################################################################
 // ITERATOR
 //#################################################################################################
-template<class TListItem>
-zList<TListItem>::Iterator::Iterator()
-: mpLink(NULL)
+template<class TItem>
+zListBase<TItem>::Iterator::Iterator()
 {
 }
 
-template<class TListItem>
-zList<TListItem>::Iterator::Iterator(Iterator& _Copy)
+template<class TItem>
+zListBase<TItem>::Iterator::Iterator(const Iterator& _Copy)
 {
 	operator=(_Copy);
 }
 
-template<class TListItem>
-zList<TListItem>::Iterator::Iterator(Link* _Current)
-: mpLink(_Current)
+template<class TItem>
+zListBase<TItem>::Iterator::Iterator(zListLink* _pLink, size_t _uOffset)
+: mpLink(_pLink)
+, muOffset(_uOffset)
 {
 }
 
-template<class TListItem>
-TListItem* zList<TListItem>::Iterator::Get()
+template<class TItem>
+bool zListBase<TItem>::Iterator::IsValid() const
 {
-	return mpLink ? mpLink->Get() : NULL;
+	return mpLink;
 }
 
-template<class TListItem>
-const TListItem* zList<TListItem>::Iterator::Get()const
+template<class TItem>
+TItem* zListBase<TItem>::Iterator::Get() const
 {
-	return mpLink ? mpLink->Get() : NULL;
+	return IsValid() ?  &zListGetItem<TItem>(*mpLink, muOffset) : nullptr;
 }
 
-template<class TListItem>
-TListItem* zList<TListItem>::Iterator::operator*()
-{
-	return Get();
-}
-
-template<class TListItem>
-const TListItem* zList<TListItem>::Iterator::operator*()const
+template<class TItem>
+TItem* zListBase<TItem>::Iterator::operator*()const
 {
 	return Get();
 }
 
-template<class TListItem>
-TListItem* zList<TListItem>::Iterator::GoNext()
+template<class TItem>
+TItem* zListBase<TItem>::Iterator::operator->()const
+{
+	return Get();
+}
+
+template<class TItem>
+void zListBase<TItem>::Iterator::operator++()
 {
 	ZENAssert(mpLink);
-	mpLink = mpLink->GetNextItemLink();
-	return mpLink->Get();
+	mpLink = mpLink->GetNext();
 }
 
-template<class TListItem>
-TListItem* zList<TListItem>::Iterator::GoPrevious()
+template<class TItem>
+void zListBase<TItem>::Iterator::operator--()
 {
 	ZENAssert(mpLink);
-	mpLink = mpLink->mpPrevLink;
-	return mpLink->Get();
+	mpLink = mpLink->GetPrev();
 }
 
-template<class TListItem>
-void zList<TListItem>::Iterator::operator++()
-{
-	GoNext();	
-}
 
-template<class TListItem>
-void zList<TListItem>::Iterator::operator--()
-{
-	GoPrevious();
-}
 
-template<class TListItem>
-TListItem* zList<TListItem>::Iterator::operator->()
+template<class TItem>
+typename const zListBase<TItem>::Iterator& zListBase<TItem>::Iterator::operator=(const Iterator& _Copy)
 {
-	return Get();
-}
-
-template<class TListItem>
-const TListItem* zList<TListItem>::Iterator::operator->()const
-{
-	return Get();
-}
-
-template<class TListItem>
-typename const zList<TListItem>::Iterator& zList<TListItem>::Iterator::operator=(Iterator& _Copy)
-{
-	mpLink = _Copy.mpLink;
+	mpLink		= _Copy.mpLink;
+	muOffset	= _Copy.muOffset;
 	return *this;
 }
 
-template<class TListItem>
-typename const zList<TListItem>::Iterator& zList<TListItem>::Iterator::operator=(Link* _Current)
-{
-	mpLink = _Current;
-	return *this;
-}
-
-template<class TListItem>
-TListItem* zList<TListItem>::Iterator::Unlink()
+template<class TItem>
+TItem* zListBase<TItem>::Iterator::Remove()
 {
 	ZENAssert(mpLink);
-	TListItem* pItem = mpLink->Get();
+	TItem* pItem = mpLink->Get();
 	mpLink->Unlink();	
-	mpLink = NULL;
+	mpLink = nullptr;
 	return pItem;
 }
 
-template<class TListItem>
-TListItem* zList<TListItem>::Iterator::UnlinkGoNext()
+template<class TItem>
+TItem* zListBase<TItem>::Iterator::RemoveGoNext()
 {
 	ZENAssert(mpLink);
-	Link* pUnlink		= mpLink;
-	TListItem* pItem	= GoNext();
+	zListLink* pUnlink		= mpLink;
+	TItem pItem	= GoNext();
 	pUnlink->Unlink();	
 	return pItem;
 }
 
-template<class TListItem>
-TListItem* zList<TListItem>::Iterator::UnlinkGoPrev()
+template<class TItem>
+TItem* zListBase<TItem>::Iterator::RemoveGoPrev()
 {
 	ZENAssert(mpLink);
-	Link* pUnlink		= mpLink;
-	TListItem* pItem	= GoPrevious();
+	zListLink* pUnlink	= mpLink;
+	TItem pItem	= GoPrevious();
 	pUnlink->Unlink();
 	return pItem;
 }
 
-template<class TListItem>
-bool zList<TListItem>::Iterator::IsValid()
-{
-	return Get() != NULL;
-}
-
-template<class TListItem>
-void zList<TListItem>::Iterator::InsertBefore(TListItem& _NewItem)
+template<class TItem>
+void zListBase<TItem>::Iterator::InsertBefore(TItem& _NewItem )
 {
 	ZENAssert(IsValid());
-	mpLink->InsertBefore(_NewItem);
+	mpLink->InsertBefore(zListGetLink<TItem>(_NewItem, muOffset));
 }
 
-template<class TListItem>
-void zList<TListItem>::Iterator::InsertAfter(TListItem& _NewItem)
+template<class TItem>
+void zListBase<TItem>::Iterator::InsertAfter(TItem& _NewItem)
 {
 	ZENAssert(IsValid());
-	mpLink->InsertAfter(_NewItem);
+	mpLink->InsertAfter(zListGetLink<TItem>(_NewItem, muOffset));
 }
 
 //#################################################################################################
 // LIST
 //#################################################################################################
-template<class TListItem>
-zList<TListItem>::zList(size_t _Offset)
-: mOffset(_Offset)
+template<class TItem>
+zListBase<TItem>::zListBase(size_t _Offset)
+: muOffset(_Offset)
 {
-	RemoveAll();
+	mRoot.mpNextLink = reinterpret_cast<zListLink*>((size_t)&mRoot | 1);	// Tell list link it's pointing to root node (invalid)
+	mRoot.mpPrevLink = reinterpret_cast<zListLink*>((size_t)&mRoot | 1);	// Tell list link it's pointing to root node (invalid)
+	Empty();
 }
 
-template<class TListItem>			
-void zList<TListItem>::PushHead(TListItem& _Item)
+template<class TItem>
+void zListBase<TItem>::PushHead(TItem& _Item)
 {
-	mRoot.InsertAfter(_Item);
+	mRoot.InsertAfter( zListGetLink<TItem>(_Item, muOffset) );
+	mRoot.mpNextLink->mpPrevLink = reinterpret_cast<zListLink*>((size_t)&mRoot | 1);	// Tell newly inserted item, previous link is invalid(root list link)
 }
 
-template<class TListItem>
-void zList<TListItem>::PushTail(TListItem& _Item)
+template<class TItem>
+void zListBase<TItem>::PushTail(TItem& _Item)
 {
-	mRoot.InsertBefore(_Item);
+	mRoot.InsertBefore( zListGetLink<TItem>(_Item, muOffset) );
+	mRoot.mpPrevLink->mpNextLink  = reinterpret_cast<zListLink*>((size_t)&mRoot | 1);	// Tell newly inserted item, next link is invalid(root list link)
 }
 
-template<class TListItem>
-TListItem* zList<TListItem>::PopHead()
+template<class TItem>
+TItem* zListBase<TItem>::PopHead()
 {
 	if( IsEmpty() )
-		return NULL;
-	TListItem* pHead = mRoot.GetNext();
-	mRoot.GetNextItemLink()->Unlink();
-	return pHead;
+		return nullptr;
+
+	zListLink* pHeadLink = mRoot.GetNext();
+	pHeadLink->Remove();
+	return &zListGetItem<TItem>(*pHeadLink, muOffset);
 }
 
-template<class TListItem>
-TListItem* zList<TListItem>::PopTail()
+template<class TItem>
+TItem* zListBase<TItem>::PopTail()
 {
 	if( IsEmpty() )
-		return NULL;
-	TListItem* pTail = mRoot.GetPrev();
-	mRoot.mpPrevLink->Unlink();
-	return pTail;
+		return nullptr;
+
+	zListLink* pTailLink = mRoot.GetPrev();
+	pTailLink->Remove();
+	return &zListGetItem<TItem>(*pTailLink, muOffset);
 }
 
-template<class TListItem>
-TListItem* zList<TListItem>::GetHead()
+template<class TItem>
+TItem* zListBase<TItem>::GetHead()const
 {
-	return mRoot.GetNext();
+	return &zListGetItem<TItem>(*mRoot.GetNext(), muOffset);
 }
 
-template<class TListItem>
-TListItem* zList<TListItem>::GetTail()
+template<class TItem>
+TItem* zListBase<TItem>::GetTail()const
 {
-	return mRoot.GetPrev();
+	return &zListGetItem<TItem>(*mRoot.GetPrev(), muOffset);
 }
 
-template<class TListItem>
-const TListItem* zList<TListItem>::GetHead()const
+template<class TItem>
+typename zListBase<TItem>::Iterator zListBase<TItem>::GetHeadIt()const
 {
-	return mRoot.GetNext();
+	return Iterator(mRoot.GetNext(), muOffset);
 }
 
-template<class TListItem>
-const TListItem* zList<TListItem>::GetTail()const
+template<class TItem>
+typename zListBase<TItem>::Iterator zListBase<TItem>::GetTailIt()const
 {
-	return mRoot.GetPrev();
+	return Iterator(mRoot.GetPrev(), muOffset);
 }
 
-template<class TListItem>
-typename zList<TListItem>::Iterator zList<TListItem>::GetHeadIt()const
+template<class TItem>
+void zListBase<TItem>::Empty()
 {
-	return Iterator(mRoot.GetNextItemLink());
+	while( ((size_t) mRoot.mpPrevLink & 0x01) == 0 )
+		mRoot.mpPrevLink->Remove();
 }
 
-template<class TListItem>
-typename zList<TListItem>::Iterator zList<TListItem>::GetTailIt()const
+template<class TItem>
+bool zListBase<TItem>::IsEmpty()const
 {
-	return Iterator(mRoot.mpPrevLink);
-}
-
-template<class TListItem>
-void zList<TListItem>::UnlinkAll()
-{
-	const Link* root = &mRoot;
-	while (mRoot.mpPrevLink != root)
-		mRoot.mpPrevLink->Unlink();
-}
-
-template<class TListItem>
-void zList<TListItem>::RemoveAll()
-{
-	mRoot.Unlink();
-	mRoot.mpPrevLink = reinterpret_cast<Link*>((size_t)&mRoot);
-	mRoot.mpNextItem = reinterpret_cast<TListItem*>((size_t)&mRoot - mOffset + 1);
-}
-
-template<class TListItem>
-bool zList<TListItem>::IsEmpty()const
-{
-	return mRoot.GetNext() == NULL;
+	return ((size_t)mRoot.mpPrevLink & 0x01) == 1;
 }
 
 //#################################################################################################
 // LIST SPECIALIZED
 //#################################################################################################
-template<class TListItem, typename zList<TListItem>::Link TListItem::* TLinkOffset>
-zListLinked<TListItem, TLinkOffset>::zListLinked()
-: zList( zenOffsetOf(TLinkOffset) )
+
+template<class TItem, zListLink TItem::* TLinkOffset>
+zList<TItem, TLinkOffset>::zList()
+: zListBase( zenOffsetOf(TLinkOffset) )
 {
+}
+
+template<class TItem, zListLink TItem::* TLinkOffset>
+void zList<TItem, TLinkOffset>::Remove(TItem& _Item)
+{
+	zListLink& ItemLink = zListGetLink<TItem>(_Item, zenOffsetOf(TLinkOffset));
+	return ItemLink.Remove();
+}
+
+template<class TItem, zListLink TItem::* TLinkOffset>
+bool zList<TItem, TLinkOffset>::IsInList(TItem& _Item)
+{
+	zListLink& ItemLink = zListGetLink<TItem>(_Item, zenOffsetOf(TLinkOffset));
+	return ItemLink.IsInList();
+}
+
+template<class TItem, zListLink TItem::* TLinkOffset>
+TItem* zList<TItem, TLinkOffset>::GetNext(TItem& _Item)
+{
+	zListLink& ItemLink		= zListGetLink<TItem>(_Item, zenOffsetOf(TLinkOffset));
+	zListLink* pLinkNext	= ItemLink.GetNext();
+	return pLinkNext ? &zListGetItem<TItem>(*pLinkNext, zenOffsetOf(TLinkOffset)) : nullptr;
+}
+
+template<class TItem, zListLink TItem::* TLinkOffset>
+TItem* zList<TItem, TLinkOffset>::GetPrev(TItem& _Item)
+{
+	zListLink& ItemLink		= zListGetLink<TItem>(_Item, zenOffsetOf(TLinkOffset));
+	zListLink* pLinkPrev	= ItemLink.GetPrev();
+	return pLinkPrev ? &zListGetItem<TItem>(*pLinkPrev, zenOffsetOf(TLinkOffset)) : nullptr;
+}
+
+template<class TItem, zListLink TItem::* TLinkOffset>
+void zList<TItem, TLinkOffset>::InsertBefore(TItem& _Item, TItem& _NewItem)
+{
+	zListLink& ItemLink = zListGetLink<TItem>(_Item, zenOffsetOf(TLinkOffset));
+	zListLink& NewItemLink = zListGetLink<TItem>(_NewItem, zenOffsetOf(TLinkOffset));
+	ItemLink.InsertBefore(NewItemLink);
+}
+
+template<class TItem, zListLink TItem::* TLinkOffset>
+void zList<TItem, TLinkOffset>::InsertAfter(TItem& _Item, TItem& _NewItem)
+{
+	zListLink& ItemLink = zListGetLink<TItem>(_Item, zenOffsetOf(TLinkOffset));
+	zListLink& NewItemLink = zListGetLink<TItem>(_NewItem, zenOffsetOf(TLinkOffset));
+	ItemLink.InsertAfter(NewItemLink);
 }
 
 } } //namespace zen, Type

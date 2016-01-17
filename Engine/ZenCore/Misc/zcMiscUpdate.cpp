@@ -11,7 +11,7 @@ namespace zcMisc
 void ManagerUpdate::Update( zenConst::eUpdatePriority _eUpdateGroup )
 {
 	ZENAssert(_eUpdateGroup < zenConst::keUpdt__Count);
-	zList<zenMisc::IUpdate>::Iterator UpdateIt = mlstUpdateable[_eUpdateGroup].GetHeadIt();
+	auto UpdateIt = mlstUpdateable[_eUpdateGroup].GetHeadIt();
 	while( UpdateIt.IsValid() )
 	{
 		UpdateIt->Update();
@@ -24,7 +24,7 @@ void ManagerUpdate::Update( zenConst::eUpdatePriority _eUpdateGroupFirst, zenCon
 	ZENAssert(_eUpdateGroupLast < zenConst::keUpdt__Count);
 	for(zInt idx=_eUpdateGroupFirst; idx<=_eUpdateGroupLast; ++idx)
 	{
-		zList<zenMisc::IUpdate>::Iterator UpdateIt = mlstUpdateable[idx].GetHeadIt();
+		auto UpdateIt = mlstUpdateable[idx].GetHeadIt();
 		while( UpdateIt.IsValid() )
 		{
 			UpdateIt->Update();

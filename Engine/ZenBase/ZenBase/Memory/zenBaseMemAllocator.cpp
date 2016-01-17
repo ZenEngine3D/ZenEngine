@@ -64,7 +64,7 @@ void zAllocator::DebugPrint()
 	
 	//! @todo Print informations about allocations
 		char		zSpaces[kuTreeMaxDepth*kuSpacePerLevel+1];
-		zI8			sSlotIndexPrev[ sizeof(((Iterator*)NULL)->mpSlotIndex) ];	//Get size of non-instantiated member _rray
+		zI8			sSlotIndexPrev[ sizeof(((Iterator*)nullptr)->mpSlotIndex) ];	//Get size of non-instantiated member _rray
 		memset(zSpaces, ' ', sizeof(zSpaces));
 		memset(sSlotIndexPrev, 0xFF, sizeof(sSlotIndexPrev) );
 		for(Iterator it=GetFirst(); it.IsValid(); ++it)

@@ -86,18 +86,18 @@ zU8* GfxVertexProxy_DX11::Lock()
 	if( maStreamBuffer.Count() > 0 )
 	{
 		D3D11_MAPPED_SUBRESOURCE mapRes;
-		HRESULT hr = zcMgr::GfxRender.DX11GetDeviceContext()->Map(maStreamBuffer[0], 0, D3D11_MAP_WRITE_DISCARD, NULL, &mapRes);
+		HRESULT hr = zcMgr::GfxRender.DX11GetDeviceContext()->Map(maStreamBuffer[0], 0, D3D11_MAP_WRITE_DISCARD, 0, &mapRes);
 		if( SUCCEEDED(hr) )
 			return (zU8*)mapRes.pData;
 	}
-	return NULL;
+	return nullptr;
 }
 
 void GfxVertexProxy_DX11::Unlock()
 {
 	if( maStreamBuffer.Count() > 0 )
 	{
-		zcMgr::GfxRender.DX11GetDeviceContext()->Unmap(maStreamBuffer[0], NULL);
+		zcMgr::GfxRender.DX11GetDeviceContext()->Unmap(maStreamBuffer[0], 0);
 	}
 }
 

@@ -17,7 +17,7 @@ PropertyDefRef PropertyStruct::Create( const char* _zName, const char* _zDisplay
 	for(zUInt idx(0); idx<_uPropertyDefCount; ++idx)
 	{
 		ZENAssert( _prPropertyDef[idx].IsValid() );
-		pNewDefinition->mDefault[idx] = pNewDefinition->maPropertyDef[idx]->Allocate(NULL);				
+		pNewDefinition->mDefault[idx] = pNewDefinition->maPropertyDef[idx]->Allocate(nullptr);				
 		pNewDefinition->mdPropertyDefIndex.Set(_prPropertyDef[idx]->mName.mhName, idx);
 	}
 
@@ -94,7 +94,7 @@ PropertyValueRef PropertyStruct::ValueRef::GetStructValue(zHash32 _hPropertyName
 	if( Definition.mdPropertyDefIndex.Get(_hPropertyName, uIndex) )
 		return GetValue()[uIndex];
 	
-	return NULL;
+	return nullptr;
 }
 
 }} //namespace zen { namespace zenAss

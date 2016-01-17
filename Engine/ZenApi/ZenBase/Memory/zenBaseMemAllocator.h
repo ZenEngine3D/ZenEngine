@@ -4,13 +4,13 @@
 
 #define		zenDel(_Pointer_)					{ delete	_Pointer_; }
 #define		zenDelArray(_Pointer_)				{ delete[]	_Pointer_; }
-#define		zenDelNull(_Pointer_)				{ delete	_Pointer_; _Pointer_=NULL; }
-#define		zenDelNullArray(_Pointer_)			{ delete[]	_Pointer_; _Pointer_=NULL; }
+#define		zenDelnullptr(_Pointer_)				{ delete	_Pointer_; _Pointer_=nullptr; }
+#define		zenDelnullptrArray(_Pointer_)			{ delete[]	_Pointer_; _Pointer_=nullptr; }
 #define		zenDefaultAlign						sizeof(void*)
 #define		zenNew(_Allocator_)					new(_Allocator_)
 #define		zenNewAlign(_Allocator_, _Align_)	new(_Allocator_, _Align_)
-#define		zenNewDefault						new(static_cast<zenMem::zAllocator*>(NULL))
-#define		zenNewDefaultAlign(_Align_)			new(static_cast<zenMem::zAllocator*>(NULL), _Align_)
+#define		zenNewDefault						new(static_cast<zenMem::zAllocator*>(nullptr))
+#define		zenNewDefaultAlign(_Align_)			new(static_cast<zenMem::zAllocator*>(nullptr), _Align_)
 
 namespace zen { namespace zenMem
 {

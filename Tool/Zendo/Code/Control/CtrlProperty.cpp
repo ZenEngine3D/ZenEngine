@@ -24,7 +24,7 @@ const wxColour ControlBGColor[]={wxColour(230,240,250,255),wxColour(240,245,240,
 //=================================================================================================
 wxPGProperty* CreateAssetValueControl(const zenAss::zAssetItemRef& _rAsset, const zenAss::PropertyValueRef& _Value)
 {
-	wxPGProperty* pProperty(NULL);
+	wxPGProperty* pProperty(nullptr);
 	switch( _Value.GetType() )
 	{
 	case zenConst::keAssProp_Bool:		pProperty=zenNewDefault wxZenBoolProperty(_rAsset, _Value);		break;
@@ -152,7 +152,7 @@ wxZenBoolProperty::~wxZenBoolProperty()
 
 void wxZenBoolProperty::TypedMetaData::UpdateControl()
 {
-	ZENAssert(mpOwner != NULL && mrPropertyValue.IsValid());
+	ZENAssert(mpOwner != nullptr && mrPropertyValue.IsValid());
 	zenAss::PropertyBool::ValueRef	rPropertyVal = mrPropertyValue;
 	const zenAss::PropertyBool&		PropertyDef = rPropertyVal.GetDefinition();
 	const wxString					zFalseTrue[2] = { wxT("False"), wxT("True") };	
@@ -162,7 +162,7 @@ void wxZenBoolProperty::TypedMetaData::UpdateControl()
 
 bool wxZenBoolProperty::TypedMetaData::Save()
 {
-	ZENAssert( mpOwner != NULL && mrPropertyValue.IsValid() );
+	ZENAssert( mpOwner != nullptr && mrPropertyValue.IsValid() );
 	if( mpOwner->GetValue() != mOriginalValue )
 	{
 		zenAss::PropertyBool::ValueRef rPropertyVal(mrPropertyValue);
@@ -202,7 +202,7 @@ void wxZenFloatProperty::TypedMetaData::UpdateControl()
 
 bool wxZenFloatProperty::TypedMetaData::Save()
 {
-	ZENAssert( mpOwner != NULL && mrPropertyValue.IsValid() );	
+	ZENAssert( mpOwner != nullptr && mrPropertyValue.IsValid() );	
 	if( mpOwner->GetValue() != mOriginalValue )
 	{
 		zenAss::PropertyFloat::ValueRef rPropertyVal(mrPropertyValue);
@@ -242,7 +242,7 @@ void wxZenIntProperty::TypedMetaData::UpdateControl()
 
 bool wxZenIntProperty::TypedMetaData::Save()
 {
-	ZENAssert( mpOwner != NULL && mrPropertyValue.IsValid() );	
+	ZENAssert( mpOwner != nullptr && mrPropertyValue.IsValid() );	
 	if( mpOwner->GetValue() != mOriginalValue )
 	{
 		zenAss::PropertyInt::ValueRef rPropertyVal(mrPropertyValue);
@@ -345,7 +345,7 @@ void wxZenVectorProperty<TPropertyClass, TElementCast, TWxVector, TWxProperty>::
 template< class TPropertyClass, class TElementCast, class TWxVector, class TWxProperty >
 bool wxZenVectorProperty<TPropertyClass, TElementCast, TWxVector, TWxProperty>::TypedMetaData::Save()
 {
-	ZENAssert( mpOwner != NULL && mrPropertyValue.IsValid() );	
+	ZENAssert( mpOwner != nullptr && mrPropertyValue.IsValid() );	
 	if( mpOwner->GetValue() != mOriginalValue )
 	{
  		TPropertyClass::ValueRef rPropertyVal(mrPropertyValue);
@@ -419,7 +419,7 @@ void wxZenEnumProperty::TypedMetaData::UpdateControl()
 
 bool wxZenEnumProperty::TypedMetaData::Save()
 {
-	ZENAssert( mpOwner != NULL && mrPropertyValue.IsValid() );	
+	ZENAssert( mpOwner != nullptr && mrPropertyValue.IsValid() );	
 	if( mpOwner->GetValue() != mOriginalValue )
 	{
 		zenAss::PropertyEnum::ValueRef rPropertyVal(mrPropertyValue);
@@ -507,7 +507,7 @@ bool wxZenAssetProperty::OnEvent(wxPropertyGrid* propgrid, wxWindow* wnd_primary
 wxZenAssetProperty::TypedMetaData::TypedMetaData( wxZenAssetProperty* _pOwner, const zenAss::zAssetItemRef& _rAsset, const zenAss::PropertyValueRef& _rPropertyValue)
 : PropertyMetaData(_pOwner, _rAsset, _rPropertyValue, 0)
 {
-	ZENAssert( mpOwner != NULL && mrPropertyValue.IsValid() );
+	ZENAssert( mpOwner != nullptr && mrPropertyValue.IsValid() );
 	zenAss::PropertyAsset::ValueRef rValue = _rPropertyValue;
 	mAssetIDValue			= rValue.GetValue();
 	mAssetIDOriginalValue	= mAssetIDValue;
@@ -515,7 +515,7 @@ wxZenAssetProperty::TypedMetaData::TypedMetaData( wxZenAssetProperty* _pOwner, c
 
 void wxZenAssetProperty::TypedMetaData::UpdateControlState()
 {
-	ZENAssert( mpOwner != NULL && mrPropertyValue.IsValid() );
+	ZENAssert( mpOwner != nullptr && mrPropertyValue.IsValid() );
 	mpOwner->SetBackgroundColour( ControlBGColor[ mrPropertyValue.IsDefault() ], 0 );
 	mpOwner->SetModifiedStatus	( mAssetIDValue != mAssetIDOriginalValue );	
 }
@@ -549,7 +549,7 @@ void wxZenAssetProperty::TypedMetaData::AssignValue(zenAss::zAssetID _AssetID)
 
 bool wxZenAssetProperty::TypedMetaData::Save()
 {
- 	ZENAssert( mpOwner != NULL && mrPropertyValue.IsValid() );	
+ 	ZENAssert( mpOwner != nullptr && mrPropertyValue.IsValid() );	
  	if( mAssetIDValue != mAssetIDOriginalValue )
  	{
  		zenAss::PropertyAsset::ValueRef rPropertyVal(mrPropertyValue);
@@ -610,7 +610,7 @@ void wxZenFileProperty::TypedMetaData::UpdateControl()
 
 bool wxZenFileProperty::TypedMetaData::Save()
 {
-	ZENAssert( mpOwner != NULL && mrPropertyValue.IsValid() );	
+	ZENAssert( mpOwner != nullptr && mrPropertyValue.IsValid() );	
 	if( mpOwner->GetValue() != mOriginalValue )
 	{
 		zenAss::PropertyFile::ValueRef rPropertyVal(mrPropertyValue);
@@ -660,7 +660,7 @@ void wxZenArrayProperty::TypedMetaData::UpdateControl()
 
 bool wxZenArrayProperty::TypedMetaData::Save()
 {
-	ZENAssert( mpOwner != NULL && mrPropertyValue.IsValid() );	
+	ZENAssert( mpOwner != nullptr && mrPropertyValue.IsValid() );	
 	zenAss::PropertyArray::ValueRef rPropertyVal(mrPropertyValue);
 	zUInt uChilCount				= mpOwner->GetChildCount();	
 	bool bChanged					= mOriginalValue.GetLong() != uChilCount;	
@@ -668,7 +668,7 @@ bool wxZenArrayProperty::TypedMetaData::Save()
 	for(zUInt idx(0); idx<uChilCount; ++idx)
 	{
 		wxPGProperty* pProperty		= mpOwner->Item(idx);	
-		PropertyMetaData* pMetaData	= pProperty ? static_cast<PropertyMetaData*>(pProperty->GetClientData()) : NULL;
+		PropertyMetaData* pMetaData	= pProperty ? static_cast<PropertyMetaData*>(pProperty->GetClientData()) : nullptr;
 		if( pMetaData )
 			bChanged				|= pMetaData->Save();
 	}	
@@ -735,13 +735,13 @@ void wxZenStructProperty::TypedMetaData::UpdateControlState()
 
 bool wxZenStructProperty::TypedMetaData::Save()
 {
-	ZENAssert( mpOwner != NULL && mrPropertyValue.IsValid() );	
+	ZENAssert( mpOwner != nullptr && mrPropertyValue.IsValid() );	
 	zUInt uChilCount	= mpOwner->GetChildCount();
 	bool bChanged		= false;
 	for (zUInt idx(0); idx < uChilCount; ++idx)
 	{
 		wxPGProperty* pProperty = mpOwner->Item(idx);
-		PropertyMetaData* pMetaData = pProperty ? static_cast<PropertyMetaData*>(pProperty->GetClientData()) : NULL;
+		PropertyMetaData* pMetaData = pProperty ? static_cast<PropertyMetaData*>(pProperty->GetClientData()) : nullptr;
 		if (pMetaData)
 			bChanged |= pMetaData->Save();
 	}

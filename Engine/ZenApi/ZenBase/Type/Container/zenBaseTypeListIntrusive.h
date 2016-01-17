@@ -5,52 +5,47 @@
 namespace zen { namespace zenType 
 {
 
+//=============================================================================================
+//! @class	zListLink
+//! @brief	Contain infos to reach previous and next item in a list
+//! @detail For each list a class can be a member of, add 1 zListLink member. This allow
+//!			having intrusive list support (much faster and safer than external container list)
+//!			that support multiple lists instead of being limited to one through inheritance.
+//=============================================================================================
+class zListLink
+{
+public:
+	ZENInline							~zListLink();		
+	
+protected:	
+	ZENInline void						Remove();							//!< @brief Remove item from the list this zListLink belongs to	
+	ZENInline void						InsertBefore(zListLink& _NewLink);	//!< @brief Insert a new item before this zListLink
+	ZENInline void						InsertAfter(zListLink& _NewLink);	//!< @brief Insert a new item after this zListLink	
+	ZENInline zListLink*				GetNext()const;						//!< @brief Get the next item zListLink object
+	ZENInline zListLink*				GetPrev()const;						//!< @brief Get the previous item zListLink object
+	ZENInline zListLink*				GetNextValid()const;				//!< @brief For internal use, valid even if pointing to list root
+	ZENInline zListLink*				GetPrevValid()const;				//!< @brief For internal use, valid even if pointing to list root
+	ZENInline bool						IsInList()const;					//!< @brief True if this link has been added to a list	
+	zListLink*							mpPrevLink = nullptr;				//!< Pointer to next link (lower bit set to 1 if pointing to list root, invalid)
+	zListLink*							mpNextLink = nullptr;				//!< Pointer to previous link (lower bit set to 1 if pointing to list root, invalid)
+	template<class>						friend class zListBase;
+	template<class T, zListLink T::*>	friend class zList;
+};
+
 //=================================================================================================
-//! @class	zList
-//! @brief	Double 'intrusive' linked list.
+//! @class	zListBase
+//! @brief	Double 'intrusive' linked list
 //! @detail Intrusive list do not require additional allocation to manage, their list infos is 
 //!			directly included in the object, making it more cache friendly and less heap intensive.
-//!
+//!			This class contain all the implementation details, use zList for declarating the list.
 //!			Example : look at SampleListIntrusive() for more infos
 //!
 //! @Note	This implementation supports adding an object to multiple list
-//!			A class can't contain a list of itself
 //=================================================================================================
-template<class TListItem>
-class zList
+template<class TItem>
+class zListBase
 {
 public:
-	//=============================================================================================
-	//! @class	Link
-	//! @brief	Contain infos for accessing previous or next item in the list
-	//=============================================================================================
-	class Link
-	{
-	public:
-		Link();
-		~Link();
-
-		TListItem*			Get();								//!< @brief Get current item tied to this list Link
-		TListItem*			GetNext();							//!< @brief Get next item tied to this list Link
-		TListItem*			GetPrev();							//!< @brief Get previous item tied to this list Link
-		const TListItem*	Get()const;							//!< @brief Get current item tied to this list Link
-		const TListItem*	GetNext()const;						//!< @brief Get next item tied to this list Link
-		const TListItem*	GetPrev()const;						//!< @brief Get previous item tied to this list Link
-		void				Unlink();							//!< @brief Remove item from the list this Link belongs to
-		void				InsertBefore(TListItem& _NewItem);	//!< @brief Insert a new item before this Link
-		void				InsertAfter(TListItem& _NewItem);	//!< @brief Insert a new item after this Link
-		bool				IsLinked()const;					//!< @brief True if this link has been added to a list
-
-	protected:
-		Link*				GetNextItemLink()const;				//!< @brief Get the next item Link object
-		size_t				GetOffset()const;					//!< @brief Get the offset between object and its link
-
-		Link*				mpPrevLink;
-		TListItem*			mpNextItem;
-
-		template<class>
-		friend class zList;
-	};
 	//=============================================================================================
 	//! @class	Iterator
 	//! @brief	Allow easy traversal of a list
@@ -58,68 +53,70 @@ public:
 	class Iterator
 	{
 	public:
-							Iterator();
-							Iterator(Iterator& _Copy);
-							Iterator(Link* _Current);
+									Iterator();
+									Iterator(const Iterator& _Copy);									
 		
-		bool				IsValid();							//!< @brief Return true if pointing to valid data
-		TListItem*			Get();								//!< @brief Get current item (NULL if none)
-		const TListItem*	Get()const;							//!< @brief Get current item (NULL if none)
-		TListItem*			operator*();						//!< @brief Get current item (NULL if none)
-		const TListItem*	operator*()const;					//!< @brief Get current item (NULL if none)
-		TListItem*			operator->();						//!< @brief Get current item (NULL if none)
-		const TListItem*	operator->()const;					//!< @brief Get current item (NULL if none)
-		void				operator++();						//!< @brief Go to next item
-		void				operator--();						//!< @brief Go to previous item
-		const Iterator&		operator=(Iterator& _Copy);			//!< @brief Assign iterator current location
-		const Iterator&		operator=(Link* _Current);			//!< @brief Assign iterator current location
-		TListItem*			GoNext();							//!< @brief Move iterator forward and return value found
-		TListItem*			GoPrevious();						//!< @brief Move iterator backward and return value found
-		void				InsertBefore(TListItem& _NewItem);	//!< @brief Insert a new item before this Link
-		void				InsertAfter(TListItem& _NewItem);	//!< @brief Insert a new item after this Link
-		TListItem*			Unlink();							//!< @brief Unlink current item and return value (iterator invalid afterward)
-		TListItem*			UnlinkGoNext();						//!< @brief Unlink current item and go to next value
-		TListItem*			UnlinkGoPrev();						//!< @brief Unlink current item and go to previous value
+		bool						IsValid()const;						//!< @brief Return true if pointing to valid data
+		TItem*						Get()const;							//!< @brief Get current item (nullptr if none)
+		TItem*						operator*()const;					//!< @brief Get current item (nullptr if none)
+		TItem*						operator->()const;					//!< @brief Get current item (nullptr if none)
+		void						operator++();						//!< @brief Go to next item
+		void						operator--();						//!< @brief Go to previous item
+		const Iterator&				operator=(const Iterator& _Copy);	//!< @brief Assign iterator current location
+		void						InsertBefore(TItem& _NewItem);		//!< @brief Insert a new item before this zListLink
+		void						InsertAfter(TItem& _NewItem);		//!< @brief Insert a new item after this zListLink
+		TItem*						Remove();							//!< @brief Unlink current item and return value (iterator invalid afterward)
+		TItem*						RemoveGoNext();						//!< @brief Unlink current item and go to next value
+		TItem*						RemoveGoPrev();						//!< @brief Unlink current item and go to previous value
 		
 	protected:
-		Link*				mpLink;
+									Iterator(zListLink* _pLink, size_t _uOffset);
+		zListLink*					mpLink			= nullptr;			//!< Current link node pointed by iterator
+		size_t						muOffset		= 0;				//!< Offset between Object and the Link data member
+		template<class>				friend class zListBase;
 	};
 	//=============================================================================================
 	
-	void					PushHead(TListItem& _Item);			//!< @brief Add an item to the begining of this list
-	void					PushTail(TListItem& _Item);			//!< @brief Add an item to the end of this list
-	TListItem*				PopHead();							//!< @brief Get first item in the list and remove it (NULL of none)
-	TListItem*				PopTail();							//!< @brief Get last item in the list and remove it (NULL of none)
+	void							PushHead(TItem& _Item);				//!< @brief Add an item to the beginning of this list
+	void							PushTail(TItem& _Item);				//!< @brief Add an item to the end of this list
+	TItem*							PopHead();							//!< @brief Get first item in the list and remove it (nullptr of none)
+	TItem*							PopTail();							//!< @brief Get last item in the list and remove it (nullptr of none)
 	
-	TListItem*				GetHead();							//!< @brief Get first item in the list (NULL of none)
-	TListItem*				GetTail();							//!< @brief Get last item in the list (NULL of none)
-	const TListItem*		GetHead()const;						//!< @brief Get first item in the list (NULL of none)
-	const TListItem*		GetTail()const;						//!< @brief Get last item in the list (NULL of none)
+	TItem*							GetHead()const;						//!< @brief Get first item in the list (nullptr of none)
+	TItem*							GetTail()const;						//!< @brief Get last item in the list (nullptr of none)
 
-	Iterator				GetHeadIt()const;					//!< @brief Get iterator to first item
-	Iterator				GetTailIt()const;					//!< @brief Get iterator to last item
-	void					UnlinkAll();						//!< @brief Unlink all element, one by one
-	void					RemoveAll();						//!< @brief Detach list from current elements (leaving them still chained together)
+	Iterator						GetHeadIt()const;					//!< @brief Get iterator to first item
+	Iterator						GetTailIt()const;					//!< @brief Get iterator to last item
+	void							Empty();							//!< @brief Unlink all element, one by one
+	bool							IsEmpty()const;						//!< @brief True if it contains no element
 
-	bool					IsEmpty()const;						//!< @brief True if it contains no element
 protected:
-							zList(size_t _Offset);				//!< @brief Use zListDeclare to declare new list
-	Link					mRoot;								//!< Pointer to first and last element of the list
-	size_t					mOffset;							//!< Offset between object and its link
+									zListBase(size_t _Offset);			//!< @brief Use zList to declare new list
+	zListLink						mRoot;								//!< Pointer to first and last element of the list
+	size_t							muOffset = 0;						//!< Offset between object and its link
 };
 
 //=================================================================================================
-//! @class	zListSpecialized
-//! @brief	Transmit offset infos to base class
+//! @class	zList
+//! @brief	Class used to declare a new list type
+//! @detail	The template expect the type of the object stored in the list, and a member pointer to
+//!			object listlink used to store this list info.
+//!			Exemple: zList<ExempleClass, &ExempleClass::myLink> myList;
+//!			Example: look at SampleListIntrusive() for more infos
 //=================================================================================================
-template<class TListItem, typename zList<TListItem>::Link TListItem::* TLinkOffset>
-class zListLinked : public zList<TListItem>
+template<class TItem, zListLink TItem::* TLinkOffset>
+class zList : public zListBase<TItem>
 {
 public:
-	zListLinked();
+							zList();
+	static void				Remove(TItem& _Item);
+	static bool				IsInList(TItem& _Item);
+	static TItem*			GetNext(TItem& _Item);							//!< @brief Get the next item (from current item) in the list
+	static TItem*			GetPrev(TItem& _Item);							//!< @brief Get the previous item (from current item) in the list
+	static void				InsertBefore(TItem& _Item, TItem& _NewItem);	//!< @brief Insert a new item before an item
+	static void				InsertAfter(TItem& _Item, TItem& _NewItem);		//!< @brief Insert a new item after an item
 };
 
-#define zListDeclare(_Class_, _Link_) zListLinked<_Class_, &_Class_::_Link_>
 
 } } //namespace zen, Type
 

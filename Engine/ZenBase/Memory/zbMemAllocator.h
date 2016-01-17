@@ -28,15 +28,15 @@ namespace zbMem
 	public:			
 		zenMem::zAllocator*		mpAllocator;
 		size_t					muWantedSize;
-		zHash32				mhStamp;
+		zHash32					mhStamp;
 		zU32					muOffset : 31;
 		zU32					mbIsArray: 1;
-		ZENInline bool				IsValid(){return mhStamp==zHash32("ValidAlloc");}
+		ZENInline bool			IsValid(){return mhStamp==zHash32("ValidAlloc");}
 		bool					IsArray(){return mbIsArray;};
 		void					Set(zenMem::zAllocator* _pAllocator, zU32 _uAllocOffset, size_t _uAllocSize, bool _bIsArray);
 	};			
 
-	AllocHeader*		GetHeader(void* _pAlloc, bool _bIsArray);					
+	AllocHeader*				GetHeader(void* _pAlloc, bool _bIsArray);					
 }  
 
 #endif

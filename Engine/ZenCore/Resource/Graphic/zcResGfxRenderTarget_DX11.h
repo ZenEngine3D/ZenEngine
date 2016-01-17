@@ -12,7 +12,7 @@ namespace zcRes
 		virtual						~GfxRenderTargetProxy_DX11();												
 		bool						Initialize(class GfxRenderTarget& _Owner);
 
-		ZENInline bool				IsDepth()	{ return mpTargetDepthView != NULL; }
+		ZENInline bool				IsDepth()	{ return mpTargetDepthView != nullptr; }
 		void						Clear(const zVec4F& _vRGBA);
 		void						Clear(float _fDepth=1, zU8 _uStencil=0, bool _bClearDepth=true, bool _bClearStencil=false);
 		void						ReleaseBackbuffer();

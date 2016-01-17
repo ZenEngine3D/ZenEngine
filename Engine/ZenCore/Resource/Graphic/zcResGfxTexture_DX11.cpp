@@ -4,8 +4,8 @@ namespace zcRes
 {
 
 GfxTexture2dProxy_DX11::GfxTexture2dProxy_DX11()
-: mpTextureBuffer(NULL)
-, mpTextureView(NULL)
+: mpTextureBuffer(nullptr)
+, mpTextureView(nullptr)
 {
 }
 
@@ -16,8 +16,8 @@ GfxTexture2dProxy_DX11::~GfxTexture2dProxy_DX11()
 	if( mpTextureView )		
 		mpTextureView->Release();
 
-	mpTextureBuffer = NULL;
-	mpTextureView	= NULL;
+	mpTextureBuffer = nullptr;
+	mpTextureView	= nullptr;
 }
 
 bool GfxTexture2dProxy_DX11::Initialize(class GfxTexture2d& _Owner)
@@ -67,7 +67,7 @@ bool GfxTexture2dProxy_DX11::Initialize(class GfxTexture2d& _Owner)
 		}			
 	}
 
-	HRESULT ret = zcMgr::GfxRender.DX11GetDevice()->CreateTexture2D( &bufferDesc, bValidInitData ? aInitData : NULL, &mpTextureBuffer );
+	HRESULT ret = zcMgr::GfxRender.DX11GetDevice()->CreateTexture2D( &bufferDesc, bValidInitData ? aInitData : nullptr, &mpTextureBuffer );
 	if( SUCCEEDED(ret) && !bIsDepth)
 	{
 		viewDesc.Format						= bufferDesc.Format;

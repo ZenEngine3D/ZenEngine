@@ -1,7 +1,7 @@
 #include "zeEngine.h"
 #if ZEN_ENGINETOOL
 
-namespace zen { namespace zeAss
+namespace zeAss
 {
 	//=================================================================================================
 	//! @brief		Get the list of properties definition for this asset
@@ -19,6 +19,6 @@ namespace zen { namespace zeAss
 		return sarProperties;	
 	}
 
-}} //namespace zen { namespace zeAss
+} //namespace zeAss
 
 #endif //ZEN_ENGINETOOL

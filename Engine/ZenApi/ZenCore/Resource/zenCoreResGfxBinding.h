@@ -26,8 +26,9 @@ namespace zen { namespace zenRes {
 		void							FrameEnd();
 		zGfxRenderTarget				GetBackbuffer();
 		void							Resize(const zVec2U16& _vSize);		
-		bool							PerformResize();
-		static zGfxWindow				Create( HWND _WindowHandle );
+		bool							PerformResize();		
+
+		static zGfxWindow				Create( HWND _WindowHandle );		
 	};
 		
 	ZENClassResourceRefDeclare(zGfxMeshStrip, zenConst::keResType_GfxMeshStrip)

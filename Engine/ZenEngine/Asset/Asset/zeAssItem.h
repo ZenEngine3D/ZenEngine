@@ -4,7 +4,7 @@
 
 
 #if ZEN_ENGINETOOL
-namespace zen { namespace zeAss
+namespace zeAss
 {
 
 //=================================================================================================
@@ -14,34 +14,34 @@ class Asset : public zRefCounted, public zenSig::zSlot
 {
 ZENClassDeclareNoParent(Asset)
 public:
-	virtual											~Asset();
+	virtual												~Asset();
 
-	ZENInline const zenAss::zAssetID&				GetID()const;
-	ZENInline zU64									GetIDUInt()const;
-	ZENInline const zString&						GetName()const;
-	ZENInline const zString&						GetDescription()const;
-	ZENInline zenConst::eAssetType					GetType()const;
+	ZENInline const zenAss::zAssetID&					GetID()const;
+	ZENInline zU64										GetIDUInt()const;
+	ZENInline const zString&							GetName()const;
+	ZENInline const zString&							GetDescription()const;
+	ZENInline zenConst::eAssetType						GetType()const;
 
-	void											InitDefault();
-	void											Init(zenAss::zAssetID _AssetID, const char* _zName, const zenAss::zPackageRef& _ParentPkg);
-	void											SetPackage(const zenAss::zPackageRef& _rParentPkg);
-	ZENForceInline const zenAss::zPackageRef&		GetPackage(){ return mrPackage; }
+	void												InitDefault();
+	void												Init(zenAss::zAssetID _AssetID, const char* _zName, const zenAss::zPackageRef& _ParentPkg);
+	void												SetPackage(const zenAss::zPackageRef& _rParentPkg);
+	ZENForceInline const zenAss::zPackageRef&			GetPackage(){ return mrPackage; }
 
-	ZENForceInline zUInt							GetValueCount()const;
-	ZENForceInline zenAss::PropertyValueRef			GetValue(zUInt _uValIndex);
-	ZENForceInline zenAss::PropertyValueRef			GetValue(zHash32 _hPropertyName);
+	ZENForceInline zUInt								GetValueCount()const;
+	ZENForceInline zenAss::PropertyValueRef				GetValue(zUInt _uValIndex);
+	ZENForceInline zenAss::PropertyValueRef				GetValue(zHash32 _hPropertyName);
 
-	virtual const zenAss::PropertyDefArray&			GetProperties()const = 0;								//!< Child class return the list of property definition they are made of
-	virtual zInt									GetValueIndex(zHash32 _hPropertyName)const = 0;
+	virtual const zenAss::PropertyDefArray&				GetProperties()const = 0;								//!< Child class return the list of property definition they are made of
+	virtual zInt										GetValueIndex(zHash32 _hPropertyName)const = 0;
 	
-	void											SetName(const char* _zName);	
+	void												SetName(const char* _zName);	
 	
 	typedef zenSig::zSignal1<zenAss::PropertyValueRef>							SignalUpdatedProperty;
 	typedef zenSig::zSignal1<const zArrayDynamic<zenAss::PropertyValueRef>& >	SignalUpdatedProperties;
 	ZENInline SignalUpdatedProperty&					GetSignalUpdatedProperty();
 	ZENInline SignalUpdatedProperties&					GetSignalUpdatedProperties();
 protected:										
-	Asset();
+														Asset();
 	void												RebuiltDescription();
 	void												slotPropertyUpdate(zenAss::PropertyValueRef _rUpdated);		//!< Called when properties have been updated, if asset need to reprocess some local infos
 
@@ -88,7 +88,7 @@ public:
 	void										slotPropertyUpdate(zenAss::PropertyValueRef _rUpdated);	
 };	
 
-}} //namespace zen { namespace zeAss
+}//namespace zeAss
 
 #endif
 

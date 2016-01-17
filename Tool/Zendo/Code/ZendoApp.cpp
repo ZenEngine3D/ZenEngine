@@ -27,6 +27,11 @@ public:
 	{
 		return false;
 	}
+	virtual const char* GetAppName() const
+	{
+		return "Zendo";
+	}
+
 protected:
 };
 
@@ -107,7 +112,7 @@ bool ZendoApp::InitResources()
 	}
 	
 	mdAssetIcon.Init(512);
-	mdAssetIcon.SetDefaultValue(NULL);
+	mdAssetIcon.SetDefaultValue(nullptr);
 	return true;
 }
 

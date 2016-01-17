@@ -82,13 +82,13 @@ extern IMGUI_API ImGuiState*  GImGui;
 // Helpers: UTF-8 <> wchar
 IMGUI_API int           ImTextStrToUtf8(char* buf, int buf_size, const ImWchar* in_text, const ImWchar* in_text_end);      // return output UTF-8 bytes count
 IMGUI_API int           ImTextCharFromUtf8(unsigned int* out_char, const char* in_text, const char* in_text_end);          // return input UTF-8 bytes count
-IMGUI_API int           ImTextStrFromUtf8(ImWchar* buf, int buf_size, const char* in_text, const char* in_text_end, const char** in_remaining = NULL);   // return input UTF-8 bytes count
+IMGUI_API int           ImTextStrFromUtf8(ImWchar* buf, int buf_size, const char* in_text, const char* in_text_end, const char** in_remaining = nullptr);   // return input UTF-8 bytes count
 IMGUI_API int           ImTextCountCharsFromUtf8(const char* in_text, const char* in_text_end);                            // return number of UTF-8 code-points (NOT bytes count)
 IMGUI_API int           ImTextCountUtf8BytesFromStr(const ImWchar* in_text, const ImWchar* in_text_end);                   // return number of bytes to express string as UTF-8 code-points
 
 // Helpers: Misc
 IMGUI_API ImU32         ImHash(const void* data, int data_size, ImU32 seed = 0);    // Pass data_size==0 for zero-terminated strings
-IMGUI_API void*         ImLoadFileToMemory(const char* filename, const char* file_open_mode, int* out_file_size = NULL, int padding_bytes = 0);
+IMGUI_API void*         ImLoadFileToMemory(const char* filename, const char* file_open_mode, int* out_file_size = nullptr, int padding_bytes = 0);
 IMGUI_API bool          ImIsPointInTriangle(const ImVec2& p, const ImVec2& a, const ImVec2& b, const ImVec2& c);
 static inline bool      ImCharIsSpace(int c)            { return c == ' ' || c == '\t' || c == 0x3000; }
 static inline int       ImUpperPowerOfTwo(int v)        { v--; v |= v >> 1; v |= v >> 2; v |= v >> 4; v |= v >> 8; v |= v >> 16; v++; return v; }
@@ -320,7 +320,7 @@ struct ImGuiPopupRef
     ImGuiID             ParentMenuSet;  // Set on OpenPopup()
     ImVec2              MousePosOnOpen; // Copy of mouse position at the time of opening popup
 
-    ImGuiPopupRef(ImGuiID id, ImGuiWindow* parent_window, ImGuiID parent_menu_set, const ImVec2& mouse_pos) { PopupID = id; Window = NULL; ParentWindow = parent_window; ParentMenuSet = parent_menu_set; MousePosOnOpen = mouse_pos; }
+    ImGuiPopupRef(ImGuiID id, ImGuiWindow* parent_window, ImGuiID parent_menu_set, const ImVec2& mouse_pos) { PopupID = id; Window = nullptr; ParentWindow = parent_window; ParentMenuSet = parent_menu_set; MousePosOnOpen = mouse_pos; }
 };
 
 // Main state for ImGui
@@ -400,7 +400,7 @@ struct ImGuiState
 
     // Logging
     bool                    LogEnabled;
-    FILE*                   LogFile;                            // If != NULL log to stdout/ file
+    FILE*                   LogFile;                            // If != nullptr log to stdout/ file
     ImGuiTextBuffer*        LogClipboard;                       // Else log to clipboard. This is pointer so our GImGui static constructor doesn't call heap allocators.
     int                     LogStartDepth;
     int                     LogAutoExpandMaxDepth;
@@ -416,17 +416,17 @@ struct ImGuiState
     ImGuiState()
     {
         Initialized = false;
-        Font = NULL;
+        Font = nullptr;
         FontSize = FontBaseSize = 0.0f;
         FontTexUvWhitePixel = ImVec2(0.0f, 0.0f);
 
         Time = 0.0f;
         FrameCount = 0;
         FrameCountEnded = FrameCountRendered = -1;
-        CurrentWindow = NULL;
-        FocusedWindow = NULL;
-        HoveredWindow = NULL;
-        HoveredRootWindow = NULL;
+        CurrentWindow = nullptr;
+        FocusedWindow = nullptr;
+        HoveredWindow = nullptr;
+        HoveredRootWindow = nullptr;
         HoveredId = 0;
         HoveredIdPreviousFrame = 0;
         ActiveId = 0;
@@ -434,8 +434,8 @@ struct ImGuiState
         ActiveIdIsAlive = false;
         ActiveIdIsJustActivated = false;
         ActiveIdIsFocusedOnly = false;
-        ActiveIdWindow = NULL;
-        MovedWindow = NULL;
+        ActiveIdWindow = nullptr;
+        MovedWindow = nullptr;
         SettingsDirtyTimer = 0.0f;
         DisableHideTextAfterDoubleHash = 0;
 
@@ -458,15 +458,15 @@ struct ImGuiState
         DragSpeedScaleFast = 10.0f;
         ScrollbarClickDeltaToGrabCenter = ImVec2(0.0f, 0.0f);
         memset(Tooltip, 0, sizeof(Tooltip));
-        PrivateClipboard = NULL;
+        PrivateClipboard = nullptr;
 
         ModalWindowDarkeningRatio = 0.0f;
         OverlayDrawList._OwnerName = "##Overlay"; // Give it a name for debugging
         MouseCursor = ImGuiMouseCursor_Arrow;
 
         LogEnabled = false;
-        LogFile = NULL;
-        LogClipboard = NULL;
+        LogFile = nullptr;
+        LogClipboard = nullptr;
         LogStartDepth = 0;
         LogAutoExpandMaxDepth = 2;
 
@@ -537,7 +537,7 @@ struct IMGUI_API ImGuiDrawContext
         LastItemHoveredAndUsable = LastItemHoveredRect = false;
         MenuBarAppending = false;
         MenuBarOffsetX = 0.0f;
-        StateStorage = NULL;
+        StateStorage = nullptr;
         LayoutType = ImGuiLayoutType_Vertical;
         ItemWidth = 0.0f;
         ButtonRepeat = false;
@@ -617,7 +617,7 @@ public:
     ImGuiWindow(const char* name);
     ~ImGuiWindow();
 
-    ImGuiID     GetID(const char* str, const char* str_end = NULL);
+    ImGuiID     GetID(const char* str, const char* str_end = nullptr);
     ImGuiID     GetID(const void* ptr);
 
     ImRect      Rect() const                            { return ImRect(Pos.x, Pos.y, Pos.x+Size.x, Pos.y+Size.y); }
@@ -638,7 +638,7 @@ public:
 namespace ImGui
 {
     // We should always have a CurrentWindow in the stack (there is an implicit "Debug" window)
-    // If this ever crash because g.CurrentWindow is NULL it means that either
+    // If this ever crash because g.CurrentWindow is nullptr it means that either
     // - ImGui::NewFrame() has never been called, which is illegal.
     // - You are calling ImGui functions after ImGui::Render() and before the next ImGui::NewFrame(), which is also illegal.
     inline    ImGuiWindow*  GetCurrentWindowRead()      { ImGuiState& g = *GImGui; return g.CurrentWindow; }
@@ -662,9 +662,9 @@ namespace ImGui
     IMGUI_API float         CalcWrapWidthForPos(const ImVec2& pos, float wrap_pos_x);
 
     // NB: All position are in absolute pixels coordinates (not window coordinates)
-    IMGUI_API void          RenderText(ImVec2 pos, const char* text, const char* text_end = NULL, bool hide_text_after_hash = true);
+    IMGUI_API void          RenderText(ImVec2 pos, const char* text, const char* text_end = nullptr, bool hide_text_after_hash = true);
     IMGUI_API void          RenderTextWrapped(ImVec2 pos, const char* text, const char* text_end, float wrap_width);
-    IMGUI_API void          RenderTextClipped(const ImVec2& pos_min, const ImVec2& pos_max, const char* text, const char* text_end, const ImVec2* text_size_if_known, ImGuiAlign align = ImGuiAlign_Default, const ImVec2* clip_min = NULL, const ImVec2* clip_max = NULL);
+    IMGUI_API void          RenderTextClipped(const ImVec2& pos_min, const ImVec2& pos_max, const char* text, const char* text_end, const ImVec2* text_size_if_known, ImGuiAlign align = ImGuiAlign_Default, const ImVec2* clip_min = nullptr, const ImVec2* clip_max = nullptr);
     IMGUI_API void          RenderFrame(ImVec2 p_min, ImVec2 p_max, ImU32 fill_col, bool border = true, float rounding = 0.0f);
     IMGUI_API void          RenderCollapseTriangle(ImVec2 p_min, bool opened, float scale = 1.0f, bool shadow = false);
     IMGUI_API void          RenderCheckMark(ImVec2 pos, ImU32 col);
@@ -680,7 +680,7 @@ namespace ImGui
     IMGUI_API bool          DragFloatN(const char* label, float* v, int components, float v_speed, float v_min, float v_max, const char* display_format, float power);
     IMGUI_API bool          DragIntN(const char* label, int* v, int components, float v_speed, int v_min, int v_max, const char* display_format);
 
-    IMGUI_API bool          InputTextEx(const char* label, char* buf, int buf_size, const ImVec2& size_arg, ImGuiInputTextFlags flags, ImGuiTextEditCallback callback = NULL, void* user_data = NULL);
+    IMGUI_API bool          InputTextEx(const char* label, char* buf, int buf_size, const ImVec2& size_arg, ImGuiInputTextFlags flags, ImGuiTextEditCallback callback = nullptr, void* user_data = nullptr);
     IMGUI_API bool          InputFloatN(const char* label, float* v, int components, int decimal_precision, ImGuiInputTextFlags extra_flags);
     IMGUI_API bool          InputIntN(const char* label, int* v, int components, ImGuiInputTextFlags extra_flags);
     IMGUI_API bool          InputScalarEx(const char* label, ImGuiDataType data_type, void* data_ptr, void* step_ptr, void* step_fast_ptr, const char* scalar_format, ImGuiInputTextFlags extra_flags);

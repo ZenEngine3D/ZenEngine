@@ -4,7 +4,7 @@ namespace zcRes
 {
 
 GfxInputStreamProxy_DX11::GfxInputStreamProxy_DX11()
-: mpInputLayout(NULL)
+: mpInputLayout(nullptr)
 {
 }
 
@@ -12,7 +12,7 @@ GfxInputStreamProxy_DX11::~GfxInputStreamProxy_DX11()
 {
 	if( mpInputLayout )
 		mpInputLayout->Release();
-	mpInputLayout = NULL;
+	mpInputLayout = nullptr;
 }
 
 bool GfxInputStreamProxy_DX11::Initialize(class GfxInputStream& _Owner)

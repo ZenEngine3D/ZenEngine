@@ -16,7 +16,7 @@ class zList1xNode
 {
 ZENClassDeclareNoParent(zList1xNode)
 public:
-						zList1xNode	():mpLstNext(NULL){};
+						zList1xNode	():mpLstNext(nullptr){};
 						~zList1xNode	(){};
 ZENInline  zList1xNode*	LstNext			();
 

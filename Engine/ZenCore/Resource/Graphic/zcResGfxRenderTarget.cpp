@@ -4,7 +4,7 @@ namespace zcRes
 {
 	bool GfxRenderTarget::ResourceInit()
 	{
-		if( mrResData->mpBackbuffer == NULL )
+		if( mrResData->mpBackbuffer == nullptr )
 		{
 			mrTexture2D = zcExp::CreateGfxTexture2D(mrResData->meFormat, zFlagResTexUse(zenConst::keTexCreate_RenderTarget), mrResData->mvDim );
 			if( mrTexture2D.IsValid() )

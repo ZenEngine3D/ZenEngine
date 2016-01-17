@@ -16,7 +16,7 @@ namespace zcExp
 
 	//=================================================================
 	ExporterBase::ExporterBase(const ResDataRef& _rResData)
-	: mpExportInfo(NULL)
+	: mpExportInfo(nullptr)
 	, mrResData(_rResData)
 	{		
 	}
@@ -36,7 +36,7 @@ namespace zcExp
 		if( _ExportInfo.mbSuccessStart && !mpExportInfo->mbSuccessWork )	
 			_ExportInfo.mbSuccessWork	= ExportWork(FALSE);
 		_ExportInfo.mbSuccessEnd		= ExportEnd();
-		mpExportInfo					= NULL;
+		mpExportInfo					= nullptr;
 		return _ExportInfo.IsSuccess() && mrResData->mResID.IsValid();
 	}
 

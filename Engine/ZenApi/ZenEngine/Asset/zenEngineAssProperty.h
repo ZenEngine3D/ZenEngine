@@ -19,7 +19,7 @@ namespace zen { namespace zenAss
 	public:
 							PropertyValue(const zAssetItemRef& _rOwnerAsset, const PropertyDefRef& _rOwnerDefinition);
 												//!< @todo Cleanup : Asset ptr really needed? Pointer to signal object instead?
-		zAssetItemRef		mrOwnerAsset;		//!< Asset property belongs to (null if this is a default property value) 
+		zAssetItemRef		mrOwnerAsset;		//!< Asset property belongs to (nullptr if this is a default property value) 
 		PropertyDefRef		mrOwnerDefinition;	//!< Property Definition describing value
 	};
 	

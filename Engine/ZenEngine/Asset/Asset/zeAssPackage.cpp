@@ -2,7 +2,7 @@
 
 #if ZEN_ENGINETOOL
 
-namespace zen { namespace zeAss
+namespace zeAss
 {	
 
 Package::Package()
@@ -13,7 +13,7 @@ Package::Package()
 	for(zUInt typIdx(0), typCount(madAssetPerType.Count()); typIdx<typCount; ++typIdx)
 	{
 		madAssetPerType[typIdx].Init(50);
-		madAssetPerType[typIdx].SetDefaultValue(NULL);
+		madAssetPerType[typIdx].SetDefaultValue(nullptr);
 		madAssetPerType[typIdx].SetDeleteItemCB(ResetAssetReference);
 	}
 }
@@ -37,7 +37,7 @@ void Package::Unload()
 	}
 	mzStorageInfo	= zenT("");
 	mzName			= zenT("");
-	SetParentGroup(zenAss::zPackageGroupRef(NULL));
+	SetParentGroup(zenAss::zPackageGroupRef(nullptr));
 }
 
 void Package::SetName(const zWString& _zName)
@@ -112,6 +112,6 @@ void Package::Delete()
 	zeMgr::Asset.PackageDelete( zenAss::zPackageRef(this) );
 }
 
-}} //namespace zen { namespace zeAss
+} //namespace zeAss
 
 #endif //ZEN_ENGINETOOL

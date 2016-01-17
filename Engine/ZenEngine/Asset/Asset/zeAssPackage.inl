@@ -1,5 +1,5 @@
 #if ZEN_ENGINETOOL
-namespace zen { namespace zeAss
+namespace zeAss
 {
 
 zU32 Package::GetID()const
@@ -48,8 +48,6 @@ bool Package::GetDirty()const
 	return mbDirty;
 }
 
-
-
-}} //namespace zen { namespace zeAss
+} //namespace zeAss
 
 #endif

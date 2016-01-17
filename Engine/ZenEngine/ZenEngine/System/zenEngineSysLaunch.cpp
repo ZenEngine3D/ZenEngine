@@ -2,7 +2,7 @@
 #include <Engine/ThirdParty/imgui/imgui.h> //! @todo Urgent remove this
 namespace zen { namespace zenSys {	
 
-static zEngineInstance*		gpActiveEngine(NULL);
+static zEngineInstance*	gpActiveEngine(nullptr);
 
 void LaunchEngine(zEngineInstance* _pEngineInstance, int argc, const char* const* argv)
 {	
@@ -26,15 +26,15 @@ zEngineInstance* GetEngineInstance()
 
 bool zEngineInstance::Init()
 {
-	return FSys::EngineStart();
+	return zbSys::EngineStart();
 }
 
 void zEngineInstance::Destroy()
 {
 	mrMainWindowGfx = nullptr;
-	zenDelNull(mpMainWindowOS);		
-	FSys::EngineStop();	
-	gpActiveEngine = NULL;
+	zenDelnullptr(mpMainWindowOS);		
+	zbSys::EngineStop();
+	gpActiveEngine = nullptr;
 }
 
 void zEngineInstance::MainLoop()
@@ -58,83 +58,147 @@ void zEngineInstance::MainLoop()
 }
 
 void zEngineInstance::Update()
-{
-	//! @todo clean temp debugging
-	WindowInputState InputData;	
-	ImGuiIO& io			= ImGui::GetIO();	
-	io.DisplaySize		= ImVec2(mrMainWindowGfx.GetBackbuffer().GetDim().x, mrMainWindowGfx.GetBackbuffer().GetDim().y);	
-	io.ImeWindowHandle	= mpMainWindowOS->GetHandle();
-	
-	mpMainWindowOS->GetInput(InputData, ZENArrayCount(io.InputCharacters) - 1);
-	io.MousePos.x		= (zI16)InputData.mvMousePos.x;
-	io.MousePos.y		= (zI16)InputData.mvMousePos.y;
-	io.MouseWheel		= InputData.mfMouseWheel;
-	io.KeyCtrl			= InputData.mbIsKeyDown[VK_CONTROL];
-	io.KeyShift			= InputData.mbIsKeyDown[VK_SHIFT]; 
-	io.KeyAlt			= InputData.mbIsKeyDown[VK_MENU];
-
-	for(zUInt idx(0); idx<WindowInputState::keMouseBtn__Count; ++idx)
-		io.MouseDown[idx] = InputData.mbIsMouseDown[idx];
-
-	for(zUInt idx(0), count(zenMath::Min(InputData.mbIsKeyDown.size(), ZENArrayCount(io.KeysDown))); idx<count; ++idx)
-		io.KeysDown[idx] = InputData.mbIsKeyDown[idx];
-
-	for(zUInt idx(0), count(InputData.maCharacterPressed.Count()); idx<count; ++idx)
-		if (InputData.maCharacterPressed[idx] > 0 && InputData.maCharacterPressed[idx] < 0x10000)
-			io.AddInputCharacter(InputData.maCharacterPressed[idx]);	
+{	
 }
 
 void zEngineInstance::CreateGfxWindow(const zVec2U16& _vDim, const zVec2U16& _vPos)
 {
-	ZENAssert(gpActiveEngine==NULL);
-	mpMainWindowOS	= zenNewDefault FWnd::Window(L"MainWindow", _vDim);
+	ZENAssert(gpActiveEngine==nullptr);
+	ZENAssert(mpMainWindowOS == nullptr);
+	mpMainWindowOS				= zenNewDefault zenWnd::Window(L"MainWindow", _vDim);
 	mpMainWindowOS->Initialize();
-	mrMainWindowGfx = zenRes::zGfxWindow::Create( mpMainWindowOS->GetHandle() );
-	muWindowSize	= _vDim;
-}
-
-zSampleEngineInstance::zSampleEngineInstance( void (*_pFunctionToCall)() )
-: mpFunctionToCall(_pFunctionToCall)
-, mbDone(false)
-{
+	mrMainWindowGfx				= zenRes::zGfxWindow::Create( mpMainWindowOS->GetHandle() );
+	zcRes::GfxWindowRef rWindow = mrMainWindowGfx;
+	rWindow->mpMainWindowOS		= mpMainWindowOS;
+	muWindowSize				= _vDim;
+	rWindow->GetSignalUIRender().Connect(*this, &zEngineInstance::UIRenderCB);
 }
 
 bool zSampleEngineInstance::IsDone()
 {
 	return mbDone;
 }
-	
-void zSampleEngineInstance::Update()
+
+void zSampleEngineInstance::SetDone()
 {
-	mbDone = false;
-	mpFunctionToCall();
 	mbDone = true;
 }
 
-void zEngineInstance::TempUpdateUIFps()
+void zSampleEngineInstance::UIRender()
 {
-	ImGui::SetNextWindowPos(ImVec2(0, 0));
-	ImGui::Begin("Framerate", NULL, ImVec2(mrMainWindowGfx.GetBackbuffer().GetDim().x, 0), 0.3f, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoSavedSettings);
+	Super::UIRender();
 
-	//ImGui::Begin("Framerate");
-	//ImGui::SameLine(0, ImGui::GetStyle().ItemInnerSpacing.x);
-	bool pause(false);
-	//ImGui::BeginGroup();
-	//ImGui::Text("Lines");
-	//ImGui::PlotLines("##Lines", arr, ZENArrayCount(arr), 0, "Framerate", -1.0f, 1.0f, ImVec2(0, 80));
-	//(const char* label, const float* values, int values_count, int values_offset, const char* overlay_text, 
-	//float scale_min, float scale_max, ImVec2 graph_size, int stride)
-	//ImGui::Checkbox("pause", &pause);	
+	static bool	sbShowImGUITest = false;
+	if (ImGui::BeginMainMenuBar())
+	{
+		if (ImGui::BeginMenu("Sample"))
+		{
+			ImGui::MenuItem("ImGUI Demo", nullptr, &sbShowImGUITest);
+			ImGui::EndMenu();
+		}
+		ImGui::EndMainMenuBar();
+	}
 
-	const zArrayStatic<float>&	aFrameMs	= zcMgr::GfxRender.GetFrameTimeHistory();
-	float fFrameAvg						= zcMgr::GfxRender.GetFrameTimeAvg();
-	char zTemp[64];
-	sprintf(zTemp, "Framerate: %.1fms", fFrameAvg);
-	ImGui::PlotHistogram("##Framerate", aFrameMs.First(), aFrameMs.Count(), (zcMgr::GfxRender.GetFrameCount() + 1) % aFrameMs.Count(), zTemp, 0.0f, fFrameAvg*2.f, ImVec2(ImGui::GetContentRegionAvailWidth(), 50));
-	//(const char* label, const float* values, int values_count, int values_offset, const char* overlay_text,
-	// float scale_min, float scale_max, ImVec2 graph_size, int stride)
-	//ImGui::EndGroup();
-	ImGui::End();
+	if (sbShowImGUITest)
+		ImGui::ShowTestWindow();
+}
+
+void zEngineInstance::UIRenderCB()
+{
+	UIRender();
+}
+
+void zEngineInstance::UIRender()
+{
+	static bool sbShowFps		= true;
+	static zI16 suStatsGPUFrame = -1;
+
+	if (ImGui::BeginMainMenuBar())
+	{
+		if( ImGui::BeginMenu("Zen Engine") )
+		{		
+			if( ImGui::BeginMenu("Debug") )
+			{
+				ImGui::MenuItem("Fps", nullptr, &sbShowFps);				
+				ImGui::EndMenu();
+			}
+			ImGui::EndMenu();
+		}
+		ImGui::EndMainMenuBar();
+	}
+
+	ImVec2 vPos = ImVec2(0, ImGui::GetWindowContentRegionMin().y);
+	ImGui::SetNextWindowPos(vPos);
+	
+	ImGuiStyle& CurrentStyle	= ImGui::GetStyle();
+	ImGuiStyle PreviousStyle	= CurrentStyle;
+	CurrentStyle.WindowPadding	= ImVec2(0, 0);
+	CurrentStyle.FrameRounding	= 0.f;
+	ImGui::PushStyleColor(ImGuiCol_Border, ImVec4(0.0f, 0.0f, 0.0f, 0.0f));
+
+	if(sbShowFps && ImGui::Begin("Fps", nullptr, ImVec2(ImGui::GetIO().DisplaySize.x,0), 0.1f, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoSavedSettings) )
+	{				
+		char zFpsGpuTitle[64]; 
+		const zArrayStatic<float>&	aFrameMs	= zcMgr::GfxRender.GetFrameTimeHistory();
+		float fFrameAvg							= zcMgr::GfxRender.GetFrameTimeAvg();		
+		int valOffet							= (zcMgr::GfxRender.GetStatsFrame() + 1) % aFrameMs.Count();
+		sprintf(zFpsGpuTitle, "GPU: %.1fms (%.1ffps)", fFrameAvg, 1000.f / fFrameAvg);
+		ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(0.0f, 0.0f, 0.00f, 0.0f));		
+		ImGui::PushStyleColor(ImGuiCol_PlotHistogram,			ImVec4(0.2f, 0.8f, 0.2f, 0.2f));
+		ImGui::PushStyleColor(ImGuiCol_PlotHistogramHovered,	ImVec4(0.2f, 0.8f, 0.2f, 0.5f));
+		ImGui::PlotHistogram("##FramerateGPU", aFrameMs.First(), aFrameMs.Count(), valOffet, zFpsGpuTitle, 0.0f, fFrameAvg*2.f, ImVec2(ImGui::GetContentRegionAvailWidth()/2.f, 50));
+		ImGui::PopStyleColor(2);
+		
+		if (ImGui::IsItemHovered() && ImGui::IsMouseClicked(WindowInputState::keMouseBtn_Left))
+		{
+			zcMgr::GfxRender.SetStatsUpdate(!zcMgr::GfxRender.GetStatsUpdate());
+		}
+
+		char zFpsCpuTitle[64];
+		sprintf(zFpsCpuTitle, "CPU: %.1fms (%.1ffps)", fFrameAvg, 1000.f / fFrameAvg);
+		ImGui::SameLine();
+		ImGui::PushStyleColor(ImGuiCol_PlotHistogram,			ImVec4(0.2f, 0.2f, 0.8f, 0.2f));
+		ImGui::PushStyleColor(ImGuiCol_PlotHistogramHovered,	ImVec4(0.2f, 0.2f, 0.8f, 0.5f));
+		ImGui::PlotHistogram("##FramerateCPU", aFrameMs.First(), aFrameMs.Count(), valOffet, zFpsCpuTitle, 0.0f, fFrameAvg*2.f, ImVec2(ImGui::GetContentRegionAvailWidth(), 50));
+		ImGui::PopStyleColor(3);
+				
+		if (ImGui::IsItemHovered() && ImGui::IsMouseClicked(WindowInputState::keMouseBtn_Left) )
+		{
+			zcMgr::GfxRender.SetStatsUpdate(!zcMgr::GfxRender.GetStatsUpdate());
+		}
+			
+		if (ImGui::IsItemHovered() && ImGui::IsMouseClicked(WindowInputState::keMouseBtn_Left) )
+		{
+			ImVec2 vImMin	= ImGui::GetItemRectMin();
+			ImVec2 vImMax	= ImGui::GetItemRectMax();
+			ImVec2 vImMouse = ImGui::GetMousePos();
+			const ImGuiStyle& style = ImGui::GetStyle();
+			float minX		= vImMin.x + style.FramePadding.x;
+			float maxX		= vImMax.x - style.FramePadding.x;
+			float ratio		= (vImMouse.x - minX) / (maxX - minX);
+			if( ratio > 0.f && ratio < 1.f )
+				suStatsGPUFrame = int(ratio*aFrameMs.Count());
+		}
+		
+		if( suStatsGPUFrame >= 0 )
+		{
+
+		}
+		//ImGui::EndChild();
+		//(const char* label, const float* values, int values_count, int values_offset, const char* overlay_text,
+		// float scale_min, float scale_max, ImVec2 graph_size, int stride)
+		//ImGui::EndGroup();
+		
+		ImGui::End();
+	}
+	ImGui::PopStyleColor();
+	CurrentStyle = PreviousStyle;
+}
+
+
+void zEngineInstance::UIRenderStats( )
+{	
+	//printf("Hovering %i\n", int(ratio*aFrameMs.Count()));	
 }
 
 }} // namespace zen, zenRes

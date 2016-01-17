@@ -18,7 +18,7 @@ public:
 	void	SlotDisconnectAll();
 
 protected:
-	zListDeclare(zSignal::ConnectionBase, mlnkSlot) mlstEmitters;
+	zSignal::ConnectionBase::ListSlot mlstEmitters;
 	friend class zSignal;
 };
 

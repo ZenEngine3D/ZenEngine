@@ -75,16 +75,16 @@
 #define ZENFilenameB(PREFIX, SUFFIX, EXT)		PREFIX##_##SUFFIX##EXT										//Used to generate platform based filename by others macros
 #define ZENFilename(PREFIX, SUFFIX, EXT)		ZENFilenameB(PREFIX, SUFFIX, EXT )							//Used to generate platform based filename by others macros
 
-#define ZENHeaderFile(HEADERNAME, DEFINE)		ZENStringDefine( ZENFilename(HEADERNAME, DEFINE, .h) )		//!< AllocHeader filename for current Platform type
-#define ZENInlineFile(HEADERNAME, DEFINE)		ZENStringDefine( ZENFilename(HEADERNAME, DEFINE, .inl) )		//!< AllocHeader filename for current Platform type
+#define ZENHeaderFile(HEADERNAME, DEFINE)		ZENStringDefine( ZENFilename(HEADERNAME, DEFINE, .h) )		//!< Header filename for current Platform type
+#define ZENInlineFile(HEADERNAME, DEFINE)		ZENStringDefine( ZENFilename(HEADERNAME, DEFINE, .inl) )	//!< Header filename for current Platform type
 
-#define ZENHeaderPlatform(HEADERNAME)			ZENHeaderFile(HEADERNAME,	ZEN_PLATFORM)					//!< AllocHeader filename for current Platform type
-#define ZENInlinePlatform(HEADERNAME)			ZENInlineFile(HEADERNAME,	ZEN_PLATFORM)					//!< Inline filename for current Platform type
-#define ZENClassPlatform(CLASSNAME)				ZENDefineStich3(CLASSNAME, _, ZEN_PLATFORM)					//!< AllocHeader filename for current Platform type
+#define ZENHeaderPlatform(HEADERNAME)			ZENHeaderFile(HEADERNAME,	ZEN_PLATFORM)					//!< Header filename for current Platform type
+#define ZENInlinePlatform(HEADERNAME)			ZENInlineFile(HEADERNAME,	ZEN_PLATFORM)					//!< Inline Header filename for current Platform type
+#define ZENClassPlatform(CLASSNAME)				ZENDefineStich3(CLASSNAME, _, ZEN_PLATFORM)					//!< Header filename for current Platform type
 
-#define ZENHeaderRenderer(HEADERNAME)			ZENHeaderFile(HEADERNAME, ZEN_RENDERER)						//!< AllocHeader filename for current Renderer type
-#define ZENInlineRenderer(HEADERNAME)			ZENInlineFile(HEADERNAME, ZEN_RENDERER)						//!< Inline filename for current Renderer type
-#define ZENClassRenderer(CLASSNAME)				ZENDefineStich3(CLASSNAME, _, ZEN_RENDERER)					//!< AllocHeader filename for current Platform type
+#define ZENHeaderRenderer(HEADERNAME)			ZENHeaderFile(HEADERNAME, ZEN_RENDERER)						//!< Header filename for current Renderer type
+#define ZENInlineRenderer(HEADERNAME)			ZENInlineFile(HEADERNAME, ZEN_RENDERER)						//!< Inline Header filename for current Renderer type
+#define ZENClassRenderer(CLASSNAME)				ZENDefineStich3(CLASSNAME, _, ZEN_RENDERER)					//!< Header filename for current Platform type
 
 #include ZENHeaderPlatform(zenBaseConstBuildDefines)
 #include ZENHeaderRenderer(zenBaseConstBuildDefines)

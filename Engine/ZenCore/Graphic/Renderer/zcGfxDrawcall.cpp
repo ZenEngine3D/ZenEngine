@@ -32,7 +32,7 @@ zEngineRef<Drawcall> DrawcallClearColor::Create( const zcRes::GfxRenderPassRef& 
 
 void DrawcallClearColor::Invoke()
 {	
-	mrRTColor->Clear(mvColor); //! @todo Urgent Fully implement
+	mrRTColor->Clear(mvColor); //! @todo Urgent Fully implement for all RTs
 }
 
 zEngineRef<Drawcall> DrawcallClearDepthStencil::Create( const zcRes::GfxRenderPassRef& _rRenderPass, float _fPriority, const zcRes::GfxRenderTargetRef& _rRTDepth, bool _bClearDepth, float _fDepthValue, bool _bClearStencil, zU8 _uStencilValue)

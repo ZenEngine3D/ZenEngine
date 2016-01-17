@@ -20,7 +20,7 @@ public:
 
 public:
 								zbFiber(zUInt _StackSize);
-	void						Activate(zUInt _uThreadId, zenSys::zTask* _pTask=NULL);
+	void						Activate(zUInt _uThreadId, zenSys::zTask* _pTask=nullptr);
 	void						Deactivate();	
 	void						Suspend();
 	void						InfiniteLoop();

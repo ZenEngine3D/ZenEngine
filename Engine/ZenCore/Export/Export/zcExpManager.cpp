@@ -91,7 +91,7 @@ zResID ManagerExport::GetNewResourceID(zenConst::eResPlatform _ePlatform, zenCon
 zResID ManagerExport::GetNewResourceID(zenConst::eResType _eType)
 {
 	bool _bUnused;
-	return CallbackGetItemID(zenConst::kCurrentPlatformOS, _eType, zenConst::keResSource_Runtime, NULL, _bUnused);
+	return CallbackGetItemID(zenConst::kCurrentPlatformOS, _eType, zenConst::keResSource_Runtime, nullptr, _bUnused);
 }
 
 //=================================================================================================
@@ -198,7 +198,7 @@ zResID CreateExportItemOffline(zenConst::eResType _eResType, zcExp::ExportInfoBa
 	}
 	//zcMgr::Export.Export( SerialIndex_Base::CreateResourceData(), pExportInfo );
 	//return pExportInfo->mExportResID;
-	return NULL;	
+	return nullptr;	
 }
 */
 

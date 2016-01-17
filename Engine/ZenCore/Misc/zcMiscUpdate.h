@@ -11,7 +11,7 @@ public:
 	void Update( zenConst::eUpdatePriority _eUpdateGroupFirst, zenConst::eUpdatePriority _eUpdateGroupLast );
 
 protected:
-	zListDeclare(zenMisc::IUpdate, mLink) mlstUpdateable[zenConst::keUpdt__Count];	
+	zenMisc::IUpdate::List mlstUpdateable[zenConst::keUpdt__Count];
 	friend class zenMisc::IUpdate;
 };
 

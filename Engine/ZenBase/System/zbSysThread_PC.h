@@ -14,9 +14,9 @@ public:
 	explicit AWThread_PC(T* pObject, zU32 ( T::* method)(void)) : 
 	AWThread<T>(pObject, method)
 	{
-		mhThread = NULL;
-		mhInterrupt = CreateSemaphore(NULL, 1, 1, NULL);
-		mhSingleStart = CreateMutex(NULL, FALSE, NULL);
+		mhThread = nullptr;
+		mhInterrupt = CreateSemaphore(nullptr, 1, 1, nullptr);
+		mhSingleStart = CreateMutex(nullptr, FALSE, nullptr);
 	}
 	virtual ~AWThread_PC()
 	{
@@ -47,7 +47,7 @@ public:
 			// (Re-)Set not interrupted semaphore state
 			WaitForSingleObject(mhInterrupt, 0);
 
-			mhThread = CreateThread( NULL, 0, (LPTHREAD_START_ROUTINE) AWThread_PC<T>::Run, this, 0, (LPDWORD)(&mThreadID) );
+			mhThread = CreateThread( nullptr, 0, (LPTHREAD_START_ROUTINE) AWThread_PC<T>::Run, this, 0, (LPDWORD)(&mThreadID) );
 
 			if(mhThread)
 			{
@@ -65,7 +65,7 @@ public:
 	{
 		if(mhInterrupt)
 		{
-			return ((ReleaseSemaphore(mhInterrupt, 1, NULL) == FALSE) ? false : true);
+			return ((ReleaseSemaphore(mhInterrupt, 1, nullptr) == FALSE) ? false : true);
 		}
 
 		return false;
@@ -80,7 +80,7 @@ public:
 	{
 		if(WaitForSingleObject(mhInterrupt, 0) == WAIT_TIMEOUT)
 			return false;
-		ReleaseSemaphore(mhInterrupt, 1, NULL);  // keep interrupted state
+		ReleaseSemaphore(mhInterrupt, 1, nullptr);  // keep interrupted state
 		return true;
 	}
 	virtual bool IsRunning()

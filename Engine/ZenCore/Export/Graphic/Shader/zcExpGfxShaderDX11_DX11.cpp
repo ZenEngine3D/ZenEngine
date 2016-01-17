@@ -122,7 +122,7 @@ bool ExporterGfxShaderDX11_DX11::ExportWorkCompile()
 		0, 
 		&pCompiledBlob, 
 		&pErrorBlob );	
-	if( pErrorBlob != NULL )
+	if( pErrorBlob != nullptr )
 	{
 		//@todo Missing: Implement logging	strncpy( mzLogDetail, (char*)pErrorBlob->GetBufferPointer(), keLogSizeDetail );
 		printf( "\n%s\n", (char*)pErrorBlob->GetBufferPointer() );
@@ -151,8 +151,8 @@ bool ExporterGfxShaderDX11_DX11::ExportWorkExtractResources()
 	ResDataGfxShaderDX11::BindInfo		aTextureBind[zcExp::kuDX11_TexturePerStageMax];
 	zHash32									aTextureName[zcExp::kuDX11_TexturePerStageMax];
 	zUInt									uTextureCount(0);
-	ID3D11ShaderReflection*					pGfxShaderReflection(NULL);
-	ID3D11ShaderReflectionConstantBuffer*	pConstBuffer(NULL);
+	ID3D11ShaderReflection*					pGfxShaderReflection(nullptr);
+	ID3D11ShaderReflectionConstantBuffer*	pConstBuffer(nullptr);
 	D3D11_SHADER_DESC						shaderDesc;	
 	D3D11_SHADER_INPUT_BIND_DESC			resourceDesc;			
 	

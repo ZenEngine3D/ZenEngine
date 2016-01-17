@@ -49,8 +49,8 @@
 /*
 namespace ImGui
 {
-    void    Value(const char* prefix, const MyVec2& v, const char* float_format = NULL);
-    void    Value(const char* prefix, const MyVec4& v, const char* float_format = NULL);
+    void    Value(const char* prefix, const MyVec2& v, const char* float_format = nullptr);
+    void    Value(const char* prefix, const MyVec4& v, const char* float_format = nullptr);
 }
 */
 

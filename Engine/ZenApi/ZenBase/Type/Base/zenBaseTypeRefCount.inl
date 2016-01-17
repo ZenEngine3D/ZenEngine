@@ -32,7 +32,7 @@ zInt zRefCounted::ReferenceCount()
 //=================================================================================================
 bool zReference::IsValid()const
 {
-	return mpReference != NULL;
+	return mpReference != nullptr;
 }
 
 bool zReference::operator==(const zReference& _Cmp)const
@@ -123,7 +123,7 @@ const zEngineRef<TRefCountedType>& zEngineRef<TRefCountedType>::operator=(const 
 //=================================================================================================
 template<class TRefCountedType>
 zEngineConstRef<TRefCountedType>::zEngineConstRef()
-: Super(NULL)
+: Super(nullptr)
 {
 }
 

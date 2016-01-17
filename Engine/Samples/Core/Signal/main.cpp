@@ -1,17 +1,28 @@
 #include "zenEngine.h"
 
 namespace sample
-{	
-	void SampleSignal();
-	void RunSamples()
+{
+	extern void SampleSignal();
+
+	class SampleBaseSignal : public zenSys::zSampleEngineInstance
 	{
-		SampleSignal();	
-	}
+	public:
+		virtual const char* GetAppName()const
+		{
+			return "Sample Signal/Slot";
+		}
+		virtual void Update()
+		{			
+			SampleSignal();
+			SetDone();
+		}
+	};
+
 }
 
 int main (int argc, char * const argv[])
 {	
-	zenSys::zSampleEngineInstance SampleEngine( &sample::RunSamples );
-	zenSys::LaunchEngine(&SampleEngine, argc,argv);
+	sample::SampleBaseSignal Sample;
+	zenSys::LaunchEngine(&Sample, argc,argv);
 	return 0;
 }

@@ -8,7 +8,7 @@ SerializerImportMem::SerializerImportMem(zU8* apBuffer, zUInt auBufferSize)
 :	mpMemoryStart(apBuffer)
 ,	mpMemoryCur(apBuffer)
 ,	mpMemoryEnd(apBuffer+auBufferSize)
-,	mpMemoryItemStart(NULL)
+,	mpMemoryItemStart(nullptr)
 {
 }
 

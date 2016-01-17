@@ -4,9 +4,9 @@
 //! @example SampleThread.cpp
 //! Informations and test on the usage of fibers
 //=================================================================================================
-zUInt* gpSortOriginal	= NULL;
-zUInt* gpSortDataSingle	= NULL;
-zUInt* gpSortDataTask	= NULL;
+zUInt* gpSortOriginal	= nullptr;
+zUInt* gpSortDataSingle	= nullptr;
+zUInt* gpSortDataTask	= nullptr;
 
 namespace sample
 {

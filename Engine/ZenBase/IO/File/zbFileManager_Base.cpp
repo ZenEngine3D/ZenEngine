@@ -171,7 +171,7 @@ void Filename::FindOffsets()
 void Filename::Set(const wchar_t* _zFilename)
 {
 	zUInt len(static_cast<zUInt>(wcslen(_zFilename)));
-	mzFilename.SetCount(len+3);	//add some padding handling of null name offsets
+	mzFilename.SetCount(len+3);	//add some padding handling of nullptr name offsets
 	mzFilename[len+0] = 0;
 	mzFilename[len+1] = 0;
 	mzFilename[len+2] = 0;
@@ -193,7 +193,7 @@ void Filename::Set(const wchar_t* _zPath, const wchar_t* _zFilename)
 							(_zFilename[0] != L'\\')	&& (_zFilename[0] != L'/' );
 	len1				+= bNoSeparator ? 1 : 0;
 
-	mzFilename.SetCount(len1+len2+3); //add some padding for possible '/' added and handling of null name offsets
+	mzFilename.SetCount(len1+len2+3); //add some padding for possible '/' added and handling of nullptr name offsets
 	mzFilename[len1+len2+0] = 0;
 	mzFilename[len1+len2+1] = 0;
 	mzFilename[len1+len2+2] = 0;
@@ -218,7 +218,7 @@ void Filename::operator+=(const wchar_t* _zFilename)
 	bool bNoSeparator	=	(mzFilename[len1-1] != L'\\')	&& (mzFilename[len1-1] != L'/') && 
 							(_zFilename[0] != L'\\')		&& (_zFilename[0] != L'/' );
 	len1				+= bNoSeparator ? 1 : 0;
-	mzFilename.SetCount(len1+len2+3); //add some padding for possible '/' added and handling of null name offsets
+	mzFilename.SetCount(len1+len2+3); //add some padding for possible '/' added and handling of nullptr name offsets
 	mzFilename[len1+len2+0] = 0;
 	mzFilename[len1+len2+1] = 0;
 	mzFilename[len1+len2+2] = 0;

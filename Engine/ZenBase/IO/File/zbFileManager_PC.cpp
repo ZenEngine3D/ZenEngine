@@ -181,7 +181,7 @@ bool ManagerFile_PC::CreateDir( const Filename& _Filename, bool _bLastItemIsFile
 	for(zUInt idx(0); idx<count && bOk; ++idx)
 	{
 		nameDir += aFolderNames[idx].First();
-		if( !CreateDirectory( nameDir.GetNameFull(), NULL ) )
+		if( !CreateDirectory( nameDir.GetNameFull(), nullptr ) )
 			bOk = (GetLastError() == ERROR_ALREADY_EXISTS);
 	}
 	return bOk;
@@ -189,7 +189,7 @@ bool ManagerFile_PC::CreateDir( const Filename& _Filename, bool _bLastItemIsFile
 
 bool ManagerFile_PC::OpenFile( const Filename& _Filename, FileInfo* _pOutFile )
 {
-	HANDLE hFile = CreateFile( _Filename.GetNameFull(), GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL | FILE_FLAG_SEQUENTIAL_SCAN, NULL );
+	HANDLE hFile = CreateFile( _Filename.GetNameFull(), GENERIC_READ, FILE_SHARE_READ, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL | FILE_FLAG_SEQUENTIAL_SCAN, nullptr );
 
 	if( hFile == INVALID_HANDLE_VALUE )
 	{
@@ -197,7 +197,7 @@ bool ManagerFile_PC::OpenFile( const Filename& _Filename, FileInfo* _pOutFile )
 	}
 	else
 	{
-		DWORD uFileSize = ::GetFileSize( hFile, NULL );
+		DWORD uFileSize = ::GetFileSize( hFile, nullptr );
 		if( uFileSize == INVALID_FILE_SIZE )
 		{
 			CloseHandle( hFile );
@@ -218,7 +218,7 @@ bool ManagerFile_PC::OpenFile( const Filename& _Filename, FileInfo* _pOutFile )
 
 bool ManagerFile_PC::OpenFileForWrite( const Filename& _Filename, FileInfo* _pOutFile )
 {
-	HANDLE hFile = CreateFile( _Filename.GetNameFull(), GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL | FILE_FLAG_SEQUENTIAL_SCAN, NULL );
+	HANDLE hFile = CreateFile( _Filename.GetNameFull(), GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ, nullptr, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL | FILE_FLAG_SEQUENTIAL_SCAN, nullptr );
 
 	if( hFile == INVALID_HANDLE_VALUE )
 	{
@@ -226,7 +226,7 @@ bool ManagerFile_PC::OpenFileForWrite( const Filename& _Filename, FileInfo* _pOu
 	}
 	else
 	{
-		DWORD uFileSize = ::GetFileSize( hFile, NULL );
+		DWORD uFileSize = ::GetFileSize( hFile, nullptr );
 		if( uFileSize == INVALID_FILE_SIZE )
 		{
 			CloseHandle( hFile );

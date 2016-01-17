@@ -7,6 +7,7 @@
 
 #include "Asset/ZeAss.h"
 #include "System/zeSys.h"
+#include "Performances/zePerf.h"
 #include "ToDel/zeWndViewport.h"
 
 #endif

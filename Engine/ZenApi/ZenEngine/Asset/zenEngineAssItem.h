@@ -4,7 +4,7 @@
 
 #if ZEN_ENGINETOOL
 
-namespace zen { namespace zeAss { class Asset; } }
+namespace zeAss { class Asset; }
 
 namespace zen { namespace zenAss 
 {
@@ -42,7 +42,7 @@ namespace zen { namespace zenAss
 	const zAssetItemRef&				AssetGet			(const zAssetID& _uAssetID); //! @todo Asset: Move to an asset manager at api level?
 
 	typedef zArraySparse<zenAss::zAssetItemRef>::Key64 zArrayAsset;
-}} //namespace zen { namespace zenAss
+}}// namespace zen { namespace zenAss
 
 #endif
 #endif

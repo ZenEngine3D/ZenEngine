@@ -17,7 +17,7 @@ VOID __stdcall FiberEntryPoint(LPVOID lpParameter)
 DWORD WINAPI StartThread(LPVOID lpParameter)
 {
 	zUInt Id			= (zUInt)lpParameter;
-	gaLoadingFiber[Id]	= ConvertThreadToFiber(NULL);	
+	gaLoadingFiber[Id]	= ConvertThreadToFiber(nullptr);	
 	SetThreadAffinityMask(GetCurrentThread(), 1<<Id);
 	FiberUpdateLoop(Id);
 	return 0;
@@ -32,14 +32,14 @@ void StartTaskProcessing()
 	gaThreadHandle[0]	= GetCurrentThread();
 	gaThreadID[0]		= GetCurrentThreadId();
 	for(zUInt i(1), ThreadCount(zenSys::zTask::GetCPUCoreCount()); i<ThreadCount; ++i)
-		gaThreadHandle[i] = CreateThread(NULL, maxStackSize, StartThread, (LPVOID)i, 0 , gaThreadID+i);
+		gaThreadHandle[i] = CreateThread(nullptr, maxStackSize, StartThread, (LPVOID)i, 0 , gaThreadID+i);
 		
 	StartThread(0);
 }
 
 zbFiber_PC::zbFiber_PC(zUInt _StackSize)
 : zbFiber_Base(_StackSize)
-, mpFiber(NULL)
+, mpFiber(nullptr)
 {
 	mpFiber = CreateFiber(_StackSize, FiberEntryPoint, this);
 }
@@ -48,7 +48,7 @@ zbFiber_PC::~zbFiber_PC()
 {
 	if( mpFiber )
 		DeleteFiber(mpFiber);
-	mpFiber = NULL;
+	mpFiber = nullptr;
 }
 
 void zbFiber_PC::HALActivate()

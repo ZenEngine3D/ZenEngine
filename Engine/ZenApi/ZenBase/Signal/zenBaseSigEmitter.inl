@@ -8,8 +8,8 @@ namespace zen {	namespace zenSig
 
 void zSignalEmitter0::Emit()const
 {
-	zList<ConnectionBase>::Iterator it = mlstListeners.GetHeadIt();
-	while (*it)
+	auto it = mlstListeners.GetHeadIt();
+	while( *it )
 	{
 		Connection* pConnection = static_cast<Connection*>(*it);
 		pConnection->Emit();
@@ -26,7 +26,7 @@ void zSignalEmitter0::DisconnectAll()
 template<class TParam1>
 void zSignalEmitter1<TParam1>::Emit(TParam1 _Param1)const
 {
-	zList<ConnectionBase>::Iterator it = mlstListeners.GetHeadIt();
+	auto it = mlstListeners.GetHeadIt();
 	while (*it)
 	{
 		Connection* pConnection = static_cast<Connection*>(*it);
@@ -45,7 +45,7 @@ void zSignalEmitter1<TParam1>::DisconnectAll()
 template<class TParam1, class TParam2>
 void zSignalEmitter2<TParam1, TParam2>::Emit(TParam1 _Param1, TParam2 _Param2)const
 {
-	zList<ConnectionBase>::Iterator it = mlstListeners.GetHeadIt();
+	auto it = mlstListeners.GetHeadIt();
 	while (*it)
 	{
 		Connection* pConnection = static_cast<Connection*>(*it);
@@ -64,7 +64,7 @@ void zSignalEmitter2<TParam1,TParam2>::DisconnectAll()
 template<class TParam1, class TParam2, class TParam3>
 void zSignalEmitter3<TParam1, TParam2, TParam3>::Emit(TParam1 _Param1, TParam2 _Param2, TParam3 _Param3)const
 {
-	zList<ConnectionBase>::Iterator it = mlstListeners.GetHeadIt();
+	auto it = mlstListeners.GetHeadIt();
 	while (*it)
 	{
 		Connection* pConnection = static_cast<Connection*>(*it);

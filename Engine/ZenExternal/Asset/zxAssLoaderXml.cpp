@@ -38,7 +38,7 @@ void LoadPropertyValue( const zenAss::PropertyValueRef& _rValue, const pugi::xml
 		zenAss::PropertyFile::ValueRef rValueTyped(_rValue);
 		//! @todo Asset: Finalize string handling
 		zChar zFilename[1024];
-		mbstowcs_s(NULL, zFilename, ZENArrayCount(zFilename), _Node.attribute("Value").as_string(), ZENArrayCount(zFilename));
+		mbstowcs_s(nullptr, zFilename, ZENArrayCount(zFilename), _Node.attribute("Value").as_string(), ZENArrayCount(zFilename));
 		rValueTyped = zFilename;			
 	}break;
 	case zenConst::keAssProp_Float:	{	
@@ -137,7 +137,7 @@ void SavePropertyValue(const zenAss::PropertyValueRef& _rValue, pugi::xml_node& 
 		zenAss::PropertyFile::ValueRef rValueTyped(_rValue);		
 		//! @todo Asset: Finalize string handling
 		char zFilename[1024];
-		wcstombs_s(NULL, zFilename, ZENArrayCount(zFilename), rValueTyped.GetValue(), ZENArrayCount(zFilename));
+		wcstombs_s(nullptr, zFilename, ZENArrayCount(zFilename), rValueTyped.GetValue(), ZENArrayCount(zFilename));
 		_Node.append_attribute("Value").set_value( zFilename );
 	}break;
 	case zenConst::keAssProp_Float:	{	

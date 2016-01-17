@@ -13,8 +13,8 @@ ManagerRender::RenderContext::RenderContext()
 ManagerRender::ManagerRender()
 : mDX11DriverType(D3D_DRIVER_TYPE_NULL)
 , mDX11FeatureLevel(D3D_FEATURE_LEVEL_11_0)
-, mDX11pDevice(NULL)
-, mDX11pContextImmediate(NULL)
+, mDX11pDevice(nullptr)
+, mDX11pContextImmediate(nullptr)
 {
 }
 
@@ -47,9 +47,9 @@ bool ManagerRender::Load()
 	mDX11DriverType	= D3D_DRIVER_TYPE_HARDWARE;	//Only support hardware dx11 support
 
 	hr =  D3D11CreateDevice(
-		NULL, 
+		nullptr, 
 		mDX11DriverType,	
-		NULL, 
+		nullptr, 
 		createDeviceFlags, 
 		aFeatureLevels.First(),
 		aFeatureLevels.Count(),
@@ -80,7 +80,7 @@ bool ManagerRender::Unload()
 void ManagerRender::FrameBegin(zcRes::GfxWindowRef _FrameWindow)
 {
 	Super::FrameBegin(_FrameWindow);
-	mrPreviousDrawcall = NULL;
+	mrPreviousDrawcall = nullptr;
 }
 
 void ManagerRender::FrameEnd()
@@ -147,12 +147,12 @@ void ManagerRender::UpdateShaderState(const zenRes::zGfxDrawcall& _rDrawcall, Re
 	if( _Context.mrShaderVertex != rShaderBind->GetProxy()->mrProxShaderVertex )
 	{
 		_Context.mrShaderVertex = rShaderBind->GetProxy()->mrProxShaderVertex;
-		mDX11pContextImmediate->VSSetShader( _Context.mrShaderVertex->GetProxy()->mpVertexShader, NULL, 0 );
+		mDX11pContextImmediate->VSSetShader( _Context.mrShaderVertex->GetProxy()->mpVertexShader, nullptr, 0 );
 	}
 	if( _Context.mrShaderPixel != rShaderBind->GetProxy()->mrProxShaderPixel )
 	{
 		_Context.mrShaderPixel = rShaderBind->GetProxy()->mrProxShaderPixel;
-		mDX11pContextImmediate->PSSetShader( _Context.mrShaderPixel->GetProxy()->mpPixelShader, NULL, 0 );
+		mDX11pContextImmediate->PSSetShader( _Context.mrShaderPixel->GetProxy()->mpPixelShader, nullptr, 0 );
 	}
 	if(_Context.mbScreenScissorOn && _Context.mvScreenScissor != _rDrawcall->mvScreenScissor )
 	{
@@ -238,30 +238,33 @@ void ManagerRender::UpdateShaderState(const zenRes::zGfxDrawcall& _rDrawcall, Re
 }
 
 void ManagerRender::Render(zArrayDynamic<zenRes::zGfxDrawcall>& _aDrawcalls)
-{
-	_aDrawcalls.Sort();
-	RenderContext			Context;
-	zenRes::zGfxDrawcall*	pDrawcall = _aDrawcalls.First();
-	for(zUInt i(0), count(_aDrawcalls.Count()); i<count; ++i, ++pDrawcall)
-	{	
-		if( (*pDrawcall).IsValid() && (*pDrawcall)->mrRenderPass.IsValid() )
+{	
+	if(_aDrawcalls.Count() )
+	{
+		_aDrawcalls.Sort();
+		RenderContext			Context;
+		zenRes::zGfxDrawcall*	pDrawcall = _aDrawcalls.First();
+		for(zUInt i(0), count(_aDrawcalls.Count()); i<count; ++i, ++pDrawcall)
 		{	
-			// Render Commands other than Draw/Compute
-			if( (*pDrawcall)->mSortId.muGPUPipelineMode == Drawcall::keGpuPipe_PreDrawCommand || 
-				(*pDrawcall)->mSortId.muGPUPipelineMode == Drawcall::keGpuPipe_PostDrawCommand )
-			{
-				(*pDrawcall)->Invoke();					
-			}
-			else if( (*pDrawcall)->mrMeshStrip.IsValid() )
-			{
-				const zcRes::GfxMeshStripRef& rMeshStrip = (*pDrawcall)->mrMeshStrip;
-				UpdateGPUState(*pDrawcall, Context);
-				UpdateShaderState(*pDrawcall, Context);
-				mDX11pContextImmediate->DrawIndexed( rMeshStrip->GetProxy()->muIndexCount, rMeshStrip->GetProxy()->muIndexFirst, rMeshStrip->GetProxy()->muVertexFirst);
+			if( (*pDrawcall).IsValid() && (*pDrawcall)->mrRenderPass.IsValid() )
+			{	
+				// Render Commands other than Draw/Compute
+				if( (*pDrawcall)->mSortId.muGPUPipelineMode == Drawcall::keGpuPipe_PreDrawCommand || 
+					(*pDrawcall)->mSortId.muGPUPipelineMode == Drawcall::keGpuPipe_PostDrawCommand )
+				{
+					(*pDrawcall)->Invoke();					
+				}
+				else if( (*pDrawcall)->mrMeshStrip.IsValid() )
+				{
+					const zcRes::GfxMeshStripRef& rMeshStrip = (*pDrawcall)->mrMeshStrip;
+					UpdateGPUState(*pDrawcall, Context);
+					UpdateShaderState(*pDrawcall, Context);
+					mDX11pContextImmediate->DrawIndexed( rMeshStrip->GetProxy()->muIndexCount, rMeshStrip->GetProxy()->muIndexFirst, rMeshStrip->GetProxy()->muVertexFirst);
+				}
 			}
 		}
+		mrPreviousDrawcall = *_aDrawcalls.Last();
 	}
-	mrPreviousDrawcall = *_aDrawcalls.Last();
 }
 
 

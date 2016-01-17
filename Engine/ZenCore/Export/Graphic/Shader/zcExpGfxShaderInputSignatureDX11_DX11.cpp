@@ -17,7 +17,7 @@ zResID ExporterGfxInputSignatureDX11_DX11::CallbackGetItemID(zenConst::eResPlatf
 	zEngineConstRef<ResDataGfxShaderDX11> rParentShader = zcDepot::ResourceData.GetItem<ResDataGfxShaderDX11>( pExportInfo->mParentShaderID );
 	if( rParentShader.IsValid() )
 	{
-		ID3D11ShaderReflection* pGfxShaderReflection = NULL;	
+		ID3D11ShaderReflection* pGfxShaderReflection = nullptr;	
 		if ( SUCCEEDED( D3DReflect( &rParentShader->maCompiledShader[0], rParentShader->maCompiledShader.SizeMem(), IID_ID3D11ShaderReflection, (void**)&pGfxShaderReflection ) ) ) 
 		{
 			// Get zResID of Input Signature
@@ -82,7 +82,7 @@ bool ExporterGfxInputSignatureDX11_DX11::ExportWork(bool _bIsTHRTask)
 	//---------------------------------------------------------------------------------------------
 	// Generate dummy shader code
 	//---------------------------------------------------------------------------------------------
-	ID3D11ShaderReflection* pGfxShaderReflection = NULL;	
+	ID3D11ShaderReflection* pGfxShaderReflection = nullptr;	
 	bool bSuccess(FALSE);
 	if ( SUCCEEDED( D3DReflect( maParentCompiledShader.First(), maParentCompiledShader.SizeMem(), IID_ID3D11ShaderReflection, (void**)&pGfxShaderReflection ) ) ) 
 	{	
@@ -111,7 +111,7 @@ bool ExporterGfxInputSignatureDX11_DX11::ExportWork(bool _bIsTHRTask)
 		DWORD		dwShaderFlags(D3DCOMPILE_ENABLE_STRICTNESS);		
 		ID3DBlob*	pErrorBlob;		
 		ID3DBlob*	pShaderCompiled;
-		if( SUCCEEDED(D3DCompile( zShaderText, strlen(zShaderText), NULL, NULL, NULL, "main", "vs_5_0", dwShaderFlags, 0, &pShaderCompiled, &pErrorBlob) ) )
+		if( SUCCEEDED(D3DCompile( zShaderText, strlen(zShaderText), nullptr, nullptr, nullptr, "main", "vs_5_0", dwShaderFlags, 0, &pShaderCompiled, &pErrorBlob) ) )
 		{
 			mrResData->maDummyShaderCode.Copy( (zU8*)pShaderCompiled->GetBufferPointer(), zUInt(pShaderCompiled->GetBufferSize())  );
 			bSuccess = TRUE;

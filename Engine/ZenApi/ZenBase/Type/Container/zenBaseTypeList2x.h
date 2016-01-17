@@ -70,8 +70,8 @@ public:
 	template<class _Type_> 
 	void				AddSort		( zList2xNode* _pAdd,  _Type_* _pReference	);
 
-	void				InsertBefore( zList2xNode* ZENRestrict _pAdd, zList2xNode* ZENRestrict _pItem		);
-	void				InsertAfter ( zList2xNode* ZENRestrict _pAdd, zList2xNode* ZENRestrict _pItem		); 
+	void				InsertBefore( zList2xNode* ZENRestrict _pItem,	zList2xNode* ZENRestrict _pAdd);
+	void				InsertAfter	( zList2xNode* ZENRestrict _pItem,	zList2xNode* ZENRestrict _pAdd);
 
 protected:
 	zList2xNode			moRoot;		//!< Store reference to first(moRoot.mpLstNext) and last item(moRoot.mpLstPrev) of the list.

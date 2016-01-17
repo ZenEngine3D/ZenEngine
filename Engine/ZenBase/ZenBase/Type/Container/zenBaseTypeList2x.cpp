@@ -6,8 +6,8 @@ namespace zen { namespace zenType {
 //--------------------------------------------------------------------------------------------------
 //==================================================================================================
 zList2xNode::zList2xNode()
-: mpLstNext(NULL)
-, mpLstPrev(NULL)
+: mpLstNext(nullptr)
+, mpLstPrev(nullptr)
 {
 }
 
@@ -53,6 +53,9 @@ void zList2x::Clear( bool _bDelete )
 		while( !IsEmpty() )
 			GetHead()->LstRemove();
 	}
+
+	moRoot.mpLstNext = &moRoot;
+	moRoot.mpLstPrev = &moRoot;
 }
 
 //==================================================================================================
@@ -61,7 +64,7 @@ void zList2x::Clear( bool _bDelete )
 //! @param[in]	_pAdd - Item to Add.
 //! @param[in]	_pItem - Item position to insert before.
 //==================================================================================================
-void zList2x::InsertBefore( zList2xNode* ZENRestrict _pAdd, zList2xNode* ZENRestrict _pItem )
+void zList2x::InsertBefore( zList2xNode* ZENRestrict _pItem, zList2xNode* ZENRestrict _pAdd )
 {       
 	ZENAssert(_pAdd && _pItem && _pAdd != _pItem);
 	_pAdd->LstRemove();	
@@ -78,7 +81,7 @@ void zList2x::InsertBefore( zList2xNode* ZENRestrict _pAdd, zList2xNode* ZENRest
 //! @param[in]	_pAdd - Item to Add.
 //! @param[in]	_pItem - Item position to insert after.
 //==================================================================================================
-void zList2x::InsertAfter( zList2xNode* ZENRestrict _pAdd, zList2xNode* ZENRestrict _pItem )
+void zList2x::InsertAfter( zList2xNode* ZENRestrict _pItem, zList2xNode* ZENRestrict _pAdd )
 {
 	ZENAssert(_pAdd && _pItem && _pAdd != _pItem);
 	_pAdd->LstRemove();	
@@ -117,8 +120,8 @@ void zList2xNode::LstRemove()
 	{
 		mpLstPrev->mpLstNext	= mpLstNext;
 		mpLstNext->mpLstPrev	= mpLstPrev;
-		mpLstNext				= NULL;
-		mpLstPrev				= NULL;
+		mpLstNext				= nullptr;
+		mpLstPrev				= nullptr;
 	}
 }
 
@@ -127,8 +130,8 @@ void zList2xNode::LstRemove()
 //==================================================================================================
 void zList2xNode::LstReset()
 {
-	mpLstNext	= NULL;
-	mpLstPrev	= NULL;
+	mpLstNext	= nullptr;
+	mpLstPrev	= nullptr;
 }
 
 //==================================================================================================
@@ -136,7 +139,7 @@ void zList2xNode::LstReset()
 //--------------------------------------------------------------------------------------------------
 //! @return		First item of the list (check if == GetInvalid() for empty list).
 //==================================================================================================
-zList2xNode*	zList2x::GetHead() const
+zList2xNode* zList2x::GetHead() const
 {
 	return moRoot.mpLstNext;
 }
@@ -180,7 +183,7 @@ bool zList2x::IsEmpty()const
 //==================================================================================================
 void zList2x::AddHead( zList2xNode* _pAdd	)
 {
-	InsertBefore(_pAdd, GetHead());
+	InsertBefore(GetHead(), _pAdd);
 };
 
 //==================================================================================================
@@ -191,7 +194,7 @@ void zList2x::AddHead( zList2xNode* _pAdd	)
 //==================================================================================================
 void zList2x::AddTail( zList2xNode* _pAdd	)
 {
-	InsertAfter(_pAdd, GetTail());
+	InsertAfter(GetTail(), _pAdd);
 };
 
 //==================================================================================================

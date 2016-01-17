@@ -15,7 +15,7 @@ zenMem::zAllocatorFastPool< typename zSignalEmitterAsync1<TParam1>::SignalInfo, 
 
 template<class TParam1>
 zSignalEmitterAsync1<TParam1>::zSignalEmitterAsync1() 
-: zSignalEmitterAsync(NULL) 
+: zSignalEmitterAsync(nullptr) 
 {
 }
 
@@ -44,7 +44,7 @@ void zSignalEmitterAsync1<TParam1>::Emit(TParam1 _Param1)
 template<class TParam1>
 void zSignalEmitterAsync1<TParam1>::SignalInfo::Send()
 {
-	zList<zSignal::ConnectionBase>::Iterator it = dynamic_cast<const zSignal*>(mpEmitter)->mlstListeners.GetHeadIt();
+	auto it = dynamic_cast<const zSignal*>(mpEmitter)->mlstListeners.GetHeadIt();
 	while (*it)
 	{
 		zSignal1::Connection* pConnection = static_cast<zSignal1::Connection*>(*it);
@@ -58,7 +58,7 @@ void zSignalEmitterAsync1<TParam1>::SignalInfo::Send()
 //#################################################################################################
 template<class TParam1, class TParam2>
 zSignalEmitterAsync2<TParam1, TParam2>::zSignalEmitterAsync2() 
-: zSignalEmitterAsync(NULL) 
+: zSignalEmitterAsync(nullptr) 
 {
 }
 
@@ -85,7 +85,7 @@ void zSignalEmitterAsync2<TParam1, TParam2>::Emit(TParam1 _Param1, TParam2 _Para
 template<class TParam1, class TParam2>
 void zSignalEmitterAsync2<TParam1, TParam2>::SignalInfo::Send()
 {
-	zList<zSignal::ConnectionBase>::Iterator it = dynamic_cast<const zSignal*>(mpEmitter)->mlstListeners.GetHeadIt();
+	auto it = dynamic_cast<const zSignal*>(mpEmitter)->mlstListeners.GetHeadIt();
 	while (*it)
 	{
 		zSignal2::Connection* pConnection = static_cast<zSignal2::Connection*>(*it);
@@ -97,7 +97,7 @@ void zSignalEmitterAsync2<TParam1, TParam2>::SignalInfo::Send()
 //#################################################################################################
 template<class TParam1, class TParam2, class TParam3>
 zSignalEmitterAsync3<TParam1, TParam2, TParam3>::zSignalEmitterAsync3() 
-: zSignalEmitterAsync(NULL) 
+: zSignalEmitterAsync(nullptr) 
 {
 }
 

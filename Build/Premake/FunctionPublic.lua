@@ -11,6 +11,7 @@ function Orion_AddGameLib(aLibName, aPrjGroup, aPathList, aPchFile)
 	project					( aLibName )
 	removeplatforms 		( vPlatformTool )
 	kind 					( "StaticLib" )
+	defines					( "ZEN_ENGINELIB=1")	
 	Orion_AddProjectCommon	( vDefaultCppExt, aPathList, aPchFile )
 end
 
@@ -26,6 +27,7 @@ function Orion_AddToolLib(aLibName, aPrjGroup, aPathList, aPchFile)
 	project					( aLibName )
 	removeplatforms 		( vPlatformGame )
 	kind 					( "StaticLib" )
+	defines					( "ZEN_ENGINELIB=1")
 	Orion_AddProjectCommon	( vDefaultCppExt, aPathList, aPchFile )
 end
 
@@ -40,6 +42,7 @@ function Orion_AddGameAndToolLib(aLibName, aPrjGroup, aPathList, aPchFile)
 	group					( aPrjGroup )
 	project					( aLibName )
 	kind 					( "StaticLib" )
+	defines					( "ZEN_ENGINELIB=1")
 	Orion_AddProjectCommon	( vDefaultCppExt, aPathList, aPchFile )
 end
 

@@ -44,15 +44,15 @@ zArrayStatic<TType>::zArrayStatic(std::initializer_list<TType> _Entries)
 template<class TType>
 zArrayStatic<TType>::~zArrayStatic()
 {
-	zenDelNullArray(mpData);
+	zenDelnullptrArray(mpData);
 }
 		
 template<class TType>
 zUInt zArrayStatic<TType>::SetCount(zUInt _uCount)
 {
-	zenDelNullArray(mpData);			
+	zenDelnullptrArray(mpData);			
 	if( _uCount )	mpData = zenNewDefault TType[_uCount];			
-	else			mpData = NULL;
+	else			mpData = nullptr;
 	muCount	= _uCount;
 	return muCount;
 }
@@ -60,9 +60,9 @@ zUInt zArrayStatic<TType>::SetCount(zUInt _uCount)
 template<class TType>	
 zUInt zArrayStatic<TType>::SetCountNoConstructor(zUInt _uCount)
 {
-	zenDelNullArray(mpData);			
+	zenDelnullptrArray(mpData);			
 	if( _uCount )	mpData	= (TType*) zenNewDefault zU8[sizeof(TType)*_uCount];
-	else			mpData	= NULL;
+	else			mpData	= nullptr;
 	muCount	= _uCount;
 	return muCount;
 }

@@ -2,12 +2,12 @@
 
 #if ZEN_ENGINETOOL
 
-namespace zen { namespace zeAss
+namespace zeAss
 {	
 
 PackageGroup::PackageGroup(const zWString& _zName, zenAss::zPackageGroupRef _Parent)
 : mName(_zName)
-, mrParent(NULL)
+, mrParent(nullptr)
 , mNameHashID(_zName)
 , mbDirty(false)
 , mbDirtyChild(false)
@@ -19,7 +19,7 @@ PackageGroup::PackageGroup(const zWString& _zName, zenAss::zPackageGroupRef _Par
 
 PackageGroup::~PackageGroup()
 {
-	SetParentGroup( zenAss::zPackageGroupRef(NULL) );
+	SetParentGroup( zenAss::zPackageGroupRef(nullptr) );
 }
 
 void PackageGroup::SetParentGroup(const zenAss::zPackageGroupRef& _rParent)
@@ -118,7 +118,7 @@ void PackageGroup::Delete()
 
 bool PackageGroup::IsParentOf(const zenAss::zPackageGroupRef& _Child)const
 {
-	zenAss::zPackageGroupRef rCurrentParent = _Child.IsValid() ? _Child->GetParentGroup() : NULL;
+	zenAss::zPackageGroupRef rCurrentParent = _Child.IsValid() ? _Child->GetParentGroup() : nullptr;
 	while( rCurrentParent.IsValid() )
 	{
 		if( rCurrentParent.Get() == this )
@@ -130,7 +130,7 @@ bool PackageGroup::IsParentOf(const zenAss::zPackageGroupRef& _Child)const
 
 bool PackageGroup::IsParentOf(const zenAss::zPackageRef& _Child)const
 {
-	zenAss::zPackageGroupRef rCurrentParent = _Child.IsValid() ? _Child->GetParentGroup() : NULL;
+	zenAss::zPackageGroupRef rCurrentParent = _Child.IsValid() ? _Child->GetParentGroup() : nullptr;
 	while (rCurrentParent.IsValid())
 	{
 		if (rCurrentParent.Get() == this)
@@ -140,6 +140,6 @@ bool PackageGroup::IsParentOf(const zenAss::zPackageRef& _Child)const
 	return false;
 }
 
-}} //namespace zen { namespace zeAss
+} //namespace zeAss
 
 #endif //ZEN_ENGINETOOL

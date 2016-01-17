@@ -11,8 +11,8 @@ void FiberUpdateLoop(zUInt _uThreadId)
 {
 	while( 1 )
 	{
-		zenSys::zTask* pNewTask = NULL;
-		zbFiber* pFiber	= NULL;
+		zenSys::zTask* pNewTask = nullptr;
+		zbFiber* pFiber	= nullptr;
 		zbFiber* pNotReadyFiber[zbFiber::keFiberCount];
 		zUInt uNotReadyCount(0);
 
@@ -82,7 +82,7 @@ void zbFiber::AddFreeFiber(zbFiber* _pFreeFiber)
 
 void zbFiber::Activate(zUInt _uThreadId, zenSys::zTask* _pTask)
 {
-	mpRunningTask				= _pTask != NULL ? + _pTask : mpRunningTask;
+	mpRunningTask				= _pTask != nullptr ? + _pTask : mpRunningTask;
 	muThreadId					= _uThreadId; 
 	ZENAssert(mpRunningTask);
 	mpRunningTask->mpOwnerFiber = this;
@@ -94,7 +94,7 @@ void zbFiber::Deactivate()
 {
 	ZENAssert(mpRunningTask);
 	mpRunningTask->ProcessingStop();
-	mpRunningTask = NULL;	
+	mpRunningTask = nullptr;	
 	gQueueAvailableFiber.Push(this);
 	HALDeactivate();
 }

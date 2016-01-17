@@ -29,7 +29,7 @@ public:
 		zEngineConstRef<ResourceData> rResData = GetItemBase(_ResID);
 		if( rResData.IsValid() )
 			return static_cast<const TType*>(rResData.Get());
-		return NULL;
+		return nullptr;
 	} 
 
 	template<class TType>
@@ -38,7 +38,7 @@ public:
 		zEngineConstRef<ResourceData> rResData = GetItemBaseAnySource(_ResID);
 		if( rResData.IsValid() )
 			return static_cast<const TType*>(rResData.Get());
-		return NULL;
+		return nullptr;
 	}
 	
 protected:

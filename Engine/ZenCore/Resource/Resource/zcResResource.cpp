@@ -4,8 +4,8 @@ namespace zcRes
 {	
 
 //! @todo Missing: keep track of this
-static zListDeclare(Resource, mlnkList) glstResourceActive[zenConst::keResType__Count];
-static zListDeclare(Resource, mlnkList) glstActiveToDelete[3];
+static Resource::TypeList glstResourceActive[zenConst::keResType__Count];
+static Resource::TypeList glstActiveToDelete[3];
 static zUInt guDeleteIndex(0);
 
 //=================================================================================

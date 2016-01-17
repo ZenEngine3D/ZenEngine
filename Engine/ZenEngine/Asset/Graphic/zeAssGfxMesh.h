@@ -4,7 +4,7 @@
 
 #if ZEN_ENGINETOOL
 
-namespace zen { namespace zeAss
+namespace zeAss
 {
 	class GfxMesh : public AssetTyped<zenConst::keAssType_Mesh>
 	{
@@ -12,7 +12,7 @@ namespace zen { namespace zeAss
 	public:
 		virtual const zenAss::PropertyDefArray&	GetProperties()const;
 	};
-}} //namespace zen { namespace zeAss
+} //namespace zeAss
 
 #endif
 #endif

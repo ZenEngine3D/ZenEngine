@@ -6,7 +6,7 @@ namespace zcRes
 	// GfxSamplerProxy
 	//////////////////////////////////////////////////////////////////////////
 	GfxSamplerProxy_DX11::GfxSamplerProxy_DX11()
-	: mpSamplerState(NULL)
+	: mpSamplerState(nullptr)
 	{
 	}
 	
@@ -14,7 +14,7 @@ namespace zcRes
 	{
 		if( mpSamplerState )
 			mpSamplerState->Release();
-		mpSamplerState = NULL;
+		mpSamplerState = nullptr;
 	}
 	
 	bool GfxSamplerProxy_DX11::Initialize(class GfxSampler& _Owner)
@@ -31,7 +31,7 @@ namespace zcRes
 	//GfxBlend_DX11
 	//////////////////////////////////////////////////////////////////////////
 	GfxStateBlendProxy_DX11::GfxStateBlendProxy_DX11()
-	: mpBlendState(NULL)
+	: mpBlendState(nullptr)
 	{		
 	}
 
@@ -39,7 +39,7 @@ namespace zcRes
 	{	
 		if( mpBlendState )
 			mpBlendState->Release();
-		mpBlendState = NULL;
+		mpBlendState = nullptr;
 	}
 
 	bool GfxStateBlendProxy_DX11::Initialize(class GfxStateBlend& _Owner)
@@ -60,7 +60,7 @@ namespace zcRes
 	//GfxDepthStencil_DX11
 	//////////////////////////////////////////////////////////////////////////
 	GfxStateDepthStencilProxy_DX11::GfxStateDepthStencilProxy_DX11()
-	: mpDepthStencilState(NULL)
+	: mpDepthStencilState(nullptr)
 	{		
 	}
 
@@ -68,7 +68,7 @@ namespace zcRes
 	{	
 		if( mpDepthStencilState )
 			mpDepthStencilState->Release();
-		mpDepthStencilState = NULL;
+		mpDepthStencilState = nullptr;
 	}
 
 	bool GfxStateDepthStencilProxy_DX11::Initialize(class GfxStateDepthStencil& _Owner)
@@ -85,7 +85,7 @@ namespace zcRes
 	//GfxRasterizer_DX11
 	//////////////////////////////////////////////////////////////////////////
 	GfxStateRasterizerProxy_DX11::GfxStateRasterizerProxy_DX11()
-	: mpRasterizerState(NULL)
+	: mpRasterizerState(nullptr)
 	{		
 	}
 
@@ -93,7 +93,7 @@ namespace zcRes
 	{	
 		if( mpRasterizerState )
 			mpRasterizerState->Release();
-		mpRasterizerState = NULL;
+		mpRasterizerState = nullptr;
 	}
 
 	bool GfxStateRasterizerProxy_DX11::Initialize(class GfxStateRasterizer& _Owner)

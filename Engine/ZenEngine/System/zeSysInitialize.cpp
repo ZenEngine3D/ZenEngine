@@ -1,6 +1,6 @@
 #include "zeEngine.h"
 
-namespace FSys
+namespace zbSys
 {
 //==================================================================================================
 //! @brief		Called at the program start, initializing the OS functionalities
@@ -21,6 +21,7 @@ bool StartupEngine()
 #if ZEN_ENGINETOOL
 	bResult &= zeMgr::Asset.Startup();
 #endif
+
 	if( bResult )	printf("\nEngine Initialization... Success");
 	else			printf("\nEngine Initialization... Failed");
 	return bResult;

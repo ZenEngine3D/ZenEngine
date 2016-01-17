@@ -7,7 +7,7 @@ namespace zen { namespace zenType {
 //==================================================================================================
 zList1x::zList1x( void )
 {
-	moFirst.mpLstNext = NULL;
+	moFirst.mpLstNext = nullptr;
 }
 
 //==================================================================================================
@@ -53,7 +53,7 @@ void zList1x::Clear( bool _bDelete )
 void zList1x::InsertAfter( zList1xNode* ZENRestrict _pAdd, zList1xNode* ZENRestrict _pItem )
 {
 	ZENAssert(_pAdd && _pItem && _pAdd != _pItem);
-	ZENAssertMsg(_pAdd->mpLstNext == NULL, "Remove item from its list before adding it to a new one");
+	ZENAssertMsg(_pAdd->mpLstNext == nullptr, "Remove item from its list before adding it to a new one");
 	_pAdd->mpLstNext	= _pItem->mpLstNext;	
 	_pItem->mpLstNext	= _pAdd;
 }

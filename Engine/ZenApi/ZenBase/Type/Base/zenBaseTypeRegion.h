@@ -23,8 +23,8 @@ public:
 	ZENInlineForce void Offset(const zVector2<_Type_>* pxOffset);
 	ZENInlineForce bool IsInside(const zVector2<_Type_>* pxOffset);
 
-	ZENInlineForce bool IsNull(void);
-	ZENInlineForce const zRegion& SetNull(void);
+	ZENInlineForce bool IsZero(void);
+	ZENInlineForce const zRegion& SetZero(void);
 
 	union
 	{

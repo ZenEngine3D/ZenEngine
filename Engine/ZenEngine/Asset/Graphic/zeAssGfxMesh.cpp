@@ -2,7 +2,7 @@
 
 #if ZEN_ENGINETOOL
 
-namespace zen { namespace zeAss
+namespace zeAss
 {
 
 const zenAss::PropertyDefArray& GfxMesh::GetProperties()const
@@ -15,6 +15,6 @@ const zenAss::PropertyDefArray& GfxMesh::GetProperties()const
 	return sarProperties;	
 }
 
-}} //namespace zen { namespace zeAss
+} //namespace zeAss
 
 #endif //ZEN_ENGINETOOL

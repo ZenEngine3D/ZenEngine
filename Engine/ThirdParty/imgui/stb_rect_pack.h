@@ -222,7 +222,7 @@ STBRP_DEF void stbrp_init_target(stbrp_context *context, int width, int height, 
 
    for (i=0; i < num_nodes-1; ++i)
       nodes[i].next = &nodes[i+1];
-   nodes[i].next = NULL;
+   nodes[i].next = nullptr;
    context->init_mode = STBRP__INIT_skyline;
    context->heuristic = STBRP_HEURISTIC_Skyline_default;
    context->free_head = &nodes[0];
@@ -242,7 +242,7 @@ STBRP_DEF void stbrp_init_target(stbrp_context *context, int width, int height, 
 #else
    context->extra[1].y = 65535;
 #endif
-   context->extra[1].next = NULL;
+   context->extra[1].next = nullptr;
 }
 
 // find minimum y position if it starts at x1
@@ -304,7 +304,7 @@ static stbrp__findresult stbrp__skyline_find_best_pos(stbrp_context *c, int widt
 {
    int best_waste = (1<<30), best_x, best_y = (1 << 30);
    stbrp__findresult fr;
-   stbrp_node **prev, *node, *tail, **best = NULL;
+   stbrp_node **prev, *node, *tail, **best = nullptr;
 
    // align to multiple of c->align
    width = (width + c->align - 1);
@@ -337,7 +337,7 @@ static stbrp__findresult stbrp__skyline_find_best_pos(stbrp_context *c, int widt
       node = node->next;
    }
 
-   best_x = (best == NULL) ? 0 : (*best)->x;
+   best_x = (best == nullptr) ? 0 : (*best)->x;
 
    // if doing best-fit (BF), we also have to try aligning right edge to each node position
    //
@@ -405,8 +405,8 @@ static stbrp__findresult stbrp__skyline_pack_rectangle(stbrp_context *context, i
    //    1. it failed
    //    2. the best node doesn't fit (we don't always check this)
    //    3. we're out of memory
-   if (res.prev_link == NULL || res.y + height > context->height || context->free_head == NULL) {
-      res.prev_link = NULL;
+   if (res.prev_link == nullptr || res.y + height > context->height || context->free_head == nullptr) {
+      res.prev_link = nullptr;
       return res;
    }
 
@@ -453,10 +453,10 @@ static stbrp__findresult stbrp__skyline_pack_rectangle(stbrp_context *context, i
       STBRP_ASSERT(cur->x < cur->next->x);
       cur = cur->next;
    }
-   STBRP_ASSERT(cur->next == NULL);
+   STBRP_ASSERT(cur->next == nullptr);
 
    {
-      stbrp_node *L1 = NULL, *L2 = NULL;
+      stbrp_node *L1 = nullptr, *L2 = nullptr;
       int count=0;
       cur = context->active_head;
       while (cur) {

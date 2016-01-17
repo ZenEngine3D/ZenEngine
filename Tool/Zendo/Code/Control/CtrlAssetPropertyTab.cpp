@@ -108,7 +108,7 @@ TabAssetProperty::TabAssetProperty(wxWindow *_pParent, const zenAss::zAssetItemR
 	for(zUInt propIdx(0), propCount(mrAsset.GetValueCount()); propIdx<propCount; ++propIdx)
 		CreateAssetValueControl(*pPage, mrAsset, mrAsset.GetValue(propIdx));
 		
-	mpPropertyGrid->AddPage("All", wxNullBitmap, pPage);
+	mpPropertyGrid->AddPage("All", wxnullptrBitmap, pPage);
 	pPage->RefreshModifiedItems();
 
 	// Add top PropertyEditor toolbar

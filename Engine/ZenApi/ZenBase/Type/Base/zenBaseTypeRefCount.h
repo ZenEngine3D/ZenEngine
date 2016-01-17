@@ -88,8 +88,10 @@ namespace zen { namespace zenType {
 		ZENInline const zGameRef&			operator=(TRefCountedType* _pReference);
 		ZENInline const zGameRef&			operator=(const zGameRef& _Copy);
 
+		ZENInline TRefCountedType&			operator*()const{return *Get();}		//!< Return a pointer to resource
+
 		ZENInline TRefCountedType*			Get()const;				//!< Return a pointer to resource
-		ZENInline TRefCountedType*			GetSafe()const;			//!< Return a pointer to resource and do null check first
+		ZENInline TRefCountedType*			GetSafe()const;			//!< Return a pointer to resource and do nullptr check first
 		ZENInline TRefCountedType*			operator->()const;		//!< Return a pointer to resource
 		using Super::operator==;
 		using Super::operator!=;
@@ -109,7 +111,7 @@ namespace zen { namespace zenType {
 		ZENInline const zGameConstRef&		operator=(const zGameRef<TRefCountedType>& _Copy);
 
 		ZENInline const TRefCountedType*	Get()const;			//!< Return a const pointer to resource
-		ZENInline const TRefCountedType*	GetSafe()const;		//!< Return a const pointer to resource and do null check first
+		ZENInline const TRefCountedType*	GetSafe()const;		//!< Return a const pointer to resource and do nullptr check first
 		ZENInline const TRefCountedType*	operator->()const;	//!< Return a const pointer to resource
 		using Super::operator==;
 		using Super::operator!=;

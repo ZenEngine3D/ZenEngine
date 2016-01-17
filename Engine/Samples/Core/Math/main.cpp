@@ -1,20 +1,27 @@
 #include "zenEngine.h"
 
 namespace sample
-{	
-	void SampleVector();
+{
+	extern void SampleVector();
 
-	void RunSamples()
+	class SampleBaseMath : public zenSys::zSampleEngineInstance
 	{
-		SampleVector();	
-	}
+	public:
+		virtual const char* GetAppName()const
+		{
+			return "Sample Math";
+		}
+		virtual void Update()
+		{
+			SampleVector();
+			SetDone();
+		}
+	};
 }
 
-
-
-int main (int argc, char * const argv[])
-{	
-	zenSys::zSampleEngineInstance SampleEngine( &sample::RunSamples );
-	zenSys::LaunchEngine(&SampleEngine, argc,argv);
+int main(int argc, char * const argv[])
+{
+	sample::SampleBaseMath Sample;
+	zenSys::LaunchEngine(&Sample, argc, argv);
 	return 0;
 }

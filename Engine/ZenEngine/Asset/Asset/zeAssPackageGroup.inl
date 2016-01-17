@@ -1,7 +1,7 @@
 
 #if ZEN_ENGINETOOL
 
-namespace zen { namespace zeAss
+namespace zeAss
 {
 void PackageGroup::SetStorageInfo(const zWString& _zStorageInfo)
 {
@@ -48,6 +48,6 @@ bool PackageGroup::GetDirtyChild()const
 	return mbDirtyChild;
 }
 
-}} //namespace zen { namespace zeAss
+} //namespace zeAss
 
 #endif

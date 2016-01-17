@@ -15,7 +15,7 @@ AllocHeader* GetHeader( void* _pAlloc, bool _bIsArray )
 		ZENAssertMsg( pHeader->IsArray() == _bIsArray, "Free 'new' with 'delete' and 'new[]' with 'delete[]', do not mismatch." );
 		return pHeader;
 	}
-	return NULL;
+	return nullptr;
 }
 
 void AllocHeader::Set(zenMem::zAllocator* _pAllocator, zU32 _uAllocOffset, size_t _uAllocSize, bool _bIsArray)

@@ -18,21 +18,26 @@ public:
 	class ConnectionBase
 	{
 	public:	
-												ConnectionBase();
-		virtual									~ConnectionBase(){};
-		zList<ConnectionBase>::Link				mlnkSignal;
-		zList<ConnectionBase>::Link				mlnkSlot;
-		zSignal*								mpSignal;
-		class zSlot*							mpObject;
+						ConnectionBase();
+		virtual			~ConnectionBase(){};
+		zSignal*		mpSignal;
+		class zSlot*	mpObject;
+	
+	protected:
+		zListLink		mlnkSignal;
+		zListLink		mlnkSlot;
+	public:
+		typedef zList<ConnectionBase, &ConnectionBase::mlnkSignal>	ListSignal;
+		typedef zList<ConnectionBase, &ConnectionBase::mlnkSlot>	ListSlot;
 	};
 
-	virtual										~zSignal();
-	void										Disconnect(class zSlot& _Object);	
-	bool										HasListeners()const;
-	zListDeclare(ConnectionBase, mlnkSignal)	mlstListeners; //! @todo Urgent : Not have this public
+	virtual							~zSignal();
+	void							Disconnect(class zSlot& _Object);	
+	bool							HasListeners()const;
+	ConnectionBase::ListSignal		mlstListeners; //! @todo Urgent : Not have this public
 protected:
-	void										DisconnectAll();
-	void										Connect( class zSlot& _Object, ConnectionBase& _Connection );
+	void							DisconnectAll();
+	void							Connect( class zSlot& _Object, ConnectionBase& _Connection );
 
 };
 

@@ -41,7 +41,7 @@ void QuicksortAsc(TType* _pDataFirst, TType* _pDataLast)
 
 template<class TType>
 zArrayBase<TType>::zArrayBase()
-: mpData(NULL)
+: mpData(nullptr)
 , muCount(0)
 {
 }
@@ -73,13 +73,13 @@ const TType* zArrayBase<TType>::First()const
 template<class TType>
 TType* zArrayBase<TType>::Last()
 {
-	return muCount ? (mpData + muCount - 1) : NULL;
+	return muCount ? (mpData + muCount - 1) : nullptr;
 }
 
 template<class TType>
 const TType* zArrayBase<TType>::Last()const	
 {
-	return muCount ? (mpData + muCount - 1) : NULL;
+	return muCount ? (mpData + muCount - 1) : nullptr;
 }
 
 template<class TType>

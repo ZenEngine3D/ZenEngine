@@ -236,6 +236,7 @@ namespace zen { namespace zenMath
 		ZENAssert(_fWidth > zenConst::kfSmallNumber);
 		ZENAssert(_fHeight > zenConst::kfSmallNumber);
 		ZENAssert(_fFarZ > _fNearZ);		
+		
 		_matProjectionOut.mvRows[0] = zenMath::simdXYZW( 2.0f/_fWidth,	 0.0f,			 0.0f,						0.0f);
 		_matProjectionOut.mvRows[1] = zenMath::simdXYZW( 0.0f,			-2.0f/_fHeight,  0.0f,						0.0f);
 		_matProjectionOut.mvRows[2] = zenMath::simdXYZW( 0.0f,			 0.0f,			 1.0f/(_fFarZ-_fNearZ),		0.0f);

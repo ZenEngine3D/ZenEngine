@@ -19,6 +19,7 @@ namespace zen { namespace zenMath
     ZENInline V4		simdXYZW		( float _fValue         );
     ZENInline V4		simdXYZW		( const float* _pValues );
     ZENInline V4		simdXYZW		( float _fX, float _fY, float _fZ, float _fW);
+
 	/*
 	ZENInline V4		XYZW            ( zU32 _uValue         );
 	ZENInline V4		XYZW            ( const zU32* _uValues );

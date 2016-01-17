@@ -47,8 +47,8 @@ bool ExporterGfxShaderParamDefDX11_DX11::ExportStart()
 bool ExporterGfxShaderParamDefDX11_DX11::ExportWork(bool _bIsTHRTask)
 {
 	bool bValid(false);
-	ID3D11ShaderReflection*					pGfxShaderReflection(NULL);
-	ID3D11ShaderReflectionConstantBuffer*	pConstBuffer(NULL);
+	ID3D11ShaderReflection*					pGfxShaderReflection(nullptr);
+	ID3D11ShaderReflectionConstantBuffer*	pConstBuffer(nullptr);
 	D3D11_SHADER_DESC						shaderDesc;
 	D3D11_SHADER_BUFFER_DESC				bufferDesc;
 	D3D11_SHADER_INPUT_BIND_DESC			ResourceDesc;	

@@ -87,7 +87,7 @@ namespace zcRes
 		ZENAssert(mDX11pSwapChain);
 		ZENAssertMsg(rWindowCur.IsValid()==false || rWindowCur->GetProxy() != this, "This method should only be called in ManagerBase::FrameStart()");
 
-		if( !mvPendingResize.IsNull() && mvPendingResize != mvSize )
+		if( !mvPendingResize.IsZero() && mvPendingResize != mvSize )
 		{			
 			for(zUInt idx(0); idx<ZENArrayCount(mrProxBackbufferColor); ++idx)
 				mrProxBackbufferColor[idx]->GetProxy()->ReleaseBackbuffer();
@@ -110,7 +110,7 @@ namespace zcRes
 				mpOwner->SetBackbuffer(idx, rBackbufferColor); //! @todo urgent can't access game thread object here							
 			}
 		}		
-		mvPendingResize.SetNull();
+		mvPendingResize.SetZero();
 	}
 
 }

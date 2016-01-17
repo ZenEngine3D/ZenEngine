@@ -197,7 +197,7 @@ zHamt< TKey, TValue, TIndex, TIndexBits>::~zHamt()
 	if( mpRootNode )
 	{
 		Clear();
-		zenDelNull(mpRootNode);
+		zenDelnullptr(mpRootNode);
 	}			
 }
 
@@ -208,7 +208,7 @@ zHamt< TKey, TValue, TIndex, TIndexBits>::~zHamt()
 template<class TKey, class TValue, class TIndex, int TIndexBits>
 bool zHamt< TKey, TValue, TIndex, TIndexBits>::IsInit()const
 {
-	return mpRootNode!=NULL;
+	return mpRootNode!=nullptr;
 }
 
 //==================================================================================================
@@ -374,7 +374,7 @@ bool zHamt< TKey, TValue, TIndex, TIndexBits>::Get(const TKey _Key, TValue*& _pV
 	const Node**	ppParentNode;
 	zU32		uSlotID, uNodeIndex, uDepth;
 	bool	bFound	= GetNode( _Key, ppParentNode, uNodeIndex, uSlotID, uDepth );
-	_pValueOut		= bFound ? &(*ppParentNode)->mpSlots[uSlotID].Value() : NULL;
+	_pValueOut		= bFound ? &(*ppParentNode)->mpSlots[uSlotID].Value() : nullptr;
 	return bFound;
 }
 */
@@ -441,7 +441,7 @@ bool zHamt< TKey, TValue, TIndex, TIndexBits>::Unset(const TKey _Key)
 	//-------------------------------------------------------
 	bool bFound = pNode->mpSlots[uSlotID[uDepth]].Key == _Key;
 	muCount		+= bFound ? -1 : 0;
-	pNode		= bFound ? pNode : NULL;
+	pNode		= bFound ? pNode : nullptr;
 	if( bFound && mpDeleteItemCB)
 		mpDeleteItemCB(*this, pNode->mpSlots[uSlotID[uDepth]].Value());
 
@@ -451,7 +451,7 @@ bool zHamt< TKey, TValue, TIndex, TIndexBits>::Unset(const TKey _Key)
 		// No slot left in child node, after we remove the entry, update parent to refer to it
 		if( uNewSlotCount == 0 && uDepth>0 )
 		{
-			zenDelNull(pNode);
+			zenDelnullptr(pNode);
 			pNode = *ppNodeTree[--uDepth];
 		}
 		// Child node with 1 less slot, 
@@ -467,8 +467,8 @@ bool zHamt< TKey, TValue, TIndex, TIndexBits>::Unset(const TKey _Key)
 				pNewNode->mSlotLeaf		|= TIndex(pNode->IsLeafSlot(uOldSlotID)) << i;
 			}
 			*ppNodeTree[uDepth] = pNewNode;
-			zenDelNull(pNode);
-			pNode = NULL; //Parent doesn't need updating
+			zenDelnullptr(pNode);
+			pNode = nullptr; //Parent doesn't need updating
 		}
 	}
 	return bFound;
@@ -607,7 +607,7 @@ const zHamt< TKey, TValue, TIndex, TIndexBits>& zHamt< TKey, TValue, TIndex, TIn
 	{
 		// Clear previous content
 		Clear();
-		zenDelNull(mpRootNode);
+		zenDelnullptr(mpRootNode);
 		// Size pools to have just enough space for all allocated items per pool
 		for(zUInt poolIdx=0; poolIdx<kuPoolCount; ++poolIdx)
 			mPools[poolIdx].MemoryIncrease( _Copy.mPools[poolIdx].GetTotalAllocCount() );
@@ -660,7 +660,7 @@ void zHamt< TKey, TValue, TIndex, TIndexBits>::Import( const zArrayBase<TKey>& _
 	const TValue* pValCur(_aValue.First());			
 	const TKey* pKeyCur(_aKey.First());
 	const TKey* pKeyLast(_aKey.Last());
-	if( pKeyCur != NULL )
+	if( pKeyCur != nullptr )
 	{
 		while( pKeyCur <= pKeyLast )
 			Set(*pKeyCur++, *pValCur++);
@@ -746,7 +746,7 @@ typename zHamt<TKey, TValue, TIndex, TIndexBits>::Node* zHamt< TKey, TValue, TIn
 template<class TKey, class TValue, class TIndex, int TIndexBits>
 bool zHamt< TKey, TValue, TIndex, TIndexBits>::GetNode(TKey _Key, const Node**& _pParentSlot, zU32& _uNodeIndex, zU32& _uSlotID, zU32& _uDepth) const
 {
-	ZENAssertMsg(mpRootNode!=NULL,"zHamt isn't initialized");
+	ZENAssertMsg(mpRootNode!=nullptr,"zHamt isn't initialized");
 	const Node* pNode	= mpRootNode;
 	_pParentSlot		= (const Node**)&mpRootNode;
 	_uDepth				= 0;
@@ -806,7 +806,7 @@ void zHamt< TKey, TValue, TIndex, TIndexBits>::ClearNode( Node* _pNode )
 		else if(mpDeleteItemCB)
 			mpDeleteItemCB(*this, _pNode->mpSlots[slot].Value());
 	}
-	zenDelNull( _pNode );
+	zenDelnullptr( _pNode );
 }
 
 //==================================================================================================
@@ -818,8 +818,8 @@ template<class TKey, class TValue, class TIndex, int TIndexBits>
 TValue* zHamt< TKey, TValue, TIndex, TIndexBits>::SetSlotValue(TKey _Key, const TValue& _Value, Node** _ppParentNode, zUInt _uNodeIndex, zUInt _uSlotID, zUInt _uDepth)
 {			
 	Node*	pNode(*_ppParentNode);
-	Node*	pNewNode(NULL);
-	TValue*	pValue(NULL);
+	Node*	pNewNode(nullptr);
+	TValue*	pValue(nullptr);
 						
 	//------------------------------------------------------------------
 	// Slot available in Node, resize array and add element
@@ -840,7 +840,7 @@ TValue* zHamt< TKey, TValue, TIndex, TIndexBits>::SetSlotValue(TKey _Key, const 
 			pNewNode->mpSlots[uNewSlotID]	= pNode->mpSlots[i];
 			pNewNode->mSlotLeaf				|= TIndex(pNode->IsLeafSlot(i)) << uNewSlotID;
 		}
-		zenDelNull(pNode);
+		zenDelnullptr(pNode);
 		*_ppParentNode	= pNewNode;				
 	}
 	//------------------------------------------------------------------

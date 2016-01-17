@@ -17,7 +17,7 @@ public:
 	//=============================================================================================
 	//! @brief		Should be empty
 	//! @details	Since we can't insure the initialization order of manager, constructor 
-	//!				should only initialize its member to null value, and do its proper initialization
+	//!				should only initialize its member to nullptr value, and do its proper initialization
 	//!				inside Load()	
 	//=============================================================================================
 	Manager()

@@ -152,130 +152,130 @@ ZENInlineForce bool zRegion<_Type_>::IsInside(const zVector2<_Type_>* pxPos)
 }
 
 template<>
-ZENInlineForce bool zRegion<zI8>::IsNull(void)
+ZENInlineForce bool zRegion<zI8>::IsZero(void)
 {
 	return mX1==0 && mY1==0 && mX2==0 && mY2==0;
 }
 
 template<>
-ZENInlineForce const zRegion<zI8>& zRegion<zI8>::SetNull(void)
+ZENInlineForce const zRegion<zI8>& zRegion<zI8>::SetZero(void)
 {
 	mX1 = mY1 = mX2 = mY2 = 0;
 	return *this;
 }
 
 template<>
-ZENInlineForce bool zRegion<zU8>::IsNull(void)
+ZENInlineForce bool zRegion<zU8>::IsZero(void)
 {
 	return mX1==0 && mY1==0 && mX2==0 && mY2==0;
 }
 
 template<>
-ZENInlineForce const zRegion<zU8>& zRegion<zU8>::SetNull(void)
+ZENInlineForce const zRegion<zU8>& zRegion<zU8>::SetZero(void)
 {
 	mX1 = mY1 = mX2 = mY2 = 0;
 	return *this;
 }
 
 template<>
-ZENInlineForce bool zRegion<zI16>::IsNull(void)
+ZENInlineForce bool zRegion<zI16>::IsZero(void)
 {
 	return mX1==0 && mY1==0 && mX2==0 && mY2==0;
 }
 
 template<>
-ZENInlineForce const zRegion<zI16>& zRegion<zI16>::SetNull(void)
+ZENInlineForce const zRegion<zI16>& zRegion<zI16>::SetZero(void)
 {
 	mX1 = mY1 = mX2 = mY2 = 0;
 	return *this;
 }
 
 template<>
-ZENInlineForce bool zRegion<zU16>::IsNull(void)
+ZENInlineForce bool zRegion<zU16>::IsZero(void)
 {
 	return mX1==0 && mY1==0 && mX2==0 && mY2==0;
 }
 
 template<>
-ZENInlineForce const zRegion<zU16>& zRegion<zU16>::SetNull(void)
+ZENInlineForce const zRegion<zU16>& zRegion<zU16>::SetZero(void)
 {
 	mX1 = mY1 = mX2 = mY2 = 0;
 	return *this;
 }
 
 template<>
-ZENInlineForce bool zRegion<zI32>::IsNull(void)
+ZENInlineForce bool zRegion<zI32>::IsZero(void)
 {
 	return mX1==0 && mY1==0 && mX2==0 && mY2==0;
 }
 
 template<>
-ZENInlineForce const zRegion<zI32>& zRegion<zI32>::SetNull(void)
+ZENInlineForce const zRegion<zI32>& zRegion<zI32>::SetZero(void)
 {
 	mX1 = mY1 = mX2 = mY2 = 0;
 	return *this;
 }
 
 template<>
-ZENInlineForce bool zRegion<zU32>::IsNull(void)
+ZENInlineForce bool zRegion<zU32>::IsZero(void)
 {
 	return mX1==0 && mY1==0 && mX2==0 && mY2==0;
 }
 
 template<>
-ZENInlineForce const zRegion<zU32>& zRegion<zU32>::SetNull(void)
+ZENInlineForce const zRegion<zU32>& zRegion<zU32>::SetZero(void)
 {
 	mX1 = mY1 = mX2 = mY2 = 0;
 	return *this;
 }
 
 template<>
-ZENInlineForce bool zRegion<zI64>::IsNull(void)
+ZENInlineForce bool zRegion<zI64>::IsZero(void)
 {
 	return mX1==0 && mY1==0 && mX2==0 && mY2==0;
 }
 
 template<>
-ZENInlineForce const zRegion<zI64>& zRegion<zI64>::SetNull(void)
+ZENInlineForce const zRegion<zI64>& zRegion<zI64>::SetZero(void)
 {
 	mX1 = mY1 = mX2 = mY2 = 0;
 	return *this;
 }
 
 template<>
-ZENInlineForce bool zRegion<zU64>::IsNull(void)
+ZENInlineForce bool zRegion<zU64>::IsZero(void)
 {
 	return mX1==0 && mY1==0 && mX2==0 && mY2==0;
 }
 
 template<>
-ZENInlineForce const zRegion<zU64>& zRegion<zU64>::SetNull(void)
+ZENInlineForce const zRegion<zU64>& zRegion<zU64>::SetZero(void)
 {
 	mX1 = mY1 = mX2 = mY2 = 0;
 	return *this;
 }
 
 template<>
-ZENInlineForce bool zRegion<float>::IsNull(void)
+ZENInlineForce bool zRegion<float>::IsZero(void)
 {
 	return mX1==0.0f && mY1==0.0f && mX2==0.0f && mY2==0.0f;
 }
 
 template<>
-ZENInlineForce const zRegion<float>& zRegion<float>::SetNull(void)
+ZENInlineForce const zRegion<float>& zRegion<float>::SetZero(void)
 {
 	mX1 = mY1 = mX2 = mY2 = 0.0f;
 	return *this;
 }
 
 template<>
-ZENInlineForce bool zRegion<double>::IsNull(void)
+ZENInlineForce bool zRegion<double>::IsZero(void)
 {
 	return mX1==0.0 && mY1==0.0 && mX2==0.0 && mY2==0.0;
 }
 
 template<>
-ZENInlineForce const zRegion<double>& zRegion<double>::SetNull(void)
+ZENInlineForce const zRegion<double>& zRegion<double>::SetZero(void)
 {
 	mX1 = mY1 = mX2 = mY2 = 0.0;
 	return *this;

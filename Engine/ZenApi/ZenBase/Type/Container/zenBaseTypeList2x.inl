@@ -28,7 +28,7 @@ void zList2x::AddSort( zList2xNode* _pAdd,  _Type_* _pReference )
 		pItemPrev   = pItemCur;
 		pItemCur    = pItemCur->LstNext();
 	}    
-	InsertAfter(_pAdd, pItemPrev);
+	InsertAfter(pItemPrev, _pAdd);
 }
 
   

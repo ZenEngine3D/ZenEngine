@@ -14,7 +14,7 @@ SerializerExportMem::~SerializerExportMem()
 	while( !mlstAllocs.IsEmpty() )
 	{
 		void* pAdr = mlstAllocs.PopHead();
-		zenDelNullArray(pAdr);
+		zenDelnullptrArray(pAdr);
 	}
 }
 
@@ -43,7 +43,7 @@ bool SerializerExportMem::ItemStarted(zcExp::ResourceData& aItem)
 bool SerializerExportMem::Save(const char* azFilename)
 {
 	FILE* pFile = fopen( azFilename, "wb" );
-	if(pFile==NULL)
+	if(pFile==nullptr)
 		return false;
 
 	zList1xNode* pAlloc = mlstAllocs.GetHead();

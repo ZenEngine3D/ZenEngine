@@ -16,7 +16,7 @@ PropertyDefRef PropertyArray::Create( const char* _zName, const char* _zDisplayN
 	pNewDefinition->muEntryCountMax		= _uEntryCountMax;
 	pNewDefinition->mDefault.SetCount(_uEntryCountMin);
 	for(zUInt idx(0); idx<_uEntryCountMin; ++idx)
-		pNewDefinition->mDefault[idx] = _rPropertyDef->Allocate(NULL);
+		pNewDefinition->mDefault[idx] = _rPropertyDef->Allocate(nullptr);
 	return pNewDefinition;
 }
 

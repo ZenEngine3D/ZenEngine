@@ -1,6 +1,6 @@
 
 #if ZEN_ENGINETOOL
-namespace zen { namespace zeAss
+namespace zeAss
 {
 
 const zenAss::zAssetID& Asset::GetID()const
@@ -89,6 +89,6 @@ zInt AssetTyped<AssetTypedType>::GetValueIndex(zHash32 _hPropertyName)const
 }
 
 
-}} //namespace zen { namespace zeAss
+} //namespace zeAss
 
 #endif

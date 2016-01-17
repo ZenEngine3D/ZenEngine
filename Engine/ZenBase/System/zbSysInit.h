@@ -10,7 +10,7 @@ namespace zbSys
 	bool StartupSystem( bool (*_pFuncEngineStart)(), bool (*_pFuncEngineStop)() );	
 	void ShutdownSystem();
 	bool IsSystemActive();	
-}  
+}
 
 #include ZENHeaderPlatform( zbSysInit )
 

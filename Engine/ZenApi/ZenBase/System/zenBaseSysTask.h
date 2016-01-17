@@ -16,7 +16,7 @@ public:
 	virtual void				Run()=0;
 	virtual void				Cleanup();
 	
-	void						AddToPending(std::atomic<zI32>* _pGateParent=NULL);
+	void						AddToPending(std::atomic<zI32>* _pGateParent=nullptr);
 
 	void						Suspend();
 	

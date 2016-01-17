@@ -6,6 +6,7 @@
 #include <array>
 #include <bitset>
 
+
 namespace zen { namespace zenType {
 
 typedef int8_t			zI8;		//!< Basic integer type
@@ -26,20 +27,12 @@ typedef uint64_t		zUInt;		//!< Basic unsigned integer type
 #endif
 
 //! @todo Cleanup : Find better location for this utility method
-template<class TClass, class TMemberClass>
-zU32 zenOffsetOf( TMemberClass TClass::* _pMember)
+
+template<typename TClass, typename TMemberClass>
+constexpr size_t zenOffsetOf(TMemberClass TClass::*member)
 {
-	union GetOffset
-	{
-		GetOffset(typename TMemberClass TClass::* _Member)
-		: mpMember(_Member)
-		{
-		}
-		zU32 mOffset;
-		typename TMemberClass TClass::* mpMember;
-	};
-	return GetOffset( _pMember ).mOffset;
-};
+	return (char*)&((TClass*)nullptr->*member) - (char*)nullptr;
+}
 
 template<typename T> void zenSwap(T& _Val1, T& _Val2)
 {

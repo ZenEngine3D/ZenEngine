@@ -4,7 +4,7 @@
 
 namespace zen { namespace zenMath 
 {
-	class Matrix
+	class alignas(16) Matrix
 	{
 	ZENClassDeclareNoParent(Matrix);
 	public:

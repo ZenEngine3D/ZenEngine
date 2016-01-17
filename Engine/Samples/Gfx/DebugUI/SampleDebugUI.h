@@ -16,14 +16,16 @@ struct SimpleVertex
 	zVec2F Tex;
 };
 
-class SampleDebugUIInstance : public zenSys::zEngineInstance
+class SampleDebugUIInstance : public zenSys::zSampleEngineInstance
 {
 ZENClassDeclare(SampleDebugUIInstance, zenSys::zEngineInstance);
 public:
-	virtual bool Init();
-	virtual void Destroy();
-	virtual void Update();
-	virtual bool IsDone();
+	virtual bool					Init();
+	virtual void					Destroy();
+	virtual void					Update();
+	virtual bool					IsDone();
+	virtual const char*				GetAppName()const;
+	
 
 protected:
 	void							UpdateBackbuffers();
@@ -43,17 +45,6 @@ protected:
 	zenRes::zGfxRenderTarget		mrBackbufferDepth;
 	zenRes::zGfxStateRasterizer		mrStateRaster;
 	zenRes::zGfxRenderPass			mrRndPassFinal;
-
-	zenRes::zGfxStateRasterizer		mrUIRaster;  //! need to keep ref on it, untillref counting with only proxy fixed
-	zenRes::zGfxRenderPass			mrUIRndPass;
-	zenRes::zGfxTexture2d			mrUITexture;
-	zenRes::zGfxVertex				mrUIVertex;
-	zenRes::zGfxIndex				mrUIIndex;
-	zenRes::zGfxShaderVertex		mrUIVS;
-	zenRes::zGfxShaderPixel			mrUIPS;
-	zenRes::zGfxShaderBinding		mrUIShaderBind;
-	zenRes::zGfxMesh				mrUIMesh;
-	zenMath::Matrix					matUIOrthographic;
 };
 
 }

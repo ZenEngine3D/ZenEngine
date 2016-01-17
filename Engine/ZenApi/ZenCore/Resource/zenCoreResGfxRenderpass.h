@@ -32,7 +32,7 @@ namespace zen { namespace zenRes {
 							keBlendOp__Count, 
 							keBlendOp__Invalid };
 
-			zGfxRenderTarget	mrTargetSurface		= NULL;
+			zGfxRenderTarget	mrTargetSurface		= nullptr;
 			zColorMask			mWriteMask			= zenConst::kColorMaskRGBA;				
 			bool				mbBlendEnable		= false;
 			eBlendValue			meBlendColorSrc		= keBlendVal_SrcAlpha;

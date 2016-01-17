@@ -24,7 +24,7 @@ namespace zcExp
 	{
 		ExportInfoGfxMeshStrip*	pExportInfo							= static_cast<ExportInfoGfxMeshStrip*>(mpExportInfo);
 		zEngineConstRef<ResDataGfxShaderBinding>	rShaderBinding	= zcDepot::ResourceData.GetItem<ResDataGfxShaderBinding>(pExportInfo->mShaderBindingID);
-		zEngineConstRef<ResDataGfxShaderDX11>		rVertexShader	= rShaderBinding.IsValid() ? zcDepot::ResourceData.GetItem<ResDataGfxShaderDX11>(rShaderBinding->maShaderID[zenConst::keShaderStage_Vertex]) : NULL;
+		zEngineConstRef<ResDataGfxShaderDX11>		rVertexShader	= rShaderBinding.IsValid() ? zcDepot::ResourceData.GetItem<ResDataGfxShaderDX11>(rShaderBinding->maShaderID[zenConst::keShaderStage_Vertex]) : nullptr;
 		zEngineConstRef<ResDataGfxIndexDX11>		rIndexBuffer	= zcDepot::ResourceData.GetItem<ResDataGfxIndexDX11>(pExportInfo->mIndexBufferID);
 
 		if( mpExportInfo->IsSuccess() && Super::ExportEnd() && rIndexBuffer.IsValid() && rShaderBinding.IsValid() && rVertexShader.IsValid() )
