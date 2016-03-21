@@ -6,9 +6,9 @@
 namespace zen { namespace zenMem
 {
 
-ZENInline zList2x& GetAllocatorScopeList()
+ZENInline ScopedAllocator::TypeList& GetAllocatorScopeList()
 {
-	static zList2x sOverideList;
+	static ScopedAllocator::TypeList sOverideList;
 	return sOverideList;
 }
 
@@ -16,13 +16,12 @@ ScopedAllocator::ScopedAllocator(zAllocator* _pAllocator)
 : mpAllocator(_pAllocator)
 {
 	ZENAssert(mpAllocator);
-	zList2x* testList = &GetAllocatorScopeList();
-	GetAllocatorScopeList().AddTail(this);
+	GetAllocatorScopeList().PushTail(*this);
 }
 ScopedAllocator::~ScopedAllocator()
 {
-	LstRemove();
-	ZENAssert(!GetAllocatorScopeList().IsEmpty());	//! Should be impossible with global 'GAllocatorOveride'
+	ScopedAllocator::TypeList::Remove(*this);
+	ZENAssert(!zbSys::IsSystemActive() || !GetAllocatorScopeList().IsEmpty());	//! Should be impossible with global 'GAllocatorOveride'
 }		
 
 zAllocator& ScopedAllocator::GetActive()
@@ -47,7 +46,7 @@ zAllocator::zAllocator(zDebugString _zName)
 
 zAllocator::~zAllocator()
 {
-	ZENAssertMsg( muTotalAllocCount==0, "Trying to delete _ memory manager that still has elements allocated");
+	ZENAssertMsg(muTotalAllocCount==0, "Trying to delete a memory manager that still has elements allocated");
 }
 /*
 void zAllocator::DebugPrint()
@@ -105,6 +104,7 @@ void* zAllocator::AddAlloc( size_t _uWantedSize, size_t _uExtraSize, zU32 _uAlig
 	pHeader->Set(this, (zU32)((zU8*)pAllocAligned-(zU8*)_pAllocation), _uWantedSize, _bIsArray);
 	muTotalAllocSize						+= _uWantedSize;
 	muTotalAllocCount						+= 1;
+
 #if ZEN_MEMORYDEBUG_ON
 	pHeader->LstReset();
 	mlstAllocations.AddHead( pHeader );

@@ -16,15 +16,9 @@ namespace zbMem
 	//!					-# Footer : Padding added at the end to detect buffer overrun
 	//! @todo Optim:	Reduce memory footprint by packing together infos and removing debug only infos 
 	//=================================================================================================
-	class AllocHeader
-#if ZEN_MEMORYDEBUG_ON
-	: public zList2xNode
-	{
-	ZENClassDeclare(AllocHeader, zList2xNode);
-#else
+	class AllocHeader : public zenMem::zAllocator::HeaderListItem
 	{
 	ZENClassDeclareNoParent(AllocHeader);
-#endif
 	public:			
 		zenMem::zAllocator*		mpAllocator;
 		size_t					muWantedSize;

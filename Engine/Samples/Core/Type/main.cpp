@@ -2,8 +2,6 @@
 
 namespace sample
 {
-	extern void SampleList1x();
-	extern void SampleList2x();
 	extern void SampleListIntrusive();
 	extern void SampleHash();
 	extern void SampleHamt();
@@ -25,8 +23,6 @@ namespace sample
 			SampleHamt();
 			SampleArray();
 			SampleTypeMisc();
-			SampleList1x();
-			SampleList2x();
 			SampleListIntrusive();
 			SetDone();
 		}

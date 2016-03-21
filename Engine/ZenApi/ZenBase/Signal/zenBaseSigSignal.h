@@ -27,8 +27,8 @@ public:
 		zListLink		mlnkSignal;
 		zListLink		mlnkSlot;
 	public:
-		typedef zList<ConnectionBase, &ConnectionBase::mlnkSignal>	ListSignal;
-		typedef zList<ConnectionBase, &ConnectionBase::mlnkSlot>	ListSlot;
+		typedef zList<ConnectionBase, &ConnectionBase::mlnkSignal, true>	ListSignal;
+		typedef zList<ConnectionBase, &ConnectionBase::mlnkSlot, true>		ListSlot;
 	};
 
 	virtual							~zSignal();

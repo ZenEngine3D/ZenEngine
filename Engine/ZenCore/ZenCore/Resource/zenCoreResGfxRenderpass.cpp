@@ -1,75 +1,111 @@
 #include "zcCore.h"
 
-namespace zen { namespace zenRes {
+namespace zen { namespace zenGfx {
+
+zContext zContext::Create(const zStringHash32& _zContextName, const zContext& _rParent, const zenRes::zGfxRenderPass& _rRenderState)
+{
+	static zenMem::zAllocatorPool sPoolContext("zcGfx::DrawContext", sizeof(zcGfx::DrawContext), 512, 128);	
+	zContext rContext;
+	rContext = zenNew(&sPoolContext) zcGfx::DrawContext(_zContextName, _rParent.Get(), _rRenderState);
+	return rContext;
+}
+
+void zContext::Submit()
+{
+	GetSafe()->Submit();
+}
 
 //! @todo Urgent move elsewhere, not a resource per see
-zGfxDrawcall::zGfxDrawcall(const zGfxDrawcall& _Copy)
+zCommand::zCommand()
+{
+}
+
+zCommand::zCommand(const zCommand& _Copy)
 {
 	*this = _Copy;
 }
 
-zGfxDrawcall::zGfxDrawcall()
-{
-}
-
-zGfxDrawcall::zGfxDrawcall(zcGfx::Drawcall* _pDrawcall)
+zCommand::zCommand(zcGfx::Command* _pDrawcall)
 {
 	*this = _pDrawcall;
 }
 
-zGfxDrawcall zGfxDrawcall::DrawMesh(const zGfxRenderPass& _rRenderPass, float _fPriority, const zGfxMeshStrip& _rMeshStrip )
+void zCommand::DrawMesh(const zContext& _rContext, float _fPriority, const zenRes::zGfxMeshStrip& _rMeshStrip, zU32 _uIndexFirst, zU32 _uIndexCount, const zVec4U16& _vScreenScissor )
 {
-	zcRes::GfxRenderPassRef rRenderpass	= _rRenderPass;
-	zcRes::GfxMeshStripRef rMeshStrip	= _rMeshStrip;
-	zGfxDrawcall rDrawcall				= zcGfx::Drawcall::Create(rRenderpass, _fPriority, rMeshStrip ).GetSafe();	
-	return rDrawcall;
+	const zcRes::GfxRenderPassRef& rRenderpass	= _rContext->GetRenderpass(); //! @todo urgent cleanup
+	zcRes::GfxMeshStripRef rMeshStrip			= _rMeshStrip;
+	ZENAssert(rRenderpass.IsValid());
+	ZENAssert(rMeshStrip.IsValid());
+
+	zEngineRef<zcGfx::Command> rCommand			= zcGfx::CommandDraw::Create(rRenderpass, rMeshStrip, _uIndexFirst, _uIndexCount, _vScreenScissor).GetSafe();	
+	_rContext->AddCommand(rCommand.Get());
 }
 
-zGfxDrawcall zGfxDrawcall::ClearColor( const zGfxRenderPass& _rRenderPass, const float& _fPriority, const zGfxRenderTarget& _rRTColor, const zVec4F& _vRGBA, const zColorMask& _ColorMask, const zVec2S16& _vOrigin, const zVec2U16& _vDim )
+void zCommand::DrawMesh(const zContext& _rContext, float _fPriority, const zenRes::zGfxMesh& _rMesh, zU32 _uIndexFirst, zU32 _uIndexCount, const zVec4U16& _vScreenScissor )
 {
-	zcRes::GfxRenderPassRef rRenderpass	= _rRenderPass;
-	zcRes::GfxRenderTargetRef rRTColor	= _rRTColor;
+	const zcRes::GfxRenderPassRef& rRenderpass	= _rContext->GetRenderpass(); //! @todo urgent cleanup
+	zcRes::GfxMeshRef rMesh						= _rMesh;
+	ZENAssert(rRenderpass.IsValid());
+	ZENAssert(rMesh.IsValid());
+
+	auto aMeshStrips = rMesh->GetMeshStrips();
+	for(int idx(0), count(aMeshStrips.Count()); idx<count; ++idx)
+	{		
+		zcRes::GfxMeshStripRef rMeshStrip			= aMeshStrips[idx];
+		zEngineRef<zcGfx::Command> rCommand			= zcGfx::CommandDraw::Create(rRenderpass, rMeshStrip, _uIndexFirst, _uIndexCount, _vScreenScissor).GetSafe();	
+		_rContext->AddCommand(rCommand.Get());
+	}
+}
+
+void zCommand::ClearColor(const zContext& _rContext, const zenRes::zGfxRenderTarget& _rRTColor, const zVec4F& _vRGBA, const zColorMask& _ColorMask, const zVec2S16& _vOrigin, const zVec2U16& _vDim )
+{
+	const zcRes::GfxRenderPassRef& rRenderpass	= _rContext->GetRenderpass(); //! @todo urgent cleanup
+	zcRes::GfxRenderTargetRef rRTColor			= _rRTColor;
+	ZENAssert(rRenderpass.IsValid());
 	ZENAssert(!rRTColor->IsDepth());
-	zGfxDrawcall rDrawcall = zcGfx::DrawcallClearColor::Create(rRenderpass, _fPriority, rRTColor, _vRGBA, _ColorMask, _vOrigin, _vDim).GetSafe();	
-	return rDrawcall;
+		
+	zEngineRef<zcGfx::Command> rCommand			= zcGfx::CommandClearColor::Create(rRenderpass, rRTColor, _vRGBA, _ColorMask, _vOrigin, _vDim);
+	_rContext->AddCommand(rCommand);
 }
 
-zGfxDrawcall zGfxDrawcall::ClearDepthStencil(const zGfxRenderPass& _rRenderPass, float _fPriority, const zGfxRenderTarget& _rRTDepthStencil, bool _bClearDepth, float _fDepthValue, bool _bClearStencil, zU8 _uStencilValue)
+void zCommand::ClearDepthStencil(const zContext& _rContext, const zenRes::zGfxRenderTarget& _rRTDepthStencil, bool _bClearDepth, float _fDepthValue, bool _bClearStencil, zU8 _uStencilValue)
 {
-	zcRes::GfxRenderPassRef rRenderpass			= _rRenderPass;
+	const zcRes::GfxRenderPassRef& rRenderpass	= _rContext->GetRenderpass(); //! @todo urgent cleanup
 	zcRes::GfxRenderTargetRef rRTDepthStencil	= _rRTDepthStencil;
+	ZENAssert(rRenderpass.IsValid());
 	ZENAssert(rRTDepthStencil->IsDepth());
-	zGfxDrawcall rDrawcall = zcGfx::DrawcallClearDepthStencil::Create(rRenderpass, _fPriority, rRTDepthStencil, _bClearDepth, _fDepthValue, _bClearStencil, _uStencilValue).GetSafe();	
-	return rDrawcall;
-}
-void zGfxDrawcall::Submit(zArrayDynamic<zenRes::zGfxDrawcall>& _aDrawcalls)
-{
-	zcMgr::GfxRender.Render( _aDrawcalls );
+
+	zEngineRef<zcGfx::Command> rCommand			= zcGfx::CommandClearDepthStencil::Create(rRenderpass, rRTDepthStencil, _bClearDepth, _fDepthValue, _bClearStencil, _uStencilValue).GetSafe();	
+	_rContext->AddCommand(rCommand);
 }
 
-zGfxDrawcall& zGfxDrawcall::operator=(const zGfxDrawcall& _Copy)
+zCommand& zCommand::operator=(const zCommand& _Copy)
 {	
 	Super::operator=(_Copy.Get());
 	return *this;
 }
 
-zGfxDrawcall& zGfxDrawcall::operator=(zcGfx::Drawcall* _pCopy)
+zCommand& zCommand::operator=(zcGfx::Command* _pCopy)
 {	
 	Super::operator=(_pCopy);
 	return *this;
 }
 
-bool zGfxDrawcall::operator>(const zenRes::zGfxDrawcall& _Cmp)const
+bool zCommand::operator>(const zenGfx::zCommand& _Cmp)const
 {
 	return	(Get()->mSortId.mSortKeyHi > _Cmp->mSortId.mSortKeyHi) ||
 			(Get()->mSortId.mSortKeyHi == _Cmp->mSortId.mSortKeyHi && Get()->mSortId.mSortKeyLo > _Cmp->mSortId.mSortKeyLo);
 }
 
-bool zGfxDrawcall::operator>=(const zenRes::zGfxDrawcall& _Cmp)const
+bool zCommand::operator>=(const zenGfx::zCommand& _Cmp)const
 {
 	return	(Get()->mSortId.mSortKeyHi > _Cmp->mSortId.mSortKeyHi) ||
 			(Get()->mSortId.mSortKeyHi == _Cmp->mSortId.mSortKeyHi && Get()->mSortId.mSortKeyLo >= _Cmp->mSortId.mSortKeyLo);
 }
+
+}} // namespace zen, zenGfx
+
+namespace zen { namespace zenRes {	
 
 //=================================================================================================
 // GFX RenderPass
@@ -83,5 +119,6 @@ zGfxRenderPass zGfxRenderPass::Create(const zString& _zStageName, zU8 _uPassPrio
 {
 	return zcExp::CreateGfxRenderpass(_zStageName, _uPassPriority, _aRTColors, _RTDepth, _rStateRaster, _vDim, _vOrigin);
 }
+
 
 }} // namespace zen, zenRes

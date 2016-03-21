@@ -15,7 +15,7 @@ void ManagerRender_Base::FrameBegin( zcRes::GfxWindowRef _FrameWindow )
 	mrWindowCurrent			= _FrameWindow;
 	if(mbStatsUpdate )
 	{
-		zU32 uElapsed			= zenSys::GetTimeUSec() - muFramePreviousTime;
+		zU64 uElapsed			= zenSys::GetTimeUSec() - muFramePreviousTime;
 		float fElapsedMs		= float(uElapsed) / 1000.0f;
 		muFramePreviousTime		= zenSys::GetTimeUSec();
 		mfFrameAverageMs		= (float(mfFrameAverageMs) * 99.0f + fElapsedMs) / 100.0f;

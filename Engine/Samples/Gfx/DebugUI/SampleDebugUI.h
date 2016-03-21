@@ -40,7 +40,7 @@ protected:
 	zenRes::zGfxSampler				mrSampler;	
 	zenRes::zGfxSampler				mrSampler2;		
 	zenRes::zGfxShaderBinding		mrShaderBind;
-	zenRes::zGfxMeshStrip			mrCube3MeshStrip;	
+	zenRes::zGfxMeshStrip			mrCubeMeshStrip;	
 
 	zenRes::zGfxRenderTarget		mrBackbufferDepth;
 	zenRes::zGfxStateRasterizer		mrStateRaster;

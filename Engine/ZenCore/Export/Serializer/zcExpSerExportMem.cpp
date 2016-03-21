@@ -22,16 +22,15 @@ bool SerializerExportMem::ItemStarted(zcExp::ResourceData& aItem)
 {
 	if( ISerializerExporter::ItemStarted( aItem ) )
 	{
-		Alloc* pAlloc = (Alloc*)mlstAllocs.GetHead();
-		if( pAlloc == mlstAllocs.GetInvalid() || pAlloc->pMemoryCur+aItem.muSize >= pAlloc->pMemoryEnd )
+		Alloc* pAlloc = mlstAllocs.GetHead();
+		if( pAlloc || pAlloc->mpMemoryCur+aItem.muSize >= pAlloc->mpMemoryEnd )
 		{
-			Alloc* pAlloc;
-			zU32	uAllocSize		= zenMath::Max<zU32>(muAllocSize, aItem.muSize);
-			pAlloc					= (Alloc*) zenNewDefault zU8[ uAllocSize + sizeof(Alloc)] ;
-			pAlloc->pMemoryStart	= (zU8*)pAlloc + sizeof(Alloc);
-			pAlloc->pMemoryCur		= pAlloc->pMemoryStart;
-			pAlloc->pMemoryEnd		= pAlloc->pMemoryStart + uAllocSize;
-			mlstAllocs.AddHead(pAlloc);
+			zU32 uAllocSize			= zenMath::Max<zU32>(muAllocSize, aItem.muSize);
+			Alloc* pAlloc			= (Alloc*) zenNewDefault zU8[uAllocSize + sizeof(Alloc)] ;
+			pAlloc->mpMemoryStart	= (zU8*)pAlloc + sizeof(Alloc);
+			pAlloc->mpMemoryCur		= pAlloc->mpMemoryStart;
+			pAlloc->mpMemoryEnd		= pAlloc->mpMemoryStart + uAllocSize;
+			mlstAllocs.PushHead(*pAlloc);
 		}
 
 		return true;
@@ -46,11 +45,11 @@ bool SerializerExportMem::Save(const char* azFilename)
 	if(pFile==nullptr)
 		return false;
 
-	zList1xNode* pAlloc = mlstAllocs.GetHead();
-	while( pAlloc != mlstAllocs.GetInvalid() )
+	Alloc* pAlloc = mlstAllocs.GetHead();
+	while( pAlloc )
 	{
-		fwrite( ((Alloc*)pAlloc)->pMemoryStart, ((Alloc*)pAlloc)->pMemoryCur-((Alloc*)pAlloc)->pMemoryStart, 1, pFile );
-		pAlloc = pAlloc->LstNext();
+		fwrite( ((Alloc*)pAlloc)->mpMemoryStart, ((Alloc*)pAlloc)->mpMemoryCur-((Alloc*)pAlloc)->mpMemoryStart, 1, pFile );
+		pAlloc = mlstAllocs.GetNext(*pAlloc);
 	}
 
 	fclose( pFile );
@@ -60,9 +59,9 @@ bool SerializerExportMem::Save(const char* azFilename)
 void* SerializerExportMem::GetMemory(zUInt _uSize)
 {
 	Alloc* pAlloc = (Alloc*)mlstAllocs.GetHead();
-	ZENAssertMsg(pAlloc->pMemoryCur+_uSize <= pAlloc->pMemoryEnd, "Not enought memory pre-allocated for this item. Item is not respecting SetItemSize() value.");
-	void* pMemory		= pAlloc->pMemoryCur;
-	pAlloc->pMemoryCur	+= _uSize;
+	ZENAssertMsg(pAlloc->mpMemoryCur+_uSize <= pAlloc->mpMemoryEnd, "Not enought memory pre-allocated for this item. Item is not respecting SetItemSize() value.");
+	void* pMemory		= pAlloc->mpMemoryCur;
+	pAlloc->mpMemoryCur	+= _uSize;
 	return pMemory;
 }
 

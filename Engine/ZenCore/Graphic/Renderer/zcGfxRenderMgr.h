@@ -2,12 +2,10 @@
 #ifndef __zCore_Gfx_Renderer_Manager_h__
 #define __zCore_Gfx_Renderer_Manager_h__
 
-//#include <Engine/libZenCore/Graphic/EngineGraphicBase.h>
-
 namespace zcGfx
 {
 
-//! @todo clean move to better location
+//! @todo clean start using event system
 enum eStatGfx
 {
 	keStatTime_FrameGPU,
@@ -28,21 +26,21 @@ class ManagerRender_Base : public zbType::Manager
 {
 ZENClassDeclare(ManagerRender_Base, zbType::Manager)
 public:	
-															ManagerRender_Base();
+											ManagerRender_Base();
 
-	virtual void											FrameBegin( zcRes::GfxWindowRef _FrameWindow );
-	virtual void											FrameEnd();
+	virtual void							FrameBegin( zcRes::GfxWindowRef _FrameWindow );
+	virtual void							FrameEnd();
 	
-	zU64													GetFrameCount();
-	ZENInline zcRes::GfxWindowRef							GetWindowCurrent()		{return mrWindowCurrent;}
+	zU64									GetFrameCount();
+	ZENInline zcRes::GfxWindowRef			GetWindowCurrent()			{return mrWindowCurrent;}
 	
-	ZENInline void											SetStatsUpdate(bool _bEnable){mbStatsUpdate = _bEnable;}
-	ZENInline bool											GetStatsUpdate()const { return mbStatsUpdate; }
-	ZENInline zU16											GetStatsFrame()const		{return muStatsFrame;}
-	ZENInline const zArrayStatic< float >&					GetFrameTimeHistory()const	{return mafFrameElapsedMs;}
-	ZENInline double										GetFrameTimeAvg()const		{return mfFrameAverageMs;}
+	ZENInline void							SetStatsUpdate(bool _bEnable){mbStatsUpdate = _bEnable;}
+	ZENInline bool							GetStatsUpdate()const		{return mbStatsUpdate; }
+	ZENInline zU16							GetStatsFrame()const		{return muStatsFrame;}
+	ZENInline const zArrayStatic<float>&	GetFrameTimeHistory()const	{return mafFrameElapsedMs;}
+	ZENInline double						GetFrameTimeAvg()const		{return mfFrameAverageMs;}
 	//! @todo Clean: move to more generic ZENFormat testing functions file?
-	bool													IsDepth( zenConst::eTextureFormat _eTexFormat ) const { return _eTexFormat>=zenConst::keTexFormat__DepthFirst && _eTexFormat<=zenConst::keTexFormat__DepthLast; }
+	bool									IsDepth( zenConst::eTextureFormat _eTexFormat ) const { return _eTexFormat>=zenConst::keTexFormat__DepthFirst && _eTexFormat<=zenConst::keTexFormat__DepthLast; }
 	
 protected:		
 	bool									mbStatsUpdate		= true;

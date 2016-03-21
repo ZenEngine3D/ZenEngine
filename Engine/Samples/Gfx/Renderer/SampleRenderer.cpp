@@ -233,58 +233,61 @@ void SampleRendererInstance::Destroy()
 void SampleRendererInstance::Update()
 {	
 	Super::Update();
-	zArrayDynamic<zenRes::zGfxDrawcall> aDrawcalls;
-	aDrawcalls.Reserve(48000);
+	UpdateBackbuffers();
+
+	zenGfx::zContext rContextRoot				= zenGfx::zContext::Create("Root");
+	zenGfx::zContext rContextRenderToTexture	= zenGfx::zContext::Create("RenderToTexture",	rContextRoot, mrRndPassTexture);
+	zenGfx::zContext rContextFinal				= zenGfx::zContext::Create("Final",				rContextRoot, mrRndPassFinal);
 
 	//---------------------------------------------------------------------
 	// Render loop
 	//---------------------------------------------------------------------
-	UpdateBackbuffers();
 	mrMainWindowGfx.FrameBegin();
 	
 	float t = static_cast<float>(zenSys::GetElapsedSec() / 3.0);	// Update our time animation
 	
 	//-----------------------------------------------------------------
-	// Render cubes in main render target
-	//-----------------------------------------------------------------
-	zVec4F vClearColor = zenMath::TriLerp( zVec4F(0.05f,0.05f,0.05f,1), zVec4F(0.1f,0.1f,0.20f,1), zVec4F(0.05f,0.05f,0.05f,1), zenMath::Fract(t) );
-	aDrawcalls.Push( zenRes::zGfxDrawcall::ClearColor(mrRndPassFinal, 0, mrMainWindowGfx.GetBackbuffer(), vClearColor) );
-	aDrawcalls.Push( zenRes::zGfxDrawcall::ClearDepthStencil(mrRndPassFinal, 0, mrBackbufferDepth) );
-
-	// Render the cube with rendertarget as texture
-	mrCube2MeshStrip.SetValue( zHash32("World"),		matWorld[1] );
-	mrCube2MeshStrip.SetValue( zHash32("Projection"),	matProjection );
-	mrCube2MeshStrip.Draw(mrRndPassFinal, 0, aDrawcalls);
-
-	// Render the cube with point sampling
-	matWorld[2].SetRotationY( t );						// Rotate cube around the origin 				
-	mrCube3MeshStrip.SetValue( zHash32("World"),		matWorld[2] );
-	mrCube3MeshStrip.SetValue( zHash32("Projection"),	matProjection );
-	mrCube3MeshStrip.Draw(mrRndPassFinal, 0, aDrawcalls);
-
-	matWorld[3].SetRotationX( t );						// Rotate cube around the origin 				
-	mrCube4Mesh.SetValue( zHash32("World"),				matWorld[3] );
-	mrCube4Mesh.SetValue( zHash32("Projection"),		matProjection );
-	mrCube4Mesh.SetValue( zHash32("World"),				matWorld[3] );
-	mrCube4Mesh.SetValue( zHash32("Projection"),		matProjection );	
-	mrCube4Mesh.Draw(mrRndPassFinal, 0, aDrawcalls);
-
-	//-----------------------------------------------------------------
 	// Render cube in RenderTarget
 	//-----------------------------------------------------------------
 	{
-		aDrawcalls.Push(zenRes::zGfxDrawcall::ClearColor(mrRndPassTexture, 0, mrRenderToTextureRT1, zVec4F(0, 0, 0, 1)));
-		aDrawcalls.Push(zenRes::zGfxDrawcall::ClearColor(mrRndPassTexture, 0, mrRenderToTextureRT2, zVec4F(0, 0, 0, 1)));
-		aDrawcalls.Push(zenRes::zGfxDrawcall::ClearDepthStencil(mrRndPassTexture, 0, mrRenderToTextureDepth));
+		zenGfx::zCommand::ClearColor(rContextRenderToTexture, mrRenderToTextureRT1, zVec4F(0, 0, 0, 1));
+		zenGfx::zCommand::ClearColor(rContextRenderToTexture, mrRenderToTextureRT2, zVec4F(0, 0, 0, 1));
+		zenGfx::zCommand::ClearDepthStencil(rContextRenderToTexture, mrRenderToTextureDepth);
 
 		zVec4F vShaderColor = zenMath::TriLerp<zVec4F>(zVec4F(1, 1, 1, 1), zVec4F(0.15f, 0.15f, 1.0f, 1), zVec4F(1, 1, 1, 1), zenMath::Fract(t * 2));
 		matWorld[0].SetRotationY(t);							// Rotate cube around the origin
 		mrCube1MeshStrip.SetValue(zHash32("World"), matWorld[0]);
 		mrCube1MeshStrip.SetValue(zHash32("vColor"), vShaderColor);
-		mrCube1MeshStrip.Draw(mrRndPassTexture, 0, aDrawcalls);
+		zenGfx::zCommand::DrawMesh(rContextRenderToTexture, 0, mrCube1MeshStrip);
 	}
 
-	zenRes::zGfxDrawcall::Submit(aDrawcalls);
+	//-----------------------------------------------------------------
+	// Render cubes in main render target
+	//-----------------------------------------------------------------
+	zVec4F vClearColor = zenMath::TriLerp( zVec4F(0.05f,0.05f,0.05f,1), zVec4F(0.1f,0.1f,0.20f,1), zVec4F(0.05f,0.05f,0.05f,1), zenMath::Fract(t) );
+	zenGfx::zCommand::ClearColor(rContextFinal, mrMainWindowGfx.GetBackbuffer(), vClearColor);
+	zenGfx::zCommand::ClearDepthStencil(rContextFinal, mrBackbufferDepth);
+
+	// Render the cube with rendertarget as texture
+	mrCube2MeshStrip.SetValue( zHash32("World"),		matWorld[1] );
+	mrCube2MeshStrip.SetValue( zHash32("Projection"),	matProjection );
+	zenGfx::zCommand::DrawMesh(rContextFinal, 0, mrCube2MeshStrip);
+
+	// Render the cube with point sampling
+	matWorld[2].SetRotationY( t );						// Rotate cube around the origin 				
+	mrCube3MeshStrip.SetValue( zHash32("World"),		matWorld[2] );
+	mrCube3MeshStrip.SetValue( zHash32("Projection"),	matProjection );
+	zenGfx::zCommand::DrawMesh(rContextFinal, 0, mrCube3MeshStrip);
+
+	matWorld[3].SetRotationX( t );						// Rotate cube around the origin 				
+	mrCube4Mesh.SetValue( zHash32("World"),				matWorld[3] );
+	mrCube4Mesh.SetValue( zHash32("Projection"),		matProjection );
+	mrCube4Mesh.SetValue( zHash32("World"),				matWorld[3] );
+	mrCube4Mesh.SetValue( zHash32("Projection"),		matProjection );
+	zenGfx::zCommand::DrawMesh(rContextFinal, 0, mrCube4Mesh);
+	
+	rContextRoot.Submit();
+
 	mrMainWindowGfx.FrameEnd();
 }
 }

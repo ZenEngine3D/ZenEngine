@@ -22,18 +22,27 @@ public:
 	void												CreateGfxWindow(const zVec2U16& _vDim, const zVec2U16& _vPos);
 	zenSig::zSignalEmitter1<zenConst::eUpdatePriority>&	GetSignalUpdate();	
 
+	//! @todo Urgent finish implementing this
+	zArrayStatic< zenPerf::zEventRef >					marHistoryEvents;
+	zUInt												muFrameCount		= 0;
+
 protected:	
 	virtual void										UIRender();
 	void												UIRenderStats();
+	void												UIRenderEventTree(const zenPerf::zEventRef& _rProfilEvent, double _fTotalTime, double _fParentTime, zUInt& _uItemCount, zUInt _uDepth=0, bool _bGroupedSibbling=false );
+	bool												UIRenderEventTreeItem(const zString& _zEventName, double _fEventTime, double _fTotalTime, double _fParentTime, zUInt _uItemCount, zUInt _uChildCount, zUInt _uDepth);
+	bool												mbUIFrameStatsShow	= false;
+	zenPerf::zEventRef									mrUIFrameStatsEvent;
 	zenRes::zGfxWindow									mrMainWindowGfx		= nullptr;
 	zenWnd::Window*										mpMainWindowOS		= nullptr;
 	zVec2U16											muWindowSize;
 	zenSig::zSignalEmitter1<zenConst::eUpdatePriority>	msigUpdate;	
-
+	
 private:
 	void												UIRenderCB();
 	void												MainLoop();
 	friend void											LaunchEngine(zEngineInstance* _pEngineInstance, int argc, const char* const * argv);
+	
 };
 
 //! @todo clean move this to a more appropriate location

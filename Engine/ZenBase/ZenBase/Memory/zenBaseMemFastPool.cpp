@@ -30,7 +30,7 @@ void zAllocatorFastPoolBase::Init( size_t _uItemSize, zU32 _uItemCount, zU32 _uI
 {
 	muAllocatedCount	= 0;
 	muReservedCount		= 0;
-	muItemSize			= zenMath::Max(sizeof(zList1xNode), _uItemSize);
+	muItemSize			= zenMath::Max(sizeof(PoolItem), _uItemSize);
 	muItemIncrease		= _uItemIncrease;
 	MemoryIncrease(_uItemCount);
 }
@@ -49,26 +49,30 @@ void* zAllocatorFastPoolBase::Allocate()
 void zAllocatorFastPoolBase::Deallocate(void* _pAlloc)
 {
 	//! @todo safety Add debug check for integrity
-	zList1xNode* pAllocFree = reinterpret_cast<zList1xNode*>(_pAlloc);
-	mlstFreeItems.AddHead( pAllocFree );
+	PoolItem* pAllocFree = reinterpret_cast<PoolItem*>(_pAlloc);
+	pAllocFree->mlnkList.SetNull();
+	mlstFreeItems.PushHead(*pAllocFree);
 }
 
 void zAllocatorFastPoolBase::MemoryIncrease(zU32 _uItemCount)
 {
 	size_t			uSizeHeader		= zenMath::RoundUp(sizeof(MemAllocInfo), muItemSize);
 	size_t			uTotalSize		= _uItemCount*muItemSize + uSizeHeader;
-	MemAllocInfo*	pNewAlloc		= static_cast<MemAllocInfo*>(zMalloc(uTotalSize));
-	zU8* pMemCur					= reinterpret_cast<zU8*>(pNewAlloc) + uSizeHeader;
-	zU8* pMemEnd					= pMemCur + _uItemCount*muItemSize;
-	while( pMemCur < pMemEnd )
+	MemAllocInfo*	pNewAlloc		= static_cast<MemAllocInfo*>(zMalloc(uTotalSize));	
+	size_t pMemCur					= reinterpret_cast<size_t>(pNewAlloc) + uSizeHeader;
+	size_t pMemEnd					= pMemCur + _uItemCount*muItemSize;
+
+	while (pMemCur < pMemEnd)
 	{
-		mlstFreeItems.AddHead(reinterpret_cast<zList1xNode*>(pMemCur));
-		pMemCur	+= muItemSize;
+		PoolItem* pPoolItem = reinterpret_cast<PoolItem*>(pMemCur);
+		pPoolItem->mlnkList.SetNull();
+		mlstFreeItems.PushHead(*pPoolItem);
+		pMemCur += muItemSize;
 	}
 
 	muReservedCount			+= _uItemCount;
 	pNewAlloc->mDataSize	= _uItemCount*muItemSize;
-	mlstAlloc.AddHead(pNewAlloc);
+	mlstAllocs.PushHead(*pNewAlloc);
 }
 
 //==================================================================================================
@@ -78,12 +82,10 @@ void zAllocatorFastPoolBase::Clear()
 {	
 	ZENAssertMsg(GetAllocatedCount()==0, "Trying to clear a MemPool while there's still some items allocated." );
 	muReservedCount	= 0;	
-	mlstFreeItems.Clear();
-	while( mlstAlloc.GetHead() != mlstAlloc.GetInvalid() )
-	{
-		zList1xNode* pDel = mlstAlloc.PopHead();
-		zenDel(pDel);	
-	}
+	mlstFreeItems.Empty();
+
+	while( !mlstAllocs.IsEmpty() )
+		zenDel(mlstAllocs.PopHead() );
 }
 
 } } //namespace zen { namespace zenMem

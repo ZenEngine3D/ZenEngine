@@ -32,14 +32,14 @@ public:
 	}
 	void Render()
 	{
-		zArrayDynamic<zenRes::zGfxDrawcall> aDrawcalls;
+		zArrayDynamic<zenRes::zGfxDrawCall> aDrawcalls;
 		aDrawcalls.Reserve(2000);
 		float t = static_cast<float>(zenSys::GetElapsedSec() / 3.0);	// Update our time animation
 		mrGfxWindow.FrameBegin();
 		zVec4F vClearColor = zenMath::TriLerp<zVec4F>( zVec4F(0.5f,0.5f,0.5f,1), zVec4F(0.1f,0.1f,0.20f,1), zVec4F(0.5f,0.5f,0.5f,1), zenMath::Fract(t) );
 		//mrGfxWindow.GetBackbuffer().Clear( true, vClearColor, true, 0 );
-		aDrawcalls.Push( zenRes::zGfxDrawcall::ClearColor(mrRndPassGeneric, 0, mrGfxWindow.GetBackbuffer(), vClearColor) );
-		zenRes::zGfxDrawcall::Submit(aDrawcalls);
+		aDrawcalls.Push( zenRes::zGfxDrawCall::ClearColor(mrRndPassGeneric, 0, mrGfxWindow.GetBackbuffer(), vClearColor) );
+		zenRes::zGfxDrawCall::Submit(aDrawcalls);
 		mrGfxWindow.FrameEnd();
 		
 	}

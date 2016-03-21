@@ -56,17 +56,12 @@ namespace zcExp
 				}
 			}
 			// Create new empty ParameterInstance for the one not provided for needed ParameterDef
-			//zArrayStatic<const zcExp::ParameterBase*> aEmptyParamValues;
 			for(zUInt paramDefIdx(0); paramDefIdx<paramDefCount; ++paramDefIdx)
 			{					
 				if( mrResData->maShaderParamID[paramDefIdx].GetType() == zenConst::keResType_GfxShaderParamDef )
 					mrResData->maShaderParamID[paramDefIdx] = zcExp::CreateGfxShaderParam( mrResData->maShaderParamID[paramDefIdx]/*, aEmptyParamValues*/);					
 			}
-			
-			//---------------------------------------------------------------------
-			// Make sure we have all texture assigned
-			//---------------------------------------------------------------------
-			// Assign default invalid value to all needed texture slot
+
 			mrResData->maTextureID.SetCount( zenConst::keShaderStage__Count );
 			mrResData->maSamplerID.SetCount( zenConst::keShaderStage__Count );
 			for( zUInt stageIdx(0); stageIdx<zenConst::keShaderStage__Count; ++stageIdx)
@@ -80,24 +75,28 @@ namespace zcExp
 					mrResData->maSamplerID[stageIdx][textureIdx] = zResID();
 				}
 			}
-				
+
 			// Now assign provided texture value
-			zMap<ResDataGfxShaderBinding::TextureSlot>::Key32 dTextureBindInfo(16);
-			dTextureBindInfo.Import( rShaderBinding->maTextureName, rShaderBinding->maTextureBind );
-			dTextureBindInfo.SetDefaultValue(ResDataGfxShaderBinding::TextureSlot());
-			for( zUInt textureIdx(0), textureCount(pExportInfo->maTexture.Count()); textureIdx<textureCount; ++textureIdx)
+			zUInt bindCount = rShaderBinding->maTextureName.Count();
+			for(zUInt textureIdx(0), textureCount(pExportInfo->maTexture.Count()); textureIdx<textureCount; ++textureIdx)
 			{
-				const ResDataGfxShaderBinding::TextureSlot& slotInfo = dTextureBindInfo[ pExportInfo->maTexture[textureIdx].mhTextureName ];
-				for(zUInt stageIdx(0); stageIdx<zenConst::keShaderStage__Count; ++stageIdx )
+				for(zUInt bindIdx(0); bindIdx < bindCount; ++bindIdx)
 				{
-					if( slotInfo.muCount[stageIdx] > 0 )
+					if( pExportInfo->maTexture[textureIdx].mhTextureName == rShaderBinding->maTextureName[bindIdx] )
 					{
-						mrResData->maTextureID[stageIdx][slotInfo.muSlot[stageIdx]] = pExportInfo->maTexture[textureIdx].mTextureID;
-						mrResData->maSamplerID[stageIdx][slotInfo.muSlot[stageIdx]] = pExportInfo->maTexture[textureIdx].mSamplerID;
+						const ResDataGfxShaderBinding::TextureSlot& slotInfo = rShaderBinding->maTextureBind[bindIdx];
+						for(zUInt stageIdx(0); stageIdx<zenConst::keShaderStage__Count; ++stageIdx )
+						{
+							if( slotInfo.muCount[stageIdx] > 0 )
+							{
+								mrResData->maTextureID[stageIdx][slotInfo.muSlot[stageIdx]] = pExportInfo->maTexture[textureIdx].mTextureID;
+								mrResData->maSamplerID[stageIdx][slotInfo.muSlot[stageIdx]] = pExportInfo->maTexture[textureIdx].mSamplerID;
+							}
+						}
 					}
 				}
 			}
-
+		
 			return true;
 		}
 

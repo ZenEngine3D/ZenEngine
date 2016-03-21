@@ -24,14 +24,15 @@ void zSignal::Connect(zSlot& _Object, zSignal::ConnectionBase& _Connection)
 void zSignal::Disconnect(zSlot& _Object)
 {
 	auto it = _Object.mlstEmitters.GetHeadIt();
-	while( *it )
+	while( it )
 	{
 		if( it->mpSignal == this )
 		{
-			zSignal::ConnectionBase::ListSignal::Remove(**it);
-			zSignal::ConnectionBase::ListSlot::Remove(**it);
+			zSignal::ConnectionBase::ListSignal::Remove(*it);
+			zSignal::ConnectionBase::ListSlot::Remove(*it);
 			break;
-		}		
+		}
+		++it;
 	}
 }
 

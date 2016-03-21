@@ -17,15 +17,15 @@ class zxRenderData : public zRefCounted
 {
 ZENClassDeclare(zxRenderData, zRefCounted)
 public:
-	alignas(16) zenMath::Matrix		matOrthographic;
-	zenRes::zGfxRenderTarget		mrRendertarget	= nullptr;	
-	zenRes::zGfxRenderPass			mrRenderpass	= nullptr;		
-	zenRes::zGfxVertex				mrVertexBuffer	= nullptr;
-	zenRes::zGfxIndex				mrIndexBuffer	= nullptr;
-	zenSig::zSignalEmitter0			msigRenderUI;	
-	zVec2U16						mvScreenSize	= zVec2U16(0,0);
-	zUInt							muVertexCount	= 0; //! @todo Urgent have buffer accessors available 
-	zUInt							muIndexCount	= 0;
+	alignas(16) zenMath::Matrix				matOrthographic;
+	zenRes::zGfxRenderTarget				mrRendertarget	= nullptr;	
+	zenRes::zGfxRenderPass					mrRenderpass	= nullptr;		
+	zenRes::zGfxVertex						mrVertexBuffer	= nullptr;
+	zenRes::zGfxIndex						mrIndexBuffer	= nullptr;	
+	zenSig::zSignalEmitter0					msigRenderUI;	
+	zVec2U16								mvScreenSize	= zVec2U16(0,0);
+	zUInt									muVertexCount	= 0; //! @todo Urgent have buffer accessors available 
+	zUInt									muIndexCount	= 0;
 };
 
 //=================================================================================================
@@ -41,16 +41,17 @@ class zxImGUIHelper : public zSingleton<zxImGUIHelper>
 {
 ZENClassDeclare(zxImGUIHelper, zSingleton<zxImGUIHelper>)
 public:
-									zxImGUIHelper();
-	void							Render(const zEngineRef<zxRenderData>& _rImGuiData, WindowInputState* _pInputData=nullptr);
+											zxImGUIHelper();
+	void									Render(const zEngineRef<zxRenderData>& _rImGuiData, WindowInputState* _pInputData=nullptr);
 
 protected:									
-	zenRes::zGfxStateRasterizer		mrStateRaster;	
-	zenRes::zGfxShaderVertex		mrShaderVertex;
-	zenRes::zGfxShaderPixel			mrShaderPixel;
-	zenRes::zGfxShaderBinding		mrShaderBinding;
-	zenRes::zGfxTexture2d			mrFontTextureDefault;
-	zenRes::zGfxSampler				mrFontSampler;
+	zenRes::zGfxStateRasterizer				mrStateRaster;	
+	zenRes::zGfxShaderVertex				mrShaderVertex;
+	zenRes::zGfxShaderPixel					mrShaderPixel;
+	zenRes::zGfxShaderBinding				mrShaderBinding;
+	zArrayStatic<zenRes::zGfxShaderParam>	marShaderParams;
+	zenRes::zGfxTexture2d					mrFontTextureDefault;
+	zenRes::zGfxSampler						mrFontSampler;
 };
 
 }

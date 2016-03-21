@@ -97,26 +97,38 @@ namespace zen { namespace zenRes {
 
 
 //! @todo Urgent, this is not a resource, should be moved elsewhere
-namespace zcGfx  { class Drawcall; }	//Forward declare
-namespace zen { namespace zenRes 
+namespace zcGfx  { class Command; class DrawContext; }	//Forward declare
+namespace zen { namespace zenGfx 
 {	
-	class zGfxDrawcall : public zEngineRef<zcGfx::Drawcall>
+	class zContext : public zEngineRef<zcGfx::DrawContext>
 	{
-	ZENClassDeclare(zGfxDrawcall, zEngineRef<zcGfx::Drawcall>);
-	public:			
-										zGfxDrawcall();
-										zGfxDrawcall(const zGfxDrawcall& _Copy);		
-										zGfxDrawcall(zcGfx::Drawcall* _Drawcall);
-		
-		zGfxDrawcall&					operator=(zcGfx::Drawcall* _pCopy);
-		zGfxDrawcall&					operator=(const zGfxDrawcall& _Copy);
-		bool							zGfxDrawcall::operator>(const zenRes::zGfxDrawcall& _Cmp)const;
-		bool							zGfxDrawcall::operator>=(const zenRes::zGfxDrawcall& _Cmp)const;
-		static zGfxDrawcall				DrawMesh			(const zGfxRenderPass& _rRenderPass, float _fPriority, const zGfxMeshStrip&	_rMeshStrip);
-		static zGfxDrawcall				ClearColor			(const zGfxRenderPass& _rRenderPass, const float& _fPriority, const zGfxRenderTarget& _RTColor, const zVec4F& _vRGBA,  const zColorMask& _ColorMask=zenConst::kColorMaskRGBA, const zVec2S16& _vOrigin=zVec2S16(0,0), const zVec2U16& _vDim=zVec2U16(0,0) );
-		static zGfxDrawcall				ClearDepthStencil	(const zGfxRenderPass& _rRenderPass, float _fPriority, const zGfxRenderTarget& _rRTDepthStencil, bool _bClearDepth=true, float _fDepthValue=1, bool _bClearStencil=false, zU8 _uStencilValue=128);
-		static void						Submit				(zArrayDynamic<zenRes::zGfxDrawcall>& _aDrawcalls);
+	ZENClassDeclare(zContext, zEngineRef<zcGfx::DrawContext>);
+	public:	
+		void					Submit();
+		static zContext			Create(const zStringHash32& _zContextName, const zContext& _rParent=zContext(), const zenRes::zGfxRenderPass& _rRenderState=zenRes::zGfxRenderPass());
+		using zEngineRef<zcGfx::DrawContext>::operator=;
 	};
+
+	class zCommand : public zEngineRef<zcGfx::Command>
+	{
+	ZENClassDeclare(zCommand, zEngineRef<zcGfx::Command>);
+	public:			
+								zCommand();
+								zCommand(const zCommand& _Copy);		
+								zCommand(zcGfx::Command* _Drawcall);
+		
+		zCommand&				operator=(zcGfx::Command* _pCopy);
+		zCommand&				operator=(const zCommand& _Copy);
+		bool					zCommand::operator>(const zCommand& _Cmp)const;
+		bool					zCommand::operator>=(const zCommand& _Cmp)const;
+
+		static void				DrawMesh			(const zContext& _rContext, float _fPriority, const zenRes::zGfxMesh& _rMesh, zU32 _uIndexFirst=0, zU32 _uIndexCount=0xFFFFFFFF, const zVec4U16& _vScreenScissor = zVec4U16(0,0,0xFFFF,0xFFFF) );
+		static void				DrawMesh			(const zContext& _rContext, float _fPriority, const zenRes::zGfxMeshStrip&	_rMeshStrip, zU32 _uIndexFirst=0, zU32 _uIndexCount=0xFFFFFFFF, const zVec4U16& _vScreenScissor = zVec4U16(0,0,0xFFFF,0xFFFF) );
+		static void				ClearColor			(const zContext& _rContext, const zenRes::zGfxRenderTarget& _RTColor, const zVec4F& _vRGBA,  const zColorMask& _ColorMask=zenConst::kColorMaskRGBA, const zVec2S16& _vOrigin=zVec2S16(0,0), const zVec2U16& _vDim=zVec2U16(0,0) );
+		static void				ClearDepthStencil	(const zContext& _rContext, const zenRes::zGfxRenderTarget& _rRTDepthStencil, bool _bClearDepth=true, float _fDepthValue=1, bool _bClearStencil=false, zU8 _uStencilValue=128);
+		//static void				Submit				(zArrayDynamic<zCommand>& _aDrawcalls);	
+	};
+	
 	
 }}
 #include "zenCoreResGfxBinding.inl"

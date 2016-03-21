@@ -45,9 +45,9 @@ template<class TParam1>
 void zSignalEmitterAsync1<TParam1>::SignalInfo::Send()
 {
 	auto it = dynamic_cast<const zSignal*>(mpEmitter)->mlstListeners.GetHeadIt();
-	while (*it)
+	while (it)
 	{
-		zSignal1::Connection* pConnection = static_cast<zSignal1::Connection*>(*it);
+		zSignal1::Connection* pConnection = static_cast<zSignal1::Connection*>(it.Get());
 		pConnection->Emit(mParam1);
 		++it;
 	}
@@ -86,9 +86,9 @@ template<class TParam1, class TParam2>
 void zSignalEmitterAsync2<TParam1, TParam2>::SignalInfo::Send()
 {
 	auto it = dynamic_cast<const zSignal*>(mpEmitter)->mlstListeners.GetHeadIt();
-	while (*it)
+	while (it)
 	{
-		zSignal2::Connection* pConnection = static_cast<zSignal2::Connection*>(*it);
+		zSignal2::Connection* pConnection = static_cast<zSignal2::Connection*>(it.Get());
 		pConnection->Emit(mParam1, mParam2);
 		++it;
 	}

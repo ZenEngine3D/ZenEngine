@@ -51,12 +51,11 @@ namespace zbSys
 			{				
 				spFuncEngineStop();
 				printf("\n  Engine unloaded");
-			}			
-			
-			printf("\n  System unloaded\n");
-			sbSystemStarted = false;
-			sbEngineStarted = false;
+			}						
+			printf("\n  System unloaded\n");			
 		}
+		sbSystemStarted = false;
+		sbEngineStarted = false;
 	}
 	
 	bool IsSystemActive()

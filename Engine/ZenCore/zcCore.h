@@ -8,6 +8,7 @@
 #include "Misc/zcMiscUpdate.h"
 #include "Export/zcExp.h"
 #include "Resource/zcRes.h"
+#include "Performances/zcPerf.h"
 #include "Graphic/zcGfx.h"
 
 #endif

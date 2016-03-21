@@ -11,8 +11,6 @@
 #include "Base/zenBaseTypeDebugString.h"
 #include "Base/zenBaseTypeVector.h"
 #include "Base/zenBaseTypeRegion.h"
-#include "Container/zenBaseTypeList1x.h"
-#include "Container/zenBaseTypeList2x.h"
 #include "Container/zenBaseTypeListIntrusive.h"
 #include "Container/zenBaseTypeThreadsafeQueue.h"
 

@@ -100,9 +100,9 @@ void zSignalEmitterAsync0::Emit()
 void zSignalEmitterAsync0::SignalInfo::Send()
 {
 	auto it = dynamic_cast<const zSignal*>(mpEmitter)->mlstListeners.GetHeadIt();
-	while (*it)
+	while(it)
 	{
-		zSignal0::Connection* pConnection = static_cast<zSignal0::Connection*>(*it);
+		zSignal0::Connection* pConnection = static_cast<zSignal0::Connection*>(it.Get());
 		pConnection->Emit();
 		++it;
 	}

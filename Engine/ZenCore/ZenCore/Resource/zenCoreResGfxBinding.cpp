@@ -13,8 +13,8 @@ zGfxMesh zGfxMesh::Create(const zArrayBase<zGfxMeshStrip>& _aMeshStrip)
 	aMeshStripID.Copy<zGfxMeshStrip>(_aMeshStrip);
 	return zcExp::CreateGfxMesh( aMeshStripID );
 }
-
-void zGfxMesh::Draw(zenRes::zGfxRenderPass& _rRenderpass, float _fPriority, zArrayDynamic<zenRes::zGfxDrawcall>& _aDrawcallsOut, const zVec4U16& _vScreenScissor)
+/*
+void zGfxMesh::Draw(zenRes::zGfxRenderPass& _rRenderpass, float _fPriority, zArrayDynamic<zenGfx::zCommand>& _aDrawcallsOut, const zVec4U16& _vScreenScissor)
 {
 	zcRes::GfxMeshRef rMesh									= *this;
 	zcRes::GfxRenderPassRef rRenderpass						= _rRenderpass;
@@ -23,18 +23,24 @@ void zGfxMesh::Draw(zenRes::zGfxRenderPass& _rRenderpass, float _fPriority, zArr
 	const zUInt uStripCount									= aMeshStrips.Count();
 	_aDrawcallsOut.SetCount( uOldCount + uStripCount );
 	for(zUInt stripIdx(0); stripIdx<uStripCount; ++stripIdx)
-		_aDrawcallsOut[uOldCount+stripIdx] = zcGfx::Drawcall::Create(rRenderpass, _fPriority, aMeshStrips[stripIdx], _vScreenScissor).GetSafe();
+		_aDrawcallsOut[uOldCount+stripIdx] = zcGfx::CommandDraw::Create(rRenderpass, _fPriority, aMeshStrips[stripIdx], 0, 0xFFFFFFFF, _vScreenScissor).GetSafe();
 }
-
-zGfxMeshStrip zGfxMeshStrip::Create(const zGfxVertex& _VertexBuffer, const zGfxIndex& _IndexBuffer, const zGfxShaderBinding& _rShaderBinding, const zArrayBase<zResID>& _aShaderParamID, const zArrayBase<zShaderTexture>& _aTexture, zU32 _uIndexFirst, zU32 _uIndexCount, zU32 _uVertexFirst)
+*/
+zGfxMeshStrip zGfxMeshStrip::Create(const zGfxVertex& _VertexBuffer, const zGfxIndex& _IndexBuffer, const zGfxShaderBinding& _rShaderBinding, const zArrayBase<zGfxShaderParam>& _arShaderParam, const zArrayBase<zShaderTexture>& _aTexture, zU32 _uIndexFirst, zU32 _uIndexCount, zU32 _uVertexFirst)
 {
-	return zcExp::CreateGfxMeshStrip(_VertexBuffer, _IndexBuffer, _rShaderBinding.GetResID(), _uIndexFirst, _uIndexCount, _uVertexFirst, _aShaderParamID, _aTexture);
+	zArrayStatic<zResID> aShaderParamID(zUInt(_arShaderParam.Count()));
+	for(int idx(0), count(_arShaderParam.Count()); idx<count; ++idx)
+		aShaderParamID[idx] = _arShaderParam[idx].GetResID();
+	return zcExp::CreateGfxMeshStrip(_VertexBuffer, _IndexBuffer, _rShaderBinding.GetResID(), _uIndexFirst, _uIndexCount, _uVertexFirst, aShaderParamID, _aTexture);
 }
 
-zGfxMeshStrip zGfxMeshStrip::Create(const zGfxVertex& _VertexBuffer, const zGfxIndex& _IndexBuffer, const zGfxShaderBinding& _rShaderBinding, const zArrayBase<zResID>& _aShaderParamID, zU32 _uIndexFirst, zU32 _uIndexCount, zU32 _uVertexFirst)
+zGfxMeshStrip zGfxMeshStrip::Create(const zGfxVertex& _VertexBuffer, const zGfxIndex& _IndexBuffer, const zGfxShaderBinding& _rShaderBinding, const zArrayBase<zGfxShaderParam>& _arShaderParam, zU32 _uIndexFirst, zU32 _uIndexCount, zU32 _uVertexFirst)
 {	
 	static const zArrayStatic<zShaderTexture> aTexture(zUInt(0));
-	return zcExp::CreateGfxMeshStrip(_VertexBuffer, _IndexBuffer, _rShaderBinding.GetResID(), _uIndexFirst, _uIndexCount, _uVertexFirst, _aShaderParamID, aTexture);
+	zArrayStatic<zResID> aShaderParamID(zUInt(_arShaderParam.Count()));
+	for(int idx(0), count(_arShaderParam.Count()); idx<count; ++idx)
+		aShaderParamID[idx] = _arShaderParam[idx].GetResID();
+	return zcExp::CreateGfxMeshStrip(_VertexBuffer, _IndexBuffer, _rShaderBinding.GetResID(), _uIndexFirst, _uIndexCount, _uVertexFirst, aShaderParamID, aTexture);
 }
 
 zGfxMeshStrip zGfxMeshStrip::Create(const zGfxVertex& _VertexBuffer, const zGfxIndex& _IndexBuffer, const zGfxShaderBinding& _rShaderBinding, zU32 _uIndexFirst, zU32 _uIndexCount, zU32 _uVertexFirst)
@@ -43,13 +49,13 @@ zGfxMeshStrip zGfxMeshStrip::Create(const zGfxVertex& _VertexBuffer, const zGfxI
 	static const zArrayStatic<zShaderTexture>	aTexture(zUInt(0));
 	return zcExp::CreateGfxMeshStrip(_VertexBuffer, _IndexBuffer, _rShaderBinding.GetResID(), _uIndexFirst, _uIndexCount, _uVertexFirst, aShaderParamID, aTexture);
 }
-
-void zGfxMeshStrip::Draw(zenRes::zGfxRenderPass& _rRenderpass, float _fPriority, zArrayDynamic<zenRes::zGfxDrawcall>& _aDrawcallsOut, const zVec4U16& _vScreenScissor )
+/*
+void zGfxMeshStrip::Draw(zenRes::zGfxRenderPass& _rRenderpass, float _fPriority, zArrayDynamic<zenGfx::zCommand>& _aDrawcallsOut, zU32 _uIndexFirst, zU32 _uIndexCount, const zVec4U16& _vScreenScissor )
 {
 	zcRes::GfxRenderPassRef rRenderpass	= _rRenderpass;
 	zcRes::GfxMeshStripRef rMeshStrip	= *this;
-	_aDrawcallsOut.Push( zcGfx::Drawcall::Create(rRenderpass, _fPriority, rMeshStrip, _vScreenScissor).GetSafe());
-}
+	_aDrawcallsOut.Push(zcGfx::CommandDraw::Create(rRenderpass, _fPriority, rMeshStrip, _uIndexFirst, _uIndexCount, _vScreenScissor).GetSafe());
+}*/
 
 zGfxWindow zGfxWindow::Create( HWND _WindowHandle )
 {
@@ -130,6 +136,19 @@ zVec2U16 zGfxView::GetDim()const
 	ZENAssertMsg(mpResource, "No valid resource assigned");
 	const zcRes::GfxView* pView = static_cast<const zcRes::GfxView*>(mpResource);	
 	return pView->GetDim();
+}
+
+//=================================================================================================
+// GFX SHADER BINDING
+//=================================================================================================
+void zGfxShaderBinding::CreateShaderParam(zArrayStatic<zenRes::zGfxShaderParam>& _aShaderParamOut)const
+{
+	ZENAssertMsg(mpResource, "No valid resource assigned");
+	const zcRes::GfxShaderBinding* pShaderBinding = static_cast<const zcRes::GfxShaderBinding*>(mpResource);	
+	const zArrayStatic<zResID>& rShaderParamDefId = pShaderBinding->GetResData()->maParamDefID;
+	_aShaderParamOut.SetCount( rShaderParamDefId.Count() );
+	for(int idx(0), count(rShaderParamDefId.Count()); idx<count; ++idx)
+		_aShaderParamOut[idx] = zcExp::CreateGfxShaderParam( rShaderParamDefId[idx] );
 }
 
 //=================================================================================================

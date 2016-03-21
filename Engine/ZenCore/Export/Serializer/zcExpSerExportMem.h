@@ -12,17 +12,22 @@ public:
 	virtual			~SerializerExportMem();
 	bool			Save(const char* azFilename);
 protected:
-	struct Alloc : public zList1xNode
+	struct Alloc
 	{
-		zU8*	pMemoryStart;
-		zU8*	pMemoryCur;
-		zU8*	pMemoryEnd;
+	protected:
+		zListLink	mlnkList;
+
+	public:
+		zU8*		mpMemoryStart;
+		zU8*		mpMemoryCur;
+		zU8*		mpMemoryEnd;
+		typedef zList<Alloc, &Alloc::mlnkList> TypeList;
 	};						
 
 	void*			GetMemory	(zUInt auSize);
 	void			AddMemory	(zUInt auSize);
 	
-	zList1x		mlstAllocs;
+	Alloc::TypeList	mlstAllocs;
 	zUInt			muAllocSize;
 
 //-------------------------------------------------------------------

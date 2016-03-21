@@ -58,7 +58,7 @@ public:
 	bool Shutdown()
 	{
 		ZENCriticalMsg(mbIsloaded, "This manager has already been stopped");	
-		mbIsloaded = Unload();
+		mbIsloaded = !Unload();
 		return !mbIsloaded;
 	}
 
@@ -79,7 +79,7 @@ protected:
 	//!				should release all resources here.
 	//! @note		Child classes must have un-init code here
 	//!-----------------------------------------------------------------------------
-	//! @return		True if init was successful
+	//! @return		True if unloading was successful
 	//==================================================================================================
 	virtual bool Unload()=0;		
 

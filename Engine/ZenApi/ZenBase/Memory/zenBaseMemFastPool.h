@@ -33,18 +33,25 @@ public:
 				void		Clear();
 				void*		Allocate();
 				void		Deallocate(void* _pAlloc);
-protected:	
+protected:
+	struct MemAllocInfo
+	{
+		size_t		mDataSize;
+		zListLink	mlnkList;
+		typedef zList<MemAllocInfo, &MemAllocInfo::mlnkList> TypeList;
+	};
+	struct PoolItem
+	{
+		zListLink mlnkList;
+		typedef zList<PoolItem, &PoolItem::mlnkList> TypeList;
+	};
+
 	zU32					muAllocatedCount;	//!< Number of items currently allocated
 	zU32					muReservedCount;	//!< Number of pool item reserved	
 	size_t					muItemSize;			//!< Size of each pool item
 	zU32					muItemIncrease;		//!< Amount of new item when pool runs out of item (0 for none)
-	zList1x					mlstFreeItems;		//!< List of the free pre-allocated items	
-	zList1x					mlstAlloc;			//!< List of allocations done from mpAllocator to reserve space in the pool
-
-	struct MemAllocInfo : zList1xNode
-	{
-		size_t	mDataSize;
-	};
+	MemAllocInfo::TypeList	mlstAllocs;			//!< List of allocations done from mpAllocator to reserve space in the pool	
+	PoolItem::TypeList		mlstFreeItems;		//!< List of the free pre-allocated items	
 };
 
 //=================================================================================================

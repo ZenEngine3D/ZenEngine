@@ -335,9 +335,9 @@ template<class TKey, class TValue, class TIndex, int TIndexBits>
 const TValue& zHamt< TKey, TValue, TIndex, TIndexBits>::Get( const TKey _Key ) const
 {
 	ZENAssertMsg(IsInit(),"zHamt isn't initialized");
-	const Node**	ppParentNode;
-	zU32		uSlotID, uNodeIndex, uDepth;
-	bool	bFound = GetNode( _Key, ppParentNode, uNodeIndex, uSlotID, uDepth );
+	const Node** ppParentNode;
+	zU32 uSlotID, uNodeIndex, uDepth;
+	bool bFound = GetNode( _Key, ppParentNode, uNodeIndex, uSlotID, uDepth );
 	if( !bFound )	return mDefault;									//Not found, return default value
 	else			return (*ppParentNode)->mpSlots[uSlotID].Value();	//Return found entry
 }

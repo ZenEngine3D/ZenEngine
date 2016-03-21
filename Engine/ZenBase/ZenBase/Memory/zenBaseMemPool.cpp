@@ -57,7 +57,7 @@ void zAllocatorPool::Init(const zDebugString& _zName, size_t _uItemSize, zUInt _
 	ZENAssertMsg(_uItemSize%_uAlign==0, "Pool item size must be a multiple of alignment specified.");
 	mzAllocatorName		= _zName;
 	mPoolReservedCount	= 0;
-	mPoolItemSize		= _uItemSize;
+	mPoolItemSize		= zenMath::Max(sizeof(PoolItem), _uItemSize);
 	mPoolItemIncrease	= _uItemIncrease;
 	mPoolItemAlign		= _uAlign;
 	mPoolItemCountInit	= zenMath::Max<zU32>(1,_uItemCount);
@@ -74,33 +74,40 @@ void* zAllocatorPool::Malloc(size_t _uSize, bool _bIsArray, zU32 _uAlign)
 		MemoryIncrease(mPoolReservedCount ? mPoolItemIncrease : mPoolItemCountInit);
 	}
 	
-	zList1xNode* pItem = mlstFreeItems.PopHead();
+	PoolItem* pItem = mlstFreeItems.PopHead();
 	return AddAlloc(mPoolItemSize, 0, mPoolItemAlign, (void*)pItem, false);
 }
 
 void zAllocatorPool::Free(void* _pAlloc, void* _pInfoAlloc)
 {
 	ZENAssert(_pAlloc && _pInfoAlloc);
-	zbMem::AllocHeader* pInfoAlloc = static_cast<zbMem::AllocHeader*>(_pInfoAlloc);
+	zbMem::AllocHeader* pInfoAlloc		= static_cast<zbMem::AllocHeader*>(_pInfoAlloc);
 	RemAlloc(pInfoAlloc);
-	zList1xNode* pPoolItemFree = (zList1xNode*)_pInfoAlloc;
-	mlstFreeItems.AddHead(pPoolItemFree);	
+
+	PoolItem* pPoolItemFree				= reinterpret_cast<PoolItem*>(_pInfoAlloc);
+	pPoolItemFree->mlnkList.SetNull();
+	mlstFreeItems.PushHead(*pPoolItemFree);	
 }
 
 void zAllocatorPool::MemoryIncrease(zUInt _uItemCount)
 {
 	size_t			uPoolItemSize	= GetAllocSize(mPoolItemSize, 0, mPoolItemAlign);
-	size_t			uTotalSize		= sizeof(zList1xNode)+_uItemCount*uPoolItemSize;	
-	zList1xNode*	pNewAlloc		= static_cast<zList1xNode*>(zMalloc(uTotalSize));
-	zList1xNode*	pPoolFreeItem	= pNewAlloc+1;
-	void*			pMemEnd			= (void*)((zU8*)pNewAlloc + uTotalSize);
-	mPoolReservedCount				+= _uItemCount;
-	mlstAlloc.AddHead(pNewAlloc);
-	while( pPoolFreeItem < pMemEnd )
+	size_t			uTotalSize		= sizeof(PoolAlloc)+_uItemCount*uPoolItemSize;
+	PoolAlloc*		pNewAlloc		= reinterpret_cast<PoolAlloc*>(zMalloc(uTotalSize));	
+	size_t			pMemCur			= reinterpret_cast<size_t>(pNewAlloc+1);
+	size_t			pMemEnd			= reinterpret_cast<size_t>(pNewAlloc) + uTotalSize;
+
+	while(pMemCur < pMemEnd)
 	{
-		mlstFreeItems.AddHead(pPoolFreeItem);
-		pPoolFreeItem = (zList1xNode*)(((zU8*)pPoolFreeItem)+uPoolItemSize);
+		PoolItem* pPoolItem = reinterpret_cast<PoolItem*>(pMemCur);
+		pPoolItem->mlnkList.SetNull();
+		mlstFreeItems.PushHead(*pPoolItem);
+		pMemCur += uPoolItemSize;
 	}
+
+	mPoolReservedCount += _uItemCount;
+	pNewAlloc->mlnkList.SetNull();
+	mlstAlloc.PushHead(*pNewAlloc);
 }
 
 //==================================================================================================
@@ -110,12 +117,9 @@ void zAllocatorPool::Clear()
 {	
 	ZENAssertMsg(GetTotalAllocCount()==0, "Trying to clear a MemPool while there's still some items allocated." );
 	mPoolReservedCount	= 0;
-	mlstFreeItems		= zList1x();	
-	while( mlstAlloc.GetHead() != mlstAlloc.GetInvalid() )
-	{
-		zList1xNode* pDel = mlstAlloc.PopHead();
-		zenDel(pDel);	
-	}
+	mlstFreeItems.Empty();
+	while( mlstAlloc.GetHead() )
+		zenDel(mlstAlloc.PopHead());	
 }
 
 } } //namespace zen { namespace zenMem

@@ -22,7 +22,8 @@ zxImGUIHelper::zxImGUIHelper()
 	mrShaderBinding					= zenRes::zGfxShaderBinding::Create(mrShaderVertex, mrShaderPixel);
 	mrFontSampler					= zenRes::zGfxSampler::Create(zenConst::keTexFilter_Point, zenConst::keTexFilter_Point, zenConst::keTexWrap_Clamp, zenConst::keTexWrap_Clamp, 0);
 	mrStateRaster					= zenRes::zGfxStateRasterizer::Create(RasterConfig);
-	
+	mrShaderBinding.CreateShaderParam(marShaderParams);
+
 	// Font Texture
 	unsigned char* pixels;
 	int width, height;
@@ -124,83 +125,92 @@ void zxImGUIHelper::Render(const zEngineRef<zxRenderData>& _rImGuiData, WindowIn
 	// Ask all client suscriber to display their UI
 	io.DisplaySize = ImVec2(_rImGuiData->mvScreenSize.x, _rImGuiData->mvScreenSize.y);
 	ImGui::NewFrame();	
-	_rImGuiData->msigRenderUI.Emit();
-	ImGui::Render();
+	{
+		zenPerf::zScopedEventCpu EmitEvent("ImGUI Update");
+		_rImGuiData->msigRenderUI.Emit();
+	}
+	{
+		zenPerf::zScopedEventCpu EmitEvent("ImGUI Internal Render");
+		ImGui::Render();		
+	}
+
 	ImDrawData* pImGuiData = ImGui::GetDrawData();
-
-	//----------------------------------------------------------------------------
-	// Grow Vertex/Index buffer when needed
-	if(_rImGuiData->muVertexCount < pImGuiData->TotalVtxCount)
 	{
-		zArrayStatic<zenRes::zGfxVertex::Stream> aUIVerticeStreams(1);
-		_rImGuiData->muVertexCount = static_cast<zUInt>(pImGuiData->TotalVtxCount*1.25);
-		aUIVerticeStreams[0].muStride = static_cast<zU32>(sizeof(ImDrawVert));
-		aUIVerticeStreams[0].maElements = aUIVerticeInfos;
-		aUIVerticeStreams[0].maData.SetCount(_rImGuiData->muVertexCount*sizeof(ImDrawVert));
-		_rImGuiData->mrVertexBuffer = zenRes::zGfxVertex::Create(aUIVerticeStreams, zFlagResUse(zenConst::keResUse_DynamicDiscard));
-	}
-	if(_rImGuiData->muIndexCount < pImGuiData->TotalIdxCount)
-	{
-		_rImGuiData->muIndexCount = static_cast<zUInt>(pImGuiData->TotalIdxCount*1.25);
-		if (sizeof(ImDrawIdx) == sizeof(zU16))
+		zenPerf::zScopedEventCpu EmitEvent("ImGUI Buffers");
+		//----------------------------------------------------------------------------
+		// Grow Vertex/Index buffer when needed
+		if(_rImGuiData->muVertexCount < pImGuiData->TotalVtxCount)
 		{
-			zArrayStatic<zU16> aIndices;
-			aIndices.SetCount(_rImGuiData->muIndexCount);
-			_rImGuiData->mrIndexBuffer = zenRes::zGfxIndex::Create(aIndices, zenConst::kePrimType_TriangleList);
+			zArrayStatic<zenRes::zGfxVertex::Stream> aUIVerticeStreams(1);
+			_rImGuiData->muVertexCount = static_cast<zUInt>(pImGuiData->TotalVtxCount*1.25);
+			aUIVerticeStreams[0].muStride = static_cast<zU32>(sizeof(ImDrawVert));
+			aUIVerticeStreams[0].maElements = aUIVerticeInfos;
+			aUIVerticeStreams[0].maData.SetCount(_rImGuiData->muVertexCount*sizeof(ImDrawVert));
+			_rImGuiData->mrVertexBuffer = zenRes::zGfxVertex::Create(aUIVerticeStreams, zFlagResUse(zenConst::keResUse_DynamicDiscard));
 		}
-		else if (sizeof(ImDrawIdx) == sizeof(zU32))
+		if(_rImGuiData->muIndexCount < pImGuiData->TotalIdxCount)
 		{
-			zArrayStatic<zU32> aIndices;
-			aIndices.SetCount(_rImGuiData->muIndexCount);
-			_rImGuiData->mrIndexBuffer = zenRes::zGfxIndex::Create(aIndices, zenConst::kePrimType_TriangleList);
-		}
-	}
-
-	//----------------------------------------------------------------------------
-	// Update content of vertex/index
-	ImDrawVert* pUIVertices = reinterpret_cast<ImDrawVert*>(_rImGuiData->mrVertexBuffer.Lock());
-	ImDrawIdx* pUIIndices = reinterpret_cast<ImDrawIdx*>(_rImGuiData->mrIndexBuffer.Lock());
-	for (int n = 0; n < pImGuiData->CmdListsCount; ++n)
-	{
-		const ImDrawList* cmd_list = pImGuiData->CmdLists[n];
-		zenMem::Copy(pUIVertices, &cmd_list->VtxBuffer[0], cmd_list->VtxBuffer.size());
-		zenMem::Copy(pUIIndices, &cmd_list->IdxBuffer[0], cmd_list->IdxBuffer.size());
-		pUIVertices += cmd_list->VtxBuffer.size();
-		pUIIndices += cmd_list->IdxBuffer.size();
-	}
-	_rImGuiData->mrVertexBuffer.Unlock();
-	_rImGuiData->mrIndexBuffer.Unlock();
-
-	//----------------------------------------------------------------------------
-	// Emit drawcalls
-	int vtx_offset = 0;
-	int idx_offset = 0;
-	zArrayDynamic<zenRes::zGfxDrawcall> aDrawcalls;
-	aDrawcalls.Reserve(pImGuiData->CmdListsCount);
-	for (int n = 0; n < pImGuiData->CmdListsCount; n++)
-	{
-		const ImDrawList* cmd_list = pImGuiData->CmdLists[n];
-		for (int cmd_i = 0; cmd_i < cmd_list->CmdBuffer.size(); cmd_i++)
-		{
-			const ImDrawCmd* pcmd = &cmd_list->CmdBuffer[cmd_i];
-			if (pcmd->UserCallback)
+			_rImGuiData->muIndexCount = static_cast<zUInt>(pImGuiData->TotalIdxCount*1.25);
+			if (sizeof(ImDrawIdx) == sizeof(zU16))
 			{
-				pcmd->UserCallback(cmd_list, pcmd);
+				zArrayStatic<zU16> aIndices;
+				aIndices.SetCount(_rImGuiData->muIndexCount);
+				_rImGuiData->mrIndexBuffer = zenRes::zGfxIndex::Create(aIndices, zenConst::kePrimType_TriangleList);
 			}
-			else
+			else if (sizeof(ImDrawIdx) == sizeof(zU32))
 			{
-				zenRes::zGfxMeshStrip rMeshStrip = zenRes::zGfxMeshStrip::Create(_rImGuiData->mrVertexBuffer, _rImGuiData->mrIndexBuffer, mrShaderBinding, idx_offset, pcmd->ElemCount, vtx_offset);
-				//! @todo optim create shaderparam and reuse it instead of recreating it for all mesh strip
-				rMeshStrip.SetValue(zHash32("txFont"), mrFontTextureDefault, mrFontSampler);
-				rMeshStrip.SetValue(zHash32("ProjectionMatrix"), _rImGuiData->matOrthographic);
-				rMeshStrip.Draw(_rImGuiData->mrRenderpass, float(aDrawcalls.Count()), aDrawcalls, zVec4U16(zU16(pcmd->ClipRect.x), zU16(pcmd->ClipRect.y), zU16(pcmd->ClipRect.z), zU16(pcmd->ClipRect.w)));
+				zArrayStatic<zU32> aIndices;
+				aIndices.SetCount(_rImGuiData->muIndexCount);
+				_rImGuiData->mrIndexBuffer = zenRes::zGfxIndex::Create(aIndices, zenConst::kePrimType_TriangleList);
 			}
-			idx_offset += pcmd->ElemCount;
 		}
-		vtx_offset += cmd_list->VtxBuffer.size();
-	}
 
-	zenRes::zGfxDrawcall::Submit(aDrawcalls);
+		//----------------------------------------------------------------------------
+		// Update content of vertex/index
+		ImDrawVert* pUIVertices = reinterpret_cast<ImDrawVert*>(_rImGuiData->mrVertexBuffer.Lock());
+		ImDrawIdx* pUIIndices = reinterpret_cast<ImDrawIdx*>(_rImGuiData->mrIndexBuffer.Lock());
+		for (int n = 0; n < pImGuiData->CmdListsCount; ++n)
+		{
+			const ImDrawList* cmd_list = pImGuiData->CmdLists[n];
+			zenMem::Copy(pUIVertices, &cmd_list->VtxBuffer[0], cmd_list->VtxBuffer.size());
+			zenMem::Copy(pUIIndices, &cmd_list->IdxBuffer[0], cmd_list->IdxBuffer.size());
+			pUIVertices += cmd_list->VtxBuffer.size();
+			pUIIndices += cmd_list->IdxBuffer.size();
+		}
+		_rImGuiData->mrVertexBuffer.Unlock();
+		_rImGuiData->mrIndexBuffer.Unlock();		
+	}
+	{
+		//----------------------------------------------------------------------------
+		// Emit drawcalls
+		zenPerf::zScopedEventCpu EmitEvent("ImGUI Emit Drawcalls");
+		int vtx_offset = 0;
+		int idx_offset = 0;
+		bool bFirst = true;
+		zArrayDynamic<zenGfx::zCommand> aDrawcalls;		
+		aDrawcalls.Reserve(pImGuiData->CmdListsCount);		
+		for (int n = 0; n < pImGuiData->CmdListsCount; n++)
+		{
+			const ImDrawList* cmd_list = pImGuiData->CmdLists[n];
+			zenRes::zGfxMeshStrip rMeshStrip = zenRes::zGfxMeshStrip::Create(_rImGuiData->mrVertexBuffer, _rImGuiData->mrIndexBuffer, mrShaderBinding, marShaderParams, 0, pImGuiData->TotalIdxCount, vtx_offset);
+			rMeshStrip.SetValue(zHash32("txFont"), mrFontTextureDefault, mrFontSampler);
+			rMeshStrip.SetValue(zHash32("ProjectionMatrix"), _rImGuiData->matOrthographic);
+			for (int cmd_i = 0; cmd_i < cmd_list->CmdBuffer.size(); cmd_i++)
+			{
+				zenPerf::zScopedEventCpu EmitEvent("ImGUI Draw test");
+				const ImDrawCmd* pcmd = &cmd_list->CmdBuffer[cmd_i];
+				if (pcmd->UserCallback)
+					pcmd->UserCallback(cmd_list, pcmd);
+				//else
+					//! @todo finish rMeshStrip.Draw(_rImGuiData->mrRenderpass, float(aDrawcalls.Count()), aDrawcalls, idx_offset, pcmd->ElemCount, zVec4U16(zU16(pcmd->ClipRect.x), zU16(pcmd->ClipRect.y), zU16(pcmd->ClipRect.z), zU16(pcmd->ClipRect.w)));
+
+				idx_offset += pcmd->ElemCount;
+			}
+			vtx_offset += cmd_list->VtxBuffer.size();
+		}
+
+		//! @todo finish zenGfx::zCommand::Submit(aDrawcalls);
+	}
 }
 
 } // namespace zxImGui

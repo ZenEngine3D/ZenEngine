@@ -37,12 +37,12 @@ public:
 		zU16							muPerStageTextureCount[zenConst::keShaderStage__Count];
 	};
 
-									ManagerRender();
 	virtual void					FrameBegin(zcRes::GfxWindowRef _FrameWindow);
 	virtual void					FrameEnd();
+	void							Render(zArrayDynamic<zEngineRef<zcGfx::Command>>& _aDrawcalls);
+	void							NamedEventBegin(const zStringHash32& zName);
+	void							NamedEventEnd();
 	
-	void							Render(zArrayDynamic<zenRes::zGfxDrawcall>& _aDrawcalls);
-	void							Render(const zenRes::zGfxDrawcall& _rDrawcall);
 //---------------------------------------------------------
 // DirectX device infos
 //---------------------------------------------------------
@@ -53,17 +53,18 @@ public:
 	void							UnbindTextures();
 	void							UnbindResources();
 protected:
-	ZENInline void					UpdateGPUState(const zenRes::zGfxDrawcall& _rDrawcall, RenderContext& _Context);
-	ZENInline void					UpdateShaderState(const zenRes::zGfxDrawcall& _rDrawcall, RenderContext& _Context);
+	ZENInline void					UpdateGPUState(const zEngineRef<zcGfx::Command>& _rDrawcall, RenderContext& _Context);
+	ZENInline void					UpdateShaderState(const zcGfx::CommandDraw& _Drawcall, RenderContext& _Context);
 
-	zenRes::zGfxDrawcall			mrPreviousDrawcall;	
+	zEngineRef<zcGfx::Command>		mrPreviousDrawcall;	
 	DXGI_FORMAT						meFormatConversion[zenConst::keTexFormat__Count];
-	D3D_DRIVER_TYPE					mDX11DriverType;
-	D3D_FEATURE_LEVEL				mDX11FeatureLevel;
-	ID3D11Device*					mDX11pDevice;
-	ID3D11DeviceContext*			mDX11pContextImmediate;	
-	bool							mbTextureUnbound = false;
-	bool							mbResourceUnbound = false;
+	D3D_DRIVER_TYPE					mDX11DriverType			= D3D_DRIVER_TYPE_NULL;
+	D3D_FEATURE_LEVEL				mDX11FeatureLevel		= D3D_FEATURE_LEVEL_11_0;
+	ID3D11Device*					mDX11pDevice			= nullptr;
+	ID3D11DeviceContext*			mDX11pContextImmediate	= nullptr;	
+	ID3DUserDefinedAnnotation*		mDX11pPerf				= nullptr;
+	bool							mbTextureUnbound		= false;
+	bool							mbResourceUnbound		= false;
 //---------------------------------------------------------
 // ManagerBase Section
 //---------------------------------------------------------

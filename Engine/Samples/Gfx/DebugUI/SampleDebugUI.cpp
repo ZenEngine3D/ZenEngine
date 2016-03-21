@@ -56,15 +56,6 @@ const zArrayStatic<zenRes::zGfxVertex::Element> aCubeVerticeInfos = {
 	zenRes::zGfxVertex::Element(zenConst::keShaderElemType_Float, 2, zenConst::keShaderSemantic_UV,			ZENMemberOffset(SimpleVertex, Tex) ) 
 };
 
-//SF++
-#if IMGUION
-const zArrayStatic<zenRes::zGfxVertex::Element> aUIVerticeInfos = {
-	zenRes::zGfxVertex::Element(zenConst::keShaderElemType_Float, 2, zenConst::keShaderSemantic_Position,	ZENMemberOffset(ImDrawVert, pos)),
-	zenRes::zGfxVertex::Element(zenConst::keShaderElemType_Float, 2, zenConst::keShaderSemantic_UV,			ZENMemberOffset(ImDrawVert, uv)),
-	zenRes::zGfxVertex::Element(zenConst::keShaderElemType_UByte, 4, zenConst::keShaderSemantic_Color,		ZENMemberOffset(ImDrawVert, col))
-};
-#endif
-
 bool SampleDebugUIInstance::IsDone()
 {
 	return false;
@@ -109,7 +100,6 @@ bool SampleDebugUIInstance::Init()
 	zArrayStatic<const zenRes::zShaderParameter*> aParamAll = { &zenRes::zShaderFloat4(zHash32("vMeshColor"),	zVec4F(.7f,.7f,.7f,1)),
 																&zenRes::zShaderFloat4(zHash32("vColor"),		zVec4F(1,1,1,1)) };
 
-
 	//---------------------------------------------------------------------
 	// Create rendering resources		
 	//---------------------------------------------------------------------	
@@ -123,7 +113,7 @@ bool SampleDebugUIInstance::Init()
 	
 	// Some bindings of render resource together
 	mrShaderBind									= zenRes::zGfxShaderBinding::Create(mrShaderVS, mrShaderPS);
-	mrCube3MeshStrip								= zenRes::zGfxMeshStrip::Create( mrCubeVertex, mrCubeIndex, mrShaderBind );
+	mrCubeMeshStrip									= zenRes::zGfxMeshStrip::Create( mrCubeVertex, mrCubeIndex, mrShaderBind );
 	mrStateRaster									= zenRes::zGfxStateRasterizer::Create(zenRes::zGfxStateRasterizer::Config());
 		
 	//-------------------------------------------------
@@ -135,18 +125,19 @@ bool SampleDebugUIInstance::Init()
 	zenMath::MatrixLookAtLH(matView, vEye, vAt, vUp );		
 	matWorld.SetIdentity();
 	matWorld.SetPos(zenMath::simdXYZW(3.0f, 0.0f, 0.0f, 1.0f));
-	mrCube3MeshStrip.SetValue( aParamAll );
-	mrCube3MeshStrip.SetValue( zHash32("View"),		matView );
-	mrCube3MeshStrip.SetValue( zHash32("Projection"),matProjection );		
-	mrCube3MeshStrip.SetValue( zHash32("World"),	matWorld );
-	mrCube3MeshStrip.SetValue( zHash32("txColor"),	mrTexture, mrSampler2);
-	mrCube3MeshStrip.SetValue( zHash32("vColor"),	zVec4F(1,1,1,1));
+	mrCubeMeshStrip.SetValue( aParamAll );
+	mrCubeMeshStrip.SetValue( zHash32("View"),		matView );
+	mrCubeMeshStrip.SetValue( zHash32("Projection"),matProjection );		
+	mrCubeMeshStrip.SetValue( zHash32("World"),		matWorld );
+	mrCubeMeshStrip.SetValue( zHash32("txColor"),	mrTexture, mrSampler2);
+	mrCubeMeshStrip.SetValue( zHash32("vColor"),	zVec4F(1,1,1,1));
 
 	return true;
 }
 
 void SampleDebugUIInstance::UpdateBackbuffers()
 {
+	zenPerf::zScopedEventCpu EmitEvent("UpdateBackbuffers");
 	if( !mrRndPassFinal.IsValid() || mrMainWindowGfx.PerformResize() )
 	{	
 		zVec2U16 vBackbufferDim = mrMainWindowGfx.GetBackbuffer().GetDim();
@@ -162,28 +153,6 @@ void SampleDebugUIInstance::UpdateBackbuffers()
 			mrRndPassFinal							= zenRes::zGfxRenderPass::Create("RenderBackbufferFinal", 2, FinalColorRTConfig, FinalDepthRTConfig, mrStateRaster);	
 			zenMath::MatrixProjectionLH( matProjection, 60, float(vBackbufferDim.y)/float(vBackbufferDim.x), 0.01f, 100.f );
 		}
-	#if IMGUION
-		{	// Rendering to UI
-			zenRes::zGfxRenderPass::ConfigColorRT	UIColorRTConfig;
-			zenRes::zGfxRenderPass::ConfigDepthRT	UIDepthRTConfig;
-			zenRes::zGfxStateRasterizer::Config		UIRasterConfig;
-			UIRasterConfig.mbScissorEnable			= true;
-			UIRasterConfig.mbShowBackface			= true;
-			UIRasterConfig.mbShowFrontface			= true;
-
-			mrUIRaster								= zenRes::zGfxStateRasterizer::Create(UIRasterConfig); 
-			UIColorRTConfig.mrTargetSurface			= mrMainWindowGfx.GetBackbuffer();
-			UIColorRTConfig.mbBlendEnable			= true;
-			UIColorRTConfig.meBlendColorSrc			= zenRes::zGfxRenderPass::ConfigColorRT::keBlendVal_SrcAlpha;
-			UIColorRTConfig.meBlendColorDest		= zenRes::zGfxRenderPass::ConfigColorRT::keBlendVal_InvSrcAlpha;
-			UIColorRTConfig.meBlendColorOp			= zenRes::zGfxRenderPass::ConfigColorRT::keBlendOp_Add;
-			UIColorRTConfig.meBlendAlphaSrc			= zenRes::zGfxRenderPass::ConfigColorRT::keBlendVal_Zero;
-			UIColorRTConfig.meBlendAlphaDest		= zenRes::zGfxRenderPass::ConfigColorRT::keBlendVal_One;
-			UIColorRTConfig.meBlendAlphaOp			= zenRes::zGfxRenderPass::ConfigColorRT::keBlendOp_Add;
-			mrUIRndPass								= zenRes::zGfxRenderPass::Create("RenderUI", 100, UIColorRTConfig, UIDepthRTConfig, mrUIRaster);
-			zenMath::MatrixProjectionOrthoLH(matUIOrthographic, vBackbufferDim.x, vBackbufferDim.y, 0, 1);
-		}
-	#endif
 	}
 }
 
@@ -195,9 +164,8 @@ void SampleDebugUIInstance::Destroy()
 void SampleDebugUIInstance::Update()
 {	
 	Super::Update();
-		
-	zArrayDynamic<zenRes::zGfxDrawcall> aDrawcalls;
-	aDrawcalls.Reserve(1000);
+	zenPerf::zScopedEventCpu EmitEvent("SampleDebugUIInstance::Update");
+
 	UpdateBackbuffers();
 
 	// Testing memory leaking
@@ -208,25 +176,39 @@ void SampleDebugUIInstance::Update()
 		i++;
 	}
 	#endif
-	
+
+	zenGfx::zContext rCxtRoot	= zenGfx::zContext::Create("Root");
+	zenGfx::zContext rCxt1		= zenGfx::zContext::Create("Context1", rCxtRoot, mrRndPassFinal);
+	zenGfx::zContext rCxt2		= zenGfx::zContext::Create("Context2", rCxtRoot, mrRndPassFinal);
+		
 	//---------------------------------------------------------------------
 	// Render loop
 	//---------------------------------------------------------------------	
-	mrMainWindowGfx.FrameBegin();
-	
-	float t = static_cast<float>(zenSys::GetElapsedSec() / 3.0);	// Update our time animation
+	{
+		zenPerf::zScopedEventCpu EmitEvent("FrameBegin");
+		mrMainWindowGfx.FrameBegin();
+	}
+	{
+		zenPerf::zScopedEventCpu EmitEvent("Draw");
+		float t = static_cast<float>(zenSys::GetElapsedSec() / 3.0);	// Update our time animation
 
-	zVec4F vClearColor = zenMath::TriLerp( zVec4F(0.05f,0.05f,0.05f,1), zVec4F(0.1f,0.1f,0.20f,1), zVec4F(0.05f,0.05f,0.05f,1), zenMath::Fract(t) );
-	aDrawcalls.Push( zenRes::zGfxDrawcall::ClearColor(mrRndPassFinal, 0, mrMainWindowGfx.GetBackbuffer(), vClearColor) );
-	aDrawcalls.Push( zenRes::zGfxDrawcall::ClearDepthStencil(mrRndPassFinal, 0, mrBackbufferDepth) );
-
-	matWorld.SetRotationY( t );	// Rotate cube around the origin 				
-	mrCube3MeshStrip.SetValue( zHash32("World"), matWorld );
-	mrCube3MeshStrip.SetValue( zHash32("Projection"), matProjection );
-	mrCube3MeshStrip.Draw(mrRndPassFinal, 0, aDrawcalls);
+		zVec4F vClearColor = zenMath::TriLerp( zVec4F(0.05f,0.05f,0.05f,1), zVec4F(0.1f,0.1f,0.20f,1), zVec4F(0.05f,0.05f,0.05f,1), zenMath::Fract(t) );
+		zenGfx::zCommand::ClearColor(rCxt1, mrMainWindowGfx.GetBackbuffer(), vClearColor);
+		zenGfx::zCommand::ClearDepthStencil(rCxt1, mrBackbufferDepth);
 	
-	zenRes::zGfxDrawcall::Submit(aDrawcalls);	
-	mrMainWindowGfx.FrameEnd();
+		matWorld.SetRotationY( t );	// Rotate cube around the origin 				
+		mrCubeMeshStrip.SetValue( zHash32("World"), matWorld );
+		mrCubeMeshStrip.SetValue( zHash32("Projection"), matProjection );
+		zenGfx::zCommand::DrawMesh(rCxt1, 0, mrCubeMeshStrip);
+	}
+	{
+		zenPerf::zScopedEventCpu EmitEvent("Submit");
+		rCxtRoot.Submit();		
+	}
+	{
+		zenPerf::zScopedEventCpu EmitEvent("FrameEnd");
+		mrMainWindowGfx.FrameEnd();
+	}
 
 }
 }

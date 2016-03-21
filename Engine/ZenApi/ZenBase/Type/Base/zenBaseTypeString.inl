@@ -100,8 +100,8 @@ void zString::Merge(const zArrayStatic<zString>& _aStrings, char _Separator, zIn
 //=================================================================================================		
 template<class THashType>
 zStringHash<THashType>::zStringHash(const char* _zString)
-	: mzName(_zString)
-	, mhName(_zString)
+: mzName(_zString)
+, mhName(_zString)
 {
 }
 

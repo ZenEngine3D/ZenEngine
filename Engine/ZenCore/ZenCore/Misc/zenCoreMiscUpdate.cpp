@@ -33,7 +33,7 @@ void IUpdate::Activate(zenConst::eUpdatePriority _ePriorityGroup, zU32 _uPriorit
 		++it;
 
 	if( it.IsValid() )
-		it.InsertBefore(*this);
+		it.AddBefore(*this);
 	else
 		zcMgr::Updater.mlstUpdateable[mePriorityGroup].PushTail(*this);
 }

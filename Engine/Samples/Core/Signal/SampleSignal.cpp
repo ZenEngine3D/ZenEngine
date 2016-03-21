@@ -26,7 +26,7 @@ protected:
 	zString mzDisplayName;
 };
 
-class PerfSlotCallback0 : public zList2xNode
+class PerfSlotCallback0
 {
 public:
 	PerfSlotCallback0()
@@ -39,6 +39,9 @@ public:
 		++sCounter;
 	}
 	void (*mpCallback)();
+
+	zListLink mlstLink;
+	typedef zList<PerfSlotCallback0, &PerfSlotCallback0::mlstLink> TypeList;
 };
 
 class TestSlotConnection : public zenSig::zSlot
@@ -105,20 +108,18 @@ void SampleSignal()
 	//--------------------------------------------------------
 	// Callback
 	//--------------------------------------------------------		
-	PerfSlotCallback0	Callback0;
-	zList2x				lstListener0;
-	lstListener0.AddHead(&Callback0);
+	PerfSlotCallback0			Callback0;
+	PerfSlotCallback0::TypeList	lstListener0;
+	lstListener0.PushHead(Callback0);
 
-	zU64 uCallbackTime		= zenSys::GetTimeUSec();
+	zU64 uCallbackTime = zenSys::GetTimeUSec();
 	for (zU32 i = 0; i <kLoopCount; ++i)
 	{
-		zList2xNode* pListenerCur	= lstListener0.GetHead();
-		const zList2xNode* pInvalid = lstListener0.GetInvalid();
-		while( pListenerCur != pInvalid )
+		PerfSlotCallback0* pListenerCur	= lstListener0.GetHead();
+		while( pListenerCur )
 		{
-			PerfSlotCallback0* pListener	= static_cast<PerfSlotCallback0*>(pListenerCur);
-			pListenerCur					= pListenerCur->LstNext();
-			pListener->mpCallback();
+			pListenerCur->mpCallback();
+			pListenerCur = lstListener0.GetNext(*pListenerCur);
 		}
 	}
 	uCallbackTime			= zenSys::GetTimeUSec() - uCallbackTime;

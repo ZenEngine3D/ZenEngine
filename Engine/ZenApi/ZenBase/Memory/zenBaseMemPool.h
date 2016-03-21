@@ -34,13 +34,25 @@ public:
 			void			SetIncreaseCount	(zU32 _uIncreaseCount);
 			void			Clear				();
 protected:	
-	zUInt					mPoolReservedCount;	//!< Number of pool item reserved
-	size_t					mPoolItemSize;		//!< Size of each pool item
+	zU32					mPoolReservedCount;	//!< Number of pool item reserved
+	zU32					mPoolItemSize;		//!< Size of each pool item
 	zU32					mPoolItemIncrease;	//!< Amount of new item when pool runs out of item (0 for none)
 	zU32					mPoolItemAlign;		//!< Each item alignment
-	zUInt					mPoolItemCountInit; //!< Original pool item reserved
-	zList1x					mlstFreeItems;		//!< List of the free pre-allocated items	
-	zList1x					mlstAlloc;			//!< List of allocations done from mpAllocator to reserve space in the pool
+	zU32					mPoolItemCountInit; //!< Original pool item reserved
+	
+	struct PoolAlloc
+	{
+		zListLink mlnkList;
+		typedef zList<PoolAlloc, &PoolAlloc::mlnkList> TypeList;
+	};
+	struct PoolItem
+	{	
+		zListLink mlnkList;
+		typedef zList<PoolItem, &PoolItem::mlnkList> TypeList;
+	};
+
+	PoolItem::TypeList		mlstFreeItems;		//!< List of the free pre-allocated items	
+	PoolAlloc::TypeList		mlstAlloc;			//!< List of allocations done from mpAllocator to reserve space in the pool
 };
 
 } } //namespace zen { namespace zenMem

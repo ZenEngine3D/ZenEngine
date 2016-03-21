@@ -115,9 +115,9 @@ namespace zen { namespace zenMath
 	zU8 BitsCount( zU64 _uValue )
 	{
 	#if _M_AMD64
-		return static_cast<zUInt>(__popcnt64(_uValue));
+		return static_cast<zU8>(__popcnt64(_uValue));
 	#else
-		return static_cast<zUInt>(__popcnt(static_cast<zU32>(_uValue)) + __popcnt(static_cast<zU32>(_uValue>>32)));
+		return static_cast<zU8>(__popcnt(static_cast<zU32>(_uValue)) + __popcnt(static_cast<zU32>(_uValue>>32)));
 	#endif
 	}
 

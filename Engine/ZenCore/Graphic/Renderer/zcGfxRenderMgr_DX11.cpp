@@ -10,14 +10,6 @@ ManagerRender::RenderContext::RenderContext()
 	zenMem::Zero(muPerStageTextureCount, sizeof(muPerStageTextureCount));
 }
 
-ManagerRender::ManagerRender()
-: mDX11DriverType(D3D_DRIVER_TYPE_NULL)
-, mDX11FeatureLevel(D3D_FEATURE_LEVEL_11_0)
-, mDX11pDevice(nullptr)
-, mDX11pContextImmediate(nullptr)
-{
-}
-
 bool ManagerRender::Load()
 {	
 	HRESULT hr	= S_OK;
@@ -61,40 +53,61 @@ bool ManagerRender::Load()
 
 	if( FAILED( hr ) )
 		return FALSE;
-	
+
+	hr = mDX11pContextImmediate->QueryInterface( __uuidof(mDX11pPerf), reinterpret_cast<void**>(&mDX11pPerf) );	
+	if( FAILED( hr ) )
+		return FALSE;
+
 	return TRUE;
 }
 
 bool ManagerRender::Unload()
 {
+	if( mDX11pPerf ) 
+		mDX11pPerf->Release();
+
 	if( mDX11pContextImmediate )
 	{	
 		mDX11pContextImmediate->ClearState();
 		mDX11pContextImmediate->Release();
 	}
 	if( mDX11pDevice )				
-		mDX11pDevice->Release();	
+		mDX11pDevice->Release();
+
+	mDX11pPerf				= nullptr;
+	mDX11pContextImmediate	= nullptr;
+	mDX11pDevice			= nullptr;
+	
 	return true;
 }
 
 void ManagerRender::FrameBegin(zcRes::GfxWindowRef _FrameWindow)
 {
 	Super::FrameBegin(_FrameWindow);
+	zcGfx::Command::ResetCommandCount();
 	mrPreviousDrawcall = nullptr;
 }
 
 void ManagerRender::FrameEnd()
 {	
-	mrWindowCurrent->GetProxy()->mDX11pSwapChain->Present( 1, 0 );
+	mrWindowCurrent->GetProxy()->mDX11pSwapChain->Present( 0, 0 );
 	UnbindResources();
 	Super::FrameEnd();
 }
 
-void ManagerRender::Render(const zenRes::zGfxDrawcall& _rDrawcall)
+void ManagerRender::NamedEventBegin(const zStringHash32& zName)
 {
+	WCHAR zEventName[64];
+	mbstowcs_s(nullptr, zEventName, zName.mzName, ZENArrayCount(zEventName));
+	mDX11pPerf->BeginEvent(zEventName);
 }
 
-void ManagerRender::UpdateGPUState(const zenRes::zGfxDrawcall& _rDrawcall, RenderContext& _Context)
+void ManagerRender::NamedEventEnd()
+{
+	mDX11pPerf->EndEvent();
+}
+
+void ManagerRender::UpdateGPUState(const zEngineRef<zcGfx::Command>& _rDrawcall, RenderContext& _Context)
 {
 	if( _Context.mrRenderpass != _rDrawcall->mrRenderPass )
 	{			
@@ -127,10 +140,10 @@ void ManagerRender::UpdateGPUState(const zenRes::zGfxDrawcall& _rDrawcall, Rende
 	}
 }
 
-void ManagerRender::UpdateShaderState(const zenRes::zGfxDrawcall& _rDrawcall, RenderContext& _Context)
+void ManagerRender::UpdateShaderState(const zcGfx::CommandDraw& _Drawcall, RenderContext& _Context)
 {
 	UINT UnusedOffset = 0;
-	const zcRes::GfxMeshStripRef& rMeshStrip		= _rDrawcall->mrMeshStrip;
+	const zcRes::GfxMeshStripRef& rMeshStrip		= _Drawcall.mrMeshStrip;
 	const zcRes::GfxVertexRef& rVertex				= rMeshStrip->GetProxy()->mrInputStreamProxy->GetProxy()->mrVertexProxy;
 	const zcRes::GfxIndexRef& rIndex				= rMeshStrip->GetProxy()->mrIndexBufferProxy;
 	const zcRes::GfxShaderBindingRef rShaderBind	= rMeshStrip->GetProxy()->mrShaderBindingProxy;
@@ -154,14 +167,14 @@ void ManagerRender::UpdateShaderState(const zenRes::zGfxDrawcall& _rDrawcall, Re
 		_Context.mrShaderPixel = rShaderBind->GetProxy()->mrProxShaderPixel;
 		mDX11pContextImmediate->PSSetShader( _Context.mrShaderPixel->GetProxy()->mpPixelShader, nullptr, 0 );
 	}
-	if(_Context.mbScreenScissorOn && _Context.mvScreenScissor != _rDrawcall->mvScreenScissor )
+	if(_Context.mbScreenScissorOn && _Context.mvScreenScissor != _Drawcall.mvScreenScissor )
 	{
-		_Context.mvScreenScissor = _rDrawcall->mvScreenScissor;
+		_Context.mvScreenScissor = _Drawcall.mvScreenScissor;
 		D3D11_RECT ScissorRect;
-		ScissorRect.left	= _rDrawcall->mvScreenScissor.x;
-		ScissorRect.top		= _rDrawcall->mvScreenScissor.y;
-		ScissorRect.right	= zenMath::Min<zU16>(_rDrawcall->mvScreenScissor.z, _Context.mrStateView->GetProxy()->mViewport.Width);
-		ScissorRect.bottom	= zenMath::Min<zU16>(_rDrawcall->mvScreenScissor.w, _Context.mrStateView->GetProxy()->mViewport.Height);
+		ScissorRect.left	= _Drawcall.mvScreenScissor.x;
+		ScissorRect.top		= _Drawcall.mvScreenScissor.y;
+		ScissorRect.right	= zenMath::Min<zU16>(_Drawcall.mvScreenScissor.z, _Context.mrStateView->GetProxy()->mViewport.Width);
+		ScissorRect.bottom	= zenMath::Min<zU16>(_Drawcall.mvScreenScissor.w, _Context.mrStateView->GetProxy()->mViewport.Height);
 		mDX11pContextImmediate->RSSetScissorRects(1, &ScissorRect);
 	}
 	
@@ -237,33 +250,73 @@ void ManagerRender::UpdateShaderState(const zenRes::zGfxDrawcall& _rDrawcall, Re
 	mbResourceUnbound	= false;
 }
 
-void ManagerRender::Render(zArrayDynamic<zenRes::zGfxDrawcall>& _aDrawcalls)
+//void ManagerRender::Render(zArrayDynamic<zenGfx::zCommand>& _aDrawcalls)
+void ManagerRender::Render(zArrayDynamic<zEngineRef<zcGfx::Command>>& _aDrawcalls)
 {	
 	if(_aDrawcalls.Count() )
 	{
-		_aDrawcalls.Sort();
+		//_aDrawcalls.Sort(); //! @todo urgent readd sorting
+		RenderContext				Context;
+		zEngineRef<zcGfx::Command>*	prDrawcall = _aDrawcalls.First();
+		for(zUInt i(0), count(_aDrawcalls.Count()); i<count; ++i, ++prDrawcall)
+		{	
+			if( (*prDrawcall).IsValid() && (*prDrawcall)->mrRenderPass.IsValid() )
+			{	
+				// Render Commands other than Draw/Compute
+				//! @todo Perf test compared to virtual method
+				if( (*prDrawcall)->mbIsCommandDraw )
+				{
+					zcGfx::CommandDraw* pCommandDraw = static_cast<zcGfx::CommandDraw*>( (*prDrawcall).Get() );
+					if( pCommandDraw->mrMeshStrip.IsValid() )
+					{
+						const zcRes::GfxMeshStripRef& rMeshStrip = pCommandDraw->mrMeshStrip;
+						UpdateGPUState(*prDrawcall, Context);
+						UpdateShaderState(*pCommandDraw, Context);
+						mDX11pContextImmediate->DrawIndexed(pCommandDraw->muIndexCount, pCommandDraw->muIndexFirst, rMeshStrip->GetProxy()->muVertexFirst);
+					}
+				}
+				// All other type of command use 'slower' virtual method 'invoke' instead of type casting
+				else 
+				{
+					(*prDrawcall)->Invoke();					
+				}
+				
+			}
+		}
+		mrPreviousDrawcall = *_aDrawcalls.Last();
+
+		
+		/*
+		//_aDrawcalls.Sort(); //! @todo urgent readd sorting
 		RenderContext			Context;
-		zenRes::zGfxDrawcall*	pDrawcall = _aDrawcalls.First();
+		zenGfx::zCommand*	pDrawcall = _aDrawcalls.First();
 		for(zUInt i(0), count(_aDrawcalls.Count()); i<count; ++i, ++pDrawcall)
 		{	
 			if( (*pDrawcall).IsValid() && (*pDrawcall)->mrRenderPass.IsValid() )
 			{	
 				// Render Commands other than Draw/Compute
-				if( (*pDrawcall)->mSortId.muGPUPipelineMode == Drawcall::keGpuPipe_PreDrawCommand || 
-					(*pDrawcall)->mSortId.muGPUPipelineMode == Drawcall::keGpuPipe_PostDrawCommand )
+				//! @todo Perf test compared to virtual method
+				if( (*pDrawcall)->mbIsCommandDraw )
+				{
+					zcGfx::CommandDraw* pCommandDraw = static_cast<zcGfx::CommandDraw*>( (*pDrawcall).Get() );
+					if( pCommandDraw->mrMeshStrip.IsValid() )
+					{
+						const zcRes::GfxMeshStripRef& rMeshStrip = pCommandDraw->mrMeshStrip;
+						UpdateGPUState(*pDrawcall, Context);
+						UpdateShaderState(*pCommandDraw, Context);
+						mDX11pContextImmediate->DrawIndexed(pCommandDraw->muIndexCount, pCommandDraw->muIndexFirst, rMeshStrip->GetProxy()->muVertexFirst);
+					}
+				}
+				// All other type of command use 'slower' virtual method 'invoke' instead of type casting
+				else 
 				{
 					(*pDrawcall)->Invoke();					
 				}
-				else if( (*pDrawcall)->mrMeshStrip.IsValid() )
-				{
-					const zcRes::GfxMeshStripRef& rMeshStrip = (*pDrawcall)->mrMeshStrip;
-					UpdateGPUState(*pDrawcall, Context);
-					UpdateShaderState(*pDrawcall, Context);
-					mDX11pContextImmediate->DrawIndexed( rMeshStrip->GetProxy()->muIndexCount, rMeshStrip->GetProxy()->muIndexFirst, rMeshStrip->GetProxy()->muVertexFirst);
-				}
+				
 			}
 		}
 		mrPreviousDrawcall = *_aDrawcalls.Last();
+		*/
 	}
 }
 

@@ -31,12 +31,13 @@ void GfxWindow::FrameEnd()
 	GfxWindow* pCurrentWindow = zcMgr::GfxRender.GetWindowCurrent().Get();
 	ZENAssertMsg( this == pCurrentWindow, "Ending frame with different window than started");
 	
-	//! @todo clean temp debugging	
-	WindowInputState InputData;
-	mpMainWindowOS->GetInput(InputData, 8); //! @todo urgent cleanup this messy access
-
-	mrImGuiData->mrRendertarget = GetBackbuffer();
-	zxImGui::zxImGUIHelper::Get().Render(mrImGuiData, &InputData);
+	//! @todo clean temp debugging
+	{		
+		WindowInputState InputData;
+		mpMainWindowOS->GetInput(InputData, 8); //! @todo urgent cleanup this messy access
+		mrImGuiData->mrRendertarget = GetBackbuffer();
+		zxImGui::zxImGUIHelper::Get().Render(mrImGuiData, &InputData);
+	}
 	zcMgr::GfxRender.FrameEnd();
 }
 
