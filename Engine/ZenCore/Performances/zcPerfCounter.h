@@ -5,29 +5,43 @@
 namespace zcPerf 
 {
 
-class zeEventBase : public zRefCounted
+class EventBase : public zRefCounted
 {
-ZENClassDeclare(zeEventBase, zRefCounted)
+ZENClassDeclare(EventBase, zRefCounted)
 protected:	
 	zListLink				mlnkChild;
 public:		
-	typedef zList<zeEventBase, &zeEventBase::mlnkChild> TypeListChild;
+	typedef zList<EventBase, &EventBase::mlnkChild> TypeListChild;
 	
-							zeEventBase(const zStringHash32& _zEventName);
-	virtual					~zeEventBase();
-	virtual void 			Start() = 0;
-	virtual void 			Stop() = 0;
-	void					AddChild(zeEventBase& _Child);
-	ZENInline double		GetElapsedMs(){ return muTimeElapsed/1000.0; }
-	void					ShowStats( const zEngineRef<zeEventBase>& _rParent, double _fTotalTime, zUInt& _uItemCount, zUInt _uDepth );
-//! @todo Urgent add accessors
-//protected:
-	zStringHash32			mzEventName		= zStringHash32("Unassigned");
-	zU64					muTimeStart		= 0;
-	zU64					muTimeElapsed	= 0;
-	
-	TypeListChild			mlstChilds;
+									EventBase(const zStringHash32& _zEventName);
+	virtual							~EventBase();
+	virtual void 					Start() = 0;
+	virtual void 					Stop() = 0;
+	virtual double					GetElapsedMs();
+
+	bool							IsActive()const;
+	void							AddChild(EventBase& _Child);	
+	void							ShowStats( const zEngineRef<EventBase>& _rParent, double _fTotalTime, zUInt& _uItemCount, zUInt _uDepth );
+	ZENInline const zStringHash32&	GetName()const;
+	ZENInline zEngineRef<EventBase>	GetFirstChild()const;
+
+protected:	
+	zStringHash32					mzEventName		= zStringHash32("Unassigned");
+	zU64							muTimeStart		= 0;
+	zU64							muTimeElapsed	= 0;
+	bool							mbActive		= false;
+	TypeListChild					mlstChilds;
 };
+
+const zStringHash32& EventBase::GetName()const
+{
+	return mzEventName;
+}
+
+zEngineRef<EventBase> EventBase::GetFirstChild()const
+{
+	return mlstChilds.GetHead();
+}
 
 }
 

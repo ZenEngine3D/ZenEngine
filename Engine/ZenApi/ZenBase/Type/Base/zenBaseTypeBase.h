@@ -34,6 +34,12 @@ constexpr size_t zenOffsetOf(TMemberClass TClass::*member)
 	return (char*)&((TClass*)nullptr->*member) - (char*)nullptr;
 }
 
+template<typename TClass, typename TMemberClass>
+constexpr size_t zenOffsetAfter(TMemberClass TClass::*member)
+{
+	return (char*)&((TClass*)nullptr->*member) - (char*)nullptr + sizeof( TMemberClass );
+}
+
 template<typename T> void zenSwap(T& _Val1, T& _Val2)
 {
 	T Temp(_Val2);

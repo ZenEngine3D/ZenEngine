@@ -10,6 +10,11 @@ zContext zContext::Create(const zStringHash32& _zContextName, const zContext& _r
 	return rContext;
 }
 
+zContext zContext::Create(const zStringHash32& _zContextName, const zenRes::zGfxRenderPass& _rRenderState)
+{
+	return Create(_zContextName, zContext(), _rRenderState);
+}
+
 void zContext::Submit()
 {
 	GetSafe()->Submit();

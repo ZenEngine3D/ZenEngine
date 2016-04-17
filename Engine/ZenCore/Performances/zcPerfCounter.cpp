@@ -3,14 +3,14 @@
 namespace zcPerf 
 {
 
-zeEventBase::zeEventBase(const zStringHash32& _zEventName)
+EventBase::EventBase(const zStringHash32& _zEventName)
 : mzEventName(_zEventName)
 {
 }
 
-zeEventBase::~zeEventBase()
+EventBase::~EventBase()
 {
-	zeEventBase* pCounter = mlstChilds.PopHead();
+	EventBase* pCounter = mlstChilds.PopHead();
 	while( pCounter )
 	{
 		pCounter->ReferenceRem();
@@ -18,10 +18,21 @@ zeEventBase::~zeEventBase()
 	}
 }
 
-void zeEventBase::AddChild(zeEventBase& _Child)
+bool EventBase::IsActive() const
+{
+	return mbActive;
+}
+
+double EventBase::GetElapsedMs()
+{ 
+	return muTimeElapsed/1000.0; 
+}
+
+void EventBase::AddChild(EventBase& _Child)
 {
 	_Child.ReferenceAdd();
 	mlstChilds.PushTail(_Child);
 }
+
 
 }

@@ -2,12 +2,12 @@
 #ifndef __LibZenEngine_Perf_h__
 #define __LibZenEngine_Perf_h__
 
-namespace zcPerf{ class zeEventBase; }
+namespace zcPerf{ class EventBase; }
 
 namespace zen { namespace zenPerf 
 {
 
-class zEventRef : public zEngineRef<zcPerf::zeEventBase>
+class zEventRef : public zEngineRef<zcPerf::EventBase>
 {
 ZENClassDeclare(zEventRef, zEngineRef);
 public:
@@ -20,11 +20,11 @@ public:
 	zEventRef				GetNext() const;
 	zEventRef				GetPrev() const;
 	const zStringHash32&	GetName() const;
+	using zEngineRef<zcPerf::EventBase>::operator=;
 protected:
 					//	zEventRef(const zEventRef& _Copy);
-					//	zEventRef(zcPerf::zeCounterBase* _pCounter);
-	using zEngineRef<zcPerf::zeEventBase>::operator=;
-	//void operator=(zEngineRef<zcPerf::zeEventBase>);
+					//	zEventRef(zcPerf::zeCounterBase* _pCounter);	
+					//void operator=(zEngineRef<zcPerf::zeEventBase>);
 };
 
 class zScopedEventCpu

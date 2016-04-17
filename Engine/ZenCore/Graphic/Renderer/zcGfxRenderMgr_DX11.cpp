@@ -5,6 +5,118 @@ namespace zcMgr { zcGfx::ManagerRender GfxRender; }
 namespace zcGfx
 {
 
+zList<DX11QueryDisjoint, &DX11QueryDisjoint::mlstLink>	DX11QueryDisjoint::slstQueryCreated;
+zList<DX11QueryTimestamp, &DX11QueryTimestamp::mlstLink> DX11QueryTimestamp::slstQueryCreated;
+
+DX11QueryDisjoint::DX11QueryDisjoint()
+{
+	D3D11_QUERY_DESC QueryDesc;
+	QueryDesc.Query		= D3D11_QUERY_TIMESTAMP_DISJOINT;
+	QueryDesc.MiscFlags	= 0;
+	HRESULT result		= zcMgr::GfxRender.DX11GetDevice()->CreateQuery(&QueryDesc, &mpDX11Query);
+	ZENAssert(result == S_OK);
+	slstQueryCreated.PushHead(*this);
+}
+
+void DX11QueryDisjoint::ReferenceNoneCB()
+{
+	slstQueryCreated.PushHead(*this);
+}
+
+
+void DX11QueryDisjoint::Start()
+{
+	muFrameStop				= zUInt(-1);
+	mbValidResult			= false;
+	mDisjointInfo.Disjoint	= true;
+	zcMgr::GfxRender.DX11GetDeviceContext()->Begin(mpDX11Query);	
+}
+
+void DX11QueryDisjoint::Stop()
+{
+	if( muFrameStop )
+	{
+		muFrameStop	= zcMgr::GfxRender.GetFrameRendered();
+		zcMgr::GfxRender.DX11GetDeviceContext()->End(mpDX11Query);
+	}
+}
+
+zU64 DX11QueryDisjoint::GetClockRate()
+{
+	ZENAssertMsg(muFrameStop != zUInt(-1), "Query need to be started and stopped before we get results back");
+	ZENAssertMsg(muFrameStop < zcMgr::GfxRender.GetFrameRendered(), "Must wait a complete frame before getting results");
+	if( !mbValidResult ) 
+	{		
+		HRESULT result	= zcMgr::GfxRender.DX11GetDeviceContext()->GetData(mpDX11Query, &mDisjointInfo, sizeof(mDisjointInfo), 0);
+		mbValidResult	= (result == S_OK);
+	}
+	return mDisjointInfo.Disjoint ? 0 : mDisjointInfo.Frequency;
+}
+
+zEngineRef<DX11QueryDisjoint> DX11QueryDisjoint::Create()
+{	
+	const zUInt uGrowSize = 8;
+	if( slstQueryCreated.IsEmpty() )
+	{
+		for(zUInt idx(0); idx<uGrowSize; ++idx)
+			zenNewDefault DX11QueryDisjoint();
+	}
+	return slstQueryCreated.PopTail();
+}
+
+DX11QueryTimestamp::DX11QueryTimestamp()
+{
+	D3D11_QUERY_DESC QueryDesc;
+	QueryDesc.Query		= D3D11_QUERY_TIMESTAMP;
+	QueryDesc.MiscFlags	= 0;
+	HRESULT result		= zcMgr::GfxRender.DX11GetDevice()->CreateQuery(&QueryDesc, &mpDX11Query);
+	ZENAssert(result == S_OK);
+	slstQueryCreated.PushHead(*this);
+}
+
+void DX11QueryTimestamp::ReferenceNoneCB()
+{
+	if( mrQueryDisjoint.IsValid() )
+	{
+		zU64 uDiscard = GetTimestampUSec(); // This prevents DX warning about starting a new query(when query reused), without having retrieved the value first
+		mrQueryDisjoint	= nullptr;
+		mbValidResult	= false;
+	}
+	slstQueryCreated.PushHead(*this);
+}
+
+zU64 DX11QueryTimestamp::GetTimestampUSec()
+{	
+	if( mbValidResult == false )
+	{
+		zU64 uClockRate = mrQueryDisjoint->GetClockRate();		
+		if( uClockRate != 0 )
+		{
+			zcMgr::GfxRender.DX11GetDeviceContext()->GetData(mpDX11Query, &muTimestamp, sizeof(muTimestamp), 0);
+			muTimestamp		= uClockRate ? (muTimestamp*1000*1000/uClockRate) : 0;
+			mbValidResult	= true;
+		}
+	}
+	return muTimestamp;
+}
+
+zEngineRef<DX11QueryTimestamp> DX11QueryTimestamp::Create()
+{	
+	const zUInt uGrowSize = 128;
+	if( slstQueryCreated.IsEmpty() )
+	{
+		for(zUInt idx(0); idx<uGrowSize; ++idx)
+			zenNewDefault DX11QueryTimestamp();
+	}
+
+	DX11QueryTimestamp* pQuery	= slstQueryCreated.PopTail();
+	pQuery->mrQueryDisjoint		= zcMgr::GfxRender.GetQueryDisjoint();
+	pQuery->mbValidResult		= false;
+	pQuery->muTimestamp			= 0;
+	zcMgr::GfxRender.DX11GetDeviceContext()->End(pQuery->mpDX11Query);
+	return pQuery;
+}
+
 ManagerRender::RenderContext::RenderContext()
 {
 	zenMem::Zero(muPerStageTextureCount, sizeof(muPerStageTextureCount));
@@ -44,7 +156,7 @@ bool ManagerRender::Load()
 		nullptr, 
 		createDeviceFlags, 
 		aFeatureLevels.First(),
-		aFeatureLevels.Count(),
+		(UINT)aFeatureLevels.Count(),
 		D3D11_SDK_VERSION, 
 		&mDX11pDevice, 
 		&mDX11FeatureLevel, 
@@ -85,26 +197,40 @@ void ManagerRender::FrameBegin(zcRes::GfxWindowRef _FrameWindow)
 {
 	Super::FrameBegin(_FrameWindow);
 	zcGfx::Command::ResetCommandCount();
-	mrPreviousDrawcall = nullptr;
+	mrPreviousDrawcall		= nullptr;
+	mbDX11ProfilerDetected	= mDX11pPerf && mDX11pPerf->GetStatus();
+	mrQueryDisjoint			= DX11QueryDisjoint::Create();
+	mrQueryDisjoint->Start();
+	
 }
 
 void ManagerRender::FrameEnd()
 {	
-	mrWindowCurrent->GetProxy()->mDX11pSwapChain->Present( 0, 0 );
+	mrQueryDisjoint->Stop();		
+	gWindowRender->GetProxy()->mDX11pSwapChain->Present( 0, 0 );	
 	UnbindResources();
 	Super::FrameEnd();
 }
 
 void ManagerRender::NamedEventBegin(const zStringHash32& zName)
 {
-	WCHAR zEventName[64];
-	mbstowcs_s(nullptr, zEventName, zName.mzName, ZENArrayCount(zEventName));
-	mDX11pPerf->BeginEvent(zEventName);
+	if( mbDX11ProfilerDetected )
+	{
+		WCHAR zEventName[64];
+		mbstowcs_s(nullptr, zEventName, zName.mzName, ZENArrayCount(zEventName));
+		mDX11pPerf->BeginEvent(zEventName);
+	}
 }
 
 void ManagerRender::NamedEventEnd()
 {
-	mDX11pPerf->EndEvent();
+	if( mbDX11ProfilerDetected )
+		mDX11pPerf->EndEvent();
+}
+
+const zEngineRef<DX11QueryDisjoint>& ManagerRender::GetQueryDisjoint()const
+{
+	return mrQueryDisjoint;
 }
 
 void ManagerRender::UpdateGPUState(const zEngineRef<zcGfx::Command>& _rDrawcall, RenderContext& _Context)
@@ -173,8 +299,8 @@ void ManagerRender::UpdateShaderState(const zcGfx::CommandDraw& _Drawcall, Rende
 		D3D11_RECT ScissorRect;
 		ScissorRect.left	= _Drawcall.mvScreenScissor.x;
 		ScissorRect.top		= _Drawcall.mvScreenScissor.y;
-		ScissorRect.right	= zenMath::Min<zU16>(_Drawcall.mvScreenScissor.z, _Context.mrStateView->GetProxy()->mViewport.Width);
-		ScissorRect.bottom	= zenMath::Min<zU16>(_Drawcall.mvScreenScissor.w, _Context.mrStateView->GetProxy()->mViewport.Height);
+		ScissorRect.right	= zenMath::Min<zU16>(_Drawcall.mvScreenScissor.z, (zU16)_Context.mrStateView->GetProxy()->mViewport.Width);
+		ScissorRect.bottom	= zenMath::Min<zU16>(_Drawcall.mvScreenScissor.w, (zU16)_Context.mrStateView->GetProxy()->mViewport.Height);
 		mDX11pContextImmediate->RSSetScissorRects(1, &ScissorRect);
 	}
 	
@@ -207,7 +333,7 @@ void ManagerRender::UpdateShaderState(const zcGfx::CommandDraw& _Drawcall, Rende
 		auPerStageTextureCount[stageIdx]	= 0;
 		abSamplerChanged[stageIdx]			= false;
 		abTextureChanged[stageIdx]			= mbTextureUnbound;
-		for( zUInt textureIdx(0); textureIdx<textureCount; ++textureIdx )
+		for( zU16 textureIdx(0); textureIdx<textureCount; ++textureIdx )
 		{
 			zcRes::GfxTexture2dRef rTexture	= rMeshStrip->GetProxy()->marTextureProxy[stageIdx][textureIdx];
 			zcRes::GfxSamplerRef rSampler	= rMeshStrip->GetProxy()->marGfxSamplerProxy[stageIdx][textureIdx];
@@ -250,7 +376,6 @@ void ManagerRender::UpdateShaderState(const zcGfx::CommandDraw& _Drawcall, Rende
 	mbResourceUnbound	= false;
 }
 
-//void ManagerRender::Render(zArrayDynamic<zenGfx::zCommand>& _aDrawcalls)
 void ManagerRender::Render(zArrayDynamic<zEngineRef<zcGfx::Command>>& _aDrawcalls)
 {	
 	if(_aDrawcalls.Count() )
@@ -284,39 +409,6 @@ void ManagerRender::Render(zArrayDynamic<zEngineRef<zcGfx::Command>>& _aDrawcall
 			}
 		}
 		mrPreviousDrawcall = *_aDrawcalls.Last();
-
-		
-		/*
-		//_aDrawcalls.Sort(); //! @todo urgent readd sorting
-		RenderContext			Context;
-		zenGfx::zCommand*	pDrawcall = _aDrawcalls.First();
-		for(zUInt i(0), count(_aDrawcalls.Count()); i<count; ++i, ++pDrawcall)
-		{	
-			if( (*pDrawcall).IsValid() && (*pDrawcall)->mrRenderPass.IsValid() )
-			{	
-				// Render Commands other than Draw/Compute
-				//! @todo Perf test compared to virtual method
-				if( (*pDrawcall)->mbIsCommandDraw )
-				{
-					zcGfx::CommandDraw* pCommandDraw = static_cast<zcGfx::CommandDraw*>( (*pDrawcall).Get() );
-					if( pCommandDraw->mrMeshStrip.IsValid() )
-					{
-						const zcRes::GfxMeshStripRef& rMeshStrip = pCommandDraw->mrMeshStrip;
-						UpdateGPUState(*pDrawcall, Context);
-						UpdateShaderState(*pCommandDraw, Context);
-						mDX11pContextImmediate->DrawIndexed(pCommandDraw->muIndexCount, pCommandDraw->muIndexFirst, rMeshStrip->GetProxy()->muVertexFirst);
-					}
-				}
-				// All other type of command use 'slower' virtual method 'invoke' instead of type casting
-				else 
-				{
-					(*pDrawcall)->Invoke();					
-				}
-				
-			}
-		}
-		mrPreviousDrawcall = *_aDrawcalls.Last();
-		*/
 	}
 }
 

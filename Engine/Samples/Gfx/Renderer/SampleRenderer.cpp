@@ -42,8 +42,8 @@ SimpleVertex CubeVertices[] =
 };
 
 const zenRes::zGfxVertex::Element CubeVerticeInfos[]={	
-	zenRes::zGfxVertex::Element(zenConst::keShaderElemType_Float, 3, zenConst::keShaderSemantic_Position,	ZENMemberOffset(SimpleVertex, Pos) ),
-	zenRes::zGfxVertex::Element(zenConst::keShaderElemType_Float, 2, zenConst::keShaderSemantic_UV,		ZENMemberOffset(SimpleVertex, Tex) ) 
+	zenRes::zGfxVertex::Element(zenConst::keShaderElemType_Float, 3, zenConst::keShaderSemantic_Position,	zenOffsetOf(&SimpleVertex::Pos) ),
+	zenRes::zGfxVertex::Element(zenConst::keShaderElemType_Float, 2, zenConst::keShaderSemantic_UV,			zenOffsetOf(&SimpleVertex::Tex) ) 
 };
 
 zU16 CubeIndices[] =
@@ -72,6 +72,7 @@ bool SampleRendererInstance::Init()
 	CreateGfxWindow( zVec2U16(1280, 800), zVec2U16(0,0) );
 	
 	//! @todo Urgent : Finish raster state, per mesh values
+	//! @todo Urgent : leaking memory drawing context
 
 	//-----------------------------------------------------------
 	// Prepare some data for asset creation
@@ -235,15 +236,14 @@ void SampleRendererInstance::Update()
 	Super::Update();
 	UpdateBackbuffers();
 
-	zenGfx::zContext rContextRoot				= zenGfx::zContext::Create("Root");
-	zenGfx::zContext rContextRenderToTexture	= zenGfx::zContext::Create("RenderToTexture",	rContextRoot, mrRndPassTexture);
-	zenGfx::zContext rContextFinal				= zenGfx::zContext::Create("Final",				rContextRoot, mrRndPassFinal);
-
 	//---------------------------------------------------------------------
 	// Render loop
 	//---------------------------------------------------------------------
 	mrMainWindowGfx.FrameBegin();
-	
+	zenGfx::zContext rContextRoot				= zenGfx::zContext::Create("RenderLoop");
+	zenGfx::zContext rContextRenderToTexture	= zenGfx::zContext::Create("RenderToTexture",	rContextRoot, mrRndPassTexture);
+	zenGfx::zContext rContextFinal				= zenGfx::zContext::Create("Final",				rContextRoot, mrRndPassFinal);
+			
 	float t = static_cast<float>(zenSys::GetElapsedSec() / 3.0);	// Update our time animation
 	
 	//-----------------------------------------------------------------

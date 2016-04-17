@@ -31,15 +31,16 @@ public:
 		evt.Skip();
 	}
 	void Render()
-	{
-		zArrayDynamic<zenRes::zGfxDrawCall> aDrawcalls;
-		aDrawcalls.Reserve(2000);
+	{		
 		float t = static_cast<float>(zenSys::GetElapsedSec() / 3.0);	// Update our time animation
 		mrGfxWindow.FrameBegin();
+		zenGfx::zContext rContextRoot = zenGfx::zContext::Create("RenderLoop");		
 		zVec4F vClearColor = zenMath::TriLerp<zVec4F>( zVec4F(0.5f,0.5f,0.5f,1), zVec4F(0.1f,0.1f,0.20f,1), zVec4F(0.5f,0.5f,0.5f,1), zenMath::Fract(t) );
+		zenGfx::zCommand::ClearColor(rContextRoot, mrGfxWindow.GetBackbuffer(), vClearColor);
+		rContextRoot.Submit();
 		//mrGfxWindow.GetBackbuffer().Clear( true, vClearColor, true, 0 );
-		aDrawcalls.Push( zenRes::zGfxDrawCall::ClearColor(mrRndPassGeneric, 0, mrGfxWindow.GetBackbuffer(), vClearColor) );
-		zenRes::zGfxDrawCall::Submit(aDrawcalls);
+		//aDrawcalls.Push( zenRes::zGfxDrawCall::ClearColor(mrRndPassGeneric, 0, mrGfxWindow.GetBackbuffer(), vClearColor) );
+		//zenRes::zGfxDrawCall::Submit(aDrawcalls);
 		mrGfxWindow.FrameEnd();
 		
 	}

@@ -83,9 +83,8 @@ namespace zcRes
 	//==================================================================================================
 	void GfxWindowProxy_DX11::PerformResize()
 	{
-		zcRes::GfxWindowRef rWindowCur = zcMgr::GfxRender.GetWindowCurrent();
 		ZENAssert(mDX11pSwapChain);
-		ZENAssertMsg(rWindowCur.IsValid()==false || rWindowCur->GetProxy() != this, "This method should only be called in ManagerBase::FrameStart()");
+		ZENAssertMsg(zcGfx::gWindowRender.IsValid()==false || zcGfx::gWindowRender->GetProxy() != this, "This method should only be called in ManagerBase::FrameStart()");
 
 		if( !mvPendingResize.IsZero() && mvPendingResize != mvSize )
 		{			

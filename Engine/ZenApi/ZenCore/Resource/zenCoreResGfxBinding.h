@@ -2,6 +2,34 @@
 #ifndef __zenApi_Core_ResGfxBinding_h__
 #define __zenApi_Core_ResGfxBinding_h__
 
+//! @todo Urgent, this is not a resource, should be moved elsewhere
+//Forward declare
+namespace zcGfx  { class Command; }										
+namespace zen { namespace zenGfx { class zContext; }}
+namespace zen { namespace zenRes { class zGfxMesh; class zGfxMeshStrip; }}
+
+namespace zen { namespace zenGfx 
+{	
+	class zCommand : public zEngineRef<zcGfx::Command>
+	{
+	ZENClassDeclare(zCommand, zEngineRef<zcGfx::Command>);
+	public:			
+								zCommand();
+								zCommand(const zCommand& _Copy);		
+								zCommand(zcGfx::Command* _Drawcall);
+		
+		zCommand&				operator=(zcGfx::Command* _pCopy);
+		zCommand&				operator=(const zCommand& _Copy);
+		bool					zCommand::operator>(const zCommand& _Cmp)const;
+		bool					zCommand::operator>=(const zCommand& _Cmp)const;
+
+		static void				DrawMesh			(const zContext& _rContext, float _fPriority, const zenRes::zGfxMesh& _rMesh, zU32 _uIndexFirst=0, zU32 _uIndexCount=0xFFFFFFFF, const zVec4U16& _vScreenScissor = zVec4U16(0,0,0xFFFF,0xFFFF) );
+		static void				DrawMesh			(const zContext& _rContext, float _fPriority, const zenRes::zGfxMeshStrip&	_rMeshStrip, zU32 _uIndexFirst=0, zU32 _uIndexCount=0xFFFFFFFF, const zVec4U16& _vScreenScissor = zVec4U16(0,0,0xFFFF,0xFFFF) );
+		static void				ClearColor			(const zContext& _rContext, const zenRes::zGfxRenderTarget& _RTColor, const zVec4F& _vRGBA,  const zColorMask& _ColorMask=zenConst::kColorMaskRGBA, const zVec2S16& _vOrigin=zVec2S16(0,0), const zVec2U16& _vDim=zVec2U16(0,0) );
+		static void				ClearDepthStencil	(const zContext& _rContext, const zenRes::zGfxRenderTarget& _rRTDepthStencil, bool _bClearDepth=true, float _fDepthValue=1, bool _bClearStencil=false, zU8 _uStencilValue=128);
+	};	
+}}
+
 namespace zen { namespace zenRes {	
 	
 	class zGfxRenderPass; //! forward declare
@@ -10,8 +38,6 @@ namespace zen { namespace zenRes {
 	public:				
 		static zGfxShaderBinding						Create(const zGfxShaderVertex& _VertexShader);
 		static zGfxShaderBinding						Create(const zGfxShaderVertex& _VertexShader, const zGfxShaderPixel& _PixelShader);
-
-		//const zArrayStatic<zenRes::zGfxShaderParamDef>&	GetShaderParamDef()const;
 		void											CreateShaderParam(zArrayStatic<zenRes::zGfxShaderParam>& _aShaderParamOut)const;
 	};
 
@@ -22,7 +48,7 @@ namespace zen { namespace zenRes {
 	public:
 		zVec2U16						GetDim()const;
 	};
-	
+		
 	ZENClassResourceRefDeclare(zGfxWindow, zenConst::keResType_GfxWindow)
 	public:
 		void							FrameBegin();
@@ -30,13 +56,11 @@ namespace zen { namespace zenRes {
 		zGfxRenderTarget				GetBackbuffer();
 		void							Resize(const zVec2U16& _vSize);		
 		bool							PerformResize();		
-
 		static zGfxWindow				Create( HWND _WindowHandle );		
 	};
 		
 	ZENClassResourceRefDeclare(zGfxMeshStrip, zenConst::keResType_GfxMeshStrip)
 	public:
-//		void							Draw(zGfxRenderPass& _rRenderpass, float _fPriority, zArrayDynamic<class zCommand>& _aDrawcallsOut, zU32 _uIndexFirst=0, zU32 _uIndexCount=0xFFFFFFFF, const zVec4U16& _vScreenScissor = zVec4U16(0, 0, 0xFFFF, 0xFFFF));
 		void							SetValue(const zShaderParameter& _Value);			
 		void							SetValue(const zArrayBase<const zShaderParameter*>& _aValues);	
 		void							SetValue(const zHash32& _hParamName, const float& _fValue);
@@ -55,7 +79,6 @@ namespace zen { namespace zenRes {
 
 	ZENClassResourceRefDeclare(zGfxMesh, zenConst::keResType_GfxMesh)
 	public:
-//		void							Draw(zGfxRenderPass& _rRenderpass, float _fPriority, zArrayDynamic<class zCommand>& _aDrawcallsOut, const zVec4U16& _vScreenScissor = zVec4U16(0, 0, 0xFFFF, 0xFFFF)); //! @todo clean move output array first
 		void							SetValue(const zShaderParameter& _Value);			
 		void							SetValue(const zArrayBase<const zShaderParameter*>& _aValues);	
 		void							SetValue(const zHash32& _hParamName, const float& _fValue);

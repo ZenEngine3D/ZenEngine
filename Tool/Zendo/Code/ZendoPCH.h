@@ -3,7 +3,6 @@
 
 #include <zenEngine/zenEngine.h>
 //! @todo Urgent Stop giving access to inner engine code! Use interface layer like rest of the engine
-//#include <Engine/zenExternal/zxExternal.h>
 #include <Engine/ZenExternal/UI/zxUIwxWidgets.h>
 
 #endif

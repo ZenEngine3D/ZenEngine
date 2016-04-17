@@ -4,16 +4,7 @@
 
 namespace zcGfx
 {
-
-//! @todo clean start using event system
-enum eStatGfx
-{
-	keStatTime_FrameGPU,
-	keStatTime_FrameCPU,
-	keStatCount_Drawcall,
-	keStat__Count,
-	keStat__Invalid
-};
+extern zcRes::GfxWindowRef	gWindowRender;	//!< Window being currently rendered //! @todo clean rethink global naming convention. g in front of everything?
 
 //=================================================================================================
 //! @brief		zbType::Manager used to control hardware renderer
@@ -29,33 +20,26 @@ public:
 											ManagerRender_Base();
 
 	virtual void							FrameBegin( zcRes::GfxWindowRef _FrameWindow );
-	virtual void							FrameEnd();
-	
-	zU64									GetFrameCount();
-	ZENInline zcRes::GfxWindowRef			GetWindowCurrent()			{return mrWindowCurrent;}
-	
-	ZENInline void							SetStatsUpdate(bool _bEnable){mbStatsUpdate = _bEnable;}
-	ZENInline bool							GetStatsUpdate()const		{return mbStatsUpdate; }
-	ZENInline zU16							GetStatsFrame()const		{return muStatsFrame;}
-	ZENInline const zArrayStatic<float>&	GetFrameTimeHistory()const	{return mafFrameElapsedMs;}
-	ZENInline double						GetFrameTimeAvg()const		{return mfFrameAverageMs;}
+	virtual void							FrameEnd();	
+
 	//! @todo Clean: move to more generic ZENFormat testing functions file?
 	bool									IsDepth( zenConst::eTextureFormat _eTexFormat ) const { return _eTexFormat>=zenConst::keTexFormat__DepthFirst && _eTexFormat<=zenConst::keTexFormat__DepthLast; }
-	
-protected:		
-	bool									mbStatsUpdate		= true;
-	zU16									muStatsFrame		= 0;
-	zcRes::GfxWindowRef						mrWindowCurrent		= nullptr; 
-	zU64									muFrameCount		= 0;
-	zU64									muFramePreviousTime = 0;
-	float									mfFrameAverageMs	= 0;
-	zArrayStatic< float >					mafFrameElapsedMs;
+	ZENInline zUInt							GetFrameRendered()const;
+protected:
+	zUInt									muFrameRendered = 0;
 };
+
+zUInt ManagerRender_Base::GetFrameRendered()const
+{
+	return muFrameRendered;
+}
 
 }
 
 #include ZENHeaderRenderer( zcGfxRenderMgr )
 
-namespace zcMgr { extern zcGfx::ManagerRender GfxRender; }
+namespace zcMgr { 
+	extern zcGfx::ManagerRender GfxRender; 	
+}
 
 #endif

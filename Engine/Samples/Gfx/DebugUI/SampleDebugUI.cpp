@@ -52,8 +52,8 @@ const zArrayStatic<zU16> aCubeIndices =
 };
 
 const zArrayStatic<zenRes::zGfxVertex::Element> aCubeVerticeInfos = {
-	zenRes::zGfxVertex::Element(zenConst::keShaderElemType_Float, 3, zenConst::keShaderSemantic_Position,	ZENMemberOffset(SimpleVertex, Pos) ),
-	zenRes::zGfxVertex::Element(zenConst::keShaderElemType_Float, 2, zenConst::keShaderSemantic_UV,			ZENMemberOffset(SimpleVertex, Tex) ) 
+	zenRes::zGfxVertex::Element(zenConst::keShaderElemType_Float, 3, zenConst::keShaderSemantic_Position,	zenOffsetOf(&SimpleVertex::Pos) ),
+	zenRes::zGfxVertex::Element(zenConst::keShaderElemType_Float, 2, zenConst::keShaderSemantic_UV,			zenOffsetOf(&SimpleVertex::Tex) ) 
 };
 
 bool SampleDebugUIInstance::IsDone()
@@ -177,36 +177,31 @@ void SampleDebugUIInstance::Update()
 	}
 	#endif
 
-	zenGfx::zContext rCxtRoot	= zenGfx::zContext::Create("Root");
-	zenGfx::zContext rCxt1		= zenGfx::zContext::Create("Context1", rCxtRoot, mrRndPassFinal);
-	zenGfx::zContext rCxt2		= zenGfx::zContext::Create("Context2", rCxtRoot, mrRndPassFinal);
-		
 	//---------------------------------------------------------------------
 	// Render loop
-	//---------------------------------------------------------------------	
-	{
-		zenPerf::zScopedEventCpu EmitEvent("FrameBegin");
-		mrMainWindowGfx.FrameBegin();
-	}
-	{
-		zenPerf::zScopedEventCpu EmitEvent("Draw");
-		float t = static_cast<float>(zenSys::GetElapsedSec() / 3.0);	// Update our time animation
+	//---------------------------------------------------------------------
+	{		
+		mrMainWindowGfx.FrameBegin();						
+		{			
+			zenPerf::zScopedEventCpu EmitEvent("Draw");
+			zenGfx::zContext rCxtRender	= zenGfx::zContext::Create("RenderLoop");
+			zenGfx::zContext rCxtPhase1	= zenGfx::zContext::Create("Phase 1", rCxtRender, mrRndPassFinal);
+			float t = static_cast<float>(zenSys::GetElapsedSec() / 3.0);	// Update our time animation
 
-		zVec4F vClearColor = zenMath::TriLerp( zVec4F(0.05f,0.05f,0.05f,1), zVec4F(0.1f,0.1f,0.20f,1), zVec4F(0.05f,0.05f,0.05f,1), zenMath::Fract(t) );
-		zenGfx::zCommand::ClearColor(rCxt1, mrMainWindowGfx.GetBackbuffer(), vClearColor);
-		zenGfx::zCommand::ClearDepthStencil(rCxt1, mrBackbufferDepth);
+			zVec4F vClearColor = zenMath::TriLerp( zVec4F(0.05f,0.05f,0.05f,1), zVec4F(0.1f,0.1f,0.20f,1), zVec4F(0.05f,0.05f,0.05f,1), zenMath::Fract(t) );
+			zenGfx::zCommand::ClearColor(rCxtPhase1, mrMainWindowGfx.GetBackbuffer(), vClearColor);
+			zenGfx::zCommand::ClearDepthStencil(rCxtPhase1, mrBackbufferDepth);
 	
-		matWorld.SetRotationY( t );	// Rotate cube around the origin 				
-		mrCubeMeshStrip.SetValue( zHash32("World"), matWorld );
-		mrCubeMeshStrip.SetValue( zHash32("Projection"), matProjection );
-		zenGfx::zCommand::DrawMesh(rCxt1, 0, mrCubeMeshStrip);
-	}
-	{
-		zenPerf::zScopedEventCpu EmitEvent("Submit");
-		rCxtRoot.Submit();		
-	}
-	{
-		zenPerf::zScopedEventCpu EmitEvent("FrameEnd");
+			matWorld.SetRotationY( t );	// Rotate cube around the origin 				
+			mrCubeMeshStrip.SetValue( zHash32("World"), matWorld );
+			mrCubeMeshStrip.SetValue( zHash32("Projection"), matProjection );
+			zenGfx::zCommand::DrawMesh(rCxtPhase1, 0, mrCubeMeshStrip);
+			
+			{
+				zenPerf::zScopedEventCpu EmitEvent("Submit");
+				rCxtRender.Submit();		
+			}
+		}		
 		mrMainWindowGfx.FrameEnd();
 	}
 

@@ -4,21 +4,32 @@
 
 namespace zcPerf 
 {
+	//! @brief Basic class for CPU event, code share by all platform
+	class EventCPU_Base : public EventBase
+	{
+	ZENClassDeclare(EventCPU_Base, EventBase)
+	public:									
+		virtual void	Start();
+		virtual void	Stop();
 
-class zeEventCPU : public zeEventBase
+	protected:
+						EventCPU_Base(const zStringHash32& _EventName);
+	};
+}
+
+#include ZENHeaderPlatform(zcPerfCounterCPU)
+
+namespace zcPerf 
 {
-ZENClassDeclare(zeEventCPU, zeEventBase)
-public:						
-	void virtual					Start();
-	void virtual					Stop();	
-	static zGameRef<zeEventBase>	Create(const zStringHash32& _EventName); //! @todo Urgent, until we expose child list properly
+	class EventCPU : public EventCPU_Platform
+	{
+	ZENClassDeclare(EventCPU, EventCPU_Platform)
+	public:						
+		static zEngineRef<EventBase>	Create(const zStringHash32& _EventName);
 
-protected:
-	void							StartCommon();
-	void							StopCommon();
-									zeEventCPU(const zStringHash32& _EventName): Super(_EventName) {}
-};
-
+	protected:
+										EventCPU(const zStringHash32& _EventName) : Super(_EventName) {}
+	};
 }
 
 #endif

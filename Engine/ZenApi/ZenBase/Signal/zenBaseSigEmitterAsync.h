@@ -2,6 +2,8 @@
 #ifndef __zenApi_Base_Signal_EmitterAsync_h__
 #define __zenApi_Base_Signal_EmitterAsync_h__
 
+//! @todo clean : See if c++11 could make varg simpler instead of 1 class per arg count
+
 namespace zen { namespace zenSig
 {
 

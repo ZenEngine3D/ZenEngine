@@ -10,7 +10,6 @@ namespace zcGfx
 //! @details	
 //!				
 //=================================================================================================	
-//! @todo Urgent current work
 class Command : public zRefCounted
 {
 ZENClassDeclare(Command, zRefCounted)
@@ -58,7 +57,6 @@ public:
 	bool					mbIsCommandDraw	= false;
 	RenderStateSortID		mSortId;
 	zcRes::GfxRenderPassRef	mrRenderPass;
-	float					mfCommandIssuedIndex;	//! @todo Safe Not multithreaded safe
 	static float			sfCommandCount;			//!< Number of command issued this frame. Used to set command priority when sorting. (made it a float to avoid float/int conversion cost for each drawcall)
 protected:
 							Command();

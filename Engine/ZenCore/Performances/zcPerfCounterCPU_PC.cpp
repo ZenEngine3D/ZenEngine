@@ -3,16 +3,21 @@
 namespace zcPerf
 {
 
-void zeEventCPU::Start() 
+EventCPU_PC::EventCPU_PC(const zStringHash32& _EventName)
+: Super(_EventName)
 {
-	StartCommon();
+}
+
+void EventCPU_PC::Start() 
+{
+	Super::Start();
 	muTimeStart = zenSys::GetTimeUSec();
 }
 
-void zeEventCPU::Stop() 
+void EventCPU_PC::Stop() 
 {
-	StopCommon();	
-	muTimeElapsed	= zenSys::GetTimeUSec() - muTimeStart;
+	Super::Stop();
+	muTimeElapsed = zenSys::GetTimeUSec() - muTimeStart;
 }
 
 }

@@ -5,9 +5,9 @@ namespace zxImGui
 {
 
 const zArrayStatic<zenRes::zGfxVertex::Element> aUIVerticeInfos = {
-		zenRes::zGfxVertex::Element(zenConst::keShaderElemType_Float, 2, zenConst::keShaderSemantic_Position,	ZENMemberOffset(ImDrawVert, pos)),
-		zenRes::zGfxVertex::Element(zenConst::keShaderElemType_Float, 2, zenConst::keShaderSemantic_UV,			ZENMemberOffset(ImDrawVert, uv)),
-		zenRes::zGfxVertex::Element(zenConst::keShaderElemType_UByte, 4, zenConst::keShaderSemantic_Color,		ZENMemberOffset(ImDrawVert, col))
+		zenRes::zGfxVertex::Element(zenConst::keShaderElemType_Float, 2, zenConst::keShaderSemantic_Position,	zenOffsetOf(&ImDrawVert::pos)),
+		zenRes::zGfxVertex::Element(zenConst::keShaderElemType_Float, 2, zenConst::keShaderSemantic_UV,			zenOffsetOf(&ImDrawVert::uv)),
+		zenRes::zGfxVertex::Element(zenConst::keShaderElemType_UByte, 4, zenConst::keShaderSemantic_Color,		zenOffsetOf(&ImDrawVert::col))
 	};
 
 zxImGUIHelper::zxImGUIHelper()
@@ -64,6 +64,8 @@ zxImGUIHelper::zxImGUIHelper()
 //=================================================================================================
 void zxImGUIHelper::Render(const zEngineRef<zxRenderData>& _rImGuiData, WindowInputState* _pInputData)
 {	
+	zenPerf::zScopedEventCpu EmitEvent("ImGUI");
+
 	//----------------------------------------------------------------------------
 	// Update UI input if provided
 	ImGuiIO& io = ImGui::GetIO();
@@ -121,12 +123,13 @@ void zxImGUIHelper::Render(const zEngineRef<zxRenderData>& _rImGuiData, WindowIn
 		zenMath::MatrixProjectionOrthoLH(_rImGuiData->matOrthographic, _rImGuiData->mvScreenSize.x, _rImGuiData->mvScreenSize.y, 0, 1);
 	}
 
+	
 	//----------------------------------------------------------------------------
 	// Ask all client suscriber to display their UI
-	io.DisplaySize = ImVec2(_rImGuiData->mvScreenSize.x, _rImGuiData->mvScreenSize.y);
+	io.DisplaySize				= ImVec2(_rImGuiData->mvScreenSize.x, _rImGuiData->mvScreenSize.y);	
 	ImGui::NewFrame();	
 	{
-		zenPerf::zScopedEventCpu EmitEvent("ImGUI Update");
+		zenPerf::zScopedEventCpu EmitEvent("ImGUI Render callbacks");
 		_rImGuiData->msigRenderUI.Emit();
 	}
 	{
@@ -134,37 +137,38 @@ void zxImGUIHelper::Render(const zEngineRef<zxRenderData>& _rImGuiData, WindowIn
 		ImGui::Render();		
 	}
 
+	//----------------------------------------------------------------------------
+	// Grow Vertex/Index buffer when needed
 	ImDrawData* pImGuiData = ImGui::GetDrawData();
+	if(_rImGuiData->muVertexCount < pImGuiData->TotalVtxCount)
 	{
-		zenPerf::zScopedEventCpu EmitEvent("ImGUI Buffers");
-		//----------------------------------------------------------------------------
-		// Grow Vertex/Index buffer when needed
-		if(_rImGuiData->muVertexCount < pImGuiData->TotalVtxCount)
-		{
-			zArrayStatic<zenRes::zGfxVertex::Stream> aUIVerticeStreams(1);
-			_rImGuiData->muVertexCount = static_cast<zUInt>(pImGuiData->TotalVtxCount*1.25);
-			aUIVerticeStreams[0].muStride = static_cast<zU32>(sizeof(ImDrawVert));
-			aUIVerticeStreams[0].maElements = aUIVerticeInfos;
-			aUIVerticeStreams[0].maData.SetCount(_rImGuiData->muVertexCount*sizeof(ImDrawVert));
-			_rImGuiData->mrVertexBuffer = zenRes::zGfxVertex::Create(aUIVerticeStreams, zFlagResUse(zenConst::keResUse_DynamicDiscard));
-		}
-		if(_rImGuiData->muIndexCount < pImGuiData->TotalIdxCount)
-		{
-			_rImGuiData->muIndexCount = static_cast<zUInt>(pImGuiData->TotalIdxCount*1.25);
-			if (sizeof(ImDrawIdx) == sizeof(zU16))
-			{
-				zArrayStatic<zU16> aIndices;
-				aIndices.SetCount(_rImGuiData->muIndexCount);
-				_rImGuiData->mrIndexBuffer = zenRes::zGfxIndex::Create(aIndices, zenConst::kePrimType_TriangleList);
-			}
-			else if (sizeof(ImDrawIdx) == sizeof(zU32))
-			{
-				zArrayStatic<zU32> aIndices;
-				aIndices.SetCount(_rImGuiData->muIndexCount);
-				_rImGuiData->mrIndexBuffer = zenRes::zGfxIndex::Create(aIndices, zenConst::kePrimType_TriangleList);
-			}
-		}
+		zArrayStatic<zenRes::zGfxVertex::Stream> aUIVerticeStreams(1);
+		_rImGuiData->muVertexCount = static_cast<zUInt>(pImGuiData->TotalVtxCount*1.25);
+		aUIVerticeStreams[0].muStride = static_cast<zU32>(sizeof(ImDrawVert));
+		aUIVerticeStreams[0].maElements = aUIVerticeInfos;
+		aUIVerticeStreams[0].maData.SetCount(_rImGuiData->muVertexCount*sizeof(ImDrawVert));
+		_rImGuiData->mrVertexBuffer = zenRes::zGfxVertex::Create(aUIVerticeStreams, zFlagResUse(zenConst::keResUse_DynamicDiscard));
+	}
 
+	if(_rImGuiData->muIndexCount < pImGuiData->TotalIdxCount)
+	{
+		_rImGuiData->muIndexCount = static_cast<zUInt>(pImGuiData->TotalIdxCount*1.25);
+		if (sizeof(ImDrawIdx) == sizeof(zU16))
+		{
+			zArrayStatic<zU16> aIndices;
+			aIndices.SetCount(_rImGuiData->muIndexCount);
+			_rImGuiData->mrIndexBuffer = zenRes::zGfxIndex::Create(aIndices, zenConst::kePrimType_TriangleList);
+		}
+		else if (sizeof(ImDrawIdx) == sizeof(zU32))
+		{
+			zArrayStatic<zU32> aIndices;
+			aIndices.SetCount(_rImGuiData->muIndexCount);
+			_rImGuiData->mrIndexBuffer = zenRes::zGfxIndex::Create(aIndices, zenConst::kePrimType_TriangleList);
+		}
+	}
+
+	if( _rImGuiData->muIndexCount && _rImGuiData->muVertexCount )
+	{
 		//----------------------------------------------------------------------------
 		// Update content of vertex/index
 		ImDrawVert* pUIVertices = reinterpret_cast<ImDrawVert*>(_rImGuiData->mrVertexBuffer.Lock());
@@ -178,17 +182,17 @@ void zxImGUIHelper::Render(const zEngineRef<zxRenderData>& _rImGuiData, WindowIn
 			pUIIndices += cmd_list->IdxBuffer.size();
 		}
 		_rImGuiData->mrVertexBuffer.Unlock();
-		_rImGuiData->mrIndexBuffer.Unlock();		
+		_rImGuiData->mrIndexBuffer.Unlock();
 	}
+	
 	{
 		//----------------------------------------------------------------------------
 		// Emit drawcalls
 		zenPerf::zScopedEventCpu EmitEvent("ImGUI Emit Drawcalls");
-		int vtx_offset = 0;
-		int idx_offset = 0;
-		bool bFirst = true;
-		zArrayDynamic<zenGfx::zCommand> aDrawcalls;		
-		aDrawcalls.Reserve(pImGuiData->CmdListsCount);		
+		zenGfx::zContext rUIContext	= zenGfx::zContext::Create("ImGui", _rImGuiData->mrRenderpass);
+		int vtx_offset				= 0;
+		int idx_offset				= 0;
+		bool bFirst					= true;
 		for (int n = 0; n < pImGuiData->CmdListsCount; n++)
 		{
 			const ImDrawList* cmd_list = pImGuiData->CmdLists[n];
@@ -200,16 +204,20 @@ void zxImGUIHelper::Render(const zEngineRef<zxRenderData>& _rImGuiData, WindowIn
 				zenPerf::zScopedEventCpu EmitEvent("ImGUI Draw test");
 				const ImDrawCmd* pcmd = &cmd_list->CmdBuffer[cmd_i];
 				if (pcmd->UserCallback)
+				{
 					pcmd->UserCallback(cmd_list, pcmd);
-				//else
-					//! @todo finish rMeshStrip.Draw(_rImGuiData->mrRenderpass, float(aDrawcalls.Count()), aDrawcalls, idx_offset, pcmd->ElemCount, zVec4U16(zU16(pcmd->ClipRect.x), zU16(pcmd->ClipRect.y), zU16(pcmd->ClipRect.z), zU16(pcmd->ClipRect.w)));
+				}
+				else
+				{
+					zenGfx::zCommand::DrawMesh(rUIContext, 0.f, rMeshStrip, idx_offset, pcmd->ElemCount, zVec4U16(zU16(pcmd->ClipRect.x), zU16(pcmd->ClipRect.y), zU16(pcmd->ClipRect.z), zU16(pcmd->ClipRect.w)));
+				}
 
 				idx_offset += pcmd->ElemCount;
 			}
 			vtx_offset += cmd_list->VtxBuffer.size();
 		}
 
-		//! @todo finish zenGfx::zCommand::Submit(aDrawcalls);
+		rUIContext.Submit();
 	}
 }
 
