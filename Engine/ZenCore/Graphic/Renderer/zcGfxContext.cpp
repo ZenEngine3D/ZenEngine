@@ -3,29 +3,12 @@
 namespace zcGfx
 {
 
-#if 0
-class  : public zRefCounted
-{
-ZENClassDeclare(DrawingContext, zRefCounted)
-zListLink mlnkChild;
-typedef zList<DrawingContext, &DrawingContext::mlnkChild> TypeListChild;
-public:
-		
-protected:
-										
-	zStringHash							mzName;
-	TypeListChild						mlstChilds;
-	zcRes::GfxRenderPassRef				mrRenderpass;
-	zArrayDynamic<zenRes::zGfxDrawcall>	marDrawcalls;
-};
-#endif
-
 zMap<zU16>::Key32 DrawContext::sdDrawcallCount[2]; 
 
 DrawContext::DrawContext(const zStringHash32& _zContextName, DrawContext* _pParent, const zcRes::GfxRenderPassRef& _rRenderpass)
 : mzName(_zContextName)
+, mbRootContext( _pParent == nullptr )
 , mrRenderpass(_rRenderpass)
-, mrParent(_pParent)
 {		
 	if( _pParent )
 	{
@@ -62,13 +45,12 @@ void DrawContext::Clear()
 		pChildContext->Clear();
 		pChildContext = mlstChilds.PopHead();	
 	}	
-	mrParent = nullptr;	
 	marDrawcalls.Clear();
 }
 
 void DrawContext::Submit()
 {
-	ZENAssertMsg( mrParent.IsValid() == false, "Can only submit root object");
+	ZENAssertMsg( mbRootContext, "Can only submot a root context");
 	SubmitInternal();
 }
 

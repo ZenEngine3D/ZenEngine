@@ -72,7 +72,6 @@ bool SampleRendererInstance::Init()
 	CreateGfxWindow( zVec2U16(1280, 800), zVec2U16(0,0) );
 	
 	//! @todo Urgent : Finish raster state, per mesh values
-	//! @todo Urgent : leaking memory drawing context
 
 	//-----------------------------------------------------------
 	// Prepare some data for asset creation

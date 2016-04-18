@@ -10,8 +10,7 @@ namespace zcRes
 	class GfxWindow : public TResource<GfxWindow, GfxWindowResData, GfxWindowProxy, zcExp::ExporterNone>, public zenSig::zSlot
 	{
 	ZENClassDeclare(GfxWindow, TResource)
-	enum eConstant{ keEventHistoryCount = 128 };
-
+	enum eConstant{ keEventHistoryCount = 2 };
 	public:
 												GfxWindow();
 		void									Resize(const zVec2U16& _vSize){ mrProxy->mvPendingResize = _vSize; } //! @todo safety make this multithread safe
@@ -44,11 +43,11 @@ namespace zcRes
 		bool									mbUIEventCurrentCPUShow	= false;
 		bool									mbUIEventCurrentGPUShow	= false;
 		
-		zU32									muEventValidIndex		= 0;		//!< First valid root event index
-		zU32									muEventValidCount		= 0;		//!< Number of valid root events
-		zArrayStatic<zenPerf::zEventRef>		maEventHistoryCPU;		//!< Hierarchical history of last X frame of CPU events (with timing)
-		zArrayStatic<zenPerf::zEventRef>		maEventHistoryGPU;		//!< Hierarchical history of last X frame of GPU events (with timing)
-		zenPerf::zEventRef						mrEventProfiling;		//!< Event hierarchy to display for profiling
+		zU32									muEventValidIndex		= 0;	//!< First valid root event index
+		zU32									muEventValidCount		= 0;	//!< Number of valid root events
+		zArrayStatic<zenPerf::zEventRef>		maEventHistoryCPU;				//!< Hierarchical history of last X frame of CPU events (with timing)
+		zArrayStatic<zenPerf::zEventRef>		maEventHistoryGPU;				//!< Hierarchical history of last X frame of GPU events (with timing)
+		zenPerf::zEventRef						mrEventProfiling;				//!< Event hierarchy to display for profiling
 		zenPerf::zEventRef						mrInvalidEvent;		
 	};
 
