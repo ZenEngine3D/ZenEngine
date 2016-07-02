@@ -12,13 +12,14 @@ namespace zcRes
 {	
 	//=============================================================================================
 	//! @class	Base class for all resources that can be created and used
+	//! @todo	Clean Delete this, after moved everything to TResource2 type
 	//=============================================================================================
 	class Resource: public zenRes::zResource
 	{
 	ZENClassDeclare(Resource, zenRes::zResource)
 	public:									
-		virtual								~Resource();	
-		bool								Initialize();		
+		virtual								~Resource();
+		bool								Initialize(); //delete me
 
 	protected:					
 		virtual bool						ResourceInit();		//!< @todo cleanup rename this.  Initialize and Resourcinit confusing
@@ -95,15 +96,8 @@ namespace zcRes
 
 		static ResourceRef RuntimeExport(zcExp::ExportInfoBase& _ExportInfo)
 		{ 	
-			static zenMem::zAllocatorPool sMemPool("Pool TResource SeriaData", sizeof(ClassResData), 32, 32 );			
+			static zenMem::zAllocatorPool sMemPool("Pool TResource SeriaData", sizeof(ClassResData), 128, 128 );			
 			ClassResData* pData = zenNew(&sMemPool) ClassResData();
-
-			#if 0 //SF Temp code to help find memory leak of export data..
-			if( _ExportInfo.mExportResID.GetType() == zenConst::keResType_GfxShaderParam )
-			{				
-				printf(""); 
-			}
-			#endif
 			ResDataRef rResData = pData;
 			ClassExporter Exporter(rResData);
 			Exporter.Export( _ExportInfo );
@@ -119,7 +113,7 @@ namespace zcRes
 			ResourceRef rNewResource	= zenNewDefault ClassResource;
 			rNewResource->mrResData		= _rResData;
 			rNewResource->mResID		= _rResData->mResID;
-			if(rNewResource->Initialize() )
+			if( rNewResource->Initialize() )
 			{
 				if(rNewResource->mrResData.IsValid() && !zcDepot::ResourceData.IsValid(rNewResource->mResID) )
 				{
@@ -142,6 +136,71 @@ namespace zcRes
 		static zU32	suCreatedCount;				//!< How many resource of this type was created before
 	};
 	
+	//=============================================================================================
+	//! @class	Templated specialized version of Resource
+	//!			Implement basic common functionalities like creation
+	//! @todo	Clean Rename TResource once everything converted to this and we can remove previous one
+	//=============================================================================================
+	template<class TResource, class TExportData, class TExporter>
+	class TResource2 : public zenRes::zResource
+	{
+	ZENClassDeclare(TResource2, Resource)
+	public:
+		typedef zEngineRef<TExportData>			ResDataRef;
+		typedef zEngineConstRef<TExportData>	ResDataConstRef;
+		typedef zEngineRef<TResource>			ResourceRef;
+		 
+	public:
+		ZENInline const ResDataConstRef& GetResData() const
+		{
+			return *(ResDataConstRef*)&mrResourceData;
+		}
+
+		static ResourceRef RuntimeExport(zcExp::ExportInfoBase& _ExportInfo)
+		{
+			static zenMem::zAllocatorPool sMemPool("Pool TResource SeriaData", sizeof(TExportData), 128, 128);
+			TExportData* pData		= zenNew(&sMemPool) TExportData();
+			ResDataRef rResData		= pData;
+			TExporter Exporter(rResData.Get());
+			Exporter.Export(_ExportInfo);
+			if( _ExportInfo.IsSuccess() )
+				return RuntimeCreate(rResData);
+
+			return nullptr;
+		}
+
+		//! @todo clean Move gfx state creation to use this ?
+		static ResourceRef RuntimeCreate(const ResDataRef& _rExportData)
+		{
+			ZENAssert(zenIsResourceCreationThread());
+			static zenMem::zAllocatorPool sMemPool("Pool TResource", sizeof(TResource), 128, 128);
+			if( _rExportData.IsValid() )
+			{
+				ResourceRef rNewResource		= zenNew(&sMemPool) TResource;
+				rNewResource->mrResourceData	= _rExportData;
+				rNewResource->mResID			= _rExportData->mResID;
+				if( rNewResource->Initialize() )
+				{						
+					// Adding ResData to depot if resource wasn't exported, so this didn't happen
+					if( rNewResource->mrResourceData.IsValid() && !zcDepot::ResourceData.IsValid(rNewResource->mResID) )
+					{
+						zenConst::eResType eType					= rNewResource->mResID.GetType();
+						rNewResource->mrResourceData->muVersion		= zcDepot::ResourceData.GetEngineVersion(eType);
+						rNewResource->mrResourceData->mExportTime	= zenSys::GetTimeStamp();
+						zcDepot::ResourceData.SetItem(rNewResource->mrResourceData.Get());
+					}
+
+					zcDepot::Resources.Add(rNewResource.Get());
+					return rNewResource;
+				}
+			}
+			return nullptr;
+		}
+
+	protected:
+		TResource2() {}
+		ResDataRef mrResourceData = nullptr;
+	};
 
 	//=============================================================================================
 	//! @class	Templated specialized version of ResourceAnyRef, that does ResourceType check
@@ -191,11 +250,12 @@ namespace zcRes
 	typedef ResourceRef<class GfxShaderParam,		zenRes::zGfxShaderParam>		GfxShaderParamRef;
 	typedef ResourceRef<class GfxShaderBinding,		zenRes::zGfxShaderBinding>		GfxShaderBindingRef;
 		
+	//! @todo Clean remove all this once moved to resource2
 	typedef zEngineConstRef<GfxSamplerResData>										GfxSamplerResDataRef;
 	typedef zEngineConstRef<GfxStateBlendResData>									GfxStateBlendResDataRef;
 	typedef zEngineConstRef<GfxStateDepthStencilResData>							GfxStateDepthStencilResDataRef;
 	typedef zEngineConstRef<GfxStateRasterizerResData>								GfxStateRasterizerResDataRef;
-	typedef zEngineConstRef<GfxIndexResData>										GfxIndexResDataRef;
+//	typedef zEngineConstRef<GfxIndexExportData>										GfxIndexExportDataRef;
 	typedef zEngineConstRef<GfxVertexResData>										GfxVertexResDataRef;
 	typedef zEngineConstRef<GfxTexture2dResData>									GfxTexture2dResDataRef;
 	typedef zEngineConstRef<GfxRenderTargetResData>									GfxRenderTargetResDataRef;

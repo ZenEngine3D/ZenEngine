@@ -3,23 +3,9 @@
 namespace zcRes
 {
 
-GfxIndexProxy_DX11::GfxIndexProxy_DX11()
-: mpIndiceBuffer(nullptr)
+bool GfxIndex_DX11::Initialize()
 {
-}
-
-GfxIndexProxy_DX11::~GfxIndexProxy_DX11()
-{
-	if( mpIndiceBuffer )
-		mpIndiceBuffer->Release();
-	mpIndiceBuffer = nullptr;
-}
-
-bool GfxIndexProxy_DX11::Initialize(class GfxIndex& _Owner)
-{
-	const GfxIndex::ResDataRef& rResData = _Owner.GetResData();
-	ZENAssert(rResData.IsValid());
-	ZENDbgCode(mpOwner = &_Owner);
+	ZENAssert(mrResourceData.IsValid());
 
 	//! @todo Missing: configure resource creations flags
 	//D3D11_USAGE eUsage(D3D11_USAGE_DEFAULT);
@@ -27,45 +13,43 @@ bool GfxIndexProxy_DX11::Initialize(class GfxIndex& _Owner)
 	D3D11_USAGE eUsage(D3D11_USAGE_DYNAMIC);
 	UINT uCpuAccess(D3D11_CPU_ACCESS_WRITE);
 	D3D11_BUFFER_DESC IndexDesc;
-	IndexDesc.ByteWidth				= rResData->maIndices.SizeMem();
-	IndexDesc.Usage					= eUsage;						
-	IndexDesc.BindFlags				= D3D11_BIND_INDEX_BUFFER;		
-	IndexDesc.CPUAccessFlags		= uCpuAccess;					
-	IndexDesc.MiscFlags				= 0;	
+	IndexDesc.ByteWidth				= mrResourceData->maIndices.SizeMem();
+	IndexDesc.Usage					= eUsage;
+	IndexDesc.BindFlags				= D3D11_BIND_INDEX_BUFFER;
+	IndexDesc.CPUAccessFlags		= uCpuAccess;
+	IndexDesc.MiscFlags				= 0;
 	IndexDesc.StructureByteStride	= 0;
 
 	D3D11_SUBRESOURCE_DATA InitData;
-	InitData.pSysMem				= rResData->maIndices.First();
+	InitData.pSysMem				= mrResourceData->maIndices.First();
 	InitData.SysMemPitch			= 0;
 	InitData.SysMemSlicePitch		= 0;
-	HRESULT hr						= zcMgr::GfxRender.DX11GetDevice()->CreateBuffer( &IndexDesc, &InitData, &mpIndiceBuffer );
-
-	mePrimitiveType					= rResData->mePrimitiveType;
-	meIndiceFormat					= rResData->meIndiceFormat;	
-	muIndiceCount					= rResData->muIndiceCount;	
-	muIndiceSize					= rResData->muIndiceSize;	
-	muPrimitiveCount				= rResData->muPrimitiveCount;
+	HRESULT hr = zcMgr::GfxRender.DX11GetDevice()->CreateBuffer(&IndexDesc, &InitData, &mrResourceData->mpIndiceBuffer);
 
 	return SUCCEEDED(hr);
 }
 
-zU8* GfxIndexProxy_DX11::Lock()
+const zArrayStatic<zU8>& GfxIndex_DX11::GetIndices()const
 {
-	//! @todo Missing: Stream index parameter
-	//! @todo Missing: Specify access type
-	if( mpIndiceBuffer )
-	{
-		D3D11_MAPPED_SUBRESOURCE mapRes;
-		zcMgr::GfxRender.DX11GetDeviceContext()->Map(mpIndiceBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mapRes);
-		return (zU8*)mapRes.pData;
-	}
-	return nullptr;
+	return mrResourceData->maIndices;
 }
 
-void GfxIndexProxy_DX11::Unlock()
+zU8	GfxIndex_DX11::GetIndiceSize()const
 {
-	if( mpIndiceBuffer )
-		zcMgr::GfxRender.DX11GetDeviceContext()->Unmap(mpIndiceBuffer, 0);
+	return mrResourceData->muIndiceSize;
+}
+
+void GfxIndex_DX11::Update( zU8* _pData, zUInt _uOffset, zUInt _uSize )
+{
+	if (mrResourceData->mpIndiceBuffer)
+	{
+		D3D11_MAPPED_SUBRESOURCE mapRes;
+		_uOffset		= zenMath::Min(_uOffset,	(zUInt)mrResourceData->muIndiceCount );
+		_uSize			= zenMath::Min(_uSize,		(zUInt)mrResourceData->maIndices.SizeMem() - _uOffset);
+		HRESULT result = zcMgr::GfxRender.DX11GetDeviceContext()->Map(mrResourceData->mpIndiceBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mapRes);
+		memcpy( (zU8*)mapRes.pData, _pData, _uSize ); //! @todo Urgent : offset support, and not use map/unmap
+		zcMgr::GfxRender.DX11GetDeviceContext()->Unmap(mrResourceData->mpIndiceBuffer, 0);
+	}
 }
 
 }

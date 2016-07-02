@@ -35,6 +35,19 @@ namespace zcPerf
 										EventGPU(const zStringHash32& _EventName);
 	};
 
+	//! @brief Used to retrieve number of drawcall send to GPU, per type
+	class EventGPUCounter : public EventGPU_Base
+	{
+	ZENClassDeclare(EventGPUCounter, EventGPU_Base)
+	public:
+		enum eType{ keType_DrawIndexed, keType_ClearColor, keType_ClearDepth, keType_Compute, keType__Count, keType__Invalid=keType__Count};
+		static zEngineRef<EventBase>	Create(eType _eCounterType);
+		virtual void					Start();
+
+	protected:
+										EventGPUCounter(eType _eCounterType);
+		eType							meCounterType;
+	};
 }
 
 #endif

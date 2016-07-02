@@ -31,6 +31,12 @@ void zResource::ReferenceNoneCB()
 	}	
 }
 
+zResource::~zResource()
+{
+	if( mResID.GetSource() == zenConst::keResSource_Runtime )
+		zcDepot::ResourceData.ClearItem(mResID);
+}
+
 zResourceRef::zResourceRef(zFlagResType _SupportedTypes, zResID _ResourceID)
 : mpResource(nullptr)
 {

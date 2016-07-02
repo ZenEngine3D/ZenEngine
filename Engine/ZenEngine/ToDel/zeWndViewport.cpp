@@ -4,6 +4,9 @@ void WindowInputState::Reset(zU8 _uMaxKeyProcessed)
 {	
 	mbIsKeyPressed.reset();
 	mbIsKeyReleased.reset();
+	mbIsMousePressed.reset();
+	mbIsMouseReleased.reset();
+	mfMouseWheelDelta = 0;
 
 	// Copy any keypress not processed this frame, to be processed next one
 	if(maCharacterPressed.Count() > _uMaxKeyProcessed)

@@ -11,6 +11,7 @@ namespace zen { namespace zenRes {
 	{
 	ZENClassDeclare(zResource, zRefCounted)
 	public:									
+		virtual								~zResource();
 		ZENInline const zResID&				GetResID()const;	//!< @brief return resource ID of resource
 		ZENInline bool						IsValid()const;		//!< @brief true if the object is a valid resource
 		static void							ReleaseUnused();
@@ -19,8 +20,8 @@ namespace zen { namespace zenRes {
 		ZENInline							zResource();
 		zResID								mResID;
 		bool								mbIsPendingDelete	= false;
-		static zU8							suPendingDeleteIndex;
-		static zArrayDynamic<zResource*>	saPendingDelete[2];	//! @todo safe multithread support		
+		static zU8							suPendingDeleteIndex;	//! Which pending delete array is active
+		static zArrayDynamic<zResource*>	saPendingDelete[2];		//! @todo safe multi thread support		
 	};
 
 	//=============================================================================================
@@ -66,10 +67,10 @@ namespace zen { namespace zenRes {
 	{
 	ZENClassDeclare(zResourceTypedRef, zResourceRef)
 	public:
-		ZENInline				zResourceTypedRef();
-		ZENInline				zResourceTypedRef(const zResourceTypedRef& _rResource);
-		ZENInline				zResourceTypedRef(zResource* _pResource);
-		ZENInline				zResourceTypedRef(zResID _ResourceID);
+		ZENInline			zResourceTypedRef();
+		ZENInline			zResourceTypedRef(const zResourceTypedRef& _rResource);
+		ZENInline			zResourceTypedRef(zResource* _pResource);
+		ZENInline			zResourceTypedRef(zResID _ResourceID);
 		
 	};
 

@@ -269,19 +269,20 @@ void ManagerRender::UpdateGPUState(const zEngineRef<zcGfx::Command>& _rDrawcall,
 void ManagerRender::UpdateShaderState(const zcGfx::CommandDraw& _Drawcall, RenderContext& _Context)
 {
 	UINT UnusedOffset = 0;
-	const zcRes::GfxMeshStripRef& rMeshStrip		= _Drawcall.mrMeshStrip;
-	const zcRes::GfxVertexRef& rVertex				= rMeshStrip->GetProxy()->mrInputStreamProxy->GetProxy()->mrVertexProxy;
-	const zcRes::GfxIndexRef& rIndex				= rMeshStrip->GetProxy()->mrIndexBufferProxy;
-	const zcRes::GfxShaderBindingRef rShaderBind	= rMeshStrip->GetProxy()->mrShaderBindingProxy;
+	const zcRes::GfxMeshStripRef&		rMeshStrip	= _Drawcall.mrMeshStrip;
+	const zcRes::GfxVertexRef&			rVertex		= rMeshStrip->GetProxy()->mrInputStreamProxy->GetProxy()->mrVertexProxy;
+	const zcRes::GfxIndexRef&			rIndex		= rMeshStrip->GetProxy()->mrIndexBufferProxy;
+	const zcRes::GfxShaderBindingRef	rShaderBind	= rMeshStrip->GetProxy()->mrShaderBindingProxy;
 	if( _Context.mrInputStream != rMeshStrip->GetProxy()->mrInputStreamProxy )
 	{
 		_Context.mrInputStream = rMeshStrip->GetProxy()->mrInputStreamProxy;
 		mDX11pContextImmediate->IASetInputLayout( rMeshStrip->GetProxy()->mrInputStreamProxy->GetProxy()->mpInputLayout );
 	}
-	if( _Context.mePrimitiveType != rIndex->GetProxy()->mePrimitiveType )
+	
+	if( _Context.mePrimitiveType != rIndex->GetResData()->mePrimitiveType )
 	{
-		_Context.mePrimitiveType = rIndex->GetProxy()->mePrimitiveType;
-		mDX11pContextImmediate->IASetPrimitiveTopology( rIndex->GetProxy()->mePrimitiveType );
+		_Context.mePrimitiveType = rIndex->GetResData()->mePrimitiveType;
+		mDX11pContextImmediate->IASetPrimitiveTopology( _Context.mePrimitiveType );
 	}		
 	if( _Context.mrShaderVertex != rShaderBind->GetProxy()->mrProxShaderVertex )
 	{
@@ -295,12 +296,12 @@ void ManagerRender::UpdateShaderState(const zcGfx::CommandDraw& _Drawcall, Rende
 	}
 	if(_Context.mbScreenScissorOn && _Context.mvScreenScissor != _Drawcall.mvScreenScissor )
 	{
-		_Context.mvScreenScissor = _Drawcall.mvScreenScissor;
 		D3D11_RECT ScissorRect;
-		ScissorRect.left	= _Drawcall.mvScreenScissor.x;
-		ScissorRect.top		= _Drawcall.mvScreenScissor.y;
-		ScissorRect.right	= zenMath::Min<zU16>(_Drawcall.mvScreenScissor.z, (zU16)_Context.mrStateView->GetProxy()->mViewport.Width);
-		ScissorRect.bottom	= zenMath::Min<zU16>(_Drawcall.mvScreenScissor.w, (zU16)_Context.mrStateView->GetProxy()->mViewport.Height);
+		_Context.mvScreenScissor	= _Drawcall.mvScreenScissor;		
+		ScissorRect.left			= _Drawcall.mvScreenScissor.x;
+		ScissorRect.top				= _Drawcall.mvScreenScissor.y;
+		ScissorRect.right			= zenMath::Min<zU16>(_Drawcall.mvScreenScissor.z, (zU16)_Context.mrStateView->GetProxy()->mViewport.Width);
+		ScissorRect.bottom			= zenMath::Min<zU16>(_Drawcall.mvScreenScissor.w, (zU16)_Context.mrStateView->GetProxy()->mViewport.Height);
 		mDX11pContextImmediate->RSSetScissorRects(1, &ScissorRect);
 	}
 	
@@ -313,8 +314,9 @@ void ManagerRender::UpdateShaderState(const zcGfx::CommandDraw& _Drawcall, Rende
 				rMeshStrip->GetProxy()->marShaderParamProxy[bufferIdx]->GetProxy()->Bind(static_cast<zenConst::eShaderStage>(stageIdx));
 	}
 
-	mDX11pContextImmediate->IASetIndexBuffer		( rIndex->GetProxy()->mpIndiceBuffer, rIndex->GetProxy()->meIndiceFormat, 0 );
-	mDX11pContextImmediate->IASetVertexBuffers		( 0, 1, rVertex->GetProxy()->maStreamBuffer.First(), rVertex->GetProxy()->maStreamStride.First(), &UnusedOffset );
+	const zcRes::GfxIndex::ResDataConstRef& IndexData = rIndex->GetResData();
+	mDX11pContextImmediate->IASetIndexBuffer	( IndexData->mpIndiceBuffer, IndexData->meIndiceFormat, 0 );
+	mDX11pContextImmediate->IASetVertexBuffers	( 0, 1, rVertex->GetProxy()->maStreamBuffer.First(), rVertex->GetProxy()->maStreamStride.First(), &UnusedOffset );
 
 	//----------------------------------------------------------------------------
 	// Assign texture/sampler input for each shader stage
@@ -380,12 +382,12 @@ void ManagerRender::Render(zArrayDynamic<zEngineRef<zcGfx::Command>>& _aDrawcall
 {	
 	if(_aDrawcalls.Count() )
 	{
-		//_aDrawcalls.Sort(); //! @todo urgent readd sorting
+		//_aDrawcalls.Sort(); //! @todo urgent re-add sorting
 		RenderContext				Context;
 		zEngineRef<zcGfx::Command>*	prDrawcall = _aDrawcalls.First();
 		for(zUInt i(0), count(_aDrawcalls.Count()); i<count; ++i, ++prDrawcall)
 		{	
-			if( (*prDrawcall).IsValid() && (*prDrawcall)->mrRenderPass.IsValid() )
+			if( (*prDrawcall).IsValid()/* && (*prDrawcall)->mrRenderPass.IsValid()*/ )
 			{	
 				// Render Commands other than Draw/Compute
 				//! @todo Perf test compared to virtual method
@@ -394,6 +396,7 @@ void ManagerRender::Render(zArrayDynamic<zEngineRef<zcGfx::Command>>& _aDrawcall
 					zcGfx::CommandDraw* pCommandDraw = static_cast<zcGfx::CommandDraw*>( (*prDrawcall).Get() );
 					if( pCommandDraw->mrMeshStrip.IsValid() )
 					{
+						zcPerf::EventGPUCounter::Create(zcPerf::EventGPUCounter::keType_DrawIndexed);
 						const zcRes::GfxMeshStripRef& rMeshStrip = pCommandDraw->mrMeshStrip;
 						UpdateGPUState(*prDrawcall, Context);
 						UpdateShaderState(*pCommandDraw, Context);

@@ -304,8 +304,8 @@ void WndAssetBrowser::CreateSectionPackage()
 	zUInt uIconSize(16);
 	mpPanelPackage		= zenNewDefault wxPanel(this);
 	wxBoxSizer* sizer	= zenNewDefault wxBoxSizer(wxVERTICAL);
-	mpIconPackage		= zenNewDefault wxImageList(uIconSize, uIconSize, true);
 
+	mpIconPackage		= zenNewDefault wxImageList(uIconSize, uIconSize, true);
 	mpIconPackage->Add(wxArtProvider::GetIcon(wxART_FOLDER,			wxART_LIST, wxSize(uIconSize,uIconSize)));
 	mpIconPackage->Add(wxArtProvider::GetIcon(wxART_FOLDER_OPEN,	wxART_LIST, wxSize(uIconSize,uIconSize)));	
 	mpIconPackage->Add(wxArtProvider::GetIcon(wxART_COPY,			wxART_LIST, wxSize(uIconSize,uIconSize)));
@@ -315,7 +315,7 @@ void WndAssetBrowser::CreateSectionPackage()
 	mpTreePackage = zenNewDefault wxTreeListCtrl(mpPanelPackage, ID_Package_Tree,	wxDefaultPosition, wxDefaultSize, wxTL_DEFAULT_STYLE | wxTL_CHECKBOX | wxTL_3STATE );
 	mpTreePackage->AppendColumn("Packages", wxCOL_WIDTH_AUTOSIZE, wxALIGN_LEFT, wxCOL_RESIZABLE | wxCOL_SORTABLE);
 	mpTreePackage->AppendColumn("#", wxCOL_WIDTH_AUTOSIZE, wxALIGN_RIGHT, wxCOL_RESIZABLE | wxCOL_SORTABLE);
-	mpTreePackage->SetImageList(mpIconPackage);
+	mpTreePackage->SetImageList(mpIconPackage); //@todo Urgent Issue with this on 3.10 //SF
 	mpTreePackage->GetDataView()->SetIndent(16);
 
 	mpTreePackage->GetDataView()->SetId(ID_Package_Tree) ;
@@ -356,12 +356,12 @@ void WndAssetBrowser::CreateSectionAsset()
 	pRdioAssetView[meAssetView]->SetValue(true);
 
 	mpTxtAssetFilter				= zenNewDefault wxSearchCtrl(mpPanelAsset, -1, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER);
-
-	sizerRightOptions->Add(mpTxtAssetFilter,	100,	wxGROW | wxALL | wxALIGN_CENTRE_VERTICAL, 0);
+	//! @todo clean removed alignement, causes assert
+	sizerRightOptions->Add(mpTxtAssetFilter,	100,	wxGROW | wxALL /*| wxALIGN_CENTRE_VERTICAL*/, 0);
 	sizerRightOptions->AddSpacer(4);
-	sizerRightOptions->Add(pRdioAssetView[0],	0,		wxGROW | wxALL | wxALIGN_CENTRE_VERTICAL, 0);
-	sizerRightOptions->Add(pRdioAssetView[1],	0,		wxGROW | wxALL | wxALIGN_CENTRE_VERTICAL, 0);
-	sizerRightOptions->Add(pRdioAssetView[2],	0,		wxGROW | wxALL | wxALIGN_CENTRE_VERTICAL, 0);
+	sizerRightOptions->Add(pRdioAssetView[0],	0,		wxGROW | wxALL /*| wxALIGN_CENTRE_VERTICAL*/, 0);
+	sizerRightOptions->Add(pRdioAssetView[1],	0,		wxGROW | wxALL /*| wxALIGN_CENTRE_VERTICAL*/, 0);
+	sizerRightOptions->Add(pRdioAssetView[2],	0,		wxGROW | wxALL /*| wxALIGN_CENTRE_VERTICAL*/, 0);
 	sizer->Add(sizerRightOptions,				0,		wxGROW | wxALL, 2);
 
 	mpPanelAsset->SetSizer(sizer);	
@@ -538,7 +538,7 @@ void WndAssetBrowser::UpdatePackageList(wxTreeListItem _treeParentID, const zenA
 	{
 		const zenAss::zPackageRef& rPackage			= _rGroupToAdd.GetPackages()[idx];
 		wxPackageClientData* pClientData			= zenNewDefault wxPackageClientData(nullptr, rPackage);		
-		wxTreeListItem treeIDPackage				= mpTreePackage->AppendItem(_treeParentID, rPackage.GetName(), IcoPkg_Package, IcoPkg_Package);		
+		wxTreeListItem treeIDPackage				= mpTreePackage->AppendItem(_treeParentID, rPackage.GetName(), IcoPkg_Package, IcoPkg_Package);
 		mpTreePackage->SetItemData(treeIDPackage, pClientData );
 		mpTreePackage->CheckItem(treeIDPackage, _dSelectedItems.Exist(pClientData->mHashID) ? wxCHK_CHECKED : wxCHK_UNCHECKED );
 	}

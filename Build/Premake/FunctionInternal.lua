@@ -37,19 +37,20 @@ function Orion_ConfigureBuild()
 		system 			( "Windows")
 		defines			( {"WIN32","_WINDOWS", "ZEN_PLATFORM=PC", "ZEN_PLATFORM_PC=1", "ZEN_RENDERER=DX11", "ZEN_RENDERER_DX11=1"})
 		debugdir		( vSourceRoot .. "/Build/Content")
-		
+	--[[	
 	configuration		( "PCGame32")
 		architecture 	( "x32")
 		defines			( {"ZEN_ENGINEGAME=1"})
-		targetdir 		( vOutputRoot .. iif(vIsLib, "/" .. project().name .. "/Game32", "/../[Bin]/Windows32") )		
-	configuration 		( "PCGame64")
-		architecture 	( "x64")		
-		defines			( {"ZEN_ENGINEGAME=1"})
-		targetdir 		( vOutputRoot .. iif(vIsLib, "/" .. project().name .. "/Game64", "/../[Bin]/Windows64") )
+		targetdir 		( vOutputRoot .. iif(vIsLib, "/" .. project().name .. "/Game32", "/../[Bin]/Windows32") )
 	configuration 		( "PCTool32")
 		architecture 	( "x32")
 		defines			( {"ZEN_ENGINETOOL=1"})
 		targetdir 		( vOutputRoot .. iif(vIsLib, "/" .. project().name .. "/Tool32", "/../[Bin]/Windows32") )
+	]]--	
+	configuration 		( "PCGame64")
+		architecture 	( "x64")		
+		defines			( {"ZEN_ENGINEGAME=1"})
+		targetdir 		( vOutputRoot .. iif(vIsLib, "/" .. project().name .. "/Game64", "/../[Bin]/Windows64") )	
 	configuration 		( "PCTool64")
 		architecture 	( "x64")
 		defines			( {"ZEN_ENGINETOOL=1"})
@@ -131,25 +132,26 @@ end
 
 -- ============================================================================
 -- 	Add support for WxWidget, to a particular project
---  Needs to get those file from "http://sourceforge.net/projects/wxwindows/files/3.0.2/" : 
---		wxMSW-3.0.2_vc120_x64_ReleaseDLL.7z
---		wxMSW-3.0.2_vc120_x64_Dev.7z
---		wxWidgets-3.0.2_headers.7z
+--  Needs to get those file from "https://github.com/wxWidgets/wxWidgets/releases/tag/v3.1.0" : 
+--		wxMSW-3.1.0_vc140_x64_Dev.7z
+--		wxWidgets-3.1.0-headers.7z
+--		wxMSW-3.1.0_vc140_x64_ReleaseDLL.7z
+--		wxMSW-3.1.0_vc140_x64_ReleasePDB.7z
 -- ============================================================================
 function Orion_AddProjectWxWidget()
-	vLibsDebug = {"wxmsw30ud_core", "wxbase30ud", "wxmsw30ud_aui", "wxmsw30ud_propgrid", "wxmsw30ud_adv", "wxjpegd", "wxpngd", "wxzlibd", "wxregexud", "wxexpatd", "wxtiffd"}
-	vLibsRelease = {"wxmsw30u_core", "wxbase30u", "wxmsw30u_aui", "wxmsw30u_propgrid", "wxmsw30u_adv", "wxjpeg", "wxpng", "wxzlib", "wxregexu", "wxexpat", "wxtiff"}
+	vLibsDebug = {"wxmsw31ud_core", "wxbase31ud", "wxmsw31ud_aui", "wxmsw31ud_propgrid", "wxmsw31ud_adv", "wxjpegd", "wxpngd", "wxzlibd", "wxregexud", "wxexpatd", "wxtiffd"}
+	vLibsRelease = {"wxmsw31u_core", "wxbase31u", "wxmsw31u_aui", "wxmsw31u_propgrid", "wxmsw31u_adv", "wxjpeg", "wxpng", "wxzlib", "wxregexu", "wxexpat", "wxtiff"}
 	
 	configuration		( {} )
 		includedirs		( {vSourceRoot .. "/Engine/ThirdParty/[wxWidgets]/include"} )
 		includedirs		( {vSourceRoot .. "/Engine/ThirdParty/[wxWidgets]/include/msvc"} )	
-		defines			( {"WXUSINGDLL=1", "wxMSVC_VERSION=120"} )		
+		defines			( {"WXUSINGDLL=1", "wxMSVC_VERSION=140"} )		
 	configuration		( "*64")
-		libdirs 		(vSourceRoot .. "/Engine/ThirdParty/[wxWidgets]/lib/vc120_x64_dll")
+		libdirs 		(vSourceRoot .. "/Engine/ThirdParty/[wxWidgets]/lib/vc140_x64_dll")
 	configuration( "PC*" )	
-		postbuildcommands { "xcopy \"" .. vSourceRoot .. "/Engine/ThirdParty/[wxWidgets]/lib/vc120_x64_dll\\*.dll\" \"$(TargetDir)\" /Y /D" } --xcopy doesn't support '/' with wirldcard, so last one is a '\'
+		postbuildcommands { "xcopy \"" .. vSourceRoot .. "/Engine/ThirdParty/[wxWidgets]/lib/vc140_x64_dll\\*.dll\" \"$(TargetDir)\" /Y /D" } --xcopy doesn't support '/' with wirldcard, so last one is a '\'
 	configuration		( "Debug" )
-		links			( vLibsDebug )
+		links			( vLibsRelease )
 	configuration 		( "Release" )
 		links			( vLibsRelease )
 	configuration 		( "Final" )

@@ -37,7 +37,7 @@ bool ExporterGfxVertexDX11_DX11::ExportWork(bool _bIsTHRTask)
 	for( zUInt stream=0; stream<mrResData->maStream.Count(); ++stream )
 	{
 		const zenRes::zGfxVertex::Stream& StreamIn		= pExportInfo->maStreams[stream];
-		ResData::Stream& StreamOut					= mrResData->maStream[stream];
+		ResData::Stream& StreamOut						= mrResData->maStream[stream];
 		StreamOut.maData								= StreamIn.maData;
 		StreamOut.muStride								= StreamIn.muStride;
 		StreamOut.muElementStart						= uElementCur;

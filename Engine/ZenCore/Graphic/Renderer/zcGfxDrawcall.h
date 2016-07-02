@@ -20,33 +20,52 @@ public:
 //protected:			
 	enum eGPUPipelineMode
 	{
-		keGpuPipe_PreDrawCommand,
-		keGpuPipe_PreCompute, 
+		keGpuPipe_DataUpdate,
+		keGpuPipe_PreDrawCompute,
 		keGpuPipe_Vertex, 
 		keGpuPipe_VertexPixel, 
 		keGpuPipe_VertexPixelGeo, 
 		keGpuPipe_VertexPixelDomainHull, 
-		keGpuPipe_PostCompute, 
-		keGpuPipe_PostDrawCommand,
+		keGpuPipe_PostDrawCompute,
 	};
 
 	union RenderStateSortID
 	{
 		// Put highest cost state change item last
 		// Have a struct per Pipeline mode?
-		struct
+		struct 
 		{
-			float	mfPriority;
+			float	mfPriority;			
 			zU32	muShaderBindingID	: 32;	
 			zU32	muVertexShaderID	: 16;
 			zU32	muInputShaderID		: 16;
 			zU32	muRasterStateID		: 12;	//! @todo Urgent finish sorting ID
 			zU32	mbCullingFrontface	: 1;	//!< Meshstrip wants frontface culling
 			zU32	mbCullingBackface	: 1;	//!< Meshstrip wants backface culling
-			zU32	muGPUPipelineMode	: 3;	//!< One of eGPUPipelineMode enum value			
-			zU32	muRenderPassID		: 8;	//!< Rendering pass ID			
-			zU32	Unused				: 7;	//!< Available bits
-		};
+			zU32	muUnused			: 7;
+
+			zU32	muGPUPipelineMode	: 3;	//!< One of eGPUPipelineMode enum value
+			zU32	muRenderPassID		: 8;	//!< Rendering pass ID						
+		}Draw;
+		struct 
+		{
+			float	mfPriority;						
+			zU32	muShaderBindingID	: 32;
+			zU32	muUnused1			: 32;
+			zU32	muUnused2			: 21;
+			
+			zU32	muGPUPipelineMode	: 3;	//!< One of eGPUPipelineMode enum value
+			zU32	muRenderPassID		: 8;	//!< Rendering pass ID						
+		}Compute;
+		struct 
+		{
+			zU64	muResID;
+			zU32	muUnused1			: 32;
+			zU32	muUnused2			: 21;
+			
+			zU32	muGPUPipelineMode	: 3;	//!< One of eGPUPipelineMode enum value
+			zU32	muRenderPassID		: 8;	//!< Rendering pass ID						
+		}DataUpdate;
 		struct 
 		{
 			zU64	mSortKeyLo;
@@ -60,8 +79,9 @@ public:
 	static float			sfCommandCount;			//!< Number of command issued this frame. Used to set command priority when sorting. (made it a float to avoid float/int conversion cost for each drawcall)
 protected:
 							Command();
-	ZENInline void			ConfigureBase( const zcRes::GfxRenderPassRef& _rRenderPass, float _fPriority, zU32 _uShaderBindingID, eGPUPipelineMode _eGPUPipelineMode ); 
-	ZENInline void			ConfigureBase( const zcRes::GfxRenderPassRef& _rRenderPass, float _fPriority, const zcRes::GfxMeshStripRef& _rMeshStrip ); 	
+	ZENInline void			SetSortKeyDraw		( const zcRes::GfxRenderPassRef& _rRenderPass, float _fPriority, const zcRes::GfxMeshStripRef& _rMeshStrip ); 	
+	ZENInline void			SetSortKeyCompute	( const zcRes::GfxRenderPassRef& _rRenderPass, float _fPriority, zU32 _uShaderBindingID, bool _bBeforeDraw=true);
+	ZENInline void			SetSortKeyDataUpdate( /*const zcRes::GfxRenderPassRef& _rRenderPass,*/ zU64 _uResID ); 	
 };
 
 class CommandDraw : public Command
@@ -97,7 +117,7 @@ class CommandClearDepthStencil : public Command
 {
 ZENClassDeclare(CommandClearDepthStencil, Command)
 public:
-	static zEngineRef<Command> Create( const zcRes::GfxRenderPassRef& _rRenderPass, const zcRes::GfxRenderTargetRef& _rRTDepth, bool _bClearDepth, float _fDepthValue=1.f, bool _bClearStencil=false, zU8 _uStencilValue=128);
+	static zEngineRef<Command>	Create( const zcRes::GfxRenderPassRef& _rRenderPass, const zcRes::GfxRenderTargetRef& _rRTDepth, bool _bClearDepth, float _fDepthValue=1.f, bool _bClearStencil=false, zU8 _uStencilValue=128);
 	virtual void				Invoke();
 
 protected:
@@ -108,26 +128,18 @@ protected:
 	zU8							muStencilValue;
 };
 
-class CommandEventStart : public Command
+class CommandUpdateIndex : public Command
 {
-ZENClassDeclare(CommandEventStart, Command)
+	ZENClassDeclare(CommandUpdateIndex, Command)
 public:
-	static zEngineRef<Command> Create(const zcRes::GfxRenderPassRef& _rRenderPass/*, const zenPerf::zEventRef& _rEventGPU*/ );
+	static zEngineRef<Command>	Create( const zcRes::GfxIndexRef& _rIndex, zU8* _pData, zUInt _uOffset=0, zUInt _uSize=0xFFFFFFFFFFFFFFFF);
 	virtual void				Invoke();
 
 protected:	
-	//zenPerf::zEventRef			mrEventGPU;
-};
-
-class CommandEventStop : public Command
-{
-	ZENClassDeclare(CommandEventStop, Command)
-public:
-	static zEngineRef<Command> Create(const zcRes::GfxRenderPassRef& _rRenderPass/*, const zenPerf::zEventRef& _rEventGPU*/ );
-	virtual void				Invoke();
-
-protected:
-	//zenPerf::zEventRef			mrEventGPU;
+	zcRes::GfxIndexRef	mrIndex;
+	zU8*				mpData;
+	zUInt				muOffset;
+	zUInt				muSize;
 };
 
 }

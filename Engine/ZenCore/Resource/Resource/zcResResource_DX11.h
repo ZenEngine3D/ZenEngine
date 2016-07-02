@@ -4,6 +4,7 @@
 
 namespace zcRes
 {	
+//! @todo Clean remove all this once moved to resource2
 	typedef class GfxSamplerProxy_DX11								GfxSamplerProxy;
 	typedef zcExp::ExporterGfxSamplerDX11_DX11						GfxSamplerExporterRuntime;
 	typedef zcExp::ExporterGfxSamplerDX11_DX11::ResData				GfxSamplerResData;
@@ -20,9 +21,9 @@ namespace zcRes
 	typedef zcExp::ExporterGfxStateRasterizerDX11_DX11				GfxStateRasterizerExporterRuntime;
 	typedef zcExp::ExporterGfxStateRasterizerDX11_DX11::ResData		GfxStateRasterizerResData;
 	
-	typedef class GfxIndexProxy_DX11								GfxIndexProxy;
-	typedef zcExp::ExporterGfxIndexDX11_DX11						GfxIndexExporterRuntime;
-	typedef zcExp::ExporterGfxIndexDX11_DX11::ResData				GfxIndexResData;
+	//typedef class GfxIndexProxy_DX11								GfxIndexProxy;
+	//typedef zcExp::ExporterGfxIndexDX11_DX11						GfxIndexExporterRuntime;
+	//typedef zcExp::ExporterGfxIndexDX11_DX11::ExportData			GfxIndexExportData;
 	
 	typedef class GfxVertexProxy_DX11								GfxVertexProxy;
 	typedef zcExp::ExporterGfxVertexDX11_DX11						GfxVertexExporterRuntime;

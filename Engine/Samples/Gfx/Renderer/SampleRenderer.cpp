@@ -71,8 +71,6 @@ bool SampleRendererInstance::Init()
 	Super::Init();
 	CreateGfxWindow( zVec2U16(1280, 800), zVec2U16(0,0) );
 	
-	//! @todo Urgent : Finish raster state, per mesh values
-
 	//-----------------------------------------------------------
 	// Prepare some data for asset creation
 	zArrayStatic<zenRes::zGfxVertex::Stream> aVerticeStreams(1);		
@@ -103,29 +101,29 @@ bool SampleRendererInstance::Init()
 	//---------------------------------------------------------------------
 	// Create rendering resources		
 	//---------------------------------------------------------------------	
-	mrCubeVertex									= zenRes::zGfxVertex::Create(aVerticeStreams, zFlagResUse());	
-	mrCubeIndex										= zenRes::zGfxIndex::Create( zArrayStatic<zU16>(CubeIndices, ZENArrayCount(CubeIndices), TRUE), zenConst::kePrimType_TriangleList );
-	mrShaderVS										= zenRes::zGfxShaderVertex::Create( "Shader/Tutorial07.fx", "VS");
-	mrShaderPS										= zenRes::zGfxShaderPixel::Create( "Shader/Tutorial07.fx", "PS", aShaderDefines );		
-	mrShaderPS2Output								= zenRes::zGfxShaderPixel::Create( "Shader/Tutorial07.fx", "PS2Output", aShaderDefines );		
-	mrTexture										= zenRes::zGfxTexture2d::Create(zenConst::keTexFormat_RGBA8, vTexSize, aTexRGBA );
-	mrSampler										= zenRes::zGfxSampler::Create(zenConst::keTexFilter_Trilinear, zenConst::keTexFilter_Bilinear, zenConst::keTexWrap_Clamp, zenConst::keTexWrap_Clamp, 0);
-	mrSampler2										= zenRes::zGfxSampler::Create(zenConst::keTexFilter_Point, zenConst::keTexFilter_Point, zenConst::keTexWrap_Clamp, zenConst::keTexWrap_Clamp, 0);	
+	mrCubeVertex										= zenRes::zGfxVertex::Create(aVerticeStreams, zFlagResUse());	
+	mrCubeIndex											= zenRes::zGfxIndex::Create( zArrayStatic<zU16>(CubeIndices, ZENArrayCount(CubeIndices), TRUE), zenConst::kePrimType_TriangleList );
+	mrShaderVS											= zenRes::zGfxShaderVertex::Create( "Shader/Tutorial07.fx", "VS");
+	mrShaderPS											= zenRes::zGfxShaderPixel::Create( "Shader/Tutorial07.fx", "PS", aShaderDefines );		
+	mrShaderPS2Output									= zenRes::zGfxShaderPixel::Create( "Shader/Tutorial07.fx", "PS2Output", aShaderDefines );		
+	mrTexture											= zenRes::zGfxTexture2d::Create(zenConst::keTexFormat_RGBA8, vTexSize, aTexRGBA );
+	mrSampler											= zenRes::zGfxSampler::Create(zenConst::keTexFilter_Trilinear, zenConst::keTexFilter_Bilinear, zenConst::keTexWrap_Clamp, zenConst::keTexWrap_Clamp, 0);
+	mrSampler2											= zenRes::zGfxSampler::Create(zenConst::keTexFilter_Point, zenConst::keTexFilter_Point, zenConst::keTexWrap_Clamp, zenConst::keTexWrap_Clamp, 0);	
 	
 	// Some bindings of render resource together
-	mrShaderBind									= zenRes::zGfxShaderBinding::Create(mrShaderVS, mrShaderPS);
-	mrShader2OutputBind								= zenRes::zGfxShaderBinding::Create(mrShaderVS, mrShaderPS2Output);
-	mrCube1MeshStrip								= zenRes::zGfxMeshStrip::Create( mrCubeVertex, mrCubeIndex, mrShader2OutputBind );
-	mrCube2MeshStrip								= zenRes::zGfxMeshStrip::Create( mrCubeVertex, mrCubeIndex, mrShaderBind );
-	mrCube3MeshStrip								= zenRes::zGfxMeshStrip::Create( mrCubeVertex, mrCubeIndex, mrShaderBind );
+	mrShaderBind										= zenRes::zGfxShaderBinding::Create(mrShaderVS, mrShaderPS);
+	mrShader2OutputBind									= zenRes::zGfxShaderBinding::Create(mrShaderVS, mrShaderPS2Output);
+	mrCube1MeshStrip									= zenRes::zGfxMeshStrip::Create( mrCubeVertex, mrCubeIndex, mrShader2OutputBind );
+	mrCube2MeshStrip									= zenRes::zGfxMeshStrip::Create( mrCubeVertex, mrCubeIndex, mrShaderBind );
+	mrCube3MeshStrip									= zenRes::zGfxMeshStrip::Create( mrCubeVertex, mrCubeIndex, mrShaderBind );
 
-	zenRes::zGfxMeshStrip rCube4MeshStripA			= zenRes::zGfxMeshStrip::Create( mrCubeVertex, mrCubeIndex, mrShaderBind, 0, 12 );
-	zenRes::zGfxMeshStrip rCube4MeshStripB			= zenRes::zGfxMeshStrip::Create( mrCubeVertex, mrCubeIndex, mrShaderBind, 12, 0xFFFFFFFF );
-	zArrayStatic<zenRes::zGfxMeshStrip> aMesh4Strip	= {rCube4MeshStripA, rCube4MeshStripB};
-	mrCube4Mesh										= zenRes::zGfxMesh::Create( aMesh4Strip );
+	zenRes::zGfxMeshStrip rCube4MeshStripA				= zenRes::zGfxMeshStrip::Create( mrCubeVertex, mrCubeIndex, mrShaderBind, 0, 12 );
+	zenRes::zGfxMeshStrip rCube4MeshStripB				= zenRes::zGfxMeshStrip::Create( mrCubeVertex, mrCubeIndex, mrShaderBind, 12, 0xFFFFFFFF );
+	zArrayStatic<zenRes::zGfxMeshStrip> aMesh4Strip		= {rCube4MeshStripA, rCube4MeshStripB};
+	mrCube4Mesh											= zenRes::zGfxMesh::Create( aMesh4Strip );
 
 	zenRes::zGfxStateRasterizer::Config	DefaultRasterConfig;
-	mrStateRaster									= zenRes::zGfxStateRasterizer::Create(DefaultRasterConfig);
+	mrStateRaster										= zenRes::zGfxStateRasterizer::Create(DefaultRasterConfig);
 	
 	
 	zArrayStatic<zenRes::zGfxRenderPass::ConfigColorRT>	aRenderToTextureColorRTConfig;

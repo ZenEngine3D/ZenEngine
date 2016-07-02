@@ -38,7 +38,7 @@ public:
 	static zEngineRef<DX11QueryTimestamp>	Create();				//!< @brief Get a new disjoint query and start the timestamp request
 	zU64									GetTimestampUSec();		//!< @brief Retrieve the timestamp result (0 if invalid)
 	virtual void							ReferenceNoneCB();		//!< @brief Return object to free list instead of deleting it
-
+	
 protected:
 											DX11QueryTimestamp();
 	ID3D11Query*							mpDX11Query;			//!< @brief DirectX timestamp query object used to get result

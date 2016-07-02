@@ -174,7 +174,6 @@ bool DepotResourceData::IsValid(const zArrayBase<zResID>& _aResID)
 	const zResID* pResIDEnd	= _aResID.Last()+1;
 	while( pResIdCur < pResIDEnd )
 	{
-		//if( !mdResourceData.Exist(pResIdCur->GetHashID()) )
 		if( mdResourceData.find(pResIdCur->GetHashID()) == mdResourceData.end() )
 			return false;
 		++pResIdCur;

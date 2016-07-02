@@ -13,7 +13,8 @@ namespace zcExp
 		virtual				~ISerialize(){}
 		virtual bool		Serialize( Serializer_Base& aSerializer )=0;
 	};
-	
+
+	//! @todo Clean rename ExportData
 	class ResourceData : public ISerialize, public zRefCounted
 	{
 	ZENClassDeclare(ResourceData, ISerialize)

@@ -2,7 +2,8 @@
 #ifndef __zCore_Res_Gfx_All_h__
 #define __zCore_Res_Gfx_All_h__
 
-#include ZENHeaderRenderer( zcResGfxIndex )
+namespace zcGfx { class ManagerRender; } //Forward declaration //! @todo clean remove this and call function to do the stuff needed in manager instead?
+
 #include ZENHeaderRenderer( zcResGfxVertex )
 #include ZENHeaderRenderer( zcResGfxShaderParam )
 #include ZENHeaderRenderer( zcResGfxBinding )

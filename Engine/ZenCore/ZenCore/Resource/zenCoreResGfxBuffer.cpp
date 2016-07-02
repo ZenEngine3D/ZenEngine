@@ -59,17 +59,22 @@ void zGfxVertex::Unlock()
 //=================================================================================================
 zU8* zGfxIndex::Lock()
 {
-	ZENAssertMsg(mpResource, "No valid resource assigned");
-	zcRes::GfxIndex* pIndex = static_cast<zcRes::GfxIndex*>(mpResource);
-	return pIndex->Lock();
+	zcRes::GfxIndexRef rIndex = mpResource;
+	return rIndex->Lock();
 }
-
+/*
 void zGfxIndex::Unlock()
 {
-	ZENAssertMsg(mpResource, "No valid resource assigned");
-	zcRes::GfxIndex* pIndex = static_cast<zcRes::GfxIndex*>(mpResource);
-	return pIndex->Unlock();
+	zcRes::GfxIndexRef rIndex = mpResource;
+	rIndex->Unlock();
 }
+*/
+void zGfxIndex::Unlock(const zenGfx::zContext& rContext)
+{
+	zcRes::GfxIndexRef rIndex = mpResource;
+	rIndex->Unlock(rContext);
+}
+
 
 //=================================================================================================
 // GFX TEXTURE2D

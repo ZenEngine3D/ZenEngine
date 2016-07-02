@@ -23,7 +23,7 @@ namespace zcPerf
 
 	double EventGPU_DX11::GetElapsedMs()
 	{
-		if( muTimeElapsed == 0 && mrQueryTimestampStart.IsValid() && mrQueryTimestampStop.IsValid() )
+		if( muTimeElapsed == 0 && mrQueryTimestampStart.IsValid() && mrQueryTimestampStop.IsValid() && mrQueryTimestampStart->GetTimestampUSec() > 0 && mrQueryTimestampStop->GetTimestampUSec() > 0)
 		{
 			zU64 uTimeStart	= mrQueryTimestampStart->GetTimestampUSec();
 			zU64 uTimeStop	= mrQueryTimestampStop->GetTimestampUSec();

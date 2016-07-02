@@ -25,7 +25,7 @@ namespace zcExp
 		ExportInfoGfxMeshStrip*	pExportInfo							= static_cast<ExportInfoGfxMeshStrip*>(mpExportInfo);
 		zEngineConstRef<ResDataGfxShaderBinding>	rShaderBinding	= zcDepot::ResourceData.GetItem<ResDataGfxShaderBinding>(pExportInfo->mShaderBindingID);
 		zEngineConstRef<ResDataGfxShaderDX11>		rVertexShader	= rShaderBinding.IsValid() ? zcDepot::ResourceData.GetItem<ResDataGfxShaderDX11>(rShaderBinding->maShaderID[zenConst::keShaderStage_Vertex]) : nullptr;
-		zEngineConstRef<ResDataGfxIndexDX11>		rIndexBuffer	= zcDepot::ResourceData.GetItem<ResDataGfxIndexDX11>(pExportInfo->mIndexBufferID);
+		zEngineConstRef<ExportGfxIndexDX11>			rIndexBuffer	= zcDepot::ResourceData.GetItem<ExportGfxIndexDX11>(pExportInfo->mIndexBufferID);
 
 		if( mpExportInfo->IsSuccess() && Super::ExportEnd() && rIndexBuffer.IsValid() && rShaderBinding.IsValid() && rVertexShader.IsValid() )
 		{			
@@ -34,7 +34,7 @@ namespace zcExp
 			//-----------------------------------------------------------------
 			mrResData->muIndexCount		= zenMath::Min( mrResData->muIndexCount, rIndexBuffer->muIndiceCount-mrResData->muIndexFirst );
 			mrResData->mStreamBindingID	= CreateGfxInputStream(pExportInfo->mVertexBufferID, rVertexShader->mShaderInputSignatureID);
-
+			 
 			//---------------------------------------------------------------------
 			// Make sure there's a ShaderParam for each ShaderParamDef needed
 			//	Store ParamDefID in array, and replace it with the ParamId 

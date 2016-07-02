@@ -31,17 +31,19 @@ namespace zen { namespace zenMath
 	}
 
 	template<class _Type_>
-	_Type_ Lerp( const _Type_& _Value1, const _Type_& _Value2, float _fRatio ) 
+	_Type_ Lerp( const _Type_& _StartValue, const _Type_& _EndValue, float _fRatio ) 
 	{
-		return _Value1*Min<float>(_fRatio,1.f) + _Value2*(1.0f-Max<float>(_fRatio,0.f) ); 
+		float fRatio = Clamp(_fRatio, 0.f, 1.f);
+		return _StartValue*(1.0f-fRatio) + _EndValue*fRatio; 
 	}
 
 	template<class _Type_>
-	_Type_ TriLerp( const _Type_& _Value1, const _Type_& _Value2, const _Type_& _Value3, float _fRatio ) 
+	_Type_ TriLerp( const _Type_& _StartValue, const _Type_& _MidValue, const _Type_& _EndValue, float _fRatio ) 
 	{
-		float fRatio = (_fRatio < 0.5f) ? _fRatio*2.f : (_fRatio-0.5f)*2.f;
-		return (_fRatio < 0.5f)	? _Value1*Min<float>(fRatio, 1.0f) + _Value2*(1.0f-Max<float>(fRatio,0.f))	
-								: _Value2*Min<float>(fRatio, 1.0f) + _Value3*(1.0f-Max<float>(fRatio,0.f)); 
+		float fRatioClamp	= Clamp(_fRatio, 0.f, 1.f);
+		float fRatio		= (fRatioClamp < 0.5f) ? fRatioClamp*2.f : (fRatioClamp-0.5f)*2.f;
+		return (fRatioClamp < 0.5f)	? _StartValue*(1.0f-fRatio) + _MidValue*fRatio
+									: _MidValue*(1.0f-fRatio)	+ _EndValue*fRatio; 
 	}
 
 	ZENInline float Fract(float _fValue){ float fIntPart; return modf(_fValue, &fIntPart); }

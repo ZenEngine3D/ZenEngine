@@ -59,36 +59,43 @@ namespace zen { namespace zenWnd
 			case WM_LBUTTONDOWN:
 				pParentWindow->mWindowMutex.lock();
 				pParentWindow->mWindowInput.mbIsMouseDown[WindowInputState::keMouseBtn_Left] = true;
+				pParentWindow->mWindowInput.mbIsMousePressed[WindowInputState::keMouseBtn_Left] = true;
 				pParentWindow->mWindowMutex.unlock();
 				break;
 			case WM_LBUTTONUP:
 				pParentWindow->mWindowMutex.lock();
 				pParentWindow->mWindowInput.mbIsMouseDown[WindowInputState::keMouseBtn_Left] = false;
+				pParentWindow->mWindowInput.mbIsMouseReleased[WindowInputState::keMouseBtn_Left] = true;
 				pParentWindow->mWindowMutex.unlock();
 				break;
 			case WM_RBUTTONDOWN:
 				pParentWindow->mWindowMutex.lock();
 				pParentWindow->mWindowInput.mbIsMouseDown[WindowInputState::keMouseBtn_Right] = true;
+				pParentWindow->mWindowInput.mbIsMousePressed[WindowInputState::keMouseBtn_Right] = true;
 				pParentWindow->mWindowMutex.unlock();				
 				break;
 			case WM_RBUTTONUP:
 				pParentWindow->mWindowMutex.lock();
 				pParentWindow->mWindowInput.mbIsMouseDown[WindowInputState::keMouseBtn_Right] = false;
+				pParentWindow->mWindowInput.mbIsMouseReleased[WindowInputState::keMouseBtn_Right] = true;
 				pParentWindow->mWindowMutex.unlock();
 				break;
 			case WM_MBUTTONDOWN:
 				pParentWindow->mWindowMutex.lock();
 				pParentWindow->mWindowInput.mbIsMouseDown[WindowInputState::keMouseBtn_Middle] = true;
+				pParentWindow->mWindowInput.mbIsMousePressed[WindowInputState::keMouseBtn_Middle] = true;
 				pParentWindow->mWindowMutex.unlock();
 				break;
 			case WM_MBUTTONUP:
 				pParentWindow->mWindowMutex.lock();
 				pParentWindow->mWindowInput.mbIsMouseDown[WindowInputState::keMouseBtn_Middle] = false;
+				pParentWindow->mWindowInput.mbIsMouseReleased[WindowInputState::keMouseBtn_Left] = false;
 				pParentWindow->mWindowMutex.unlock();
 				break;
 			case WM_MOUSEWHEEL:
 				pParentWindow->mWindowMutex.lock();
-				pParentWindow->mWindowInput.mfMouseWheel += GET_WHEEL_DELTA_WPARAM(wParam) > 0 ? +1.0f : -1.0f;
+				pParentWindow->mWindowInput.mfMouseWheelDelta	= GET_WHEEL_DELTA_WPARAM(wParam) > 0 ? +1.0f : -1.0f;
+				pParentWindow->mWindowInput.mfMouseWheel		+= pParentWindow->mWindowInput.mfMouseWheelDelta;				
 				pParentWindow->mWindowMutex.unlock();
 				break;
 			case WM_MOUSEMOVE:

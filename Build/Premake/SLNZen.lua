@@ -1,5 +1,7 @@
-vPlatformGame 	= {"PCGame32", "PCGame64"}
-vPlatformTool 	= {"PCTool32", "PCTool64"}
+--vPlatformGame 	= {"PCGame32", "PCGame64"}
+--vPlatformTool 	= {"PCTool32", "PCTool64"}
+vPlatformGame 	= {"PCGame64"}
+vPlatformTool 	= {"PCTool64"}
 vPlatformAll 	= {vPlatformGame, vPlatformTool}
 
 solution( "Zen" )    

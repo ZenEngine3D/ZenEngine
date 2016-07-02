@@ -47,7 +47,8 @@ namespace zen { namespace zenRes
 	ZENClassResourceRefDeclare(zGfxIndex, zenConst::keResType_GfxIndex)
 	public:		
 		zU8*					Lock();
-		void					Unlock();
+		//void					Unlock();
+		void					Unlock(const zenGfx::zContext& rContext);
 
 		static zGfxIndex		Create(const zArrayBase<zU16>& _Indices, zenConst::ePrimitiveType _ePrimitiveType);
 		static zGfxIndex		Create(const zArrayBase<zU32>& _Indices, zenConst::ePrimitiveType _ePrimitiveType);

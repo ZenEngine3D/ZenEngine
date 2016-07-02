@@ -23,7 +23,10 @@ enum eMouseButton
 
 	zVec2S16						mvMousePos			= zVec2S16(0,0);	
 	float							mfMouseWheel		= 0;
+	float							mfMouseWheelDelta	= 0;
 	std::bitset<keMouseBtn__Count>	mbIsMouseDown;
+	std::bitset<keMouseBtn__Count>	mbIsMousePressed;
+	std::bitset<keMouseBtn__Count>	mbIsMouseReleased;
 	std::bitset<255>				mbIsKeyDown;
 	std::bitset<255>				mbIsKeyPressed;
 	std::bitset<255>				mbIsKeyReleased;

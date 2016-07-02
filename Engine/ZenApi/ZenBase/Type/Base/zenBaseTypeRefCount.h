@@ -59,7 +59,7 @@ namespace zen { namespace zenType {
 	template<class TRefCountedType>
 	class zEngineConstRef : public zReference
 	{
-	ZENClassDeclare(zEngineRef, zReference)
+	ZENClassDeclare(zEngineConstRef, zReference)
 	public:
 		ZENInline 							zEngineConstRef();
 		ZENInline 							zEngineConstRef(const TRefCountedType* _pReference);

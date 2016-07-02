@@ -50,8 +50,8 @@ zArrayStatic<TType>::~zArrayStatic()
 template<class TType>
 zUInt zArrayStatic<TType>::SetCount(zUInt _uCount)
 {
-	zenDelnullptrArray(mpData);			
-	if( _uCount )	mpData = zenNewDefault TType[_uCount];			
+	zenDelnullptrArray(mpData);
+	if( _uCount )	mpData = zenNewDefault TType[_uCount];
 	else			mpData = nullptr;
 	muCount	= _uCount;
 	return muCount;

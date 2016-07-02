@@ -37,7 +37,7 @@ zCommand::zCommand(zcGfx::Command* _pDrawcall)
 
 void zCommand::DrawMesh(const zContext& _rContext, float _fPriority, const zenRes::zGfxMeshStrip& _rMeshStrip, zU32 _uIndexFirst, zU32 _uIndexCount, const zVec4U16& _vScreenScissor )
 {
-	const zcRes::GfxRenderPassRef& rRenderpass	= _rContext->GetRenderpass(); //! @todo urgent cleanup
+	const zcRes::GfxRenderPassRef& rRenderpass	= _rContext->GetRenderpass();
 	zcRes::GfxMeshStripRef rMeshStrip			= _rMeshStrip;
 	ZENAssert(rRenderpass.IsValid());
 	ZENAssert(rMeshStrip.IsValid());
@@ -48,7 +48,7 @@ void zCommand::DrawMesh(const zContext& _rContext, float _fPriority, const zenRe
 
 void zCommand::DrawMesh(const zContext& _rContext, float _fPriority, const zenRes::zGfxMesh& _rMesh, zU32 _uIndexFirst, zU32 _uIndexCount, const zVec4U16& _vScreenScissor )
 {
-	const zcRes::GfxRenderPassRef& rRenderpass	= _rContext->GetRenderpass(); //! @todo urgent cleanup
+	const zcRes::GfxRenderPassRef& rRenderpass	= _rContext->GetRenderpass();
 	zcRes::GfxMeshRef rMesh						= _rMesh;
 	ZENAssert(rRenderpass.IsValid());
 	ZENAssert(rMesh.IsValid());
@@ -64,7 +64,7 @@ void zCommand::DrawMesh(const zContext& _rContext, float _fPriority, const zenRe
 
 void zCommand::ClearColor(const zContext& _rContext, const zenRes::zGfxRenderTarget& _rRTColor, const zVec4F& _vRGBA, const zColorMask& _ColorMask, const zVec2S16& _vOrigin, const zVec2U16& _vDim )
 {
-	const zcRes::GfxRenderPassRef& rRenderpass	= _rContext->GetRenderpass(); //! @todo urgent cleanup
+	const zcRes::GfxRenderPassRef& rRenderpass	= _rContext->GetRenderpass();
 	zcRes::GfxRenderTargetRef rRTColor			= _rRTColor;
 	ZENAssert(rRenderpass.IsValid());
 	ZENAssert(!rRTColor->IsDepth());
@@ -75,7 +75,7 @@ void zCommand::ClearColor(const zContext& _rContext, const zenRes::zGfxRenderTar
 
 void zCommand::ClearDepthStencil(const zContext& _rContext, const zenRes::zGfxRenderTarget& _rRTDepthStencil, bool _bClearDepth, float _fDepthValue, bool _bClearStencil, zU8 _uStencilValue)
 {
-	const zcRes::GfxRenderPassRef& rRenderpass	= _rContext->GetRenderpass(); //! @todo urgent cleanup
+	const zcRes::GfxRenderPassRef& rRenderpass	= _rContext->GetRenderpass();
 	zcRes::GfxRenderTargetRef rRTDepthStencil	= _rRTDepthStencil;
 	ZENAssert(rRenderpass.IsValid());
 	ZENAssert(rRTDepthStencil->IsDepth());

@@ -62,8 +62,9 @@ bool ZendoApp::OnInit()
 		testPackage.Save();
 		testPackage.SetFilename("TestDir2/monpackage.xml");
 		*/
-		mpFrame = zenNewDefault WndMain("Zendo Editor");
 		InitResources();
+		mpFrame = zenNewDefault WndMain("Zendo Editor");
+		
 		if( mpFrame->Initialize() )
 		{
 			mpFrame->Show(true);												// And show it (the frames, unlike simple controls, are not shown when created initially)			
@@ -82,7 +83,7 @@ int ZendoApp::OnExit()
 bool ZendoApp::InitResources()
 {
 	// Init Asset type icon
-	zUInt auIconSize[]={16,32,128};
+	zU32 auIconSize[]={16,32,128};
 	for( zUInt idxSize(0); idxSize<ZENArrayCount(auIconSize); ++idxSize )
 	{
 		wxString zFolder	= wxString::Format("Zendo/Icons/ResourceType%i/", auIconSize[idxSize]);	//! @todo Clean: move root path outside assetmanager control
