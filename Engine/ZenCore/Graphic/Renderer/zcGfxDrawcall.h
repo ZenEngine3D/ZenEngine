@@ -32,7 +32,6 @@ public:
 	union RenderStateSortID
 	{
 		// Put highest cost state change item last
-		// Have a struct per Pipeline mode?
 		struct 
 		{
 			float	mfPriority;			
@@ -42,29 +41,26 @@ public:
 			zU32	muRasterStateID		: 12;	//! @todo Urgent finish sorting ID
 			zU32	mbCullingFrontface	: 1;	//!< Meshstrip wants frontface culling
 			zU32	mbCullingBackface	: 1;	//!< Meshstrip wants backface culling
-			zU32	muUnused			: 7;
+			zU32	muUnused			: 15;
 
 			zU32	muGPUPipelineMode	: 3;	//!< One of eGPUPipelineMode enum value
-			zU32	muRenderPassID		: 8;	//!< Rendering pass ID						
 		}Draw;
 		struct 
 		{
 			float	mfPriority;						
 			zU32	muShaderBindingID	: 32;
 			zU32	muUnused1			: 32;
-			zU32	muUnused2			: 21;
+			zU32	muUnused2			: 29;
 			
 			zU32	muGPUPipelineMode	: 3;	//!< One of eGPUPipelineMode enum value
-			zU32	muRenderPassID		: 8;	//!< Rendering pass ID						
 		}Compute;
 		struct 
 		{
 			zU64	muResID;
 			zU32	muUnused1			: 32;
-			zU32	muUnused2			: 21;
+			zU32	muUnused2			: 29;
 			
 			zU32	muGPUPipelineMode	: 3;	//!< One of eGPUPipelineMode enum value
-			zU32	muRenderPassID		: 8;	//!< Rendering pass ID						
 		}DataUpdate;
 		struct 
 		{
@@ -81,7 +77,7 @@ protected:
 							Command();
 	ZENInline void			SetSortKeyDraw		( const zcRes::GfxRenderPassRef& _rRenderPass, float _fPriority, const zcRes::GfxMeshStripRef& _rMeshStrip ); 	
 	ZENInline void			SetSortKeyCompute	( const zcRes::GfxRenderPassRef& _rRenderPass, float _fPriority, zU32 _uShaderBindingID, bool _bBeforeDraw=true);
-	ZENInline void			SetSortKeyDataUpdate( /*const zcRes::GfxRenderPassRef& _rRenderPass,*/ zU64 _uResID ); 	
+	ZENInline void			SetSortKeyDataUpdate( zU64 _uResID ); 	
 };
 
 class CommandDraw : public Command
@@ -102,11 +98,11 @@ class CommandClearColor : public Command
 {
 ZENClassDeclare(CommandClearColor, Command)
 public:
-	static zEngineRef<Command>	Create( const zcRes::GfxRenderPassRef& _rRenderPass, const zcRes::GfxRenderTargetRef& _rRTColor, const zVec4F& _vRGBA,  const zColorMask& _ColorMask=zenConst::kColorMaskRGBA, const zVec2S16& _vOrigin=zVec2S16(0,0), const zVec2U16& _vDim=zVec2U16(0,0) );
+	static zEngineRef<Command>	Create( const zcRes::GfxRenderPassRef& _rRenderPass, const zcRes::GfxTarget2DRef& _rRTColor, const zVec4F& _vRGBA,  const zColorMask& _ColorMask=zenConst::kColorMaskRGBA, const zVec2S16& _vOrigin=zVec2S16(0,0), const zVec2U16& _vDim=zVec2U16(0,0) );
 	virtual void				Invoke();
 
 protected:
-	zcRes::GfxRenderTargetRef	mrRTColor;
+	zcRes::GfxTarget2DRef	mrRTColor;
 	zVec4F						mvColor;
 	zColorMask					mColorMask;
 	zVec2S16					mvOrigin;
@@ -117,11 +113,11 @@ class CommandClearDepthStencil : public Command
 {
 ZENClassDeclare(CommandClearDepthStencil, Command)
 public:
-	static zEngineRef<Command>	Create( const zcRes::GfxRenderPassRef& _rRenderPass, const zcRes::GfxRenderTargetRef& _rRTDepth, bool _bClearDepth, float _fDepthValue=1.f, bool _bClearStencil=false, zU8 _uStencilValue=128);
+	static zEngineRef<Command>	Create( const zcRes::GfxRenderPassRef& _rRenderPass, const zcRes::GfxTarget2DRef& _rRTDepth, bool _bClearDepth, float _fDepthValue=1.f, bool _bClearStencil=false, zU8 _uStencilValue=128);
 	virtual void				Invoke();
 
 protected:
-	zcRes::GfxRenderTargetRef	mrRTDepthStencil;
+	zcRes::GfxTarget2DRef	mrRTDepthStencil;
 	bool						mbClearDepth;
 	float						mfDepthValue;
 	bool						mbClearStencil;
@@ -136,10 +132,24 @@ public:
 	virtual void				Invoke();
 
 protected:	
-	zcRes::GfxIndexRef	mrIndex;
-	zU8*				mpData;
-	zUInt				muOffset;
-	zUInt				muSize;
+	zcRes::GfxIndexRef			mrIndex;
+	zU8*						mpData;
+	zUInt						muOffset;
+	zUInt						muSize;
+};
+
+class CommandUpdateVertex : public Command
+{
+ZENClassDeclare(CommandUpdateVertex, Command)
+public:
+	static zEngineRef<Command>	Create( const zcRes::GfxVertexRef& _rVertex, zU8* _pData, zUInt _uOffset=0, zUInt _uSize=0xFFFFFFFFFFFFFFFF);
+	virtual void				Invoke();
+
+protected:	
+	zcRes::GfxVertexRef			mrVertex;
+	zU8*						mpData;
+	zUInt						muOffset;
+	zUInt						muSize;
 };
 
 }

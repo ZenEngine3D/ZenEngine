@@ -3,10 +3,11 @@
 namespace zcExp
 {
 
-ExporterGfxShaderParamDX11_DX11::ExporterGfxShaderParamDX11_DX11(const ResDataRef& _rResData)
-: Super(_rResData.GetSafe())
-, mrResData(_rResData)
+ExporterGfxShaderParamDX11_DX11::ExporterGfxShaderParamDX11_DX11(const ExportResultRef& _rExportOut)
+: Super(_rExportOut.GetSafe())
+, mrExport(_rExportOut)
 {
+	zenAssert(mrExport.IsValid());
 }
 
 bool ExporterGfxShaderParamDX11_DX11::ExportStart()
@@ -15,11 +16,11 @@ bool ExporterGfxShaderParamDX11_DX11::ExportStart()
 	if( Super::ExportStart() )
 	{
 		ExportInfoGfxShaderParam* pExportInfo					= static_cast<ExportInfoGfxShaderParam*>(mpExportInfo);
-		mrResData->mParentParamDefID							= pExportInfo->mParentParamDefID;	
-		zEngineConstRef<ResDataGfxShaderParamDefDX11> rParent	= zcDepot::ResourceData.GetItem<ResDataGfxShaderParamDefDX11>(pExportInfo->mParentParamDefID);
+		mrExport->mParentParamDefID								= pExportInfo->mParentParamDefID;	
+		zEngineConstRef<ExportGfxShaderParamDefDX11> rParent	= zcDepot::ExportData.GetTyped<ExportGfxShaderParamDefDX11>(pExportInfo->mParentParamDefID);
 		if( rParent.IsValid() )
 		{
-			mrResData->maParameterValues = rParent->maParameterDefaults;
+			mrExport->maParameterValues = rParent->maParameterDefaults;
 			return TRUE;
 		}
 	}

@@ -10,9 +10,26 @@ namespace zcExp
 		static zResID			CallbackGetItemID(zenConst::eResPlatform _ePlatform, zenConst::eResType _eType, zenConst::eResSource _eSource, const zcExp::ExportInfoBase* _pExportInfo, bool& _bExistOut);
 	};
 
+	class ExportGfxMesh : public zenRes::zExportData
+	{
+	ZENClassDeclare(ExportGfxMesh, zenRes::zExportData)
+	public:
+		//virtual bool			Serialize( zcExp::Serializer_Base& _Serializer ){return true;}		
+		zArrayStatic<zResID>	maMeshStripID;			//!< List of Mesh strips used this Mesh
+	};
+
+	class ExporterGfxMesh : public ExporterBase
+	{
+	ZENClassDeclare(ExporterGfxMesh, ExporterBase)
+	public:				
+	typedef zEngineRef<ExportGfxMesh>	ExportResultRef; 
+										ExporterGfxMesh(const ExportResultRef& _rExportOut);
+	protected:	
+		virtual bool					ExportStart();		
+		ExportResultRef					mrExport;
+	};
+
 	zResID CreateGfxMesh(const zArrayBase<zResID>& _aMeshStripID);
 }
-
-#include "zcExpGfxMeshDX11.h"
 
 #endif

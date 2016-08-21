@@ -11,7 +11,7 @@ ZENClassDeclare(EventBase, zRefCounted)
 protected:	
 	zListLink				mlnkChild;
 public:		
-	typedef zList<EventBase, &EventBase::mlnkChild> TypeListChild;
+	typedef zList<EventBase, &EventBase::mlnkChild, false> TypeListChild;
 	
 									EventBase(const zStringHash32& _zEventName);
 	virtual							~EventBase();

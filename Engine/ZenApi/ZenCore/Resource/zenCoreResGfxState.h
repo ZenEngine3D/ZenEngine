@@ -4,19 +4,38 @@
 
 namespace zen { namespace zenRes {	
 
-	ZENClassResourceRefDeclare(zGfxSampler, zenConst::keResType_GfxSampler)
+	class zGfxSampler : public zcRes::GfxSamplerRef
+	{
+	ZENClassDeclare(zGfxSampler, zcRes::GfxSamplerRef);
 	public:
+		using Super::Super;
+		using Super::operator=;
 		static zGfxSampler				Create( zenConst::eTextureFiltering _eFilterMin=zenConst::keTexFilter_Bilinear, zenConst::eTextureFiltering _eFilterMag=zenConst::keTexFilter_Bilinear, zenConst::eTextureWrap _eWrapU=zenConst::keTexWrap_Repeat, zenConst::eTextureWrap _eWrapV=zenConst::keTexWrap_Repeat, float _fLodBias=0, const zVec4F& _vBorderColor=zVec4F(0,0,0,1) );
 	};
-	
-	ZENClassResourceRefDeclare(zGfxStateBlend, zenConst::keResType_GfxBlend)
-	};
-	
-	ZENClassResourceRefDeclare(zGfxStateDepthStencil, zenConst::keResType_GfxDepthStencil)
-	};
-	
-	ZENClassResourceRefDeclare(zGfxStateRasterizer, zenConst::keResType_GfxRasterizer)
+
+	class zGfxStateBlend : public zcRes::GfxStateBlendRef
+	{
+	ZENClassDeclare(zGfxStateBlend, zcRes::GfxStateBlendRef);
 	public:
+		using Super::Super;
+		using Super::operator=;
+	};
+	
+	class zGfxStateDepthStencil : public zcRes::GfxStateDepthStencilRef
+	{
+	ZENClassDeclare(zGfxStateDepthStencil, zcRes::GfxStateDepthStencilRef);
+	public:
+		using Super::Super;
+		using Super::operator=;
+	};
+
+	class zGfxStateRaster : public zcRes::GfxStateRasterRef
+	{
+	ZENClassDeclare(zGfxStateRaster, zcRes::GfxStateRasterRef);
+	public:
+		using Super::Super;
+		using Super::operator=;
+	
 		struct Config
 		{
 			Config()
@@ -47,7 +66,7 @@ namespace zen { namespace zenRes {
 			float	mfSlopeScaledDepthBias;
 		};
 
-		static zGfxStateRasterizer		Create( const Config& _RasterConfig );
+		static zGfxStateRaster		Create( const Config& _RasterConfig );
 	};
 
 }} // namespace zen, zenRes

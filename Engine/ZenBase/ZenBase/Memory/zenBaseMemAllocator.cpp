@@ -15,13 +15,13 @@ ZENInline ScopedAllocator::TypeList& GetAllocatorScopeList()
 ScopedAllocator::ScopedAllocator(zAllocator* _pAllocator)
 : mpAllocator(_pAllocator)
 {
-	ZENAssert(mpAllocator);
+	zenAssert(mpAllocator);
 	GetAllocatorScopeList().PushTail(*this);
 }
 ScopedAllocator::~ScopedAllocator()
 {
 	ScopedAllocator::TypeList::Remove(*this);
-	ZENAssert(!zbSys::IsSystemActive() || !GetAllocatorScopeList().IsEmpty());	//! Should be impossible with global 'GAllocatorOveride'
+	zenAssert(!zbSys::IsSystemActive() || !GetAllocatorScopeList().IsEmpty());	//! Should be impossible with global 'GAllocatorOveride'
 }		
 
 zAllocator& ScopedAllocator::GetActive()
@@ -46,7 +46,7 @@ zAllocator::zAllocator(zDebugString _zName)
 
 zAllocator::~zAllocator()
 {
-	ZENAssertMsg(muTotalAllocCount==0, "Trying to delete a memory manager that still has elements allocated");
+	zenAssertMsg(muTotalAllocCount==0, "Trying to delete a memory manager that still has elements allocated");
 }
 /*
 void zAllocator::DebugPrint()
@@ -89,7 +89,7 @@ void zAllocator::DebugPrint()
 */
 size_t zAllocator::GetAllocSize(size_t _uWantedSize, size_t _uExtraSize, zU32 _uAlign )
 {
-	ZENAssertMsg( zenMath::IsPower2(_uAlign) && _uAlign>=sizeof(void*), "Alignement must be a power of 2 and greater equal than pointer data size" );	
+	zenAssertMsg( zenMath::IsPower2(_uAlign) && _uAlign>=sizeof(void*), "Alignement must be a power of 2 and greater equal than pointer data size" );	
 	return _uWantedSize + _uExtraSize + _uAlign + sizeof(zbMem::AllocHeader) + sizeof(kh64AllocationStamp);
 }
 

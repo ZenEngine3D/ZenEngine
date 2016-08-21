@@ -18,7 +18,7 @@ void* zAllocatorMalloc::Malloc(size_t _uSize, bool _bIsArray, zU32 _uAlign)
 
 void zAllocatorMalloc::Free(void* _pAlloc, void* _pInfoAlloc)
 {
-	ZENAssert(_pAlloc && _pInfoAlloc);
+	zenAssert(_pAlloc && _pInfoAlloc);
 	zbMem::AllocHeader* pInfoAlloc = static_cast<zbMem::AllocHeader*>(_pInfoAlloc);
 	RemAlloc(pInfoAlloc);
 	free( (void*)((zU8*)_pAlloc - pInfoAlloc->muOffset) );

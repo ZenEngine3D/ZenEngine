@@ -7,10 +7,11 @@
 namespace zcExp
 {
 
-ExporterGfxShaderParamDefDX11_DX11::ExporterGfxShaderParamDefDX11_DX11(const ResDataRef& _rResData)
-: Super(_rResData.GetSafe())
-, mrResData(_rResData)
+ExporterGfxShaderParamDefDX11_DX11::ExporterGfxShaderParamDefDX11_DX11(const ExportResultRef& _rExportOut)
+: Super(_rExportOut.GetSafe())
+, mrExport(_rExportOut)
 {
+	zenAssert(mrExport.IsValid());
 }
 
 //=================================================================================================
@@ -24,8 +25,8 @@ bool ExporterGfxShaderParamDefDX11_DX11::ExportStart()
 	if( !Super::ExportStart() )
 		return false;
 
-	ExportInfoGfxShaderParamDef*			pExportInfo = static_cast<ExportInfoGfxShaderParamDef*>(mpExportInfo);	
-	zEngineConstRef<ResDataGfxShaderDX11>	rShaderItem	= zcDepot::ResourceData.GetItem<ResDataGfxShaderDX11>(pExportInfo->mParentShaderID);
+	ExportInfoGfxShaderParamDef*			pExportInfo = static_cast<ExportInfoGfxShaderParamDef*>(mpExportInfo);
+	zEngineConstRef<ExportGfxShaderDX11>	rShaderItem	= zcDepot::ExportData.GetTyped<ExportGfxShaderDX11>(pExportInfo->mParentShaderID);
 	if( rShaderItem.IsValid() )
 	{
 		maCompiledShader = rShaderItem->maCompiledShader;
@@ -69,11 +70,11 @@ bool ExporterGfxShaderParamDefDX11_DX11::ExportWork(bool _bIsTHRTask)
 		{
 			bValid = true;
 			pConstBuffer->GetDesc( &bufferDesc );
-			mrResData->meFrequence = pExportInfo->meBufferIndex;
+			mrExport->meFrequence = pExportInfo->meBufferIndex;
 			
 			// Load the description of each variable for use later on when binding a buffer
-			mrResData->mdParameters.Init(32);
-			mrResData->maParameterDefaults.SetCount( bufferDesc.Size );
+			mrExport->mdParameters.Init(32);
+			mrExport->maParameterDefaults.SetCount( bufferDesc.Size );
 			for( UINT j = 0; bValid && j < bufferDesc.Variables; j++ )
 			{
 				// Get the variable description and store it
@@ -106,9 +107,9 @@ bool ExporterGfxShaderParamDefDX11_DX11::ExportWork(bool _bIsTHRTask)
 				Param.mbInUse				= (VarDesc.uFlags & D3D_SVF_USED) != 0;
 
 				// Copy default value
-				if(VarDesc.DefaultValue)	zenMem::Copy(&mrResData->maParameterDefaults[VarDesc.StartOffset], static_cast<const zU8*>(VarDesc.DefaultValue), VarDesc.Size); 
-				else						zenMem::Set(&mrResData->maParameterDefaults[VarDesc.StartOffset], 0, VarDesc.Size); 
-				mrResData->mdParameters.GetAdd( zHash32(VarDesc.Name) ) = Param;
+				if(VarDesc.DefaultValue)	zenMem::Copy(&mrExport->maParameterDefaults[VarDesc.StartOffset], static_cast<const zU8*>(VarDesc.DefaultValue), VarDesc.Size); 
+				else						zenMem::Set(&mrExport->maParameterDefaults[VarDesc.StartOffset], 0, VarDesc.Size); 
+				mrExport->mdParameters.GetAdd( zHash32(VarDesc.Name) ) = Param;
 			}
 			
 		}

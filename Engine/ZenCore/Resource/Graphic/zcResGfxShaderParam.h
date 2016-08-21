@@ -4,16 +4,17 @@
 
 namespace zcRes
 {
-	class GfxShaderParamDef : public TResource<GfxShaderParamDef, GfxShaderParamDefResData, GfxShaderParamDefProxy, GfxShaderParamDefExporterRuntime>
+	class GfxShaderParamDef : protected GfxShaderParamDefHAL
 	{
-	ZENClassDeclare(GfxShaderParamDef, TResource)
+	ZENClassDeclare(GfxShaderParamDef, GfxShaderParamDefHAL)
 	public:
 	};
 
-	class GfxShaderParam : public TResource<GfxShaderParam, GfxShaderParamResData, GfxShaderParamProxy, GfxShaderParamExporterRuntime>
+	class GfxShaderParam : protected GfxShaderParamHAL
 	{
-	ZENClassDeclare(GfxShaderParam, TResource)
+	ZENClassDeclare(GfxShaderParam, GfxShaderParamHAL)
 	public:
+		using Super::SetValue;
 	};	
 }
 

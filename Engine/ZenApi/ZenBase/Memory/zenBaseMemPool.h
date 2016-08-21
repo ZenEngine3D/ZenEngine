@@ -43,12 +43,12 @@ protected:
 	struct PoolAlloc
 	{
 		zListLink mlnkList;
-		typedef zList<PoolAlloc, &PoolAlloc::mlnkList> TypeList;
+		typedef zList<PoolAlloc, &PoolAlloc::mlnkList, false> TypeList;
 	};
 	struct PoolItem
 	{	
 		zListLink mlnkList;
-		typedef zList<PoolItem, &PoolItem::mlnkList> TypeList;
+		typedef zList<PoolItem, &PoolItem::mlnkList,false> TypeList;
 	};
 
 	PoolItem::TypeList		mlstFreeItems;		//!< List of the free pre-allocated items	

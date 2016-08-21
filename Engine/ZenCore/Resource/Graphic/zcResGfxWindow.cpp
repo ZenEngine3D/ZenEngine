@@ -25,21 +25,14 @@ GfxWindow::GfxWindow()
 	//mrNuklearData->msigRenderUI.Connect(*this, &GfxWindow::UIRenderCB);
 }
 
-void GfxWindow::SetBackbuffer(zU8 _uBackbufferIndex, const GfxRenderTargetRef& _rBackbufferColor) 
-{ 
-	ZENAssert(_uBackbufferIndex < ZENArrayCount(mrBackbufferColor));
-	mrBackbufferColor[_uBackbufferIndex] = _rBackbufferColor;
-	
-}
-
-const GfxRenderTargetRef& GfxWindow::GetBackbuffer() 
+const GfxTarget2DRef& GfxWindow::GetBackbuffer() 
 {		
 	return mrBackbufferColor[ muFrameCount % ZENArrayCount(mrBackbufferColor) ];
 }
 
 zenSig::zSignalEmitter0& GfxWindow::GetSignalUIRender()
 {
-	ZENAssert(mrImGuiData.IsValid());
+	zenAssert(mrImGuiData.IsValid());
 	return mrImGuiData->msigRenderUI;
 }
 
@@ -59,7 +52,7 @@ void GfxWindow::FrameBegin()
 
 void GfxWindow::FrameEnd()
 {
-	ZENAssertMsg( this == zcGfx::gWindowRender.Get(), "Ending frame with different window than started");	
+	zenAssertMsg( this == zcGfx::grWindowRender.Get(), "Ending frame with different window than started");	
 	//! @todo urgent cleanup this messy access
 	// Editor doesn't have OS windows associated...
 	if( mpMainWindowOS )
@@ -122,8 +115,8 @@ void GfxWindow::UIRenderCB()
 		{					
 			ImGui::MenuItem("Performances",				nullptr, &mbUIShowFps);
 			ImGui::MenuItem("Performances (details)",	nullptr, &mbUIShowDetailFps);
-			ImGui::MenuItem("Profiling GPU",			nullptr, &mbUIEventShowCurrent[keEvtTyp_CPU]);
-			ImGui::MenuItem("Profiling CPU",			nullptr, &mbUIEventShowCurrent[keEvtTyp_GPU]);
+			ImGui::MenuItem("Profiling CPU",			nullptr, &mbUIEventShowCurrent[keEvtTyp_CPU]);
+			ImGui::MenuItem("Profiling GPU",			nullptr, &mbUIEventShowCurrent[keEvtTyp_GPU]);
 			ImGui::MenuItem("Profiling display spike",	nullptr, &mbUIAutoDisplaySpike);			
 			ImGui::EndMenu();			
 		}
@@ -192,7 +185,7 @@ void GfxWindow::UIRenderFpsDetail( )
 
 void GfxWindow::UIRenderStatsHistogram(eEventType _eEventType, const char* _zHistoID, const char* _zTitle, const zVec3F& _vColor, float _fWidthRatio)
 {
-	ZENAssert( _eEventType < keEvtTyp__Count );
+	zenAssert( _eEventType < keEvtTyp__Count );
 	zArrayStatic<float>	aFrameMs;
 	zcRes::GfxWindowRef rWindow						= this;
 	const zUInt uFrameIndex							= rWindow->GetFrameCount();
@@ -217,7 +210,7 @@ void GfxWindow::UIRenderStatsHistogram(eEventType _eEventType, const char* _zHis
 		sprintf(zFpsTitle, _zTitle, fMinFrameMs, 1000.f / fMinFrameMs);
 		ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(0.0f, 0.0f, 0.00f, 0.0f));
 		ImGui::PushStyleColor(ImGuiCol_PlotHistogram, ImVec4(_vColor.r, _vColor.g, _vColor.b, 0.2f));
-		ImGui::PushStyleColor(ImGuiCol_PlotHistogramHovered, ImVec4(_vColor.r, _vColor.g, _vColor.b, 0.5f));
+		ImGui::PushStyleColor(ImGuiCol_PlotHistogramHovered, ImVec4(_vColor.r, _vColor.g, _vColor.b, 0.9f));
 		ImGui::SameLine();
 		ImGui::PlotHistogram(_zHistoID, aFrameMs.First(), uStatCount, 0, zFpsTitle, 0.0f, (fMinFrameMs < 16.f ? fMinFrameMs*2.f : 100.f), ImVec2(ImGui::GetWindowContentRegionWidth() * _fWidthRatio, 50));
 		ImGui::PopStyleColor(3);
@@ -245,7 +238,7 @@ void GfxWindow::UIRenderStatsHistogram(eEventType _eEventType, const char* _zHis
 void GfxWindow::UIRenderEvents( )
 {
 	const char* azWindowTile[]={"CPU Profiling", "GPU Profiling"};
-	ZENStaticAssert(ZENArrayCount(azWindowTile) == keEvtTyp__Count);
+	zenStaticAssert(ZENArrayCount(azWindowTile) == keEvtTyp__Count);
 
 	ImGuiStyle& CurrentStyle	= ImGui::GetStyle();
 	ImGuiStyle PreviousStyle	= CurrentStyle;
@@ -383,8 +376,8 @@ bool GfxWindow::UIRenderEventTreeItem(const zString& _zEventName, double _fEvent
 	bool bOpenNode			= false;
 	float fOpacityMul		= bIsHeader > 0 ? 2.5f : 1.f;
 
-	ImGui::PushStyleColor(ImGuiCol_Header, _uItemCount % 2 ? ImVec4(0.4f, 0.2f, 0.2f, 0.15f*fOpacityMul) : ImVec4(0.2f, 0.2f, 0.4f, 0.15f*fOpacityMul));
-	ImGui::PushStyleColor(ImGuiCol_HeaderHovered, _uItemCount % 2 ? ImVec4(0.2f, 0.4f, 0.2f, 0.15f*fOpacityMul) : ImVec4(0.2f, 0.4f, 0.2f, 0.15f*fOpacityMul));
+	ImGui::PushStyleColor(ImGuiCol_Header, _uItemCount % 2 ?		ImVec4(0.4f, 0.2f, 0.2f, 0.15f*fOpacityMul) : ImVec4(0.2f, 0.2f, 0.4f, 0.15f*fOpacityMul));
+	ImGui::PushStyleColor(ImGuiCol_HeaderHovered, _uItemCount % 2 ? ImVec4(0.4f, 0.2f, 0.2f, 0.8f*fOpacityMul)	: ImVec4(0.2f, 0.2f, 0.4f, 0.8f*fOpacityMul));
 	if( bIsHeader )
 	{		
 		bOpenNode = ImGui::CollapsingHeader("", _zEventName, true, _bHeaderStartOpen);
@@ -418,6 +411,5 @@ bool GfxWindow::UIRenderEventTreeItem(const zString& _zEventName, double _fEvent
 	++_uItemCount;
 	return bOpenNode;
 }
-
 
 }

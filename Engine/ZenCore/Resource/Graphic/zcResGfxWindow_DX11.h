@@ -4,21 +4,24 @@
 
 namespace zcRes
 {
-	class GfxWindowProxy_DX11 : public zRefCounted
+	class GfxWindowHAL_DX11 : public zcExp::ExportGfxWindowDX11
 	{
-	ZENClassDeclare(GfxWindowProxy_DX11, zRefCounted)
+	ZENClassDeclare(GfxWindowHAL_DX11, zcExp::ExportGfxWindowDX11)
 	public:
-		virtual							~GfxWindowProxy_DX11();												
-		bool							Initialize(class GfxWindow& _Owner);		
-		void							PerformResize();
+		virtual							~GfxWindowHAL_DX11();												
+		bool							Initialize();
+		bool							PerformResize();
 		
-		IDXGISwapChain*					mDX11pSwapChain				= nullptr;
-		GfxRenderTargetRef				mrProxBackbufferColor[2]	= {nullptr, nullptr};
+		IDXGISwapChain*					mpDX11SwapChain				= nullptr;
+		GfxTarget2DRef					mrBackbufferColor[2];
 		zenConst::eTextureFormat		meBackbufferColorFormat		= zenConst::keTexFormat_RGBA8; //! @todo clean feature expose desired format in ResData
 		zVec2U16						mvSize						= zVec2U16(0,0);
 		zVec2U16						mvPendingResize				= zVec2U16(0,0);
-		ZENDbgCode(class GfxWindow*		mpOwner);
+
+	public:
+		static GfxWindowRef				RuntimeCreate(HWND _WindowHandle);
 	};
+	class GfxWindowHAL : public GfxWindowHAL_DX11{};
 }
 
 #endif

@@ -7,19 +7,18 @@
 namespace zcRes
 {
 
-class GfxIndex : public GfxIndex_Platform
+class GfxIndex : protected GfxIndexHAL
 {
-ZENClassDeclare(GfxIndex, GfxIndex_Platform)
+ZENClassDeclare(GfxIndex, GfxIndexHAL)
 public:
 	zU8*				Lock();
-	void				Unlock(const zenGfx::zContext& _rContext);
+	void				Unlock(const zenGfx::zContext& _rContext);		
 
+	using				GfxIndexHAL::Update;	// Expose HAL method
 protected:	
-	zU8*				mpLockData = nullptr;
-	zEngineRef<GfxIndex_Data> mData;
+	zU8*				mpLockData = nullptr; //! @todo safe support multi threading (lock return context?)
 };
 
 }
-
 
 #endif

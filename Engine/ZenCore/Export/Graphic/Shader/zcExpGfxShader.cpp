@@ -4,8 +4,8 @@ namespace zcExp
 {
 	zResID ExportInfoGfxShader::CallbackGetItemID(zenConst::eResPlatform _ePlatform, zenConst::eResType _eType, zenConst::eResSource _eSource, const zcExp::ExportInfoBase* _pExportInfo, bool& _bExistOut)
 	{
-		ZENAssert( zenConst::kFlagResShaders.Any(_eType) );
-		ZENAssert( _pExportInfo );
+		zenAssert( zenConst::kFlagResShaders.Any(_eType) );
+		zenAssert( _pExportInfo );
 		const ExportInfoGfxShader* pExportInfo	= static_cast<const ExportInfoGfxShader*>(_pExportInfo);
 		const zenRes::zShaderDefine* pEntry			= pExportInfo->maDefines.First();
 

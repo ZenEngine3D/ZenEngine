@@ -5,28 +5,17 @@
 namespace zcRes
 {
 
-class GfxVertexProxy_DX11 : public zRefCounted
+class GfxVertexHAL_DX11 : public zcExp::ExportGfxVertexDX11
 {
-ZENClassDeclare(GfxVertexProxy_DX11, zRefCounted)
 public:
-											GfxVertexProxy_DX11();
-	virtual									~GfxVertexProxy_DX11();												
-	bool									Initialize(class GfxVertex& _Owner);
-	zU8*									Lock();
-	void									Unlock();
-
-	struct StreamInfo
-	{
-		zU8	muElementStartIndex;							//!< Index of first stream element, in maElementDef
-		zU8	muElementCount;									//!< stream elements count, in maElementDef
-	};
-
-	zArrayStatic<ID3D11Buffer*>				maStreamBuffer;	//!< D3D11 Buffer object
-	zArrayStatic<UINT>						maStreamStride;	//!< Stride between 2 vertices of a buffer
-	zArrayStatic<StreamInfo>				maStreamInfo;	//!< Element infos of stream
-	zArrayStatic<D3D11_INPUT_ELEMENT_DESC>	maElementDef;	//!< D3D11 infos on each vertice element contained in all buffer (pos, uv, etc...)
-	ZENDbgCode(class GfxVertex*		mpOwner);
+	virtual										~GfxVertexHAL_DX11();
+	bool										Initialize();
+	void										Update(zU8* _pData, zUInt _uOffset = 0, zUInt _uSize = 0xFFFFFFFFFFFFFFFF);
+	zArrayStatic<ID3D11Buffer*>					maStreamBuffer;	//!< D3D11 Buffer object
+	zArrayStatic<UINT>							maStreamStride;	//!< Stride between 2 vertices of a buffer //todo move exo
+	typedef zcExp::ExporterGfxVertexDX11_DX11	RuntimeExporter;
 };
+class GfxVertexHAL : public GfxVertexHAL_DX11{};
 
 }
 

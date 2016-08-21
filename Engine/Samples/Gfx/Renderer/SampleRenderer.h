@@ -46,11 +46,11 @@ protected:
 	zenRes::zGfxMeshStrip			mrCube2MeshStrip;
 	zenRes::zGfxMeshStrip			mrCube3MeshStrip;
 	zenRes::zGfxMesh				mrCube4Mesh;
-	zenRes::zGfxRenderTarget		mrRenderToTextureRT1;
-	zenRes::zGfxRenderTarget		mrRenderToTextureRT2;
-	zenRes::zGfxRenderTarget		mrRenderToTextureDepth;
-	zenRes::zGfxRenderTarget		mrBackbufferDepth;	
-	zenRes::zGfxStateRasterizer		mrStateRaster;
+	zenRes::zGfxTarget2D			mrRenderToTextureRT1;
+	zenRes::zGfxTarget2D			mrRenderToTextureRT2;
+	zenRes::zGfxTarget2D			mrRenderToTextureDepth;
+	zenRes::zGfxTarget2D			mrBackbufferDepth;	
+	zenRes::zGfxStateRaster			mrStateRaster;
 	zenRes::zGfxRenderPass			mrRndPassTexture;
 	zenRes::zGfxRenderPass			mrRndPassFinal;
 };

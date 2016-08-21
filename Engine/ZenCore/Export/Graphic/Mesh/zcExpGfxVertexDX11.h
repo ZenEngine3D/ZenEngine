@@ -4,28 +4,12 @@
 
 namespace zcExp
 {
-
-class ResDataGfxVertexDX11 : public ResourceData
-{
-ZENClassDeclare(ResDataGfxVertexDX11, ResourceData)
-public:
-	class Stream : public zcExp::ISerialize
+	class ExportGfxVertexDX11 : public ExportGfxVertex
 	{
-	ZENClassDeclare(Stream, zcExp::ISerialize)
-	public:		
-		virtual bool					Serialize( zcExp::Serializer_Base& _Serializer ){return true;}
-		zArrayStatic<zU8>				maData;				//!< Vertex elements data (pos, uv, etc...)
-		zU16							muStride;			//!< Stride between 2 vertex entry
-		zU8								muElementStart;		//!< First entry index in stream definition
-		zU8								muElementCount;		//!< Number of different vertex element contained in buffer (not number of vertice)
+	ZENClassDeclare(ExportGfxVertexDX11, ExportGfxVertex)
+	public:
+		zArrayStatic<D3D11_INPUT_ELEMENT_DESC>	maElementDef;	//!< D3D11 infos on each vertice element contained in all buffer (pos, uv, etc...)	
 	};
-
-	virtual bool						Serialize( zcExp::Serializer_Base& _Serializer ){return true;}
-	zArrayStatic<zU8>					maElementDef;		//!< Vertex element definitions
-	zcExp::StaticArraySerial<Stream>	maStream;			//!< Vertex Buffer data
-	zFlagResUse							mResourceUse;		//!< Creation flags taken from (SerialVertex_Base::eCreationFlags)
-};	
-
 }
 
 #endif

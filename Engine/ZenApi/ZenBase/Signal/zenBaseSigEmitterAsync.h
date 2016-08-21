@@ -31,8 +31,8 @@ protected:
 		zListLink				mlnkPendingInEmitter;
 		virtual void			Send() = 0;
 
-		typedef zList<SignalInfo, &SignalInfo::mlnkPendingInGroup>		ListGroup;
-		typedef zList<SignalInfo, &SignalInfo::mlnkPendingInEmitter>	ListEmitter;
+		typedef zList<SignalInfo, &SignalInfo::mlnkPendingInGroup, false>	ListGroup;
+		typedef zList<SignalInfo, &SignalInfo::mlnkPendingInEmitter, false>	ListEmitter;
 	};
 	class zSignalEmitterAsyncGroup*	mpEmitterGroup;
 	SignalInfo::ListEmitter			mlstPendingSignal;

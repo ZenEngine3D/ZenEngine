@@ -3,32 +3,45 @@
 #define __zenApi_Core_ResGfxShader_h__
 
 namespace zen { namespace zenRes {	
-
-	//! @todo Clean: remove this from api ?
-	ZENClassResourceRefDeclare(zGfxInputSignature, zenConst::keResType_GfxInputSignature) };
-	ZENClassResourceRefDeclare(zGfxShaderParamDef, zenConst::keResType_GfxShaderParamDef) };
-
-	ZENClassResourceRefDeclare(zGfxShaderParam, zenConst::keResType_GfxShaderParam)
+	
+	class zGfxShaderParamDef : public zcRes::GfxShaderParamDefRef
+	{
+	ZENClassDeclare(zGfxShaderParamDef, zcRes::GfxShaderParamDefRef);
 	public:
+		using Super::Super;
+		using Super::operator=;
+	};
+
+	class zGfxShaderParam : public zcRes::GfxShaderParamRef
+	{
+	ZENClassDeclare(zGfxShaderParam, zcRes::GfxShaderParamRef);
+	public:
+		using Super::Super;
+		using Super::operator=;
 	};
 	
-	ZENClassResourceRef2Declare(zGfxShader, zenConst::keResType_GfxShaderVertex, zenConst::keResType_GfxShaderPixel) 
-	public:	
-	};
-
 	//! @todo Clean: Expose shader compiling to runtime?
-	ZENClassResourceRefDeclare(zGfxShaderVertex, zenConst::keResType_GfxShaderVertex) 
+	class zGfxShaderVertex : public zcRes::GfxShaderVertexRef
+	{
+	ZENClassDeclare(zGfxShaderVertex, zcRes::GfxShaderVertexRef);
 	public:
+		using Super::Super;
+		using Super::operator=;
+
 		static zGfxShaderVertex Create(const char* _zFilename, const char* _zEntryname );
 		static zGfxShaderVertex Create(const char* _zFilename, const char* _zEntryname, const zArrayBase<zShaderDefine>& _aDefines);
 	};
 
-	ZENClassResourceRefDeclare(zGfxShaderPixel, zenConst::keResType_GfxShaderPixel) 
+	class zGfxShaderPixel : public zcRes::GfxShaderPixelRef
+	{
+	ZENClassDeclare(zGfxShaderPixel, zcRes::GfxShaderPixelRef);
 	public:
+		using Super::Super;
+		using Super::operator=;
+
 		static zGfxShaderPixel Create( const char* _zFilename, const char* _zEntryname );
 		static zGfxShaderPixel Create( const char* _zFilename, const char* _zEntryname, const zArrayBase<zShaderDefine>& _aDefines);
 	};
-
 }} // namespace zen, zenRes
 
 #endif

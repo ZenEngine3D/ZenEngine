@@ -13,7 +13,7 @@ template<class TClassDefinition, class TClassValueStorage>
 TPropertyValue<TClassDefinition,TClassValueStorage>::TPropertyValue(const zAssetItemRef& _rOwnerAsset, const PropertyDefRef& _rOwnerDefinition) 
 : Super( _rOwnerAsset, _rOwnerDefinition)
 {	
-	ZENAssert( _rOwnerDefinition->GetType() == TClassDefinition::kPropertyType);
+	zenAssert( _rOwnerDefinition->GetType() == TClassDefinition::kPropertyType);
 }
 
 
@@ -24,13 +24,13 @@ template<class TClassDefinition, class TClassValueStorage>
 TPropertyValueRef<TClassDefinition, TClassValueStorage>::TPropertyValueRef( const PropertyValueRef& _Copy )
 : Super( _Copy )	
 {			
-	ZENAssert( !_Copy.IsValid() || _Copy.GetType() == TClassDefinition::kPropertyType );
+	zenAssert( !_Copy.IsValid() || _Copy.GetType() == TClassDefinition::kPropertyType );
 }
 
 template<class TClassDefinition, class TClassValueStorage>
 TPropertyValueRef<TClassDefinition, TClassValueStorage>& TPropertyValueRef<TClassDefinition, TClassValueStorage>::operator=( const TPropertyValueRef& _Copy )
 {
-	ZENAssert( !_Copy.IsValid() || _Copy.GetType() == TClassDefinition::kPropertyType );
+	zenAssert( !_Copy.IsValid() || _Copy.GetType() == TClassDefinition::kPropertyType );
 	Super::operator=( _Copy );
 	return *this;
 }
@@ -38,7 +38,7 @@ TPropertyValueRef<TClassDefinition, TClassValueStorage>& TPropertyValueRef<TClas
 template<class TClassDefinition, class TClassValueStorage>
 TPropertyValueRef<TClassDefinition, TClassValueStorage>& TPropertyValueRef<TClassDefinition, TClassValueStorage>::operator=( const TClassValueStorage& _Assign )
 {
-	ZENAssert(IsValid());
+	zenAssert(IsValid());
 	if( GetValue() != _Assign )
 	{
 		static_cast<Value*>(GetSafe())->mValue = _Assign;
@@ -80,7 +80,7 @@ PropertyValueRef TPropertyDefinition<TPropertyType, TClassDefinition, TClassValu
 template<zenConst::eAssetPropertyType TPropertyType, class TClassDefinition, class TClassValue>
 PropertyValueRef TPropertyDefinition<TPropertyType, TClassDefinition, TClassValue>::Clone(const PropertyValueRef& _rValue)const
 {
-	ZENAssert( _rValue.GetType() == kPropertyType );
+	zenAssert( _rValue.GetType() == kPropertyType );
 	ValueRef rValueToClone	= _rValue;
 	ValueRef rValueCloned	= Allocate( rValueToClone->mrOwnerAsset );
 	rValueCloned			= rValueToClone.GetValue();
@@ -90,7 +90,7 @@ PropertyValueRef TPropertyDefinition<TPropertyType, TClassDefinition, TClassValu
 template<zenConst::eAssetPropertyType TPropertyType, class TClassDefinition, class TClassValue>
 bool TPropertyDefinition<TPropertyType, TClassDefinition, TClassValue>::IsDefault(const PropertyValueRef& _rValue)const
 {
-	ZENAssert( _rValue.GetType() == kPropertyType );	
+	zenAssert( _rValue.GetType() == kPropertyType );	
 	ValueRef rValue = _rValue;
 	return static_cast<const TClassDefinition*>(this)->mDefault == rValue.GetValue();	
 }
@@ -98,7 +98,7 @@ bool TPropertyDefinition<TPropertyType, TClassDefinition, TClassValue>::IsDefaul
 template<zenConst::eAssetPropertyType TPropertyType, class TClassDefinition, class TClassValue>
 bool TPropertyDefinition<TPropertyType, TClassDefinition, TClassValue>::IsEqual(const PropertyValueRef& _rValue1, const PropertyValueRef& _rValue2)const
 {	
-	ZENAssert( _rValue1.GetType() == kPropertyType );
+	zenAssert( _rValue1.GetType() == kPropertyType );
 	if( _rValue1.GetType() == _rValue2.GetType() )
 	{
 		const ValueRef rValue1	= _rValue1;

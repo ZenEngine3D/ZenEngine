@@ -39,14 +39,29 @@ public:
 
 	ZENInline bool					operator==( const zFlag& _Cmp )const;
 	ZENInline bool					operator!=( const zFlag& _Cmp )const;
-
-protected:
+	
 	template<typename... Ts>
-	constexpr static TStorage		MakeFlag(TEnumFlag Value, Ts... r);	//! Using recursive variadic template to handle any parameters count
-	constexpr static TStorage		MakeFlag(TEnumFlag _Value);
+	constexpr static TStorage		Mask(TEnumFlag Value, Ts... r);
+	constexpr static TStorage		Mask(TEnumFlag _Value);
+protected:		
 	ZENInline						zFlag(TStorage _Mask);
 	TStorage						muFlags;
 };
+
+template<typename TOut, typename TEnumType>
+constexpr TOut zEnumMask(TEnumType _eEnumVal)
+{
+	//zenAssert( sizeof(TOut)*8 >= _eEnumVal ); //Not enough bits to convert enum to mask	
+	return TOut(1) << _eEnumVal;
+}
+
+template<typename TOut, typename TEnumType, typename... Ts>
+constexpr TOut zEnumMask(TEnumType _eEnumVal, Ts... _eRemainVals)
+{
+	return zEnumMask<TOut>(_eEnumVal) | zEnumMask<TOut>( _eRemainVals... );
+}
+
+
 
 } } //namespace zen, Type
 

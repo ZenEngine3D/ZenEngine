@@ -9,18 +9,23 @@ namespace zcExp
 		zArrayStatic<zenRes::zGfxVertex::Stream>	maStreams;
 		zFlagResUse									mResourceUse;
 	};
-	/*
-	class SerialVertex_Base : public zcExp::ExportItem
+
+	class ExportGfxVertex : public zenRes::zExportData
 	{
-	ZENClassDeclare(SerialVertex_Base,zcExp::ExportItem)
+	ZENClassDeclare(ExportGfxVertex, zenRes::zExportData)
 	public:
-		struct ExportInfo : public zcExp::ExportInfoBase
-		{			
-			zArrayStatic<zenRes::zGfxVertex::Stream>	maStreams;
-			zFlagResUse									mResourceUse;
+		class Stream
+		{
+		public:		
+			zArrayStatic<zU8>			maData;				//!< Vertex elements data (pos, uv, etc...)
+			zU16						muStride;			//!< Stride between 2 vertex entry
+			zU8							muElementStart;		//!< First entry index in stream definition
+			zU8							muElementCount;		//!< Number of different vertex element contained in buffer (not number of vertice)
 		};
+		zArrayStatic<Stream>			maStream;			//!< Vertex Buffer data
+		zFlagResUse						mResourceUse;		//!< Creation flags
 	};
-	*/
+
 	zResID CreateGfxVertex(const zArrayBase<zenRes::zGfxVertex::Stream>& _aStreams, zFlagResUse _ResourceUse);
 }
 

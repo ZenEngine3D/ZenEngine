@@ -72,7 +72,7 @@ TabAssetProperty::TabAssetProperty(wxWindow *_pParent, const zenAss::zAssetItemR
 : wxPanel(_pParent, wxID_ANY)
 , mrAsset(_rEditAsset)
 {
-	ZENAssert(mrAsset.IsValid());
+	zenAssert(mrAsset.IsValid());
 	wxBoxSizer* sizer = zenNewDefault wxBoxSizer(wxVERTICAL);	
 	const int margin(3);
 	const long flags(wxGROW | wxALL);

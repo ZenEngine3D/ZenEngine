@@ -2,10 +2,11 @@
 
 namespace zcExp
 {
-	ExporterGfxShaderBindingDX11_DX11::ExporterGfxShaderBindingDX11_DX11(const ResDataRef& _rResData)
-	: Super(_rResData.GetSafe())
-	, mrResData(_rResData)
+	ExporterGfxShaderBindingDX11_DX11::ExporterGfxShaderBindingDX11_DX11(const ExportResultRef& _rExportOut)
+	: Super(_rExportOut.GetSafe())
+	, mrExport(_rExportOut)
 	{
+		zenAssert(_rExportOut.IsValid());
 	}
 
 	//=================================================================================================
@@ -21,40 +22,40 @@ namespace zcExp
 
 		ExportInfoGfxShaderBinding* pExportInfo = static_cast<ExportInfoGfxShaderBinding*>(mpExportInfo);	
 
-		mrResData->maShaderID = pExportInfo->maShaderID;
-		mdStagePerParamDef.Export( *(zArrayStatic<zHash64>*)&mrResData->maParamDefID, mrResData->maStagePerParamDef);
+		mrExport->maShaderID = pExportInfo->maShaderID;
+		mdStagePerParamDef.Export( *(zArrayStatic<zHash64>*)&mrExport->maParamDefID, mrExport->maStagePerParamDef);
 
 		//---------------------------------------------------------------------
 		// Process texture binding infos for each shader stage
 		//---------------------------------------------------------------------
-		zMap<ResDataGfxShaderBinding::TextureSlot>::Key32 dTextureBindInfo(16);
-		dTextureBindInfo.SetDefaultValue( ResDataGfxShaderBinding::TextureSlot() );
-		for( zUInt stageIdx(0), stageCount(mrResData->maShaderID.Count()); stageIdx<stageCount; ++stageIdx)
+		zMap<ExportGfxShaderBinding::TextureSlot>::Key32 dTextureBindInfo(16);
+		dTextureBindInfo.SetDefaultValue( ExportGfxShaderBinding::TextureSlot() );
+		for( zUInt stageIdx(0), stageCount(mrExport->maShaderID.Count()); stageIdx<stageCount; ++stageIdx)
 		{
-			zEngineConstRef<ResDataGfxShaderDX11> rShaderData = zcDepot::ResourceData.GetItem<zcExp::ResDataGfxShaderDX11>( mrResData->maShaderID[stageIdx] );
+			zEngineConstRef<ExportGfxShaderDX11> rShaderData = zcDepot::ExportData.GetTyped<ExportGfxShaderDX11>(mrExport->maShaderID[stageIdx]);
 			if( rShaderData.IsValid() )
 			{				
 				for(zUInt idxTexShader=0; idxTexShader < rShaderData->maTextureSamplerSlot.Count(); ++idxTexShader)
 				{						
-					const ResDataGfxShaderDX11::BindInfo& SlotInfoIn	= rShaderData->maTextureSamplerSlot[idxTexShader];
+					const ExportGfxShaderDX11::BindInfo& SlotInfoIn		= rShaderData->maTextureSamplerSlot[idxTexShader];
  				 	zHash32 hTextureName								= rShaderData->maTextureSamplerName[idxTexShader];					
- 					ResDataGfxShaderBinding::TextureSlot& SlotInfoOut	= dTextureBindInfo.GetAdd(hTextureName);
+ 					ExportGfxShaderBinding::TextureSlot& SlotInfoOut	= dTextureBindInfo.GetAdd(hTextureName);
  					SlotInfoOut.muSlot[stageIdx]						= SlotInfoIn.uSlot;
  					SlotInfoOut.muCount[stageIdx]						= SlotInfoIn.uCount;	
 				}
 			}
 		}	
-		dTextureBindInfo.Export( mrResData->maTextureName, mrResData->maTextureBind );
+		dTextureBindInfo.Export( mrExport->maTextureName, mrExport->maTextureBind );
 
 		//---------------------------------------------------------------------
 		// Process parameters binding infos (list param name in each bound ParamDef)
 		//---------------------------------------------------------------------	
 		zMap<zU32>::Key32	dParamDefPerName(64);	
 		dParamDefPerName.SetDefaultValue(0);
-		for(zUInt paramDefIdx(0), paramDefCount(mrResData->maParamDefID.Count()); paramDefIdx<paramDefCount; ++paramDefIdx )
+		for(zUInt paramDefIdx(0), paramDefCount(mrExport->maParamDefID.Count()); paramDefIdx<paramDefCount; ++paramDefIdx )
 		{
-			ZENAssert( paramDefIdx < mrResData->maParameterMask.SizeItem() );			
-			zEngineConstRef<ResDataGfxShaderParamDefDX11> rParamDef = zcDepot::ResourceData.GetItem<ResDataGfxShaderParamDefDX11>( mrResData->maParamDefID[paramDefIdx] );
+			zenAssert( paramDefIdx < mrExport->maParameterMask.SizeItem() );			
+			zEngineConstRef<ExportGfxShaderParamDefDX11> rParamDef = zcDepot::ExportData.GetTyped<ExportGfxShaderParamDefDX11>( mrExport->maParamDefID[paramDefIdx] );
 			if( rParamDef.IsValid() )
 			{
 				zcExp::ShaderParamItemInfoMap::Iterator it(rParamDef->mdParameters);
@@ -69,10 +70,8 @@ namespace zcExp
 				//! @todo Missing: export error, missing ParamDef
 			}
 		}
-		dParamDefPerName.Export( mrResData->maParameterName, mrResData->maParameterMask );
+		dParamDefPerName.Export( mrExport->maParameterName, mrExport->maParameterMask );
 		ExportSkipWork();
 		return true;
 	}
-
-
 }

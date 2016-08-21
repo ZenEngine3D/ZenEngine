@@ -124,7 +124,7 @@ void zArrayDynamic<TType, TGrowthPolicy>::Reserve(zUInt _uCount)
 template<class TType, GrowthPolicyFunction TGrowthPolicy>
 TType zArrayDynamic<TType, TGrowthPolicy>::Pop()
 {
-	ZENAssert( muCount > 0);
+	zenAssert( muCount > 0);
 	TType value = mpData[--muCount];
 	Shrink();			
 	return value;
@@ -133,7 +133,7 @@ TType zArrayDynamic<TType, TGrowthPolicy>::Pop()
 template<class TType, GrowthPolicyFunction TGrowthPolicy>
 void zArrayDynamic<TType, TGrowthPolicy>::RemoveSwap(zUInt _uIndex)
 {
-	ZENAssert( _uIndex < muCount );
+	zenAssert( _uIndex < muCount );
 	mpData[_uIndex] = mpData[--muCount];
 	Shrink();
 }
@@ -172,7 +172,7 @@ template<class TType, GrowthPolicyFunction TGrowthPolicy>
 void zArrayDynamic<TType, TGrowthPolicy>::Grow( zUInt _auCountNeeded )
 {
 	zUInt uNewCount	= TGrowthPolicy(muCountReserved, _auCountNeeded, sizeof(TType) );
-	ZENAssertMsg(uNewCount>=_auCountNeeded, "Growth function returned less item count than needed");
+	zenAssertMsg(uNewCount>=_auCountNeeded, "Growth function returned less item count than needed");
 	TType* pNewData = zenNewDefault TType[uNewCount];
 	zenMem::Copy(pNewData, mpData, muCount);
 	zenDelnullptrArray(mpData);	
@@ -187,7 +187,7 @@ template<class TType, GrowthPolicyFunction TGrowthPolicy>
 void zArrayDynamic<TType, TGrowthPolicy>::GrowNoConstructor( zUInt _auCountNeeded )
 {
 	zUInt uNewCount	= TGrowthPolicy(muCountReserved, _auCountNeeded, sizeof(TType) );
-	ZENAssertMsg(uNewCount>=_auCountNeeded, "Growth function returned less item count than needed");
+	zenAssertMsg(uNewCount>=_auCountNeeded, "Growth function returned less item count than needed");
 	TType* pNewData = reinterpret_cast<TType*>( zenNewDefault zU8[sizeof(TType)*uNewCount] );	
 	zenMem::Copy(pNewData, mpData, muCount );
 	zenDelnullptrArray(mpData);

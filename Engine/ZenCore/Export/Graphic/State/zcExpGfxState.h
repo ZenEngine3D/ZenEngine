@@ -24,13 +24,13 @@ namespace zcExp
 		const zenRes::zGfxRenderPass::ConfigDepthRT* mpDepthStencilConfig; // Only designed for runtime, makes no copy
 	};
 
-	struct ExportInfoGfxStateRasterizer : public ExportInfoBase
+	struct ExportInfoGfxStateRaster : public ExportInfoBase
 	{
-		zenRes::zGfxStateRasterizer::Config	mRasterConfig;
+		zenRes::zGfxStateRaster::Config	mRasterConfig;
 	};
 		
 	zResID CreateGfxSampler( zenConst::eTextureFiltering _eFilterMin=zenConst::keTexFilter_Bilinear, zenConst::eTextureFiltering _eFilterMag=zenConst::keTexFilter_Bilinear, zenConst::eTextureWrap _eWrapU=zenConst::keTexWrap_Repeat, zenConst::eTextureWrap _eWrapV=zenConst::keTexWrap_Repeat, float _fLodBias=0, const zVec4F& _vBorderColor=zVec4F(0,0,0,1) );	
-	zResID CreateGfxRasterizer( const zenRes::zGfxStateRasterizer::Config& _RasterConfig );
+	zResID CreateGfxRasterizer( const zenRes::zGfxStateRaster::Config& _RasterConfig );
 	zResID CreateGfxDepthStencil( const zenRes::zGfxRenderPass::ConfigDepthRT& _DepthStencilConfig );
 	zResID CreateGfxBlend( const zArrayBase<zenRes::zGfxRenderPass::ConfigColorRT>& _aTargetColorConfig);
 }

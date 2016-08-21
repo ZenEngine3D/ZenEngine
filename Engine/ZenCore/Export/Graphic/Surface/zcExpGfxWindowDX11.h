@@ -4,14 +4,12 @@
 
 namespace zcExp
 {
-	class ResDataGfxWindowDX11 : public ResourceData
+	class ExportGfxWindowDX11 : public zenRes::zExportData
 	{
-	ZENClassDeclare(ResDataGfxWindowDX11, ResourceData)
+	ZENClassDeclare(ExportGfxWindowDX11, zenRes::zExportData)
 	public:
-		virtual bool			Serialize( zcExp::Serializer_Base& _Serializer ){return true;}		
 		HWND					mhWindow;
 	};
-
 }
 
 

@@ -50,13 +50,13 @@ void DrawContext::Clear()
 
 void DrawContext::Submit()
 {
-	ZENAssertMsg( mbRootContext, "Can only submot a root context");
+	zenAssertMsg( mbRootContext, "Can only submot a root context");
 	SubmitInternal();
 }
 
 void DrawContext::SubmitInternal()
 {
-	ZENAssertMsg( mbSubmitted == false, "Can only submit a context once");
+	zenAssertMsg( mbSubmitted == false, "Can only submit a context once");
 	if( !marDrawcalls.IsEmpty() || !mlstChilds.IsEmpty() )
 	{
 		zenPerf::zScopedEventGpu Event(mzName);

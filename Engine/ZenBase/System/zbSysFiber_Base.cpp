@@ -27,7 +27,7 @@ void zbFiber_Base::UpdateLoop()
 
 void zbFiber_Base::Deactivate()
 {
-	ZENAssert(mpRunningTask);
+	zenAssert(mpRunningTask);
 	mpRunningTask->muElapsed	+= zUInt(zenSys::GetTimeUSec() - mpRunningTask->muProfilingTimer);
 	mpRunningTask				= nullptr; //! @todo cleanup fiber Free data ?
 	gQueueAvailableFiber.Push(this);
@@ -35,7 +35,7 @@ void zbFiber_Base::Deactivate()
 
 void zbFiber_Base::Suspend()
 {
-	ZENAssert(mpRunningTask);
+	zenAssert(mpRunningTask);
 	mpRunningTask->muElapsed	+= zUInt(zenSys::GetTimeUSec() - mpRunningTask->muProfilingTimer);
 	gQueueSuspendedFiber[muThreadId].Push(this);
 }

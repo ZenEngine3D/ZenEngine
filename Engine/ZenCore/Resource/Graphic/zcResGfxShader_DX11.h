@@ -2,49 +2,44 @@
 #ifndef __zCore_Res_Gfx_Shaders_DX11_h__
 #define __zCore_Res_Gfx_Shaders_DX11_h__
 
-struct ID3D11VertexShader;
-struct ID3D11PixelShader;
-struct ID3D11InputLayout;
 
 namespace zcRes
 {
-	typedef zMap<zcExp::ResDataGfxShaderDX11::BindInfo>::Key32	MapBindInfo;
 
-	//=================================================================================================
-	class GfxInputSignatureProxy_DX11 : public zRefCounted
+//=================================================================================================
+	class GfxInputSignatureHAL_DX11 : public zcExp::ExportGfxInputSignatureDX11
 	{
-	ZENClassDeclare(GfxInputSignatureProxy_DX11, zRefCounted)
-	public:												
-											GfxInputSignatureProxy_DX11();
-		virtual								~GfxInputSignatureProxy_DX11();												
-		bool								Initialize(class GfxInputSignature& _Owner);
-		zArrayStatic<zU8>					maDummyShaderCode;
-		ZENDbgCode(class GfxInputSignature*	mpOwner);
+	ZENClassDeclare(GfxInputSignatureHAL_DX11, zcExp::ExportGfxInputSignatureDX11)
+	public:
+		typedef zcExp::ExporterGfxInputSignatureDX11_DX11	RuntimeExporter;
+		bool												Initialize();
 	};
-
+	class GfxInputSignatureHAL : public GfxInputSignatureHAL_DX11{};
+	
 	//=================================================================================================
-	class GfxShaderVertexProxy_DX11 : public zRefCounted
+	class GfxShaderVertexHAL_DX11 : public zcExp::ExportGfxShaderDX11
 	{
-	ZENClassDeclare(GfxShaderVertexProxy_DX11, zRefCounted)
+	ZENClassDeclare(GfxShaderVertexHAL_DX11, zcExp::ExportGfxShaderDX11)
 	public:												
-											GfxShaderVertexProxy_DX11();
-		virtual								~GfxShaderVertexProxy_DX11();												
-		bool								Initialize(class GfxShaderVertex& _Owner);
-		ID3D11VertexShader*					mpVertexShader;		
-		ZENDbgCode(class GfxShaderVertex*	mpOwner);
+		virtual										~GfxShaderVertexHAL_DX11();												
+		bool										Initialize();
+		struct ID3D11VertexShader*					mpVertexShader		= nullptr;		
+		GfxInputSignatureRef						mrGfxInputSignature;
+		typedef zcExp::ExporterGfxShaderDX11_DX11	RuntimeExporter;
 	};
+	class GfxShaderVertexHAL : public GfxShaderVertexHAL_DX11{};
 
 	//=================================================================================================	
-	class GfxShaderPixelProxy_DX11 : public zRefCounted
+	class GfxShaderPixelHAL_DX11 : public zcExp::ExportGfxShaderDX11
 	{
-	ZENClassDeclare(GfxShaderPixelProxy_DX11, zRefCounted)
+	ZENClassDeclare(GfxShaderPixelHAL_DX11, zcExp::ExportGfxShaderDX11)
 	public:											
-											GfxShaderPixelProxy_DX11();
-		virtual								~GfxShaderPixelProxy_DX11();												
-		bool								Initialize(class GfxShaderPixel& _Owner);
-		ID3D11PixelShader*					mpPixelShader;
-		ZENDbgCode(class GfxShaderPixel*	mpOwner);
-	};
+		virtual										~GfxShaderPixelHAL_DX11();												
+		bool										Initialize();
+		struct ID3D11PixelShader*					mpPixelShader		= nullptr;
+		typedef zcExp::ExporterGfxShaderDX11_DX11	RuntimeExporter;
+	};	
+	class GfxShaderPixelHAL : public GfxShaderPixelHAL_DX11{};
 }
 
 #endif

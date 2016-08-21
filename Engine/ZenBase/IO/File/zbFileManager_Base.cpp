@@ -331,7 +331,7 @@ void Filename::SplitFolder(zArrayDynamic<zArrayStatic<wchar_t>>& _aFolderOut)con
 	// Find all path separators	
 	while( ++uPos < uCount)
 	{
-		ZENAssert(uOffetCount < ZENArrayCount(aOffset) )
+		zenAssert(uOffetCount < ZENArrayCount(aOffset) )
 		if( mzFilename[uPos] == L'\\' || mzFilename[uPos] == L'/')
 			aOffset[uOffetCount++] = uPos+1;
 	}

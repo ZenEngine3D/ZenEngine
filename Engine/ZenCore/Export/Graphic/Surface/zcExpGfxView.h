@@ -13,32 +13,29 @@ namespace zcExp
 		static zResID												CallbackGetItemID(zenConst::eResPlatform _ePlatform, zenConst::eResType _eType, zenConst::eResSource _eSource, const ExportInfoBase* _pExportInfo, bool& _bExistOut);
 	};
 	
-	class ResDataGfxView : public ResourceData
+	class ExportGfxView : public zenRes::zExportData
 	{
-	ZENClassDeclare(ResDataGfxView, ResourceData)
-	public:		
+	ZENClassDeclare(ExportGfxView, zenRes::zExportData)
+	public:
 		zArrayStatic<zenRes::zGfxRenderPass::ConfigColorRT>			maRTColorConfig;
 		zenRes::zGfxRenderPass::ConfigDepthRT						mRTDepthConfig;
 		zVec2U16													mvDim;
 		zVec2S16													mvOrigin;
-		virtual bool												Serialize( zcExp::Serializer_Base& _Serializer ){return true;}
 	};
 
 	class ExporterGfxView : public ExporterBase
 	{
 	ZENClassDeclare(ExporterGfxView, ExporterBase)
-	public:				
-	typedef ResDataGfxView		ResData;
-	typedef zEngineRef<ResData>	ResDataRef;
-								ExporterGfxView(const ResDataRef& _rResData);
-	protected:	
-		virtual bool			ExportStart();		
-		ResDataRef				mrResData;
+	public:
+	typedef zEngineRef<ExportGfxView>	ExportResultRef; //todo use proper ref class
+										ExporterGfxView(const ExportResultRef& _rExportOut);
+	protected:
+		virtual bool					ExportStart();
+		ExportResultRef					mrExportResult;
 	};
 
 	zResID CreateGfxView(const zArrayBase<zenRes::zGfxRenderPass::ConfigColorRT>& _aRTColorConfig, const zenRes::zGfxRenderPass::ConfigDepthRT& _RTDepthConfig, const zVec2U16& _vDim = zVec2U16(0xFFFF, 0xFFFF), const zVec2S16& _vOrigin = zVec2S16(0,0));	
 	
 }
-
 
 #endif

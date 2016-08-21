@@ -25,8 +25,8 @@ namespace zen { namespace zenGfx
 
 		static void				DrawMesh			(const zContext& _rContext, float _fPriority, const zenRes::zGfxMesh& _rMesh, zU32 _uIndexFirst=0, zU32 _uIndexCount=0xFFFFFFFF, const zVec4U16& _vScreenScissor = zVec4U16(0,0,0xFFFF,0xFFFF) );
 		static void				DrawMesh			(const zContext& _rContext, float _fPriority, const zenRes::zGfxMeshStrip&	_rMeshStrip, zU32 _uIndexFirst=0, zU32 _uIndexCount=0xFFFFFFFF, const zVec4U16& _vScreenScissor = zVec4U16(0,0,0xFFFF,0xFFFF) );
-		static void				ClearColor			(const zContext& _rContext, const zenRes::zGfxRenderTarget& _RTColor, const zVec4F& _vRGBA,  const zColorMask& _ColorMask=zenConst::kColorMaskRGBA, const zVec2S16& _vOrigin=zVec2S16(0,0), const zVec2U16& _vDim=zVec2U16(0,0) );
-		static void				ClearDepthStencil	(const zContext& _rContext, const zenRes::zGfxRenderTarget& _rRTDepthStencil, bool _bClearDepth=true, float _fDepthValue=1, bool _bClearStencil=false, zU8 _uStencilValue=128);
+		static void				ClearColor			(const zContext& _rContext, const zenRes::zGfxTarget2D& _RTColor, const zVec4F& _vRGBA,  const zColorMask& _ColorMask=zenConst::kColorMaskRGBA, const zVec2S16& _vOrigin=zVec2S16(0,0), const zVec2U16& _vDim=zVec2U16(0,0) );
+		static void				ClearDepthStencil	(const zContext& _rContext, const zenRes::zGfxTarget2D& _rRTDepthStencil, bool _bClearDepth=true, float _fDepthValue=1, bool _bClearStencil=false, zU8 _uStencilValue=128);
 	};	
 }}
 
@@ -34,33 +34,51 @@ namespace zen { namespace zenRes {
 	
 	class zGfxRenderPass; //! forward declare
 
-	ZENClassResourceRefDeclare(zGfxShaderBinding, zenConst::keResType_GfxShaderBinding)
-	public:				
+	class zGfxShaderBinding : public zcRes::GfxShaderBindingRef
+	{
+	ZENClassDeclare(zGfxShaderBinding, zcRes::GfxShaderBindingRef);
+	public:
+		using Super::Super;
+		using Super::operator=;
+	
 		static zGfxShaderBinding						Create(const zGfxShaderVertex& _VertexShader);
 		static zGfxShaderBinding						Create(const zGfxShaderVertex& _VertexShader, const zGfxShaderPixel& _PixelShader);
 		void											CreateShaderParam(zArrayStatic<zenRes::zGfxShaderParam>& _aShaderParamOut)const;
 	};
 
 	//! @todo Clean: remove this from api
-	ZENClassResourceRefDeclare(zGfxInputStream, zenConst::keResType_GfxInputStream) };
+	//ZENClassResourceRefDeclare(zGfxInputStream, zenConst::keResType_GfxInputStream) };
 	
-	ZENClassResourceRefDeclare(zGfxView, zenConst::keResType_GfxView)
+	class zGfxView : public zcRes::GfxViewRef
+	{
+	ZENClassDeclare(zGfxView, zcRes::GfxViewRef);
 	public:
+		using Super::Super;
+		using Super::operator=;
 		zVec2U16						GetDim()const;
 	};
 		
-	ZENClassResourceRefDeclare(zGfxWindow, zenConst::keResType_GfxWindow)
+	class zGfxWindow : public zcRes::GfxWindowRef
+	{
+	ZENClassDeclare(zGfxWindow, zcRes::GfxWindowRef);
 	public:
+		using Super::Super;
+		using Super::operator=;
+
 		void							FrameBegin();
 		void							FrameEnd();
-		zGfxRenderTarget				GetBackbuffer();
+		zGfxTarget2D					GetBackbuffer();
 		void							Resize(const zVec2U16& _vSize);		
 		bool							PerformResize();		
-		static zGfxWindow				Create( HWND _WindowHandle );		
 	};
-		
-	ZENClassResourceRefDeclare(zGfxMeshStrip, zenConst::keResType_GfxMeshStrip)
+
+	class zGfxMeshStrip : public zcRes::GfxMeshStripRef
+	{
+	ZENClassDeclare(zGfxMeshStrip, zcRes::GfxMeshStripRef);
 	public:
+		using Super::Super;
+		using Super::operator=;
+
 		void							SetValue(const zShaderParameter& _Value);			
 		void							SetValue(const zArrayBase<const zShaderParameter*>& _aValues);	
 		void							SetValue(const zHash32& _hParamName, const float& _fValue);
@@ -77,8 +95,13 @@ namespace zen { namespace zenRes {
 		static zGfxMeshStrip			Create(const zGfxVertex& _rVertexBuffer, const zGfxIndex& _rIndexBuffer, const zGfxShaderBinding& _rShaderBinding, zU32 _uIndexFirst=0, zU32 _uIndexCount=0xFFFFFFFF, zU32 _uVertexFirst = 0);
 	};
 
-	ZENClassResourceRefDeclare(zGfxMesh, zenConst::keResType_GfxMesh)
+	class zGfxMesh : public zcRes::GfxMeshRef
+	{
+	ZENClassDeclare(zGfxMesh, zcRes::GfxMeshRef);
 	public:
+		using Super::Super;
+		using Super::operator=;
+
 		void							SetValue(const zShaderParameter& _Value);			
 		void							SetValue(const zArrayBase<const zShaderParameter*>& _aValues);	
 		void							SetValue(const zHash32& _hParamName, const float& _fValue);

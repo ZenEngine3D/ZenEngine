@@ -4,7 +4,7 @@
 
 namespace zcGfx
 {
-extern zcRes::GfxWindowRef	gWindowRender;	//!< Window being currently rendered //! @todo clean rethink global naming convention. g in front of everything?
+extern zcRes::GfxWindowRef	grWindowRender;	//!< Window being currently rendered //! @todo clean rethink global naming convention. g in front of everything?
 
 //=================================================================================================
 //! @brief		zbType::Manager used to control hardware renderer

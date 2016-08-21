@@ -4,8 +4,13 @@
 
 namespace zen { namespace zenRes 
 {	
-	ZENClassResourceRefDeclare(zGfxVertex, zenConst::keResType_GfxVertex)
+	class zGfxVertex : public zcRes::GfxVertexRef
+	{
+	ZENClassDeclare(zGfxVertex, zcRes::GfxVertexRef);
 	public:
+		using Super::Super;
+		using Super::operator=;
+
 		struct Element
 		{
 		public:
@@ -39,37 +44,49 @@ namespace zen { namespace zenRes
 		};
 	public:		
 		zU8*					Lock();
-		void					Unlock();
+		void					Unlock(const zenGfx::zContext& rContext);
 		
 		static zGfxVertex		Create(const zArrayBase<zGfxVertex::Stream>& _aStreams, zFlagResUse _ResourceUse);
 	};
 
-	ZENClassResourceRefDeclare(zGfxIndex, zenConst::keResType_GfxIndex)
-	public:		
+	class zGfxIndex : public zcRes::GfxIndexRef
+	{
+	ZENClassDeclare(zGfxIndex, zcRes::GfxIndexRef);
+	public:
+		using Super::Super;
+		using Super::operator=;	
+
 		zU8*					Lock();
-		//void					Unlock();
 		void					Unlock(const zenGfx::zContext& rContext);
 
 		static zGfxIndex		Create(const zArrayBase<zU16>& _Indices, zenConst::ePrimitiveType _ePrimitiveType);
 		static zGfxIndex		Create(const zArrayBase<zU32>& _Indices, zenConst::ePrimitiveType _ePrimitiveType);
 	};
 
-	ZENClassResourceRefDeclare(zGfxTexture2d, zenConst::keResType_GfxTexture2D)
-	public:		
+	class zGfxTexture2d : public zcRes::GfxTexture2dRef
+	{
+	ZENClassDeclare(zGfxTexture2d, zcRes::GfxTexture2dRef);
+	public:
+		using Super::Super;
+		using Super::operator=;
+		
 		const zVec2U16&			GetDim();
 		static zGfxTexture2d	Create(zenConst::eTextureFormat _eFormat, zVec2U16 _vDim, zFlagResTexUse _CreationFlags=zFlagResTexUse());		
 		static zGfxTexture2d	Create(zenConst::eTextureFormat _eFormat, zVec2U16 _vDim, const zArrayBase<zU8>& _aRawData, zFlagResTexUse _CreationFlags=zFlagResTexUse());
 	};
 
-	ZENClassResourceRefDeclare(zGfxRenderTarget, zenConst::keResType_GfxRenderTarget)
+	class zGfxTarget2D : public zcRes::GfxTarget2DRef
+	{
+	ZENClassDeclare(zGfxTarget2D, zcRes::GfxTarget2DRef);
 	public:		
-		bool					IsDepth();
-		const zVec2U16&			GetDim();
-		zGfxTexture2d			GetTexture2D();
-		void					Clear(const zVec4F& _vRGBA);
-		void					Clear(float _fDepth=1, zU8 _uStencil=0, bool _bClearDepth=true, bool _bClearStencil=false);
+		using Super::Super;
+		using Super::operator=;
+
+		bool						IsDepth()const;
+		const zVec2U16&				GetDim()const;
+		zGfxTexture2d				GetTexture2D();
 		
-		static zGfxRenderTarget	Create(zenConst::eTextureFormat _eFormat, zVec2U16 _vDim, bool _bSrgb=true);
+		static zGfxTarget2D			Create(zenConst::eTextureFormat _eFormat, zVec2U16 _vDim, bool _bSrgb=true);
 	};
 
 }} // namespace zen, zenRes

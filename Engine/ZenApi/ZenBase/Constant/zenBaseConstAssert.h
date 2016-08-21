@@ -27,38 +27,39 @@ namespace zbLog
 	#else
 		#define ASSERT_BREAKTYPE (zbLog::keErrorLevel_AssertMsg)
 	#endif		
-	#define	ZENCriticalMsg(_Cond_, _Msg_, ...)		{   if( !(_Cond_) ) zbLog::Assert(#_Cond_, __FILE__, __LINE__, zbLog::keErrorLevel_Critical, _Msg_, __VA_ARGS__ ); }
-	#define	ZENAssertMsg(_Cond_, _Msg_, ...)			{   if( !(_Cond_) ) zbLog::Assert(#_Cond_, __FILE__, __LINE__, ASSERT_BREAKTYPE, _Msg_, __VA_ARGS__ ); }	
-	#define	ZENAssertMsgOnce(_Cond_, _Msg_, ...)		{   static bool sbTriggered=false;													\
+	#define	zenCriticalMsg(_Cond_, _Msg_, ...)		{   if( !(_Cond_) ) zbLog::Assert(#_Cond_, __FILE__, __LINE__, zbLog::keErrorLevel_Critical, _Msg_, __VA_ARGS__ ); }
+	#define	zenAssertMsg(_Cond_, _Msg_, ...)		{   if( !(_Cond_) ) zbLog::Assert(#_Cond_, __FILE__, __LINE__, ASSERT_BREAKTYPE, _Msg_, __VA_ARGS__ ); }	
+	#define	zenAssertMsgOnce(_Cond_, _Msg_, ...)	{   static bool sbTriggered=false;													\
 														if( !sbTriggered && !(_Cond_) )													\
 														{   sbTriggered= true;															\
 															zbLog::Assert(#_Cond_, __FILE__, __LINE__, ASSERT_BREAKTYPE, _Msg_, __VA_ARGS__ );   }}
-	#define	ZENWarningMsg(_Cond_, _Msg_, ...)		{   if( !(_Cond_) ) zbLog::Assert(#_Cond_, __FILE__, __LINE__, zbLog::keErrorLevel_Warning, _Msg_, __VA_ARGS__ ); }	
-	#define	ZENWarningMsgOnce(_Cond_, _Msg_, ...)	{   static bool sbTriggered=false;													\
+	#define	zenWarningMsg(_Cond_, _Msg_, ...)		{   if( !(_Cond_) ) zbLog::Assert(#_Cond_, __FILE__, __LINE__, zbLog::keErrorLevel_Warning, _Msg_, __VA_ARGS__ ); }
+	#define	zenWarningMsgOnce(_Cond_, _Msg_, ...)	{   static bool sbTriggered=false;													\
 														if( !sbTriggered && !(_Cond_) )													\
 														{   sbTriggered= true;															\
 															zbLog::Assert(#_Cond_, __FILE__, __LINE__, zbLog::keErrorLevel_Warning, _Msg_, __VA_ARGS__ );   }}
-	#define	ZENStaticAssertMsg(_Cond_, _Msg_, ...)	{	switch (0) {case 0: case (_Cond_):;} }
+	#define	zenStaticAssertMsg(_Cond_, _Msg_)		{	static_assert(_Cond_, _Msg_);}
 
 //=================================================================================================
 // ASSERT Disabled
 //=================================================================================================
 #else	
-	#define	ZENStaticAssertMsg(_Cond_, _Msg_, ...)	((void)0);
-	#define ZENCriticalMsg(_Cond_, _Msg_, ...)		((void)0);
-	#define	ZENAssertMsg(_Cond_, _Msg_, ...)		((void)0);
-	#define	ZENAssertMsgOnce(_Cond_, _Msg_, ...)	((void)0);
-	#define ZENWarningMsg(_Cond_, _Msg_, ...)		((void)0);
-	#define	ZENWarningMsgOnce(_Cond_, _Msg_, ...)	((void)0);
-	#define	ZENStaticAssertMsg(_Cond_, _Msg_, ...)	((void)0);
+	#define	zenStaticAssertMsg(_Cond_, _Msg_, ...)	((void)0);
+	#define zenCriticalMsg(_Cond_, _Msg_, ...)		((void)0);
+	#define	zenAssertMsg(_Cond_, _Msg_, ...)		((void)0);
+	#define	zenAssertMsgOnce(_Cond_, _Msg_, ...)	((void)0);
+	#define zenWarningMsg(_Cond_, _Msg_, ...)		((void)0);
+	#define	zenWarningMsgOnce(_Cond_, _Msg_, ...)	((void)0);
+	#define	zenStaticAssertMsg(_Cond_, _Msg_, ...)	((void)0);
 
 #endif
 
-#define ZENStaticAssert(_Cond_)	ZENStaticAssertMsg(_Cond_, "")
-#define	ZENCritical(_Cond_)		ZENCriticalMsg(_Cond_, "")
-#define	ZENAssert(_Cond_)		ZENAssertMsg(_Cond_, "")
-#define	ZENAssertOnce(_Cond_)	ZENAssertMsgOnce(_Cond_, "")
-#define	ZENWarning(_Cond_)		ZENWarningMsg(_Cond_, "")
-#define	ZENWarningOnce(_Cond_)	ZENWarningMsgOnce(_Cond_, "")
+//! @todo clean replace macro with 'static_assert' and use zenAssert
+#define zenStaticAssert(_Cond_)			zenStaticAssertMsg(_Cond_, "")
+#define	zenCritical(_Cond_)				zenCriticalMsg(_Cond_, "")
+#define	zenAssert(_Cond_)				zenAssertMsg(_Cond_, "")
+#define	zenAssertOnce(_Cond_)			zenAssertMsgOnce(_Cond_, "")
+#define	zenWarning(_Cond_)				zenWarningMsg(_Cond_, "")
+#define	zenWarningOnce(_Cond_)			zenWarningMsgOnce(_Cond_, "")
 
 #endif

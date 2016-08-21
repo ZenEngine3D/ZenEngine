@@ -2,75 +2,71 @@
 
 namespace zcRes
 {
-
-	GfxWindowProxy_DX11::~GfxWindowProxy_DX11()
+	GfxWindowRef GfxWindowHAL_DX11::RuntimeCreate(HWND _WindowHandle)
 	{
-		if( mDX11pSwapChain )
-			mDX11pSwapChain->Release();	
-	}
-
-	bool GfxWindowProxy_DX11::Initialize(class GfxWindow& _Owner)
-	{
-		const GfxWindow::ResDataRef& rResData = _Owner.GetResData();
-		ZENAssert(rResData.IsValid());
-		ZENDbgCode(mpOwner = &_Owner);
-
-		RECT rc;
-		GetClientRect( rResData->mhWindow, &rc );
-		mvSize					= zVec2U16(zU16(rc.right-rc.left), zU16(rc.bottom-rc.top));
-
-		DXGI_SWAP_CHAIN_DESC swapDesc;
-		ZeroMemory( &swapDesc, sizeof( swapDesc ) );
-		swapDesc.BufferCount						= 2;
-		swapDesc.BufferDesc.Width					= mvSize.x;
-		swapDesc.BufferDesc.Height					= mvSize.y;
-		swapDesc.BufferDesc.Format					= zcMgr::GfxRender.ZenFormatToNative(meBackbufferColorFormat);
-		swapDesc.BufferDesc.RefreshRate.Numerator	= 60;
-		swapDesc.BufferDesc.RefreshRate.Denominator	= 1;
-		swapDesc.BufferUsage						= DXGI_USAGE_RENDER_TARGET_OUTPUT;
-		swapDesc.BufferCount						= 2;
-		swapDesc.OutputWindow						= rResData->mhWindow;
-		swapDesc.SampleDesc.Count					= 1;
-		swapDesc.SampleDesc.Quality					= 0;
-		swapDesc.Windowed							= TRUE;
-		swapDesc.SwapEffect							= DXGI_SWAP_EFFECT_DISCARD;
+		RECT						rc;
+		IDXGIDevice*				pDXGIDevice;
+		IDXGIAdapter*				pDXGIAdapter;
+		IDXGIFactory*				pDXGIFactory;
+		IDXGISwapChain*				pDXSwapChain;
+		DXGI_SWAP_CHAIN_DESC		SwapDesc;
+		zenConst::eTextureFormat	eColorFormat	= zenConst::keTexFormat_RGBA8; //! @todo clean feature expose desired format in ResData
 		
-		IDXGIDevice*	pDXGIDevice;
-		IDXGIAdapter*	pDXGIAdapter;
-		IDXGIFactory*	pIDXGIFactory;		
+		GetClientRect( _WindowHandle, &rc );		
+		ZeroMemory( &SwapDesc, sizeof( SwapDesc ) );		
+		SwapDesc.BufferCount						= 2;
+		SwapDesc.BufferDesc.Width					= rc.right-rc.left;
+		SwapDesc.BufferDesc.Height					= rc.bottom-rc.top;
+		SwapDesc.BufferDesc.Format					= zcMgr::GfxRender.ZenFormatToNative(eColorFormat);
+		SwapDesc.BufferDesc.RefreshRate.Numerator	= 60;
+		SwapDesc.BufferDesc.RefreshRate.Denominator	= 1;
+		SwapDesc.BufferUsage						= DXGI_USAGE_RENDER_TARGET_OUTPUT;
+		SwapDesc.BufferCount						= 2;
+		SwapDesc.OutputWindow						= _WindowHandle;
+		SwapDesc.SampleDesc.Count					= 1;
+		SwapDesc.SampleDesc.Quality					= 0;
+		SwapDesc.Windowed							= TRUE;
+		SwapDesc.SwapEffect							= DXGI_SWAP_EFFECT_DISCARD;
+		ID3D11Device*   DX11pDevice					= zcMgr::GfxRender.DX11GetDevice();		
 		
-		ID3D11Device*   DX11pDevice = zcMgr::GfxRender.DX11GetDevice();
 		if( SUCCEEDED(DX11pDevice->QueryInterface(__uuidof(IDXGIDevice), (void **)&pDXGIDevice)) )
 		{
 			if( SUCCEEDED(pDXGIDevice->GetParent(__uuidof(IDXGIAdapter), (void **)&pDXGIAdapter)) )
 			{
-				if( SUCCEEDED(pDXGIAdapter->GetParent(__uuidof(IDXGIFactory), (void **)&pIDXGIFactory)) )
+				if( SUCCEEDED(pDXGIAdapter->GetParent(__uuidof(IDXGIFactory), (void **)&pDXGIFactory)) )
 				{
-					if( SUCCEEDED(pIDXGIFactory->CreateSwapChain( DX11pDevice, &swapDesc, &mDX11pSwapChain)) )
-					{
-						//! @todo can't allow access to owner in render thread, fix this
-						//! @todo clean move code to resize and avoid duplicate						
-						zEngineRef<GfxRenderTargetResData> rResData	= zenNewDefault GfxRenderTargetResData();
-						bool bValid				= true;
-						rResData->mResID		= zcMgr::Export.GetNewResourceID(zenConst::keResType_GfxRenderTarget);
-						rResData->mbSRGB		= TRUE;
-						rResData->meFormat		= meBackbufferColorFormat;
-						rResData->mvDim			= mvSize;
-						rResData->mpBackbuffer	= mDX11pSwapChain;
-						for(zUInt idx(0); idx<ZENArrayCount(mrProxBackbufferColor) && bValid; ++idx)
+					if( SUCCEEDED(pDXGIFactory->CreateSwapChain( DX11pDevice, &SwapDesc, &pDXSwapChain)) )
+					{						
+						static zenMem::zAllocatorPool sMemPool("Pool GfxWindow", sizeof(GfxWindow), 128, 128);
+						GfxWindowRef rResource						= zenNew(&sMemPool) GfxWindow();		
+						bool bValid									= true;						
+						rResource.HAL()->mhWindow					= _WindowHandle;
+						rResource.HAL()->mpDX11SwapChain			= pDXSwapChain;
+						rResource.HAL()->meBackbufferColorFormat	= eColorFormat;
+						rResource.HAL()->mvSize						= zVec2U16(zU16(rc.right-rc.left), zU16(rc.bottom-rc.top));
+						for(zUInt idx(0); idx<ZENArrayCount(mrBackbufferColor) && bValid; ++idx)
 						{
-							rResData->muBackbufferId			= idx;
-							GfxRenderTargetRef rBackbufferColor = GfxRenderTarget::RuntimeCreate(rResData).GetSafe();
-							mrProxBackbufferColor[idx]			= rBackbufferColor;
-							bValid								= mrProxBackbufferColor[idx].IsValid();
-							mpOwner->SetBackbuffer(idx, rBackbufferColor); //! @todo urgent can't access game thread object here							
-						}																	
-						return bValid;
+							rResource.HAL()->mrBackbufferColor[idx]	= GfxTarget2DHAL_DX11::RuntimeCreate(*pDXSwapChain, eColorFormat, idx);							
+							bValid									= rResource.HAL()->mrBackbufferColor[idx].IsValid();
+						}
+
+						if( bValid )
+						{
+							RuntimeCreateFinalize( *rResource.HAL(), zenConst::keResType_GfxWindow );
+							return rResource;
+						}
+
 					}
 				}
 			}
 		}		
-		return false;;
+		return nullptr;		
+	}
+
+	GfxWindowHAL_DX11::~GfxWindowHAL_DX11()
+	{
+		if( mpDX11SwapChain )
+			mpDX11SwapChain->Release();	
 	}
 
 	//==================================================================================================
@@ -81,35 +77,30 @@ namespace zcRes
 	//--------------------------------------------------------------------------------------------------
 	//! @return		
 	//==================================================================================================
-	void GfxWindowProxy_DX11::PerformResize()
+	bool GfxWindowHAL_DX11::PerformResize()
 	{
-		ZENAssert(mDX11pSwapChain);
-		ZENAssertMsg(zcGfx::gWindowRender.IsValid()==false || zcGfx::gWindowRender->GetProxy() != this, "This method should only be called in ManagerBase::FrameStart()");
+		zenAssert(mpDX11SwapChain);
+		zenAssertMsg(zcGfx::grWindowRender.IsValid()==false || zcGfx::grWindowRender.Get() != dynamic_cast<GfxWindow*>(this), "This method should only be called in ManagerBase::FrameStart()");
 
-		if( !mvPendingResize.IsZero() && mvPendingResize != mvSize )
-		{			
-			for(zUInt idx(0); idx<ZENArrayCount(mrProxBackbufferColor); ++idx)
-				mrProxBackbufferColor[idx]->GetProxy()->ReleaseBackbuffer();
-
-			mDX11pSwapChain->ResizeBuffers(0, mvPendingResize.x, mvPendingResize.y, DXGI_FORMAT_UNKNOWN, 0);
-
-			zEngineRef<GfxRenderTargetResData> rResData	= zenNewDefault GfxRenderTargetResData();
-			mvSize										= mvPendingResize;
-			rResData->mResID							= zcMgr::Export.GetNewResourceID( zenConst::keResType_GfxRenderTarget );
-			rResData->mbSRGB							= TRUE;
-			rResData->meFormat							= meBackbufferColorFormat;
-			rResData->mvDim								= mvSize;
-			rResData->mpBackbuffer						= mDX11pSwapChain;
-			
-			for (zUInt idx(0); idx<ZENArrayCount(mrProxBackbufferColor); ++idx)
+		bool bResize = !mvPendingResize.IsZero() && mvPendingResize != mvSize;
+		if( bResize  )
+		{				
+			bool bValid(true);
+			for(zUInt idx(0); idx<ZENArrayCount(mrBackbufferColor); ++idx)
 			{
-				rResData->muBackbufferId				= idx;
-				GfxRenderTargetRef rBackbufferColor		= GfxRenderTarget::RuntimeCreate(rResData).GetSafe();
-				mrProxBackbufferColor[idx]				= rBackbufferColor;
-				mpOwner->SetBackbuffer(idx, rBackbufferColor); //! @todo urgent can't access game thread object here							
+				const GfxTarget2DRef& rRenderTarget = mrBackbufferColor[idx];
+				rRenderTarget.HAL()->ReleaseBackbuffer();
 			}
-		}		
+			mpDX11SwapChain->ResizeBuffers(0, mvPendingResize.x, mvPendingResize.y, DXGI_FORMAT_UNKNOWN, 0);
+			
+			for(zUInt idx(0); idx<ZENArrayCount(mrBackbufferColor) && bValid; ++idx)
+			{
+				mrBackbufferColor[idx]	= GfxTarget2DHAL_DX11::RuntimeCreate(*mpDX11SwapChain, meBackbufferColorFormat, idx);				
+				bValid					= mrBackbufferColor[idx].IsValid();
+			}
+		}
+		
 		mvPendingResize.SetZero();
+		return bResize;
 	}
-
 }

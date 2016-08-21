@@ -2,15 +2,25 @@
 
 namespace zen { namespace zenType {
 
-zRefCounted::~zRefCounted()
+zRefCounted::TypeList zRefCounted::sLstPendingDel[3];
+zUInt zRefCounted::suLstPendingDelIndex = 0;
+
+void zRefCounted::ReferenceRelease()
 {
+	suLstPendingDelIndex		= (suLstPendingDelIndex + 1) % ZENArrayCount(sLstPendingDel);
+	zRefCounted* pCurrentItem	= nullptr;	
+	while( pCurrentItem	= sLstPendingDel[suLstPendingDelIndex].PopHead() )
+	{
+		if( pCurrentItem->miRefCount <= 0)
+			pCurrentItem->ReferenceDeleteCB();
+	}
 }
 
-void zRefCounted::ReferenceNoneCB()
+void zRefCounted::ReferenceDeleteCB()
 {
 	delete this;
 }
-	
+
 zReference::zReference()
 : mpReference(nullptr)
 {
@@ -61,4 +71,7 @@ const zReference& zReference::operator=(const zReference& _Copy)
 	return *this;
 }
 
+
+
+		
 }} // namespace zen, zenType

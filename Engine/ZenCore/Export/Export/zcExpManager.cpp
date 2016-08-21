@@ -1,18 +1,22 @@
 #include "zcCore.h"
 
 namespace zcMgr { zcExp::ManagerExport Export; }
+namespace zcRes { zResID RuntimeCreateResource(zcExp::ExportInfoBase* _pExportInfo); }
 
 namespace zcExp
 {
-
 zU32	ManagerExport::saNextID[zenConst::keResType__Count];
 
 //=================================================================================================
 //! @brief		Constructor
 //=================================================================================================
 ManagerExport::ManagerExport()
-: muExportPending(0)
 {	
+	
+	zenConst::eResPlatform aPlatformTypes[zResID::kePlatformType__Count];
+	aPlatformTypes[zResID::kePlatformType_OS]	= zenConst::kCurrentPlatformOS;
+	aPlatformTypes[zResID::kePlatformType_GFX]	= zenConst::kCurrentPlatformGfx;
+	SetExportInfos( aPlatformTypes, zenConst::keResSource_Runtime, zcRes::RuntimeCreateResource ); //! @todo Clean support export/runtime creation
 }
 
 //=================================================================================================
@@ -36,13 +40,13 @@ bool ManagerExport::Load()
 	mpCallbackGetItemID[zenConst::keResPlatform_DX11][zenConst::keResType_GfxShaderPixel]		= zcExp::ExportInfoGfxShader::CallbackGetItemID;
 	mpCallbackGetItemID[zenConst::keResPlatform_DX11][zenConst::keResType_GfxShaderParamDef]	= zcExp::ExportInfoGfxShaderParamDef::CallbackGetItemID;
 	mpCallbackGetItemID[zenConst::keResPlatform_DX11][zenConst::keResType_GfxShaderBinding]		= zcExp::ExportInfoGfxShaderBinding::CallbackGetItemID;
+	mpCallbackGetItemID[zenConst::keResPlatform_DX11][zenConst::keResType_GfxInputStream]		= zcExp::ExporterGfxInputStream::CallbackGetItemID;
 	//! @todo cleanup move this to console specific code
 #if ZEN_RENDERER_DX11		
 	mpCallbackGetItemID[zenConst::keResPlatform_DX11][zenConst::keResType_GfxSampler]			= zcExp::ExporterGfxSamplerDX11_DX11::CallbackGetItemID;
 	mpCallbackGetItemID[zenConst::keResPlatform_DX11][zenConst::keResType_GfxBlend]				= zcExp::ExporterGfxStateBlendDX11_DX11::CallbackGetItemID;
 	mpCallbackGetItemID[zenConst::keResPlatform_DX11][zenConst::keResType_GfxDepthStencil]		= zcExp::ExporterGfxStateDepthStencilDX11_DX11::CallbackGetItemID;
-	mpCallbackGetItemID[zenConst::keResPlatform_DX11][zenConst::keResType_GfxRasterizer]		= zcExp::ExporterGfxStateRasterizerDX11_DX11::CallbackGetItemID;	
-	mpCallbackGetItemID[zenConst::keResPlatform_DX11][zenConst::keResType_GfxInputStream]		= zcExp::ExporterGfxInputStreamDX11_DX11::CallbackGetItemID;
+	mpCallbackGetItemID[zenConst::keResPlatform_DX11][zenConst::keResType_GfxRaster]			= zcExp::ExporterGfxStateRasterDX11_DX11::CallbackGetItemID;		
 	mpCallbackGetItemID[zenConst::keResPlatform_DX11][zenConst::keResType_GfxInputSignature]	= zcExp::ExporterGfxInputSignatureDX11_DX11::CallbackGetItemID;		
 #endif
 
@@ -56,12 +60,12 @@ void ManagerExport::SetExportInfos(zenConst::eResPlatform _aPlatforms[zenConst::
 	meSource				= _eExportSource;
 	mpCallbackCreateItem	= _pExportCBCreateItem;
 }
-
+//! @todo Clean, remove platformtype, use resourcetype to know
 zResID ManagerExport::CreateItem( zResID::ePlatformType _ePlatformType, zenConst::eResType _eResourceType, ExportInfoBase* _pExportInfoBase )
 { 
-	ZENAssert(_ePlatformType<zenConst::keResPlatform__Count);
-	ZENAssert(_eResourceType<zenConst::keResType__Count);
-	ZENAssert(_pExportInfoBase);
+	zenAssert(_ePlatformType<zenConst::keResPlatform__Count);
+	zenAssert(_eResourceType<zenConst::keResType__Count);
+	zenAssert(_pExportInfoBase);
 	bool bExist(false);
 	zenConst::eResPlatform eExportPlatform	= maPlatforms[_ePlatformType];
 	_pExportInfoBase->mExportResID			= mpCallbackGetItemID[eExportPlatform][_eResourceType](eExportPlatform, _eResourceType, meSource, _pExportInfoBase, bExist);
@@ -119,6 +123,7 @@ bool ManagerExport::Unload()
 	return true;
 } 
 
+#if 0
 //=================================================================================================
 //! @brief		Has exporting task pending
 //=================================================================================================
@@ -140,66 +145,6 @@ void ManagerExport::WaitExportDone() const
 		Sleep(1);
 	}
 }
-/*
-void ManagerExport::ExportDone(ExportItem* _pExportItem)
-{
-	if( _pExportItem->mResID.IsExport() )
-	{
-		ZENAssert(muExportPending>0);
-		--muExportPending;	
-	}
-
-	if( _pExportItem->mpExportInfo->IsSuccess() )	maExportSuccessOld.Push(_pExportItem);
-	else											maExportFailOld.Push(_pExportItem);	
-}
-*/
-void ManagerExport::ExportDone(const ResDataRef& _rResData)
-{
-	if( _rResData->mResID.IsExport() )
-	{
-		ZENAssert(muExportPending>0);
-		--muExportPending;	
-	}
-
-//! @todo cleanup revisit this (used to be in export/serial item class, but now split in 2
-//	if( _rResData->mpExportInfo->IsSuccess() )	maExportSuccess.Push(_rResData);
-//	else											maExportFail.Push(_rResData);	
-}
-
-//=================================================================================================
-//! @brief		Create a new ShaderInputSignature Resource
-//! @details	
-//-------------------------------------------------------------------------------------------------
-//! @param _ParentShaderID	- ResourceId of the parent shader to generate the input signature for
-//! @return 				- Unique zResID of created Resource
-//=================================================================================================
-/*
-zResID CreateExportItemOffline(zenConst::eResType _eResType, zcExp::ExportInfoBase* _pExportInfo)
-{
-	switch( zcMgr::Export.GetExportGfx() )
-	{
-	#if ZEN_EXPORT_OR_RESOURCE_DX11
-		case zenConst::keResPlatform_DX11:
-		{
-			switch(_eResType)
-			{
-			case zenConst::keResType_GfxIndexTemp: return zenNewDefaultEExp::SerialGfxIndex_DX11;
-			}
-		}break;
-	#endif
-	}
-	switch( zcMgr::Export.GetExportOS() )
-	{
-	#if AWEXPORT_WIN
-		case zenConst::keResPlatform_Window:
-		{			
-		}break;			
-	#endif
-	}
-	//zcMgr::Export.Export( SerialIndex_Base::CreateResourceData(), pExportInfo );
-	//return pExportInfo->mExportResID;
-	return nullptr;	
-}
-*/
+#endif
 
 }

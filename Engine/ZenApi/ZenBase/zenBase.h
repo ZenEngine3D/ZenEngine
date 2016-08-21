@@ -2,9 +2,10 @@
 #ifndef __zenApi_Base_Api_h__
 #define __zenApi_Base_Api_h__
 
-namespace zen{ namespace zenType{} };
+namespace zen{ namespace zenType{}; namespace zenConst{} };
 using namespace zen;
 using namespace zen::zenType;
+using namespace zen::zenConst;
 
 #include "Constant/zenBaseConst.h"
 #include "Type/zenBaseType1.h"

@@ -2,22 +2,27 @@
 #ifndef __zCore_Res_Gfx_GfxRenderTarget_h__
 #define __zCore_Res_Gfx_GfxRenderTarget_h__
 
+#include ZENHeaderRenderer(zcResGfxRenderTarget)
+
 namespace zcRes
 {
-	class GfxRenderTarget : public TResource<GfxRenderTarget, GfxRenderTargetResData, GfxRenderTargetProxy, GfxRenderTargetExporterRuntime>
-	{
-	ZENClassDeclare(GfxRenderTarget, TResource)
-	public:	
-		ZENInline bool					IsDepth()	{ return mrProxy->mpTargetDepthView != nullptr; }
-		ZENInline const zVec2U16&		GetDim()	{ return mrResData->mvDim; }
-		void							Clear(const zVec4F& _vRGBA){mrProxy->Clear(_vRGBA);} //! @todo clean thread unsafe access
-		void							Clear(float _fDepth=1, zU8 _uStencil=0, bool _bClearDepth=true, bool _bClearStencil=false){mrProxy->Clear(_fDepth, _uStencil, _bClearDepth, _bClearStencil);} //! @todo clean thread unsafe access
-		const GfxTexture2dRef&			GetTexture2D()const{return mrTexture2D;}
-	
-	protected:										
-		virtual bool					ResourceInit();		
-		GfxTexture2dRef					mrTexture2D;		
-	};
+
+class GfxTarget2D : protected GfxTarget2DHAL
+{
+ZENClassDeclare(GfxTarget2D, GfxTarget2DHAL)
+public:
+	using							Super::Clear;
+	virtual bool					Initialize();
+
+	bool							IsDepth();
+	const zVec2U16&					GetDim();
+	const GfxTexture2dRef&			GetTexture2D()const{return mrTexture2D;}
+
+protected:	
+	GfxTexture2dRef					mrTexture2D;
+	bool							mbNeedResolve;	
+};
+
 }
 
 #endif

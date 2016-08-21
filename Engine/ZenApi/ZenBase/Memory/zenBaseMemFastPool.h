@@ -38,12 +38,12 @@ protected:
 	{
 		size_t		mDataSize;
 		zListLink	mlnkList;
-		typedef zList<MemAllocInfo, &MemAllocInfo::mlnkList> TypeList;
+		typedef zList<MemAllocInfo, &MemAllocInfo::mlnkList, false> TypeList;
 	};
 	struct PoolItem
 	{
 		zListLink mlnkList;
-		typedef zList<PoolItem, &PoolItem::mlnkList> TypeList;
+		typedef zList<PoolItem, &PoolItem::mlnkList, false> TypeList;
 	};
 
 	zU32					muAllocatedCount;	//!< Number of items currently allocated

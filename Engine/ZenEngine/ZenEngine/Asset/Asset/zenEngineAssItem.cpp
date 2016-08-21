@@ -13,7 +13,7 @@ const zStringHash32 sTypeDescription[]={
 
 zAssetItemRef AssetCreate( zenConst::eAssetType _eAssetType, zPackageRef& _rPackage )
 {
-	ZENAssert( _rPackage.IsValid() );	
+	zenAssert( _rPackage.IsValid() );	
 	zeAss::Asset* pNewItem	= zeAss::Asset::CreateItem(_eAssetType);
 	if( pNewItem )
 	{
@@ -28,7 +28,7 @@ zAssetItemRef AssetCreate( zenConst::eAssetType _eAssetType, zPackageRef& _rPack
 
 const char* AssetTypeToString(zenConst::eAssetType _eAssetType)
 {
-	ZENAssert(_eAssetType<zenConst::keAssType__Count);
+	zenAssert(_eAssetType<zenConst::keAssType__Count);
 	return sTypeDescription[_eAssetType].mzName;
 }
 

@@ -4,12 +4,11 @@
 
 namespace zcExp
 {
-	class ResDataGfxShaderParamDefDX11 : public ResourceData
+	class ExportGfxShaderParamDefDX11 : public zenRes::zExportData
 	{
-	ZENClassDeclare(ResDataGfxShaderParamDefDX11, ResourceData)
+	ZENClassDeclare(ExportGfxShaderParamDefDX11, zenRes::zExportData)
 	public:
-		virtual bool			Serialize( zcExp::Serializer_Base& _Serializer ){return true;}				
-		eShaderParamFreq		meFrequence;		
+		eShaderParamFreq		meFrequence;
 		ShaderParamItemInfoMap	mdParameters;
 		zArrayStatic<zU8>		maParameterDefaults;
 	};

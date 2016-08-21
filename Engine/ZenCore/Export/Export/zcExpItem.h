@@ -17,13 +17,13 @@ struct ExportInfoBase
 	bool						IsSuccess(){return mbSuccessStart && mbSuccessWork && mbSuccessEnd; }
 };
 
-typedef zEngineRef<class ResourceData> ResDataRef;
+typedef zEngineRef<zenRes::zExportData>		ExportDataRef;
 
 //! @todo Clean Make this use fiber/task system
 class ExporterBase
 {
 public:
-								ExporterBase(const ResDataRef& _rResData);
+								ExporterBase(const ExportDataRef& _rExportData);
 	bool						Export( zcExp::ExportInfoBase& _ExportInfo );	//!< @brief	Export this item, from current thread
 	
 protected:
@@ -32,8 +32,8 @@ protected:
 	virtual bool				ExportWork(bool _bIsTHRTask){return TRUE;};		//!< @brief Called from Thread:Main or Thread:Task for main export operation (must be threadsafe)
 	virtual bool				ExportEnd();									//!< @brief Called from Thread:Main, for some post export task 
 	ZENInline	void			ExportSkipWork();								//!< @brief Call in ExportStart to avoid launching a job for this
-	ResDataRef					mrResData;
-	ExportInfoBase*				mpExportInfo;									//!< @brief	Informations needed to export this item (child class a child ExportInfo with parameters specific to them)	
+	ExportDataRef				mrExportData	= nullptr;
+	ExportInfoBase*				mpExportInfo	= nullptr;						//!< @brief	Informations needed to export this item (child class a child ExportInfo with parameters specific to them)	
 	
 	friend class ExportTask;
 	friend class ManagerExport;
@@ -48,16 +48,16 @@ public:
 
 ZENInline void ExporterBase::ExportSkipWork()
 {
-	ZENAssertMsg(mpExportInfo, "Call only from ExportStart()"); 
+	zenAssertMsg(mpExportInfo, "Call only from ExportStart()"); 
 	mpExportInfo->mbSuccessWork = TRUE;
 }
 
 ZENInline zResID ValidateItemID(zenConst::eResPlatform _ePlatform, zenConst::eResType _eType, zenConst::eResSource _eSource, zResID::NameHash _hName, bool& _bExistOut)
 {
 	zResID newResID(_hName, _ePlatform, _eType, _eSource);
-	zEngineConstRef<ResourceData> rResData	= zcDepot::ResourceData.GetItemBaseAnySource( newResID );
-	_bExistOut								= rResData.IsValid();
-	return _bExistOut ? rResData->mResID : newResID;
+	zEngineConstRef<zenRes::zExportData> rExportData	= zcDepot::ExportData.GetAnySource( newResID );
+	_bExistOut											= rExportData.IsValid();
+	return _bExistOut ? rExportData->mResID : newResID;
 }
 
 }

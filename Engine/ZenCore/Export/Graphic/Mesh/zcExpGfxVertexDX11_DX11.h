@@ -8,13 +8,13 @@ namespace zcExp
 class ExporterGfxVertexDX11_DX11 : public ExporterBase
 {
 ZENClassDeclare(ExporterGfxVertexDX11_DX11, ExporterBase)
-public:				
-typedef ResDataGfxVertexDX11	ResData;
-typedef zEngineRef<ResData>		ResDataRef;
-								ExporterGfxVertexDX11_DX11(const ResDataRef& _rResData);
+public:
+typedef zEngineRef<ExportGfxVertexDX11>	ExportResultRef; //todo use proper ref class
+										ExporterGfxVertexDX11_DX11(const ExportResultRef& _rExportOut);
+								
 protected:	
-	virtual bool				ExportWork(bool _bIsTHRTask);
-	ResDataRef					mrResData;
+	virtual bool						ExportWork(bool _bIsTHRTask);
+	ExportResultRef						mrExport;
 };
 
 }

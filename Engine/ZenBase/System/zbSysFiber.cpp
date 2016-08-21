@@ -76,7 +76,7 @@ void zbFiber::AddPendingTask(zenSys::zTask* _pTask)
 
 void zbFiber::AddFreeFiber(zbFiber* _pFreeFiber)
 {
-	ZENAssert(_pFreeFiber);
+	zenAssert(_pFreeFiber);
 	gQueueAvailableFiber.Push(_pFreeFiber);
 }
 
@@ -84,7 +84,7 @@ void zbFiber::Activate(zUInt _uThreadId, zenSys::zTask* _pTask)
 {
 	mpRunningTask				= _pTask != nullptr ? + _pTask : mpRunningTask;
 	muThreadId					= _uThreadId; 
-	ZENAssert(mpRunningTask);
+	zenAssert(mpRunningTask);
 	mpRunningTask->mpOwnerFiber = this;
 	mpRunningTask->ProcessingStart();
 	HALActivate();
@@ -92,7 +92,7 @@ void zbFiber::Activate(zUInt _uThreadId, zenSys::zTask* _pTask)
 
 void zbFiber::Deactivate()
 {
-	ZENAssert(mpRunningTask);
+	zenAssert(mpRunningTask);
 	mpRunningTask->ProcessingStop();
 	mpRunningTask = nullptr;	
 	gQueueAvailableFiber.Push(this);
@@ -101,7 +101,7 @@ void zbFiber::Deactivate()
 
 void zbFiber::Suspend()
 {
-	ZENAssert(mpRunningTask);	
+	zenAssert(mpRunningTask);	
 	mpRunningTask->ProcessingStop();	
 	gQueueSuspendedFiber[muThreadId].Push(this);
 	HALDeactivate();

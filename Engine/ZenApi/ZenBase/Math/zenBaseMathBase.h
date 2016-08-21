@@ -55,7 +55,7 @@ namespace zen { namespace zenMath
 
 	ZENInline zUInt RoundPow2( zUInt _Value, zUInt _Pow2Multiple )
 	{
-		ZENAssert(IsPower2(_Pow2Multiple));
+		zenAssert(IsPower2(_Pow2Multiple));
 		return (_Value + (_Pow2Multiple-1)) & ~(_Pow2Multiple-1);
 	}
 

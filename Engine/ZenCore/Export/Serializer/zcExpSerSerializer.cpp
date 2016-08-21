@@ -133,7 +133,7 @@ bool Serializer_Base::Serialize(zResID& _Value)
 {	
 	if( GetStatus() == keStatus_Exporting)
 	{
-		ZENAssertMsg(_Value.IsExport(), "Can only save export ResourceData.");
+		zenAssertMsg(_Value.IsExport(), "Can only save export ResourceData.");
 		zResID ResId(_Value);
 		ResId.SetSource(zenConst::keResSource_Loaded);
 		return Serialize(*(zU64*)&ResId);	
@@ -159,7 +159,7 @@ bool ISerializerExporter::ItemStarted(ResourceData& aItem)
 	{
 		aItem.muSize		= oGetItemSize.GetSerializeSize();			
 		aItem.mExportTime	= 0;
-		aItem.muVersion		= zcDepot::ResourceData.GetEngineVersion( aItem.mResID.GetType() );
+		aItem.muVersion		= zcDepot::ExportData.GetEngineVersion( aItem.mResID.GetType() );
 		return true;
 	}
 	return false;

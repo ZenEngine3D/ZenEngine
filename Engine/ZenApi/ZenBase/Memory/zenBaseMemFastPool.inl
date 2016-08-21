@@ -75,7 +75,7 @@ void zAllocatorFastPool<TObject, TCallConstructor, TCallDestructor>::Deallocate(
 template<class TObject, bool TCallConstructor, bool TCallDestructor> template<class TParam1>
 TObject* zAllocatorFastPool<TObject, TCallConstructor, TCallDestructor>::Allocate(TParam1 _Val1)
 {
-	ZENStaticAssertMsg( TCallConstructor, "Constructor not support on this pool");
+	zenStaticAssertMsg( TCallConstructor, "Constructor not support on this pool");
 	void* pMemAlloc = Super::Allocate();
 	return new(pMemAlloc) TObject(_Val1);
 }
@@ -83,7 +83,7 @@ TObject* zAllocatorFastPool<TObject, TCallConstructor, TCallDestructor>::Allocat
 template<class TObject, bool TCallConstructor, bool TCallDestructor> template<class TParam1, class TParam2>
 TObject* zAllocatorFastPool<TObject, TCallConstructor, TCallDestructor>::Allocate(TParam1 _Val1, TParam2 _Val2)
 {
-	ZENStaticAssertMsg( TCallConstructor, "Constructor not support on this pool");
+	zenStaticAssertMsg( TCallConstructor, "Constructor not support on this pool");
 	void* pMemAlloc = Super::Allocate();
 	return new(pMemAlloc) TObject(_Val1, _Val2);
 }
@@ -91,7 +91,7 @@ TObject* zAllocatorFastPool<TObject, TCallConstructor, TCallDestructor>::Allocat
 template<class TObject, bool TCallConstructor, bool TCallDestructor> template<class TParam1, class TParam2, class TParam3>
 TObject* zAllocatorFastPool<TObject, TCallConstructor, TCallDestructor>::Allocate(TParam1 _Val1, TParam2 _Val2, TParam3 _Val3)
 {
-	ZENStaticAssertMsg( TCallConstructor, "Constructor not support on this pool");
+	zenStaticAssertMsg( TCallConstructor, "Constructor not support on this pool");
 	void* pMemAlloc = Super::Allocate();
 	return new(pMemAlloc) TObject(_Val1, _Val2, _Val3);
 }

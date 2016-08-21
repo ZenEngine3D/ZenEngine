@@ -34,7 +34,7 @@ namespace zen {
 			keResType_GfxShaderParamDef,
 			keResType_GfxShaderParam,
 			keResType_GfxShaderBinding,		
-			keResType_GfxRenderTarget,
+			keResType_GfxTarget2D,
 			keResType_GfxView,
 			keResType_GfxWindow,
 			keResType_GfxIndex,
@@ -43,7 +43,7 @@ namespace zen {
 			keResType_GfxSampler,
 			keResType_GfxBlend,
 			keResType_GfxDepthStencil,
-			keResType_GfxRasterizer,
+			keResType_GfxRaster,
 			keResType_GfxMeshStrip,
 			keResType_GfxMesh,
 			keResType_GfxInputStream,
@@ -150,10 +150,10 @@ namespace zen {
 
 	namespace zenType
 	{
-		typedef zFlag<zenConst::eResType,zenConst::keResType__Count, zU64>	zFlagResType;
-		typedef zFlag<zenConst::eResType,zenConst::keResPlatform__Count>	zFlagResPlatform;
-		typedef zFlag<zenConst::eResourceUse,zenConst::keResUse__Count>		zFlagResUse;
-		typedef zFlag<zenConst::eTextureUse,zenConst::keTexCreate__Count>	zFlagResTexUse;		
+		typedef zFlag<zenConst::eResType,zenConst::keResType__Count, zU64>		zFlagResType;
+		typedef zFlag<zenConst::eResPlatform,zenConst::keResPlatform__Count>	zFlagResPlatform;
+		typedef zFlag<zenConst::eResourceUse,zenConst::keResUse__Count>			zFlagResUse;
+		typedef zFlag<zenConst::eTextureUse,zenConst::keTexCreate__Count>		zFlagResTexUse;		
 	}
 
 	namespace zenConst

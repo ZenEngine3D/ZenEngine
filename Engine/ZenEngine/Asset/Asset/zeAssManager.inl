@@ -14,7 +14,7 @@ const zenAss::zArrayPackage& ManagerAsset::PackageGet()const
 
 zenAss::zAssetID ManagerAsset::GetAssetNextID(zenConst::eAssetType _eType)
 { 
-	ZENAssert(_eType < zenConst::keAssType__Count); 
+	zenAssert(_eType < zenConst::keAssType__Count); 
 	return zenAss::zAssetID(_eType, maAssetNextID[_eType]++);
 }
 

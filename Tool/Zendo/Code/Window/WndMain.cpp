@@ -10,11 +10,11 @@ public:
 	MyRenderWindow(wxWindow* _pParent)
 	: wxWindow(_pParent,-1)	
 	{
-		zenRes::zGfxStateRasterizer::Config	DefaultRasterConfig;
+		zenRes::zGfxStateRaster::Config			DefaultRasterConfig;
 		zenRes::zGfxRenderPass::ConfigColorRT	ColorRTConfig;
 		zenRes::zGfxRenderPass::ConfigDepthRT	DepthRTConfig;				
 		mrGfxWindow							= zenRes::zGfxWindow::Create(GetHWND());		
-		mrStateRaster						= zenRes::zGfxStateRasterizer::Create(DefaultRasterConfig);
+		mrStateRaster						= zenRes::zGfxStateRaster::Create(DefaultRasterConfig);
 		ColorRTConfig.mrTargetSurface		= mrGfxWindow.GetBackbuffer();
 		mrRndPassGeneric					= zenRes::zGfxRenderPass::Create("Generic",0,ColorRTConfig,DepthRTConfig, mrStateRaster );
 		mTimer.SetOwner(this);
@@ -54,7 +54,7 @@ protected:
 
 	wxTimer							mTimer;
 	zenRes::zGfxWindow				mrGfxWindow;
-	zenRes::zGfxStateRasterizer		mrStateRaster;
+	zenRes::zGfxStateRaster			mrStateRaster;
 	zenRes::zGfxRenderPass			mrRndPassGeneric;
 	wxDECLARE_NO_COPY_CLASS(MyRenderWindow);
 	DECLARE_EVENT_TABLE()

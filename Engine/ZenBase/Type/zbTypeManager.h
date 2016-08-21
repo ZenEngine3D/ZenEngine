@@ -32,7 +32,7 @@ public:
 	//=============================================================================================
 	virtual ~Manager()
 	{
-		ZENCriticalMsg(!mbIsloaded, "Stop the manager before engine termination");
+		zenCriticalMsg(!mbIsloaded, "Stop the manager before engine termination");
 	}	
 	
 	//=============================================================================================
@@ -44,7 +44,7 @@ public:
 	//=============================================================================================
 	bool Startup()
 	{
-		ZENCriticalMsg(!mbIsloaded, "This manager has already been started");	
+		zenCriticalMsg(!mbIsloaded, "This manager has already been started");	
 		mbIsloaded = Load();
 		return mbIsloaded;
 	}
@@ -57,7 +57,7 @@ public:
 	//=============================================================================================
 	bool Shutdown()
 	{
-		ZENCriticalMsg(mbIsloaded, "This manager has already been stopped");	
+		zenCriticalMsg(mbIsloaded, "This manager has already been stopped");	
 		mbIsloaded = !Unload();
 		return !mbIsloaded;
 	}

@@ -39,8 +39,8 @@ void zCommand::DrawMesh(const zContext& _rContext, float _fPriority, const zenRe
 {
 	const zcRes::GfxRenderPassRef& rRenderpass	= _rContext->GetRenderpass();
 	zcRes::GfxMeshStripRef rMeshStrip			= _rMeshStrip;
-	ZENAssert(rRenderpass.IsValid());
-	ZENAssert(rMeshStrip.IsValid());
+	zenAssert(rRenderpass.IsValid());
+	zenAssert(rMeshStrip.IsValid());
 
 	zEngineRef<zcGfx::Command> rCommand			= zcGfx::CommandDraw::Create(rRenderpass, rMeshStrip, _uIndexFirst, _uIndexCount, _vScreenScissor).GetSafe();	
 	_rContext->AddCommand(rCommand.Get());
@@ -50,8 +50,8 @@ void zCommand::DrawMesh(const zContext& _rContext, float _fPriority, const zenRe
 {
 	const zcRes::GfxRenderPassRef& rRenderpass	= _rContext->GetRenderpass();
 	zcRes::GfxMeshRef rMesh						= _rMesh;
-	ZENAssert(rRenderpass.IsValid());
-	ZENAssert(rMesh.IsValid());
+	zenAssert(rRenderpass.IsValid());
+	zenAssert(rMesh.IsValid());
 
 	auto aMeshStrips = rMesh->GetMeshStrips();
 	for(int idx(0), count(aMeshStrips.Count()); idx<count; ++idx)
@@ -62,23 +62,23 @@ void zCommand::DrawMesh(const zContext& _rContext, float _fPriority, const zenRe
 	}
 }
 
-void zCommand::ClearColor(const zContext& _rContext, const zenRes::zGfxRenderTarget& _rRTColor, const zVec4F& _vRGBA, const zColorMask& _ColorMask, const zVec2S16& _vOrigin, const zVec2U16& _vDim )
+void zCommand::ClearColor(const zContext& _rContext, const zenRes::zGfxTarget2D& _rRTColor, const zVec4F& _vRGBA, const zColorMask& _ColorMask, const zVec2S16& _vOrigin, const zVec2U16& _vDim )
 {
 	const zcRes::GfxRenderPassRef& rRenderpass	= _rContext->GetRenderpass();
-	zcRes::GfxRenderTargetRef rRTColor			= _rRTColor;
-	ZENAssert(rRenderpass.IsValid());
-	ZENAssert(!rRTColor->IsDepth());
+	zcRes::GfxTarget2DRef rRTColor			= _rRTColor;
+	zenAssert(rRenderpass.IsValid());
+	zenAssert(!rRTColor->IsDepth());
 		
 	zEngineRef<zcGfx::Command> rCommand			= zcGfx::CommandClearColor::Create(rRenderpass, rRTColor, _vRGBA, _ColorMask, _vOrigin, _vDim);
 	_rContext->AddCommand(rCommand);
 }
 
-void zCommand::ClearDepthStencil(const zContext& _rContext, const zenRes::zGfxRenderTarget& _rRTDepthStencil, bool _bClearDepth, float _fDepthValue, bool _bClearStencil, zU8 _uStencilValue)
+void zCommand::ClearDepthStencil(const zContext& _rContext, const zenRes::zGfxTarget2D& _rRTDepthStencil, bool _bClearDepth, float _fDepthValue, bool _bClearStencil, zU8 _uStencilValue)
 {
 	const zcRes::GfxRenderPassRef& rRenderpass	= _rContext->GetRenderpass();
-	zcRes::GfxRenderTargetRef rRTDepthStencil	= _rRTDepthStencil;
-	ZENAssert(rRenderpass.IsValid());
-	ZENAssert(rRTDepthStencil->IsDepth());
+	zcRes::GfxTarget2DRef rRTDepthStencil	= _rRTDepthStencil;
+	zenAssert(rRenderpass.IsValid() && rRTDepthStencil.IsValid());
+	zenAssert(rRTDepthStencil->IsDepth());
 
 	zEngineRef<zcGfx::Command> rCommand			= zcGfx::CommandClearDepthStencil::Create(rRenderpass, rRTDepthStencil, _bClearDepth, _fDepthValue, _bClearStencil, _uStencilValue).GetSafe();	
 	_rContext->AddCommand(rCommand);
@@ -115,12 +115,12 @@ namespace zen { namespace zenRes {
 //=================================================================================================
 // GFX RenderPass
 //=================================================================================================
-zGfxRenderPass zGfxRenderPass::Create(const zString& _zStageName, zU8 _uPassPriority, const ConfigColorRT& _RTColor, const ConfigDepthRT& _RTDepth, const zGfxStateRasterizer& _rStateRaster, const zVec2U16& _vDim, const zVec2S16& _vOrigin)
+zGfxRenderPass zGfxRenderPass::Create(const zString& _zStageName, zU8 _uPassPriority, const ConfigColorRT& _RTColor, const ConfigDepthRT& _RTDepth, const zGfxStateRaster& _rStateRaster, const zVec2U16& _vDim, const zVec2S16& _vOrigin)
 {
 	return zcExp::CreateGfxRenderpass(_zStageName, _uPassPriority, _RTColor, _RTDepth, _rStateRaster, _vDim, _vOrigin);
 }
 
-zGfxRenderPass zGfxRenderPass::Create(const zString& _zStageName, zU8 _uPassPriority, const zArrayBase<zenRes::zGfxRenderPass::ConfigColorRT>& _aRTColors, const ConfigDepthRT& _RTDepth, const zGfxStateRasterizer& _rStateRaster, const zVec2U16& _vDim, const zVec2S16& _vOrigin)
+zGfxRenderPass zGfxRenderPass::Create(const zString& _zStageName, zU8 _uPassPriority, const zArrayBase<zenRes::zGfxRenderPass::ConfigColorRT>& _aRTColors, const ConfigDepthRT& _RTDepth, const zGfxStateRaster& _rStateRaster, const zVec2U16& _vDim, const zVec2S16& _vOrigin)
 {
 	return zcExp::CreateGfxRenderpass(_zStageName, _uPassPriority, _aRTColors, _RTDepth, _rStateRaster, _vDim, _vOrigin);
 }

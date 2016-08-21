@@ -41,7 +41,7 @@ wxPGProperty* CreateAssetValueControl(const zenAss::zAssetItemRef& _rAsset, cons
 	case zenConst::keAssProp_Asset:		pProperty=zenNewDefault wxZenAssetProperty(_rAsset, _Value);		break;
  	case zenConst::keAssProp_Array:		pProperty=zenNewDefault wxZenArrayProperty(_rAsset, _Value);		break;
  	case zenConst::keAssProp_Struct:	pProperty=zenNewDefault wxZenStructProperty(_rAsset, _Value);		break;
-	default:							ZENAssertMsg(0, "Unknown property type, implement it.")				break;
+	default:							zenAssertMsg(0, "Unknown property type, implement it.")				break;
 	}	
 
 	if( pProperty )
@@ -152,7 +152,7 @@ wxZenBoolProperty::~wxZenBoolProperty()
 
 void wxZenBoolProperty::TypedMetaData::UpdateControl()
 {
-	ZENAssert(mpOwner != nullptr && mrPropertyValue.IsValid());
+	zenAssert(mpOwner != nullptr && mrPropertyValue.IsValid());
 	zenAss::PropertyBool::ValueRef	rPropertyVal = mrPropertyValue;
 	const zenAss::PropertyBool&		PropertyDef = rPropertyVal.GetDefinition();
 	const wxString					zFalseTrue[2] = { wxT("False"), wxT("True") };	
@@ -162,7 +162,7 @@ void wxZenBoolProperty::TypedMetaData::UpdateControl()
 
 bool wxZenBoolProperty::TypedMetaData::Save()
 {
-	ZENAssert( mpOwner != nullptr && mrPropertyValue.IsValid() );
+	zenAssert( mpOwner != nullptr && mrPropertyValue.IsValid() );
 	if( mpOwner->GetValue() != mOriginalValue )
 	{
 		zenAss::PropertyBool::ValueRef rPropertyVal(mrPropertyValue);
@@ -179,7 +179,7 @@ bool wxZenBoolProperty::TypedMetaData::Save()
 wxZenFloatProperty::wxZenFloatProperty(const zenAss::zAssetItemRef& _rAsset, const zenAss::PropertyValueRef& _rPropertyValue)
 {
 	static zenMem::zAllocatorPool sPoolMetaData("Betl::TypedMetaData Pool", sizeof(TypedMetaData), 100, 100);
-	ZENAssert( _rPropertyValue.IsValid() );
+	zenAssert( _rPropertyValue.IsValid() );
 	zenAss::PropertyFloat::ValueRef	rPropertyVal	= _rPropertyValue;
 	const zenAss::PropertyFloat&	PropertyDef	= rPropertyVal.GetDefinition();
 	SetClientData		( zenNew(&sPoolMetaData)TypedMetaData(this, _rAsset, _rPropertyValue, rPropertyVal.GetValue()) );
@@ -202,7 +202,7 @@ void wxZenFloatProperty::TypedMetaData::UpdateControl()
 
 bool wxZenFloatProperty::TypedMetaData::Save()
 {
-	ZENAssert( mpOwner != nullptr && mrPropertyValue.IsValid() );	
+	zenAssert( mpOwner != nullptr && mrPropertyValue.IsValid() );	
 	if( mpOwner->GetValue() != mOriginalValue )
 	{
 		zenAss::PropertyFloat::ValueRef rPropertyVal(mrPropertyValue);
@@ -219,7 +219,7 @@ bool wxZenFloatProperty::TypedMetaData::Save()
 wxZenIntProperty::wxZenIntProperty(const zenAss::zAssetItemRef& _rAsset, const zenAss::PropertyValueRef& _rPropertyValue)
 {	
 	static zenMem::zAllocatorPool sPoolMetaData("Betl::TypedMetaData Pool", sizeof(TypedMetaData), 100, 100);
-	ZENAssert( _rPropertyValue.IsValid() );
+	zenAssert( _rPropertyValue.IsValid() );
 	zenAss::PropertyInt::ValueRef	rPropertyVal	= _rPropertyValue;
 	const zenAss::PropertyInt&		PropertyDef	= rPropertyVal.GetDefinition();	
 	SetClientData			(zenNew(&sPoolMetaData)TypedMetaData(this, _rAsset, _rPropertyValue, rPropertyVal.GetValue()));
@@ -242,7 +242,7 @@ void wxZenIntProperty::TypedMetaData::UpdateControl()
 
 bool wxZenIntProperty::TypedMetaData::Save()
 {
-	ZENAssert( mpOwner != nullptr && mrPropertyValue.IsValid() );	
+	zenAssert( mpOwner != nullptr && mrPropertyValue.IsValid() );	
 	if( mpOwner->GetValue() != mOriginalValue )
 	{
 		zenAss::PropertyInt::ValueRef rPropertyVal(mrPropertyValue);
@@ -260,7 +260,7 @@ template< class TPropertyClass, class TElementCast, class TWxVector, class TWxPr
 wxZenVectorProperty<TPropertyClass, TElementCast, TWxVector, TWxProperty>::wxZenVectorProperty(const zenAss::zAssetItemRef& _rAsset, const zenAss::PropertyValueRef& _rPropertyValue, const char* _zTooltip, const char* _zTooltipElement)
 {		
 	static zenMem::zAllocatorPool sPoolMetaData("Betl::TypedMetaData Pool", sizeof(TypedMetaData), 100, 100);
-	ZENAssert( _rPropertyValue.IsValid() );
+	zenAssert( _rPropertyValue.IsValid() );
 	TPropertyClass::ValueRef	rPropertyVal	= _rPropertyValue;
 	const TPropertyClass&		PropertyDef	= rPropertyVal.GetDefinition();	
 
@@ -345,7 +345,7 @@ void wxZenVectorProperty<TPropertyClass, TElementCast, TWxVector, TWxProperty>::
 template< class TPropertyClass, class TElementCast, class TWxVector, class TWxProperty >
 bool wxZenVectorProperty<TPropertyClass, TElementCast, TWxVector, TWxProperty>::TypedMetaData::Save()
 {
-	ZENAssert( mpOwner != nullptr && mrPropertyValue.IsValid() );	
+	zenAssert( mpOwner != nullptr && mrPropertyValue.IsValid() );	
 	if( mpOwner->GetValue() != mOriginalValue )
 	{
  		TPropertyClass::ValueRef rPropertyVal(mrPropertyValue);
@@ -389,7 +389,7 @@ WX_PG_IMPLEMENT_PROPERTY_CLASS(wxZenInt4fProperty, wxPGProperty, wxVector4s, con
 wxZenEnumProperty::wxZenEnumProperty(const zenAss::zAssetItemRef& _rAsset, const zenAss::PropertyValueRef& _rPropertyValue)
 {
 	static zenMem::zAllocatorPool sPoolMetaData("Betl::TypedMetaData Pool", sizeof(TypedMetaData), 100, 100);
-	ZENAssert( _rPropertyValue.IsValid() );
+	zenAssert( _rPropertyValue.IsValid() );
 	zenAss::PropertyEnum::ValueRef	rPropertyVal	= _rPropertyValue;
 	const zenAss::PropertyEnum&		PropertyDef	= rPropertyVal.GetDefinition();	
 
@@ -419,7 +419,7 @@ void wxZenEnumProperty::TypedMetaData::UpdateControl()
 
 bool wxZenEnumProperty::TypedMetaData::Save()
 {
-	ZENAssert( mpOwner != nullptr && mrPropertyValue.IsValid() );	
+	zenAssert( mpOwner != nullptr && mrPropertyValue.IsValid() );	
 	if( mpOwner->GetValue() != mOriginalValue )
 	{
 		zenAss::PropertyEnum::ValueRef rPropertyVal(mrPropertyValue);
@@ -436,7 +436,7 @@ bool wxZenEnumProperty::TypedMetaData::Save()
 wxZenAssetProperty::wxZenAssetProperty(const zenAss::zAssetItemRef& _rAsset, const zenAss::PropertyValueRef& _rPropertyValue)
 {
 	static zenMem::zAllocatorPool sPoolMetaData("Betl::TypedMetaData Pool", sizeof(TypedMetaData), 100, 100);
-	ZENAssert( _rPropertyValue.IsValid() );
+	zenAssert( _rPropertyValue.IsValid() );
 	zenAss::PropertyAsset::ValueRef	rPropertyVal	= _rPropertyValue;
 	const zenAss::PropertyAsset&	PropertyDef	= rPropertyVal.GetDefinition();
 		
@@ -507,7 +507,7 @@ bool wxZenAssetProperty::OnEvent(wxPropertyGrid* propgrid, wxWindow* wnd_primary
 wxZenAssetProperty::TypedMetaData::TypedMetaData( wxZenAssetProperty* _pOwner, const zenAss::zAssetItemRef& _rAsset, const zenAss::PropertyValueRef& _rPropertyValue)
 : PropertyMetaData(_pOwner, _rAsset, _rPropertyValue, 0)
 {
-	ZENAssert( mpOwner != nullptr && mrPropertyValue.IsValid() );
+	zenAssert( mpOwner != nullptr && mrPropertyValue.IsValid() );
 	zenAss::PropertyAsset::ValueRef rValue = _rPropertyValue;
 	mAssetIDValue			= rValue.GetValue();
 	mAssetIDOriginalValue	= mAssetIDValue;
@@ -515,7 +515,7 @@ wxZenAssetProperty::TypedMetaData::TypedMetaData( wxZenAssetProperty* _pOwner, c
 
 void wxZenAssetProperty::TypedMetaData::UpdateControlState()
 {
-	ZENAssert( mpOwner != nullptr && mrPropertyValue.IsValid() );
+	zenAssert( mpOwner != nullptr && mrPropertyValue.IsValid() );
 	mpOwner->SetBackgroundColour( ControlBGColor[ mrPropertyValue.IsDefault() ], 0 );
 	mpOwner->SetModifiedStatus	( mAssetIDValue != mAssetIDOriginalValue );	
 }
@@ -549,7 +549,7 @@ void wxZenAssetProperty::TypedMetaData::AssignValue(zenAss::zAssetID _AssetID)
 
 bool wxZenAssetProperty::TypedMetaData::Save()
 {
- 	ZENAssert( mpOwner != nullptr && mrPropertyValue.IsValid() );	
+ 	zenAssert( mpOwner != nullptr && mrPropertyValue.IsValid() );	
  	if( mAssetIDValue != mAssetIDOriginalValue )
  	{
  		zenAss::PropertyAsset::ValueRef rPropertyVal(mrPropertyValue);
@@ -610,7 +610,7 @@ void wxZenFileProperty::TypedMetaData::UpdateControl()
 
 bool wxZenFileProperty::TypedMetaData::Save()
 {
-	ZENAssert( mpOwner != nullptr && mrPropertyValue.IsValid() );	
+	zenAssert( mpOwner != nullptr && mrPropertyValue.IsValid() );	
 	if( mpOwner->GetValue() != mOriginalValue )
 	{
 		zenAss::PropertyFile::ValueRef rPropertyVal(mrPropertyValue);
@@ -628,7 +628,7 @@ bool wxZenFileProperty::TypedMetaData::Save()
 wxZenArrayProperty::wxZenArrayProperty(const zenAss::zAssetItemRef& _rAsset, const zenAss::PropertyValueRef& _rPropertyValue)
 {
 	static zenMem::zAllocatorPool sPoolMetaData("Betl::TypedMetaData Pool", sizeof(TypedMetaData), 100, 100);
-	ZENAssert( _rPropertyValue.IsValid() );
+	zenAssert( _rPropertyValue.IsValid() );
 	zenAss::PropertyArray::ValueRef	rPropertyVal				= _rPropertyValue;
 	const zenAss::PropertyArray&	PropertyDef					= rPropertyVal.GetDefinition();	
 	const zArrayDynamic<zenAss::PropertyValueRef>& valueArray	= rPropertyVal.GetValue();
@@ -660,7 +660,7 @@ void wxZenArrayProperty::TypedMetaData::UpdateControl()
 
 bool wxZenArrayProperty::TypedMetaData::Save()
 {
-	ZENAssert( mpOwner != nullptr && mrPropertyValue.IsValid() );	
+	zenAssert( mpOwner != nullptr && mrPropertyValue.IsValid() );	
 	zenAss::PropertyArray::ValueRef rPropertyVal(mrPropertyValue);
 	zUInt uChilCount				= mpOwner->GetChildCount();	
 	bool bChanged					= mOriginalValue.GetLong() != uChilCount;	
@@ -692,7 +692,7 @@ void wxZenArrayProperty::TypedMetaData::UpdateControlState()
 wxZenStructProperty::wxZenStructProperty(const zenAss::zAssetItemRef& _rAsset, const zenAss::PropertyValueRef& _rPropertyValue)
 {
 	static zenMem::zAllocatorPool sPoolMetaData("Betl::TypedMetaData Pool", sizeof(TypedMetaData), 100, 100);
-	ZENAssert( _rPropertyValue.IsValid() );
+	zenAssert( _rPropertyValue.IsValid() );
 	zenAss::PropertyStruct::ValueRef rPropertyVal				= _rPropertyValue;
 	const zenAss::PropertyStruct& PropertyDef					= rPropertyVal.GetDefinition();	
 	const zArrayStatic<zenAss::PropertyValueRef>& aStructValue	= rPropertyVal.GetValue();
@@ -735,7 +735,7 @@ void wxZenStructProperty::TypedMetaData::UpdateControlState()
 
 bool wxZenStructProperty::TypedMetaData::Save()
 {
-	ZENAssert( mpOwner != nullptr && mrPropertyValue.IsValid() );	
+	zenAssert( mpOwner != nullptr && mrPropertyValue.IsValid() );	
 	zUInt uChilCount	= mpOwner->GetChildCount();
 	bool bChanged		= false;
 	for (zUInt idx(0); idx < uChilCount; ++idx)

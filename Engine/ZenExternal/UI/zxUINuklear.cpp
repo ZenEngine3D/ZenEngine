@@ -40,7 +40,7 @@ zxRenderData::zxRenderData()
 		aFontRGBA.Copy(pGeneratedTexture, width*height * 4);
 		mrFontTextureAtlas = zenRes::zGfxTexture2d::Create(zenConst::keTexFormat_RGBA8, zVec2U16(width, height), aFontRGBA);
 	}    
-	zcRes::GfxTexture2dRef rTexture = mrFontTextureAtlas;
+	zcRes::GfxTexture2dRef rTexture = mrFontTextureAtlas; 
 	nk_font_atlas_end(&moFontAtlas, nk_handle_ptr(rTexture.Get()), &moDrawNullTexture);
 	if (moFontAtlas.default_font)
         nk_style_set_font(&moContext, &moFontAtlas.default_font->handle);
@@ -66,7 +66,7 @@ zxRenderData::~zxRenderData()
 zxNuklearHelper::zxNuklearHelper()
 {
 	// Shaders & State resources
-	zenRes::zGfxStateRasterizer::Config	RasterConfig;
+	zenRes::zGfxStateRaster::Config	RasterConfig;
 	RasterConfig.mbScissorEnable	= true;
 	RasterConfig.mbShowBackface		= true;
 	RasterConfig.mbShowFrontface	= true;
@@ -74,7 +74,7 @@ zxNuklearHelper::zxNuklearHelper()
 	mrShaderPixel					= zenRes::zGfxShaderPixel::Create("Shader/Nuklear.sl", "ps");
 	mrShaderBinding					= zenRes::zGfxShaderBinding::Create(mrShaderVertex, mrShaderPixel);
 	mrFontSampler					= zenRes::zGfxSampler::Create(zenConst::keTexFilter_Point, zenConst::keTexFilter_Point, zenConst::keTexWrap_Clamp, zenConst::keTexWrap_Clamp, 0);
-	mrStateRaster					= zenRes::zGfxStateRasterizer::Create(RasterConfig);
+	mrStateRaster					= zenRes::zGfxStateRaster::Create(RasterConfig);
 	mrShaderBinding.CreateShaderParam(marShaderParams);
 }
 
@@ -389,7 +389,7 @@ void zxNuklearHelper::Render(const zEngineRef<zxRenderData>& _rNuklearData, Wind
 			nk_buffer_init_fixed(&ibuf, pUIIndices, (size_t)TotalIdxCount*sizeof(zU16));
 			nk_convert(&_rNuklearData->moContext, &_rNuklearData->moCommands, &vbuf, &ibuf, &_rNuklearData->moConfig);
 
-			_rNuklearData->mrVertexBuffer.Unlock();
+			_rNuklearData->mrVertexBuffer.Unlock(rUIContext);
 			_rNuklearData->mrIndexBuffer.Unlock(rUIContext);
 		
 			//----------------------------------------------------------------------------

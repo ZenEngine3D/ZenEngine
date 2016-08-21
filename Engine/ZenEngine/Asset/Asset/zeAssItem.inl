@@ -35,7 +35,7 @@ zUInt Asset::GetValueCount()const
 
 zenAss::PropertyValueRef Asset::GetValue(zUInt _uValIndex)
 { 
-	ZENAssert(_uValIndex < maPropertyValue.Count()); 
+	zenAssert(_uValIndex < maPropertyValue.Count()); 
 	return maPropertyValue[_uValIndex]; 
 }
 

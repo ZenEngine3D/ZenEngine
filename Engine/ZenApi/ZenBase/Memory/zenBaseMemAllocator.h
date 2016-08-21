@@ -34,8 +34,8 @@ namespace zen { namespace zenMem
 		static zAllocator&			GetDefault			();
 	
 	protected:
-		size_t					GetAllocSize		(size_t _uWantedSize, size_t _uExtraSize, zU32 _uAlign);
-		void*					AddAlloc			(size_t _uWantedSize, size_t _uExtraSize, zU32 _uAlign, void* _pAllocation, const bool _bIsArray);
+		size_t						GetAllocSize		(size_t _uWantedSize, size_t _uExtraSize, zU32 _uAlign);
+		void*						AddAlloc			(size_t _uWantedSize, size_t _uExtraSize, zU32 _uAlign, void* _pAllocation, const bool _bIsArray);
 		void						RemAlloc			(void* _pAlloc);
 		size_t						muTotalAllocSize;
 		zUInt						muTotalAllocCount;
@@ -47,7 +47,7 @@ namespace zen { namespace zenMem
 	
 	// Implement on child class
 	public:
-		virtual void*			Malloc(size_t _uSize, bool _bIsArray, zU32 _uAlign)=0;
+		virtual void*				Malloc(size_t _uSize, bool _bIsArray, zU32 _uAlign)=0;
 		virtual	void				Free(void* _pAlloc, void* _pInfoAlloc)=0;
 		virtual zDebugString		GetDescription()=0;
 	};
@@ -73,7 +73,7 @@ namespace zen { namespace zenMem
 		zAllocator*				mpAllocator;
 		zListLink				mlstLink;
 	public:
-		typedef zList<ScopedAllocator, &ScopedAllocator::mlstLink> TypeList;
+		typedef zList<ScopedAllocator, &ScopedAllocator::mlstLink, false> TypeList;
 	};
 
 }} //namespace zen { namespace mem  
@@ -96,8 +96,8 @@ void* zMalloc(size_t _uSize_, zU32 uAlign=zenDefaultAlign);
 void* zMalloc(zenMem::zAllocator* _pAllocator, size_t _uSize_, zU32 uAlign=zenDefaultAlign);
 
 //! @todo remove new library and implement my own
-//#define		malloc			ZENStaticAssert(0, "Use zMalloc")
-//#define		new				ZENAssertMsg(0, "Use zenNew")
-//#define		delete			ZENAssertMsg(0, "User zenDel")
+//#define		malloc			zenStaticAssert(0, "Use zMalloc")
+//#define		new				zenAssertMsg(0, "Use zenNew")
+//#define		delete			zenAssertMsg(0, "User zenDel")
 
 #endif

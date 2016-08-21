@@ -141,7 +141,7 @@ const zenAss::zAssetItemRef& ManagerAsset::AssetGet( zenConst::eAssetType _eType
 
 const zenAss::zArrayAsset& ManagerAsset::AssetGet( zenConst::eAssetType _eType )const
 {
-	ZENAssert( _eType < zenConst::keAssType__Count );
+	zenAssert( _eType < zenConst::keAssType__Count );
 	return madAsset[_eType];
 }
 
@@ -149,7 +149,7 @@ void ManagerAsset::AssetAdd( const zenAss::zAssetItemRef& _rAsset )
 {
 	if( _rAsset.IsValid() )
 	{
-		ZENAssert( madAsset[_rAsset->GetType()].Exist(_rAsset->GetID().muIndex) == false );
+		zenAssert( madAsset[_rAsset->GetType()].Exist(_rAsset->GetID().muIndex) == false );
 		madAsset[_rAsset->GetType()].Set(_rAsset->GetIDUInt(), _rAsset);
 	}	
 }

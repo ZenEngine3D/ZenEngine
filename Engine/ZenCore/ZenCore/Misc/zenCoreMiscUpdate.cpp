@@ -25,7 +25,7 @@ void IUpdate::Update()
 
 void IUpdate::Activate(zenConst::eUpdatePriority _ePriorityGroup, zU32 _uPriority)
 {
-	ZENAssert(mePriorityGroup<zenConst::keUpdt__Count);
+	zenAssert(mePriorityGroup<zenConst::keUpdt__Count);
 	mePriorityGroup		= _ePriorityGroup;
 	muPriority			= _uPriority;
 	auto it				= zcMgr::Updater.mlstUpdateable[mePriorityGroup].GetHeadIt();
@@ -45,7 +45,7 @@ void IUpdate::Deactivate()
 
 void IUpdate::Reactivate()
 {
-	ZENAssertMsg(mePriorityGroup<zenConst::keUpdt__Count, "Make sure object has been activated properly once before re-activating");
+	zenAssertMsg(mePriorityGroup<zenConst::keUpdt__Count, "Make sure object has been activated properly once before re-activating");
 	Activate(mePriorityGroup, muPriority);
 }
 

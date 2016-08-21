@@ -4,8 +4,8 @@ namespace zcExp
 {
 	zResID ExportInfoGfxMesh::CallbackGetItemID(zenConst::eResPlatform _ePlatform, zenConst::eResType _eType, zenConst::eResSource _eSource, const zcExp::ExportInfoBase* _pExportInfo, bool& _bExistOut)
 	{
-		ZENAssert(_eType==zenConst::keResType_GfxMesh);
-		ZENAssert( _pExportInfo );
+		zenAssert(_eType==zenConst::keResType_GfxMesh);
+		zenAssert( _pExportInfo );
 		const ExportInfoGfxMesh* pExportInfo = static_cast<const ExportInfoGfxMesh*>(_pExportInfo);
 
 		zResID::NameHash hName;
@@ -13,6 +13,34 @@ namespace zcExp
 			hName.Append( &(pExportInfo->maMeshStripID[meshStripIdx]), sizeof(zResID) );
 
 		return zcExp::ValidateItemID(_ePlatform, _eType, _eSource, hName, _bExistOut);
+	}
+
+	ExporterGfxMesh::ExporterGfxMesh(const ExportResultRef& _rExportOut)
+	: Super(_rExportOut.GetSafe())
+	, mrExport(_rExportOut)
+	{
+		zenAssert(mrExport.IsValid());
+	}
+
+	bool ExporterGfxMesh::ExportStart()
+	{
+		if( !Super::ExportStart() )
+			return false;
+	
+		ExportInfoGfxMesh* pExportInfo	= static_cast<ExportInfoGfxMesh*>(mpExportInfo);
+		mrExport->maMeshStripID			= pExportInfo->maMeshStripID;
+
+		// Make sure all MeshStrip are valid
+		for(zUInt stripIdx(0), stripCount(mrExport->maMeshStripID.Count()); stripIdx<stripCount; ++stripIdx)
+		{
+			zResID resID = mrExport->maMeshStripID[stripIdx];
+			if( resID.GetType() != zenConst::keResType_GfxMeshStrip || zcDepot::ExportData.GetTyped<ExportGfxMeshStrip>(resID).IsValid()==false )
+				return false;
+		}
+
+		//! @todo Optimn: Parse all strip, concatenate all vertex together to quickly draw object in 1 call (for depth pass)
+		ExportSkipWork();
+		return true;
 	}
 
 	//=================================================================================================

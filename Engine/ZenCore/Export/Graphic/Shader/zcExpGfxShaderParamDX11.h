@@ -4,11 +4,10 @@
 
 namespace zcExp
 {
-	class ResDataGfxShaderParamDX11 : public ResourceData
+	class ExportGfxShaderParamDX11 : public zenRes::zExportData
 	{
-	ZENClassDeclare(ResDataGfxShaderParamDX11, ResourceData)
+	ZENClassDeclare(ExportGfxShaderParamDX11, zenRes::zExportData)
 	public:
-		virtual bool			Serialize( zcExp::Serializer_Base& _Serializer ){return true;}
 		zResID					mParentParamDefID;	//!< Parent ShaderParam definition
 		zArrayStatic<zU8>		maParameterValues;	//!< Bytes data for all buffer values (see ShaderParamDef for each parameter start offset in array)
 	};

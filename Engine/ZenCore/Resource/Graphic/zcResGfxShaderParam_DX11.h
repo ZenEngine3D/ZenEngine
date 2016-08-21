@@ -4,43 +4,38 @@
 
 namespace zcRes
 {
-	class GfxShaderParamDefProxy_DX11 : public zRefCounted
+	class GfxShaderParamDefHAL_DX11 : public zcExp::ExportGfxShaderParamDefDX11
 	{
-	ZENClassDeclare(GfxShaderParamDefProxy_DX11, zRefCounted)
+	ZENClassDeclare(GfxShaderParamDefHAL_DX11, zcExp::ExportGfxShaderParamDefDX11)
 	public:
-												GfxShaderParamDefProxy_DX11();
-		virtual									~GfxShaderParamDefProxy_DX11();
-		bool									Initialize(class GfxShaderParamDef& _Owner);
-				
-		zcExp::eShaderParamFreq					meFrequence;		
-		zcExp::ShaderParamItemInfoMap			mdParameters;
-		zArrayStatic<zU8>						maParameterDefaults;
-		ZENDbgCode(class GfxShaderParamDef*		mpOwner);
+		bool												Initialize();				
+		typedef zcExp::ExporterGfxShaderParamDefDX11_DX11	RuntimeExporter;
 	};
-
-	class GfxShaderParamProxy_DX11 : public zRefCounted
+	class GfxShaderParamDefHAL : public GfxShaderParamDefHAL_DX11{};
+	
+	class GfxShaderParamHAL_DX11 : public zcExp::ExportGfxShaderParamDX11
 	{
-	ZENClassDeclare(GfxShaderParamProxy_DX11, zRefCounted)
+	ZENClassDeclare(GfxShaderParamHAL_DX11, zcExp::ExportGfxShaderParamDX11)
 	public:
-												GfxShaderParamProxy_DX11();
-		virtual									~GfxShaderParamProxy_DX11();
-		bool									Initialize(class GfxShaderParam& _Owner);
+		virtual												~GfxShaderParamHAL_DX11();
+		bool												Initialize();
 		
-		void									Bind(zenConst::eShaderStage _eShaderStage)const;	
-		void									SetValue(const zenRes::zShaderParameter& _Value);	
-		void									SetValue(const zcExp::ParameterBase& _Value);	
-		void									SetValue(const zHash32& _hParamName, const float& _fValue);
-		void									SetValue(const zHash32& _hParamName, const zVec2F& _vValue);
-		void									SetValue(const zHash32& _hParamName, const zVec3F& _vValue);
-		void									SetValue(const zHash32& _hParamName, const zVec4F& _vValue);
-		void									SetValue(const zHash32& _hParamName, const zenMath::Matrix& _matValue);
+		void												Bind(zenConst::eShaderStage _eShaderStage)const;	
+		void												SetValue(const zenRes::zShaderParameter& _Value);	
+		void												SetValue(const zcExp::ParameterBase& _Value);	
+		void												SetValue(const zHash32& _hParamName, const float& _fValue);
+		void												SetValue(const zHash32& _hParamName, const zVec2F& _vValue);
+		void												SetValue(const zHash32& _hParamName, const zVec3F& _vValue);
+		void												SetValue(const zHash32& _hParamName, const zVec4F& _vValue);
+		void												SetValue(const zHash32& _hParamName, const zenMath::Matrix& _matValue);
 		
-		GfxShaderParamDefRef					mrProxShaderParamDef;
-		ID3D11Buffer*							mpBufferBinding;
-		zArrayStatic<zU8>						maParameterValues;	//!< Bytes data for all buffer values (see ShaderParamDef for each parameter start offset in array)
-		mutable bool							mbUpdated;
-		ZENDbgCode(class GfxShaderParam*		mpOwner);
-	};	
+		zcRes::GfxShaderParamDefRef							mrShaderParamDef;
+		ID3D11Buffer*										mpBufferBinding			= nullptr;
+		mutable bool										mbUpdated				= false;
+		
+		typedef zcExp::ExporterGfxShaderParamDX11_DX11		RuntimeExporter;
+	};
+	class GfxShaderParamHAL : public GfxShaderParamHAL_DX11{};
 }
 
 #endif

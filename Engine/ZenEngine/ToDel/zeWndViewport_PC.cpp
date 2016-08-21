@@ -17,7 +17,13 @@ namespace zen { namespace zenWnd
 		mhMainWindowThread		= CreateThread( nullptr, 0,  WndThread, this, 0, nullptr);  
 		while( meMainWindowThreadStatus == keThread_Starting )
 			SleepEx(1, false);
-		return meMainWindowThreadStatus == keThread_Running;
+
+		if( meMainWindowThreadStatus == keThread_Running )
+		{
+			mGfxWindow = zcRes::GfxWindowHAL::RuntimeCreate( mhMainWindow );
+			return meMainWindowThreadStatus == keThread_Running;
+		}
+		return false;
 	}
 	
 	void Window::GetInput(WindowInputState& _WindowInputOut, zU8 _uMaxKeyProcessed)

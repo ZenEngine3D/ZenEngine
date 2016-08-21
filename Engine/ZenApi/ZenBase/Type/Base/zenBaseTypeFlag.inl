@@ -4,14 +4,14 @@ template<typename TEnumFlag, int TEnumMax, typename TStorage>
 zFlag<TEnumFlag, TEnumMax, TStorage>::zFlag() 
 : muFlags(0)
 {
-	ZENStaticAssertMsg( sizeof(TStorage)*8>=TEnumMax, StorageContainerTooSmallForMaxValue );
+	zenStaticAssertMsg( sizeof(TStorage)*8>=TEnumMax, "StorageContainerTooSmallForMaxValue" );
 };
 
 template<typename TEnumFlag, int TEnumMax, typename TStorage> 
 zFlag<TEnumFlag, TEnumMax, TStorage>::zFlag(bool _bInitAllActive) 
 : muFlags(0)
 {
-	ZENStaticAssertMsg( sizeof(TStorage)*8>=TEnumMax, StorageContainerTooSmallForMaxValue );
+	zenStaticAssertMsg( sizeof(TStorage)*8>=TEnumMax, "StorageContainerTooSmallForMaxValue" );
 	if( _bInitAllActive )
 		Invert();
 };
@@ -158,14 +158,14 @@ template<typename TEnumFlag, int TEnumMax, typename TStorage>
 template<typename... Ts>
 zFlag<TEnumFlag, TEnumMax, TStorage>::zFlag(Ts... r)
 {
-	muFlags = MakeFlag(r...);
+	muFlags = Mask(r...);
 }
 
 template<typename TEnumFlag, int TEnumMax, typename TStorage>
 template<typename... Ts>
 bool zFlag<TEnumFlag, TEnumMax, TStorage>::Any(Ts... r)const
 {
-	TStorage uFlagCmp = MakeFlag(r...);
+	TStorage uFlagCmp = Mask(r...);
 	return (muFlags & uFlagCmp) != 0;
 }
 
@@ -173,22 +173,22 @@ template<typename TEnumFlag, int TEnumMax, typename TStorage>
 template<typename... Ts>
 bool zFlag<TEnumFlag, TEnumMax, TStorage>::All(Ts... r)const
 {
-	TStorage uFlagCmp = MakeFlag(r...);
+	TStorage uFlagCmp = Mask(r...);
 	return (muFlags & uFlagCmp) == uFlagCmp;
 }
 
 template<typename TEnumFlag, int TEnumMax, typename TStorage>
-constexpr TStorage zFlag<TEnumFlag, TEnumMax, TStorage>::MakeFlag(TEnumFlag _Value)
+constexpr TStorage zFlag<TEnumFlag, TEnumMax, TStorage>::Mask(TEnumFlag _Value)
 {
-	ZENAssertMsg((_Value & (~((TStorage(1) << TEnumMax) - 1))) == 0, "Using an enum value higher than allowed");
+	zenAssertMsg((_Value & (~((TStorage(1) << TEnumMax) - 1))) == 0, "Using an enum value higher than allowed");
 	return TStorage(1) << _Value;
 }
 
 template<typename TEnumFlag, int TEnumMax, typename TStorage>
 template<typename... Ts>
-constexpr TStorage zFlag<TEnumFlag, TEnumMax, TStorage>::MakeFlag(TEnumFlag Value, Ts... r)
+constexpr TStorage zFlag<TEnumFlag, TEnumMax, TStorage>::Mask(TEnumFlag Value, Ts... r)
 {
-	return MakeFlag(Value) | MakeFlag(r...);
+	return Mask(Value) | Mask(r...);
 }
 
 } } //namespace zen, Type

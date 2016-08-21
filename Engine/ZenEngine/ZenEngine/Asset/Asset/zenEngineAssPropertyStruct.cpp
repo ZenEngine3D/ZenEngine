@@ -7,7 +7,7 @@ namespace zen { namespace zenAss
 
 PropertyDefRef PropertyStruct::Create( const char* _zName, const char* _zDisplayName, const char* _zDescription, bool _bShowInAssetDesc, bool _bIsEditable, const PropertyDefRef* _prPropertyDef, zUInt _uPropertyDefCount )
 {	
-	ZENAssert(_prPropertyDef && _uPropertyDefCount>0);
+	zenAssert(_prPropertyDef && _uPropertyDefCount>0);
 	static zenMem::zAllocatorPool sAllocPool( "PropertyDefinition::Create", sizeof(PropertyStruct), 256, 256 );
 	PropertyStruct* pNewDefinition = zenNew(&sAllocPool) zenAss::PropertyStruct(_zName, _zDisplayName, _zDescription, _bShowInAssetDesc, _bIsEditable);
 	pNewDefinition->maPropertyDef.Copy(_prPropertyDef, _uPropertyDefCount);
@@ -16,7 +16,7 @@ PropertyDefRef PropertyStruct::Create( const char* _zName, const char* _zDisplay
 	pNewDefinition->mdPropertyDefIndex.SetDefaultValue(0xFFFFFFFF);
 	for(zUInt idx(0); idx<_uPropertyDefCount; ++idx)
 	{
-		ZENAssert( _prPropertyDef[idx].IsValid() );
+		zenAssert( _prPropertyDef[idx].IsValid() );
 		pNewDefinition->mDefault[idx] = pNewDefinition->maPropertyDef[idx]->Allocate(nullptr);				
 		pNewDefinition->mdPropertyDefIndex.Set(_prPropertyDef[idx]->mName.mhName, idx);
 	}
@@ -43,7 +43,7 @@ PropertyValueRef PropertyStruct::Allocate(const zAssetItemRef& _rOwnerAsset)cons
 
 PropertyValueRef PropertyStruct::Clone(const PropertyValueRef& _rValue)const
 {
-	ZENAssert( _rValue.GetType() == kPropertyType );
+	zenAssert( _rValue.GetType() == kPropertyType );
 	static zenMem::zAllocatorPool sAllocPool( "PropertyArray::Clone", sizeof(ValueProperty), 256, 256 );	
 	ValueRef rValueToClone				= _rValue;	
 	ValueRef rValueCloned 				= zenNew(&sAllocPool) ValueProperty(rValueToClone->mrOwnerAsset, this);	
@@ -88,7 +88,7 @@ bool PropertyStruct::IsEqual(const PropertyValueRef& _rValue1, const PropertyVal
 
 PropertyValueRef PropertyStruct::ValueRef::GetStructValue(zHash32 _hPropertyName)
 {
-	ZENAssert( IsValid() );
+	zenAssert( IsValid() );
 	zUInt uIndex;
 	const PropertyStruct& Definition = GetDefinition();
 	if( Definition.mdPropertyDefIndex.Get(_hPropertyName, uIndex) )

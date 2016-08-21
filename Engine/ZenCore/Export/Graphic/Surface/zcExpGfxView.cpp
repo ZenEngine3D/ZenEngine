@@ -4,8 +4,8 @@ namespace zcExp
 {
 	zResID ExportInfoGfxView::CallbackGetItemID(zenConst::eResPlatform _ePlatform, zenConst::eResType _eType, zenConst::eResSource _eSource, const zcExp::ExportInfoBase* _pExportInfo, bool& _bExistOut)
 	{
-		ZENAssert(_eType==zenConst::keResType_GfxView);
-		ZENAssert( _pExportInfo );
+		zenAssert(_eType==zenConst::keResType_GfxView);
+		zenAssert( _pExportInfo );
 		zResID::NameHash hName;
 		const ExportInfoGfxView* pExportInfo = static_cast<const ExportInfoGfxView*>(_pExportInfo);
 		hName.Append( (void*)pExportInfo->mpaRTColorConfig->First(), pExportInfo->mpaRTColorConfig->SizeMem() );
@@ -15,9 +15,9 @@ namespace zcExp
 		return zcExp::ValidateItemID(_ePlatform, _eType, _eSource, hName, _bExistOut);
 	}
 
-	ExporterGfxView::ExporterGfxView(const ResDataRef& _rResData)
-	: Super(_rResData.GetSafe())
-	, mrResData(_rResData)
+	ExporterGfxView::ExporterGfxView(const ExportResultRef& _rExportOut)
+	: Super(_rExportOut.GetSafe())
+	, mrExportResult(_rExportOut)
 	{
 	}
 
@@ -27,38 +27,38 @@ namespace zcExp
 		if( !Super::ExportStart() )
 			return false;		
 		
-		ZENAssert(pExportInfo->mpaRTColorConfig);
-		ZENAssert(pExportInfo->mpRTDepthConfig);
+		zenAssert(pExportInfo->mpaRTColorConfig);
+		zenAssert(pExportInfo->mpRTDepthConfig);
 
-		mrResData->mvDim = pExportInfo->mvDim;		
-		zenRes::zGfxRenderTarget rParamDepthRT = pExportInfo->mpRTDepthConfig->mrTargetSurface;
+		mrExportResult->mvDim				= pExportInfo->mvDim;		
+		zenRes::zGfxTarget2D rParamDepthRT	= pExportInfo->mpRTDepthConfig->mrTargetSurface;
 		if( rParamDepthRT.IsValid() )
 		{
 			const zenRes::zGfxRenderPass::ConfigDepthRT& RTConfig	= *pExportInfo->mpRTDepthConfig;
-			zcRes::GfxRenderTargetRef rDepthSurface					= RTConfig.mrTargetSurface;
+			zcRes::GfxTarget2DRef rDepthSurface						= RTConfig.mrTargetSurface;
 			if( rDepthSurface.IsValid() )
 			{
-				mrResData->mvDim.x = zenMath::Min<zU16>(mrResData->mvDim.x, rDepthSurface->GetDim().x-pExportInfo->mvOrigin.x );
-				mrResData->mvDim.y = zenMath::Min<zU16>(mrResData->mvDim.y, rDepthSurface->GetDim().y-pExportInfo->mvOrigin.y );
+				mrExportResult->mvDim.x		= zenMath::Min<zU16>(mrExportResult->mvDim.x, rDepthSurface->GetDim().x-pExportInfo->mvOrigin.x );
+				mrExportResult->mvDim.y		= zenMath::Min<zU16>(mrExportResult->mvDim.y, rDepthSurface->GetDim().y-pExportInfo->mvOrigin.y );
 			}
 		}
 
 		for(zUInt rtIdx(0), rtCount(pExportInfo->mpaRTColorConfig->Count()); rtIdx<rtCount; ++rtIdx)
 		{
 			const zenRes::zGfxRenderPass::ConfigColorRT& RTConfig	= (*pExportInfo->mpaRTColorConfig)[rtIdx];
-			zcRes::GfxRenderTargetRef rColorSurface					= RTConfig.mrTargetSurface;
+			zcRes::GfxTarget2DRef rColorSurface						= RTConfig.mrTargetSurface;
 			//! @todo Missing: error if not found
 			if( rColorSurface.IsValid() )
 			{
-				mrResData->mvDim.x = zenMath::Min<zU16>(mrResData->mvDim.x, rColorSurface->GetDim().x-pExportInfo->mvOrigin.x );
-				mrResData->mvDim.y = zenMath::Min<zU16>(mrResData->mvDim.y, rColorSurface->GetDim().y-pExportInfo->mvOrigin.y );
+				mrExportResult->mvDim.x		= zenMath::Min<zU16>(mrExportResult->mvDim.x, rColorSurface->GetDim().x-pExportInfo->mvOrigin.x );
+				mrExportResult->mvDim.y		= zenMath::Min<zU16>(mrExportResult->mvDim.y, rColorSurface->GetDim().y-pExportInfo->mvOrigin.y );
 			}			
 		}
 
-		mrResData->mvOrigin.x		= zenMath::Min<zU16>(pExportInfo->mvOrigin.x, mrResData->mvDim.x);
-		mrResData->mvOrigin.y		= zenMath::Min<zU16>(pExportInfo->mvOrigin.y, mrResData->mvDim.y);
-		mrResData->maRTColorConfig	= *pExportInfo->mpaRTColorConfig;
-		mrResData->mRTDepthConfig	= *pExportInfo->mpRTDepthConfig;		
+		mrExportResult->mvOrigin.x			= zenMath::Min<zU16>(pExportInfo->mvOrigin.x, mrExportResult->mvDim.x);
+		mrExportResult->mvOrigin.y			= zenMath::Min<zU16>(pExportInfo->mvOrigin.y, mrExportResult->mvDim.y);
+		mrExportResult->maRTColorConfig		= *pExportInfo->mpaRTColorConfig;
+		mrExportResult->mRTDepthConfig		= *pExportInfo->mpRTDepthConfig;
 		ExportSkipWork();
 		return true;
 	}

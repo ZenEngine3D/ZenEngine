@@ -7,13 +7,12 @@ ExporterGfxIndexDX11_DX11::ExporterGfxIndexDX11_DX11(const ExportDataRef& _rExpo
 : ExporterBase(_rExportData.GetSafe())
 , mrExportData(_rExportData)
 {
+	zenAssert(mrExportData.IsValid());
 }
 
 bool ExporterGfxIndexDX11_DX11::ExportWork(bool _bIsTHRTask)
-{
-	ZENAssert(mrResData.IsValid());	
+{	
 	ExportInfoGfxIndex* pExportInfo = static_cast<ExportInfoGfxIndex*>(mpExportInfo);
-	
 	if( pExportInfo->maIndice16.Count() > 0 )
 	{
 		mrExportData->meIndiceFormat	= DXGI_FORMAT_R16_UINT;
@@ -52,12 +51,10 @@ bool ExporterGfxIndexDX11_DX11::ExportWork(bool _bIsTHRTask)
 		mrExportData->muPrimitiveCount	= mrExportData->muIndiceCount-2;
 		break;
 	default:
-		ZENAssertMsg(0, "Unhandled Primitive type");				
+		zenAssertMsg(0, "Unhandled Primitive type");				
 		return FALSE;
 	}
-	
-	return TRUE;
-	
+	return TRUE;	
 }
 		
 }

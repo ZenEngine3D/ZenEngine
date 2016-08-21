@@ -37,11 +37,11 @@ void zAllocatorFastPoolBase::Init( size_t _uItemSize, zU32 _uItemCount, zU32 _uI
 
 void* zAllocatorFastPoolBase::Allocate()
 {
-	ZENAssertMsg( muItemSize > 0, "Trying to use an uninitialized pool");
+	zenAssertMsg( muItemSize > 0, "Trying to use an uninitialized pool");
 	if( mlstFreeItems.IsEmpty() )
 		MemoryIncrease( muItemIncrease );
 
-	ZENAssert( !mlstFreeItems.IsEmpty() );
+	zenAssert( !mlstFreeItems.IsEmpty() );
 	void* pAllocatedItem = reinterpret_cast<void*>(mlstFreeItems.PopHead());
 	return pAllocatedItem;
 }
@@ -80,7 +80,7 @@ void zAllocatorFastPoolBase::MemoryIncrease(zU32 _uItemCount)
 //==================================================================================================
 void zAllocatorFastPoolBase::Clear()
 {	
-	ZENAssertMsg(GetAllocatedCount()==0, "Trying to clear a MemPool while there's still some items allocated." );
+	zenAssertMsg(GetAllocatedCount()==0, "Trying to clear a MemPool while there's still some items allocated." );
 	muReservedCount	= 0;	
 	mlstFreeItems.Empty();
 

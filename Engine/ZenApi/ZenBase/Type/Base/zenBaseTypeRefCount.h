@@ -2,20 +2,28 @@
 #ifndef __zenApi_Base_Type_RefCount_h__
 #define __zenApi_Base_Type_RefCount_h__
 
+#include <atomic>
+
 namespace zen { namespace zenType {
 	
+//! @todo clean make this all const so we can pass on read only resources
 	class zRefCounted
 	{
 	ZENClassDeclareNoParent(zRefCounted)
 	public:
-		ZENInline			zRefCounted();
-		virtual				~zRefCounted();
-		ZENInline void		ReferenceAdd();
-		ZENInline void		ReferenceRem();
-		ZENInline zInt		ReferenceCount();
+		ZENInline void					ReferenceAdd();
+		ZENInline void					ReferenceRem();
+		ZENInline zInt					ReferenceCount();		
+		static void						ReferenceRelease();		//!< @brief Clear item flagged as deleted (reference reached 0)
+		virtual							~zRefCounted(){};
 	protected:
-		virtual	 void		ReferenceNoneCB();	//!< Called when no reference are left on object
-		zI32				miRefCount;		
+		virtual	void					ReferenceDeleteCB();	//!< Called when no reference are left on object
+		zListLink						mLstPendingDelLink;
+		mutable std::atomic<zI32>		miRefCount = 0;
+		
+		typedef zList<zRefCounted, &zRefCounted::mLstPendingDelLink, true> TypeList;		
+		static zUInt					suLstPendingDelIndex;
+		static TypeList					sLstPendingDel[3];		
 	};
 	
 	class zReference
@@ -54,6 +62,7 @@ namespace zen { namespace zenType {
 	#endif
 		using Super::operator==;
 		using Super::operator!=;
+		typedef TRefCountedType Class;
 	};
 	
 	template<class TRefCountedType>

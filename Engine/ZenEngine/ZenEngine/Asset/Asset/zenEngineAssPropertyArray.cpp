@@ -8,8 +8,8 @@ namespace zen { namespace zenAss
 PropertyDefRef PropertyArray::Create( const char* _zName, const char* _zDisplayName, const char* _zDescription, bool _bShowInAssetDesc, bool _bIsEditable, const PropertyDefRef& _rPropertyDef, zUInt _uEntryCountMin, zUInt _uEntryCountMax )
 {		
 	static zenMem::zAllocatorPool sAllocPool( "PropertyDefinition::Create", sizeof(PropertyArray), 256, 256 );
-	ZENAssert( _rPropertyDef.IsValid() );
-	ZENAssert( _uEntryCountMin <= _uEntryCountMax);
+	zenAssert( _rPropertyDef.IsValid() );
+	zenAssert( _uEntryCountMin <= _uEntryCountMax);
 	PropertyArray* pNewDefinition		= zenNew(&sAllocPool) zenAss::PropertyArray(_zName, _zDisplayName, _zDescription, _bShowInAssetDesc, _bIsEditable);
 	pNewDefinition->mrArrayPropertyDef	= _rPropertyDef;	
 	pNewDefinition->muEntryCountMin		= _uEntryCountMin;
@@ -38,7 +38,7 @@ PropertyValueRef PropertyArray::Allocate(const zAssetItemRef& _rOwnerAsset)const
 
 PropertyValueRef PropertyArray::Clone(const zAssetItemRef& _rOwnerAsset, const PropertyValueRef& _rValue)const
 {
-	ZENAssert( _rValue.GetType() == kPropertyType );
+	zenAssert( _rValue.GetType() == kPropertyType );
 	static zenMem::zAllocatorPool sAllocPool( "PropertyArray::Clone", sizeof(ValueProperty), 256, 256 );	
 	ValueRef rValueToClone				= _rValue;	
 	ValueRef rValueCloned 				= zenNew(&sAllocPool) ValueProperty(rValueToClone->mrOwnerAsset, this);	
@@ -82,7 +82,7 @@ bool PropertyArray::IsEqual(const PropertyValueRef& _rValue1, const PropertyValu
 
 PropertyValueRef PropertyArray::ValueRef::AddEntry()
 {
-	ZENAssert( IsValid() );
+	zenAssert( IsValid() );
 	const PropertyArray& Definition		= GetDefinition();
 	PropertyValueRef newValue			= Definition.mrArrayPropertyDef->Allocate((*this)->mrOwnerAsset);
 	ValueStorage& arrayValue			= static_cast<Value*>(GetSafe())->mValue;
@@ -92,7 +92,7 @@ PropertyValueRef PropertyArray::ValueRef::AddEntry()
 
 void PropertyArray::ValueRef::RemEntry(const PropertyValueRef& _ToRemove)
 {
-	ZENAssert( IsValid() );
+	zenAssert( IsValid() );
 	ValueStorage& arrayValue = static_cast<Value*>(GetSafe())->mValue;
 	for( zUInt idx(0), count(arrayValue.Count()); idx<count; ++idx)
 	{

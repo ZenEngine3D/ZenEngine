@@ -8,7 +8,7 @@ void LaunchEngine(zEngineInstance* _pEngineInstance, int argc, const char* const
 {	
 	if( _pEngineInstance->Init() )
 	{
-		ZENAssert(!gpActiveEngine);
+		zenAssert(!gpActiveEngine);
 		gpActiveEngine = _pEngineInstance;
 		while( !gpActiveEngine->IsDone() && zbSys::IsSystemActive() )
 		{
@@ -20,7 +20,7 @@ void LaunchEngine(zEngineInstance* _pEngineInstance, int argc, const char* const
 
 zEngineInstance* GetEngineInstance()
 {
-	ZENAssert(gpActiveEngine);
+	zenAssert(gpActiveEngine);
 	return gpActiveEngine;
 }
 
@@ -31,7 +31,7 @@ bool zEngineInstance::Init()
 
 void zEngineInstance::Destroy()
 {
-	mrMainWindowGfx = nullptr;
+	//mrMainWindowGfx = nullptr;
 	zenDelnullptr(mpMainWindowOS);		
 	zbSys::EngineStop();
 	gpActiveEngine = nullptr;
@@ -46,7 +46,7 @@ void zEngineInstance::MainLoop()
 		if( muWindowSize != vWindowSize )
 		{
 			muWindowSize = vWindowSize;
-			mrMainWindowGfx.Resize(muWindowSize);
+			mpMainWindowOS->GetGfxWindow().Resize(muWindowSize);
 		}
 	}
 	
@@ -67,8 +67,8 @@ void zEngineInstance::MainLoop()
 			msigUpdate.Emit(zenConst::keUpdt_FrameEnd);
 		}
 		{
-			zenPerf::zScopedEventCpu EmitEvent("Resources Release");
-			zenRes::zResource::ReleaseUnused();
+			zenPerf::zScopedEventCpu EmitEvent("Refcounted Release");
+			zRefCounted::ReferenceRelease();
 		}
 	}
 }
@@ -79,15 +79,16 @@ void zEngineInstance::Update()
 
 void zEngineInstance::CreateGfxWindow(const zVec2U16& _vDim, const zVec2U16& _vPos)
 {
-	ZENAssert(gpActiveEngine==nullptr);
-	ZENAssert(mpMainWindowOS == nullptr);
-	mpMainWindowOS				= zenNewDefault zenWnd::Window(L"MainWindow", _vDim);
+	zenAssert(gpActiveEngine==nullptr);
+	zenAssert(mpMainWindowOS == nullptr);
+	//! @todo Clean improve windows creation to be more os agnostic, and more parameters (fullscreen, etc...)
+	//! @todo clean make os window a resource too
+	mpMainWindowOS					= zenNewDefault zenWnd::Window(L"MainWindow", _vDim);
 	mpMainWindowOS->Initialize();
-	mrMainWindowGfx				= zenRes::zGfxWindow::Create( mpMainWindowOS->GetHandle() );
-	zcRes::GfxWindowRef rWindow = mrMainWindowGfx;
-	rWindow->mpMainWindowOS		= mpMainWindowOS;
-	muWindowSize				= _vDim;
-	rWindow->GetSignalUIRender().Connect(*this, &zEngineInstance::UIRenderCB);
+	mrMainWindowGfx					= mpMainWindowOS->GetGfxWindow();
+	mrMainWindowGfx->mpMainWindowOS	= mpMainWindowOS;
+	muWindowSize					= _vDim;
+	mrMainWindowGfx->GetSignalUIRender().Connect(*this, &zEngineInstance::UIRenderCB);
 }
 
 bool zSampleEngineInstance::IsDone()

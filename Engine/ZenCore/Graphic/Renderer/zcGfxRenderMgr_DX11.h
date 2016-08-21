@@ -12,20 +12,23 @@ namespace zcGfx
 class DX11QueryDisjoint : public zRefCounted
 {
 public:
-	static zEngineRef<DX11QueryDisjoint>		Create();				//!< @brief Get a new disjoint query
-	virtual void								ReferenceNoneCB();		//!< @brief Return object to free list instead of deleting it
-	void										Start();				//!< @brief Starts clock frequency query
-	void										Stop();					//!< @brief Stops clock frequency query	
-	zU64										GetClockRate();			//!< @brief Gets clock frequency result (0 if invalid)
+	static zEngineRef<DX11QueryDisjoint>	Create();					//!< @brief Get a new disjoint query	
+	void									Start();					//!< @brief Starts clock frequency query
+	void									Stop();						//!< @brief Stops clock frequency query	
+	zU64									GetClockRate();				//!< @brief Gets clock frequency result (0 if invalid)
 
 protected:
 											DX11QueryDisjoint();
+	virtual void							ReferenceDeleteCB();		//!< @brief Return object to free list instead of deleting it
 	ID3D11Query*							mpDX11Query;				//!< @brief DirectX disjoint query object used to get result
 	D3D11_QUERY_DATA_TIMESTAMP_DISJOINT		mDisjointInfo;				//!< @brief Frequency infos returned from query, about the GPU
 	zU64									muFrameStop;				//!< @brief When query was ended (to make sure 1 frame elapsed)
 	bool									mbValidResult;				//!< @brief True if we got the result back from GPU
 	zListLink								mlstLink;
-	static zList<DX11QueryDisjoint, &DX11QueryDisjoint::mlstLink> slstQueryCreated;
+public:
+	typedef zList<DX11QueryDisjoint, &DX11QueryDisjoint::mlstLink, false> List;
+protected:
+	static List								slstQueryCreated;
 };
 
 //=================================================================================================
@@ -37,16 +40,19 @@ class DX11QueryTimestamp : public zRefCounted
 public:
 	static zEngineRef<DX11QueryTimestamp>	Create();				//!< @brief Get a new disjoint query and start the timestamp request
 	zU64									GetTimestampUSec();		//!< @brief Retrieve the timestamp result (0 if invalid)
-	virtual void							ReferenceNoneCB();		//!< @brief Return object to free list instead of deleting it
-	
+		
 protected:
 											DX11QueryTimestamp();
+	virtual void							ReferenceDeleteCB();	//!< @brief Return object to free list instead of deleting it
 	ID3D11Query*							mpDX11Query;			//!< @brief DirectX timestamp query object used to get result
 	zEngineRef<DX11QueryDisjoint>			mrQueryDisjoint;		//!< @brief Reference to Disjoint query to use for getting gpu frequency
 	bool									mbValidResult;			//!< @brief True if we got the result back from GPU
 	zU64									muTimestamp;			//!< @brief Time on the GPU when query was processed (in microseconds)
 	zListLink								mlstLink;
-	static zList<DX11QueryTimestamp, &DX11QueryTimestamp::mlstLink> slstQueryCreated;
+public:
+	typedef zList<DX11QueryTimestamp, &DX11QueryTimestamp::mlstLink, false> List;
+protected:
+	static List								slstQueryCreated;
 };
 
 //=================================================================================================
@@ -63,22 +69,19 @@ public:
 	struct RenderContext
 	{
 		RenderContext();
-		zVec4U16						mvScreenScissor		= zVec4U16(0, 0, 0, 0);
-		bool							mbScreenScissorOn	= false;
 		zcRes::GfxRenderPassRef			mrRenderpass		= nullptr;
+		zcRes::GfxViewRef				mrStateView			= nullptr;
 		zcRes::GfxStateBlendRef			mrStateBlend		= nullptr;
 		zcRes::GfxStateDepthStencilRef	mrStateDepthStencil	= nullptr;
-		zcRes::GfxStateRasterizerRef	mrStateRaster		= nullptr;
-		zcRes::GfxViewRef				mrStateView			= nullptr;
-		
-		zcRes::GfxInputStreamRef		mrInputStream		= nullptr;
-		D3D11_PRIMITIVE_TOPOLOGY		mePrimitiveType		= D3D_PRIMITIVE_TOPOLOGY_UNDEFINED;
-		zcRes::GfxShaderVertexRef		mrShaderVertex		= nullptr;
-		zcRes::GfxShaderPixelRef		mrShaderPixel		= nullptr;
-		
+		zcRes::GfxStateRasterRef		mrStateRaster		= nullptr;
+		zcRes::GfxInputStreamRef		mrInputStream		= nullptr;		
+		zcRes::GfxShaderAnyRef			marShader[zenConst::keShaderStage__Count];				
 		zcRes::GfxSamplerRef			maCurrentSampler[zenConst::keShaderStage__Count][zcExp::kuDX11_TexturePerStageMax];
 		zcRes::GfxTexture2dRef			maCurrentTexture[zenConst::keShaderStage__Count][zcExp::kuDX11_TexturePerStageMax];
 		zU16							muPerStageTextureCount[zenConst::keShaderStage__Count];
+		D3D11_PRIMITIVE_TOPOLOGY		mePrimitiveType		= D3D_PRIMITIVE_TOPOLOGY_UNDEFINED;
+		zVec4U16						mvScreenScissor		= zVec4U16(0, 0, 0, 0);
+		bool							mbScreenScissorOn	= false;
 	};
 
 	virtual void								FrameBegin(zcRes::GfxWindowRef _FrameWindow);

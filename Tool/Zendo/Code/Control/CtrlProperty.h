@@ -142,7 +142,7 @@ class wxZenFloat2fProperty : public wxZenVectorProperty<zenAss::PropertyFloat2, 
 {
 WX_PG_DECLARE_PROPERTY_CLASS( wxZenFloat2fProperty )
 public:
-	wxZenFloat2fProperty(){ZENAssertMsg(0, "Shouldn't be reaching this constructor")}
+	wxZenFloat2fProperty(){zenAssertMsg(0, "Shouldn't be reaching this constructor")}
 	wxZenFloat2fProperty(const zenAss::zAssetItemRef& _rAsset, const zenAss::PropertyValueRef& _rAssetValue): wxZenVectorProperty(_rAsset, _rAssetValue, "%s\n(Default [ %.3f, %.3f ])", "%s\n(Default %.3f)"){};
 };
 
@@ -150,7 +150,7 @@ class wxZenFloat3fProperty : public wxZenVectorProperty<zenAss::PropertyFloat3, 
 {
 WX_PG_DECLARE_PROPERTY_CLASS( wxZenFloat3fProperty )
 public:
-	wxZenFloat3fProperty(){ZENAssertMsg(0, "Shouldn't be reaching this constructor")}
+	wxZenFloat3fProperty(){zenAssertMsg(0, "Shouldn't be reaching this constructor")}
 	wxZenFloat3fProperty(const zenAss::zAssetItemRef& _rAsset, const zenAss::PropertyValueRef& _rAssetValue):wxZenVectorProperty(_rAsset, _rAssetValue, "%s\n(Default [ %.3f, %.3f, %.3f ])", "%s\n(Default %.3f)"){};
 };
 
@@ -158,7 +158,7 @@ class wxZenFloat4fProperty : public wxZenVectorProperty<zenAss::PropertyFloat4, 
 {
 WX_PG_DECLARE_PROPERTY_CLASS( wxZenFloat4fProperty )
 public:
-	wxZenFloat4fProperty(){ZENAssertMsg(0, "Shouldn't be reaching this constructor")}
+	wxZenFloat4fProperty(){zenAssertMsg(0, "Shouldn't be reaching this constructor")}
 	wxZenFloat4fProperty(const zenAss::zAssetItemRef& _rAsset, const zenAss::PropertyValueRef& _rAssetValue):wxZenVectorProperty(_rAsset, _rAssetValue, "%s\n(Default [ %.3f, %.3f, %.3f, %.3f ])", "%s\n(Default %.3f)"){};
 };
 
@@ -166,7 +166,7 @@ class wxZenInt2fProperty : public wxZenVectorProperty<zenAss::PropertyInt2, long
 {
 WX_PG_DECLARE_PROPERTY_CLASS( wxZenInt2fProperty )
 public:
-	wxZenInt2fProperty(){ZENAssertMsg(0, "Shouldn't be reaching this constructor")}
+	wxZenInt2fProperty(){zenAssertMsg(0, "Shouldn't be reaching this constructor")}
 	wxZenInt2fProperty(const zenAss::zAssetItemRef& _rAsset, const zenAss::PropertyValueRef& _rAssetValue): wxZenVectorProperty(_rAsset, _rAssetValue, "%s\n(Default [ %3i, %3i ])", "%s\n(Default %3i)"){};
 };
 
@@ -174,7 +174,7 @@ class wxZenInt3fProperty : public wxZenVectorProperty<zenAss::PropertyInt3, long
 {
 WX_PG_DECLARE_PROPERTY_CLASS( wxZenInt3fProperty )
 public:
-	wxZenInt3fProperty(){ZENAssertMsg(0, "Shouldn't be reaching this constructor")}
+	wxZenInt3fProperty(){zenAssertMsg(0, "Shouldn't be reaching this constructor")}
 	wxZenInt3fProperty(const zenAss::zAssetItemRef& _rAsset, const zenAss::PropertyValueRef& _rAssetValue):wxZenVectorProperty(_rAsset, _rAssetValue, "%s\n(Default [ %3i, %3i, %3i ])", "%s\n(Default %3i)"){};
 };
 
@@ -182,7 +182,7 @@ class wxZenInt4fProperty : public wxZenVectorProperty<zenAss::PropertyInt4, long
 {
 WX_PG_DECLARE_PROPERTY_CLASS( wxZenInt4fProperty )
 public:
-	wxZenInt4fProperty(){ZENAssertMsg(0, "Shouldn't be reaching this constructor")}
+	wxZenInt4fProperty(){zenAssertMsg(0, "Shouldn't be reaching this constructor")}
 	wxZenInt4fProperty(const zenAss::zAssetItemRef& _rAsset, const zenAss::PropertyValueRef& _rAssetValue):wxZenVectorProperty(_rAsset, _rAssetValue, "%s\n(Default [ %3i, %3i, %3i, %3i ])", "%s\n(Default %3i)"){};
 };
 

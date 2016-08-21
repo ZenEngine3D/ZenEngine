@@ -4,54 +4,53 @@
 
 namespace zcRes
 {
-	class GfxSamplerProxy_DX11 : public zRefCounted
+	class GfxSamplerHAL_DX11 : public zcExp::ExportGfxSamplerDX11
 	{
-	ZENClassDeclare(GfxSamplerProxy_DX11, zRefCounted)
+	ZENClassDeclare(GfxSamplerHAL_DX11, zcExp::ExportGfxSamplerDX11);
 	public:
-												GfxSamplerProxy_DX11();
-		virtual									~GfxSamplerProxy_DX11();												
-		bool									Initialize(class GfxSampler& _Owner);
-		ID3D11SamplerState*						mpSamplerState;
-		ZENDbgCode(class GfxSampler*			mpOwner);
+		virtual										~GfxSamplerHAL_DX11();
+		bool										Initialize();
+		ID3D11SamplerState*							mpSamplerState;
+		typedef zcExp::ExporterGfxSamplerDX11_DX11	RuntimeExporter;
 	};
+	class GfxSamplerHAL : public GfxSamplerHAL_DX11{};	
 
-	class GfxStateBlendProxy_DX11 : public zRefCounted
+	class GfxStateBlendHAL_DX11 : public zcExp::ExportGfxStateBlendDX11
 	{
-	ZENClassDeclare(GfxStateBlendProxy_DX11, zRefCounted)
+	ZENClassDeclare(GfxStateBlendHAL_DX11, zcExp::ExportGfxStateBlendDX11)
 	public:
-												GfxStateBlendProxy_DX11();
-		virtual									~GfxStateBlendProxy_DX11();												
-		bool									Initialize(class GfxStateBlend& _Owner);
-		ID3D11BlendState*						mpBlendState;
-		UINT									muSampleMask;
-		float									mafBlendFactor[4]; 
-		ZENDbgCode(class GfxStateBlend*			mpOwner);
+		virtual													~GfxStateBlendHAL_DX11();												
+		bool													Initialize();
+		ID3D11BlendState*										mpBlendState		= nullptr;
+		UINT													muSampleMask		= 0;
+		float													mafBlendFactor[4]	= {0,0,0,0}; 
+		typedef zcExp::ExporterGfxStateBlendDX11_DX11			RuntimeExporter;
 	};
-
-	class GfxStateDepthStencilProxy_DX11 : public zRefCounted
+	class GfxStateBlendHAL : public GfxStateBlendHAL_DX11{};
+	
+	class GfxStateDepthStencilHAL_DX11 : public zcExp::ExportGfxStateDepthStencilDX11
 	{
-	ZENClassDeclare(GfxStateDepthStencilProxy_DX11, zRefCounted)
+	ZENClassDeclare(GfxStateDepthStencilHAL_DX11, zcExp::ExportGfxStateDepthStencilDX11)
 	public:
-												GfxStateDepthStencilProxy_DX11();
-		virtual									~GfxStateDepthStencilProxy_DX11();												
-		bool									Initialize(class GfxStateDepthStencil& _Owner);
-		ID3D11DepthStencilState*				mpDepthStencilState;
-		UINT									muStencilValue;
-		ZENDbgCode(class GfxStateDepthStencil*	mpOwner);
+		virtual													~GfxStateDepthStencilHAL_DX11();												
+		bool													Initialize();
+		ID3D11DepthStencilState*								mpDepthStencilState	= nullptr;
+		UINT													muStencilValue		= 0x80;
+		typedef zcExp::ExporterGfxStateDepthStencilDX11_DX11	RuntimeExporter;
 	};
-
-	class GfxStateRasterizerProxy_DX11 : public zRefCounted
+	class GfxStateDepthStencilHAL : public GfxStateDepthStencilHAL_DX11{};
+	
+	class GfxStateRasterHAL_DX11 : public zcExp::ExportGfxStateRasterDX11
 	{
-	ZENClassDeclare(GfxStateRasterizerProxy_DX11, zRefCounted)
+	ZENClassDeclare(GfxStateRasterHAL_DX11, zcExp::ExportGfxStateRasterDX11)
 	public:
-												GfxStateRasterizerProxy_DX11();
-		virtual									~GfxStateRasterizerProxy_DX11();												
-		bool									Initialize(class GfxStateRasterizer& _Owner);
-		ID3D11RasterizerState*					mpRasterizerState;	
-		bool									mbScreenScissorOn;	//! @todo clean : remove this once proxy is collapsed with owner
-		ZENDbgCode(class GfxStateRasterizer*	mpOwner);
+		virtual													~GfxStateRasterHAL_DX11();												
+		bool													Initialize();
+		ID3D11RasterizerState*									mpRasterizerState	= nullptr;	
+		//bool													mbScreenScissorOn	= false;	//! @todo clean : remove this once proxy is collapsed with owner
+		typedef zcExp::ExporterGfxStateRasterDX11_DX11			RuntimeExporter;
 	};
-
+	class GfxStateRasterHAL : public GfxStateRasterHAL_DX11{};
 }
 
 #endif

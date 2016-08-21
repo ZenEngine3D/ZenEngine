@@ -121,7 +121,7 @@ void LoadPropertyValue( const zenAss::PropertyValueRef& _rValue, const pugi::xml
 		rValueTyped = aArrayVal;
 	}break;
 	default:
-		ZENAssertMsg(0, "Unsupported Asset Property type while loading.");
+		zenAssertMsg(0, "Unsupported Asset Property type while loading.");
 	}
 }
 
@@ -223,7 +223,7 @@ void SavePropertyValue(const zenAss::PropertyValueRef& _rValue, pugi::xml_node& 
 		}
 	}break;
 	default:
-		ZENAssertMsg(0, "Unsupported Asset Property type while loading.");
+		zenAssertMsg(0, "Unsupported Asset Property type while loading.");
 	}
 }
 

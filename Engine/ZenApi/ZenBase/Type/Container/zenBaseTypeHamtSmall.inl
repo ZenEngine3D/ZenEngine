@@ -94,21 +94,21 @@ bool zHamt<TKey, TValue, TIndex, TIndexBits>::Iterator::IsValid()
 template<class TKey, class TValue, class TIndex, int TIndexBits>
 TKey zHamt<TKey, TValue, TIndex, TIndexBits>::Iterator::GetKey()							
 { 
-	ZENAssert( IsValid() ); 
+	zenAssert( IsValid() ); 
 	return mpNodeTree[msDepth]->mpSlots[mpSlotID[msDepth]].Key; 
 }
 
 template<class TKey, class TValue, class TIndex, int TIndexBits>
 TValue& zHamt<TKey, TValue, TIndex, TIndexBits>::Iterator::GetValue()						
 { 
-	ZENAssert( IsValid() ); 
+	zenAssert( IsValid() ); 
 	return mpNodeTree[msDepth]->mpSlots[mpSlotID[msDepth]].Value(); 
 }
 
 template<class TKey, class TValue, class TIndex, int TIndexBits>
 void zHamt<TKey, TValue, TIndex, TIndexBits>::Iterator::operator++()
 {
-	ZENAssert( IsValid() );									
+	zenAssert( IsValid() );									
 	// Go to next SlotID
 	// And go up hierarchy while SlotID bigger than current Node slot count
 	++mpSlotID[msDepth];		
@@ -133,7 +133,7 @@ void zHamt<TKey, TValue, TIndex, TIndexBits>::Iterator::operator++()
 template<class TKey, class TValue, class TIndex, int TIndexBits>
 void zHamt<TKey, TValue, TIndex, TIndexBits>::Iterator::operator--()
 {
-	ZENAssert( IsValid() );
+	zenAssert( IsValid() );
 	// Go to previous SlotID
 	// And go up hierarchy while SlotID smaller than 0
 	--mpSlotID[msDepth];
@@ -169,7 +169,7 @@ zHamt< TKey, TValue, TIndex, TIndexBits>::zHamt()
 , muCount(0)
 , mpDeleteItemCB(nullptr)
 { 
-	ZENStaticAssertMsg( kuKeyBits >= kuSlotCount,"Size of Index not big enough to contain '1<<TIndexBits' Index, check template definition" ); 
+	zenStaticAssertMsg( kuKeyBits >= kuSlotCount,"Size of Index not big enough to contain '1<<TIndexBits' Index, check template definition" ); 
 }
 
 //==================================================================================================
@@ -184,7 +184,7 @@ zHamt< TKey, TValue, TIndex, TIndexBits>::zHamt( zUInt _uReservePool )
 , muCount(0)
 , mpDeleteItemCB(nullptr)
 {
-	ZENStaticAssertMsg( kuKeyBits >= kuSlotCount,"Size of Index not big enough to contain '1<<TIndexBits' Index, check template definition" ); 
+	zenStaticAssertMsg( kuKeyBits >= kuSlotCount,"Size of Index not big enough to contain '1<<TIndexBits' Index, check template definition" ); 
 	Init(_uReservePool);
 }
 
@@ -234,7 +234,7 @@ void zHamt< TKey, TValue, TIndex, TIndexBits>::Clear()
 template<class TKey, class TValue, class TIndex, int TIndexBits>
 void zHamt< TKey, TValue, TIndex, TIndexBits>::Init( zUInt _uReservePool )
 {	
-	ZENAssertMsg(!IsInit(),"zHamt already initialized");			
+	zenAssertMsg(!IsInit(),"zHamt already initialized");			
 	zI32 iPoolItemLeft(static_cast<zI32>(_uReservePool)-1);
 	zI32 iPoolItemMin	= zenMath::Max<zI32>((iPoolItemLeft / 3) / kuSlotCount, 1);	//< @Note: A 1/3 of PoolItemCount get split evenly between each Pool. Remaining assigned with 1/2 less every time. Need metric to adjust for optimal value
 	iPoolItemLeft		= zenMath::Max<zI32>(iPoolItemLeft-iPoolItemMin*kuSlotCount, 0);
@@ -334,7 +334,7 @@ bool zHamt< TKey, TValue, TIndex, TIndexBits>::SetReplace(const TKey _Key, const
 template<class TKey, class TValue, class TIndex, int TIndexBits>
 const TValue& zHamt< TKey, TValue, TIndex, TIndexBits>::Get( const TKey _Key ) const
 {
-	ZENAssertMsg(IsInit(),"zHamt isn't initialized");
+	zenAssertMsg(IsInit(),"zHamt isn't initialized");
 	const Node** ppParentNode;
 	zU32 uSlotID, uNodeIndex, uDepth;
 	bool bFound = GetNode( _Key, ppParentNode, uNodeIndex, uSlotID, uDepth );
@@ -352,7 +352,7 @@ const TValue& zHamt< TKey, TValue, TIndex, TIndexBits>::Get( const TKey _Key ) c
 template<class TKey, class TValue, class TIndex, int TIndexBits>
 bool zHamt< TKey, TValue, TIndex, TIndexBits>::Get(const TKey _Key, TValue& _ValueOut) const
 {
-	ZENAssertMsg(IsInit(),"zHamt isn't initialized");
+	zenAssertMsg(IsInit(),"zHamt isn't initialized");
 	const Node**	ppParentNode;
 	zU32		uSlotID, uNodeIndex, uDepth;
 	bool	bFound	= GetNode( _Key, ppParentNode, uNodeIndex, uSlotID, uDepth );
@@ -370,7 +370,7 @@ bool zHamt< TKey, TValue, TIndex, TIndexBits>::Get(const TKey _Key, TValue& _Val
 template<class TKey, class TValue, class TIndex, int TIndexBits>
 bool zHamt< TKey, TValue, TIndex, TIndexBits>::Get(const TKey _Key, TValue*& _pValueOut) const
 {
-	ZENAssertMsg(IsInit(),"zHamt isn't initialized");
+	zenAssertMsg(IsInit(),"zHamt isn't initialized");
 	const Node**	ppParentNode;
 	zU32		uSlotID, uNodeIndex, uDepth;
 	bool	bFound	= GetNode( _Key, ppParentNode, uNodeIndex, uSlotID, uDepth );
@@ -416,7 +416,7 @@ TValue& zHamt< TKey, TValue, TIndex, TIndexBits>::GetAdd(const TKey _Key)
 template<class TKey, class TValue, class TIndex, int TIndexBits>
 bool zHamt< TKey, TValue, TIndex, TIndexBits>::Unset(const TKey _Key)
 {		
-	ZENAssertMsg(IsInit(),"zHamt isn't initialized");
+	zenAssertMsg(IsInit(),"zHamt isn't initialized");
 	Node**		ppNodeTree[kuTreeMaxDepth];
 	zUInt		uSlotID[kuTreeMaxDepth];
 	zUInt		uNodeIndex[kuTreeMaxDepth];
@@ -656,7 +656,7 @@ void zHamt< TKey, TValue, TIndex, TIndexBits>::Export( zArrayBase<TKey>& _aKey, 
 template<class TKey, class TValue, class TIndex, int TIndexBits>
 void zHamt< TKey, TValue, TIndex, TIndexBits>::Import( const zArrayBase<TKey>& _aKey, const zArrayBase<TValue>& _aValue ) 
 {			
-	ZENAssertMsg( _aKey.Count() == _aValue.Count(), "Importing mismatching keys/values pair");
+	zenAssertMsg( _aKey.Count() == _aValue.Count(), "Importing mismatching keys/values pair");
 	const TValue* pValCur(_aValue.First());			
 	const TKey* pKeyCur(_aKey.First());
 	const TKey* pKeyLast(_aKey.Last());
@@ -746,7 +746,7 @@ typename zHamt<TKey, TValue, TIndex, TIndexBits>::Node* zHamt< TKey, TValue, TIn
 template<class TKey, class TValue, class TIndex, int TIndexBits>
 bool zHamt< TKey, TValue, TIndex, TIndexBits>::GetNode(TKey _Key, const Node**& _pParentSlot, zU32& _uNodeIndex, zU32& _uSlotID, zU32& _uDepth) const
 {
-	ZENAssertMsg(mpRootNode!=nullptr,"zHamt isn't initialized");
+	zenAssertMsg(mpRootNode!=nullptr,"zHamt isn't initialized");
 	const Node* pNode	= mpRootNode;
 	_pParentSlot		= (const Node**)&mpRootNode;
 	_uDepth				= 0;

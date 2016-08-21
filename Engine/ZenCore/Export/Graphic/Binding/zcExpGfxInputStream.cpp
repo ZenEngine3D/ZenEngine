@@ -2,6 +2,44 @@
 
 namespace zcExp
 {
+	zResID ExporterGfxInputStream::CallbackGetItemID(zenConst::eResPlatform _ePlatform, zenConst::eResType _eType, zenConst::eResSource _eSource, const zcExp::ExportInfoBase* _pExportInfo, bool& _bExistOut)
+	{
+		zenAssert(_eType==zenConst::keResType_GfxInputStream);
+		zenAssert( _pExportInfo );
+		const ExportInfoGfxInputStream* pExportInfo = static_cast<const ExportInfoGfxInputStream*>(_pExportInfo);
+
+		zResID::NameHash hName = pExportInfo->mVertexBufferID.GetName();	//! @todo Optim: Different buffer with same format should return same id, saving a lot of binding
+		hName.Append( &pExportInfo->mShaderInputSignatureID.GetName(), sizeof(zResID::NameHash) );
+		return zcExp::ValidateItemID(_ePlatform, _eType, _eSource, hName, _bExistOut);
+	}
+
+	ExporterGfxInputStream::ExporterGfxInputStream(const ExportResultRef& _rExportOut)
+	: ExporterBase(_rExportOut.GetSafe())
+	, mrExport(_rExportOut)
+	{
+		zenAssert(mrExport.IsValid());
+	}
+
+	//=================================================================================================
+	//! @brief		Create a Vertex Input Signature
+	//! @details	Creates a dummy empty shader with only the input declared, so any vertex shader
+	//!				having the same signature, can use the same input layout object, and not keep 
+	//!				shader code around
+	//-------------------------------------------------------------------------------------------------
+	//! @return		True if successful
+	//=================================================================================================
+	bool ExporterGfxInputStream::ExportStart()
+	{
+		if( !Super::ExportStart() )
+			return false;
+		
+		ExportInfoGfxInputStream* pExportInfo	= static_cast<ExportInfoGfxInputStream*>(mpExportInfo);				
+		mrExport->mVertexBufferID				= pExportInfo->mVertexBufferID;
+		mrExport->mShaderInputSignatureID		= pExportInfo->mShaderInputSignatureID;
+		ExportSkipWork();
+		return true;
+	}
+
 	//=================================================================================================
 	//! @brief		Create a new ShaderInputSignature Binding to a VertexBuffer
 	//! @details	Tie together a vertex stream and input signature, for rendering

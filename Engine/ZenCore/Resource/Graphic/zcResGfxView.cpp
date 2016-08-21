@@ -5,7 +5,7 @@ namespace zcRes
 
 const zVec2U16& GfxView::GetDim()const
 {
-	return mrResData->mvDim;
+	return mvDim;
 }
 
 }

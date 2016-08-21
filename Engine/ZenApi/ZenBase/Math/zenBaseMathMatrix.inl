@@ -123,8 +123,8 @@ namespace zen { namespace zenMath
 	//=================================================================================================
 	ZENInline void MatrixLookToLH( Matrix& _matViewOut, V4 _vEyePos, V4 _vEyeDir, V4 _vUpDir )
 	{		
-		ZENAssert( !simdIsNearZero(_vEyeDir) );
-		ZENAssert( !simdIsNearZero(_vUpDir) );
+		zenAssert( !simdIsNearZero(_vEyeDir) );
+		zenAssert( !simdIsNearZero(_vUpDir) );
 				
 		//@todo Optim: optimize by just masking value		
 		_vEyePos				= simdMul(_vEyePos, v4XYZ1);	//Discard w
@@ -196,9 +196,9 @@ namespace zen { namespace zenMath
 	//=================================================================================================
 	ZENInline void MatrixProjectionLH( Matrix& _matProjectionOut, float _fFovDegreeWidth, float _fAspectRatio, float _fNearZ, float _fFarZ )
 	{
-		ZENAssert( _fFovDegreeWidth > zenConst::kfSmallNumber );
-		ZENAssert( _fAspectRatio > zenConst::kfSmallNumber );
-		ZENAssert( _fNearZ > zenConst::kfSmallNumber && _fFarZ > _fNearZ );
+		zenAssert( _fFovDegreeWidth > zenConst::kfSmallNumber );
+		zenAssert( _fAspectRatio > zenConst::kfSmallNumber );
+		zenAssert( _fNearZ > zenConst::kfSmallNumber && _fFarZ > _fNearZ );
 		
 		float ScaleX				= 1.f / tanf(_fFovDegreeWidth/180.0f*zenMath::kfPI);		
 		_matProjectionOut.mvRows[0]	= simdXYZW( ScaleX,		0,						0,									0);
@@ -233,9 +233,9 @@ namespace zen { namespace zenMath
 	//=================================================================================================
 	void MatrixProjectionOrthoLH(Matrix& _matProjectionOut, float _fWidth, float _fHeight, float _fNearZ, float _fFarZ)
 	{
-		ZENAssert(_fWidth > zenConst::kfSmallNumber);
-		ZENAssert(_fHeight > zenConst::kfSmallNumber);
-		ZENAssert(_fFarZ > _fNearZ);		
+		zenAssert(_fWidth > zenConst::kfSmallNumber);
+		zenAssert(_fHeight > zenConst::kfSmallNumber);
+		zenAssert(_fFarZ > _fNearZ);		
 		
 		_matProjectionOut.mvRows[0] = zenMath::simdXYZW( 2.0f/_fWidth,	 0.0f,			 0.0f,						0.0f);
 		_matProjectionOut.mvRows[1] = zenMath::simdXYZW( 0.0f,			-2.0f/_fHeight,  0.0f,						0.0f);

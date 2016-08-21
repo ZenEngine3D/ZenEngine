@@ -29,7 +29,7 @@ namespace zbLog
 
 	void ManagerLog::SetActive( eLogOutput _eOutput, zenConst::eLogType _eType, bool _bActive )
 	{ 
-		ZENAssertMsg( _eOutput < keLogOut__Count, "Invalid output");
+		zenAssertMsg( _eOutput < keLogOut__Count, "Invalid output");
 		zU32 uMask = (1<<_eType);
 		muOutputMask[_eOutput] &= ~uMask;
 		muOutputMask[_eOutput] |= (zU32)_bActive>0 ? uMask : 0;
@@ -37,13 +37,13 @@ namespace zbLog
 
 	void ManagerLog::Clear( eLogOutput _eOutput )
 	{
-		ZENAssertMsg( _eOutput < keLogOut__Count, "Invalid output");
+		zenAssertMsg( _eOutput < keLogOut__Count, "Invalid output");
 		muOutputMask[_eOutput] = 0;
 	}
 
 	bool ManagerLog::IsActive( eLogOutput _eOutput, zenConst::eLogType _eType )
 	{
-		ZENAssertMsg( _eOutput < keLogOut__Count, "Invalid output");
+		zenAssertMsg( _eOutput < keLogOut__Count, "Invalid output");
 		return (muOutputMask[_eOutput] & (1<<_eType)) != 0;
 	}
 

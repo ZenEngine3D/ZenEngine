@@ -7,13 +7,12 @@ namespace zcExp
 	class ExporterGfxShaderParamDX11_DX11 : public ExporterBase
 	{
 	ZENClassDeclare(ExporterGfxShaderParamDX11_DX11, ExporterBase)
-	public:				
-	typedef ResDataGfxShaderParamDX11	ResData;
-	typedef zEngineRef<ResData>			ResDataRef;
-										ExporterGfxShaderParamDX11_DX11(const ResDataRef& _rResData);
+	public:
+	typedef zEngineRef<ExportGfxShaderParamDX11>	ExportResultRef; //todo use proper ref class
+													ExporterGfxShaderParamDX11_DX11(const ExportResultRef& _rExportOut);
 	protected:	
-		virtual bool					ExportStart();
-		ResDataRef						mrResData;
+		virtual bool								ExportStart();
+		ExportResultRef								mrExport;
 	};
 }
 

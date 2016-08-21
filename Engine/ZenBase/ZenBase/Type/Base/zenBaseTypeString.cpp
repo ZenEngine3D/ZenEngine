@@ -13,7 +13,7 @@ zString& zString::Copy(const char* _zString, zUInt _uCount)
 
 void zString::Split(const char* _zString, char _Separator, zArrayStatic<zString>& _aStringOut, zUInt _uAdditionalArraySize )
 {
-	ZENAssert(_zString);	
+	zenAssert(_zString);	
 	zUInt uGroupEnd[128];
 	zUInt uGroupCount(0);
 	zUInt uStrPos(0);
@@ -24,7 +24,7 @@ void zString::Split(const char* _zString, char _Separator, zArrayStatic<zString>
 		if( _zString[uStrPos] == _Separator )
 		{
 			uGroupEnd[uGroupCount++] = uStrPos;
-			ZENAssert( uGroupCount+1<ZENArrayCount(uGroupEnd) );
+			zenAssert( uGroupCount+1<ZENArrayCount(uGroupEnd) );
 		}
 	}
 	if( uStrPos > 0 && _zString[uStrPos-1] != _Separator )

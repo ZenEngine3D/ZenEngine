@@ -34,7 +34,7 @@ const zenAss::zArrayAsset& Package::GetAsset(zenConst::eAssetType _eType)const
 
 void Package::AssetAdd(const zenAss::zAssetItemRef& _rAsset)
 {
-	ZENAssert( madAssetPerType[_rAsset.GetType()].Exist(_rAsset.GetIDUInt()) == false );
+	zenAssert( madAssetPerType[_rAsset.GetType()].Exist(_rAsset.GetIDUInt()) == false );
 	madAssetPerType[_rAsset.GetType()].Set( _rAsset.GetIDUInt(), _rAsset);
 }
 

@@ -17,7 +17,7 @@ namespace zen { namespace zenType {
 	{	
 		while( mLock.exchange(1) != 0 );
 		
-		ZENAssertMsg(mNextFree-mCurrent <= TItemCount, "Queue is at full capacity, increase its size");
+		zenAssertMsg(mNextFree-mCurrent <= TItemCount, "Queue is at full capacity, increase its size");
 		zU16 uIndex						= mNextFree%TItemCount;
 		mQueue[mNextFree%TItemCount]	= _Item;
 		++mNextFree;

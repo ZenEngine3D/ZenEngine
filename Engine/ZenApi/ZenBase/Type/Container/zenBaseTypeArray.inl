@@ -115,14 +115,14 @@ void zArrayBase<TType>::SetAll(const TType& _Value)
 template<class TType>
 TType& zArrayBase<TType>::operator[](zInt _sIndex)
 {
-	ZENAssert( (_sIndex>=0 && zUInt(_sIndex)<muCount) || (_sIndex<0 && zUInt(-_sIndex) <= muCount) );
+	zenAssert( (_sIndex>=0 && zUInt(_sIndex)<muCount) || (_sIndex<0 && zUInt(-_sIndex) <= muCount) );
 	return _sIndex >= 0 ? mpData[_sIndex] : mpData[muCount+_sIndex];
 }
 
 template<class TType>
 const TType& zArrayBase<TType>::operator[](zInt _sIndex)const
 {
-	ZENAssert( (_sIndex>=0 && zUInt(_sIndex)<muCount) || (_sIndex<0 && zUInt(-_sIndex) <= muCount) );
+	zenAssert( (_sIndex>=0 && zUInt(_sIndex)<muCount) || (_sIndex<0 && zUInt(-_sIndex) <= muCount) );
 	return _sIndex >= 0 ? mpData[_sIndex] : mpData[muCount+_sIndex];
 }
 
@@ -191,7 +191,8 @@ bool zArrayBase<TType>::operator!=(const zArrayBase& _Cmp)const
 //==================================================================================================
 template<class TType>
 zArrayBase<TType>& zArrayBase<TType>::operator=( const zArrayBase<TType>& _aCopy )
-{
+{	
+	zenAssert(&_aCopy != this);
 	Copy(_aCopy.First(), _aCopy.Count() );
 	return *this;
 }
@@ -209,9 +210,12 @@ zArrayBase<TType>& zArrayBase<TType>::operator=( const zArrayBase<TType>& _aCopy
 template<class TType>
 zUInt zArrayBase<TType>::Copy(const TType* _pCopy, zUInt _uCount)
 {	
-	Clear();
-	SetCount(_uCount);
-	zenMem::Copy(mpData, _pCopy, _uCount);	
+	if( mpData != _pCopy )
+	{
+		Clear();
+		SetCount(_uCount);
+		zenMem::Copy(mpData, _pCopy, _uCount);	
+	}
 	return muCount;
 }		
 
@@ -224,16 +228,18 @@ zUInt zArrayBase<TType>::Copy(const TType* _pCopy, zUInt _uCount)
 //! @return						- Number of element after copy
 //==================================================================================================
 template<class TType> template<class TTypeImport>
-zUInt zArrayBase<TType>::Copy(const TTypeImport* _ImportArray, zUInt _uCount )
+zUInt zArrayBase<TType>::Copy(const TTypeImport* _pImportArray, zUInt _uCount )
 {
-	Clear();
-	SetCount(_uCount);
-	TType*				pDataDest	= mpData;
-	TType*				pDataEnd	= &mpData[_uCount];
-	const TTypeImport*	pDataSrc	= _ImportArray;
-	while( pDataDest < pDataEnd )
-		*pDataDest++ = *pDataSrc++;
-
+	if( (void*)mpData != (void*)_pImportArray )
+	{
+		Clear();
+		SetCount(_uCount);
+		TType*				pDataDest	= mpData;
+		TType*				pDataEnd	= &mpData[_uCount];
+		const TTypeImport*	pDataSrc	= _pImportArray;
+		while( pDataDest < pDataEnd )
+			*pDataDest++ = (TType)*pDataSrc++;
+	}
 	return muCount;
 }
 
@@ -247,14 +253,16 @@ zUInt zArrayBase<TType>::Copy(const TTypeImport* _ImportArray, zUInt _uCount )
 template<class TType> template<class TTypeImport>
 zUInt zArrayBase<TType>::Copy( const zArrayBase<TTypeImport>& _ImportArray )
 {
-	Clear();
-	SetCount(_ImportArray.Count());
-	TType*				pDataDest	= mpData;
-	TType*				pDataEnd	= &mpData[muCount];
-	const TTypeImport*	pDataSrc	= _ImportArray.First();
-	while( pDataDest < pDataEnd )
-		*pDataDest++ = *pDataSrc++;
-
+	if( (void*)this != (void*)&_ImportArray )
+	{
+		Clear();
+		SetCount(_ImportArray.Count());
+		TType*				pDataDest	= mpData;
+		TType*				pDataEnd	= &mpData[muCount];
+		const TTypeImport*	pDataSrc	= _ImportArray.First();
+		while( pDataDest < pDataEnd )
+			*pDataDest++ = *pDataSrc++;
+	}
 	return muCount;
 }
 

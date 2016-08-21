@@ -15,10 +15,9 @@ namespace zcExp
 	}
 
 	//=================================================================
-	ExporterBase::ExporterBase(const ResDataRef& _rResData)
-	: mpExportInfo(nullptr)
-	, mrResData(_rResData)
-	{		
+	ExporterBase::ExporterBase(const ExportDataRef& _rExportData)
+	: mrExportData(_rExportData)
+	{
 	}
 
 	//=============================================================================================
@@ -37,7 +36,8 @@ namespace zcExp
 			_ExportInfo.mbSuccessWork	= ExportWork(FALSE);
 		_ExportInfo.mbSuccessEnd		= ExportEnd();
 		mpExportInfo					= nullptr;
-		return _ExportInfo.IsSuccess() && mrResData->mResID.IsValid();
+
+		return _ExportInfo.IsSuccess() && mrExportData.IsValid() && mrExportData->mResID.IsValid();
 	}
 
 	//=============================================================================================
@@ -46,8 +46,8 @@ namespace zcExp
 	//=============================================================================================
 	bool ExporterBase::ExportStart()
 	{ 
-		mrResData->mResID = mpExportInfo ? mpExportInfo->mExportResID : zResID(); 		
-		return mrResData->mResID.IsValid();
+		mrExportData->mResID = mpExportInfo ? mpExportInfo->mExportResID : zResID();
+		return mrExportData->mResID.IsValid();
 	}
 
 	//=============================================================================================
@@ -58,17 +58,17 @@ namespace zcExp
 	{	
 		if( mpExportInfo->IsSuccess() )
 		{
-			mrResData->muVersion	= zcDepot::ResourceData.GetEngineVersion(mpExportInfo->mExportResID.GetType());
-			mrResData->mExportTime	= zenSys::GetTimeStamp();			
-			zcDepot::ResourceData.SetItem(mrResData);
+			mrExportData->muVersion		= zcDepot::ExportData.GetEngineVersion(mpExportInfo->mExportResID.GetType());
+			mrExportData->mExportTime	= zenSys::GetTimeStamp();			
+			zcDepot::ExportData.Set(mrExportData.Get());
 		}		
-		zcMgr::Export.ExportDone(mrResData); //! @todo replug this with new system
+		
 		return true;
 	}
 	
 	bool ExporterNone::ExportStart()
 	{
-		ZENAssertMsg(0, "Exporting an unsupported resource");
+		zenAssertMsg(0, "Exporting an unsupported resource");
 		return false;
 	}
 }

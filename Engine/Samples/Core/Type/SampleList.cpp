@@ -20,8 +20,8 @@ public:
 	size_t mValue = 0;
 	zListLink mlnkList1;
 	zListLink mlnkList2;
-	typedef zList<IntrusiveListItem, &IntrusiveListItem::mlnkList1> TypeList1;
-	typedef zList<IntrusiveListItem, &IntrusiveListItem::mlnkList2> TypeList2;
+	typedef zList<IntrusiveListItem, &IntrusiveListItem::mlnkList1, false> TypeList1;
+	typedef zList<IntrusiveListItem, &IntrusiveListItem::mlnkList2, false> TypeList2;
 };
 
 class ListItemRefCounted : public zRefCounted
@@ -43,7 +43,7 @@ protected:
 	zListLink mlnkList;
 public:
 	typedef zListRef<zGameRef, ListItemRefCounted, &ListItemRefCounted::mlnkListRef> TypeList2;
-	typedef zList<ListItemRefCounted, &ListItemRefCounted::mlnkList> TypeList3;
+	typedef zList<ListItemRefCounted, &ListItemRefCounted::mlnkList, false> TypeList3;
 };
 
 class ItemWithVirtual
@@ -77,8 +77,8 @@ void SampleListIntrusive()
 	TestVirtualItem.mValueBefore	= 1;
 	TestVirtualItem.mValueAfter		= 2;
 	TestVirtualList.PushHead(TestVirtualItem);
-	ZENAssertMsg(TestVirtualItem.mValueBefore == 1, "zList doesn't support this compiler properly, adjust the TVirtualPad handling");
-	ZENAssertMsg(TestVirtualItem.mValueAfter == 2, "zList doesn't support this compiler properly, adjust the TVirtualPad handling");
+	zenAssertMsg(TestVirtualItem.mValueBefore == 1, "zList doesn't support this compiler properly, adjust the TVirtualPad handling");
+	zenAssertMsg(TestVirtualItem.mValueAfter == 2, "zList doesn't support this compiler properly, adjust the TVirtualPad handling");
 
 	//============================================================================
 	// Ref test Intrusive node

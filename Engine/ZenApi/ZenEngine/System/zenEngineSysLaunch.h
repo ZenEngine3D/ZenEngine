@@ -24,7 +24,7 @@ public:
 
 protected:	
 	virtual void										UIRender();
-	zenRes::zGfxWindow									mrMainWindowGfx		= nullptr;
+	zenRes::zGfxWindow									mrMainWindowGfx;
 	zenWnd::Window*										mpMainWindowOS		= nullptr;
 	zVec2U16											muWindowSize;
 	zenSig::zSignalEmitter1<zenConst::eUpdatePriority>	msigUpdate;	

@@ -37,7 +37,7 @@ protected:
 	zListLink					mLink;
 
 public:
-	typedef zList<IUpdate, &IUpdate::mLink> List;
+	typedef zList<IUpdate, &IUpdate::mLink, true> List;
 };
 
 

@@ -33,6 +33,15 @@ namespace zcExp
 		zU8							mbGenerateMip;
 	};
 
+	class ExportGfxTexture2d : public zenRes::zExportData
+	{
+	ZENClassDeclare(ExportGfxTexture2d, zenRes::zExportData)
+	public:
+		zArrayStatic<MipInfo>		maMipData;
+		zenConst::eTextureFormat	meFormat;
+		zFlagResTexUse				mCreationFlags;
+	};
+
 	const TextureBlockInfo& GetTextureBlockInfo( zenConst::eTextureFormat _eFormat );	
 	zResID CreateGfxTexture2D( zenConst::eTextureFormat _eFormat, zFlagResTexUse _CreationFlags, zVec2U16 _vDim, const zArrayBase<zU8>& _aRawData=zArrayStatic<zU8>(zUInt(0)) );
 

@@ -9,13 +9,12 @@ class ExporterGfxIndexDX11_DX11 : public ExporterBase
 {
 ZENClassDeclare(ExporterGfxIndexDX11_DX11, ExporterBase)
 public:				
-typedef ExportGfxIndexDX11		ExportData;
-typedef zEngineRef<ExportData>	ExportDataRef;
-								ExporterGfxIndexDX11_DX11(const ExportDataRef& _rExportData);		
-
+typedef zEngineRef<ExportGfxIndexDX11>	ExportDataRef; //todo use proper ref class
+										ExporterGfxIndexDX11_DX11(const ExportDataRef& _rExportData);		
+							
 protected:	
-	virtual bool				ExportWork(bool _bIsTHRTask);	
-	ExportDataRef				mrExportData;
+	virtual bool						ExportWork(bool _bIsTHRTask);	
+	ExportDataRef						mrExportData;
 };
 
 }

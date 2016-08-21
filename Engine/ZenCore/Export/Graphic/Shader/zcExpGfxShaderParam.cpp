@@ -13,7 +13,7 @@ namespace zcExp
 //=================================================================================================
 zResID CreateGfxShaderParam(zResID _ParentParamDefID)
 {
-	ZENAssert( _ParentParamDefID.GetType() == zenConst::keResType_GfxShaderParamDef );	
+	zenAssert( _ParentParamDefID.GetType() == zenConst::keResType_GfxShaderParamDef );	
 	static zenMem::zAllocatorPool sMemPool("Pool CreateShaderParam", sizeof(ExportInfoGfxShaderParam), 1, 5 );
 	ExportInfoGfxShaderParam*	pExportInfo		= zenNew(&sMemPool) ExportInfoGfxShaderParam;
 	pExportInfo->mParentParamDefID				= _ParentParamDefID;
@@ -32,8 +32,8 @@ zResID CreateGfxShaderParam(zResID _ParentParamDefID)
 //=================================================================================================
 zResID CreateGfxShaderParam(zResID _ParentShaderID, zcExp::eShaderParamFreq _eShaderParamIndex)
 {
-	ZENAssert( zenConst::kFlagResShaders.Any(_ParentShaderID.GetType()) );
-	zEngineConstRef<zcRes::GfxShaderResData> rShaderData = zcDepot::ResourceData.GetItem<zcRes::GfxShaderResData>(_ParentShaderID); 
+	zenAssert( zenConst::kFlagResShaders.Any(_ParentShaderID.GetType()) );
+	zEngineConstRef<zcExp::ExportGfxShader> rShaderData = zcDepot::ExportData.GetTyped<zcExp::ExportGfxShader>(_ParentShaderID); 
 	if( rShaderData.IsValid() && rShaderData->maParamDefID[_eShaderParamIndex].IsValid() )
 		return CreateGfxShaderParam( rShaderData->maParamDefID[_eShaderParamIndex]);	
 	return zResID();

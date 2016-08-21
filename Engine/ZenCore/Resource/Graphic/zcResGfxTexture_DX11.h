@@ -4,18 +4,17 @@
 
 namespace zcRes
 {
-
-class GfxTexture2dProxy_DX11 : public zRefCounted
-{
-ZENClassDeclare(GfxTexture2dProxy_DX11, zRefCounted)
-public:
-											GfxTexture2dProxy_DX11();
-	virtual									~GfxTexture2dProxy_DX11();												
-	bool									Initialize(class GfxTexture2d& _Owner);
-	ID3D11Texture2D*						mpTextureBuffer;
-	ID3D11ShaderResourceView*				mpTextureView;
-	ZENDbgCode(class GfxTexture2d*	mpOwner);
-};
+	class GfxTexture2dHAL_DX11 : public zcExp::ExportGfxTexture2d
+	{
+	public:
+		virtual											~GfxTexture2dHAL_DX11();
+		bool											Initialize();
+	
+		ID3D11Texture2D*								mpTextureBuffer;
+		ID3D11ShaderResourceView*						mpTextureView;
+		typedef zcExp::ExporterGfxTexture2dDX11_DX11	RuntimeExporter;
+	};
+	class GfxTexture2dHAL : public GfxTexture2dHAL_DX11{};
 
 }
 

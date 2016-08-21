@@ -1,182 +1,149 @@
 namespace zen { namespace zenRes {	
 
-//#################################################################################################
-// RESOURCE
-//#################################################################################################
+//############################################################################################
 
-//=================================================================================================
-//! @details	Prevents being able to instantiate a resource outside of children class's Create()
-//=================================================================================================
-zResource::zResource()
+template<class TResourceClass, class TResourceHAL, zU64 TTypeMask>
+zResourceConstRef<TResourceClass, TResourceHAL, TTypeMask>::zResourceConstRef()
 {
 }
 
-const zResID& zResource::GetResID()const
-{ 
-	return mResID; 
-}
-
-bool zResource::IsValid()const		
-{ 
-	return mResID.meType<zenConst::keResType__Invalid; 
-}
-
-//#################################################################################################
-// RESOURCE REF
-//#################################################################################################
-zResourceRef::zResourceRef()
-{ 
-	ZENDbgCode( mSupportedTypeMask.Invert(); )	//Set default value to support all resource type
-}
-
-void zResourceRef::SetResource(zResource* _pResource)
+template<class TResourceClass, class TResourceHAL, zU64 TTypeMask>
+zResourceConstRef<TResourceClass, TResourceHAL, TTypeMask>::zResourceConstRef(const zResourceConstRef& _rResource)
 {
-	if( mpResource != nullptr)
-		mpResource->ReferenceRem();
-	ZENAssert(_pResource==nullptr || mSupportedTypeMask.Any(_pResource->GetResID().GetType()) );
-	mpResource = _pResource;
-	if( mpResource != nullptr)
-		mpResource->ReferenceAdd();
-}	
-
-zResourceRef::zResourceRef(zResource* _pResource)
-{
-	ZENDbgCode(mSupportedTypeMask.Invert(); );	//Set default value to support all resource type
-	SetResource(_pResource);
+	operator=(_rResource);
 }
 
-zResourceRef::zResourceRef(const zResourceRef& _rResource)
+template<class TResourceClass, class TResourceHAL, zU64 TTypeMask>
+template<class TCopyClass, class TCopyHAL, zU64 TCopyMask >
+zResourceConstRef<TResourceClass, TResourceHAL, TTypeMask>::zResourceConstRef(const zResourceConstRef<TCopyClass, TCopyHAL, TCopyMask>& _rResource)
 {
-	ZENDbgCode(mSupportedTypeMask.Invert(); );	//Set default value to support all resource type
-	SetResource(_rResource.mpResource);
+	operator=(_rResource);
 }
 
-zResourceRef::zResourceRef(zFlagResType _SupportedTypes, const zResourceRef& _rResource)
+template<class TResourceClass, class TResourceHAL, zU64 TTypeMask>
+zResourceConstRef<TResourceClass, TResourceHAL, TTypeMask>::zResourceConstRef(TResourceClass* _pResource)
 {
-	ZENDbgCode(mSupportedTypeMask = _SupportedTypes;)
-	SetResource(_rResource.mpResource);
+	operator=(_pResource);
 }
 
-zResourceRef::zResourceRef(zFlagResType _SupportedTypes)
+template<class TResourceClass, class TResourceHAL, zU64 TTypeMask>
+zResourceConstRef<TResourceClass, TResourceHAL, TTypeMask>::zResourceConstRef(zResID _ResourceID)
 {
-	ZENDbgCode( mSupportedTypeMask = _SupportedTypes; )
+	operator=(_ResourceID);
 }
 
-zResourceRef::zResourceRef(zFlagResType _SupportedTypes, zResource* _pResource)
+template<class TResourceClass, class TResourceHAL, zU64 TTypeMask>
+zResourceConstRef<TResourceClass, TResourceHAL, TTypeMask>::~zResourceConstRef()
 {
-	ZENDbgCode( mSupportedTypeMask = _SupportedTypes; )
-	SetResource( _pResource );
+	SetResource(nullptr);
 }
 
-const zResourceRef& zResourceRef::operator=(zResource* _pResource)
+template<class TResourceClass, class TResourceHAL, zU64 TTypeMask>
+const zResourceConstRef<TResourceClass, TResourceHAL, TTypeMask>& zResourceConstRef<TResourceClass, TResourceHAL, TTypeMask>::operator=(TResourceClass* _pResource)
 {
-	SetResource( _pResource );
+	SetResource( (zExportData*)_pResource );
 	return *this;
 }
 
-const zResourceRef& zResourceRef::operator=(const zResourceRef& _ResourceRef)
+template<class TResourceClass, class TResourceHAL, zU64 TTypeMask>
+const zResourceConstRef<TResourceClass, TResourceHAL, TTypeMask>& zResourceConstRef<TResourceClass, TResourceHAL, TTypeMask>::operator=(const zResourceConstRef& _rResource)
 {
-	SetResource( _ResourceRef.mpResource );
+	zExportData* pExportData	= reinterpret_cast<zExportData*>(_rResource.mpResource);
+	SetResource(pExportData);
 	return *this;
 }
 
-bool zResourceRef::IsValid()const		
-{ 
-	return mpResource!= nullptr;
-}
-
-zResID zResourceRef::GetResID()const		
-{ 
-	return mpResource!=nullptr ? mpResource->GetResID() : zResID(); 
-}
-
-bool zResourceRef::operator==(const zResourceRef& _rCmp)const	
+template<class TResourceClass, class TResourceHAL, zU64 TTypeMask>
+template<class TCopyClass, class TCopyHAL, zU64 TCopyMask >
+const zResourceConstRef<TResourceClass, TResourceHAL, TTypeMask>& zResourceConstRef<TResourceClass, TResourceHAL, TTypeMask>::operator=(const zResourceConstRef<TCopyClass, TCopyHAL, TCopyMask>& _rResource)
 {
-	return mpResource == _rCmp.mpResource;
+	static_assert((TTypeMask & TCopyMask) != 0, "Trying to assign an unsupported resource to this object");
+	zExportData* pExportData	= reinterpret_cast<zExportData*>(_rResource.mpResource);
+	SetResource(pExportData);
+	return *this;
 }
 
-bool zResourceRef::operator!=(const zResourceRef& _rCmp)const	
+template<class TResourceClass, class TResourceHAL, zU64 TTypeMask>
+const zResourceConstRef<TResourceClass, TResourceHAL, TTypeMask>& zResourceConstRef<TResourceClass, TResourceHAL, TTypeMask>::operator=(const zResID& _ResourceID)
 {
-	return mpResource != _rCmp.mpResource;
+	zEngineRef<zExportData> rExportData = zcDepot::ExportData.Get(_ResourceID);
+	SetResource(rExportData.Get());
+	return *this;
 }
 
-zResourceRef::operator zResID()const
+template<class TResourceClass, class TResourceHAL, zU64 TTypeMask>
+bool zResourceConstRef<TResourceClass, TResourceHAL, TTypeMask>::operator==( const zResourceConstRef& _rCmpResource ) const
 {
-	return mpResource ? mpResource->GetResID() : zResID(); 
+	return mpResource == _rCmpResource.mpResource;
 }
 
-//#################################################################################################
-// RESOURCE TYPED REF
-//#################################################################################################
-template<zenConst::eResType TType>
-zResourceTypedRef<TType>::zResourceTypedRef()								
-: zResourceRef(zFlagResType(TType))
+template<class TResourceClass, class TResourceHAL, zU64 TTypeMask>
+bool zResourceConstRef<TResourceClass, TResourceHAL, TTypeMask>::operator!=( const zResourceConstRef& _rCmpResource ) const
 {
+	return mpResource != _rCmpResource.mpResource;
 }
 
-template<zenConst::eResType TType>
-zResourceTypedRef<TType>::zResourceTypedRef(const zResourceTypedRef& _rResource)
-: zResourceRef(zFlagResType(TType), _rResource)
+template<class TResourceClass, class TResourceHAL, zU64 TTypeMask>
+const TResourceClass* zResourceConstRef<TResourceClass, TResourceHAL, TTypeMask>::operator->() const
 {
+	return Get();
 }
 
-template<zenConst::eResType TType>
-zResourceTypedRef<TType>::zResourceTypedRef(zResource* _pResource)	
-: zResourceRef(zFlagResType(TType), _pResource)
-{}
+template<class TResourceClass, class TResourceHAL, zU64 TTypeMask>
+const TResourceClass* zResourceConstRef<TResourceClass, TResourceHAL, TTypeMask>::Get() const
+{
+	return mpResource;
+}
 
-template<zenConst::eResType TType>
-zResourceTypedRef<TType>::zResourceTypedRef(zResID _ResourceID)		
-: zResourceRef(zFlagResType(TType), _ResourceID)
-{}
+template<class TResourceClass, class TResourceHAL, zU64 TTypeMask>
+const TResourceHAL* zResourceConstRef<TResourceClass, TResourceHAL, TTypeMask>::HAL()const
+{
+	return reinterpret_cast<const TResourceHAL*>(mpResource);
+}
 
-//#################################################################################################
-// RESOURCE TYPED2 REF
-//#################################################################################################
-template<zenConst::eResType TType1, zenConst::eResType TType2>
-zResourceTyped2Ref<TType1,TType2>::zResourceTyped2Ref()							
-: zResourceRef(zFlagResType(TType1,TType2))
-{}
+template<class TResourceClass, class TResourceHAL, zU64 TTypeMask>
+zResID zResourceConstRef<TResourceClass, TResourceHAL, TTypeMask>::GetResID() const
+{
+	return mpResource ? reinterpret_cast<const zExportData*>(mpResource)->mResID : zResID();
+}
 
-template<zenConst::eResType TType1, zenConst::eResType TType2>
-zResourceTyped2Ref<TType1, TType2>::zResourceTyped2Ref(const zResourceTyped2Ref& _rResource)
-: zResourceRef(zFlagResType(TType1, TType2), _rResource)
-{}
+template<class TResourceClass, class TResourceHAL, zU64 TTypeMask>
+void zResourceConstRef<TResourceClass, TResourceHAL, TTypeMask>::SetResource(zExportData* _pExportData)
+{
+	if( (void*)_pExportData != (void*)mpResource )
+	{
+		const bool bSupportedResourceType = _pExportData &&
+											(	(_pExportData->mResID.GetType() == zenConst::keResType__Invalid) ||	// When in middle of creating, but not assigned a ResId yet
+												(TTypeMask & (zU64(1)<<_pExportData->mResID.GetType()))
+											);
+		zenAssert( _pExportData == nullptr || bSupportedResourceType );
 
-template<zenConst::eResType TType1, zenConst::eResType TType2>
-zResourceTyped2Ref<TType1,TType2>::zResourceTyped2Ref(zResource* _pResource)	
-: zResourceRef(zFlagResType(TType1,TType2), _pResource)
-{}
+		if( mpResource )
+			reinterpret_cast<zExportData*>(mpResource)->ReferenceRem();
 
-template<zenConst::eResType TType1, zenConst::eResType TType2>
-zResourceTyped2Ref<TType1,TType2>::zResourceTyped2Ref(zResID _ResourceID)	
-: zResourceRef(zFlagResType(TType1,TType2), _ResourceID)
-{}
+		mpResource = bSupportedResourceType ? reinterpret_cast<TResourceClass*>(_pExportData) : nullptr;
+
+		if( mpResource)
+			reinterpret_cast<zExportData*>(mpResource)->ReferenceAdd();		
+	}
+}
+
+template<class TResourceClass, class TResourceHAL, zU64 TTypeMask>
+TResourceClass* zResourceRef<TResourceClass, TResourceHAL, TTypeMask>::operator->() const
+{
+	return Get();
+}
+
+template<class TResourceClass, class TResourceHAL, zU64 TTypeMask>
+TResourceClass* zResourceRef<TResourceClass, TResourceHAL, TTypeMask>::Get() const
+{
+	return mpResource;
+}
+
+template<class TResourceClass, class TResourceHAL, zU64 TTypeMask>
+TResourceHAL* zResourceRef<TResourceClass, TResourceHAL, TTypeMask>::HAL() const
+{
+	return reinterpret_cast<TResourceHAL*>(mpResource);
+}
 
 }} // namespace zen, zenRes
-
-//#################################################################################################
-// Used for declaration of zResourceTypedRef classes
-//#################################################################################################
-#define ZENClassResourceRefDeclare(_ClassName_, _Type_)								\
-class _ClassName_ : public zenRes::zResourceTypedRef<_Type_>						\
-{																					\
-ZENClassDeclare(_ClassName_, zenRes::zResourceTypedRef<_Type_>)						\
-public:																				\
-	ZENInline	_ClassName_():Super(){}												\
-	ZENInline	_ClassName_(const _ClassName_& _rResource):Super(_rResource){}		\
-	ZENInline	_ClassName_(zenRes::zResource* _pResource):Super(_pResource){}		\
-	ZENInline	_ClassName_(zResID _ResourceID):Super(_ResourceID){}
-
-//#################################################################################################
-// Used for declaration of zResourceTyped2Ref classes
-//#################################################################################################
-#define ZENClassResourceRef2Declare(_ClassName_, _Type1_, _Type2_)					\
-class _ClassName_ : public zenRes::zResourceTyped2Ref<_Type1_ , _Type2_>			\
-{																					\
-ZENClassDeclare(_ClassName_, zenRes::zResourceTyped2Ref<_Type1_ ZENComma _Type2_> )	\
-public:																				\
-	ZENInline	_ClassName_():Super(){}												\
-	ZENInline	_ClassName_(const _ClassName_& _rResource):Super(_rResource){}		\
-	ZENInline	_ClassName_(zenRes::zResource* _pResource):Super(_pResource){}		\
-	ZENInline	_ClassName_(zResID _ResourceID):Super(_ResourceID){}

@@ -29,6 +29,7 @@ namespace zen { namespace zenWnd
 		zVec2U16						GetSize()const {return mvSize;}
 		HWND							GetHandle(){return mhMainWindow;}
 		void							GetInput(WindowInputState& _WindowInputs, zU8 _uMaxKeyProcessed=0xFF);
+		zenRes::zGfxWindow				GetGfxWindow()const{return mGfxWindow;}
 
 	protected:		
 		static DWORD WINAPI				WndThread( LPVOID lpParam );
@@ -43,6 +44,7 @@ namespace zen { namespace zenWnd
 		WindowInputState				mWindowInput;				//!< Belongs to main window thread
 		std::mutex						mWindowMutex;
 		zArrayDynamic<PendingMessage>	mOSMessages;
+		zenRes::zGfxWindow				mGfxWindow;
 	};
 }}
 #endif

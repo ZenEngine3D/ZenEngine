@@ -3,7 +3,7 @@
 namespace zcGfx
 {
 
-zcRes::GfxWindowRef gWindowRender;
+zcRes::GfxWindowRef grWindowRender;
 
 ManagerRender_Base::ManagerRender_Base()
 {
@@ -11,13 +11,13 @@ ManagerRender_Base::ManagerRender_Base()
 
 void ManagerRender_Base::FrameBegin( zcRes::GfxWindowRef _FrameWindow )
 {
-	ZENAssertMsg( !gWindowRender.IsValid(), "End previous frame before starting a new one" );
-	gWindowRender	= _FrameWindow;
+	zenAssertMsg( !grWindowRender.IsValid(), "End previous frame before starting a new one" );
+	grWindowRender	= _FrameWindow;
 }
 
 void ManagerRender_Base::FrameEnd()
 {
-	gWindowRender = nullptr;
+	grWindowRender = nullptr;
 	++muFrameRendered;
 }
 

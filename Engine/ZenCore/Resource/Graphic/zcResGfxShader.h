@@ -2,6 +2,8 @@
 #ifndef __zCore_Res_Gfx_Shaders_h__
 #define __zCore_Res_Gfx_Shaders_h__
 
+#include ZENHeaderRenderer(zcResGfxShader)
+
 namespace zcRes
 {
 
@@ -13,24 +15,19 @@ namespace zcRes
 //!			Also remove the need to keep the vertex shader code loaded, after creating 
 //!			it's shader, since the signature contain the relevant part.
 //=============================================================================================
-class GfxInputSignature : public TResource<GfxInputSignature, GfxInputSignatureResData, GfxInputSignatureProxy, GfxInputSignatureExporterRuntime>
+class GfxInputSignature : protected GfxInputSignatureHAL_DX11
 {
-ZENClassDeclare(GfxInputSignature, TResource)
+ZENClassDeclare(GfxInputSignature, GfxInputSignatureHAL_DX11)
 };
 
-//! @todo move shader param infos common object
-class GfxShaderVertex : public TResource<GfxShaderVertex, GfxShaderResData, GfxShaderVertexProxy, GfxShaderExporterRuntime>
+class GfxShaderVertex : protected GfxShaderVertexHAL_DX11
 {
-ZENClassDeclare(GfxShaderVertex, TResource)
-public:
-	virtual bool								Initialize();
-protected:
-	GfxInputSignatureRef						mrGfxInputSignature;	//!< Input signature associated with this vertex shader
+ZENClassDeclare(GfxShaderVertex, GfxShaderVertexHAL_DX11)
 };
 
-class GfxShaderPixel : public TResource<GfxShaderPixel, GfxShaderResData, GfxShaderPixelProxy, GfxShaderExporterRuntime>
+class GfxShaderPixel : protected GfxShaderPixelHAL_DX11
 {
-ZENClassDeclare(GfxShaderPixel, TResource)
+ZENClassDeclare(GfxShaderPixel, GfxShaderPixelHAL_DX11)
 };
 
 }

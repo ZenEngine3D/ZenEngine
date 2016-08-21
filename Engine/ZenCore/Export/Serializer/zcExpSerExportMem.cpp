@@ -59,7 +59,7 @@ bool SerializerExportMem::Save(const char* azFilename)
 void* SerializerExportMem::GetMemory(zUInt _uSize)
 {
 	Alloc* pAlloc = (Alloc*)mlstAllocs.GetHead();
-	ZENAssertMsg(pAlloc->mpMemoryCur+_uSize <= pAlloc->mpMemoryEnd, "Not enought memory pre-allocated for this item. Item is not respecting SetItemSize() value.");
+	zenAssertMsg(pAlloc->mpMemoryCur+_uSize <= pAlloc->mpMemoryEnd, "Not enought memory pre-allocated for this item. Item is not respecting SetItemSize() value.");
 	void* pMemory		= pAlloc->mpMemoryCur;
 	pAlloc->mpMemoryCur	+= _uSize;
 	return pMemory;

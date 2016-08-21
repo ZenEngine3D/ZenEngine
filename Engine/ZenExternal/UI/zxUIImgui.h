@@ -18,10 +18,10 @@ class zxRenderData : public zRefCounted
 ZENClassDeclare(zxRenderData, zRefCounted)
 public:
 	alignas(16) zenMath::Matrix				matOrthographic;
-	zenRes::zGfxRenderTarget				mrRendertarget	= nullptr;	
-	zenRes::zGfxRenderPass					mrRenderpass	= nullptr;		
-	zenRes::zGfxVertex						mrVertexBuffer	= nullptr;
-	zenRes::zGfxIndex						mrIndexBuffer	= nullptr;	
+	zenRes::zGfxTarget2D					mrRendertarget;
+	zenRes::zGfxRenderPass					mrRenderpass;
+	zenRes::zGfxVertex						mrVertexBuffer;
+	zenRes::zGfxIndex						mrIndexBuffer;
 	zenSig::zSignalEmitter0					msigRenderUI;	
 	zVec2U16								mvScreenSize	= zVec2U16(0,0);
 	zUInt									muVertexCount	= 0; //! @todo Urgent have buffer accessors available 
@@ -45,7 +45,7 @@ public:
 	void									Render(const zEngineRef<zxRenderData>& _rImGuiData, WindowInputState* _pInputData=nullptr);
 
 protected:									
-	zenRes::zGfxStateRasterizer				mrStateRaster;	
+	zenRes::zGfxStateRaster					mrStateRaster;	
 	zenRes::zGfxShaderVertex				mrShaderVertex;
 	zenRes::zGfxShaderPixel					mrShaderPixel;
 	zenRes::zGfxShaderBinding				mrShaderBinding;

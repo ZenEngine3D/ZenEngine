@@ -2,64 +2,47 @@
 #ifndef __zCore_Res_Gfx_Binding_h__
 #define __zCore_Res_Gfx_Binding_h__
 
+#include ZENHeaderRenderer(zcResGfxBinding)
+
 namespace zcRes
 {
 	//=============================================================================================
 	//! @class	Binding between a vertex shader and a VertexBuffer.
 	//!			Needed for proper mapping of vertex stream into Shader.	
 	//=============================================================================================
-	class GfxInputStream : public TResource<GfxInputStream, GfxInputStreamResData, GfxInputStreamProxy, GfxInputStreamExporterRuntime>
+	class GfxInputStream : public GfxInputStreamHAL
 	{
-	ZENClassDeclare(GfxInputStream, TResource)
+	ZENClassDeclare(GfxInputStream, GfxInputStreamHAL)
 	};
 
 	//=============================================================================================
 	//! @class	Binding geometry to shader
 	//=============================================================================================
-	class GfxMeshStrip : public TResource<GfxMeshStrip, GfxMeshStripResData, GfxMeshStripProxy, GfxMeshStripExporterRuntime>
+	class GfxMeshStrip : protected GfxMeshStripHAL
 	{
-	ZENClassDeclare(GfxMeshStrip, TResource)
+	ZENClassDeclare(GfxMeshStrip, GfxMeshStripHAL)
 	public:
-
-		//! @todo urgent implement this properly (tread safe coms with proxy)
-		void									SetValue(const zArrayBase<const zenRes::zShaderParameter*>& _aValues){ mrProxy->SetValue(_aValues); }	
-		void									SetValue(const zenRes::zShaderParameter& _Value){mrProxy->SetValue(_Value);}
-		void									SetValue(const zHash32& _hParamName, const float& _fValue){mrProxy->SetValue(_hParamName, _fValue);}
-		void									SetValue(const zHash32& _hParamName, const zVec2F& _vValue){mrProxy->SetValue(_hParamName, _vValue);}
-		void									SetValue(const zHash32& _hParamName, const zVec3F& _vValue){mrProxy->SetValue(_hParamName, _vValue);}
-		void									SetValue(const zHash32& _hParamName, const zVec4F& _vValue){mrProxy->SetValue(_hParamName, _vValue);}
-		void									SetValue(const zHash32& _hParamName, const zenMath::Matrix& _matValue){mrProxy->SetValue(_hParamName, _matValue);}
-		void									SetValue(const zHash32& _hTextureName, const GfxTexture2dRef& _rTexture ){mrProxy->SetValue(_hTextureName, _rTexture);}
-		void									SetValue(const zHash32& _hTextureName, const GfxSamplerRef& _rSampler ){mrProxy->SetValue(_hTextureName, _rSampler);}
-		void									SetValue(const zHash32& _hTextureName, const GfxTexture2dRef& _rTexture, const GfxSamplerRef& _rSampler ){mrProxy->SetValue(_hTextureName, _rTexture, _rSampler);}
+		using Super::SetValue;
+		ZENInline zU32 GetVertexFirst()const{return muVertexFirst;}
+		ZENInline zU32 GetIndexFirst()const{return muIndexFirst;}
+		ZENInline zU32 GetIndexCount()const{return muIndexCount;}
 	};
 
 	//=============================================================================================
 	//! @class	List of MeshStrip resource to generate entire mesh
 	//=============================================================================================
-	class GfxMesh : public TResource<GfxMesh, GfxMeshResData, GfxMeshProxy, GfxMeshExporterRuntime>
+	class GfxMesh : protected GfxMeshHAL
 	{
-	ZENClassDeclare(GfxMesh, TResource)
-	public:
-		//! @todo urgent implement this properly (tread safe coms with proxy)												
-		void									SetValue(const zArrayBase<const zenRes::zShaderParameter*>& _aValues){ mrProxy->SetValue(_aValues); }	
-		void									SetValue(const zenRes::zShaderParameter& _Value){mrProxy->SetValue(_Value);}
-		void									SetValue(const zHash32& _hParamName, const float& _fValue){mrProxy->SetValue(_hParamName, _fValue);}
-		void									SetValue(const zHash32& _hParamName, const zVec2F& _vValue){mrProxy->SetValue(_hParamName, _vValue);}
-		void									SetValue(const zHash32& _hParamName, const zVec3F& _vValue){mrProxy->SetValue(_hParamName, _vValue);}
-		void									SetValue(const zHash32& _hParamName, const zVec4F& _vValue){mrProxy->SetValue(_hParamName, _vValue);}
-		void									SetValue(const zHash32& _hParamName, const zenMath::Matrix& _matValue){mrProxy->SetValue(_hParamName, _matValue);}
-		void									SetValue(const zHash32& _hTextureName, const GfxTexture2dRef _rTexture ){mrProxy->SetValue(_hTextureName, _rTexture);}
-		void									SetValue(const zHash32& _hTextureName, const GfxSamplerRef& _rSampler ){mrProxy->SetValue(_hTextureName, _rSampler);}
-		void									SetValue(const zHash32& _hTextureName, const GfxTexture2dRef& _rTexture, const GfxSamplerRef& _rSampler ){mrProxy->SetValue(_hTextureName, _rTexture, _rSampler);}
-		const zArrayStatic<GfxMeshStripRef>&	GetMeshStrips()const;
-
-		zArrayStatic<GfxMeshStripRef>			marGfxMeshStrip;	//! @todo clean remove public access, temp workaround
+	ZENClassDeclare(GfxMesh, GfxMeshHAL)
+	public:		
+		const zArrayStatic<GfxMeshStripRef>&	GetMeshStrips()const;	
+		using Super::SetValue;
 	};
 
-	class GfxShaderBinding : public TResource<GfxShaderBinding, GfxShaderBindingResData, GfxShaderBindingProxy, GfxShaderBindingExporterRuntime>
+	class GfxShaderBinding : protected GfxShaderBindingHAL
 	{
-	ZENClassDeclare(GfxShaderBinding, TResource)
+	ZENClassDeclare(GfxShaderBinding, GfxShaderBindingHAL)
+	using Super::CreateShaderParam;
 	};
 }
 

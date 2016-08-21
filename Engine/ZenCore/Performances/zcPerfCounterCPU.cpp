@@ -12,7 +12,7 @@ EventCPU_Base::EventCPU_Base(const zStringHash32& _EventName)
 
 void EventCPU_Base::Start()
 {
-	ZENAssertMsg( muTimeStart==0, "Event can only be used once");
+	zenAssertMsg( muTimeStart==0, "Event can only be used once");
 	mbActive = true;
 
 	if (garStackEventCPU.IsEmpty() == false)
@@ -23,8 +23,9 @@ void EventCPU_Base::Start()
 
 void EventCPU_Base::Stop()
 {
-	ZENAssertMsg( IsActive(), "Start Event before ending it");
-	ZENAssertMsg((*garStackEventCPU.Last()).GetSafe() == this, "Stop events in the reverse order they were started");
+	zenAssertMsg( IsActive(), "Start Event before ending it");
+	zenAssertMsg((*garStackEventCPU.Last()).GetSafe() == this, "Stop events in the reverse order they were started");
+	*garStackEventCPU.Last() = nullptr;
 	garStackEventCPU.Pop();
 	mbActive = false;
 }

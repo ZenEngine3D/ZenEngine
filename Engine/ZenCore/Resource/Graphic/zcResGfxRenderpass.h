@@ -4,10 +4,11 @@
 
 namespace zcRes
 {
-	class GfxRenderPass : public TResource<GfxRenderPass, GfxRenderPassResData, GfxRenderPassProxy, GfxRenderPassExporterRuntime>
+	class GfxRenderPass : public GfxRenderPassHAL
 	{
-	ZENClassDeclare(GfxRenderPass, TResource)
+	ZENClassDeclare(GfxRenderPass, GfxRenderPassHAL)
 	};
+
 }
 
 #endif

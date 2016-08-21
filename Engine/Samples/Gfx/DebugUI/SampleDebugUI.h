@@ -41,8 +41,8 @@ protected:
 	zenRes::zGfxShaderBinding		mrShaderBind;
 	zenRes::zGfxMeshStrip			mrCubeMeshStrip;	
 
-	zenRes::zGfxRenderTarget		mrBackbufferDepth;
-	zenRes::zGfxStateRasterizer		mrStateRaster;
+	zenRes::zGfxTarget2D			mrBackbufferDepth;
+	zenRes::zGfxStateRaster			mrStateRaster;
 	zenRes::zGfxRenderPass			mrRndPassFinal;
 };
 

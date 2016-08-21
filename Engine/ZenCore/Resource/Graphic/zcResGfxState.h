@@ -2,28 +2,29 @@
 #ifndef __zCore_Res_Gfx_State_h__
 #define __zCore_Res_Gfx_State_h__
 
+#include ZENHeaderRenderer(zcResGfxState)
+
 namespace zcRes
 {
-	class GfxSampler : public TResource<GfxSampler, GfxSamplerResData, GfxSamplerProxy, GfxSamplerExporterRuntime>
+	class GfxSampler : protected GfxSamplerHAL
 	{
-	ZENClassDeclare(GfxSampler, TResource)		
+	ZENClassDeclare(GfxSampler, GfxSamplerHAL)
 	};
 
-	class GfxStateBlend : public TResource<GfxStateBlend, GfxStateBlendResData, GfxStateBlendProxy, GfxStateBlendExporterRuntime>
+	class GfxStateBlend : protected GfxStateBlendHAL
 	{
-	ZENClassDeclare(GfxStateBlend, TResource)		
+	ZENClassDeclare(GfxStateBlend, GfxStateBlendHAL)		
 	};
 
-	class GfxStateDepthStencil : public TResource<GfxStateDepthStencil, GfxStateDepthStencilResData, GfxStateDepthStencilProxy, GfxStateDepthStencilExporterRuntime>
+	class GfxStateDepthStencil : protected GfxStateDepthStencilHAL
 	{
-	ZENClassDeclare(GfxStateDepthStencil, TResource)		
+	ZENClassDeclare(GfxStateDepthStencil, GfxStateDepthStencilHAL)		
 	};
 
-	class GfxStateRasterizer : public TResource<GfxStateRasterizer, GfxStateRasterizerResData, GfxStateRasterizerProxy, GfxStateRasterizerExporterRuntime>
+	class GfxStateRaster : protected GfxStateRasterHAL
 	{
-	ZENClassDeclare(GfxStateRasterizer, TResource)		
+	ZENClassDeclare(GfxStateRaster, GfxStateRasterHAL)		
 	};
-	
 }
 
 #endif

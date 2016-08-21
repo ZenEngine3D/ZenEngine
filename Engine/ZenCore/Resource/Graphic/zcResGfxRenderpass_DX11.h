@@ -7,20 +7,18 @@ namespace zcRes
 	//=============================================================================================
 	//! @class	Bind together all the GPU states needed for a drawcall
 	//=============================================================================================
-	class GfxRenderPassProxy_DX11 : public zRefCounted
+	class GfxRenderPassHAL_DX11 : public zcExp::ExportGfxRenderPass
 	{
-	ZENClassDeclare(GfxRenderPassProxy_DX11, zRefCounted)
+	ZENClassDeclare(GfxRenderPassHAL_DX11, zcExp::ExportGfxRenderPass)
 	public:
-											GfxRenderPassProxy_DX11();
-		virtual								~GfxRenderPassProxy_DX11();
-		bool								Initialize(class GfxRenderPass& _Owner);
-		zString								mzStageName;
-		GfxStateBlendRef					mrProxBlendState;
-		GfxStateDepthStencilRef				mrProxDepthStencilState;
-		GfxStateRasterizerRef				mrProxRasterState;
-		GfxViewRef							mrProxViewState;
-		ZENDbgCode(class GfxRenderPass*		mpOwner);
+		bool									Initialize();
+		GfxStateBlendRef						mrStateBlend;
+		GfxStateDepthStencilRef					mrStateDepthStencil;
+		GfxStateRasterRef						mrStateRaster;
+		GfxViewRef								mrStateView;
+		typedef zcExp::ExporterGfxRenderPass	RuntimeExporter;
 	};
+	class GfxRenderPassHAL : public GfxRenderPassHAL_DX11{};
 }
 
 #endif

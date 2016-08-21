@@ -21,7 +21,7 @@ protected:
 		zU8*		mpMemoryStart;
 		zU8*		mpMemoryCur;
 		zU8*		mpMemoryEnd;
-		typedef zList<Alloc, &Alloc::mlnkList> TypeList;
+		typedef zList<Alloc, &Alloc::mlnkList, false> TypeList;
 	};						
 
 	void*			GetMemory	(zUInt auSize);

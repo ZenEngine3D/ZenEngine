@@ -53,7 +53,7 @@ namespace sample
 		{
 			zU64 uSortStartTime = zenSys::GetTimeUSec();
 			zI32 iEntryCount	= zI32(mpEnd-mpStart+1);
-			if( zUInt(1<<muDepth) <= zTask::GetCPUCoreCount() && iEntryCount > 2 )
+			if( (zUInt(1)<<muDepth) <= zTask::GetCPUCoreCount() && iEntryCount > 2 )
 			{			
 				zUInt* pSplit = SortSplit(mpStart,	mpEnd);
 				TaskSort SubTask[2]={ {mpStart,pSplit-1,muDepth+1}, {pSplit+1, mpEnd,muDepth+1} };

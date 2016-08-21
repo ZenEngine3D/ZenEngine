@@ -105,12 +105,12 @@ bool SampleDebugUIInstance::Init()
 	mrShaderVS										= zenRes::zGfxShaderVertex::Create( "Shader/Tutorial07.fx", "VS");
 	mrShaderPS										= zenRes::zGfxShaderPixel::Create( "Shader/Tutorial07.fx", "PS" );
 	mrTexture										= zenRes::zGfxTexture2d::Create(zenConst::keTexFormat_RGBA8, vTexSize, aTexRGBA );
-	mrSampler										= zenRes::zGfxSampler::Create(zenConst::keTexFilter_Trilinear, zenConst::keTexFilter_Trilinear, zenConst::keTexWrap_Clamp, zenConst::keTexWrap_Clamp, 0);	
+	mrSampler										= zenRes::zGfxSampler::Create(zenConst::keTexFilter_Trilinear, zenConst::keTexFilter_Trilinear, zenConst::keTexWrap_Clamp, zenConst::keTexWrap_Clamp, 0);
 	
 	// Some bindings of render resource together
 	mrShaderBind									= zenRes::zGfxShaderBinding::Create(mrShaderVS, mrShaderPS);
 	mrCubeMeshStrip									= zenRes::zGfxMeshStrip::Create( mrCubeVertex, mrCubeIndex, mrShaderBind );
-	mrStateRaster									= zenRes::zGfxStateRasterizer::Create(zenRes::zGfxStateRasterizer::Config());
+	mrStateRaster									= zenRes::zGfxStateRaster::Create(zenRes::zGfxStateRaster::Config());
 		
 	//-------------------------------------------------
 	// Init some shader values
@@ -140,7 +140,7 @@ void SampleDebugUIInstance::UpdateBackbuffers()
 		{	
 			zenRes::zGfxRenderPass::ConfigColorRT	FinalColorRTConfig;
 			zenRes::zGfxRenderPass::ConfigDepthRT	FinalDepthRTConfig;					
-			mrBackbufferDepth						= zenRes::zGfxRenderTarget::Create(zenConst::keTexFormat_D24S8, vBackbufferDim ); 
+			mrBackbufferDepth						= zenRes::zGfxTarget2D::Create(zenConst::keTexFormat_D24S8, vBackbufferDim ); 
 			FinalColorRTConfig.mrTargetSurface		= mrMainWindowGfx.GetBackbuffer();
 			FinalDepthRTConfig.mrTargetSurface		= mrBackbufferDepth;
 			FinalDepthRTConfig.mbDepthEnable		= true;

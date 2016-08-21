@@ -5,25 +5,18 @@
 namespace zcRes
 {
 
-//! @todo Urgent : Collapse Platform specific and data?
-class GfxIndexData_DX11 : public zcExp::ExportGfxIndexDX11
+class GfxIndexHAL_DX11 : public zcExp::ExportGfxIndexDX11
 {
-public:
-	ID3D11Buffer*					mpIndiceBuffer;
-};
+public:	
+	virtual										~GfxIndexHAL_DX11();
+	bool										Initialize();
+	void										Update(zU8* _pData, zUInt _uOffset = 0, zUInt _uSize = 0xFFFFFFFFFFFFFFFF);
 
-class GfxIndex_DX11 : public TResource2<class GfxIndex, GfxIndexData_DX11, zcExp::ExporterGfxIndexDX11_DX11>
-{
-ZENClassDeclare(GfxIndex_DX11, TResource2)
-public:
-	bool							Initialize();
-	const zArrayStatic<zU8>&		GetIndices()const;
-	zU8								GetIndiceSize()const;	//! @todo clean urgent 
-	void							Update(zU8* _pData, zUInt _uOffset=0, zUInt _uSize=0xFFFFFFFFFFFFFFFF);
+	ID3D11Buffer*								mpIndiceBuffer;
+	typedef zcExp::ExporterGfxIndexDX11_DX11	RuntimeExporter;
 };
+class GfxIndexHAL : public GfxIndexHAL_DX11{};
 
-typedef GfxIndex_DX11 GfxIndex_Platform;
-typedef GfxIndexData_DX11 GfxIndex_Data; //SF test
 }
 
 #endif

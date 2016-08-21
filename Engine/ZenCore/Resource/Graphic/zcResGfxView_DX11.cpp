@@ -2,68 +2,32 @@
 
 namespace zcRes
 {
-
-GfxViewProxy_DX11::GfxViewProxy_DX11()
+		
+bool GfxViewHAL_DX11::Initialize()
 {
-}
+	zenAssert(maRTColorConfig.Count() < D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT);
 
-GfxViewProxy_DX11::~GfxViewProxy_DX11()
-{
-}
-
-bool GfxViewProxy_DX11::Initialize(class GfxView& _Owner)
-{
-	const GfxView::ResDataRef& rResData = _Owner.GetResData();
-	ZENAssert(rResData.IsValid());
-	ZENAssert(marProxTargetColor.Count() < D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT);
-	ZENDbgCode(mpOwner = &_Owner);
-	
-	zcRes::GfxRenderTargetRef rRTDepthSurface = rResData->mRTDepthConfig.mrTargetSurface;
-	mpDepthView			= nullptr;
-	mrProxTargetDepth	= nullptr;
-	if( rRTDepthSurface.IsValid() )
+	GfxTarget2DRef rRTDepthSurface		= mRTDepthConfig.mrTargetSurface;
+	mpDepthView							= rRTDepthSurface.IsValid() ? rRTDepthSurface.HAL()->mpTargetDepthView : nullptr;
+	muColorCount						= 0;
+	zenMem::Zero(mpColorViews, sizeof(mpColorViews));
+	for(int idx(0), count(maRTColorConfig.Count()); idx<count; ++idx)
 	{
-		mrProxTargetDepth	= rRTDepthSurface;
-		mpDepthView			= mrProxTargetDepth.IsValid() ? mrProxTargetDepth->GetProxy()->mpTargetDepthView : nullptr;
-	}
-
-	muColorCount		= 0;
-	zenMem::Zero(mpColorViews, sizeof(mpColorViews) );
-	marProxTargetColor.SetCount( rResData->maRTColorConfig.Count() );	
-	for(int idx(0), count(marProxTargetColor.Count()); idx<count; ++idx)
-	{
-		zcRes::GfxRenderTargetRef rRTColorSurface  = rResData->maRTColorConfig[idx].mrTargetSurface;
-		marProxTargetColor[idx] = rRTColorSurface;
-		if( marProxTargetColor[idx]->GetProxy()->mpTargetColorView )
-			mpColorViews[muColorCount++] = marProxTargetColor[idx]->GetProxy()->mpTargetColorView;
+		zcRes::GfxTarget2DRef rRTColorSurface  = maRTColorConfig[idx].mrTargetSurface;
+		if( rRTColorSurface.HAL()->mpTargetColorView )
+			mpColorViews[muColorCount++] = rRTColorSurface.HAL()->mpTargetColorView;
 	}
 
 	//! @todo Support min/max depth rendering
 	zenMem::Zero(&mViewport, sizeof(mViewport));		
-	mViewport.Width		= (FLOAT)rResData->mvDim.x;
-	mViewport.Height	= (FLOAT)rResData->mvDim.y;	
-	mViewport.TopLeftX	= (FLOAT)rResData->mvOrigin.x;
-	mViewport.TopLeftY	= (FLOAT)rResData->mvOrigin.y;
+	mViewport.Width		= (FLOAT)mvDim.x;
+	mViewport.Height	= (FLOAT)mvDim.y;	
+	mViewport.TopLeftX	= (FLOAT)mvOrigin.x;
+	mViewport.TopLeftY	= (FLOAT)mvOrigin.y;
 	mViewport.MinDepth	= 0.0f;
 	mViewport.MaxDepth	= 1.0f; 
 
 	return true;
-}
-
-void GfxViewProxy_DX11::Clear( bool _bClearColor, const zVec4F& _vRGBA, bool _bClearDepth, float _fDepth, bool _bClearStencil, zU8 _uStencil )
-{
-	if( _bClearColor )
-	{
-		for(zUInt rtIdx(0), rtCount(marProxTargetColor.Count()); rtIdx<rtCount; ++rtIdx)
-		{
-			if( marProxTargetColor[rtIdx].IsValid() )
-				marProxTargetColor[rtIdx]->Clear(_vRGBA);
-		}
-	}
-	if( mrProxTargetDepth.IsValid()&& (_bClearDepth || _bClearStencil) )
-	{
-		mrProxTargetDepth->Clear(_fDepth, _uStencil, _bClearDepth, _bClearStencil);
-	}
 }
 
 }

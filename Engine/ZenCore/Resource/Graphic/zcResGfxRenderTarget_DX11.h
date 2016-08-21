@@ -4,28 +4,31 @@
 
 namespace zcRes
 {
-	class GfxRenderTargetProxy_DX11 : public zRefCounted
+
+	class GfxTarget2DHAL_DX11 : public zcExp::ExportGfxTarget2D
 	{
-	ZENClassDeclare(GfxRenderTargetProxy_DX11, zRefCounted)
+	ZENClassDeclare(GfxTarget2DHAL_DX11, zcExp::ExportGfxTarget2D)
 	public:
-									GfxRenderTargetProxy_DX11();
-		virtual						~GfxRenderTargetProxy_DX11();												
-		bool						Initialize(class GfxRenderTarget& _Owner);
+		typedef zcExp::ExporterGfxTarget2D	RuntimeExporter;
 
-		ZENInline bool				IsDepth()	{ return mpTargetDepthView != nullptr; }
-		void						Clear(const zVec4F& _vRGBA);
-		void						Clear(float _fDepth=1, zU8 _uStencil=0, bool _bClearDepth=true, bool _bClearStencil=false);
-		void						ReleaseBackbuffer();
-	
+		virtual								~GfxTarget2DHAL_DX11();
+		virtual bool						Initialize();
+		void								ReleaseBackbuffer();
+
+		ZENInline bool						IsDepth()const	{ return mpTargetDepthView != nullptr; }
+		void								Clear(const zVec4F& _vRGBA);
+		void								Clear(float _fDepth=1, zU8 _uStencil=0, bool _bClearDepth=true, bool _bClearStencil=false);
+		
+		
 	//protected:
-		ID3D11RenderTargetView*		mpTargetColorView;
-		ID3D11DepthStencilView*		mpTargetDepthView;
-		zenConst::eTextureFormat	meFormat;
-		zVec2U16					mvDim;
-		bool						mbNeedResolve;
-		GfxTexture2dRef				mrProxParentTexture;
-		ZENDbgCode(class GfxRenderTarget*	mpOwner);
+		ID3D11RenderTargetView*				mpTargetColorView;
+		ID3D11DepthStencilView*				mpTargetDepthView;
+		static GfxTarget2DRef				RuntimeCreate(IDXGISwapChain& _Swapchain, zenConst::eTextureFormat _eTexFormat, zUInt _uBufferId);
+	protected:
+		bool								InitializeCommon(ID3D11Texture2D& _Texture);
 	};
-}
+	class GfxTarget2DHAL : public GfxTarget2DHAL_DX11{};
 
+
+}
 #endif

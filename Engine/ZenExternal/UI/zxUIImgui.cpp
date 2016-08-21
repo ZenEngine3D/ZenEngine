@@ -13,7 +13,7 @@ const zArrayStatic<zenRes::zGfxVertex::Element> aUIVerticeInfos = {
 zxImGUIHelper::zxImGUIHelper()
 {
 	// Shaders & State resources
-	zenRes::zGfxStateRasterizer::Config	RasterConfig;
+	zenRes::zGfxStateRaster::Config	RasterConfig;
 	RasterConfig.mbScissorEnable	= true;
 	RasterConfig.mbShowBackface		= true;
 	RasterConfig.mbShowFrontface	= true;
@@ -21,7 +21,7 @@ zxImGUIHelper::zxImGUIHelper()
 	mrShaderPixel					= zenRes::zGfxShaderPixel::Create("Shader/ImGui.sl", "PSMain");
 	mrShaderBinding					= zenRes::zGfxShaderBinding::Create(mrShaderVertex, mrShaderPixel);
 	mrFontSampler					= zenRes::zGfxSampler::Create(zenConst::keTexFilter_Point, zenConst::keTexFilter_Point, zenConst::keTexWrap_Clamp, zenConst::keTexWrap_Clamp, 0);
-	mrStateRaster					= zenRes::zGfxStateRasterizer::Create(RasterConfig);
+	mrStateRaster					= zenRes::zGfxStateRaster::Create(RasterConfig);
 	mrShaderBinding.CreateShaderParam(marShaderParams);
 
 	// Font Texture
@@ -166,7 +166,7 @@ void zxImGUIHelper::Render(const zEngineRef<zxRenderData>& _rImGuiData, WindowIn
 				pUIVertices += cmd_list->VtxBuffer.size();
 				pUIIndices += cmd_list->IdxBuffer.size();
 			}
-			_rImGuiData->mrVertexBuffer.Unlock();
+			_rImGuiData->mrVertexBuffer.Unlock(rUIContext);
 			_rImGuiData->mrIndexBuffer.Unlock(rUIContext);
 		}
 	}

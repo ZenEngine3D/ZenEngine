@@ -9,7 +9,7 @@ class DrawContext : public zRefCounted
 {
 ZENClassDeclare(DrawContext, zRefCounted)
 zListLink mlnkChild;
-typedef zList<DrawContext, &DrawContext::mlnkChild> TypeListChild;		
+typedef zList<DrawContext, &DrawContext::mlnkChild, false> TypeListChild;		
 
 public:
 	

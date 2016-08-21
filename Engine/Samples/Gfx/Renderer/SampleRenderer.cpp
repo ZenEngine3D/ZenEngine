@@ -122,15 +122,15 @@ bool SampleRendererInstance::Init()
 	zArrayStatic<zenRes::zGfxMeshStrip> aMesh4Strip		= {rCube4MeshStripA, rCube4MeshStripB};
 	mrCube4Mesh											= zenRes::zGfxMesh::Create( aMesh4Strip );
 
-	zenRes::zGfxStateRasterizer::Config	DefaultRasterConfig;
-	mrStateRaster										= zenRes::zGfxStateRasterizer::Create(DefaultRasterConfig);
+	zenRes::zGfxStateRaster::Config	DefaultRasterConfig;
+	mrStateRaster										= zenRes::zGfxStateRaster::Create(DefaultRasterConfig);
 	
 	
 	zArrayStatic<zenRes::zGfxRenderPass::ConfigColorRT>	aRenderToTextureColorRTConfig;
 	zenRes::zGfxRenderPass::ConfigDepthRT				RenderToTextureDepthRTConfig;
-	mrRenderToTextureRT1								= zenRes::zGfxRenderTarget::Create(zenConst::keTexFormat_RGBA8, zVec2U16(512,512) );
-	mrRenderToTextureRT2								= zenRes::zGfxRenderTarget::Create(zenConst::keTexFormat_RGBA8, zVec2U16(512,512) );
-	mrRenderToTextureDepth								= zenRes::zGfxRenderTarget::Create(zenConst::keTexFormat_D24S8, zVec2U16(512,512) );
+	mrRenderToTextureRT1								= zenRes::zGfxTarget2D::Create(zenConst::keTexFormat_RGBA8, zVec2U16(512,512) );
+	mrRenderToTextureRT2								= zenRes::zGfxTarget2D::Create(zenConst::keTexFormat_RGBA8, zVec2U16(512,512) );
+	mrRenderToTextureDepth								= zenRes::zGfxTarget2D::Create(zenConst::keTexFormat_D24S8, zVec2U16(512,512) );
 	aRenderToTextureColorRTConfig.SetCount(2);	
 	aRenderToTextureColorRTConfig[0].mrTargetSurface	= mrRenderToTextureRT1;
 	aRenderToTextureColorRTConfig[1].mrTargetSurface	= mrRenderToTextureRT2;
@@ -184,9 +184,11 @@ bool SampleRendererInstance::Init()
 	rCube4MeshStripA.SetValue( zHash32("vColor"),	zVec4F(1,0.2f,0.2f,1));
 	rCube4MeshStripB.SetValue( zHash32("vColor"),	zVec4F(0.2f,1,0.2f,1));	
 	
+#if 0
 	//---------------------------------------------------------------------
 	// Testing Lock
 	//---------------------------------------------------------------------
+	//todo add gfxcontext
 	SimpleVertex* pVertexSrc	= CubeVertices;
 	SimpleVertex* pVertexSrcEnd	= &CubeVertices[ZENArrayCount(CubeVertices)];
 	SimpleVertex* pVertex		= (SimpleVertex*)mrCubeVertex.Lock();		
@@ -198,7 +200,7 @@ bool SampleRendererInstance::Init()
 		++pVertex;
 	}
 	mrCubeVertex.Unlock();
-
+#endif 
 	UpdateBackbuffers();
 
 	return true;
@@ -211,7 +213,7 @@ void SampleRendererInstance::UpdateBackbuffers()
 		zenRes::zGfxRenderPass::ConfigColorRT	FinalColorRTConfig;
 		zenRes::zGfxRenderPass::ConfigDepthRT	FinalDepthRTConfig;		
 		zVec2U16 vBackbufferDim					= mrMainWindowGfx.GetBackbuffer().GetDim();
-		mrBackbufferDepth						= zenRes::zGfxRenderTarget::Create(zenConst::keTexFormat_D24S8, vBackbufferDim ); 
+		mrBackbufferDepth						= zenRes::zGfxTarget2D::Create(zenConst::keTexFormat_D24S8, vBackbufferDim ); 
 		FinalColorRTConfig.mrTargetSurface		= mrMainWindowGfx.GetBackbuffer();
 		FinalDepthRTConfig.mrTargetSurface		= mrBackbufferDepth;
 		FinalDepthRTConfig.mbDepthEnable		= true;
@@ -232,7 +234,7 @@ void SampleRendererInstance::Update()
 {	
 	Super::Update();
 	UpdateBackbuffers();
-
+	
 	//---------------------------------------------------------------------
 	// Render loop
 	//---------------------------------------------------------------------

@@ -4,8 +4,13 @@
 
 namespace zen { namespace zenRes {	
 
-	ZENClassResourceRefDeclare(zGfxRenderPass, zenConst::keResType_GfxRenderPass)
+	class zGfxRenderPass : public zcRes::GfxRenderPassRef
+	{
+	ZENClassDeclare(zGfxRenderPass, zcRes::GfxRenderPassRef);
 	public:
+		using Super::Super;
+		using Super::operator=;
+
 		struct ConfigColorRT
 		{
 		// If editing these enum, make sure platform specific implementation are also updated to reflect this
@@ -32,15 +37,15 @@ namespace zen { namespace zenRes {
 							keBlendOp__Count, 
 							keBlendOp__Invalid };
 
-			zGfxRenderTarget	mrTargetSurface		= nullptr;
-			zColorMask			mWriteMask			= zenConst::kColorMaskRGBA;				
-			bool				mbBlendEnable		= false;
-			eBlendValue			meBlendColorSrc		= keBlendVal_SrcAlpha;
-			eBlendValue			meBlendColorDest	= keBlendVal_InvSrcAlpha;
-			eBlendOp			meBlendColorOp		= keBlendOp_Add;
-			eBlendValue			meBlendAlphaSrc		= keBlendVal_One;
-			eBlendValue			meBlendAlphaDest	= keBlendVal_Zero;
-			eBlendOp			meBlendAlphaOp		= keBlendOp_Add;			
+			zGfxTarget2D	mrTargetSurface;	//! @todo clean make this a resid to be serializable? 
+			zColorMask		mWriteMask			= zenConst::kColorMaskRGBA;				
+			bool			mbBlendEnable		= false;
+			eBlendValue		meBlendColorSrc		= keBlendVal_SrcAlpha;
+			eBlendValue		meBlendColorDest	= keBlendVal_InvSrcAlpha;
+			eBlendOp		meBlendColorOp		= keBlendOp_Add;
+			eBlendValue		meBlendAlphaSrc		= keBlendVal_One;
+			eBlendValue		meBlendAlphaDest	= keBlendVal_Zero;
+			eBlendOp		meBlendAlphaOp		= keBlendOp_Add;			
 		};
 
 		struct ConfigDepthRT
@@ -78,7 +83,7 @@ namespace zen { namespace zenRes {
 			};
 
 		public:
-			zGfxRenderTarget	mrTargetSurface;
+			zGfxTarget2D		mrTargetSurface;
 			bool				mbDepthEnable				= false;
 			bool				mbDepthWrite				= false;
 			bool				mbStencilEnable				= false;
@@ -90,8 +95,8 @@ namespace zen { namespace zenRes {
 		};
 		
 		//! @todo Clean Use Raster Config instead of reference?
-		static zGfxRenderPass	Create(const zString& _zStageName, zU8 _uPassPriority, const ConfigColorRT& _RTColor, const ConfigDepthRT& _RTDepth, const zGfxStateRasterizer& _rStateRaster, const zVec2U16& _vDim = zVec2U16(0xFFFF, 0xFFFF), const zVec2S16& _vOrigin = zVec2S16(0,0));
-		static zGfxRenderPass	Create(const zString& _zStageName, zU8 _uPassPriority, const zArrayBase<zenRes::zGfxRenderPass::ConfigColorRT>& _aRTColors, const ConfigDepthRT& _RTDepth, const zGfxStateRasterizer& _rStateRaster, const zVec2U16& _vDim = zVec2U16(0xFFFF, 0xFFFF), const zVec2S16& _vOrigin = zVec2S16(0,0));
+		static zGfxRenderPass	Create(const zString& _zStageName, zU8 _uPassPriority, const ConfigColorRT& _RTColor, const ConfigDepthRT& _RTDepth, const zGfxStateRaster& _rStateRaster, const zVec2U16& _vDim = zVec2U16(0xFFFF, 0xFFFF), const zVec2S16& _vOrigin = zVec2S16(0,0));
+		static zGfxRenderPass	Create(const zString& _zStageName, zU8 _uPassPriority, const zArrayBase<zenRes::zGfxRenderPass::ConfigColorRT>& _aRTColors, const ConfigDepthRT& _RTDepth, const zGfxStateRaster& _rStateRaster, const zVec2U16& _vDim = zVec2U16(0xFFFF, 0xFFFF), const zVec2S16& _vOrigin = zVec2S16(0,0));
 	};	
 }} // namespace zen, zenRes
 

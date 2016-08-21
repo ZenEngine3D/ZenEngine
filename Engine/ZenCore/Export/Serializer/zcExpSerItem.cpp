@@ -17,6 +17,6 @@ namespace zcExp
 		bSuccess		&= aSerializer.Serialize(mResID);		
 		bSuccess		&= aSerializer.Serialize(muVersion);
 		bSuccess		&= aSerializer.Serialize(mExportTime);		
-		return bSuccess && muVersion <= zUInt(zcDepot::ResourceData.GetEngineVersion(mResID.GetType()));
+		return bSuccess && muVersion <= zUInt(zcDepot::ExportData.GetEngineVersion(mResID.GetType()));
 	}
 }

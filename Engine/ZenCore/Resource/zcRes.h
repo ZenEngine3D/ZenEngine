@@ -19,6 +19,5 @@
 
 #include "Resource/zcResResource.h"
 #include "Graphic/zcResGfxAll.h"
-#include "Resource/zcResManager.h"
 
 #endif

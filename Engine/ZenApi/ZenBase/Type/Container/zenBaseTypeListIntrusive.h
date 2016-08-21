@@ -17,11 +17,12 @@ class zListLink
 public:
     ZENInline				~zListLink();		
 	ZENInline void			SetNull();							//!< Use to set pointer to null. Doing so will break the list if element was in one
-protected:	
+	ZENInline bool			IsInList()const;					//!< @brief True if this link has been added to a list
+
+protected:
 	ZENInline void			Remove();							//!< @brief Remove item from the list this zListLink belongs to	
 	ZENInline zListLink*	GetNext()const;						//!< @brief Get the next item zListLink object
-	ZENInline zListLink*	GetPrev()const;						//!< @brief Get the previous item zListLink object
-	ZENInline bool			IsInList()const;					//!< @brief True if this link has been added to a list	
+	ZENInline zListLink*	GetPrev()const;						//!< @brief Get the previous item zListLink object	
 	zListLink*				mpPrevLink = nullptr;				//!< Pointer to next link (lower bit set to 1 if pointing to list root, invalid)
 	zListLink*				mpNextLink = nullptr;				//!< Pointer to previous link (lower bit set to 1 if pointing to list root, invalid)
 	template<class T, zListLink T::*, bool> friend class zList;
@@ -35,16 +36,16 @@ protected:
 //!			Example : look at SampleListIntrusive() for more infos
 //!			Exemple: zList<ExempleClass, &ExempleClass::myLink> myList;
 //! 
-//!			TItem : The item class
-//!			TLinkOffset : The class member pointer (used to find offset to data in object)
-//!			TVirtualPad : Needed to tell compiler there's a virtual table at object begining
+//!			TItem			: The item class
+//!			TLinkOffset		: The class member pointer (used to find offset to data in object)
+//!			TVirtual1stTime : Needed to tell compiler there's a virtual table at object beginning
 //!
 //! @note	IMPORTANT: When declaring a zList<myClass, &myClass::listLink> directly in myClass, 
 //!			and myClass has a virtual method for the first time, set TVirtualPad to true. 
-//!			Without this, compiler give us the rigth offset to member listLink.
-//!			(Doesn't realize the class has a vtable before data, until class declaration is done)
+//!			Without this, compiler give us the wrong offset to member listLink.
+//!			(Doesn't realize class has a vtable before data, until class declaration is finished)
 //=================================================================================================
-template<class TItem, zListLink TItem::* TLinkOffset, bool TVirtualPad=false>
+template<class TItem, zListLink TItem::* TLinkOffset, bool TVirtual1stTime>
 class zList
 {
 public:

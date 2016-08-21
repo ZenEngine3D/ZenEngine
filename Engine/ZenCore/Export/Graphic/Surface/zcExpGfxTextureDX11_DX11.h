@@ -8,13 +8,13 @@ namespace zcExp
 class ExporterGfxTexture2dDX11_DX11 : public ExporterBase
 {
 ZENClassDeclare(ExporterGfxTexture2dDX11_DX11, ExporterBase)
-public:				
-typedef ResDataGfxTexture2dDX11	ResData;
-typedef zEngineRef<ResData>		ResDataRef;
-								ExporterGfxTexture2dDX11_DX11(const ResDataRef& _rResData);
+public:
+
+typedef zEngineRef<ExportGfxTexture2d>	ExportResultRef; //todo use proper ref class
+										ExporterGfxTexture2dDX11_DX11(const ExportResultRef& _rExportOut);
 protected:	
 	virtual bool				ExportWork(bool _bIsTHRTask);	
-	ResDataRef					mrResData;
+	ExportResultRef				mrExport;
 };
 
 }

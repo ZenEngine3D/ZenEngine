@@ -4,38 +4,19 @@
 
 namespace zcRes
 {
-//! @todo Engin : Rethink proxy, use class parenting instead of new object? Used for Hardware Abstraction, not multihreading?
-
-	//=============================================================================================
-	//! @class	Binding between a vertex shader and a VertexBuffer.
-	//!			Needed for proper mapping of vertex stream into Shader.	
-	//=============================================================================================
-	class GfxInputStreamProxy_DX11 : public zRefCounted
-	{
-	ZENClassDeclare(GfxInputStreamProxy_DX11, zRefCounted)
-	public:
-															GfxInputStreamProxy_DX11();
-		virtual												~GfxInputStreamProxy_DX11();
-		bool												Initialize(class GfxInputStream& _Owner);
-
-		zcRes::GfxVertexRef									mrVertexProxy;
-		zcRes::GfxInputSignatureRef							mrSignatureProxy;
-		ID3D11InputLayout*									mpInputLayout;	//!< Contain DX object for vertex input remapping
-		ZENDbgCode(class GfxInputStream*					mpOwner);
-	};
-
-
 	//=============================================================================================
 	//! @class	Binding geometry to shader
 	//=============================================================================================
-	class GfxMeshStripProxy_DX11 : public zRefCounted
+	class GfxMeshStripHAL_DX11 : public zcExp::ExportGfxMeshStrip
 	{
-	ZENClassDeclare(GfxMeshStripProxy_DX11, zRefCounted)
+	ZENClassDeclare(GfxMeshStripHAL_DX11, zcExp::ExportGfxMeshStrip)
 	public:
-															GfxMeshStripProxy_DX11();
-		virtual												~GfxMeshStripProxy_DX11();
-		bool												Initialize(class GfxMeshStrip& _Owner);
-
+		GfxMeshStripHAL_DX11()
+		{
+			static int i(0);
+			++i;
+		}
+		bool												Initialize();
 		void												SetValue(const zArrayBase<const zenRes::zShaderParameter*>& _aValues);
 		void												SetValue(const zenRes::zShaderParameter& _Value);
 		void												SetValue(const zHash32& _hParamName, const float& _fValue);
@@ -47,29 +28,25 @@ namespace zcRes
 		void												SetValue(const zHash32& _hTextureName, GfxSamplerRef _rSampler);
 		void												SetValue(const zHash32& _hTextureName, GfxTexture2dRef _rTexture, GfxSamplerRef _rSampler);
 
-		GfxIndexRef											mrIndexBufferProxy;
-		GfxInputStreamRef									mrInputStreamProxy;			//!< Reference to input streams binding
-		GfxShaderBindingRef									mrShaderBindingProxy;		//!< Reference to shader binding infos 
-		zArrayStatic<GfxShaderParamRef>						marShaderParamProxy;		//!< Array of all ShaderParam used by all Shaders stage
-		zArrayStatic<zArrayStatic<GfxTexture2dRef>>			marTextureProxy;			//!< Per Shader stage texture input (Array sub Index = Slot)
-		zArrayStatic<zArrayStatic<GfxSamplerRef>>			marGfxSamplerProxy;			//!< Per Shader stage texture input (Array sub Index = Slot)			
-		zU32												muVertexFirst;
-		zU32												muIndexFirst;
-		zU32												muIndexCount;
-		ZENDbgCode(class GfxMeshStrip*						mpOwner);
-	};
+		GfxIndexRef											mrIndexBuffer;
+		GfxInputStreamRef									mrInputStream;			//!< Reference to input streams binding
+		GfxShaderBindingRef									mrShaderBinding;
+		zArrayStatic<GfxShaderParamRef>						marShaderParam;			//!< Array of all ShaderParam used by all Shaders stage
+		zArrayStatic<zArrayStatic<GfxTexture2dRef>>			marTexture;				//!< Per Shader stage texture input (Array sub Index = Slot)
+		zArrayStatic<zArrayStatic<GfxSamplerRef>>			marGfxSampler;			//!< Per Shader stage texture input (Array sub Index = Slot)
 
+		typedef zcExp::ExporterGfxMeshStrip					RuntimeExporter;
+	};
+	class GfxMeshStripHAL : public GfxMeshStripHAL_DX11{};
 	
 	//=============================================================================================
 	//! @class	Bind together all strip of a Mesh
 	//=============================================================================================
-	class GfxMeshProxy_DX11 : public zRefCounted
+	class GfxMeshHAL_DX11 : public zcExp::ExportGfxMesh
 	{
-	ZENClassDeclare(GfxMeshProxy_DX11, zRefCounted)
+	ZENClassDeclare(GfxMeshHAL_DX11, zcExp::ExportGfxMesh)
 	public:
-															GfxMeshProxy_DX11();
-		virtual												~GfxMeshProxy_DX11();
-		bool												Initialize(class GfxMesh& _Owner);
+		bool												Initialize();
 		void												SetValue(const zArrayBase<const zenRes::zShaderParameter*>& _aValues);
 		void												SetValue(const zenRes::zShaderParameter& _Value);
 		void												SetValue(const zHash32& _hParamName, const float& _fValue);
@@ -81,28 +58,46 @@ namespace zcRes
 		void												SetValue(const zHash32& _hTextureName, GfxSamplerRef _rSampler);
 		void												SetValue(const zHash32& _hTextureName, GfxTexture2dRef _rTexture, GfxSamplerRef _rSampler);
 
-		zArrayStatic<GfxMeshStripRef>						marProxGfxMeshStrip;	//!< 
-		ZENDbgCode(class GfxMesh*							mpOwner);
+		zArrayStatic<GfxMeshStripRef>						marGfxMeshStrip;		
+		typedef zcExp::ExporterGfxMesh						RuntimeExporter;
 	};
+	class GfxMeshHAL : public GfxMeshHAL_DX11{};
+	
+	//=============================================================================================
+	//! @class	Binding between a vertex shader and a VertexBuffer.
+	//!			Needed for proper mapping of vertex stream into Shader.	
+	//=============================================================================================
+	class GfxInputStreamHAL_DX11 : public zcExp::ExportGfxInputStream
+	{
+	ZENClassDeclare(GfxInputStreamHAL_DX11, zcExp::ExportGfxInputStream)
+	public:
+		virtual												~GfxInputStreamHAL_DX11();
+		bool												Initialize();
+
+		GfxVertexRef										mrVertexStream;
+		GfxInputSignatureRef								mrSignature;
+		ID3D11InputLayout*									mpInputLayout	= nullptr;	//!< Contain DX object for vertex input remapping
+		typedef zcExp::ExporterGfxInputStream				RuntimeExporter;
+	};
+	class GfxInputStreamHAL : public GfxInputStreamHAL_DX11{};
 
 	//=============================================================================================
 	//! @class	Bind together all shader stage, Shader parameters, texture used and sampler
 	//=============================================================================================
-	class GfxShaderBindingProxy_DX11 : public zRefCounted
+	class GfxShaderBindingHAL_DX11 : public zcExp::ExportGfxShaderBinding
 	{
-	ZENClassDeclare(GfxShaderBindingProxy_DX11, zRefCounted)
+	ZENClassDeclare(GfxShaderBindingHAL_DX11, zcExp::ExportGfxShaderBinding)
 	public:
-															GfxShaderBindingProxy_DX11();
-		virtual												~GfxShaderBindingProxy_DX11();
-		bool												Initialize(class GfxShaderBinding& _Owner);
-		GfxShaderVertexRef									mrProxShaderVertex;		//! @todo clean have common interface to shader stage again? Pointer to proxy instead?
-		GfxShaderPixelRef									mrProxShaderPixel;			
-		zMap<zU32>::Key32									mdBufferPerParam;		//!< Bitmask of each ShaderParam containing this parameter name
-		zMap<GfxShaderBindingResData::TextureSlot>::Key32	mdStageSlotPerTexture;	//!< Texture Index of each Shader stage using this parameter name
-		zArrayStatic<zU32>									maStagePerParamDef;		//!< Array of Bitfield of valid shader stage per ShaderParam (match mSerial.maParamDef)
-		ZENDbgCode(class GfxShaderBinding*					mpOwner);
-	};
+		bool												Initialize();
+		void												CreateShaderParam(zArrayStatic<zenRes::zGfxShaderParam>& _aShaderParamOut)const;
 
+		GfxShaderAnyRef										marShader[zenConst::keShaderStage__Count];
+		zMap<TextureSlot>::Key32							mdStageSlotPerTexture;	//!< Texture Index of each Shader stage using this parameter name
+		zMap<zU32>::Key32									mdBufferPerParam;		//!< Bitmask of each ShaderParam containing this parameter name
+		typedef zcExp::ExporterGfxShaderBindingDX11_DX11	RuntimeExporter;
+	};
+	class GfxShaderBindingHAL : public GfxShaderBindingHAL_DX11{};
+	
 }
 
 #endif

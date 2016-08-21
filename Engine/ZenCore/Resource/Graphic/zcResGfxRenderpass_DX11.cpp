@@ -3,27 +3,12 @@
 namespace zcRes
 {
 
-GfxRenderPassProxy_DX11::GfxRenderPassProxy_DX11()
-: mzStageName("Uninitialized")
-{
-}
-
-GfxRenderPassProxy_DX11::~GfxRenderPassProxy_DX11()
-{
-}
-
-bool GfxRenderPassProxy_DX11::Initialize(class GfxRenderPass& _Owner)
-{
-	const GfxRenderPass::ResDataRef& rResData = _Owner.GetResData();
-	ZENAssert(rResData.IsValid());
-	ZENDbgCode(mpOwner = &_Owner);
-			
-	mzStageName				= rResData->mzStageName;
-	mrProxBlendState		= rResData->mBlendStateID;
-	mrProxDepthStencilState	= rResData->mDepthStencilStateID;
-	mrProxRasterState		= rResData->mRasterStateID;
-	mrProxViewState			= rResData->mViewStateID;
-
+bool GfxRenderPassHAL_DX11::Initialize()
+{		
+	mrStateBlend		= mBlendStateID;
+	mrStateDepthStencil	= mDepthStencilStateID;
+	mrStateRaster		= mRasterStateID;
+	mrStateView			= mViewStateID;
 	return true;
 }
 

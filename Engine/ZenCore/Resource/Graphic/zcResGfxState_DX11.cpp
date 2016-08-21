@@ -3,51 +3,33 @@
 namespace zcRes
 {
 	//////////////////////////////////////////////////////////////////////////
-	// GfxSamplerProxy
+	// GfxSamplerHAL
 	//////////////////////////////////////////////////////////////////////////
-	GfxSamplerProxy_DX11::GfxSamplerProxy_DX11()
-	: mpSamplerState(nullptr)
-	{
-	}
-	
-	GfxSamplerProxy_DX11::~GfxSamplerProxy_DX11()
+	GfxSamplerHAL_DX11::~GfxSamplerHAL_DX11()
 	{
 		if( mpSamplerState )
 			mpSamplerState->Release();
 		mpSamplerState = nullptr;
 	}
-	
-	bool GfxSamplerProxy_DX11::Initialize(class GfxSampler& _Owner)
+	bool GfxSamplerHAL_DX11::Initialize()
 	{	
-		const GfxSampler::ResDataRef& rResData = _Owner.GetResData();
-		ZENAssert(rResData.IsValid());
-		ZENDbgCode(mpOwner = &_Owner);
-		HRESULT hr = zcMgr::GfxRender.DX11GetDevice()->CreateSamplerState( &rResData->mSamplerDesc, &mpSamplerState );
+		HRESULT hr = zcMgr::GfxRender.DX11GetDevice()->CreateSamplerState( &mSamplerDesc, &mpSamplerState );
 		return SUCCEEDED(hr);
 	}
-	
-					
+
 	//////////////////////////////////////////////////////////////////////////
 	//GfxBlend_DX11
 	//////////////////////////////////////////////////////////////////////////
-	GfxStateBlendProxy_DX11::GfxStateBlendProxy_DX11()
-	: mpBlendState(nullptr)
-	{		
-	}
-
-	GfxStateBlendProxy_DX11::~GfxStateBlendProxy_DX11()
+	GfxStateBlendHAL_DX11::~GfxStateBlendHAL_DX11()
 	{	
 		if( mpBlendState )
 			mpBlendState->Release();
 		mpBlendState = nullptr;
 	}
 
-	bool GfxStateBlendProxy_DX11::Initialize(class GfxStateBlend& _Owner)
+	bool GfxStateBlendHAL_DX11::Initialize()
 	{
-		const GfxStateBlend::ResDataRef& rResData = _Owner.GetResData();
-		ZENAssert(rResData.IsValid());
-		ZENDbgCode(mpOwner = &_Owner);
-		HRESULT hr = zcMgr::GfxRender.DX11GetDevice()->CreateBlendState( &rResData->mBlendDesc, &mpBlendState );
+		HRESULT hr = zcMgr::GfxRender.DX11GetDevice()->CreateBlendState( &mBlendDesc, &mpBlendState );
 		//! @note : Global write mask / Blend factor : Unused functionality for now (per render target for now)
 		muSampleMask = 0xFFFFFFFF;				
 		for(zUInt i(0); i<ZENArrayCount(mafBlendFactor); ++i)
@@ -59,24 +41,16 @@ namespace zcRes
 	//////////////////////////////////////////////////////////////////////////
 	//GfxDepthStencil_DX11
 	//////////////////////////////////////////////////////////////////////////
-	GfxStateDepthStencilProxy_DX11::GfxStateDepthStencilProxy_DX11()
-	: mpDepthStencilState(nullptr)
-	{		
-	}
-
-	GfxStateDepthStencilProxy_DX11::~GfxStateDepthStencilProxy_DX11()
+	GfxStateDepthStencilHAL_DX11::~GfxStateDepthStencilHAL_DX11()
 	{	
 		if( mpDepthStencilState )
 			mpDepthStencilState->Release();
 		mpDepthStencilState = nullptr;
 	}
 
-	bool GfxStateDepthStencilProxy_DX11::Initialize(class GfxStateDepthStencil& _Owner)
+	bool GfxStateDepthStencilHAL_DX11::Initialize()
 	{
-		const GfxStateDepthStencil::ResDataRef& rResData = _Owner.GetResData();
-		ZENAssert(rResData.IsValid());
-		ZENDbgCode(mpOwner = &_Owner);
-		HRESULT hr = zcMgr::GfxRender.DX11GetDevice()->CreateDepthStencilState( &rResData->mDepthStencilDesc, &mpDepthStencilState );
+		HRESULT hr = zcMgr::GfxRender.DX11GetDevice()->CreateDepthStencilState( &mDepthStencilDesc, &mpDepthStencilState );
 		muStencilValue = 0;
 		return SUCCEEDED(hr);
 	}
@@ -84,25 +58,16 @@ namespace zcRes
 	//////////////////////////////////////////////////////////////////////////
 	//GfxRasterizer_DX11
 	//////////////////////////////////////////////////////////////////////////
-	GfxStateRasterizerProxy_DX11::GfxStateRasterizerProxy_DX11()
-	: mpRasterizerState(nullptr)
-	{		
-	}
-
-	GfxStateRasterizerProxy_DX11::~GfxStateRasterizerProxy_DX11()
+	GfxStateRasterHAL_DX11::~GfxStateRasterHAL_DX11()
 	{	
 		if( mpRasterizerState )
 			mpRasterizerState->Release();
 		mpRasterizerState = nullptr;
 	}
 
-	bool GfxStateRasterizerProxy_DX11::Initialize(class GfxStateRasterizer& _Owner)
+	bool GfxStateRasterHAL_DX11::Initialize()
 	{
-		const GfxStateRasterizer::ResDataRef& rResData = _Owner.GetResData();
-		ZENAssert(rResData.IsValid());
-		ZENDbgCode(mpOwner = &_Owner);
-		HRESULT hr			= zcMgr::GfxRender.DX11GetDevice()->CreateRasterizerState( &rResData->mRasterizerDesc, &mpRasterizerState );
-		mbScreenScissorOn	= rResData->mRasterizerDesc.ScissorEnable > 0;
+		HRESULT hr			= zcMgr::GfxRender.DX11GetDevice()->CreateRasterizerState( &mRasterizerDesc, &mpRasterizerState );
 		return SUCCEEDED(hr);
 	}
 }

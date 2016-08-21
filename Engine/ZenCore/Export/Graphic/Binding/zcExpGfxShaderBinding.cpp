@@ -4,8 +4,8 @@ namespace zcExp
 {
 	zResID ExportInfoGfxShaderBinding::CallbackGetItemID(zenConst::eResPlatform _ePlatform, zenConst::eResType _eType, zenConst::eResSource _eSource, const zcExp::ExportInfoBase* _pExportInfo, bool& _bExistOut)
 	{
-		ZENAssert(_ePlatform==zenConst::keResPlatform_DX11 && _eType==zenConst::keResType_GfxShaderBinding);
-		ZENAssert( _pExportInfo );
+		zenAssert(_ePlatform==zenConst::keResPlatform_DX11 && _eType==zenConst::keResType_GfxShaderBinding);
+		zenAssert( _pExportInfo );
 		const ExportInfoGfxShaderBinding* pExportInfo = static_cast<const ExportInfoGfxShaderBinding*>(_pExportInfo);
 
 		zUInt uValidCount(0);
@@ -22,8 +22,8 @@ namespace zcExp
 		return zcExp::ValidateItemID(_ePlatform, _eType, _eSource, hName, _bExistOut);
 	}
 
-	ExporterGfxShaderBinding::ExporterGfxShaderBinding(const ResDataRef& _rResData)
-	: Super(_rResData)
+	ExporterGfxShaderBinding::ExporterGfxShaderBinding(zenRes::zExportData* _pExportOut)
+	: Super(_pExportOut)
 	{
 	}
 
@@ -46,16 +46,16 @@ namespace zcExp
 		ExportInfoGfxShaderBinding*	pExport = static_cast<ExportInfoGfxShaderBinding*>(mpExportInfo);
 		const zResID					aShaderIdnullptr[]={zResID(),zResID()};
 		zArrayStatic<zResID>			aShaderID;
-		ZENStaticAssert(ZENArrayCount(aShaderIdnullptr) == zenConst::keShaderStage__Count);
+		zenStaticAssert(ZENArrayCount(aShaderIdnullptr) == zenConst::keShaderStage__Count);
 		aShaderID.Copy(aShaderIdnullptr, ZENArrayCount(aShaderIdnullptr));
 		mdStagePerParamDef.Init(8);
 		mdStagePerParamDef.SetDefaultValue(0);
 		for(zUInt idx=0; idx<pExport->maShaderID.Count(); ++idx)
 		{
-			zEngineConstRef<zcRes::GfxShaderResData> rShader = zcDepot::ResourceData.GetItem<zcRes::GfxShaderResData>( pExport->maShaderID[idx] );
+			zEngineConstRef<zcExp::ExportGfxShader> rShader = zcDepot::ExportData.GetTyped<zcExp::ExportGfxShader>( pExport->maShaderID[idx] );
 			if( rShader.IsValid() )
 			{
-				ZENAssertMsg(!aShaderID[rShader->meShaderStage].IsValid(), "Should only specify 1 shader per shader stage");	//! @todo Missing: error output
+				zenAssertMsg(!aShaderID[rShader->meShaderStage].IsValid(), "Should only specify 1 shader per shader stage");	//! @todo Missing: error output
 				aShaderID[rShader->meShaderStage] = rShader->mResID;
 				for(const zResID *pParamIDCur(rShader->maParamDefID.First()), *pParamIDLast(rShader->maParamDefID.Last()); pParamIDCur<=pParamIDLast;  ++pParamIDCur )
 				{

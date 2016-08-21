@@ -28,7 +28,7 @@ PropertyValue::PropertyValue(const zAssetItemRef& _rOwnerAsset, const PropertyDe
 : mrOwnerAsset(_rOwnerAsset)
 , mrOwnerDefinition(_rOwnerDefinition)
 {	
-	ZENAssert(mrOwnerDefinition.IsValid());
+	zenAssert(mrOwnerDefinition.IsValid());
 }
 
 //=============================================================================
@@ -92,8 +92,8 @@ const zString& PropertyDefinition::GetTypeName()const
 
 const zString& PropertyDefinition::GetTypeName(zenConst::eAssetPropertyType _eType)
 {
-	ZENStaticAssert( ZENArrayCount(saPropertyName)==zenConst::keAssProp__Count );
-	ZENAssert( _eType < zenConst::keAssProp__Count);
+	zenStaticAssert( ZENArrayCount(saPropertyName)==zenConst::keAssProp__Count );
+	zenAssert( _eType < zenConst::keAssProp__Count);
 	return saPropertyName[_eType].mzName;
 }
 

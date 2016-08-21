@@ -7,7 +7,7 @@ zGfxSampler zGfxSampler::Create( zenConst::eTextureFiltering _eFilterMin, zenCon
 	return zcExp::CreateGfxSampler(_eFilterMin, _eFilterMag, _eWrapU, _eWrapV, _fLodBias, _vBorderColor);
 }
 
-zGfxStateRasterizer zGfxStateRasterizer::Create( const zGfxStateRasterizer::Config& _RasterConfig )
+zGfxStateRaster zGfxStateRaster::Create( const zGfxStateRaster::Config& _RasterConfig )
 {
 	return zcExp::CreateGfxRasterizer(_RasterConfig);
 }

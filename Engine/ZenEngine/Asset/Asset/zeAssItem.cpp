@@ -20,7 +20,7 @@ Asset* Asset::CreateItem( zenConst::eAssetType _eAssetType )
 	case zenConst::keAssType_TestProperty:	return zenNewDefault TestProperty();
 	case zenConst::keAssType_Texture2D:		return zenNewDefault GfxTexture2D();
 	case zenConst::keAssType_Mesh:			return zenNewDefault GfxMesh();
-	default:								ZENAssertMsg(0, "Unsupported Asset Type");
+	default:								zenAssertMsg(0, "Unsupported Asset Type");
 	}
 	return nullptr;
 }
@@ -38,7 +38,7 @@ Asset::~Asset()
 
 void Asset::Init(zenAss::zAssetID _AssetID, const char* _zName, const zenAss::zPackageRef& _rParentPkg)
 {	
-	ZENAssert( !_AssetID.IsValid() || _AssetID.meType == GetType() );
+	zenAssert( !_AssetID.IsValid() || _AssetID.meType == GetType() );
 	mID		= _AssetID.IsValid() ? _AssetID :  zeMgr::Asset.GetAssetNextID( GetType() );
 	mzName	= _zName;
 	InitDefault();
@@ -93,7 +93,7 @@ void Asset::RebuiltDescription()
 void Asset::InitDefault()
 {	
 	const zenAss::PropertyDefArray& aProperties = GetProperties();	
-	ZENAssertMsg(aProperties.Count() > 0, "An Asset type is missing ::GetProperties() implementation" );
+	zenAssertMsg(aProperties.Count() > 0, "An Asset type is missing ::GetProperties() implementation" );
 	maPropertyValue.SetCount( aProperties.Count() );
 	const zenAss::PropertyDefRef*	prDefinitionCur	= aProperties.First();
 	zenAss::PropertyValueRef*		pValueCur		= maPropertyValue.First();

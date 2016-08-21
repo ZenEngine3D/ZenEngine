@@ -4,11 +4,6 @@ namespace zen { namespace zenType {
 //=================================================================================================
 // zREF COUNTED
 //=================================================================================================
-zRefCounted::zRefCounted()
-: miRefCount(0)
-{
-}
-
 void zRefCounted::ReferenceAdd()
 {
 	++miRefCount;
@@ -16,10 +11,9 @@ void zRefCounted::ReferenceAdd()
 
 void zRefCounted::ReferenceRem()
 {
-	ZENAssert(miRefCount > 0)
-	--miRefCount; 
-	if(miRefCount<=0) 
-		ReferenceNoneCB();
+	//! @todo multihread not safe to have multiple add to list
+	if( miRefCount.fetch_sub(1) == 1 && !mLstPendingDelLink.IsInList() )
+		sLstPendingDel[suLstPendingDelIndex].PushHead( *this );
 }
 
 zInt zRefCounted::ReferenceCount()
@@ -107,7 +101,7 @@ const zEngineRef<TRefCountedType>& zEngineRef<TRefCountedType>::operator=(const 
 	template<class TRefCountedType>
 	TRefCountedType* zEngineRef<TRefCountedType>::GetSafe()const
 	{
-		ZENAssert(IsValid());
+		zenAssert(IsValid());
 		return static_cast<TRefCountedType*>(mpReference);
 	}
 
@@ -184,7 +178,7 @@ const zEngineConstRef<TRefCountedType>& zEngineConstRef<TRefCountedType>::operat
 	template<class TRefCountedType>
 	const TRefCountedType* zEngineConstRef<TRefCountedType>::GetSafe()const
 	{
-		ZENAssert(IsValid());
+		zenAssert(IsValid());
 		return static_cast<const TRefCountedType*>(mpReference);
 	}
 
@@ -240,7 +234,7 @@ TRefCountedType* zGameRef<TRefCountedType>::Get()const
 template<class TRefCountedType>
 TRefCountedType* zGameRef<TRefCountedType>::GetSafe()const
 {
-	ZENAssert(IsValid());
+	zenAssert(IsValid());
 	return static_cast<TRefCountedType*>(mpReference);
 }
 
@@ -307,7 +301,7 @@ const TRefCountedType* zGameConstRef<TRefCountedType>::Get()const
 template<class TRefCountedType>
 const TRefCountedType* zGameConstRef<TRefCountedType>::GetSafe()const
 {
-	ZENAssert(IsValid());
+	zenAssert(IsValid());
 	return static_cast<const TRefCountedType*>(mpReference);
 }
 

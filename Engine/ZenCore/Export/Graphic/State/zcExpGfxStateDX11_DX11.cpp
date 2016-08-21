@@ -53,25 +53,24 @@ namespace zcExp
 	//////////////////////////////////////////////////////////////////////////
 	//ExporterGfxSamplerDX11_DX11
 	//////////////////////////////////////////////////////////////////////////
-	ExporterGfxSamplerDX11_DX11::ExporterGfxSamplerDX11_DX11(const ResDataRef& _rResData)
-	: ExporterBase(_rResData.GetSafe())
-	, mrResData(_rResData)
+	ExporterGfxSamplerDX11_DX11::ExporterGfxSamplerDX11_DX11(const ExportResultRef& _rExportOut)
+	: ExporterBase(_rExportOut.GetSafe())
+	, mrExport(_rExportOut)
 	{
+		zenAssert(mrExport.IsValid());
 	}
-
 	bool ExporterGfxSamplerDX11_DX11::ExportWork(bool _bIsTHRTask)
-	{
-		ZENAssert(mrResData.IsValid());
+	{		
 		ExportInfoGfxSampler* pExportInfo = static_cast<ExportInfoGfxSampler*>(mpExportInfo);
-		ZeroMemory( &mrResData->mSamplerDesc, sizeof(mrResData->mSamplerDesc) );
-		mrResData->mSamplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_POINT;
+		ZeroMemory( &mrExport->mSamplerDesc, sizeof(mrExport->mSamplerDesc) );
+		mrExport->mSamplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_POINT;
 		if( pExportInfo->meFilterMin == zenConst::keTexFilter_Anisotropic || pExportInfo->meFilterMag == zenConst::keTexFilter_Anisotropic )
 		{
-			mrResData->mSamplerDesc.Filter = D3D11_FILTER_ANISOTROPIC;
+			mrExport->mSamplerDesc.Filter = D3D11_FILTER_ANISOTROPIC;
 		}
 		else if( pExportInfo->meFilterMin == zenConst::keTexFilter_Trilinear || pExportInfo->meFilterMag == zenConst::keTexFilter_Trilinear )
 		{
-			mrResData->mSamplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+			mrExport->mSamplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
 		}
 		else
 		{
@@ -81,43 +80,43 @@ namespace zcExp
 			{
 				switch( pExportInfo->meFilterMin )
 				{
-				case zenConst::keTexFilter_Point:		mrResData->mSamplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_POINT;		break;
-				case zenConst::keTexFilter_Bilinear:	mrResData->mSamplerDesc.Filter = D3D11_FILTER_MIN_LINEAR_MAG_MIP_POINT;	break;		
+				case zenConst::keTexFilter_Point:		mrExport->mSamplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_POINT;		break;
+				case zenConst::keTexFilter_Bilinear:	mrExport->mSamplerDesc.Filter = D3D11_FILTER_MIN_LINEAR_MAG_MIP_POINT;	break;		
 				}break;
 			}
 			case zenConst::keTexFilter_Bilinear:
 			{
 				switch( pExportInfo->meFilterMin )
 				{
-				case zenConst::keTexFilter_Point:		mrResData->mSamplerDesc.Filter = D3D11_FILTER_MIN_POINT_MAG_LINEAR_MIP_POINT;	break;
-				case zenConst::keTexFilter_Bilinear:	mrResData->mSamplerDesc.Filter = D3D11_FILTER_MIN_MAG_LINEAR_MIP_POINT;			break;		
+				case zenConst::keTexFilter_Point:		mrExport->mSamplerDesc.Filter = D3D11_FILTER_MIN_POINT_MAG_LINEAR_MIP_POINT;	break;
+				case zenConst::keTexFilter_Bilinear:	mrExport->mSamplerDesc.Filter = D3D11_FILTER_MIN_MAG_LINEAR_MIP_POINT;			break;		
 				}break;
 			}
 			}
 		}
 
 		const D3D11_TEXTURE_ADDRESS_MODE cWrapTranslate[]= { D3D11_TEXTURE_ADDRESS_CLAMP, D3D11_TEXTURE_ADDRESS_WRAP, D3D11_TEXTURE_ADDRESS_MIRROR, D3D11_TEXTURE_ADDRESS_BORDER };
-		ZENStaticAssert( ZENArrayCount(cWrapTranslate)==zenConst::keTexWrap__Count );
+		zenStaticAssert( ZENArrayCount(cWrapTranslate)==zenConst::keTexWrap__Count );
 
-		mrResData->mSamplerDesc.AddressU		= cWrapTranslate[pExportInfo->meWrapU];
-		mrResData->mSamplerDesc.AddressV		= cWrapTranslate[pExportInfo->meWrapV];
-		mrResData->mSamplerDesc.AddressW		= D3D11_TEXTURE_ADDRESS_CLAMP;
-		mrResData->mSamplerDesc.MipLODBias		= pExportInfo->mfLodBias;
-		mrResData->mSamplerDesc.BorderColor[0]	= pExportInfo->mvBorderColor.r * 0xFF;
-		mrResData->mSamplerDesc.BorderColor[1]	= pExportInfo->mvBorderColor.g * 0xFF;
-		mrResData->mSamplerDesc.BorderColor[2]	= pExportInfo->mvBorderColor.b * 0xFF;
-		mrResData->mSamplerDesc.BorderColor[3]	= pExportInfo->mvBorderColor.a * 0xFF;
-		mrResData->mSamplerDesc.MaxAnisotropy	= 16;
-		mrResData->mSamplerDesc.ComparisonFunc	= D3D11_COMPARISON_ALWAYS;		
-		mrResData->mSamplerDesc.MinLOD			= 0;
-		mrResData->mSamplerDesc.MaxLOD			= D3D11_FLOAT32_MAX;
+		mrExport->mSamplerDesc.AddressU			= cWrapTranslate[pExportInfo->meWrapU];
+		mrExport->mSamplerDesc.AddressV			= cWrapTranslate[pExportInfo->meWrapV];
+		mrExport->mSamplerDesc.AddressW			= D3D11_TEXTURE_ADDRESS_CLAMP;
+		mrExport->mSamplerDesc.MipLODBias		= pExportInfo->mfLodBias;
+		mrExport->mSamplerDesc.BorderColor[0]	= pExportInfo->mvBorderColor.r * 0xFF;
+		mrExport->mSamplerDesc.BorderColor[1]	= pExportInfo->mvBorderColor.g * 0xFF;
+		mrExport->mSamplerDesc.BorderColor[2]	= pExportInfo->mvBorderColor.b * 0xFF;
+		mrExport->mSamplerDesc.BorderColor[3]	= pExportInfo->mvBorderColor.a * 0xFF;
+		mrExport->mSamplerDesc.MaxAnisotropy	= 16;
+		mrExport->mSamplerDesc.ComparisonFunc	= D3D11_COMPARISON_ALWAYS;		
+		mrExport->mSamplerDesc.MinLOD			= 0;
+		mrExport->mSamplerDesc.MaxLOD			= D3D11_FLOAT32_MAX;
 		return TRUE;
 	}
 
 	zResID ExporterGfxSamplerDX11_DX11::CallbackGetItemID(zenConst::eResPlatform _ePlatform, zenConst::eResType _eType, zenConst::eResSource _eSource, const zcExp::ExportInfoBase* _pExportInfo, bool& _bExistOut)
 	{
-		ZENAssert(_ePlatform==zenConst::keResPlatform_DX11 && _eType==zenConst::keResType_GfxSampler);
-		ZENAssert( _pExportInfo );
+		zenAssert(_ePlatform==zenConst::keResPlatform_DX11 && _eType==zenConst::keResType_GfxSampler);
+		zenAssert( _pExportInfo );
 		const ExportInfoGfxSampler* pExportInfo	= static_cast<const ExportInfoGfxSampler*>(_pExportInfo);
 		zUInt uSize								= zenOffsetAfter(&ExportInfoGfxSampler::mvBorderColor) - zenOffsetOf(&ExportInfoGfxSampler::meFilterMin);
 		zResID::NameHash hName((void*)&pExportInfo->meFilterMin, uSize); 
@@ -127,27 +126,27 @@ namespace zcExp
 	//////////////////////////////////////////////////////////////////////////
 	//SerialGfxBlend_DX11
 	//////////////////////////////////////////////////////////////////////////
-	ExporterGfxStateBlendDX11_DX11::ExporterGfxStateBlendDX11_DX11(const ResDataRef& _rResData)
-	: ExporterBase(_rResData.GetSafe())
-	, mrResData(_rResData)
+	ExporterGfxStateBlendDX11_DX11::ExporterGfxStateBlendDX11_DX11(const ExportResultRef& _rExportOut)
+	: ExporterBase(_rExportOut.GetSafe())
+	, mrExport(_rExportOut)
 	{
+		zenAssert(mrExport.IsValid());
 	}
 
 	bool ExporterGfxStateBlendDX11_DX11::ExportWork(bool _bIsTHRTask)
 	{		
-		ExportInfoGfxStateBlend* pExportInfo = static_cast<ExportInfoGfxStateBlend*>(mpExportInfo);
-		ZENAssert(mrResData.IsValid());		
-		ZENAssert(gaBlendValueTranslator.Count() == zenRes::zGfxRenderPass::ConfigColorRT::keBlendVal__Count);
-		ZENAssert(gaBlendOpTranslator.Count() == zenRes::zGfxRenderPass::ConfigColorRT::keBlendOp__Count);		
-		ZENAssert( pExportInfo->mpaRenderTargetConfig && pExportInfo->mpaRenderTargetConfig->Count() < D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT );
+		ExportInfoGfxStateBlend* pExportInfo = static_cast<ExportInfoGfxStateBlend*>(mpExportInfo);		
+		zenAssert(gaBlendValueTranslator.Count() == zenRes::zGfxRenderPass::ConfigColorRT::keBlendVal__Count);
+		zenAssert(gaBlendOpTranslator.Count() == zenRes::zGfxRenderPass::ConfigColorRT::keBlendOp__Count);		
+		zenAssert( pExportInfo->mpaRenderTargetConfig && pExportInfo->mpaRenderTargetConfig->Count() < D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT );
 
-		zenMem::Zero(&mrResData->mBlendDesc, sizeof(mrResData->mBlendDesc));
-		mrResData->mBlendDesc.AlphaToCoverageEnable		= false;	//!< Currently not implemented
-		mrResData->mBlendDesc.IndependentBlendEnable	= true;		
+		zenMem::Zero(&mrExport->mBlendDesc, sizeof(mrExport->mBlendDesc));
+		mrExport->mBlendDesc.AlphaToCoverageEnable		= false;	//!< Currently not implemented
+		mrExport->mBlendDesc.IndependentBlendEnable	= true;		
 		for(zUInt rtIdx(0), rtCount(pExportInfo->mpaRenderTargetConfig->Count()); rtIdx<rtCount && rtIdx<D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT; ++rtIdx)
 		{			
 			const zenRes::zGfxRenderPass::ConfigColorRT& RtConfigIn	= (*pExportInfo->mpaRenderTargetConfig)[rtIdx];
-			D3D11_RENDER_TARGET_BLEND_DESC& RtConfigOut				= mrResData->mBlendDesc.RenderTarget[rtIdx];
+			D3D11_RENDER_TARGET_BLEND_DESC& RtConfigOut				= mrExport->mBlendDesc.RenderTarget[rtIdx];
 			RtConfigOut.BlendEnable									= RtConfigIn.mbBlendEnable;
 			RtConfigOut.SrcBlend									= gaBlendValueTranslator[RtConfigIn.meBlendColorSrc];
 			RtConfigOut.DestBlend									= gaBlendValueTranslator[RtConfigIn.meBlendColorDest];
@@ -166,10 +165,10 @@ namespace zcExp
 
 	zResID ExporterGfxStateBlendDX11_DX11::CallbackGetItemID(zenConst::eResPlatform _ePlatform, zenConst::eResType _eType, zenConst::eResSource _eSource, const zcExp::ExportInfoBase* _pExportInfo, bool& _bExistOut)
 	{
-		ZENAssert(_ePlatform==zenConst::keResPlatform_DX11 && _eType==zenConst::keResType_GfxBlend);
-		ZENAssert( _pExportInfo );
+		zenAssert(_ePlatform==zenConst::keResPlatform_DX11 && _eType==zenConst::keResType_GfxBlend);
+		zenAssert( _pExportInfo );
 		const ExportInfoGfxStateBlend* pExportInfo	= static_cast<const ExportInfoGfxStateBlend*>(_pExportInfo);
-		ZENAssert( pExportInfo->mpaRenderTargetConfig->IsEmpty()==false );
+		zenAssert( pExportInfo->mpaRenderTargetConfig->IsEmpty()==false );
 		zResID::NameHash hName((void*)pExportInfo->mpaRenderTargetConfig->First(), pExportInfo->mpaRenderTargetConfig->SizeMem());
 		return zcExp::ValidateItemID(_ePlatform, _eType, _eSource, hName, _bExistOut);
 	}
@@ -179,45 +178,45 @@ namespace zcExp
 	//////////////////////////////////////////////////////////////////////////
 	ZENInline void SetDepthStencilOpDesc(D3D11_DEPTH_STENCILOP_DESC& _StencilConfigDX11Out, const zenRes::zGfxRenderPass::ConfigDepthRT::ConfigStencil& _StencilConfigIn)
 	{		
-		ZENAssert( gaStencilOpTranslator.Count() == zenRes::zGfxRenderPass::ConfigDepthRT::keStencilOp__Count );
+		zenAssert( gaStencilOpTranslator.Count() == zenRes::zGfxRenderPass::ConfigDepthRT::keStencilOp__Count );
 		_StencilConfigDX11Out.StencilFunc			= gaComparisonTestTranslator[_StencilConfigIn.meStencilTest];
 		_StencilConfigDX11Out.StencilFailOp			= gaStencilOpTranslator[_StencilConfigIn.meStencilFailOp];		
 		_StencilConfigDX11Out.StencilPassOp			= gaStencilOpTranslator[_StencilConfigIn.meStencilPassOp];
 		_StencilConfigDX11Out.StencilDepthFailOp	= gaStencilOpTranslator[_StencilConfigIn.meDepthFailOp];		
 	}
 
-	ExporterGfxStateDepthStencilDX11_DX11::ExporterGfxStateDepthStencilDX11_DX11(const ResDataRef& _rResData)
-	: ExporterBase(_rResData.GetSafe())
-	, mrResData(_rResData)
+	ExporterGfxStateDepthStencilDX11_DX11::ExporterGfxStateDepthStencilDX11_DX11(const ExportResultRef& _rExportOut)
+	: ExporterBase(_rExportOut.GetSafe())
+	, mrExport(_rExportOut)
 	{
+		zenAssert(_rExportOut.IsValid());
 	}
 
 	bool ExporterGfxStateDepthStencilDX11_DX11::ExportWork(bool _bIsTHRTask)
-	{
-		ZENAssert(mrResData.IsValid());		
-		ZENAssert( gaComparisonTestTranslator.Count() == zenRes::zGfxRenderPass::ConfigDepthRT::keCmpTest__Count );
+	{		
+		zenAssert( gaComparisonTestTranslator.Count() == zenRes::zGfxRenderPass::ConfigDepthRT::keCmpTest__Count );
 		ExportInfoGfxStateDepthStencil* pExportInfo				= static_cast<ExportInfoGfxStateDepthStencil*>(mpExportInfo);
 		const zenRes::zGfxRenderPass::ConfigDepthRT* pConfig	= pExportInfo->mpDepthStencilConfig;
 		if( pConfig )
 		{
-			mrResData->mDepthStencilDesc.DepthEnable			= pConfig->mbDepthEnable;
-			mrResData->mDepthStencilDesc.DepthWriteMask			= pConfig->mbDepthWrite ? D3D11_DEPTH_WRITE_MASK_ALL : D3D11_DEPTH_WRITE_MASK_ZERO;
-			mrResData->mDepthStencilDesc.StencilEnable			= pConfig->mbStencilEnable;
-			mrResData->mDepthStencilDesc.DepthFunc				= gaComparisonTestTranslator[pConfig->meDepthTest];
-			mrResData->mDepthStencilDesc.StencilReadMask		= pConfig->muStencilReadMask;
-			mrResData->mDepthStencilDesc.StencilWriteMask		= pConfig->muStencilWriteMask;
-			SetDepthStencilOpDesc(mrResData->mDepthStencilDesc.FrontFace, pConfig->meStencilConfigFront);
-			SetDepthStencilOpDesc(mrResData->mDepthStencilDesc.BackFace,  pConfig->meStencilConfigBack);
+			mrExport->mDepthStencilDesc.DepthEnable			= pConfig->mbDepthEnable;
+			mrExport->mDepthStencilDesc.DepthWriteMask		= pConfig->mbDepthWrite ? D3D11_DEPTH_WRITE_MASK_ALL : D3D11_DEPTH_WRITE_MASK_ZERO;
+			mrExport->mDepthStencilDesc.StencilEnable		= pConfig->mbStencilEnable;
+			mrExport->mDepthStencilDesc.DepthFunc			= gaComparisonTestTranslator[pConfig->meDepthTest];
+			mrExport->mDepthStencilDesc.StencilReadMask		= pConfig->muStencilReadMask;
+			mrExport->mDepthStencilDesc.StencilWriteMask	= pConfig->muStencilWriteMask;
+			SetDepthStencilOpDesc(mrExport->mDepthStencilDesc.FrontFace, pConfig->meStencilConfigFront);
+			SetDepthStencilOpDesc(mrExport->mDepthStencilDesc.BackFace,  pConfig->meStencilConfigBack);
 		}
 		return TRUE;
 	}
 
 	zResID ExporterGfxStateDepthStencilDX11_DX11::CallbackGetItemID(zenConst::eResPlatform _ePlatform, zenConst::eResType _eType, zenConst::eResSource _eSource, const zcExp::ExportInfoBase* _pExportInfo, bool& _bExistOut)
 	{
-		ZENAssert(_ePlatform==zenConst::keResPlatform_DX11 && _eType==zenConst::keResType_GfxDepthStencil);
-		ZENAssert( _pExportInfo );
+		zenAssert(_ePlatform==zenConst::keResPlatform_DX11 && _eType==zenConst::keResType_GfxDepthStencil);
+		zenAssert( _pExportInfo );
 		const ExportInfoGfxStateDepthStencil* pExportInfo	= static_cast<const ExportInfoGfxStateDepthStencil*>(_pExportInfo);
-		ZENAssert( pExportInfo->mpDepthStencilConfig );
+		zenAssert( pExportInfo->mpDepthStencilConfig );
 		zResID::NameHash hName((void*)pExportInfo->mpDepthStencilConfig, sizeof(zenRes::zGfxRenderPass::ConfigDepthRT));
 		return zcExp::ValidateItemID(_ePlatform, _eType, _eSource, hName, _bExistOut);
 	}
@@ -225,36 +224,36 @@ namespace zcExp
 	//////////////////////////////////////////////////////////////////////////
 	//SerialGfxRasterizer_DX11
 	//////////////////////////////////////////////////////////////////////////
-	ExporterGfxStateRasterizerDX11_DX11::ExporterGfxStateRasterizerDX11_DX11(const ResDataRef& _rResData)
-	: ExporterBase(_rResData.GetSafe())
-	, mrResData(_rResData)
+	ExporterGfxStateRasterDX11_DX11::ExporterGfxStateRasterDX11_DX11(const ExportResultRef& _rExportOut)
+	: ExporterBase(_rExportOut.GetSafe())
+	, mrExport(_rExportOut)
 	{
+		zenAssert(mrExport.IsValid());
 	}
 
-	bool ExporterGfxStateRasterizerDX11_DX11::ExportWork(bool _bIsTHRTask)
-	{
-		ZENAssert(mrResData.IsValid());
-		ExportInfoGfxStateRasterizer* pExportInfo			= static_cast<ExportInfoGfxStateRasterizer*>(mpExportInfo);
-		zenRes::zGfxStateRasterizer::Config& Config			= pExportInfo->mRasterConfig;
-		mrResData->mRasterizerDesc.AntialiasedLineEnable	= pExportInfo->mRasterConfig.mbAntialiasedLineEnable;
-		mrResData->mRasterizerDesc.CullMode					= (Config.mbShowBackface && Config.mbShowFrontface) ? D3D11_CULL_NONE : Config.mbShowBackface ? D3D11_CULL_FRONT : D3D11_CULL_BACK;
-		mrResData->mRasterizerDesc.DepthBias				= zInt(Config.mfDepthBias);
-		mrResData->mRasterizerDesc.DepthBiasClamp			= Config.mfDepthBiasClamp;
-		mrResData->mRasterizerDesc.DepthClipEnable			= Config.mbDepthClipEnable;
-		mrResData->mRasterizerDesc.FillMode					= Config.mbWireFrame ? D3D11_FILL_WIREFRAME : D3D11_FILL_SOLID;
-		mrResData->mRasterizerDesc.FrontCounterClockwise	= !Config.mbFrontClockwise;
-		mrResData->mRasterizerDesc.MultisampleEnable		= Config.mbMultisampleEnable;
-		mrResData->mRasterizerDesc.ScissorEnable			= Config.mbScissorEnable;
-		mrResData->mRasterizerDesc.SlopeScaledDepthBias		= Config.mfSlopeScaledDepthBias;
+	bool ExporterGfxStateRasterDX11_DX11::ExportWork(bool _bIsTHRTask)
+	{		
+		ExportInfoGfxStateRaster* pExportInfo			= static_cast<ExportInfoGfxStateRaster*>(mpExportInfo);
+		zenRes::zGfxStateRaster::Config& Config			= pExportInfo->mRasterConfig;
+		mrExport->mRasterizerDesc.AntialiasedLineEnable	= pExportInfo->mRasterConfig.mbAntialiasedLineEnable;
+		mrExport->mRasterizerDesc.CullMode				= (Config.mbShowBackface && Config.mbShowFrontface) ? D3D11_CULL_NONE : Config.mbShowBackface ? D3D11_CULL_FRONT : D3D11_CULL_BACK;
+		mrExport->mRasterizerDesc.DepthBias				= zInt(Config.mfDepthBias);
+		mrExport->mRasterizerDesc.DepthBiasClamp		= Config.mfDepthBiasClamp;
+		mrExport->mRasterizerDesc.DepthClipEnable		= Config.mbDepthClipEnable;
+		mrExport->mRasterizerDesc.FillMode				= Config.mbWireFrame ? D3D11_FILL_WIREFRAME : D3D11_FILL_SOLID;
+		mrExport->mRasterizerDesc.FrontCounterClockwise	= !Config.mbFrontClockwise;
+		mrExport->mRasterizerDesc.MultisampleEnable		= Config.mbMultisampleEnable;
+		mrExport->mRasterizerDesc.ScissorEnable			= Config.mbScissorEnable;
+		mrExport->mRasterizerDesc.SlopeScaledDepthBias	= Config.mfSlopeScaledDepthBias;
 		return TRUE;
 	}
 
-	zResID ExporterGfxStateRasterizerDX11_DX11::CallbackGetItemID(zenConst::eResPlatform _ePlatform, zenConst::eResType _eType, zenConst::eResSource _eSource, const zcExp::ExportInfoBase* _pExportInfo, bool& _bExistOut)
+	zResID ExporterGfxStateRasterDX11_DX11::CallbackGetItemID(zenConst::eResPlatform _ePlatform, zenConst::eResType _eType, zenConst::eResSource _eSource, const zcExp::ExportInfoBase* _pExportInfo, bool& _bExistOut)
 	{
-		ZENAssert(_ePlatform==zenConst::keResPlatform_DX11 && _eType==zenConst::keResType_GfxRasterizer);
-		ZENAssert( _pExportInfo );
-		const ExportInfoGfxStateRasterizer* pExportInfo	= static_cast<const ExportInfoGfxStateRasterizer*>(_pExportInfo);
-		zResID::NameHash hName((void*)&pExportInfo->mRasterConfig, sizeof(zenRes::zGfxStateRasterizer::Config) );
+		zenAssert(_ePlatform==zenConst::keResPlatform_DX11 && _eType==zenConst::keResType_GfxRaster);
+		zenAssert( _pExportInfo );
+		const ExportInfoGfxStateRaster* pExportInfo	= static_cast<const ExportInfoGfxStateRaster*>(_pExportInfo);
+		zResID::NameHash hName((void*)&pExportInfo->mRasterConfig, sizeof(zenRes::zGfxStateRaster::Config) );
 		return zcExp::ValidateItemID(_ePlatform, _eType, _eSource, hName, _bExistOut);
 	}
 

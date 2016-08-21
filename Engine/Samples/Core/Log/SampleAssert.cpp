@@ -18,23 +18,23 @@ void SampleAssert()
 	zenIO::Log(zenConst::keLog_Game, " Assert test");
 	zenIO::Log(zenConst::keLog_Game, zenConst::kzLineA40);
 	
-	ZENWarning(bTestWarning);
-	ZENWarningMsg(bTestWarningMsg, "Warning with message" );
+	zenWarning(bTestWarning);
+	zenWarningMsg(bTestWarningMsg, "Warning with message" );
 	for(int i=0; i<3; ++i)
 	{
-		ZENWarningOnce(bTestWarningOnce);
-		ZENWarningMsgOnce(bTestWarningOnceMsg, "Warning Once with message");
+		zenWarningOnce(bTestWarningOnce);
+		zenWarningMsgOnce(bTestWarningOnceMsg, "Warning Once with message");
 	}
 
-	ZENAssert(bTestAssert);
-	ZENAssertMsg(bTestAssertMsg, "Assert with message" );
+	zenAssert(bTestAssert);
+	zenAssertMsg(bTestAssertMsg, "Assert with message" );
 	for(int i=0; i<3; ++i)
 	{
-		ZENAssertOnce(bTestAssertOnce);
-		ZENAssertMsgOnce(bTestAssertOnceMsg, "Assert Once with message");
+		zenAssertOnce(bTestAssertOnce);
+		zenAssertMsgOnce(bTestAssertOnceMsg, "Assert Once with message");
 	}
 
-	ZENCriticalMsg(bTestCriticalMsg, "Critical, termine program");
+	zenCriticalMsg(bTestCriticalMsg, "Critical, termine program");
 }
 
 }

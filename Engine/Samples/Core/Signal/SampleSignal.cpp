@@ -41,7 +41,7 @@ public:
 	void (*mpCallback)();
 
 	zListLink mlstLink;
-	typedef zList<PerfSlotCallback0, &PerfSlotCallback0::mlstLink> TypeList;
+	typedef zList<PerfSlotCallback0, &PerfSlotCallback0::mlstLink, false> TypeList;
 };
 
 class TestSlotConnection : public zenSig::zSlot

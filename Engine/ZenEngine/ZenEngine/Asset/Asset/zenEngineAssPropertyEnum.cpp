@@ -18,7 +18,7 @@ PropertyDefRef PropertyEnum::Create( const char* _zName, const char* _zDisplayNa
 		pNewDefinition->mdKeyToIndex.Set(_pEntries[idx].mValueKey.mhName, idx);
 		pNewDefinition->maValueToIndex.Set(_pEntries[idx].mValue, idx);
 	}
-	ZENAssertMsg( pNewDefinition->maValueToIndex.Exist(pNewDefinition->mDefault), "Specified default value doesn't exist in Asset Property Definition");
+	zenAssertMsg( pNewDefinition->maValueToIndex.Exist(pNewDefinition->mDefault), "Specified default value doesn't exist in Asset Property Definition");
 	pNewDefinition->maValueToIndex.SetDefaultValue( pNewDefinition->maValueToIndex[_Default] );
 	pNewDefinition->mdKeyToIndex.SetDefaultValue( pNewDefinition->maValueToIndex[_Default] );
 	return pNewDefinition;

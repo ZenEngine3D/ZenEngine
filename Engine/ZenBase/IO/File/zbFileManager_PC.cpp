@@ -44,8 +44,8 @@ bool ManagerFile_PC::Unload()
 
 bool ManagerFile_PC::Search(zArrayDynamic<FileInfo>& _ResultOut, zUInt _uWantedFlag, const wchar_t* _zDirName, const wchar_t* _zFilePatern, bool bRecursive)
 {
-	ZENAssert(_zDirName );
-	ZENAssert(_zFilePatern );
+	zenAssert(_zDirName );
+	zenAssert(_zFilePatern );
 			
 	_ResultOut.Clear();
 	_ResultOut.Reserve(32);

@@ -15,12 +15,12 @@ namespace zcExp
 		return zcMgr::Export.CreateItem( zResID::kePlatformType_GFX, zenConst::keResType_GfxSampler, pExportInfo );
 	}
 
-	zResID CreateGfxRasterizer( const zenRes::zGfxStateRasterizer::Config& _RasterConfig )
+	zResID CreateGfxRasterizer( const zenRes::zGfxStateRaster::Config& _RasterConfig )
 	{
-		static zenMem::zAllocatorPool sMemPool("Pool CreateRasterizer", sizeof(ExportInfoGfxStateRasterizer), 1, 5 );
-		ExportInfoGfxStateRasterizer* pExportInfo	= zenNew(&sMemPool) ExportInfoGfxStateRasterizer;
+		static zenMem::zAllocatorPool sMemPool("Pool CreateRasterizer", sizeof(ExportInfoGfxStateRaster), 1, 5 );
+		ExportInfoGfxStateRaster* pExportInfo	= zenNew(&sMemPool) ExportInfoGfxStateRaster;
 		pExportInfo->mRasterConfig					= _RasterConfig; //! @todo optim prevent copy duplicate for dynamically created element (done right away, no 
-		return zcMgr::Export.CreateItem( zResID::kePlatformType_GFX, zenConst::keResType_GfxRasterizer, pExportInfo );
+		return zcMgr::Export.CreateItem( zResID::kePlatformType_GFX, zenConst::keResType_GfxRaster, pExportInfo );
 	}
 
 	zResID CreateGfxDepthStencil( const zenRes::zGfxRenderPass::ConfigDepthRT& _DepthStencilConfig )
