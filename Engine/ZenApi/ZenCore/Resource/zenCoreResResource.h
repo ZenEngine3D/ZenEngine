@@ -96,6 +96,7 @@ typedef zenRes::zResourceRef<class GfxView,				class GfxViewHAL,				zEnumMask<zU
 typedef zenRes::zResourceRef<class GfxTarget2D,			class GfxTarget2DHAL,			zEnumMask<zU64>(keResType_GfxTarget2D)>			GfxTarget2DRef;
 typedef zenRes::zResourceRef<class GfxTexture2d,		class GfxTexture2dHAL,			zEnumMask<zU64>(keResType_GfxTexture2D)>		GfxTexture2dRef;
 typedef zenRes::zResourceRef<class GfxIndex,			class GfxIndexHAL,				zEnumMask<zU64>(keResType_GfxIndex)>			GfxIndexRef;
+typedef zenRes::zResourceRef<class GfxBuffer,			class GfxBufferHAL,				zEnumMask<zU64>(keResType_GfxBuffer)>			GfxBufferRef;
 
 };
 

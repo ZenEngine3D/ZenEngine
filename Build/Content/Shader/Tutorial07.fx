@@ -12,6 +12,14 @@
 Texture_2D( txDiffuse );
 Texture_2D( txColor );
 
+struct TestStruct 
+{
+	uint 	Val1;
+	uint 	Val2;
+};
+
+StructuredBuffer<TestStruct> TestBuffer;
+
 cbuffer cbViewPhase : register( b1 )
 {
     matrix View;
@@ -58,7 +66,7 @@ VS_OUTPUT VS( VS_INPUT input )
 	output.Pos			= mul( input.Pos, LocalToView );
 	
     output.Tex			= input.Tex;
-    //output.Test			= vMeshColor.a;
+    //output.Test		= vMeshColor.a;
     return output;
 }
 
@@ -68,7 +76,7 @@ VS_OUTPUT VS( VS_INPUT input )
 float4 PS( VS_OUTPUT input) : SV_Target
 {
 	float4 texColor = TextureSample2D( txColor, input.Tex );
-	return float4(vColor.rgb*texColor.rgb,1);
+	return float4(vColor.rgb*texColor.rgb, TestBuffer[1].Val1 );
 }
 
 void PS2Output( VS_OUTPUT input, out float4 ColorOut1 : SV_Target0, out float4 ColorOut2 : SV_Target1) 

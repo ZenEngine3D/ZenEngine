@@ -70,7 +70,11 @@ bool SampleDebugUIInstance::Init()
 {
 	Super::Init();
 	CreateGfxWindow( zVec2U16(1280, 800), zVec2U16(0,0) );
-	
+	struct test { zU64 value1; zU64 value2; };
+	zArrayStatic<test> aInitBuffer = {{0x0001020304050607, 0x08090A0B0C0D0E0F}};
+	zenRes::zGfxBuffer rTestBuf = zenRes::zGfxBuffer::Create<test>(aInitBuffer, 16 /*, zFlagResUse()*/ ); //SF TEST
+
+
 	//-----------------------------------------------------------
 	// Prepare some data for asset creation
 	zArrayStatic<zenRes::zGfxVertex::Stream> aVerticeStreams(1);		

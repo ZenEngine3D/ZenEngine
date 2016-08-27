@@ -88,7 +88,28 @@ namespace zen { namespace zenRes
 		
 		static zGfxTarget2D			Create(zenConst::eTextureFormat _eFormat, zVec2U16 _vDim, bool _bSrgb=true);
 	};
-
+	
+	class zGfxBuffer : public zcRes::GfxBufferRef
+	{
+	ZENClassDeclare(zGfxBuffer, zcRes::GfxBufferRef);
+	public:		
+		using Super::Super;
+		using Super::operator=;
+				
+		template<class TData> static zGfxBuffer Create(zU32 _uElemCount/*, zFlagResTexUse _UseFlags*/)
+		{
+			return zGfxBuffer::Create( sizeof(TData), _uElemCount);
+		}
+		template<class TData> static zGfxBuffer Create(const zArrayBase<TData>& _aData, zU32 _uElemCount/*, zFlagResTexUse _UseFlags*/)
+		{
+			return zGfxBuffer::Create( reinterpret_cast<const zU8*>(_aData.First()), _aData.SizeMem(), sizeof(TData), _uElemCount);
+		}
+	
+	protected:
+		static zGfxBuffer		Create(zUInt _uElemSize, zU32 _uElemCount/*, zFlagResTexUse _UseFlags*/);
+		static zGfxBuffer		Create(const zU8* _pData, zUInt _uDataSize, zUInt _uElemSize, zU32 _uElemCount/*, zFlagResTexUse _UseFlags*/);
+	};
+	
 }} // namespace zen, zenRes
 
 #endif

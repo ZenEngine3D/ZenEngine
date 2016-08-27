@@ -97,5 +97,18 @@ zGfxTexture2d zGfxTarget2D::GetTexture2D()
 	return mpResource->GetTexture2D();
 }
 
+//=================================================================================================
+// GFX BUFFER
+//=================================================================================================
+zGfxBuffer zGfxBuffer::Create(zUInt _uElemSize, zU32 _uElemCount/*, zFlagResTexUse _UseFlags*/)
+{
+	return zcExp::CreateGfxBuffer(nullptr, 0, _uElemSize, _uElemCount/*, _UseFlags*/);
+}
+
+zGfxBuffer zGfxBuffer::Create(const zU8* _pData, zUInt _uDataSize, zUInt _uElemSize, zU32 _uElemCount/*, zFlagResTexUse _UseFlags*/)
+{
+	return zcExp::CreateGfxBuffer(_pData, _uDataSize, _uElemSize, _uElemCount/*, _UseFlags*/);
+}
+
 } } // namespace zen, zenRes
 

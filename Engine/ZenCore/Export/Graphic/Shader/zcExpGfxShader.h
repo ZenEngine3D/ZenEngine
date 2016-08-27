@@ -24,8 +24,11 @@ namespace zcExp
 		zArrayStatic<zResID>		maParamDefID;				//!< List of Parameter info used with this shader
 		zArrayStatic<zHash32>		maTextureSamplerName;		//!< List of name used for Texture and associated Sampler 
 		zArrayStatic<BindInfo>		maTextureSamplerSlot;		//!< Texture or sampler slot used for each item in mTextureSamplerName
+		zArrayStatic<zHash32>		maBufferName;				//!< List of name used for structured buffer 
+		zArrayStatic<BindInfo>		maBufferSlot;				//!< Structured buffer or used for each item in maBufferName
 		zResID						mShaderInputSignatureID;	//!< Used for vertex shader
-		zU8							muTextureSlotCount;			//!< Texture slot used in shader
+		zU16						muTextureSlotCount;			//!< Texture slot used in shader
+		zU16						muBufferSlotCount;			//!< Buffer slot used in shader
 	};
 
 	zResID CreateGfxShaderVertex( const char* _zFilename, const char* _zEntryname );

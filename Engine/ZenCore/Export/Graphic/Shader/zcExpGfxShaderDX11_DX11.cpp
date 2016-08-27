@@ -54,6 +54,28 @@ ZENInline void ProcessTexture(ID3D11ShaderReflection& _GfxShaderReflection, cons
 	_TextureNameOut		= zHash32(zName);
 }
 
+//=================================================================================================
+//! @brief		Process the shader buffer infos
+//! @details	
+//=================================================================================================
+ZENInline void ProcessStructBuffer(ID3D11ShaderReflection& _GfxShaderReflection, const D3D11_SHADER_INPUT_BIND_DESC& _InputDesc, ExportGfxShaderDX11::BindInfo& _BindingOut, zHash32& _BufferNameOut)
+{
+	char zName[128];
+	// We package texture access inside a structure that contains bother Texture Buffer and Sampler,
+	// so no need to keep track of separate sampler.
+	//! @todo optimize might want to revisit 1 sampler per texture
+	LPCSTR pNameSrc(_InputDesc.Name);
+	char* pNameDst(zName);
+	while( *pNameSrc != 0 && *pNameSrc != '.' )
+		*pNameDst++ = *pNameSrc++;
+	*pNameDst = 0;
+
+	// Retrieve texture/sampler infos (name, slot, ...)	
+	_BindingOut.uSlot	= _InputDesc.BindPoint;
+	_BindingOut.uCount	= _InputDesc.BindCount;
+	_BufferNameOut		= zHash32(zName);
+}
+
 ExporterGfxShaderDX11_DX11::ExporterGfxShaderDX11_DX11(const ExportResultRef& _rExportOut)
 : ExporterBase(_rExportOut.GetSafe())
 , mrExport(_rExportOut)
@@ -150,7 +172,10 @@ bool ExporterGfxShaderDX11_DX11::ExportWorkExtractResources()
 	ExportInfoGfxShader*					pExportInfo = static_cast<ExportInfoGfxShader*>(mpExportInfo);
 	ExportGfxShaderDX11::BindInfo			aTextureBind[zcExp::kuDX11_TexturePerStageMax];
 	zHash32									aTextureName[zcExp::kuDX11_TexturePerStageMax];
+	ExportGfxShaderDX11::BindInfo			aBufferBind[zcExp::kuDX11_BufferPerStageMax];
+	zHash32									aBufferName[zcExp::kuDX11_TexturePerStageMax];
 	zUInt									uTextureCount(0);
+	zUInt									uBufferCount(0);
 	ID3D11ShaderReflection*					pGfxShaderReflection(nullptr);
 	ID3D11ShaderReflectionConstantBuffer*	pConstBuffer(nullptr);
 	D3D11_SHADER_DESC						shaderDesc;	
@@ -166,7 +191,7 @@ bool ExporterGfxShaderDX11_DX11::ExportWorkExtractResources()
 		{
 			if( SUCCEEDED( pGfxShaderReflection->GetResourceBindingDesc(uResIdx, &resourceDesc ) ) )
 			{				
-				if( resourceDesc.Type ==  D3D_SIT_TEXTURE )
+				if ( resourceDesc.Type ==  D3D_SIT_TEXTURE )
 				{
 					zenAssert( uTextureCount < kuDX11_TexturePerStageMax );
 					ProcessTexture( *pGfxShaderReflection, resourceDesc, aTextureBind[uTextureCount], aTextureName[uTextureCount] );
@@ -178,12 +203,21 @@ bool ExporterGfxShaderDX11_DX11::ExportWorkExtractResources()
 					zenAssert(resourceDesc.BindPoint<zcExp::keShaderParamFreq__Count);
 					ProcessShaderParamDef( *pGfxShaderReflection, resourceDesc, mrExport->mResID.GetSource(), mrExport->maParamDefID[resourceDesc.BindPoint] );
 				}
+				else if( resourceDesc.Type == D3D_SIT_STRUCTURED)
+				{
+					zenAssert( uBufferCount < kuDX11_BufferPerStageMax );
+					ProcessStructBuffer( *pGfxShaderReflection, resourceDesc, aBufferBind[uBufferCount], aBufferName[uBufferCount] );
+					mrExport->muBufferSlotCount = zenMath::Max(UINT(mrExport->muBufferSlotCount), resourceDesc.BindPoint+resourceDesc.BindCount);	
+					++uBufferCount;										
+				}
 			}			
 		}
 		pGfxShaderReflection->Release();
 
 		mrExport->maTextureSamplerName.Copy( aTextureName, uTextureCount );
-		mrExport->maTextureSamplerSlot.Copy( aTextureBind, uTextureCount );		
+		mrExport->maTextureSamplerSlot.Copy( aTextureBind, uTextureCount );
+		mrExport->maBufferName.Copy( aBufferName, uBufferCount );
+		mrExport->maBufferSlot.Copy( aBufferBind, uBufferCount );		
 		return TRUE;
 	}
 

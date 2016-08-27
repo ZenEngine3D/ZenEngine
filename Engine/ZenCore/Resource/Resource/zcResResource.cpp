@@ -32,6 +32,7 @@ zResID RuntimeCreateResource(zcExp::ExportInfoBase* _pExportInfo)
 	case zenConst::keResType_GfxShaderBinding:	rResource = RuntimeExport<GfxShaderBindingRef>(*_pExportInfo);		break;
 	case zenConst::keResType_GfxMeshStrip:		rResource = RuntimeExport<GfxMeshStripRef>(*_pExportInfo);			break;
 	case zenConst::keResType_GfxMesh:			rResource = RuntimeExport<GfxMeshRef>(*_pExportInfo);				break;
+	case zenConst::keResType_GfxBuffer:			rResource = RuntimeExport<GfxBufferRef>(*_pExportInfo);				break;
 	case zenConst::keResType_GfxInputStream:	rResource = RuntimeExport<GfxInputStreamRef>(*_pExportInfo);		break;
 	case zenConst::keResType_GfxRenderPass:		rResource = RuntimeExport<GfxRenderPassRef>(*_pExportInfo);			break;
 	}	

@@ -9,15 +9,16 @@ const zenConst::eEngineVersion gResourceVersions[]=
 {
 	//--- GFX ---
 	zenConst::keEngineVersion_Initial,		//keResType_GfxShaderPixel,
-	zenConst::keEngineVersion_Initial,		//keResType_GfxShaderVertex,			
+	zenConst::keEngineVersion_Initial,		//keResType_GfxShaderVertex,
 	zenConst::keEngineVersion_Initial,		//keResType_GfxShaderParamDef,
 	zenConst::keEngineVersion_Initial,		//keResType_GfxShaderParam,
-	zenConst::keEngineVersion_Initial,		//keResType_GfxShaderBinding,		
+	zenConst::keEngineVersion_Initial,		//keResType_GfxShaderBinding,
 	zenConst::keEngineVersion_Initial,		//keResType_GfxRenderTarget,
 	zenConst::keEngineVersion_Initial,		//keResType_GfxView,
 	zenConst::keEngineVersion_Initial,		//keResType_GfxWindow,
 	zenConst::keEngineVersion_Initial,		//keResType_GfxIndex,
-	zenConst::keEngineVersion_Initial,		//keResType_GfxVertex,			
+	zenConst::keEngineVersion_Initial,		//keResType_GfxVertex,
+	zenConst::keEngineVersion_Initial,		//keResType_GfxBuffer,
 	zenConst::keEngineVersion_Initial,		//keResType_GfxTexture2D,
 	zenConst::keEngineVersion_Initial,		//keResType_GfxSampler,
 	zenConst::keEngineVersion_Initial,		//keResType_GfxBlend,
@@ -41,7 +42,7 @@ void ResetResourceDataReference(zMap<zEngineRef<ResourceData>>::Key64& _dResData
 DepotResourceData::DepotResourceData()
 //: mdResourceData(256)
 {	
-	zenStaticAssert( ZENArrayCount(gResourceVersions)==zenConst::keResType__Count );	
+	zenStaticAssert( ZENArrayCount(gResourceVersions)==zenConst::keResType__Count );
 }
 
 //=================================================================================================

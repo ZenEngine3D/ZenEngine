@@ -55,7 +55,7 @@ namespace zbLog
 #endif
 
 //! @todo clean replace macro with 'static_assert' and use zenAssert
-#define zenStaticAssert(_Cond_)			zenStaticAssertMsg(_Cond_, "")
+#define zenStaticAssert(_Cond_)			zenStaticAssertMsg(_Cond_, #_Cond_)
 #define	zenCritical(_Cond_)				zenCriticalMsg(_Cond_, "")
 #define	zenAssert(_Cond_)				zenAssertMsg(_Cond_, "")
 #define	zenAssertOnce(_Cond_)			zenAssertMsgOnce(_Cond_, "")

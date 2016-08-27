@@ -17,7 +17,7 @@ class IntrusiveListItem
 public:
 	IntrusiveListItem(){}
 	IntrusiveListItem(int _uValue) : mValue(_uValue) {}
-	size_t mValue = 0;
+	int mValue = 0;
 	zListLink mlnkList1;
 	zListLink mlnkList2;
 	typedef zList<IntrusiveListItem, &IntrusiveListItem::mlnkList1, false> TypeList1;

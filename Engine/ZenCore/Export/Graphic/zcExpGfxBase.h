@@ -8,6 +8,7 @@
 #include "Graphic/Surface/zcExpGfxRenderTarget.h"
 #include "Graphic/Surface/zcExpGfxView.h"
 #include "Graphic/Surface/zcExpGfxWindow.h"
+#include "Graphic/Buffer/zcExpGfxBuffer.h"
 #include "Graphic/Mesh/zcExpGfxVertex.h"
 #include "Graphic/Mesh/zcExpGfxIndex.h"
 #include "Graphic/Mesh/zcExpGfxMeshStrip.h"

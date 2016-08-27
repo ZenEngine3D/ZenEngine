@@ -4,19 +4,9 @@
 
 namespace zcGfx { class ManagerRender; } //Forward declaration //! @todo clean remove this and call function to do the stuff needed in manager instead?
 
-#include ZENHeaderRenderer( zcResGfxVertex )
-#include ZENHeaderRenderer( zcResGfxShaderParam )
-#include ZENHeaderRenderer( zcResGfxBinding )
-#include ZENHeaderRenderer( zcResGfxShader )
-#include ZENHeaderRenderer( zcResGfxTexture )
-#include ZENHeaderRenderer( zcResGfxRenderTarget )
-#include ZENHeaderRenderer( zcResGfxView )
-#include ZENHeaderRenderer( zcResGfxWindow )
-#include ZENHeaderRenderer( zcResGfxState )
-#include ZENHeaderRenderer( zcResGfxRenderpass )
-
 #include "zcResGfxIndex.h"
 #include "zcResGfxVertex.h"
+#include "zcResGfxBuffer.h"
 #include "zcResGfxShader.h"
 #include "zcResGfxShaderParam.h"
 #include "zcResGfxState.h"

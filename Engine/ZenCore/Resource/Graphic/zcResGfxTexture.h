@@ -2,10 +2,10 @@
 #ifndef __zCore_Res_Gfx_Texture_h__
 #define __zCore_Res_Gfx_Texture_h__
 
+#include ZENHeaderRenderer( zcResGfxTexture )
+
 namespace zcRes
 {
-
-#include ZENHeaderRenderer(zcResGfxTexture)
 
 class GfxTexture2d : protected GfxTexture2dHAL
 {
