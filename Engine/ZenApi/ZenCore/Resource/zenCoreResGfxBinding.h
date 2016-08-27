@@ -12,7 +12,7 @@ namespace zen { namespace zenGfx
 {	
 	class zCommand : public zEngineRef<zcGfx::Command>
 	{
-	ZENClassDeclare(zCommand, zEngineRef<zcGfx::Command>);
+	zenClassDeclare(zCommand, zEngineRef<zcGfx::Command>);
 	public:			
 								zCommand();
 								zCommand(const zCommand& _Copy);		
@@ -36,7 +36,7 @@ namespace zen { namespace zenRes {
 
 	class zGfxShaderBinding : public zcRes::GfxShaderBindingRef
 	{
-	ZENClassDeclare(zGfxShaderBinding, zcRes::GfxShaderBindingRef);
+	zenClassDeclare(zGfxShaderBinding, zcRes::GfxShaderBindingRef);
 	public:
 		using Super::Super;
 		using Super::operator=;
@@ -51,7 +51,7 @@ namespace zen { namespace zenRes {
 	
 	class zGfxView : public zcRes::GfxViewRef
 	{
-	ZENClassDeclare(zGfxView, zcRes::GfxViewRef);
+	zenClassDeclare(zGfxView, zcRes::GfxViewRef);
 	public:
 		using Super::Super;
 		using Super::operator=;
@@ -60,7 +60,7 @@ namespace zen { namespace zenRes {
 		
 	class zGfxWindow : public zcRes::GfxWindowRef
 	{
-	ZENClassDeclare(zGfxWindow, zcRes::GfxWindowRef);
+	zenClassDeclare(zGfxWindow, zcRes::GfxWindowRef);
 	public:
 		using Super::Super;
 		using Super::operator=;
@@ -74,7 +74,7 @@ namespace zen { namespace zenRes {
 
 	class zGfxMeshStrip : public zcRes::GfxMeshStripRef
 	{
-	ZENClassDeclare(zGfxMeshStrip, zcRes::GfxMeshStripRef);
+	zenClassDeclare(zGfxMeshStrip, zcRes::GfxMeshStripRef);
 	public:
 		using Super::Super;
 		using Super::operator=;
@@ -97,7 +97,7 @@ namespace zen { namespace zenRes {
 
 	class zGfxMesh : public zcRes::GfxMeshRef
 	{
-	ZENClassDeclare(zGfxMesh, zcRes::GfxMeshRef);
+	zenClassDeclare(zGfxMesh, zcRes::GfxMeshRef);
 	public:
 		using Super::Super;
 		using Super::operator=;

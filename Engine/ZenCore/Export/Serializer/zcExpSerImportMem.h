@@ -6,7 +6,7 @@ namespace zcExp
 {		
 class SerializerImportMem : public ISerializerImporter
 {
-ZENClassDeclare(SerializerImportMem, ISerializerImporter)
+zenClassDeclare(SerializerImportMem, ISerializerImporter)
 public:
 					SerializerImportMem(zU8* apBuffer, zUInt auBufferSize);
 	bool			Load(const char* azFilename);

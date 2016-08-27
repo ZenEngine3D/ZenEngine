@@ -15,7 +15,7 @@ namespace zcExp
 	//=================================================================================================
 	class Serializer_Base
 	{
-	ZENClassDeclareNoParent(Serializer_Base)
+	zenClassDeclareNoParent(Serializer_Base)
 	public:
 		enum eStatus{keStatus_Invalid, keStatus_GetSize, keStatus_Exporting, keStatus_Importing};		
 						Serializer_Base();
@@ -61,7 +61,7 @@ namespace zcExp
 	//=================================================================================================
 	class ISerializerExporter : public Serializer_Base
 	{	
-	ZENClassDeclare(ISerializerExporter, Serializer_Base)
+	zenClassDeclare(ISerializerExporter, Serializer_Base)
 	public:
 		virtual eStatus	GetStatus(){return keStatus_Exporting;}
 		virtual bool	ItemStarted(ResourceData& aItem);
@@ -75,7 +75,7 @@ namespace zcExp
 	//=================================================================================================
 	class ISerializerImporter : public Serializer_Base
 	{
-	ZENClassDeclare(ISerializerImporter, Serializer_Base)
+	zenClassDeclare(ISerializerImporter, Serializer_Base)
 	public:
 		virtual eStatus	GetStatus(){return keStatus_Importing;}
 	protected:

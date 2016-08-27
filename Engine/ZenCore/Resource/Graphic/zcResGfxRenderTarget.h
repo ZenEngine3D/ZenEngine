@@ -9,7 +9,7 @@ namespace zcRes
 
 class GfxTarget2D : protected GfxTarget2DHAL
 {
-ZENClassDeclare(GfxTarget2D, GfxTarget2DHAL)
+zenClassDeclare(GfxTarget2D, GfxTarget2DHAL)
 public:
 	using							Super::Clear;
 	virtual bool					Initialize();

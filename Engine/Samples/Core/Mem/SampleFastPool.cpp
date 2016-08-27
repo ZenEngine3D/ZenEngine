@@ -73,7 +73,7 @@ void SampleFastPool()
 	StructTestPool* pValues[5];
 	zenMem::Set( pValues, 0, sizeof(pValues) );
 	
-	for(zU32 idx(0); idx<ZENArrayCount(pValues); idx++)
+	for(zU32 idx(0); idx<zenArrayCount(pValues); idx++)
 	{
 		pValues[idx]		= PoolAlloc.Allocate();
 		pValues[idx]->value = idx;
@@ -82,7 +82,7 @@ void SampleFastPool()
 	PoolAlloc.Deallocate(pValues[0]);
 	pValues[0]			= PoolAlloc.Allocate();
 	pValues[0]->value	= 10;
-	for(zUInt idx(0); idx<ZENArrayCount(pValues); idx++)
+	for(zUInt idx(0); idx<zenArrayCount(pValues); idx++)
 		PoolAlloc.Deallocate(pValues[idx]);
 
 	// Testing Constructor/Destructor call	

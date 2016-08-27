@@ -8,42 +8,43 @@
 namespace sample
 {
 
-SimpleVertex CubeVertices[] =
+const zArrayStatic<SimpleVertex> aCubeVertices =
 {
-	{ zVec3F( -1.0f, 1.0f, -1.0f ),	zVec2F( 0.0f, 1.0f ) },
-	{ zVec3F( 1.0f, 1.0f, -1.0f ),	zVec2F( 1.0f, 1.0f ) },
-	{ zVec3F( 1.0f, 1.0f, 1.0f ),	zVec2F( 1.0f, 0.0f ) },
-	{ zVec3F( -1.0f, 1.0f, 1.0f ),	zVec2F( 0.0f, 0.0f ) },
+	{ zVec3F( -1.0f, 1.0f, -1.0f ),	zVec3F( 1.0f, 1.0f, 1.0f ), zVec2F( 0.0f, 1.0f ) },
+	{ zVec3F( 1.0f, 1.0f, -1.0f ),	zVec3F( 1.0f, 1.0f, 1.0f ), zVec2F( 1.0f, 1.0f ) },
+	{ zVec3F( 1.0f, 1.0f, 1.0f ),	zVec3F( 1.0f, 1.0f, 1.0f ), zVec2F( 1.0f, 0.0f ) },
+	{ zVec3F( -1.0f, 1.0f, 1.0f ),	zVec3F( 1.0f, 1.0f, 1.0f ), zVec2F( 0.0f, 0.0f ) },
 
-	{ zVec3F( -1.0f, -1.0f, -1.0f ),zVec2F( 0.0f, 1.0f ) },
-	{ zVec3F( 1.0f, -1.0f, -1.0f ),	zVec2F( 1.0f, 1.0f ) },
-	{ zVec3F( 1.0f, -1.0f, 1.0f ),	zVec2F( 1.0f, 0.0f ) },
-	{ zVec3F( -1.0f, -1.0f, 1.0f ),	zVec2F( 0.0f, 0.0f ) },
+	{ zVec3F( -1.0f, -1.0f, -1.0f ),zVec3F( 1.0f, 1.0f, 1.0f ), zVec2F( 0.0f, 1.0f ) },
+	{ zVec3F( 1.0f, -1.0f, -1.0f ),	zVec3F( 1.0f, 1.0f, 1.0f ), zVec2F( 1.0f, 1.0f ) },
+	{ zVec3F( 1.0f, -1.0f, 1.0f ),	zVec3F( 1.0f, 1.0f, 1.0f ), zVec2F( 1.0f, 0.0f ) },
+	{ zVec3F( -1.0f, -1.0f, 1.0f ),	zVec3F( 1.0f, 1.0f, 1.0f ), zVec2F( 0.0f, 0.0f ) },
 
-	{ zVec3F( -1.0f, -1.0f, 1.0f ),	zVec2F( 0.0f, 1.0f ) },
-	{ zVec3F( -1.0f, -1.0f, -1.0f ),zVec2F( 1.0f, 1.0f ) },
-	{ zVec3F( -1.0f, 1.0f, -1.0f ),	zVec2F( 1.0f, 0.0f ) },
-	{ zVec3F( -1.0f, 1.0f, 1.0f ),	zVec2F( 0.0f, 0.0f ) },
+	{ zVec3F( -1.0f, -1.0f, 1.0f ),	zVec3F( 1.0f, 1.0f, 1.0f ), zVec2F( 0.0f, 1.0f ) },
+	{ zVec3F( -1.0f, -1.0f, -1.0f ),zVec3F( 1.0f, 1.0f, 1.0f ), zVec2F( 1.0f, 1.0f ) },
+	{ zVec3F( -1.0f, 1.0f, -1.0f ),	zVec3F( 1.0f, 1.0f, 1.0f ), zVec2F( 1.0f, 0.0f ) },
+	{ zVec3F( -1.0f, 1.0f, 1.0f ),	zVec3F( 1.0f, 1.0f, 1.0f ), zVec2F( 0.0f, 0.0f ) },
 
-	{ zVec3F( 1.0f, -1.0f, 1.0f ),	zVec2F( 0.0f, 1.0f ) },
-	{ zVec3F( 1.0f, -1.0f, -1.0f ),	zVec2F( 1.0f, 1.0f ) },
-	{ zVec3F( 1.0f, 1.0f, -1.0f ),	zVec2F( 1.0f, 0.0f ) },
-	{ zVec3F( 1.0f, 1.0f, 1.0f ),	zVec2F( 0.0f, 0.0f ) },
+	{ zVec3F( 1.0f, -1.0f, 1.0f ),	zVec3F( 1.0f, 1.0f, 1.0f ), zVec2F( 0.0f, 1.0f ) },
+	{ zVec3F( 1.0f, -1.0f, -1.0f ),	zVec3F( 1.0f, 1.0f, 1.0f ), zVec2F( 1.0f, 1.0f ) },
+	{ zVec3F( 1.0f, 1.0f, -1.0f ),	zVec3F( 1.0f, 1.0f, 1.0f ), zVec2F( 1.0f, 0.0f ) },
+	{ zVec3F( 1.0f, 1.0f, 1.0f ),	zVec3F( 1.0f, 1.0f, 1.0f ), zVec2F( 0.0f, 0.0f ) },
 
-	{ zVec3F( -1.0f, -1.0f, -1.0f ),zVec2F( 0.0f, 1.0f ) },
-	{ zVec3F( 1.0f, -1.0f, -1.0f ),	zVec2F( 1.0f, 1.0f ) },
-	{ zVec3F( 1.0f, 1.0f, -1.0f ),	zVec2F( 1.0f, 0.0f ) },
-	{ zVec3F( -1.0f, 1.0f, -1.0f ),	zVec2F( 0.0f, 0.0f ) },
+	{ zVec3F( -1.0f, -1.0f, -1.0f ),zVec3F( 1.0f, 1.0f, 1.0f ), zVec2F( 0.0f, 1.0f ) },
+	{ zVec3F( 1.0f, -1.0f, -1.0f ),	zVec3F( 1.0f, 1.0f, 1.0f ), zVec2F( 1.0f, 1.0f ) },
+	{ zVec3F( 1.0f, 1.0f, -1.0f ),	zVec3F( 1.0f, 1.0f, 1.0f ), zVec2F( 1.0f, 0.0f ) },
+	{ zVec3F( -1.0f, 1.0f, -1.0f ),	zVec3F( 1.0f, 1.0f, 1.0f ), zVec2F( 0.0f, 0.0f ) },
 
-	{ zVec3F( -1.0f, -1.0f, 1.0f ),	zVec2F( 0.0f, 1.0f ) },
-	{ zVec3F( 1.0f, -1.0f, 1.0f ),	zVec2F( 1.0f, 1.0f ) },
-	{ zVec3F( 1.0f, 1.0f, 1.0f ),	zVec2F( 1.0f, 0.0f ) },
-	{ zVec3F( -1.0f, 1.0f, 1.0f ),	zVec2F( 0.0f, 0.0f ) },
+	{ zVec3F( -1.0f, -1.0f, 1.0f ),	zVec3F( 1.0f, 1.0f, 1.0f ), zVec2F( 0.0f, 1.0f ) },
+	{ zVec3F( 1.0f, -1.0f, 1.0f ),	zVec3F( 1.0f, 1.0f, 1.0f ), zVec2F( 1.0f, 1.0f ) },
+	{ zVec3F( 1.0f, 1.0f, 1.0f ),	zVec3F( 1.0f, 1.0f, 1.0f ), zVec2F( 1.0f, 0.0f ) },
+	{ zVec3F( -1.0f, 1.0f, 1.0f ),	zVec3F( 1.0f, 1.0f, 1.0f ), zVec2F( 0.0f, 0.0f ) },
 };
 
 const zenRes::zGfxVertex::Element CubeVerticeInfos[]={	
-	zenRes::zGfxVertex::Element(zenConst::keShaderElemType_Float, 3, zenConst::keShaderSemantic_Position,	zenOffsetOf(&SimpleVertex::Pos) ),
-	zenRes::zGfxVertex::Element(zenConst::keShaderElemType_Float, 2, zenConst::keShaderSemantic_UV,			zenOffsetOf(&SimpleVertex::Tex) ) 
+	zenRes::zGfxVertex::Element(zenConst::keShaderElemType_Float, 3, zenConst::keShaderSemantic_Position,	(zU8)zenOffsetOf(&SimpleVertex::Position) ),
+	zenRes::zGfxVertex::Element(zenConst::keShaderElemType_Float, 3, zenConst::keShaderSemantic_Color,		(zU8)zenOffsetOf(&SimpleVertex::Color) ),
+	zenRes::zGfxVertex::Element(zenConst::keShaderElemType_Float, 2, zenConst::keShaderSemantic_UV,			(zU8)zenOffsetOf(&SimpleVertex::UV) ) 
 };
 
 zU16 CubeIndices[] =
@@ -71,12 +72,15 @@ bool SampleRendererInstance::Init()
 	Super::Init();
 	CreateGfxWindow( zVec2U16(1280, 800), zVec2U16(0,0) );
 	
+	zenRes::zGfxBuffer rVertexBuffer = zenRes::zGfxBuffer::Create<SimpleVertex>(aCubeVertices, aCubeVertices.Count() /*, zFlagResUse()*/ ); //SF TEST
+
+
 	//-----------------------------------------------------------
 	// Prepare some data for asset creation
 	zArrayStatic<zenRes::zGfxVertex::Stream> aVerticeStreams(1);		
 	aVerticeStreams[0].muStride = sizeof(SimpleVertex);
-	aVerticeStreams[0].maData.Copy( (zU8*)CubeVertices, sizeof(CubeVertices) );
-	aVerticeStreams[0].maElements.Copy(CubeVerticeInfos, ZENArrayCount(CubeVerticeInfos) );
+	aVerticeStreams[0].maData.Copy( (zU8*)aCubeVertices.First(), aCubeVertices.SizeMem() );
+	aVerticeStreams[0].maElements.Copy(CubeVerticeInfos, zenArrayCount(CubeVerticeInfos) );
 
 	zArrayStatic<zU8>			aTexRGBA;
 	zVec2U16					vTexSize(256,256);
@@ -102,7 +106,7 @@ bool SampleRendererInstance::Init()
 	// Create rendering resources		
 	//---------------------------------------------------------------------	
 	mrCubeVertex										= zenRes::zGfxVertex::Create(aVerticeStreams, zFlagResUse());	
-	mrCubeIndex											= zenRes::zGfxIndex::Create( zArrayStatic<zU16>(CubeIndices, ZENArrayCount(CubeIndices), TRUE), zenConst::kePrimType_TriangleList );
+	mrCubeIndex											= zenRes::zGfxIndex::Create( zArrayStatic<zU16>(CubeIndices, zenArrayCount(CubeIndices), TRUE), zenConst::kePrimType_TriangleList );
 	mrShaderVS											= zenRes::zGfxShaderVertex::Create( "Shader/Tutorial07.fx", "VS");
 	mrShaderPS											= zenRes::zGfxShaderPixel::Create( "Shader/Tutorial07.fx", "PS", aShaderDefines );		
 	mrShaderPS2Output									= zenRes::zGfxShaderPixel::Create( "Shader/Tutorial07.fx", "PS2Output", aShaderDefines );		
@@ -143,7 +147,7 @@ bool SampleRendererInstance::Init()
 	//-------------------------------------------------
 	// Init some shader values
 	//---------------------------------------------------------------------
-	for(int i=0; i<ZENArrayCount(matWorld); ++i)
+	for(int i=0; i<zenArrayCount(matWorld); ++i)
 		matWorld[i].SetIdentity();
 
 	zenMath::V4 vEye	= zenMath::simdXYZW( 0.0f, 0.0f,-2.5f, 0.0f );
@@ -190,7 +194,7 @@ bool SampleRendererInstance::Init()
 	//---------------------------------------------------------------------
 	//todo add gfxcontext
 	SimpleVertex* pVertexSrc	= CubeVertices;
-	SimpleVertex* pVertexSrcEnd	= &CubeVertices[ZENArrayCount(CubeVertices)];
+	SimpleVertex* pVertexSrcEnd	= &CubeVertices[zenArrayCount(CubeVertices)];
 	SimpleVertex* pVertex		= (SimpleVertex*)mrCubeVertex.Lock();		
 	while( pVertexSrc < pVertexSrcEnd )
 	{

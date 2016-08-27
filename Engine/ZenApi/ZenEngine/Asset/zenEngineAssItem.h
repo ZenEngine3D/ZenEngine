@@ -10,7 +10,7 @@ namespace zen { namespace zenAss
 {
 	class zAssetItemRef : public zEngineRef<zeAss::Asset>
 	{
-	ZENClassDeclare(zAssetItemRef, zEngineRef)
+	zenClassDeclare(zAssetItemRef, zEngineRef)
 	public:
 										zAssetItemRef();
 										zAssetItemRef(const zAssetItemRef& _Copy);

@@ -64,7 +64,7 @@ EventGPU::EventGPU(const zStringHash32& _EventName)
 //=================================================================================================
 zEngineRef<EventBase> EventGPUCounter::Create(eType _eCounterType)
 {
-	zenStaticAssert( ZENArrayCount(gaGPUCounterName)==EventGPUCounter::keType__Count+1 ); //Make sure Counter description array match enum
+	zenStaticAssert( zenArrayCount(gaGPUCounterName)==EventGPUCounter::keType__Count+1 ); //Make sure Counter description array match enum
 	static zenMem::zAllocatorPool sMemPool("Pool Event GPU Counter", sizeof(EventGPUCounter), 256, 256);
 	EventGPUCounter* pEventGpuCounter = zenNew(&sMemPool) EventGPUCounter(_eCounterType);
 	pEventGpuCounter->Start();

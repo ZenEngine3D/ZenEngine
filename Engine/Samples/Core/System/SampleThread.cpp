@@ -40,7 +40,7 @@ namespace sample
 
 	class TaskSort : public zenSys::zTask
 	{
-	ZENClassDeclare(TaskSort,zenSys::zTask);
+	zenClassDeclare(TaskSort,zenSys::zTask);
 	public:
 		TaskSort(zUInt* _pStart, zUInt* _pEnd, zUInt _uDepth=0)
 		: mpStart(_pStart)

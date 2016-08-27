@@ -27,7 +27,7 @@ GfxWindow::GfxWindow()
 
 const GfxTarget2DRef& GfxWindow::GetBackbuffer() 
 {		
-	return mrBackbufferColor[ muFrameCount % ZENArrayCount(mrBackbufferColor) ];
+	return mrBackbufferColor[ muFrameCount % zenArrayCount(mrBackbufferColor) ];
 }
 
 zenSig::zSignalEmitter0& GfxWindow::GetSignalUIRender()
@@ -238,7 +238,7 @@ void GfxWindow::UIRenderStatsHistogram(eEventType _eEventType, const char* _zHis
 void GfxWindow::UIRenderEvents( )
 {
 	const char* azWindowTile[]={"CPU Profiling", "GPU Profiling"};
-	zenStaticAssert(ZENArrayCount(azWindowTile) == keEvtTyp__Count);
+	zenStaticAssert(zenArrayCount(azWindowTile) == keEvtTyp__Count);
 
 	ImGuiStyle& CurrentStyle	= ImGui::GetStyle();
 	ImGuiStyle PreviousStyle	= CurrentStyle;

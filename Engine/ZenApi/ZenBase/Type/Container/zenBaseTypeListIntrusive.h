@@ -124,7 +124,7 @@ protected:
 template< template<class> class TRefPtr, class TItem, zListLink TItem::* TLinkOffset>
 class zListRef : public zList<TItem, TLinkOffset, false>
 {
-ZENClassDeclare(zListRef, zList)
+zenClassDeclare(zListRef, zList)
 public:
 	//Missing iterator delete
 	static void	Remove(TRefPtr<TItem>& _rItem)

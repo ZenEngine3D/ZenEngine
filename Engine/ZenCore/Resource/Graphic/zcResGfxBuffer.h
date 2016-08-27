@@ -9,7 +9,7 @@ namespace zcRes
 
 class GfxBuffer : protected GfxBufferHAL
 {
-ZENClassDeclare(GfxBuffer, GfxBufferHAL)
+zenClassDeclare(GfxBuffer, GfxBufferHAL)
 public:
 	
 protected:	

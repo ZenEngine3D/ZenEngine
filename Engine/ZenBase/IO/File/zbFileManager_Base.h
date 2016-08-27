@@ -19,7 +19,7 @@ namespace zbFile
 
 	class Filename
 	{
-	ZENClassDeclareNoParent(Filename);
+	zenClassDeclareNoParent(Filename);
 	public:
 										Filename();
 										Filename(const wchar_t* _zFilename);
@@ -55,7 +55,7 @@ namespace zbFile
 {
 	class FileInfo : public ZENClassPlatform(FileInfo)
 	{
-	ZENClassDeclare(FileInfo, ZENClassPlatform(FileInfo));
+	zenClassDeclare(FileInfo, ZENClassPlatform(FileInfo));
 	public:
 		struct FileTime
 		{
@@ -97,7 +97,7 @@ namespace zbFile
 
 	class ManagerFile_Base : public zbType::Manager
 	{
-	ZENClassDeclare(ManagerFile_Base, zbType::Manager);
+	zenClassDeclare(ManagerFile_Base, zbType::Manager);
 	public:
 		ZENInline const zWString&	GetRoot()const {return mzRootPath;}
 	
@@ -115,7 +115,7 @@ namespace zbFile
 {
 	class ManagerFile : public ZENClassPlatform(ManagerFile)
 	{
-	ZENClassDeclare(ManagerFile, ZENClassPlatform(ManagerFile));
+	zenClassDeclare(ManagerFile, ZENClassPlatform(ManagerFile));
 	public:
 
 		bool IsExistFile( const Filename& _filename )

@@ -46,7 +46,7 @@ bool GfxTexture2dHAL_DX11::Initialize()
 	bool bValidInitData(false);
 	for(zUInt mipIdx(0); mipIdx<bufferDesc.MipLevels; ++mipIdx)
 	{
-		zenAssert(mipIdx < ZENArrayCount(aInitData));			
+		zenAssert(mipIdx < zenArrayCount(aInitData));			
 		if( maMipData[mipIdx].maData.Count() > 0 )
 		{
 			bValidInitData					= true;

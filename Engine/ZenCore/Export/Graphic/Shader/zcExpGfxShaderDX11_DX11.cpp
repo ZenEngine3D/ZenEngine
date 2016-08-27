@@ -101,8 +101,8 @@ bool ExporterGfxShaderDX11_DX11::ExportWorkCompile()
 	//-------------------------------------------------------------------------
 	D3D10_SHADER_MACRO pDefines[128];
 	zUInt uDefineCount = pExportInfo->maDefines.Count();
-	zenAssertMsg(uDefineCount < ZENArrayCount(pDefines)-2, "Too many defines included, increase capacity");
-	uDefineCount		= zenMath::Min(uDefineCount, zUInt(ZENArrayCount(pDefines)-2));
+	zenAssertMsg(uDefineCount < zenArrayCount(pDefines)-2, "Too many defines included, increase capacity");
+	uDefineCount		= zenMath::Min(uDefineCount, zUInt(zenArrayCount(pDefines)-2));
 	if( uDefineCount )
 	{
 		D3D10_SHADER_MACRO*		pDefineCur	= pDefines;

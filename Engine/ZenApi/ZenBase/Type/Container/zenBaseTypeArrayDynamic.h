@@ -12,7 +12,7 @@ namespace zen { namespace zenType
 	template<class TType, GrowthPolicyFunction TGrowthPolicy=GrowthPolicyOneandHalf>
 	class zArrayDynamic : public zArrayBase<TType>
 	{
-	ZENClassDeclare(zArrayDynamic, zArrayBase<TType>)
+	zenClassDeclare(zArrayDynamic, zArrayBase<TType>)
 	public:
 									zArrayDynamic();
 									zArrayDynamic(zU32 _uCount);

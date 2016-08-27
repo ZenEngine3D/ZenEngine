@@ -8,7 +8,7 @@ namespace zeAss
 {
 	class GfxTexture2D : public AssetTyped<zenConst::keAssType_Texture2D>
 	{
-	ZENClassDeclare(GfxTexture2D, Asset)
+	zenClassDeclare(GfxTexture2D, Asset)
 	public:
 		virtual const zenAss::PropertyDefArray&	GetProperties()const;
 	};	

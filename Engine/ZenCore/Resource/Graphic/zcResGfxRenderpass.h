@@ -8,7 +8,7 @@ namespace zcRes
 {
 	class GfxRenderPass : public GfxRenderPassHAL
 	{
-	ZENClassDeclare(GfxRenderPass, GfxRenderPassHAL)
+	zenClassDeclare(GfxRenderPass, GfxRenderPassHAL)
 	};
 
 }

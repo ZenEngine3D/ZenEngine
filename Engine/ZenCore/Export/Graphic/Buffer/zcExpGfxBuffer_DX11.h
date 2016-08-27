@@ -7,7 +7,7 @@ namespace zcExp
 
 class ExporterGfxBuffer_DX11 : public ExporterBase
 {
-ZENClassDeclare(ExporterGfxBuffer_DX11, ExporterBase)
+zenClassDeclare(ExporterGfxBuffer_DX11, ExporterBase)
 public:				
 typedef zEngineRef<ExportGfxBuffer>		ExportDataRef; //todo use proper ref class
 										ExporterGfxBuffer_DX11(const ExportDataRef& _rExportData);		

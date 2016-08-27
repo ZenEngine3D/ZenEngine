@@ -18,7 +18,7 @@ namespace zcExp
 
 	class ExportGfxRenderPass : public zenRes::zExportData
 	{
-	ZENClassDeclare(ExportGfxRenderPass, zenRes::zExportData)
+	zenClassDeclare(ExportGfxRenderPass, zenRes::zExportData)
 	public:
 		//virtual bool					Serialize( zcExp::Serializer_Base& _Serializer ){return true;}		
 		zString							mzStageName;
@@ -31,7 +31,7 @@ namespace zcExp
 
 	class ExporterGfxRenderPass : public ExporterBase
 	{
-	ZENClassDeclare(ExporterGfxRenderPass, ExporterBase)
+	zenClassDeclare(ExporterGfxRenderPass, ExporterBase)
 	public:				
 	typedef zEngineRef<ExportGfxRenderPass>		ExportResultRef; //todo use proper ref class
 												ExporterGfxRenderPass(const ExportResultRef& _rExportOut);

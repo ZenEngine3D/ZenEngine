@@ -8,7 +8,7 @@ namespace zeAss
 
 class ManagerAsset : public zbType::Manager
 {
-ZENClassDeclare(ManagerAsset, zbType::Manager)
+zenClassDeclare(ManagerAsset, zbType::Manager)
 public:
 												ManagerAsset();
 	void										PackageLoad();

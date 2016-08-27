@@ -7,7 +7,7 @@ namespace zen { namespace zenType
 	template<typename TType>
 	class zVector2
 	{
-	ZENClassDeclareNoParent(zVector2)
+	zenClassDeclareNoParent(zVector2)
 	public:
 		zVector2();
 		zVector2(TType _Val);
@@ -36,7 +36,7 @@ namespace zen { namespace zenType
 	template<typename TType>
 	class zVector3
 	{
-	ZENClassDeclareNoParent(zVector3)
+	zenClassDeclareNoParent(zVector3)
 	public:
 									zVector3();
 									zVector3(TType _val);
@@ -65,7 +65,7 @@ namespace zen { namespace zenType
 	template<typename TType>
 	class zVector4
 	{
-	ZENClassDeclareNoParent(zVector4)
+	zenClassDeclareNoParent(zVector4)
 	public:
 									zVector4();
 									zVector4(TType _Val);

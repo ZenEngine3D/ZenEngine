@@ -6,7 +6,7 @@ namespace zen { namespace zenRes {
 
 	class zGfxSampler : public zcRes::GfxSamplerRef
 	{
-	ZENClassDeclare(zGfxSampler, zcRes::GfxSamplerRef);
+	zenClassDeclare(zGfxSampler, zcRes::GfxSamplerRef);
 	public:
 		using Super::Super;
 		using Super::operator=;
@@ -15,7 +15,7 @@ namespace zen { namespace zenRes {
 
 	class zGfxStateBlend : public zcRes::GfxStateBlendRef
 	{
-	ZENClassDeclare(zGfxStateBlend, zcRes::GfxStateBlendRef);
+	zenClassDeclare(zGfxStateBlend, zcRes::GfxStateBlendRef);
 	public:
 		using Super::Super;
 		using Super::operator=;
@@ -23,7 +23,7 @@ namespace zen { namespace zenRes {
 	
 	class zGfxStateDepthStencil : public zcRes::GfxStateDepthStencilRef
 	{
-	ZENClassDeclare(zGfxStateDepthStencil, zcRes::GfxStateDepthStencilRef);
+	zenClassDeclare(zGfxStateDepthStencil, zcRes::GfxStateDepthStencilRef);
 	public:
 		using Super::Super;
 		using Super::operator=;
@@ -31,7 +31,7 @@ namespace zen { namespace zenRes {
 
 	class zGfxStateRaster : public zcRes::GfxStateRasterRef
 	{
-	ZENClassDeclare(zGfxStateRaster, zcRes::GfxStateRasterRef);
+	zenClassDeclare(zGfxStateRaster, zcRes::GfxStateRasterRef);
 	public:
 		using Super::Super;
 		using Super::operator=;

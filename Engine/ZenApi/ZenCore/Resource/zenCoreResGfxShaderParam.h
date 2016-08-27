@@ -9,7 +9,7 @@ namespace zen { namespace zenRes {
 	//=============================================================================================
 	class zShaderDefine
 	{
-	ZENClassDeclareNoParent(zShaderDefine)
+	zenClassDeclareNoParent(zShaderDefine)
 	public:
 		ZENInline	zShaderDefine();
 		ZENInline	zShaderDefine(const char* _zName, const char* _zValue);
@@ -24,7 +24,7 @@ namespace zen { namespace zenRes {
 	//=============================================================================================
 	class zShaderTexture
 	{
-	ZENClassDeclareNoParent(zShaderTexture)
+	zenClassDeclareNoParent(zShaderTexture)
 	public:
 		ZENInline	zShaderTexture();
 		ZENInline	zShaderTexture(zHash32 _hTextureName, zResID _TextureID, zResID _SamplerID);
@@ -41,7 +41,7 @@ namespace zen { namespace zenRes {
 	//=============================================================================================
 	class zShaderParameter
 	{
-	ZENClassDeclareNoParent(zShaderParameter)
+	zenClassDeclareNoParent(zShaderParameter)
 	public:
 		zHash32		mhName;						//!< Parameter name
 		zU32		meType			: 4;		//!< eShaderElementType
@@ -57,7 +57,7 @@ namespace zen { namespace zenRes {
 	template <class TType, zenConst::eShaderElementType TShaderType>
 	class zShaderParamVector1 : public zShaderParameter
 	{
-	ZENClassDeclare(zShaderParamVector1, zShaderParameter)
+	zenClassDeclare(zShaderParamVector1, zShaderParameter)
 	public:
 		ZENInline		zShaderParamVector1( zHash32 _hName, TType _Value);
 		TType		mValue;
@@ -66,7 +66,7 @@ namespace zen { namespace zenRes {
 	template <class TType, zenConst::eShaderElementType TShaderType>
 	class zShaderParamVector2 : public zShaderParameter
 	{
-	ZENClassDeclare(zShaderParamVector2, zShaderParameter)
+	zenClassDeclare(zShaderParamVector2, zShaderParameter)
 	public:
 		ZENInline		zShaderParamVector2( zHash32 _hName, TType _Value1, TType _Value2); 
 		ZENInline		zShaderParamVector2( zHash32 _hName, const TType _Values[2]);
@@ -77,7 +77,7 @@ namespace zen { namespace zenRes {
 	template <class TType, zenConst::eShaderElementType TShaderType>
 	class zShaderParamVector3 : public zShaderParameter
 	{
-	ZENClassDeclare(zShaderParamVector3, zShaderParameter)
+	zenClassDeclare(zShaderParamVector3, zShaderParameter)
 	public:
 		ZENInline		zShaderParamVector3( zHash32 _hName, TType _Value1, TType _Value2, TType _Value3); 
 		ZENInline		zShaderParamVector3( zHash32 _hName, const TType _Values[3]);
@@ -88,7 +88,7 @@ namespace zen { namespace zenRes {
 	template <class TType, zenConst::eShaderElementType TShaderType>
 	class zShaderParamVector4 : public zShaderParameter
 	{
-	ZENClassDeclare(zShaderParamVector4, zShaderParameter)
+	zenClassDeclare(zShaderParamVector4, zShaderParameter)
 	public:
 		ZENInline		zShaderParamVector4( zHash32 _hName, TType _Value1, TType _Value2, TType _Value3, TType _Value4);
 		ZENInline		zShaderParamVector4( zHash32 _hName, const TType _Values[4]);

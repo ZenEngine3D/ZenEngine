@@ -8,7 +8,7 @@ namespace zbSys
 template< class T >
 class AWThread_PC : public AWThread<T>
 {
-	ZENClassDeclare(AWThread_PC, AWThread);
+	zenClassDeclare(AWThread_PC, AWThread);
 
 public:
 	explicit AWThread_PC(T* pObject, zU32 ( T::* method)(void)) : 

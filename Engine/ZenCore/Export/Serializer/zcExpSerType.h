@@ -10,7 +10,7 @@ namespace zcExp
 	template<class _Type_>
 	class StaticArraySerial : public zArrayStatic<_Type_>, public ISerialize
 	{
-	ZENClassDeclare(StaticArraySerial, ISerialize)
+	zenClassDeclare(StaticArraySerial, ISerialize)
 	public:
 		StaticArraySerial()										: zArrayStatic<_Type_>(){}
 		StaticArraySerial(const zArrayStatic<_Type_>& aCopy)	: zArrayStatic<_Type_>( aCopy ){}

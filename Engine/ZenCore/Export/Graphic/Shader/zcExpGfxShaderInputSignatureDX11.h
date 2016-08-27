@@ -6,7 +6,7 @@ namespace zcExp
 {	
 class ExportGfxInputSignatureDX11 : public zenRes::zExportData
 {
-ZENClassDeclare(ExportGfxInputSignatureDX11, zenRes::zExportData)
+zenClassDeclare(ExportGfxInputSignatureDX11, zenRes::zExportData)
 public:
 	zArrayStatic<zU8>			maDummyShaderCode;
 };

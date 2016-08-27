@@ -6,7 +6,7 @@ namespace zen { namespace zenRes
 {	
 	class zGfxVertex : public zcRes::GfxVertexRef
 	{
-	ZENClassDeclare(zGfxVertex, zcRes::GfxVertexRef);
+	zenClassDeclare(zGfxVertex, zcRes::GfxVertexRef);
 	public:
 		using Super::Super;
 		using Super::operator=;
@@ -51,7 +51,7 @@ namespace zen { namespace zenRes
 
 	class zGfxIndex : public zcRes::GfxIndexRef
 	{
-	ZENClassDeclare(zGfxIndex, zcRes::GfxIndexRef);
+	zenClassDeclare(zGfxIndex, zcRes::GfxIndexRef);
 	public:
 		using Super::Super;
 		using Super::operator=;	
@@ -65,7 +65,7 @@ namespace zen { namespace zenRes
 
 	class zGfxTexture2d : public zcRes::GfxTexture2dRef
 	{
-	ZENClassDeclare(zGfxTexture2d, zcRes::GfxTexture2dRef);
+	zenClassDeclare(zGfxTexture2d, zcRes::GfxTexture2dRef);
 	public:
 		using Super::Super;
 		using Super::operator=;
@@ -77,7 +77,7 @@ namespace zen { namespace zenRes
 
 	class zGfxTarget2D : public zcRes::GfxTarget2DRef
 	{
-	ZENClassDeclare(zGfxTarget2D, zcRes::GfxTarget2DRef);
+	zenClassDeclare(zGfxTarget2D, zcRes::GfxTarget2DRef);
 	public:		
 		using Super::Super;
 		using Super::operator=;
@@ -91,7 +91,7 @@ namespace zen { namespace zenRes
 	
 	class zGfxBuffer : public zcRes::GfxBufferRef
 	{
-	ZENClassDeclare(zGfxBuffer, zcRes::GfxBufferRef);
+	zenClassDeclare(zGfxBuffer, zcRes::GfxBufferRef);
 	public:		
 		using Super::Super;
 		using Super::operator=;
@@ -104,7 +104,7 @@ namespace zen { namespace zenRes
 		{
 			return zGfxBuffer::Create( reinterpret_cast<const zU8*>(_aData.First()), _aData.SizeMem(), sizeof(TData), _uElemCount);
 		}
-	
+			
 	protected:
 		static zGfxBuffer		Create(zUInt _uElemSize, zU32 _uElemCount/*, zFlagResTexUse _UseFlags*/);
 		static zGfxBuffer		Create(const zU8* _pData, zUInt _uDataSize, zUInt _uElemSize, zU32 _uElemCount/*, zFlagResTexUse _UseFlags*/);

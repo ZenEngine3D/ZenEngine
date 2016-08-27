@@ -14,7 +14,7 @@ namespace zcExp
 	
 	class ExportGfxBuffer : public zenRes::zExportData
 	{
-	ZENClassDeclare(ExportGfxBuffer, zenRes::zExportData)
+	zenClassDeclare(ExportGfxBuffer, zenRes::zExportData)
 	public:
 		zArrayStatic<zU8>			maData;	
 		zU32						muElementSize;

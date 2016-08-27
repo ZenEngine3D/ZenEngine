@@ -8,7 +8,7 @@ namespace zen { namespace zenType
 template<class _Type_>
 class zRegion
 {
-ZENClassDeclareNoParent(zRegion)
+zenClassDeclareNoParent(zRegion)
 public:
 	ZENInlineForce zRegion(void); //need to specialize for different types (right now there is a default implementation for zI8, zU8, zI16, zU16, zI32, zU32, zI64, zU64, float, double)
 	ZENInlineForce zRegion(const _Type_ inX1, const _Type_ inY1, const _Type_ inX2, const _Type_ inY2);

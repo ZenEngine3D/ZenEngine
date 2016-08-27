@@ -9,7 +9,7 @@ namespace zen { namespace zenType {
 //! @todo clean make this all const so we can pass on read only resources
 	class zRefCounted
 	{
-	ZENClassDeclareNoParent(zRefCounted)
+	zenClassDeclareNoParent(zRefCounted)
 	public:
 		ZENInline void					ReferenceAdd();
 		ZENInline void					ReferenceRem();
@@ -28,7 +28,7 @@ namespace zen { namespace zenType {
 	
 	class zReference
 	{
-	ZENClassDeclareNoParent(zReference)
+	zenClassDeclareNoParent(zReference)
 	public:
 		 									zReference();
 		 									zReference(zRefCounted* _pReference);
@@ -48,7 +48,7 @@ namespace zen { namespace zenType {
 	template<class TRefCountedType>
 	class zEngineRef : public zReference
 	{
-	ZENClassDeclare(zEngineRef, zReference)
+	zenClassDeclare(zEngineRef, zReference)
 	public:
 		ZENInline 							zEngineRef();
 		ZENInline 							zEngineRef(TRefCountedType* _pReference);
@@ -68,7 +68,7 @@ namespace zen { namespace zenType {
 	template<class TRefCountedType>
 	class zEngineConstRef : public zReference
 	{
-	ZENClassDeclare(zEngineConstRef, zReference)
+	zenClassDeclare(zEngineConstRef, zReference)
 	public:
 		ZENInline 							zEngineConstRef();
 		ZENInline 							zEngineConstRef(const TRefCountedType* _pReference);
@@ -89,7 +89,7 @@ namespace zen { namespace zenType {
 	template<class TRefCountedType>
 	class zGameRef : public zReference
 	{
-	ZENClassDeclare(zGameRef, zReference)
+	zenClassDeclare(zGameRef, zReference)
 	public:
 		ZENInline 							zGameRef();
 		ZENInline 							zGameRef(TRefCountedType* _pReference);
@@ -109,7 +109,7 @@ namespace zen { namespace zenType {
 	template<class TRefCountedType>
 	class zGameConstRef : public zReference
 	{
-	ZENClassDeclare(zGameConstRef, zReference)
+	zenClassDeclare(zGameConstRef, zReference)
 	public:
 		ZENInline 							zGameConstRef();
 		ZENInline 							zGameConstRef(const TRefCountedType* _pReference);

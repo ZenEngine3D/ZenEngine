@@ -76,7 +76,7 @@ void zxImGUIHelper::Render(const zEngineRef<zxRenderData>& _rImGuiData, WindowIn
 		for (zUInt idx(0); idx<WindowInputState::keMouseBtn__Count; ++idx)
 			io.MouseDown[idx] = _pInputData->mbIsMouseDown[idx];
 
-		for (zUInt idx(0), count(zenMath::Min(_pInputData->mbIsKeyDown.size(), ZENArrayCount(io.KeysDown))); idx<count; ++idx)
+		for (zUInt idx(0), count(zenMath::Min(_pInputData->mbIsKeyDown.size(), zenArrayCount(io.KeysDown))); idx<count; ++idx)
 			io.KeysDown[idx] = _pInputData->mbIsKeyDown[idx];
 
 		for (zUInt idx(0), count(_pInputData->maCharacterPressed.Count()); idx<count; ++idx)

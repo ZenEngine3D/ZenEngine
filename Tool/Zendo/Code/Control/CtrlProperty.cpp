@@ -266,13 +266,13 @@ wxZenVectorProperty<TPropertyClass, TElementCast, TWxVector, TWxProperty>::wxZen
 
 	TWxVector wxValue;
 	TWxVector wxDefault;
-	for(zUInt idx(0); idx<ZENArrayCount(PropertyDef.mDefault.values); ++idx)
+	for(zUInt idx(0); idx<zenArrayCount(PropertyDef.mDefault.values); ++idx)
 	{
 		wxValue.values[idx]		= rPropertyVal.GetValue().values[idx];
 		wxDefault.values[idx]	= PropertyDef.mDefault.values[idx];
 	}
 
-	for(zUInt idx(0); idx<ZENArrayCount(rPropertyVal.GetValue().values); ++idx)
+	for(zUInt idx(0); idx<zenArrayCount(rPropertyVal.GetValue().values); ++idx)
 	{
 		const wxString zNames[]={wxT("    X"),wxT("    Y"),wxT("    Z"),wxT("    W")};
 		TWxProperty* pProp		= zenNewDefault TWxProperty( wxString::Format("%s", zNames[idx]),wxPG_LABEL);
@@ -286,7 +286,7 @@ wxZenVectorProperty<TPropertyClass, TElementCast, TWxVector, TWxProperty>::wxZen
 	
 	SetDefaultValue				( WXVARIANT(wxDefault) );
 	SetClientData				( zenNew(&sPoolMetaData)TypedMetaData(this, _rAsset, _rPropertyValue, WXVARIANT(wxValue)) );
-	switch( ZENArrayCount(PropertyDef.mDefault.values) )
+	switch( zenArrayCount(PropertyDef.mDefault.values) )
 	{
 	case 1: SetHelpString( wxString::Format(_zTooltip, (const char*)PropertyDef.mzDescription, PropertyDef.mDefault.values[0]));	break;
 	case 2: SetHelpString( wxString::Format(_zTooltip, (const char*)PropertyDef.mzDescription, PropertyDef.mDefault.values[0],PropertyDef.mDefault.values[1]));	break;
@@ -307,7 +307,7 @@ void wxZenVectorProperty<TPropertyClass, TElementCast, TWxVector, TWxProperty>::
 	if ( !GetChildCount() ) return;
 	TWxVector vector;
 	vector << m_value;
-	for( zUInt idx(0); idx<ZENArrayCount(vector.values); ++idx)
+	for( zUInt idx(0); idx<zenArrayCount(vector.values); ++idx)
 		Item(idx)->SetValue( vector.values[idx] );
 }
 
@@ -330,7 +330,7 @@ void wxZenVectorProperty<TPropertyClass, TElementCast, TWxVector, TWxProperty>::
 
 	// Vector value
 	TWxVector wxValue;	
-	for (zUInt idx(0); idx < ZENArrayCount(PropertyDef.mDefault.values); ++idx)
+	for (zUInt idx(0); idx < zenArrayCount(PropertyDef.mDefault.values); ++idx)
 		wxValue.values[idx] = rPropertyVal.GetValue().values[idx];	
 	mpOwner->SetValue( WXVARIANT(wxValue) );
 
@@ -352,7 +352,7 @@ bool wxZenVectorProperty<TPropertyClass, TElementCast, TWxVector, TWxProperty>::
 		TWxVector vector;
 		vector << mpOwner->GetValue();
 		TPropertyClass::ValueStorage vValue;
-		for(zUInt idx(0); idx<ZENArrayCount(vector.values); ++idx )
+		for(zUInt idx(0); idx<zenArrayCount(vector.values); ++idx )
 			vValue = vector.values[idx];
 
  		rPropertyVal	= vValue;

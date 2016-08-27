@@ -9,7 +9,7 @@ namespace zcRes
 	//=============================================================================================
 	class GfxRenderPassHAL_DX11 : public zcExp::ExportGfxRenderPass
 	{
-	ZENClassDeclare(GfxRenderPassHAL_DX11, zcExp::ExportGfxRenderPass)
+	zenClassDeclare(GfxRenderPassHAL_DX11, zcExp::ExportGfxRenderPass)
 	public:
 		bool									Initialize();
 		GfxStateBlendRef						mrStateBlend;

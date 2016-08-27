@@ -9,7 +9,7 @@ namespace zen { namespace zenPerf
 
 class zEventRef : public zEngineRef<zcPerf::EventBase>
 {
-ZENClassDeclare(zEventRef, zEngineRef);
+zenClassDeclare(zEventRef, zEngineRef);
 public:
 	static zEventRef		CreateCPU(const zStringHash32& _EventName);
 	static zEventRef		CreateGPU(const zStringHash32& _EventName);

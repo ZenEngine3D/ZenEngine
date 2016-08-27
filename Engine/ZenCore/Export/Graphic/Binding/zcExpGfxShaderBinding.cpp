@@ -46,8 +46,8 @@ namespace zcExp
 		ExportInfoGfxShaderBinding*	pExport = static_cast<ExportInfoGfxShaderBinding*>(mpExportInfo);
 		const zResID					aShaderIdnullptr[]={zResID(),zResID()};
 		zArrayStatic<zResID>			aShaderID;
-		zenStaticAssert(ZENArrayCount(aShaderIdnullptr) == zenConst::keShaderStage__Count);
-		aShaderID.Copy(aShaderIdnullptr, ZENArrayCount(aShaderIdnullptr));
+		zenStaticAssert(zenArrayCount(aShaderIdnullptr) == zenConst::keShaderStage__Count);
+		aShaderID.Copy(aShaderIdnullptr, zenArrayCount(aShaderIdnullptr));
 		mdStagePerParamDef.Init(8);
 		mdStagePerParamDef.SetDefaultValue(0);
 		for(zUInt idx=0; idx<pExport->maShaderID.Count(); ++idx)

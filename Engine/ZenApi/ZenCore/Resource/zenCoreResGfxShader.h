@@ -6,7 +6,7 @@ namespace zen { namespace zenRes {
 	
 	class zGfxShaderParamDef : public zcRes::GfxShaderParamDefRef
 	{
-	ZENClassDeclare(zGfxShaderParamDef, zcRes::GfxShaderParamDefRef);
+	zenClassDeclare(zGfxShaderParamDef, zcRes::GfxShaderParamDefRef);
 	public:
 		using Super::Super;
 		using Super::operator=;
@@ -14,7 +14,7 @@ namespace zen { namespace zenRes {
 
 	class zGfxShaderParam : public zcRes::GfxShaderParamRef
 	{
-	ZENClassDeclare(zGfxShaderParam, zcRes::GfxShaderParamRef);
+	zenClassDeclare(zGfxShaderParam, zcRes::GfxShaderParamRef);
 	public:
 		using Super::Super;
 		using Super::operator=;
@@ -23,7 +23,7 @@ namespace zen { namespace zenRes {
 	//! @todo Clean: Expose shader compiling to runtime?
 	class zGfxShaderVertex : public zcRes::GfxShaderVertexRef
 	{
-	ZENClassDeclare(zGfxShaderVertex, zcRes::GfxShaderVertexRef);
+	zenClassDeclare(zGfxShaderVertex, zcRes::GfxShaderVertexRef);
 	public:
 		using Super::Super;
 		using Super::operator=;
@@ -34,7 +34,7 @@ namespace zen { namespace zenRes {
 
 	class zGfxShaderPixel : public zcRes::GfxShaderPixelRef
 	{
-	ZENClassDeclare(zGfxShaderPixel, zcRes::GfxShaderPixelRef);
+	zenClassDeclare(zGfxShaderPixel, zcRes::GfxShaderPixelRef);
 	public:
 		using Super::Super;
 		using Super::operator=;

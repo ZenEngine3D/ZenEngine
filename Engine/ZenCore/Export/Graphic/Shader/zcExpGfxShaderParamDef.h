@@ -6,7 +6,7 @@ namespace zcExp
 {
 	class ShaderParamItemInfo
 	{
-	ZENClassDeclareNoParent(ShaderParamItemInfo)
+	zenClassDeclareNoParent(ShaderParamItemInfo)
 	public:	
 		zU32	muOffset;				//!< Offset of value in constant buffer or register index (maximum 64k offset)
 		zU32	muSize			: 13;	//!< Parameter entire memory size (maximum 8192 bytes)

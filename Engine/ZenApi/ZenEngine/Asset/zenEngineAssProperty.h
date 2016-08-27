@@ -15,7 +15,7 @@ namespace zen { namespace zenAss
 	//=============================================================================
 	class PropertyValue : public zRefCounted
 	{
-	ZENClassDeclare(PropertyValue, zRefCounted);
+	zenClassDeclare(PropertyValue, zRefCounted);
 	public:
 							PropertyValue(const zAssetItemRef& _rOwnerAsset, const PropertyDefRef& _rOwnerDefinition);
 												//!< @todo Cleanup : Asset ptr really needed? Pointer to signal object instead?
@@ -26,7 +26,7 @@ namespace zen { namespace zenAss
 	template<class TClassDefinition, class TClassValueStorage>
 	class TPropertyValue : public PropertyValue
 	{
-	ZENClassDeclare(TPropertyValue, PropertyValue);
+	zenClassDeclare(TPropertyValue, PropertyValue);
 	public:
 							TPropertyValue(const zAssetItemRef& _rOwnerAsset, const PropertyDefRef& _rOwnerDefinition);
 		TClassValueStorage	mValue;
@@ -37,7 +37,7 @@ namespace zen { namespace zenAss
 	//=============================================================================
 	class PropertyValueRef : public zGameRef<PropertyValue>
 	{
-	ZENClassDeclare(PropertyValueRef, zGameRef<PropertyValue>);
+	zenClassDeclare(PropertyValueRef, zGameRef<PropertyValue>);
 	public:
 												PropertyValueRef(){}
 												PropertyValueRef(PropertyValue* _pReference ):Super(_pReference){}
@@ -55,7 +55,7 @@ namespace zen { namespace zenAss
 	template<class TClassDefinition, class TClassValueStorage>
 	class TPropertyValueRef : public PropertyValueRef
 	{
-		ZENClassDeclare(TPropertyValueRef, PropertyValueRef);	
+		zenClassDeclare(TPropertyValueRef, PropertyValueRef);	
 	public:
 		typedef TPropertyValue<TClassDefinition, TClassValueStorage> Value;
 
@@ -73,7 +73,7 @@ namespace zen { namespace zenAss
 	//=============================================================================
 	class PropertyDefinition : public zRefCounted
 	{
-	ZENClassDeclare(PropertyDefinition, zRefCounted);
+	zenClassDeclare(PropertyDefinition, zRefCounted);
 	public:												
 		virtual PropertyValueRef				Allocate(const zAssetItemRef& _rOwnerAsset)const=0;
 		virtual zenConst::eAssetPropertyType	GetType()const=0;
@@ -96,7 +96,7 @@ namespace zen { namespace zenAss
  	template<zenConst::eAssetPropertyType TPropertyType, class TClassDefinition, class TClassValue>
  	class TPropertyDefinition : public PropertyDefinition
  	{
-	ZENClassDeclare(TPropertyDefinition, PropertyDefinition);	
+	zenClassDeclare(TPropertyDefinition, PropertyDefinition);	
 	public:		
 		typedef TPropertyValue<TClassDefinition, TClassValue>		ValueProperty;	//!< Wrapper around PropertyValue (Definition+RefCount+Value)
 		typedef TPropertyValueRef<TClassDefinition, TClassValue>	ValueRef;		//!< PropertyRef to access the value
@@ -113,7 +113,7 @@ namespace zen { namespace zenAss
  	};
 
 #define ZENPropertyDefinitionDeclare( ClassName, ... )																	\
-	ZENClassDeclare(ClassName, TPropertyDefinition);																	\
+	zenClassDeclare(ClassName, TPropertyDefinition);																	\
 	private:																											\
 		ClassName(const char* _zName, const char* _zDisplayName, const char* _zDescription, bool _bShowInAssetDesc, bool _bIsEditable )	\
 		: TPropertyDefinition(_zName, _zDisplayName, _zDescription, _bShowInAssetDesc, _bIsEditable){}					\

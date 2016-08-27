@@ -30,9 +30,9 @@
 //=================================================================================================
 #include "zenBaseConstMacro.inl"
 
-#define ZENArrayCount(_Array_)						(sizeof(_Array_)/sizeof((_Array_)[0]))
-#define ZENClassDeclareNoParent(_Class_)			public: void zenClassDeclareCheck(){ zenStaticAssertMsg( sizeof(*this) == sizeof(_Class_), "Wrong Class name in ClassDeclare macro" );}
-#define ZENClassDeclare(_Class_, _ClassParent_)		ZENClassDeclareNoParent(_Class_)			\
+#define zenArrayCount(_Array_)						(sizeof(_Array_)/sizeof((_Array_)[0]))
+#define zenClassDeclareNoParent(_Class_)			public: void zenClassDeclareCheck(){ zenStaticAssertMsg( sizeof(*this) == sizeof(_Class_), "Wrong Class name in ClassDeclare macro" );}
+#define zenClassDeclare(_Class_, _ClassParent_)		zenClassDeclareNoParent(_Class_)			\
 													public: typedef _ClassParent_ Super;
 #include ZENHeaderPlatform(zenBaseConstMacro)
 

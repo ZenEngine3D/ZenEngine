@@ -7,7 +7,7 @@ namespace zcPerf
 	//! @brief Basic class for CPU event, code share by all platform
 	class EventCPU_Base : public EventBase
 	{
-	ZENClassDeclare(EventCPU_Base, EventBase)
+	zenClassDeclare(EventCPU_Base, EventBase)
 	public:									
 		virtual void	Start();
 		virtual void	Stop();
@@ -23,7 +23,7 @@ namespace zcPerf
 {
 	class EventCPU : public EventCPU_Platform
 	{
-	ZENClassDeclare(EventCPU, EventCPU_Platform)
+	zenClassDeclare(EventCPU, EventCPU_Platform)
 	public:						
 		static zEngineRef<EventBase>	Create(const zStringHash32& _EventName);
 

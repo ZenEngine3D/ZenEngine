@@ -27,7 +27,7 @@ const char* ManagerLog::ssLogTypeDesc[zenConst::keLog__Count+1]={
 bool ManagerLog::Load()
 {
 	Reset();
-	zenStaticAssertMsg(ZENArrayCount(ManagerLog::ssLogTypeDesc) == zenConst::keLog__Count+1, "ssLogTypeDesc  must have as many entries as the enum + 1"); 
+	zenStaticAssertMsg(zenArrayCount(ManagerLog::ssLogTypeDesc) == zenConst::keLog__Count+1, "ssLogTypeDesc  must have as many entries as the enum + 1"); 
 	return true;
 }
 

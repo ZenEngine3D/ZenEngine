@@ -9,7 +9,7 @@ namespace zcRes
 
 class GfxTexture2d : protected GfxTexture2dHAL
 {
-ZENClassDeclare(GfxTexture2d, GfxTexture2dHAL)
+zenClassDeclare(GfxTexture2d, GfxTexture2dHAL)
 public:
 	
 	ZENInline const zVec2U16& GetDim()

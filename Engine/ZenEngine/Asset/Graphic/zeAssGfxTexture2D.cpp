@@ -15,7 +15,7 @@ namespace zeAss
 			zenAss::PropertyFile::Create("Source",		"", "Texture file",		true,	zenT(""), zenT("Images|*.bmp;*.png;*.jpeg;*.jpg|BMP(*.bmp)|*.bmp|PNG(*.png)|*.png|JPEG(*.jpg;*.jpeg)|*.jpg;*.jpeg")),
 			zenAss::PropertyFile::Create("Size",		"", "Texture file",		true,	zenT(""), zenT("Images|*.bmp;*.png;*.jpeg;*.jpg|BMP(*.bmp)|*.bmp|PNG(*.png)|*.png|JPEG(*.jpg;*.jpeg)|*.jpg;*.jpeg")),
 		};
-		static zenAss::PropertyDefArray sarProperties( arPropertiesAll, ZENArrayCount(arPropertiesAll) );
+		static zenAss::PropertyDefArray sarProperties( arPropertiesAll, zenArrayCount(arPropertiesAll) );
 		return sarProperties;	
 	}
 

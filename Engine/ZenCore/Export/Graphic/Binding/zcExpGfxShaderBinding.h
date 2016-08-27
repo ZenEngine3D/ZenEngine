@@ -12,7 +12,7 @@ namespace zcExp
 
 	class ExportGfxShaderBinding : public zenRes::zExportData
 	{
-	ZENClassDeclare(ExportGfxShaderBinding, zenRes::zExportData)
+	zenClassDeclare(ExportGfxShaderBinding, zenRes::zExportData)
 	public:
 		//! @class Used to track texture SlotIndex and SlotCount
 		struct TextureSlot //: public zcExp::ISerialize
@@ -35,7 +35,7 @@ namespace zcExp
 
 	class ExporterGfxShaderBinding : public ExporterBase
 	{
-	ZENClassDeclare(ExporterGfxShaderBinding, ExporterBase)
+	zenClassDeclare(ExporterGfxShaderBinding, ExporterBase)
 	public:											
 											ExporterGfxShaderBinding(zenRes::zExportData* _pExportOut);
 	protected:	

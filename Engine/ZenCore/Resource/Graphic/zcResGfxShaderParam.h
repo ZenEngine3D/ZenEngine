@@ -8,13 +8,13 @@ namespace zcRes
 {
 	class GfxShaderParamDef : protected GfxShaderParamDefHAL
 	{
-	ZENClassDeclare(GfxShaderParamDef, GfxShaderParamDefHAL)
+	zenClassDeclare(GfxShaderParamDef, GfxShaderParamDefHAL)
 	public:
 	};
 
 	class GfxShaderParam : protected GfxShaderParamHAL
 	{
-	ZENClassDeclare(GfxShaderParam, GfxShaderParamHAL)
+	zenClassDeclare(GfxShaderParam, GfxShaderParamHAL)
 	public:
 		using Super::SetValue;
 	};	

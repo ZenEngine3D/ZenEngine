@@ -12,7 +12,7 @@ namespace zbType
 //=================================================================================================
 class Manager
 {
-ZENClassDeclareNoParent(Manager);
+zenClassDeclareNoParent(Manager);
 public:
 	//=============================================================================================
 	//! @brief		Should be empty

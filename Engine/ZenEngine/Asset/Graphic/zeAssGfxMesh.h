@@ -8,7 +8,7 @@ namespace zeAss
 {
 	class GfxMesh : public AssetTyped<zenConst::keAssType_Mesh>
 	{
-	ZENClassDeclare(GfxMesh, Asset)
+	zenClassDeclare(GfxMesh, Asset)
 	public:
 		virtual const zenAss::PropertyDefArray&	GetProperties()const;
 	};

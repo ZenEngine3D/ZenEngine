@@ -18,7 +18,7 @@ namespace zbMem
 	//=================================================================================================
 	class AllocHeader : public zenMem::zAllocator::HeaderListItem
 	{
-	ZENClassDeclareNoParent(AllocHeader);
+	zenClassDeclareNoParent(AllocHeader);
 	public:			
 		zenMem::zAllocator*		mpAllocator;
 		size_t					muWantedSize;

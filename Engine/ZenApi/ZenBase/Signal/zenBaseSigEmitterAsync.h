@@ -15,7 +15,7 @@ namespace zen { namespace zenSig
 //=================================================================================================	
 class zSignalEmitterAsync
 {
-ZENClassDeclareNoParent(zSignalEmitterAsync)
+zenClassDeclareNoParent(zSignalEmitterAsync)
 public:
 						zSignalEmitterAsync();
 						zSignalEmitterAsync(class zSignalEmitterAsyncGroup* _pEmitterGroup);
@@ -58,7 +58,7 @@ public:
 //=================================================================================================	
 class zSignalEmitterAsync0 : public zSignal0, public zSignalEmitterAsync
 {
-ZENClassDeclare(zSignalEmitterAsync0, zSignal0)
+zenClassDeclare(zSignalEmitterAsync0, zSignal0)
 public:
 	zSignalEmitterAsync0()
 	: zSignalEmitterAsync(nullptr)
@@ -87,7 +87,7 @@ public:
 template<class TParam1>
 class zSignalEmitterAsync1 : public zSignal1<TParam1>, public zSignalEmitterAsync
 {
-ZENClassDeclare(zSignalEmitterAsync1, zSignal1)
+zenClassDeclare(zSignalEmitterAsync1, zSignal1)
 public:
 					zSignalEmitterAsync1();
 					zSignalEmitterAsync1(zSignalEmitterAsyncGroup* _pEmitterGroup);
@@ -111,7 +111,7 @@ public:
 template<class TParam1, class TParam2>
 class zSignalEmitterAsync2 : public zSignal2<TParam1, TParam2>, public zSignalEmitterAsync
 {
-ZENClassDeclare(zSignalEmitterAsync2, zSignal2)
+zenClassDeclare(zSignalEmitterAsync2, zSignal2)
 public:	
 					zSignalEmitterAsync2();
 					zSignalEmitterAsync2(zSignalEmitterAsyncGroup* _pEmitterGroup);
@@ -134,7 +134,7 @@ public:
 template<class TParam1, class TParam2, class TParam3>
 class zSignalEmitterAsync3 : public zSignal3<TParam1, TParam2, TParam3>, public zSignalEmitterAsync
 {
-ZENClassDeclare(zSignalEmitterAsync3, zSignalEmitter3)
+zenClassDeclare(zSignalEmitterAsync3, zSignalEmitter3)
 public:	
 					zSignalEmitterAsync3();
 					zSignalEmitterAsync3(zSignalEmitterAsyncGroup* _pEmitterGroup);

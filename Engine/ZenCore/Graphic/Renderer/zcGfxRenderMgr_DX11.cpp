@@ -216,7 +216,7 @@ void ManagerRender::NamedEventBegin(const zStringHash32& zName)
 	if( mbDX11ProfilerDetected )
 	{
 		WCHAR zEventName[64];
-		mbstowcs_s(nullptr, zEventName, zName.mzName, ZENArrayCount(zEventName));
+		mbstowcs_s(nullptr, zEventName, zName.mzName, zenArrayCount(zEventName));
 		mDX11pPerf->BeginEvent(zEventName);
 	}
 }

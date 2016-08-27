@@ -17,17 +17,17 @@ namespace zcRes
 //=============================================================================================
 class GfxInputSignature : protected GfxInputSignatureHAL_DX11
 {
-ZENClassDeclare(GfxInputSignature, GfxInputSignatureHAL_DX11)
+zenClassDeclare(GfxInputSignature, GfxInputSignatureHAL_DX11)
 };
 
 class GfxShaderVertex : protected GfxShaderVertexHAL_DX11
 {
-ZENClassDeclare(GfxShaderVertex, GfxShaderVertexHAL_DX11)
+zenClassDeclare(GfxShaderVertex, GfxShaderVertexHAL_DX11)
 };
 
 class GfxShaderPixel : protected GfxShaderPixelHAL_DX11
 {
-ZENClassDeclare(GfxShaderPixel, GfxShaderPixelHAL_DX11)
+zenClassDeclare(GfxShaderPixel, GfxShaderPixelHAL_DX11)
 };
 
 }

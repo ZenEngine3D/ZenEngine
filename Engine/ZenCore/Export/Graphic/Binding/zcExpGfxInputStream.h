@@ -13,7 +13,7 @@ struct ExportInfoGfxInputStream : public ExportInfoBase
 
 class ExportGfxInputStream : public zenRes::zExportData
 {
-ZENClassDeclare(ExportGfxInputStream, zenRes::zExportData)
+zenClassDeclare(ExportGfxInputStream, zenRes::zExportData)
 public:
 	//virtual bool	Serialize( zcExp::Serializer_Base& _Serializer ){return true;}
 	zResID			mVertexBufferID;
@@ -22,7 +22,7 @@ public:
 
 class ExporterGfxInputStream : public ExporterBase
 {
-ZENClassDeclare(ExporterGfxInputStream, ExporterBase)
+zenClassDeclare(ExporterGfxInputStream, ExporterBase)
 public:				
 typedef zEngineRef<ExportGfxInputStream>	ExportResultRef; //todo use proper ref class
 											ExporterGfxInputStream(const ExportResultRef& _rExportOut);		

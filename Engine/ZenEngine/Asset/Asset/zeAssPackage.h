@@ -7,7 +7,7 @@ namespace zeAss
 {
 	class Package : public zRefCounted
 	{
-	ZENClassDeclare(Package, zRefCounted)
+	zenClassDeclare(Package, zRefCounted)
 	public:		
 													Package			();
 		virtual										~Package		();

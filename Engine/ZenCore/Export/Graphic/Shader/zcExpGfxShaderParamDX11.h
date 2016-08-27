@@ -6,7 +6,7 @@ namespace zcExp
 {
 	class ExportGfxShaderParamDX11 : public zenRes::zExportData
 	{
-	ZENClassDeclare(ExportGfxShaderParamDX11, zenRes::zExportData)
+	zenClassDeclare(ExportGfxShaderParamDX11, zenRes::zExportData)
 	public:
 		zResID					mParentParamDefID;	//!< Parent ShaderParam definition
 		zArrayStatic<zU8>		maParameterValues;	//!< Bytes data for all buffer values (see ShaderParamDef for each parameter start offset in array)

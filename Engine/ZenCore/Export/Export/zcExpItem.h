@@ -41,7 +41,7 @@ protected:
 
 class ExporterNone : public ExporterBase
 {
-ZENClassDeclare(ExporterNone, ExporterBase)
+zenClassDeclare(ExporterNone, ExporterBase)
 public:
 	virtual bool ExportStart();
 };

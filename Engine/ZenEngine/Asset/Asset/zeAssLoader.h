@@ -8,7 +8,7 @@ namespace zeAss
 
 class AssetSerializer
 {
-ZENClassDeclareNoParent(AssetSerializer)
+zenClassDeclareNoParent(AssetSerializer)
 public:	
 	virtual bool	LoadPackages()=0;	 
 	virtual bool	Save		( const zenAss::zPackageRef& _rPackage)=0;

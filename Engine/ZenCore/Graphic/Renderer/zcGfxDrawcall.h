@@ -12,7 +12,7 @@ namespace zcGfx
 //=================================================================================================	
 class Command : public zRefCounted
 {
-ZENClassDeclare(Command, zRefCounted)
+zenClassDeclare(Command, zRefCounted)
 public:											
 	virtual void			Invoke(){};	//!< Used by non drawing drawcall, else skip virtual call and render directly
 	static void				ResetCommandCount();
@@ -82,7 +82,7 @@ protected:
 
 class CommandDraw : public Command
 {
-ZENClassDeclare(CommandDraw, Command)
+zenClassDeclare(CommandDraw, Command)
 public:
 	static zEngineRef<Command>	Create(	const zcRes::GfxRenderPassRef& _rRenderPass, const zcRes::GfxMeshStripRef& _rMeshStrip, zU32 _uIndexFirst=0, zU32 _uIndexCount=0xFFFFFFFF, const zVec4U16& _vScreenScissor = zVec4U16(0,0,0xFFFF,0xFFFF));
 
@@ -96,7 +96,7 @@ protected:
 
 class CommandClearColor : public Command
 {
-ZENClassDeclare(CommandClearColor, Command)
+zenClassDeclare(CommandClearColor, Command)
 public:
 	static zEngineRef<Command>	Create( const zcRes::GfxRenderPassRef& _rRenderPass, const zcRes::GfxTarget2DRef& _rRTColor, const zVec4F& _vRGBA,  const zColorMask& _ColorMask=zenConst::kColorMaskRGBA, const zVec2S16& _vOrigin=zVec2S16(0,0), const zVec2U16& _vDim=zVec2U16(0,0) );
 	virtual void				Invoke();
@@ -111,7 +111,7 @@ protected:
 
 class CommandClearDepthStencil : public Command
 {
-ZENClassDeclare(CommandClearDepthStencil, Command)
+zenClassDeclare(CommandClearDepthStencil, Command)
 public:
 	static zEngineRef<Command>	Create( const zcRes::GfxRenderPassRef& _rRenderPass, const zcRes::GfxTarget2DRef& _rRTDepth, bool _bClearDepth, float _fDepthValue=1.f, bool _bClearStencil=false, zU8 _uStencilValue=128);
 	virtual void				Invoke();
@@ -126,7 +126,7 @@ protected:
 
 class CommandUpdateIndex : public Command
 {
-	ZENClassDeclare(CommandUpdateIndex, Command)
+	zenClassDeclare(CommandUpdateIndex, Command)
 public:
 	static zEngineRef<Command>	Create( const zcRes::GfxIndexRef& _rIndex, zU8* _pData, zUInt _uOffset=0, zUInt _uSize=0xFFFFFFFFFFFFFFFF);
 	virtual void				Invoke();
@@ -140,7 +140,7 @@ protected:
 
 class CommandUpdateVertex : public Command
 {
-ZENClassDeclare(CommandUpdateVertex, Command)
+zenClassDeclare(CommandUpdateVertex, Command)
 public:
 	static zEngineRef<Command>	Create( const zcRes::GfxVertexRef& _rVertex, zU8* _pData, zUInt _uOffset=0, zUInt _uSize=0xFFFFFFFFFFFFFFFF);
 	virtual void				Invoke();

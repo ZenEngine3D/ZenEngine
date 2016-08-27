@@ -18,7 +18,7 @@ namespace zcExp
 	
 	class ExportGfxMeshStrip : public zenRes::zExportData
 	{
-	ZENClassDeclare(ExportGfxMeshStrip, zenRes::zExportData)
+	zenClassDeclare(ExportGfxMeshStrip, zenRes::zExportData)
 	public:
 		//virtual bool						Serialize( zcExp::Serializer_Base& _Serializer ){return true;}
 		zResID								mIndexBufferID;
@@ -34,7 +34,7 @@ namespace zcExp
 
 	class ExporterGfxMeshStrip : public ExporterBase
 	{
-	ZENClassDeclare(ExporterGfxMeshStrip, ExporterBase)
+	zenClassDeclare(ExporterGfxMeshStrip, ExporterBase)
 	public:				
 		typedef zEngineRef<ExportGfxMeshStrip>	ExportResultRef; 
 												ExporterGfxMeshStrip(const ExportResultRef& _rExportOut);

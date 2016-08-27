@@ -13,7 +13,7 @@ namespace zen { namespace zenMem
 	//=================================================================================================
 	class zAllocatorMalloc : public zenMem::zAllocator
 	{
-	ZENClassDeclare(zAllocatorMalloc, zenMem::zAllocator);
+	zenClassDeclare(zAllocatorMalloc, zenMem::zAllocator);
 	public:
 								zAllocatorMalloc(const char* _zName);
 		virtual void*			Malloc(size_t _uSize, bool _bIsArray, zU32 _uAlign);

@@ -13,7 +13,7 @@ namespace zen { namespace zenType {
 //! @todo Clean: replace zString with zWString, implement data sharing
 class zWString : public std::wstring
 {
-ZENClassDeclare(zWString, std::wstring)
+zenClassDeclare(zWString, std::wstring)
 public:
 	ZENInline					zWString();
 	ZENInline					zWString(const zWString& _Copy);

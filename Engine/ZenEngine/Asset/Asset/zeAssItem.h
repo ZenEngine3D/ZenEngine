@@ -12,7 +12,7 @@ namespace zeAss
 //=================================================================================================
 class Asset : public zRefCounted, public zenSig::zSlot
 {
-ZENClassDeclareNoParent(Asset)
+zenClassDeclareNoParent(Asset)
 public:
 	virtual												~Asset();
 
@@ -68,7 +68,7 @@ public:
 template <zenConst::eAssetType AssetTypedType>
 class AssetTyped : public Asset
 {
-ZENClassDeclare(AssetTyped, Asset)
+zenClassDeclare(AssetTyped, Asset)
 public:
 	enum { kAssetType = AssetTypedType };
 	virtual zInt								GetValueIndex(zHash32 _hPropertyName)const;	
@@ -81,7 +81,7 @@ protected:
 //=================================================================================================
 class TestProperty : public AssetTyped<zenConst::keAssType_TestProperty>
 {
-ZENClassDeclare(TestProperty, Asset)
+zenClassDeclare(TestProperty, Asset)
 public:	
 												TestProperty();
 	virtual const zenAss::PropertyDefArray&		GetProperties()const;	

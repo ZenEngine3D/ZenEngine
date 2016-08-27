@@ -9,7 +9,7 @@ namespace zcRes
 
 class GfxView : protected GfxViewHAL
 {
-ZENClassDeclare(GfxView, GfxViewHAL)
+zenClassDeclare(GfxView, GfxViewHAL)
 public:
 	const zVec2U16&	GetDim()const;
 };

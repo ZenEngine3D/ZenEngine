@@ -6,7 +6,7 @@ namespace zbFile
 {
 	class FileInfo_PC
 	{
-		ZENClassDeclareNoParent(FileInfo_PC);
+		zenClassDeclareNoParent(FileInfo_PC);
 	public:
 							FileInfo_PC();
 

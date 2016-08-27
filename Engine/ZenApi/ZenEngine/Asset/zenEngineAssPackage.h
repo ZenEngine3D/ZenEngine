@@ -12,7 +12,7 @@ namespace zen { namespace zenAss
 
 	class zPackageRef : public zEngineRef<zeAss::Package>
 	{
-	ZENClassDeclare(zPackageRef, zEngineRef)
+	zenClassDeclare(zPackageRef, zEngineRef)
 	public:		
 											zPackageRef();
 											zPackageRef(const zPackageRef& _Copy);

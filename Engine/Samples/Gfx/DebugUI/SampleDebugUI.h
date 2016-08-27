@@ -18,7 +18,7 @@ struct SimpleVertex
 
 class SampleDebugUIInstance : public zenSys::zSampleEngineInstance
 {
-ZENClassDeclare(SampleDebugUIInstance, zenSys::zEngineInstance);
+zenClassDeclare(SampleDebugUIInstance, zenSys::zEngineInstance);
 public:
 	virtual bool					Init();
 	virtual void					Destroy();

@@ -9,7 +9,7 @@ namespace zcRes
 
 class GfxVertex : protected GfxVertexHAL
 {
-ZENClassDeclare(GfxVertex, GfxVertexHAL)
+zenClassDeclare(GfxVertex, GfxVertexHAL)
 public:
 	zU8*				Lock(); //! todo urgent specify which stream
 	void				Unlock(const zenGfx::zContext& _rContext);		

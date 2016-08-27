@@ -6,7 +6,7 @@ namespace zcRes
 {
 	class GfxShaderParamDefHAL_DX11 : public zcExp::ExportGfxShaderParamDefDX11
 	{
-	ZENClassDeclare(GfxShaderParamDefHAL_DX11, zcExp::ExportGfxShaderParamDefDX11)
+	zenClassDeclare(GfxShaderParamDefHAL_DX11, zcExp::ExportGfxShaderParamDefDX11)
 	public:
 		bool												Initialize();				
 		typedef zcExp::ExporterGfxShaderParamDefDX11_DX11	RuntimeExporter;
@@ -15,7 +15,7 @@ namespace zcRes
 	
 	class GfxShaderParamHAL_DX11 : public zcExp::ExportGfxShaderParamDX11
 	{
-	ZENClassDeclare(GfxShaderParamHAL_DX11, zcExp::ExportGfxShaderParamDX11)
+	zenClassDeclare(GfxShaderParamHAL_DX11, zcExp::ExportGfxShaderParamDX11)
 	public:
 		virtual												~GfxShaderParamHAL_DX11();
 		bool												Initialize();

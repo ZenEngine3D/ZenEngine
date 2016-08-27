@@ -11,7 +11,7 @@ namespace zbSys
 template< class T >
 class AWThread
 {
-	ZENClassDeclareNoParent(AWThread);
+	zenClassDeclareNoParent(AWThread);
 
 protected:
 	//pointer to an object's method

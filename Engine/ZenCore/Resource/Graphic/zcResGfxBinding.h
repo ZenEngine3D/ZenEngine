@@ -12,7 +12,7 @@ namespace zcRes
 	//=============================================================================================
 	class GfxInputStream : public GfxInputStreamHAL
 	{
-	ZENClassDeclare(GfxInputStream, GfxInputStreamHAL)
+	zenClassDeclare(GfxInputStream, GfxInputStreamHAL)
 	};
 
 	//=============================================================================================
@@ -20,7 +20,7 @@ namespace zcRes
 	//=============================================================================================
 	class GfxMeshStrip : protected GfxMeshStripHAL
 	{
-	ZENClassDeclare(GfxMeshStrip, GfxMeshStripHAL)
+	zenClassDeclare(GfxMeshStrip, GfxMeshStripHAL)
 	public:
 		using Super::SetValue;
 		ZENInline zU32 GetVertexFirst()const{return muVertexFirst;}
@@ -33,7 +33,7 @@ namespace zcRes
 	//=============================================================================================
 	class GfxMesh : protected GfxMeshHAL
 	{
-	ZENClassDeclare(GfxMesh, GfxMeshHAL)
+	zenClassDeclare(GfxMesh, GfxMeshHAL)
 	public:		
 		const zArrayStatic<GfxMeshStripRef>&	GetMeshStrips()const;	
 		using Super::SetValue;
@@ -41,7 +41,7 @@ namespace zcRes
 
 	class GfxShaderBinding : protected GfxShaderBindingHAL
 	{
-	ZENClassDeclare(GfxShaderBinding, GfxShaderBindingHAL)
+	zenClassDeclare(GfxShaderBinding, GfxShaderBindingHAL)
 	using Super::CreateShaderParam;
 	};
 }

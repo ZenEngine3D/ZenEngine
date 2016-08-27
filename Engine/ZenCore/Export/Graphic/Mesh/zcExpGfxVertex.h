@@ -12,7 +12,7 @@ namespace zcExp
 
 	class ExportGfxVertex : public zenRes::zExportData
 	{
-	ZENClassDeclare(ExportGfxVertex, zenRes::zExportData)
+	zenClassDeclare(ExportGfxVertex, zenRes::zExportData)
 	public:
 		class Stream
 		{

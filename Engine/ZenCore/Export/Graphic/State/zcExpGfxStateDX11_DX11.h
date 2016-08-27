@@ -7,7 +7,7 @@ namespace zcExp
 
 	class ExporterGfxSamplerDX11_DX11 : public ExporterBase
 	{
-	ZENClassDeclare(ExporterGfxSamplerDX11_DX11, ExporterBase)
+	zenClassDeclare(ExporterGfxSamplerDX11_DX11, ExporterBase)
 	public:				
 	typedef zEngineRef<ExportGfxSamplerDX11>	ExportResultRef; //todo use proper ref class
 												ExporterGfxSamplerDX11_DX11(const ExportResultRef& _rExportOut);
@@ -19,7 +19,7 @@ namespace zcExp
 
 	class ExporterGfxStateBlendDX11_DX11 : public ExporterBase
 	{
-	ZENClassDeclare(ExporterGfxStateBlendDX11_DX11, ExporterBase)
+	zenClassDeclare(ExporterGfxStateBlendDX11_DX11, ExporterBase)
 	public:				
 	typedef zEngineRef<ExportGfxStateBlendDX11>	ExportResultRef; //todo use proper ref class
 												ExporterGfxStateBlendDX11_DX11(const ExportResultRef& _rExportOut);
@@ -31,7 +31,7 @@ namespace zcExp
 
 	class ExporterGfxStateDepthStencilDX11_DX11 : public ExporterBase
 	{
-	ZENClassDeclare(ExporterGfxStateDepthStencilDX11_DX11, ExporterBase)
+	zenClassDeclare(ExporterGfxStateDepthStencilDX11_DX11, ExporterBase)
 	public:
 	typedef zEngineRef<ExportGfxStateDepthStencilDX11>	ExportResultRef; //todo use proper ref class
 														ExporterGfxStateDepthStencilDX11_DX11(const ExportResultRef& _rExportOut);
@@ -43,7 +43,7 @@ namespace zcExp
 
 	class ExporterGfxStateRasterDX11_DX11 : public ExporterBase
 	{
-	ZENClassDeclare(ExporterGfxStateRasterDX11_DX11, ExporterBase)
+	zenClassDeclare(ExporterGfxStateRasterDX11_DX11, ExporterBase)
 	public:
 	typedef zEngineRef<ExportGfxStateRasterDX11>	ExportResultRef; //todo use proper ref class
 													ExporterGfxStateRasterDX11_DX11(const ExportResultRef& _rExportOut);

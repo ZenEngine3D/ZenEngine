@@ -120,7 +120,7 @@ const zenAss::PropertyDefArray& TestProperty::GetProperties()const
 		zenAss::PropertyFloat2::Create	("StructFloat2","", "Struct Test: Float2",	true,	true, zVec2F(1.f), zVec2F(-10.f), zVec2F(10.f), zVec2F(0.1f))
 	};
 
-	static zenAss::PropertyDefRef rPropertyArrayStruct = zenAss::PropertyStruct::Create("PropertyStruct",	"",	"Test: Struct in Array", true,	true,	aPropertiesStruct, ZENArrayCount(aPropertiesStruct) );
+	static zenAss::PropertyDefRef rPropertyArrayStruct = zenAss::PropertyStruct::Create("PropertyStruct",	"",	"Test: Struct in Array", true,	true,	aPropertiesStruct, zenArrayCount(aPropertiesStruct) );
 	static zenAss::PropertyDefRef rPropertyArrayFloat2 = zenAss::PropertyFloat2::Create	("ArrayFloat2",	"", "Test: Float2 in Array",	true,	true,	zVec2F(1.f), zVec2F(-10.f), zVec2F(10.f), zVec2F(0.1f));	
 	static const zenAss::PropertyDefRef aPropertiesAll[] = {
 		zenAss::PropertyBool::Create	("Bool",	"", "Def: Bool",					true,	true,	false),
@@ -132,11 +132,11 @@ const zenAss::PropertyDefArray& TestProperty::GetProperties()const
 		zenAss::PropertyInt2::Create	("Int2",	"", "Def: Int2",					true,	true,	zVec2S32(1), zVec2S32(-10), zVec2S32(10), zVec2S32(1)),
 		zenAss::PropertyInt3::Create	("Int3",	"", "Def: Int3",					true,	true,	zVec3S32(1), zVec3S32(-10), zVec3S32(10), zVec3S32(1)),
 		zenAss::PropertyInt4::Create	("Int4",	"", "Def: Int4",					true,	true,	zVec4S32(1), zVec4S32(-10), zVec4S32(10), zVec4S32(1)),
-		zenAss::PropertyEnum::Create	("Enum",	"", "Def: Enum",					true,	true,	10, aEnumEntries, ZENArrayCount(aEnumEntries) ),
+		zenAss::PropertyEnum::Create	("Enum",	"", "Def: Enum",					true,	true,	10, aEnumEntries, zenArrayCount(aEnumEntries) ),
 		zenAss::PropertyFile::Create	("File",	"", "Def: File",					true,	true,	zenT("test.txt"), zenT("Images|*.bmp;*.png;*.jpeg;*.jpg|BMP(*.bmp)|*.bmp|PNG(*.png)|*.png|JPEG(*.jpg;*.jpeg)|*.jpg;*.jpeg")),
 		zenAss::PropertyAsset::Create	("AssetA",	"", "Def: Asset all",				true,	true,	zenAss::zAssetID()),
 		zenAss::PropertyAsset::Create	("AssetB",	"", "Def: Asset TestProperty",		true,	true,	zenAss::zAssetID(), zFlagAssetType(zenConst::keAssType_TestProperty)),
-		zenAss::PropertyStruct::Create	("Struct",	"",	"Def: Struct",					true,	true,	aPropertiesStruct, ZENArrayCount(aPropertiesStruct) ),
+		zenAss::PropertyStruct::Create	("Struct",	"",	"Def: Struct",					true,	true,	aPropertiesStruct, zenArrayCount(aPropertiesStruct) ),
 		zenAss::PropertyArray::Create	("Array1",	"", "Def: Array Float2",			true,	true,	rPropertyArrayFloat2, 1),
 		zenAss::PropertyArray::Create	("Array2",	"", "Def: Array Struct",			true,	true,	rPropertyArrayStruct, 1),
 		zenAss::PropertyInt::Create		("CopyInt",	"", "Def: Used by ReadOnlyInt",		true,	true,	0, -10, 10, 1),
@@ -144,7 +144,7 @@ const zenAss::PropertyDefArray& TestProperty::GetProperties()const
 		zenAss::PropertyInt2::Create	("ReadOnlyInt2","", "Def: Int2",				true,	false,	zVec2S32(2), zVec2S32(-10), zVec2S32(10), zVec2S32(1)),
 	};
 
-	static zenAss::PropertyDefArray		sarProperties( aPropertiesAll, ZENArrayCount(aPropertiesAll) );
+	static zenAss::PropertyDefArray		sarProperties( aPropertiesAll, zenArrayCount(aPropertiesAll) );
 	return sarProperties;
 }
 

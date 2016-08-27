@@ -34,7 +34,7 @@ const char* AssetTypeToString(zenConst::eAssetType _eAssetType)
 
 zenConst::eAssetType AssetNameToType(zHash32 _hAssetName)
 {
-	zUInt idx = zStringHash32::Find(_hAssetName, sTypeDescription, ZENArrayCount(sTypeDescription));
+	zUInt idx = zStringHash32::Find(_hAssetName, sTypeDescription, zenArrayCount(sTypeDescription));
 	return idx < zenConst::keAssType__Count ? static_cast<zenConst::eAssetType>(idx) : zenConst::keAssType__Invalid;
 }
 

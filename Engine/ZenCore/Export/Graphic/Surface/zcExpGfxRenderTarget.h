@@ -13,7 +13,7 @@ namespace zcExp
 
 	class ExportGfxTarget2D : public zenRes::zExportData
 	{
-	ZENClassDeclare(ExportGfxTarget2D, zenRes::zExportData)
+	zenClassDeclare(ExportGfxTarget2D, zenRes::zExportData)
 	public:
 		//! @todo move to texture resource?
 		zResID						mTextureID;
@@ -24,7 +24,7 @@ namespace zcExp
 
 	class ExporterGfxTarget2D : public ExporterBase
 	{
-	ZENClassDeclare(ExporterGfxTarget2D, ExporterBase)
+	zenClassDeclare(ExporterGfxTarget2D, ExporterBase)
 	public:				
 		typedef zEngineRef<ExportGfxTarget2D>	ExportResultRef;
 												ExporterGfxTarget2D(const ExportResultRef& _rExportOut);

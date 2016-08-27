@@ -22,7 +22,7 @@ bool ExporterGfxVertexDX11_DX11::ExportWork(bool _bIsTHRTask)
 		{DXGI_FORMAT_R8_SNORM,	DXGI_FORMAT_R8G8_SNORM,		DXGI_FORMAT_UNKNOWN,			DXGI_FORMAT_R8G8B8A8_SNORM },
 		};	
 	
-	zenStaticAssert( ZENArrayCount(uSemanticIndex)==zenConst::keShaderSemantic__Count );
+	zenStaticAssert( zenArrayCount(uSemanticIndex)==zenConst::keShaderSemantic__Count );
 	zenStaticAssert( sizeof(eFormats)/sizeof(DXGI_FORMAT)/4 == zenConst::keShaderElemType__Count);
 
 	//! @todo Missing: configure resource creations flags

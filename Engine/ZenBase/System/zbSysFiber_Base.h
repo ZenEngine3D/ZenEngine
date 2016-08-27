@@ -10,7 +10,7 @@ namespace zbSys
 
 class zbFiber_Base
 {
-ZENClassDeclareNoParent(zbFiber_Base);
+zenClassDeclareNoParent(zbFiber_Base);
 public:
 						zbFiber_Base(zUInt _uStackSize);
 protected:

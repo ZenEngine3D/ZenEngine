@@ -7,7 +7,7 @@ namespace zcPerf
 
 class EventCPU_PC : public EventCPU_Base
 {
-ZENClassDeclare(EventCPU_PC, EventCPU_Base)
+zenClassDeclare(EventCPU_PC, EventCPU_Base)
 public:									
 	virtual void							Start();
 	virtual void							Stop();

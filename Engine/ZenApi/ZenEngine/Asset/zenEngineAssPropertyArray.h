@@ -13,7 +13,7 @@ class PropertyArray : public TPropertyDefinition<zenConst::keAssProp_Array, Prop
 
 	class ValueRef : public TPropertyDefinition::ValueRef
 	{	
-	ZENClassDeclare(ValueRef, TPropertyDefinition::ValueRef);
+	zenClassDeclare(ValueRef, TPropertyDefinition::ValueRef);
 	public:
 								ValueRef():TPropertyDefinition::ValueRef(){};
 								ValueRef(const PropertyValueRef& _Copy):TPropertyDefinition::ValueRef(_Copy){};

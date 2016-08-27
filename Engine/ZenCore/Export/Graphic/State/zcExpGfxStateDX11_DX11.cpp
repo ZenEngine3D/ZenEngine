@@ -96,7 +96,7 @@ namespace zcExp
 		}
 
 		const D3D11_TEXTURE_ADDRESS_MODE cWrapTranslate[]= { D3D11_TEXTURE_ADDRESS_CLAMP, D3D11_TEXTURE_ADDRESS_WRAP, D3D11_TEXTURE_ADDRESS_MIRROR, D3D11_TEXTURE_ADDRESS_BORDER };
-		zenStaticAssert( ZENArrayCount(cWrapTranslate)==zenConst::keTexWrap__Count );
+		zenStaticAssert( zenArrayCount(cWrapTranslate)==zenConst::keTexWrap__Count );
 
 		mrExport->mSamplerDesc.AddressU			= cWrapTranslate[pExportInfo->meWrapU];
 		mrExport->mSamplerDesc.AddressV			= cWrapTranslate[pExportInfo->meWrapV];

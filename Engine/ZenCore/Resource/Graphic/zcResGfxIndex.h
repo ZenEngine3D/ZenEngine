@@ -9,7 +9,7 @@ namespace zcRes
 
 class GfxIndex : protected GfxIndexHAL
 {
-ZENClassDeclare(GfxIndex, GfxIndexHAL)
+zenClassDeclare(GfxIndex, GfxIndexHAL)
 public:
 	zU8*				Lock();
 	void				Unlock(const zenGfx::zContext& _rContext);		

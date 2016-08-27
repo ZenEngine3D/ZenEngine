@@ -23,7 +23,7 @@ bool GfxVertexHAL_DX11::Initialize()
 		"BLENDINDICES",	//keVertexSemantic_BlendIndex,
 		"BLENDWEIGHT",	//keVertexSemantic_BlendWeight,
 	};
-	zenStaticAssert( ZENArrayCount(zSemanticNames)==zenConst::keShaderSemantic__Count );
+	zenStaticAssert( zenArrayCount(zSemanticNames)==zenConst::keShaderSemantic__Count );
 	
 	//! @todo Missing: configure resource creations flags
 	D3D11_USAGE eUsage(D3D11_USAGE_DYNAMIC);

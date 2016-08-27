@@ -13,7 +13,7 @@ namespace zcRes
 {
 	class GfxWindow : protected GfxWindowHAL, public zenSig::zSlot
 	{
-	ZENClassDeclare(GfxWindow, GfxWindowHAL)
+	zenClassDeclare(GfxWindow, GfxWindowHAL)
 	public:
 		enum eConstant{ keEventHistoryCount = 128 };		
 		enum eEventType{ keEvtTyp_CPU, keEvtTyp_GPU, keEvtTyp__Count, keEvtTyp__Invalid=keEvtTyp__Count};

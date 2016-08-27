@@ -35,7 +35,7 @@ namespace zcExp
 
 	class ExportGfxTexture2d : public zenRes::zExportData
 	{
-	ZENClassDeclare(ExportGfxTexture2d, zenRes::zExportData)
+	zenClassDeclare(ExportGfxTexture2d, zenRes::zExportData)
 	public:
 		zArrayStatic<MipInfo>		maMipData;
 		zenConst::eTextureFormat	meFormat;

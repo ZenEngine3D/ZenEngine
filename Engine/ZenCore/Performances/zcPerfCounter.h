@@ -7,7 +7,7 @@ namespace zcPerf
 
 class EventBase : public zRefCounted
 {
-ZENClassDeclare(EventBase, zRefCounted)
+zenClassDeclare(EventBase, zRefCounted)
 protected:	
 	zListLink				mlnkChild;
 public:		

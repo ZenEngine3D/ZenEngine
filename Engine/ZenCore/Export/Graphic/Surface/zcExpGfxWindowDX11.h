@@ -6,7 +6,7 @@ namespace zcExp
 {
 	class ExportGfxWindowDX11 : public zenRes::zExportData
 	{
-	ZENClassDeclare(ExportGfxWindowDX11, zenRes::zExportData)
+	zenClassDeclare(ExportGfxWindowDX11, zenRes::zExportData)
 	public:
 		HWND					mhWindow;
 	};

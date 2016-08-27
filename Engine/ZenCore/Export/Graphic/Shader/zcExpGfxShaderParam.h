@@ -19,7 +19,7 @@ enum eShaderParamFreq
 
 class ParameterBase
 {
-ZENClassDeclareNoParent(ParameterBase)
+zenClassDeclareNoParent(ParameterBase)
 public:
  	zHash32		mhName;						//!< Parameter name
 	zU32		meType			: 4;		//!< eShaderElementType
@@ -41,7 +41,7 @@ protected:
 template <class TType, zenConst::eShaderElementType TShaderType>
 class ParameterVector1 : public ParameterBase
 {
-ZENClassDeclare(ParameterVector1, ParameterBase)
+zenClassDeclare(ParameterVector1, ParameterBase)
 public:
 				ParameterVector1( zHash32 _hName, TType _Value) 
 				: ParameterBase(_hName, TShaderType, 1, 0, sizeof(mValue))
@@ -52,7 +52,7 @@ public:
 template <class TType, zenConst::eShaderElementType TShaderType>
 class ParameterVector2 : public ParameterBase
 {
-ZENClassDeclare(ParameterVector2, ParameterBase)
+zenClassDeclare(ParameterVector2, ParameterBase)
 public:
 				ParameterVector2( zHash32 _hName, TType _Value1, TType _Value2) 
 				: ParameterBase(_hName, TShaderType, 2, 0, sizeof(mValue))
@@ -78,7 +78,7 @@ public:
 template <class TType, zenConst::eShaderElementType TShaderType>
 class ParameterVector3 : public ParameterBase
 {
-ZENClassDeclare(ParameterVector3, ParameterBase)
+zenClassDeclare(ParameterVector3, ParameterBase)
 public:
 				ParameterVector3( zHash32 _hName, TType _Value1, TType _Value2, TType _Value3) 
 				: ParameterBase(_hName, TShaderType, 3, 0, sizeof(mValue))
@@ -107,7 +107,7 @@ public:
 template <class TType, zenConst::eShaderElementType TShaderType>
 class ParameterVector4 : public ParameterBase
 {
-ZENClassDeclare(ParameterVector4, ParameterBase)
+zenClassDeclare(ParameterVector4, ParameterBase)
 public:
 				ParameterVector4( zHash32 _hName, TType _Value1, TType _Value2, TType _Value3, TType _Value4) 
 				: ParameterBase(_hName, TShaderType, 4, 0, sizeof(mValue))

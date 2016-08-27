@@ -6,7 +6,7 @@ namespace zcRes
 {
 	class GfxSamplerHAL_DX11 : public zcExp::ExportGfxSamplerDX11
 	{
-	ZENClassDeclare(GfxSamplerHAL_DX11, zcExp::ExportGfxSamplerDX11);
+	zenClassDeclare(GfxSamplerHAL_DX11, zcExp::ExportGfxSamplerDX11);
 	public:
 		virtual										~GfxSamplerHAL_DX11();
 		bool										Initialize();
@@ -17,7 +17,7 @@ namespace zcRes
 
 	class GfxStateBlendHAL_DX11 : public zcExp::ExportGfxStateBlendDX11
 	{
-	ZENClassDeclare(GfxStateBlendHAL_DX11, zcExp::ExportGfxStateBlendDX11)
+	zenClassDeclare(GfxStateBlendHAL_DX11, zcExp::ExportGfxStateBlendDX11)
 	public:
 		virtual													~GfxStateBlendHAL_DX11();												
 		bool													Initialize();
@@ -30,7 +30,7 @@ namespace zcRes
 	
 	class GfxStateDepthStencilHAL_DX11 : public zcExp::ExportGfxStateDepthStencilDX11
 	{
-	ZENClassDeclare(GfxStateDepthStencilHAL_DX11, zcExp::ExportGfxStateDepthStencilDX11)
+	zenClassDeclare(GfxStateDepthStencilHAL_DX11, zcExp::ExportGfxStateDepthStencilDX11)
 	public:
 		virtual													~GfxStateDepthStencilHAL_DX11();												
 		bool													Initialize();
@@ -42,7 +42,7 @@ namespace zcRes
 	
 	class GfxStateRasterHAL_DX11 : public zcExp::ExportGfxStateRasterDX11
 	{
-	ZENClassDeclare(GfxStateRasterHAL_DX11, zcExp::ExportGfxStateRasterDX11)
+	zenClassDeclare(GfxStateRasterHAL_DX11, zcExp::ExportGfxStateRasterDX11)
 	public:
 		virtual													~GfxStateRasterHAL_DX11();												
 		bool													Initialize();

@@ -15,7 +15,7 @@ namespace zen { namespace zenMem
 //=================================================================================================
 class zAllocatorFastPoolBase 
 {
-ZENClassDeclareNoParent(zAllocatorFastPoolBase);
+zenClassDeclareNoParent(zAllocatorFastPoolBase);
 public:
 							zAllocatorFastPoolBase	();
 							zAllocatorFastPoolBase	(size_t _uItemSize, zU32 _uItemCount, zU32 _uItemIncrease);
@@ -66,7 +66,7 @@ protected:
 template<class TObject, bool TCallConstructor=true, bool TCallDestructor=true>
 class zAllocatorFastPool : public zAllocatorFastPoolBase
 {
-ZENClassDeclare(zAllocatorFastPool, zAllocatorFastPoolBase);
+zenClassDeclare(zAllocatorFastPool, zAllocatorFastPoolBase);
 public:
 																	zAllocatorFastPool	();
 																	zAllocatorFastPool	(zU32 _uItemCount, zU32 _uItemIncrease);

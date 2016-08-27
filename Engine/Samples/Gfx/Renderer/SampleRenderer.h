@@ -12,13 +12,14 @@ namespace sample
 
 struct SimpleVertex
 {
-	zVec3F Pos;
-	zVec2F Tex;
+	zVec3F	Position;
+	zVec3F	Color;
+	zVec2F	UV;
 };
 
 class SampleRendererInstance : public zenSys::zEngineInstance
 {
-ZENClassDeclare(SampleRendererInstance, zenSys::zEngineInstance);
+zenClassDeclare(SampleRendererInstance, zenSys::zEngineInstance);
 public:
 	virtual bool					Init();
 	virtual void					Destroy();

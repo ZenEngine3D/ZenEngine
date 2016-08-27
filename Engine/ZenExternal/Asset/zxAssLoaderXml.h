@@ -11,7 +11,7 @@ namespace zen { namespace zxAss
 
 class AssetLoaderXml : public zeAss::AssetSerializer
 {
-ZENClassDeclare(AssetLoaderXml, zeAss::AssetSerializer)
+zenClassDeclare(AssetLoaderXml, zeAss::AssetSerializer)
 public:
 	virtual bool	LoadPackages();	
 	virtual bool	Save			(const zenAss::zPackageRef& _rPackage);	

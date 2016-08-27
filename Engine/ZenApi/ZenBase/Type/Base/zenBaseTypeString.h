@@ -13,7 +13,7 @@ namespace zen { namespace zenType
 //=================================================================================================
 class zString 
 {
-ZENClassDeclareNoParent(zString)
+zenClassDeclareNoParent(zString)
 public:
 	ZENInline 				zString();
 	ZENInline 				zString(const zString& _zString);

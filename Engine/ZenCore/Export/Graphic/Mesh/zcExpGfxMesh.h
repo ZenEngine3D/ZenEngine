@@ -12,7 +12,7 @@ namespace zcExp
 
 	class ExportGfxMesh : public zenRes::zExportData
 	{
-	ZENClassDeclare(ExportGfxMesh, zenRes::zExportData)
+	zenClassDeclare(ExportGfxMesh, zenRes::zExportData)
 	public:
 		//virtual bool			Serialize( zcExp::Serializer_Base& _Serializer ){return true;}		
 		zArrayStatic<zResID>	maMeshStripID;			//!< List of Mesh strips used this Mesh
@@ -20,7 +20,7 @@ namespace zcExp
 
 	class ExporterGfxMesh : public ExporterBase
 	{
-	ZENClassDeclare(ExporterGfxMesh, ExporterBase)
+	zenClassDeclare(ExporterGfxMesh, ExporterBase)
 	public:				
 	typedef zEngineRef<ExportGfxMesh>	ExportResultRef; 
 										ExporterGfxMesh(const ExportResultRef& _rExportOut);

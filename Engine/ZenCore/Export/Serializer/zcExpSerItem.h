@@ -8,7 +8,7 @@ namespace zcExp
 	
 	class ISerialize
 	{
-	ZENClassDeclareNoParent(ISerialize)
+	zenClassDeclareNoParent(ISerialize)
 	public:
 		virtual				~ISerialize(){}
 		virtual bool		Serialize( Serializer_Base& aSerializer )=0;
@@ -17,7 +17,7 @@ namespace zcExp
 	//! @todo Clean rename ExportData
 	class ResourceData : public ISerialize, public zRefCounted
 	{
-	ZENClassDeclare(ResourceData, ISerialize)
+	zenClassDeclare(ResourceData, ISerialize)
 	public:
 							ResourceData();		
 		virtual bool		Serialize( zcExp::Serializer_Base& aSerializer );		

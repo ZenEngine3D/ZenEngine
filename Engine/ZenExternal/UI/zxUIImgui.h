@@ -15,7 +15,7 @@ namespace zxImGui
 //=================================================================================================
 class zxRenderData : public zRefCounted
 {
-ZENClassDeclare(zxRenderData, zRefCounted)
+zenClassDeclare(zxRenderData, zRefCounted)
 public:
 	alignas(16) zenMath::Matrix				matOrthographic;
 	zenRes::zGfxTarget2D					mrRendertarget;
@@ -39,7 +39,7 @@ public:
 //=================================================================================================
 class zxImGUIHelper : public zSingleton<zxImGUIHelper>
 {
-ZENClassDeclare(zxImGUIHelper, zSingleton<zxImGUIHelper>)
+zenClassDeclare(zxImGUIHelper, zSingleton<zxImGUIHelper>)
 public:
 											zxImGUIHelper();
 	void									Render(const zEngineRef<zxRenderData>& _rImGuiData, WindowInputState* _pInputData=nullptr);

@@ -10,7 +10,7 @@ namespace zcPerf
 	//! @brief Basic class for GPU event, code share by all platform
 	class EventGPU_Base : public EventBase
 	{
-	ZENClassDeclare(EventGPU_Base, EventBase)
+	zenClassDeclare(EventGPU_Base, EventBase)
 	public:									
 		virtual void	Start();
 		virtual void	Stop();
@@ -27,7 +27,7 @@ namespace zcPerf
 	//! @brief GPU events. Used to get timing infos from the GPU
 	class EventGPU : public EventGPU_Platform
 	{
-	ZENClassDeclare(EventGPU, EventGPU_Platform)
+	zenClassDeclare(EventGPU, EventGPU_Platform)
 	public:									
 		static zEngineRef<EventBase>	Create(const zStringHash32& _EventName);
 	
@@ -38,7 +38,7 @@ namespace zcPerf
 	//! @brief Used to retrieve number of drawcall send to GPU, per type
 	class EventGPUCounter : public EventGPU_Base
 	{
-	ZENClassDeclare(EventGPUCounter, EventGPU_Base)
+	zenClassDeclare(EventGPUCounter, EventGPU_Base)
 	public:
 		enum eType{ keType_DrawIndexed, keType_Compute, keType_ClearColor, keType_ClearDepth, keType_UpdateIndex, keType_UpdateVertex, keType__Count, keType__Invalid=keType__Count};
 		static zEngineRef<EventBase>	Create(eType _eCounterType);

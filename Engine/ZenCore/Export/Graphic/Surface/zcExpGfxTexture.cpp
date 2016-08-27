@@ -24,7 +24,7 @@ const TextureBlockInfo& GetTextureBlockInfo( zenConst::eTextureFormat _eFormat )
 		{4,		4,		16},	//keTexFormat_BC7,
 		{1,		1,		32},	//keTexFormat_RGBA32f,
 	};
-	zenStaticAssert(ZENArrayCount(aTextureInfos)==zenConst::keTexFormat__Count);
+	zenStaticAssert(zenArrayCount(aTextureInfos)==zenConst::keTexFormat__Count);
 	zenAssert(_eFormat<zenConst::keTexFormat__Count);
 	return aTextureInfos[_eFormat];
 }

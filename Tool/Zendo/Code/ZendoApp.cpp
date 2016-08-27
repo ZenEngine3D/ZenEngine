@@ -9,7 +9,7 @@ wxIMPLEMENT_APP_CONSOLE(ZendoApp);
 
 class EngineInstance : public zenSys::zEngineInstance
 {
-ZENClassDeclare(EngineInstance, zenSys::zEngineInstance);
+zenClassDeclare(EngineInstance, zenSys::zEngineInstance);
 public:
 	virtual bool Init()
 	{
@@ -84,7 +84,7 @@ bool ZendoApp::InitResources()
 {
 	// Init Asset type icon
 	zU32 auIconSize[]={16,32,128};
-	for( zUInt idxSize(0); idxSize<ZENArrayCount(auIconSize); ++idxSize )
+	for( zUInt idxSize(0); idxSize<zenArrayCount(auIconSize); ++idxSize )
 	{
 		wxString zFolder	= wxString::Format("Zendo/Icons/ResourceType%i/", auIconSize[idxSize]);	//! @todo Clean: move root path outside assetmanager control
 		wxString zFilename	= zFolder + "Unknown.png";

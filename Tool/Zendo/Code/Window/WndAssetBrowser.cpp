@@ -240,12 +240,12 @@ void WndAssetBrowser::SelectItem(zenAss::zAssetItemRef _rItem)
 	zenAss::zPackageGroupRef rPkgGroup		= rPackage.GetParentGroup();
 	zenAss::zPackageGroupRef rPkgGroupRoot	= zenAss::zPackageGroupRef::sGetRoot();
 	zenAss::zPackageGroupRef rGroupHierarchy[256];	
-	while( rPkgGroup != rPkgGroupRoot && iGroupCount < ZENArrayCount(rGroupHierarchy) )
+	while( rPkgGroup != rPkgGroupRoot && iGroupCount < zenArrayCount(rGroupHierarchy) )
 	{
 		rGroupHierarchy[iGroupCount++]	= rPkgGroup;
 		rPkgGroup						= rPkgGroup.GetParentGroup();
 	}
-	zenAssertMsg( iGroupCount < ZENArrayCount(rGroupHierarchy), "Too many group parenting for a package, increase array size");
+	zenAssertMsg( iGroupCount < zenArrayCount(rGroupHierarchy), "Too many group parenting for a package, increase array size");
 
 	itemCurrent = mpTreePackage->GetRootItem();
 	while( itemCurrent.IsOk() && iGroupCount-- >= 0 )

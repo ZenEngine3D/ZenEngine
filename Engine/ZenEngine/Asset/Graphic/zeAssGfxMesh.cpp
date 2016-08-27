@@ -11,7 +11,7 @@ const zenAss::PropertyDefArray& GfxMesh::GetProperties()const
 	static zenAss::PropertyDefRef arPropertiesAll[] = {
 		zenAss::PropertyBool::Create("TestBool",		"", "Test Bool Field",		true,	false, true),
 	};
-	static zenAss::PropertyDefArray sarProperties( arPropertiesAll, ZENArrayCount(arPropertiesAll) );
+	static zenAss::PropertyDefArray sarProperties( arPropertiesAll, zenArrayCount(arPropertiesAll) );
 	return sarProperties;	
 }
 

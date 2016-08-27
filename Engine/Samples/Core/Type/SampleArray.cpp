@@ -22,8 +22,8 @@ namespace sample
 
 		aDynamicA.SetCount(40);
 		aStaticA.SetCount(40);
-		aDynamicB.Copy(puValueDynamic, ZENArrayCount(puValueDynamic) );
-		aStaticB.Copy(puValueStatic, ZENArrayCount(puValueStatic) );
+		aDynamicB.Copy(puValueDynamic, zenArrayCount(puValueDynamic) );
+		aStaticB.Copy(puValueStatic, zenArrayCount(puValueStatic) );
 		
 		for(zU32 i=0; i<40; ++i)
 		{
@@ -41,7 +41,7 @@ namespace sample
 		zenIO::Log(zenConst::keLog_Game, zenConst::kzLineA40);
 		zArrayStatic<zU32> uTestSort;
 		const zUInt pSourceData[] = {2,132,876,23,54,265,34,1,475,287,452,884,343,2,88,3,324,827,123,278};
-		uTestSort.Copy( pSourceData, ZENArrayCount(pSourceData) );
+		uTestSort.Copy( pSourceData, zenArrayCount(pSourceData) );
 		zenIO::Log(zenConst::keLog_Game, "Unsorted  :");
 		for(zUInt idx(0), count(uTestSort.Count()); idx<count; ++idx )
 			zenIO::Printf(zenConst::keLog_Game, " %03i", uTestSort[idx] );

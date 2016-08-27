@@ -9,7 +9,7 @@ namespace zcRes
 	//=============================================================================================
 	class GfxMeshStripHAL_DX11 : public zcExp::ExportGfxMeshStrip
 	{
-	ZENClassDeclare(GfxMeshStripHAL_DX11, zcExp::ExportGfxMeshStrip)
+	zenClassDeclare(GfxMeshStripHAL_DX11, zcExp::ExportGfxMeshStrip)
 	public:
 		GfxMeshStripHAL_DX11()
 		{
@@ -44,7 +44,7 @@ namespace zcRes
 	//=============================================================================================
 	class GfxMeshHAL_DX11 : public zcExp::ExportGfxMesh
 	{
-	ZENClassDeclare(GfxMeshHAL_DX11, zcExp::ExportGfxMesh)
+	zenClassDeclare(GfxMeshHAL_DX11, zcExp::ExportGfxMesh)
 	public:
 		bool												Initialize();
 		void												SetValue(const zArrayBase<const zenRes::zShaderParameter*>& _aValues);
@@ -69,7 +69,7 @@ namespace zcRes
 	//=============================================================================================
 	class GfxInputStreamHAL_DX11 : public zcExp::ExportGfxInputStream
 	{
-	ZENClassDeclare(GfxInputStreamHAL_DX11, zcExp::ExportGfxInputStream)
+	zenClassDeclare(GfxInputStreamHAL_DX11, zcExp::ExportGfxInputStream)
 	public:
 		virtual												~GfxInputStreamHAL_DX11();
 		bool												Initialize();
@@ -86,7 +86,7 @@ namespace zcRes
 	//=============================================================================================
 	class GfxShaderBindingHAL_DX11 : public zcExp::ExportGfxShaderBinding
 	{
-	ZENClassDeclare(GfxShaderBindingHAL_DX11, zcExp::ExportGfxShaderBinding)
+	zenClassDeclare(GfxShaderBindingHAL_DX11, zcExp::ExportGfxShaderBinding)
 	public:
 		bool												Initialize();
 		void												CreateShaderParam(zArrayStatic<zenRes::zGfxShaderParam>& _aShaderParamOut)const;

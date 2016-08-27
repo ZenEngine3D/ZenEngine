@@ -61,7 +61,7 @@ protected:
 //=================================================================================================	
 class ManagerRender : public ManagerRender_Base
 {
-ZENClassDeclare(ManagerRender, ManagerRender_Base)
+zenClassDeclare(ManagerRender, ManagerRender_Base)
 //---------------------------------------------------------
 // Common to all ManagerRender
 //---------------------------------------------------------

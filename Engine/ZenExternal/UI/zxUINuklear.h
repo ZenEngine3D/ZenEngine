@@ -23,7 +23,7 @@ namespace zxNuklear
 //=================================================================================================
 class zxRenderData : public zRefCounted
 {
-ZENClassDeclare(zxRenderData, zRefCounted)
+zenClassDeclare(zxRenderData, zRefCounted)
 public:
 											zxRenderData();
 											~zxRenderData();
@@ -57,7 +57,7 @@ public:
 //=================================================================================================
 class zxNuklearHelper : public zSingleton<zxNuklearHelper>
 {
-ZENClassDeclare(zxNuklearHelper, zSingleton<zxNuklearHelper>)
+zenClassDeclare(zxNuklearHelper, zSingleton<zxNuklearHelper>)
 public:
 											zxNuklearHelper();
 	void									Render(const zEngineRef<zxRenderData>& _rNuklearData, WindowInputState* _pInputData=nullptr);

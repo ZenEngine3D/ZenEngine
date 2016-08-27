@@ -14,7 +14,7 @@ namespace zbSys
 
 class zbFiber : public zbFiber_Platform
 {
-ZENClassDeclare(zbFiber, zbFiber_Platform);
+zenClassDeclare(zbFiber, zbFiber_Platform);
 public:
 	enum eConst{ keFiberCount = 256, keThreadMax=32 };
 

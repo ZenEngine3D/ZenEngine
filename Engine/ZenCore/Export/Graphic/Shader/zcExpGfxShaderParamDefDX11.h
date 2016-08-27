@@ -6,7 +6,7 @@ namespace zcExp
 {
 	class ExportGfxShaderParamDefDX11 : public zenRes::zExportData
 	{
-	ZENClassDeclare(ExportGfxShaderParamDefDX11, zenRes::zExportData)
+	zenClassDeclare(ExportGfxShaderParamDefDX11, zenRes::zExportData)
 	public:
 		eShaderParamFreq		meFrequence;
 		ShaderParamItemInfoMap	mdParameters;

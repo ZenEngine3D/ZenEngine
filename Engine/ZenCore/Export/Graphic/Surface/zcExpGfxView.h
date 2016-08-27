@@ -15,7 +15,7 @@ namespace zcExp
 	
 	class ExportGfxView : public zenRes::zExportData
 	{
-	ZENClassDeclare(ExportGfxView, zenRes::zExportData)
+	zenClassDeclare(ExportGfxView, zenRes::zExportData)
 	public:
 		zArrayStatic<zenRes::zGfxRenderPass::ConfigColorRT>			maRTColorConfig;
 		zenRes::zGfxRenderPass::ConfigDepthRT						mRTDepthConfig;
@@ -25,7 +25,7 @@ namespace zcExp
 
 	class ExporterGfxView : public ExporterBase
 	{
-	ZENClassDeclare(ExporterGfxView, ExporterBase)
+	zenClassDeclare(ExporterGfxView, ExporterBase)
 	public:
 	typedef zEngineRef<ExportGfxView>	ExportResultRef; //todo use proper ref class
 										ExporterGfxView(const ExportResultRef& _rExportOut);

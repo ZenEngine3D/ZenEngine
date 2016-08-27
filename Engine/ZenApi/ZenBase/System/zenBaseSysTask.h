@@ -10,7 +10,7 @@ namespace zen { namespace zenSys
 
 class zTask
 {
-ZENClassDeclareNoParent(zTask);
+zenClassDeclareNoParent(zTask);
 public:	
 								zTask();
 	virtual void				Run()=0;

@@ -12,7 +12,7 @@ namespace zen { namespace zenSys {
 //=============================================================================
 class zEngineInstance : public zenSig::zSlot
 {
-ZENClassDeclare(zEngineInstance, zenSig::zSlot)
+zenClassDeclare(zEngineInstance, zenSig::zSlot)
 public:
 	virtual bool										Init();
 	virtual void										Destroy();
@@ -39,7 +39,7 @@ private:
 //! @todo clean move this to a more appropriate location
 class zSampleEngineInstance : public zEngineInstance
 {
-ZENClassDeclare(zSampleEngineInstance, zEngineInstance)
+zenClassDeclare(zSampleEngineInstance, zEngineInstance)
 public:
 	virtual bool			IsDone();
 	void					SetDone();

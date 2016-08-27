@@ -32,7 +32,7 @@ namespace zcRes
 		HRESULT hr = zcMgr::GfxRender.DX11GetDevice()->CreateBlendState( &mBlendDesc, &mpBlendState );
 		//! @note : Global write mask / Blend factor : Unused functionality for now (per render target for now)
 		muSampleMask = 0xFFFFFFFF;				
-		for(zUInt i(0); i<ZENArrayCount(mafBlendFactor); ++i)
+		for(zUInt i(0); i<zenArrayCount(mafBlendFactor); ++i)
 			mafBlendFactor[i] = 0.0f;
 
 		return SUCCEEDED(hr);

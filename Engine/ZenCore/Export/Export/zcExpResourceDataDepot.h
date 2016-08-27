@@ -9,7 +9,7 @@ namespace zcExp
 
 class DepotResourceData : public zbType::Manager
 {
-ZENClassDeclare(DepotResourceData, zbType::Manager)
+zenClassDeclare(DepotResourceData, zbType::Manager)
 public:
 									DepotResourceData();			
 	void							Remove(const zResID& _ResID);

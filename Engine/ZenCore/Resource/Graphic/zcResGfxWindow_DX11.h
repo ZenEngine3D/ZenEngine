@@ -6,7 +6,7 @@ namespace zcRes
 {
 	class GfxWindowHAL_DX11 : public zcExp::ExportGfxWindowDX11
 	{
-	ZENClassDeclare(GfxWindowHAL_DX11, zcExp::ExportGfxWindowDX11)
+	zenClassDeclare(GfxWindowHAL_DX11, zcExp::ExportGfxWindowDX11)
 	public:
 		virtual							~GfxWindowHAL_DX11();												
 		bool							Initialize();

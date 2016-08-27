@@ -24,7 +24,7 @@ void zString::Split(const char* _zString, char _Separator, zArrayStatic<zString>
 		if( _zString[uStrPos] == _Separator )
 		{
 			uGroupEnd[uGroupCount++] = uStrPos;
-			zenAssert( uGroupCount+1<ZENArrayCount(uGroupEnd) );
+			zenAssert( uGroupCount+1<zenArrayCount(uGroupEnd) );
 		}
 	}
 	if( uStrPos > 0 && _zString[uStrPos-1] != _Separator )

@@ -7,7 +7,7 @@ namespace zen { namespace zenType {
 template<class TType>
 class zArrayStatic : public zArrayBase<TType>
 {
-ZENClassDeclare(zArrayStatic, zArrayBase<TType>)	
+zenClassDeclare(zArrayStatic, zArrayBase<TType>)	
 public:
 					zArrayStatic();
 					zArrayStatic(zUInt _uCount);

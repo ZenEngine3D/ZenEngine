@@ -6,7 +6,7 @@ namespace zen { namespace zenType {
 
 	class zResID
 	{
-	ZENClassDeclareNoParent(zResID)
+	zenClassDeclareNoParent(zResID)
 	public:
 		typedef zHash32	NameHash; //! @todo system hash64 for collision safety?
 

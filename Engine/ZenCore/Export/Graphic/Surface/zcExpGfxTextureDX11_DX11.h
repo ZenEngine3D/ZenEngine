@@ -7,7 +7,7 @@ namespace zcExp
 
 class ExporterGfxTexture2dDX11_DX11 : public ExporterBase
 {
-ZENClassDeclare(ExporterGfxTexture2dDX11_DX11, ExporterBase)
+zenClassDeclare(ExporterGfxTexture2dDX11_DX11, ExporterBase)
 public:
 
 typedef zEngineRef<ExportGfxTexture2d>	ExportResultRef; //todo use proper ref class

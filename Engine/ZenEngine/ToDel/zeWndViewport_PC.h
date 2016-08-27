@@ -13,7 +13,7 @@ namespace zen { namespace zenWnd
 	//=================================================================================================	
 	class Window
 	{
-	ZENClassDeclareNoParent(Window)
+	zenClassDeclareNoParent(Window)
 	enum eThreadStatus{keThread_Starting, keThread_Error, keThread_Running, keThread_Ended};
 	struct PendingMessage
 	{

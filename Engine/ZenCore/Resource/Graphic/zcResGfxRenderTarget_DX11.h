@@ -7,7 +7,7 @@ namespace zcRes
 
 	class GfxTarget2DHAL_DX11 : public zcExp::ExportGfxTarget2D
 	{
-	ZENClassDeclare(GfxTarget2DHAL_DX11, zcExp::ExportGfxTarget2D)
+	zenClassDeclare(GfxTarget2DHAL_DX11, zcExp::ExportGfxTarget2D)
 	public:
 		typedef zcExp::ExporterGfxTarget2D	RuntimeExporter;
 

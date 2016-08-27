@@ -92,14 +92,14 @@ const zString& PropertyDefinition::GetTypeName()const
 
 const zString& PropertyDefinition::GetTypeName(zenConst::eAssetPropertyType _eType)
 {
-	zenStaticAssert( ZENArrayCount(saPropertyName)==zenConst::keAssProp__Count );
+	zenStaticAssert( zenArrayCount(saPropertyName)==zenConst::keAssProp__Count );
 	zenAssert( _eType < zenConst::keAssProp__Count);
 	return saPropertyName[_eType].mzName;
 }
 
 zenConst::eAssetPropertyType PropertyDefinition::GetTypeFromName(const char* _zName)
 {
-	zUInt uFoundIdx = zStringHash32::Find( zHash32(_zName), saPropertyName, ZENArrayCount(saPropertyName) );
+	zUInt uFoundIdx = zStringHash32::Find( zHash32(_zName), saPropertyName, zenArrayCount(saPropertyName) );
 	return uFoundIdx < zenConst::keAssProp__Count ? static_cast<zenConst::eAssetPropertyType>(uFoundIdx) : zenConst::keAssProp__Invalid;
 }
 

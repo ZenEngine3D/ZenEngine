@@ -132,7 +132,7 @@ void zxNuklearHelper::Render(const zEngineRef<zxRenderData>& _rNuklearData, Wind
 		KeyProcessed.reset();
 
 		// Special keys
-		for (zUInt idx(0); idx < ZENArrayCount(ZenToNuklearKey); ++idx)
+		for (zUInt idx(0); idx < zenArrayCount(ZenToNuklearKey); ++idx)
 		{
 			zU8 uWinKey		= ZenToNuklearKey[idx].muWindowKey;
 			zU8 uSpecialKey	= ZenToNuklearKey[idx].muKeyCombin;

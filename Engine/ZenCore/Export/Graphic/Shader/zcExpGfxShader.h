@@ -15,7 +15,7 @@ namespace zcExp
 
 	class ExportGfxShader : public zenRes::zExportData
 	{
-	ZENClassDeclare(ExportGfxShader, zenRes::zExportData)
+	zenClassDeclare(ExportGfxShader, zenRes::zExportData)
 	public:
 		//virtual bool				Serialize( zcExp::Serializer_Base& _Serializer ){return FALSE;}
 		struct BindInfo{ zU8 uSlot;	zU8 uCount;	};

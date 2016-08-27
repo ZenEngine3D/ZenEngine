@@ -7,7 +7,7 @@ namespace zcGfx
 
 class DrawContext : public zRefCounted
 {
-ZENClassDeclare(DrawContext, zRefCounted)
+zenClassDeclare(DrawContext, zRefCounted)
 zListLink mlnkChild;
 typedef zList<DrawContext, &DrawContext::mlnkChild, false> TypeListChild;		
 

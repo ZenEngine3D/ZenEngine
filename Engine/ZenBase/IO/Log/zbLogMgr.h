@@ -27,7 +27,7 @@ enum eLogOutput
 //=================================================================================================
 class ManagerLog : public zbType::Manager
 {
-ZENClassDeclare(ManagerLog, zbType::Manager);
+zenClassDeclare(ManagerLog, zbType::Manager);
 public:  	
 				void			Reset			();
 	ZENInline	void			Clear			( eLogOutput _eOutput );

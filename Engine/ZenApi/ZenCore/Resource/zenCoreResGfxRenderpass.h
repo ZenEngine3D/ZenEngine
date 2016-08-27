@@ -6,7 +6,7 @@ namespace zen { namespace zenRes {
 
 	class zGfxRenderPass : public zcRes::GfxRenderPassRef
 	{
-	ZENClassDeclare(zGfxRenderPass, zcRes::GfxRenderPassRef);
+	zenClassDeclare(zGfxRenderPass, zcRes::GfxRenderPassRef);
 	public:
 		using Super::Super;
 		using Super::operator=;
@@ -106,7 +106,7 @@ namespace zen { namespace zenGfx
 {	
 	class zContext : public zEngineRef<zcGfx::DrawContext>
 	{
-	ZENClassDeclare(zContext, zEngineRef<zcGfx::DrawContext>);
+	zenClassDeclare(zContext, zEngineRef<zcGfx::DrawContext>);
 	public:	
 		void					Submit();
 		static zContext			Create(const zStringHash32& _zContextName, const zContext& _rParent=zContext(), const zenRes::zGfxRenderPass& _rRenderState=zenRes::zGfxRenderPass());

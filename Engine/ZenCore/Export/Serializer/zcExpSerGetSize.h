@@ -6,7 +6,7 @@ namespace zcExp
 {		
 	class SerializerGetSize : public Serializer_Base
 	{
-	ZENClassDeclare(SerializerGetSize, Serializer_Base)
+	zenClassDeclare(SerializerGetSize, Serializer_Base)
 	public:
 						SerializerGetSize():muSerializeSize(0){}
 		virtual eStatus	GetStatus(){return keStatus_GetSize;}

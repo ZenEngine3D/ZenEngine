@@ -6,7 +6,7 @@ namespace zen { namespace zenRes {
 
 	class zExportData : public zRefCounted
 	{
-	ZENClassDeclare(zExportData, zRefCounted)
+	zenClassDeclare(zExportData, zRefCounted)
 	public:
 							~zExportData();							
 		zU32				muSize;			//!< Serialized data size
@@ -23,7 +23,7 @@ namespace zen { namespace zenRes {
 	template< class TResourceClass, class TResourceHAL, zU64 TTypeMask >
 	class zResourceConstRef
 	{	
-	ZENClassDeclareNoParent(zResourceConstRef)
+	zenClassDeclareNoParent(zResourceConstRef)
 	public:	
 		enum { keTypeMask = TTypeMask };
 		typedef TResourceClass												Class;
@@ -60,7 +60,7 @@ namespace zen { namespace zenRes {
 	template< class TResourceClass, class TResourceHAL, zU64 TTypeMask >
 	class zResourceRef : public zResourceConstRef<TResourceClass, TResourceHAL, TTypeMask>
 	{	
-	ZENClassDeclare(zResourceRef, zResourceConstRef)
+	zenClassDeclare(zResourceRef, zResourceConstRef)
 	public:
 		TResourceClass*				operator->()const;		//!< Return a pointer to resource
 		TResourceClass*				Get()const;				//!< Return a pointer to resource

@@ -7,7 +7,7 @@ namespace zcExp
 
 class ExporterGfxInputSignatureDX11_DX11 : public ExporterBase
 {
-ZENClassDeclare(ExporterGfxInputSignatureDX11_DX11, ExporterBase)
+zenClassDeclare(ExporterGfxInputSignatureDX11_DX11, ExporterBase)
 public:
 typedef zEngineRef<ExportGfxInputSignatureDX11>	ExportResultRef; //todo use proper ref class
 												ExporterGfxInputSignatureDX11_DX11(const ExportResultRef& _rExportOut);

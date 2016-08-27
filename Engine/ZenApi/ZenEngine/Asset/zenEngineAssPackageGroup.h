@@ -10,7 +10,7 @@ namespace zen { namespace zenAss
 {
 	class zPackageGroupRef : public zEngineRef<zeAss::PackageGroup>
 	{
-	ZENClassDeclare(zPackageGroupRef, zEngineRef)
+	zenClassDeclare(zPackageGroupRef, zEngineRef)
 	public:	
 													zPackageGroupRef();
 													zPackageGroupRef(const zPackageGroupRef& _Copy);

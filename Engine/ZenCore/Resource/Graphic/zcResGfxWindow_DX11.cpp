@@ -44,7 +44,7 @@ namespace zcRes
 						rResource.HAL()->mpDX11SwapChain			= pDXSwapChain;
 						rResource.HAL()->meBackbufferColorFormat	= eColorFormat;
 						rResource.HAL()->mvSize						= zVec2U16(zU16(rc.right-rc.left), zU16(rc.bottom-rc.top));
-						for(zUInt idx(0); idx<ZENArrayCount(mrBackbufferColor) && bValid; ++idx)
+						for(zUInt idx(0); idx<zenArrayCount(mrBackbufferColor) && bValid; ++idx)
 						{
 							rResource.HAL()->mrBackbufferColor[idx]	= GfxTarget2DHAL_DX11::RuntimeCreate(*pDXSwapChain, eColorFormat, idx);							
 							bValid									= rResource.HAL()->mrBackbufferColor[idx].IsValid();
@@ -86,14 +86,14 @@ namespace zcRes
 		if( bResize  )
 		{				
 			bool bValid(true);
-			for(zUInt idx(0); idx<ZENArrayCount(mrBackbufferColor); ++idx)
+			for(zUInt idx(0); idx<zenArrayCount(mrBackbufferColor); ++idx)
 			{
 				const GfxTarget2DRef& rRenderTarget = mrBackbufferColor[idx];
 				rRenderTarget.HAL()->ReleaseBackbuffer();
 			}
 			mpDX11SwapChain->ResizeBuffers(0, mvPendingResize.x, mvPendingResize.y, DXGI_FORMAT_UNKNOWN, 0);
 			
-			for(zUInt idx(0); idx<ZENArrayCount(mrBackbufferColor) && bValid; ++idx)
+			for(zUInt idx(0); idx<zenArrayCount(mrBackbufferColor) && bValid; ++idx)
 			{
 				mrBackbufferColor[idx]	= GfxTarget2DHAL_DX11::RuntimeCreate(*mpDX11SwapChain, meBackbufferColorFormat, idx);				
 				bValid					= mrBackbufferColor[idx].IsValid();

@@ -6,7 +6,7 @@ namespace zen { namespace zenMath
 {
 	class alignas(16) Matrix
 	{
-	ZENClassDeclareNoParent(Matrix);
+	zenClassDeclareNoParent(Matrix);
 	public:
 							Matrix		(){};
 							Matrix		(const Matrix& _Copy);

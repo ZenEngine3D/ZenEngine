@@ -7,7 +7,7 @@ namespace zeAss
 {
 	class PackageGroup : public zRefCounted
 	{
-	ZENClassDeclare(PackageGroup, zRefCounted)
+	zenClassDeclare(PackageGroup, zRefCounted)
 	public:		
 																	PackageGroup	(const zWString& _zName, zenAss::zPackageGroupRef _Parent);
 		virtual														~PackageGroup	();		

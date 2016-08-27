@@ -7,12 +7,12 @@ bool ManagerFile_PC::Load()
 {
 	bool bValid(false);
 	wchar_t zWorkingDir[512];
-	GetCurrentDirectory( ZENArrayCount(zWorkingDir), zWorkingDir );
+	GetCurrentDirectory( zenArrayCount(zWorkingDir), zWorkingDir );
 	size_t uPosEnd = wcslen(zWorkingDir);
 	while( !bValid && zWorkingDir[0] != 0 )
 	{
 		// Look for 'Content' directory in working path		
-		_snwprintf_s( &zWorkingDir[uPosEnd], ZENArrayCount(zWorkingDir)-uPosEnd, _TRUNCATE, L"/Content");
+		_snwprintf_s( &zWorkingDir[uPosEnd], zenArrayCount(zWorkingDir)-uPosEnd, _TRUNCATE, L"/Content");
 		WIN32_FIND_DATA	FileInfo;
 		HANDLE hSearch	= FindFirstFile(zWorkingDir, &FileInfo);		
 		if( hSearch != INVALID_HANDLE_VALUE )

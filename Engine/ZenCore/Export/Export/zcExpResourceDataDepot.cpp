@@ -42,7 +42,7 @@ void ResetResourceDataReference(zMap<zEngineRef<ResourceData>>::Key64& _dResData
 DepotResourceData::DepotResourceData()
 //: mdResourceData(256)
 {	
-	zenStaticAssert( ZENArrayCount(gResourceVersions)==zenConst::keResType__Count );
+	zenStaticAssert( zenArrayCount(gResourceVersions)==zenConst::keResType__Count );
 }
 
 //=================================================================================================

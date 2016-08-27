@@ -17,7 +17,7 @@ namespace zen { namespace zenMem
 
 	class zAllocator
 	{
-	ZENClassDeclareNoParent(zAllocator);
+	zenClassDeclareNoParent(zAllocator);
 	public:
 		struct HeaderListItem
 		{
@@ -63,7 +63,7 @@ namespace zen { namespace zenMem
 	//=================================================================================================
 	class ScopedAllocator
 	{	
-	ZENClassDeclareNoParent(ScopedAllocator);
+	zenClassDeclareNoParent(ScopedAllocator);
 	public:
 								ScopedAllocator(zAllocator* _pAllocator);
 								~ScopedAllocator();

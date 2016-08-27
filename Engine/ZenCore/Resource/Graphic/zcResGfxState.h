@@ -8,22 +8,22 @@ namespace zcRes
 {
 	class GfxSampler : protected GfxSamplerHAL
 	{
-	ZENClassDeclare(GfxSampler, GfxSamplerHAL)
+	zenClassDeclare(GfxSampler, GfxSamplerHAL)
 	};
 
 	class GfxStateBlend : protected GfxStateBlendHAL
 	{
-	ZENClassDeclare(GfxStateBlend, GfxStateBlendHAL)		
+	zenClassDeclare(GfxStateBlend, GfxStateBlendHAL)		
 	};
 
 	class GfxStateDepthStencil : protected GfxStateDepthStencilHAL
 	{
-	ZENClassDeclare(GfxStateDepthStencil, GfxStateDepthStencilHAL)		
+	zenClassDeclare(GfxStateDepthStencil, GfxStateDepthStencilHAL)		
 	};
 
 	class GfxStateRaster : protected GfxStateRasterHAL
 	{
-	ZENClassDeclare(GfxStateRaster, GfxStateRasterHAL)		
+	zenClassDeclare(GfxStateRaster, GfxStateRasterHAL)		
 	};
 }
 

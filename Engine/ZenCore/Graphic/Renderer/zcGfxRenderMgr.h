@@ -15,7 +15,7 @@ extern zcRes::GfxWindowRef	grWindowRender;	//!< Window being currently rendered 
 //=================================================================================================	
 class ManagerRender_Base : public zbType::Manager
 {
-ZENClassDeclare(ManagerRender_Base, zbType::Manager)
+zenClassDeclare(ManagerRender_Base, zbType::Manager)
 public:	
 											ManagerRender_Base();
 

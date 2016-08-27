@@ -13,7 +13,7 @@ namespace zen { namespace zenSig
 //=================================================================================================	
 class zSignal
 {
-ZENClassDeclareNoParent(zSignal)
+zenClassDeclareNoParent(zSignal)
 public:
 	class ConnectionBase
 	{
@@ -49,7 +49,7 @@ protected:
 //=================================================================================================	
 class zSignal0 : public zSignal
 {
-ZENClassDeclare(zSignal0, zSignal)
+zenClassDeclare(zSignal0, zSignal)
 protected:
 	class Connection : public ConnectionBase {
 	public:
@@ -83,7 +83,7 @@ public:
 template<class TParam1>
 class zSignal1 : public zSignal
 {
-ZENClassDeclare(zSignal1, zSignal)
+zenClassDeclare(zSignal1, zSignal)
 protected:
 	class Connection : public ConnectionBase { 
 	public:
@@ -117,7 +117,7 @@ public:
 template<class TParam1, class TParam2>
 class zSignal2 : public zSignal
 {
-ZENClassDeclare(zSignal2, zSignal)
+zenClassDeclare(zSignal2, zSignal)
 protected:
 	class Connection : public ConnectionBase {
 	public:
@@ -149,7 +149,7 @@ public:
 template<class TParam1, class TParam2, class TParam3>
 class zSignal3 : public zSignal
 {
-ZENClassDeclare(zSignal3, zSignal)
+zenClassDeclare(zSignal3, zSignal)
 protected:
 	class Connection : public ConnectionBase {
 	public:
