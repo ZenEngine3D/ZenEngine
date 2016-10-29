@@ -6,6 +6,8 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 //--------------------------------------------------------------------------------------
 
+
+
 //--------------------------------------------------------------------------------------
 // Constant Buffer Variables
 //--------------------------------------------------------------------------------------
@@ -18,7 +20,9 @@ struct TestStruct
 	uint 	Val2;
 };
 
-StructuredBuffer<TestStruct> TestBuffer;
+StructuredBuffer<float3> 			VInputPosition;
+StructuredBuffer<SVertex_ColorUV>	VInputColorUV;
+StructuredBuffer<float4> 			TestBufferUpdate;
 
 cbuffer cbViewPhase : register( b1 )
 {
@@ -41,47 +45,43 @@ cbuffer cbStrip : register( b5 )
 };
 
 //--------------------------------------------------------------------------------------
-struct VS_INPUT
+struct PS_INPUT
 {
-    float4 Pos : POSITION;
-    float2 Tex : TEXCOORD0;
-};
-
-struct VS_OUTPUT
-{
-    float4 Pos : SV_POSITION;
-    float2 Tex : TEXCOORD0;
-	float Test : TEXCOORD1;
+    float4 Position : SV_POSITION;
+	float4 Color	: COLOR0;
+    float2 UV 		: TEXCOORD0;
 };
 
 
 //--------------------------------------------------------------------------------------
 // Vertex Shader
 //--------------------------------------------------------------------------------------
-VS_OUTPUT VS( VS_INPUT input )
+PS_INPUT VS( uint VertexId : SV_VertexID )
 {
-    VS_OUTPUT output = (VS_OUTPUT)0;
-		
-	matrix LocalToView	= mul(mul(World,View),Projection);
-	output.Pos			= mul( input.Pos, LocalToView );
+    PS_INPUT output 				= (PS_INPUT)0;
+	float3 bufferPos 				= VInputPosition[VtxInput_Offset+VertexId];
+	SVertex_ColorUV bufferEntry 	= VInputColorUV[VtxInput_Offset+VertexId];
 	
-    output.Tex			= input.Tex;
-    //output.Test		= vMeshColor.a;
+	matrix LocalToView				= mul(mul(World,View),Projection);
+	output.Position					= mul(float4(bufferPos,1), LocalToView);	
+	output.Color					= UNorm4ToFloat4(bufferEntry.Color);
+    output.UV						= bufferEntry.UV;
     return output;
 }
 
 //--------------------------------------------------------------------------------------
 // Pixel Shader
 //--------------------------------------------------------------------------------------
-float4 PS( VS_OUTPUT input) : SV_Target
+float4 PS( PS_INPUT VertexInput) : SV_Target
 {
-	float4 texColor = TextureSample2D( txColor, input.Tex );
-	return float4(vColor.rgb*texColor.rgb, TestBuffer[1].Val1 );
+	float4 texColor = TextureSample2D( txColor, VertexInput.UV );
+	//return float4(texColor.rgb*TestBufferUpdate[0].rgb, 1);
+	return float4(vColor.rgb*VertexInput.Color.rgb*texColor.rgb, VertexInput.Color.a );
 }
 
-void PS2Output( VS_OUTPUT input, out float4 ColorOut1 : SV_Target0, out float4 ColorOut2 : SV_Target1) 
+void PS2Output( PS_INPUT VertexInput, out float4 ColorOut1 : SV_Target0, out float4 ColorOut2 : SV_Target1) 
 {
-	float4 texColor = TextureSample2D( txColor, input.Tex );
-	ColorOut1 = float4(vColor.rgb*texColor.rgb,1);
-	ColorOut2 = float4(input.Tex.x, input.Tex.y, 1, 1);
+	float4 texColor = TextureSample2D( txColor, VertexInput.UV );
+	ColorOut1 		= float4(vColor.rgb*texColor.rgb,1);
+	ColorOut2 		= float4(VertexInput.UV.x, VertexInput.UV.y, 1, 1);
 }

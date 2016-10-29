@@ -5,7 +5,8 @@ namespace zen { namespace zenRes {
 
 zExportData::~zExportData()
 {
-	zcDepot::ExportData.Remove( mResID );
+	if( mResID.IsValid() )
+		zcDepot::ExportData.Remove( mResID );
 }
 
 }} // namespace zen, zenRes

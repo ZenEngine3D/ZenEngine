@@ -50,7 +50,7 @@ void DrawContext::Clear()
 
 void DrawContext::Submit()
 {
-	zenAssertMsg( mbRootContext, "Can only submot a root context");
+	zenAssertMsg( mbRootContext, "Can only submit a root context");
 	SubmitInternal();
 }
 

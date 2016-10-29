@@ -91,5 +91,8 @@ void zPackageRef::Delete()
 }
 
 }} //namespace zen { namespace zenAss
+#else
+
+zenPreventEmptyFileWarning
 
 #endif //ZEN_ENGINETOOL

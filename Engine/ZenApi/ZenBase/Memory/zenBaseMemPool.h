@@ -21,10 +21,10 @@ public:
 
 public:
 							zAllocatorPool		();
-							zAllocatorPool		(const zDebugString& _zName, size_t _uItemSize, zUInt _uItemCount, zU32 _uItemIncrease, zU32 _uAlign=zenDefaultAlign );
+							zAllocatorPool		(const zDebugString& _zName, size_t _uItemSize, zU32 _uItemCount, zU32 _uItemIncrease, zU32 _uAlign=zenDefaultAlign );
 	virtual					~zAllocatorPool		();
-			void			Init				(const zDebugString& _zName, size_t _uItemSize, zUInt _uItemCount, zU32 _uItemIncrease, zU32 _uAlign=zenDefaultAlign );
-			void			MemoryIncrease		(zUInt _uItemCount);
+			void			Init				(const zDebugString& _zName, size_t _uItemSize, zU32 _uItemCount, zU32 _uItemIncrease, zU32 _uAlign=zenDefaultAlign );
+			void			MemoryIncrease		(zU32 _uItemCount);
 			void			ReInit				();
 			void			MemoryReleaseUnused	();
 			size_t			GetItemSize			()const;
@@ -33,9 +33,9 @@ public:
 			zU32			GetIncreaseCount	()const;
 			void			SetIncreaseCount	(zU32 _uIncreaseCount);
 			void			Clear				();
-protected:	
+protected:		
+	size_t					mPoolItemSize;		//!< Size of each pool item
 	zU32					mPoolReservedCount;	//!< Number of pool item reserved
-	zU32					mPoolItemSize;		//!< Size of each pool item
 	zU32					mPoolItemIncrease;	//!< Amount of new item when pool runs out of item (0 for none)
 	zU32					mPoolItemAlign;		//!< Each item alignment
 	zU32					mPoolItemCountInit; //!< Original pool item reserved

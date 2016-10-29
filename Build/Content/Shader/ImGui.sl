@@ -1,19 +1,11 @@
 #include "AllInclude.sl"
-/*
-cbuffer vertexBuffer : register(b0)
-{
-	float4x4 ProjectionMatrix;
-};
-*/
-matrix ProjectionMatrix;
 
-Texture_2D( txFont );
-
-struct VS_INPUT
+//Todo use header file shared between shader/engine
+struct VS_INPUT 
 {
-	float2 pos : POSITION;
-	float4 col : COLOR0;
-	float2 uv  : TEXCOORD0;
+	float2 	Position;
+	float2	UV;
+	uint  	Color;
 };
 
 struct PS_INPUT
@@ -23,12 +15,19 @@ struct PS_INPUT
 	float2 uv  : TEXCOORD0;
 };
 
-PS_INPUT VSMain(VS_INPUT input)
-{
-	PS_INPUT output;
-	output.pos = mul( float4(input.pos.xy, 0.f, 1.f), ProjectionMatrix );
-	output.col = input.col;
-	output.uv  = input.uv;
+
+
+StructuredBuffer<VS_INPUT>	VInputAll;
+matrix 						ProjectionMatrix;
+Texture_2D( txFont );
+
+PS_INPUT VSMain(uint VertexId : SV_VertexID)
+{	
+	VS_INPUT input 	= VInputAll[VtxInput_Offset+VertexId];
+	PS_INPUT output = (PS_INPUT)0;
+	output.pos 		= mul( float4(input.Position, 0.f, 1.f), ProjectionMatrix ); 
+	output.col 		= UNorm4ToFloat4(input.Color);
+	output.uv  		= input.UV;	
 	return output;
 }
 

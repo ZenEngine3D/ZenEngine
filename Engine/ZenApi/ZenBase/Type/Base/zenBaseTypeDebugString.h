@@ -11,10 +11,10 @@ namespace zen { namespace zenType {
 class zDebugString
 {
 public:
-	ZENInline			zDebugString();
-	ZENInline			zDebugString(const char* _zString);
-	ZENInline			operator const char*();
-	ZENInline void		operator=(const zDebugString& _Copy);
+	zenInline			zDebugString();
+	zenInline			zDebugString(const char* _zString);
+	zenInline			operator const char*();
+	zenInline void		operator=(const zDebugString& _Copy);
 
 protected:	
 	ZENDbgCode(const char* mzDebugString;)

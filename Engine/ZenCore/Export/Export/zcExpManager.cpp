@@ -13,7 +13,7 @@ zU32	ManagerExport::saNextID[zenConst::keResType__Count];
 ManagerExport::ManagerExport()
 {	
 	
-	zenConst::eResPlatform aPlatformTypes[zResID::kePlatformType__Count];
+	ePlatform aPlatformTypes[zResID::kePlatformType__Count];
 	aPlatformTypes[zResID::kePlatformType_OS]	= zenConst::kCurrentPlatformOS;
 	aPlatformTypes[zResID::kePlatformType_GFX]	= zenConst::kCurrentPlatformGfx;
 	SetExportInfos( aPlatformTypes, zenConst::keResSource_Runtime, zcRes::RuntimeCreateResource ); //! @todo Clean support export/runtime creation
@@ -29,33 +29,31 @@ bool ManagerExport::Load()
 {	
 	// Default callback for Getting new zResID value, to use simple incrementing index (good for runtime resources)
 	zenMem::Zero(saNextID, sizeof(saNextID) );		
-	for( zUInt idxPlatform(0); idxPlatform<zenConst::keResPlatform__Count; ++idxPlatform)
-		for( zUInt idxType(0); idxType<zenConst::keResType__Count; ++idxType)
+	for( zUInt idxPlatform(0); idxPlatform<kePlatform__Count; ++idxPlatform)
+		for( zUInt idxType(0); idxType<keResType__Count; ++idxType)
 			mpCallbackGetItemID[idxPlatform][idxType] = CallbackGetItemID;	
 	
 	// Configure specific callback for zResID value 
-	mpCallbackGetItemID[zenConst::keResPlatform_DX11][zenConst::keResType_GfxView]				= zcExp::ExportInfoGfxView::CallbackGetItemID;
-	mpCallbackGetItemID[zenConst::keResPlatform_DX11][zenConst::keResType_GfxMesh]				= zcExp::ExportInfoGfxMesh::CallbackGetItemID;
-	mpCallbackGetItemID[zenConst::keResPlatform_DX11][zenConst::keResType_GfxShaderVertex]		= zcExp::ExportInfoGfxShader::CallbackGetItemID;
-	mpCallbackGetItemID[zenConst::keResPlatform_DX11][zenConst::keResType_GfxShaderPixel]		= zcExp::ExportInfoGfxShader::CallbackGetItemID;
-	mpCallbackGetItemID[zenConst::keResPlatform_DX11][zenConst::keResType_GfxShaderParamDef]	= zcExp::ExportInfoGfxShaderParamDef::CallbackGetItemID;
-	mpCallbackGetItemID[zenConst::keResPlatform_DX11][zenConst::keResType_GfxShaderBinding]		= zcExp::ExportInfoGfxShaderBinding::CallbackGetItemID;
-	mpCallbackGetItemID[zenConst::keResPlatform_DX11][zenConst::keResType_GfxInputStream]		= zcExp::ExporterGfxInputStream::CallbackGetItemID;
+	mpCallbackGetItemID[kePlatform_DX11][keResType_GfxView]				= zcExp::ExportInfoGfxView::CallbackGetItemID;
+	mpCallbackGetItemID[kePlatform_DX11][keResType_GfxMesh]				= zcExp::ExportInfoGfxMesh::CallbackGetItemID;
+	mpCallbackGetItemID[kePlatform_DX11][keResType_GfxShaderVertex]		= zcExp::ExportInfoGfxShader::CallbackGetItemID;
+	mpCallbackGetItemID[kePlatform_DX11][keResType_GfxShaderPixel]		= zcExp::ExportInfoGfxShader::CallbackGetItemID;
+	mpCallbackGetItemID[kePlatform_DX11][keResType_GfxCBufferDefinition]	= zcExp::ExportInfoGfxCBufferDefinition::CallbackGetItemID;
+	mpCallbackGetItemID[kePlatform_DX11][keResType_GfxShaderBinding]	= zcExp::ExportInfoGfxShaderBinding::CallbackGetItemID;
 	//! @todo cleanup move this to console specific code
 #if ZEN_RENDERER_DX11		
-	mpCallbackGetItemID[zenConst::keResPlatform_DX11][zenConst::keResType_GfxSampler]			= zcExp::ExporterGfxSamplerDX11_DX11::CallbackGetItemID;
-	mpCallbackGetItemID[zenConst::keResPlatform_DX11][zenConst::keResType_GfxBlend]				= zcExp::ExporterGfxStateBlendDX11_DX11::CallbackGetItemID;
-	mpCallbackGetItemID[zenConst::keResPlatform_DX11][zenConst::keResType_GfxDepthStencil]		= zcExp::ExporterGfxStateDepthStencilDX11_DX11::CallbackGetItemID;
-	mpCallbackGetItemID[zenConst::keResPlatform_DX11][zenConst::keResType_GfxRaster]			= zcExp::ExporterGfxStateRasterDX11_DX11::CallbackGetItemID;		
-	mpCallbackGetItemID[zenConst::keResPlatform_DX11][zenConst::keResType_GfxInputSignature]	= zcExp::ExporterGfxInputSignatureDX11_DX11::CallbackGetItemID;		
+	mpCallbackGetItemID[kePlatform_DX11][keResType_GfxSampler]			= zcExp::ExporterGfxSamplerDX11_DX11::CallbackGetItemID;
+	mpCallbackGetItemID[kePlatform_DX11][keResType_GfxBlend]			= zcExp::ExporterGfxStateBlendDX11_DX11::CallbackGetItemID;
+	mpCallbackGetItemID[kePlatform_DX11][keResType_GfxDepthStencil]		= zcExp::ExporterGfxStateDepthStencilDX11_DX11::CallbackGetItemID;
+	mpCallbackGetItemID[kePlatform_DX11][keResType_GfxRaster]			= zcExp::ExporterGfxStateRasterDX11_DX11::CallbackGetItemID;		
 #endif
 
 	return true;
 }
 
-void ManagerExport::SetExportInfos(zenConst::eResPlatform _aPlatforms[zenConst::keResPlatform__Count], zenConst::eResSource _eExportSource, CBCreateItem _pExportCBCreateItem )
+void ManagerExport::SetExportInfos(ePlatform _aPlatforms[kePlatform__Count], zenConst::eResSource _eExportSource, CBCreateItem _pExportCBCreateItem )
 {
-	for(zUInt platIdx(0); platIdx<zenConst::keResPlatform__Count; ++platIdx)
+	for(zUInt platIdx(0); platIdx<kePlatform__Count; ++platIdx)
 		maPlatforms[platIdx] = _aPlatforms[platIdx];
 	meSource				= _eExportSource;
 	mpCallbackCreateItem	= _pExportCBCreateItem;
@@ -63,13 +61,13 @@ void ManagerExport::SetExportInfos(zenConst::eResPlatform _aPlatforms[zenConst::
 //! @todo Clean, remove platformtype, use resourcetype to know
 zResID ManagerExport::CreateItem( zResID::ePlatformType _ePlatformType, zenConst::eResType _eResourceType, ExportInfoBase* _pExportInfoBase )
 { 
-	zenAssert(_ePlatformType<zenConst::keResPlatform__Count);
-	zenAssert(_eResourceType<zenConst::keResType__Count);
+	zenAssert(_ePlatformType<kePlatform__Count);
+	zenAssert(_eResourceType<keResType__Count);
 	zenAssert(_pExportInfoBase);
 	bool bExist(false);
-	zenConst::eResPlatform eExportPlatform	= maPlatforms[_ePlatformType];
-	_pExportInfoBase->mExportResID			= mpCallbackGetItemID[eExportPlatform][_eResourceType](eExportPlatform, _eResourceType, meSource, _pExportInfoBase, bExist);
-	zResID NewResID							= bExist ? _pExportInfoBase->mExportResID : mpCallbackCreateItem(_pExportInfoBase);
+	ePlatform eExportPlatform		= maPlatforms[_ePlatformType];
+	_pExportInfoBase->mExportResID	= mpCallbackGetItemID[eExportPlatform][_eResourceType](eExportPlatform, _eResourceType, meSource, _pExportInfoBase, bExist);
+	zResID NewResID					= bExist ? _pExportInfoBase->mExportResID : mpCallbackCreateItem(_pExportInfoBase);
 	zenDel(_pExportInfoBase); //! @todo safely manage this better. RefCount? Stack Allocate without pool?
 	return NewResID;
 }
@@ -81,7 +79,7 @@ zResID ManagerExport::CreateItem( zResID::ePlatformType _ePlatformType, zenConst
 //-------------------------------------------------------------------------------------------------
 //! @return		New zResID
 //=================================================================================================
-zResID ManagerExport::GetNewResourceID(zenConst::eResPlatform _ePlatform, zenConst::eResType _eType, zenConst::eResSource _eSource, const ExportInfoBase* _pExportInfo, bool& _bExistOut)
+zResID ManagerExport::GetNewResourceID(ePlatform _ePlatform, zenConst::eResType _eType, eResSource _eSource, const ExportInfoBase* _pExportInfo, bool& _bExistOut)
 {
 	return mpCallbackGetItemID[_ePlatform][_eType](_ePlatform, _eType, _eSource, _pExportInfo, _bExistOut);
 }
@@ -105,7 +103,7 @@ zResID ManagerExport::GetNewResourceID(zenConst::eResType _eType)
 //-------------------------------------------------------------------------------------------------
 //! @return		New zResID
 //=================================================================================================
-zResID ManagerExport::CallbackGetItemID(zenConst::eResPlatform _ePlatform, zenConst::eResType _eType, zenConst::eResSource _eSource, const ExportInfoBase* _pExportInfo, bool& _bExistOut)
+zResID ManagerExport::CallbackGetItemID(ePlatform _ePlatform, zenConst::eResType _eType, zenConst::eResSource _eSource, const ExportInfoBase* _pExportInfo, bool& _bExistOut)
 {
 	_bExistOut	= false;
 	zU32 uNextID = saNextID[_eType]++;

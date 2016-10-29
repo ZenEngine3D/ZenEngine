@@ -11,9 +11,9 @@ namespace zen { namespace zenType {
 	{
 	zenClassDeclareNoParent(zRefCounted)
 	public:
-		ZENInline void					ReferenceAdd();
-		ZENInline void					ReferenceRem();
-		ZENInline zInt					ReferenceCount();		
+		zenInline void					ReferenceAdd();
+		zenInline void					ReferenceRem();
+		zenInline zInt					ReferenceCount();		
 		static void						ReferenceRelease();		//!< @brief Clear item flagged as deleted (reference reached 0)
 		virtual							~zRefCounted(){};
 	protected:
@@ -36,11 +36,11 @@ namespace zen { namespace zenType {
 		 									~zReference();
 		 const zReference&					operator=(zRefCounted* _pReference);
 		 const zReference&					operator=(const zReference& _Copy);
-		ZENInline bool						operator==(const zReference& _Cmp)const;
-		ZENInline bool						operator!=(const zReference& _Cmp)const;
-		ZENInline bool						operator==(const zRefCounted* _pCmp)const;
-		ZENInline bool						operator!=(const zRefCounted* _pCmp)const;
-		ZENInline bool						IsValid()const;
+		zenInline bool						operator==(const zReference& _Cmp)const;
+		zenInline bool						operator!=(const zReference& _Cmp)const;
+		zenInline bool						operator==(const zRefCounted* _pCmp)const;
+		zenInline bool						operator!=(const zRefCounted* _pCmp)const;
+		zenInline bool						IsValid()const;
 	protected:
 		zRefCounted*						mpReference;
 	};
@@ -50,15 +50,15 @@ namespace zen { namespace zenType {
 	{
 	zenClassDeclare(zEngineRef, zReference)
 	public:
-		ZENInline 							zEngineRef();
-		ZENInline 							zEngineRef(TRefCountedType* _pReference);
-		ZENInline 							zEngineRef(const zEngineRef& _Copy);		
-		ZENInline const zEngineRef&			operator=(TRefCountedType* _pReference);
-		ZENInline const zEngineRef&			operator=(const zEngineRef& _Copy);
+		zenInline 							zEngineRef();
+		zenInline 							zEngineRef(TRefCountedType* _pReference);
+		zenInline 							zEngineRef(const zEngineRef& _Copy);		
+		zenInline const zEngineRef&			operator=(TRefCountedType* _pReference);
+		zenInline const zEngineRef&			operator=(const zEngineRef& _Copy);
 	#if ZEN_ENGINELIB
-		ZENInline TRefCountedType*			Get()const;				//!< @note Only use on engine side, else won't compile
-		ZENInline TRefCountedType*			GetSafe()const;			//!< @note Only use on engine side, else won't compile
-		ZENInline TRefCountedType*			operator->()const;		//!< @note Only use on engine side, else won't compile				
+		zenInline TRefCountedType*			Get()const;				//!< @note Only use on engine side, else won't compile
+		zenInline TRefCountedType*			GetSafe()const;			//!< @note Only use on engine side, else won't compile
+		zenInline TRefCountedType*			operator->()const;		//!< @note Only use on engine side, else won't compile				
 	#endif
 		using Super::operator==;
 		using Super::operator!=;
@@ -70,17 +70,17 @@ namespace zen { namespace zenType {
 	{
 	zenClassDeclare(zEngineConstRef, zReference)
 	public:
-		ZENInline 							zEngineConstRef();
-		ZENInline 							zEngineConstRef(const TRefCountedType* _pReference);
-		ZENInline 							zEngineConstRef(const zEngineConstRef& _Copy);
-		ZENInline 							zEngineConstRef(const zEngineRef<TRefCountedType>& _Copy);
-		ZENInline const zEngineConstRef&	operator=(const TRefCountedType* _pReference);
-		ZENInline const zEngineConstRef&	operator=(const zEngineConstRef& _Copy);
-		ZENInline const zEngineConstRef&	operator=(const zEngineRef<TRefCountedType>& _Copy);
+		zenInline 							zEngineConstRef();
+		zenInline 							zEngineConstRef(const TRefCountedType* _pReference);
+		zenInline 							zEngineConstRef(const zEngineConstRef& _Copy);
+		zenInline 							zEngineConstRef(const zEngineRef<TRefCountedType>& _Copy);
+		zenInline const zEngineConstRef&	operator=(const TRefCountedType* _pReference);
+		zenInline const zEngineConstRef&	operator=(const zEngineConstRef& _Copy);
+		zenInline const zEngineConstRef&	operator=(const zEngineRef<TRefCountedType>& _Copy);
 	#if ZEN_ENGINELIB
-		ZENInline const TRefCountedType*	Get()const;			//!< @note Only use on engine side, else won't compile
-		ZENInline const TRefCountedType*	GetSafe()const;		//!< @note Only use on engine side, else won't compile
-		ZENInline const TRefCountedType*	operator->()const;	//!< @note Only use on engine side, else won't compile
+		zenInline const TRefCountedType*	Get()const;			//!< @note Only use on engine side, else won't compile
+		zenInline const TRefCountedType*	GetSafe()const;		//!< @note Only use on engine side, else won't compile
+		zenInline const TRefCountedType*	operator->()const;	//!< @note Only use on engine side, else won't compile
 	#endif
 		using Super::operator==;
 		using Super::operator!=;
@@ -91,17 +91,17 @@ namespace zen { namespace zenType {
 	{
 	zenClassDeclare(zGameRef, zReference)
 	public:
-		ZENInline 							zGameRef();
-		ZENInline 							zGameRef(TRefCountedType* _pReference);
-		ZENInline 							zGameRef(const zEngineRef<TRefCountedType>& _Copy);
-		ZENInline const zGameRef&			operator=(TRefCountedType* _pReference);
-		ZENInline const zGameRef&			operator=(const zGameRef& _Copy);
+		zenInline 							zGameRef();
+		zenInline 							zGameRef(TRefCountedType* _pReference);
+		zenInline 							zGameRef(const zEngineRef<TRefCountedType>& _Copy);
+		zenInline const zGameRef&			operator=(TRefCountedType* _pReference);
+		zenInline const zGameRef&			operator=(const zGameRef& _Copy);
 
-		ZENInline TRefCountedType&			operator*()const{return *Get();}		//!< Return a pointer to resource
+		zenInline TRefCountedType&			operator*()const{return *Get();}		//!< Return a pointer to resource
 
-		ZENInline TRefCountedType*			Get()const;				//!< Return a pointer to resource
-		ZENInline TRefCountedType*			GetSafe()const;			//!< Return a pointer to resource and do nullptr check first
-		ZENInline TRefCountedType*			operator->()const;		//!< Return a pointer to resource
+		zenInline TRefCountedType*			Get()const;				//!< Return a pointer to resource
+		zenInline TRefCountedType*			GetSafe()const;			//!< Return a pointer to resource and do nullptr check first
+		zenInline TRefCountedType*			operator->()const;		//!< Return a pointer to resource
 		using Super::operator==;
 		using Super::operator!=;
 	};
@@ -111,17 +111,17 @@ namespace zen { namespace zenType {
 	{
 	zenClassDeclare(zGameConstRef, zReference)
 	public:
-		ZENInline 							zGameConstRef();
-		ZENInline 							zGameConstRef(const TRefCountedType* _pReference);
-		ZENInline 							zGameConstRef(const zGameConstRef& _Copy);
-		ZENInline 							zGameConstRef(const zGameRef<TRefCountedType>& _Copy);
-		ZENInline const zGameConstRef&		operator=(const TRefCountedType* _pReference);
-		ZENInline const zGameConstRef&		operator=(const zGameConstRef& _Copy);
-		ZENInline const zGameConstRef&		operator=(const zGameRef<TRefCountedType>& _Copy);
+		zenInline 							zGameConstRef();
+		zenInline 							zGameConstRef(const TRefCountedType* _pReference);
+		zenInline 							zGameConstRef(const zGameConstRef& _Copy);
+		zenInline 							zGameConstRef(const zGameRef<TRefCountedType>& _Copy);
+		zenInline const zGameConstRef&		operator=(const TRefCountedType* _pReference);
+		zenInline const zGameConstRef&		operator=(const zGameConstRef& _Copy);
+		zenInline const zGameConstRef&		operator=(const zGameRef<TRefCountedType>& _Copy);
 
-		ZENInline const TRefCountedType*	Get()const;			//!< Return a const pointer to resource
-		ZENInline const TRefCountedType*	GetSafe()const;		//!< Return a const pointer to resource and do nullptr check first
-		ZENInline const TRefCountedType*	operator->()const;	//!< Return a const pointer to resource
+		zenInline const TRefCountedType*	Get()const;			//!< Return a const pointer to resource
+		zenInline const TRefCountedType*	GetSafe()const;		//!< Return a const pointer to resource and do nullptr check first
+		zenInline const TRefCountedType*	operator->()const;	//!< Return a const pointer to resource
 		using Super::operator==;
 		using Super::operator!=;
 	};

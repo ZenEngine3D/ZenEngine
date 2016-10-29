@@ -54,7 +54,7 @@ void zCommand::DrawMesh(const zContext& _rContext, float _fPriority, const zenRe
 	zenAssert(rMesh.IsValid());
 
 	auto aMeshStrips = rMesh->GetMeshStrips();
-	for(int idx(0), count(aMeshStrips.Count()); idx<count; ++idx)
+	for(zUInt idx(0), count(aMeshStrips.Count()); idx<count; ++idx)
 	{		
 		zcRes::GfxMeshStripRef rMeshStrip			= aMeshStrips[idx];
 		zEngineRef<zcGfx::Command> rCommand			= zcGfx::CommandDraw::Create(rRenderpass, rMeshStrip, _uIndexFirst, _uIndexCount, _vScreenScissor).GetSafe();	

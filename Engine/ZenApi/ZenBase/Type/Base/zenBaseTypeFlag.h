@@ -8,43 +8,43 @@ template<typename TEnumFlag, int TEnumMax, typename TStorage=zU32>
 class zFlag
 {
 public:
-	ZENInline						zFlag();
-	ZENInline						zFlag(bool _bInitAllActive);
+	zenInline						zFlag();
+	zenInline						zFlag(bool _bInitAllActive);
 	template<typename... Ts>		zFlag(Ts... r);
 	
-	ZENInline bool					Any()const;
-	ZENInline bool					Any(const zFlag& _Cmp)const;
+	zenInline bool					Any()const;
+	zenInline bool					Any(const zFlag& _Cmp)const;
 	template<typename... Ts> bool	Any(Ts... r)const;
 
-	ZENInline bool					All(const zFlag& _Cmp)const;
+	zenInline bool					All(const zFlag& _Cmp)const;
 	template<typename... Ts> bool	All(Ts... r)const;
 
-	ZENInline const zFlag&			operator= (const zFlag& _Cpy);
-	ZENInline const zFlag&			operator+=(const zFlag& _Add);
-	ZENInline const zFlag&			operator-=(const zFlag& _Rem);
-	ZENInline const zFlag&			operator&=(const zFlag& _And);
-	ZENInline const zFlag&			operator|=(const zFlag& _Or);
-	ZENInline const zFlag&			operator^=(const zFlag& _Xor);
+	zenInline const zFlag&			operator= (const zFlag& _Cpy);
+	zenInline const zFlag&			operator+=(const zFlag& _Add);
+	zenInline const zFlag&			operator-=(const zFlag& _Rem);
+	zenInline const zFlag&			operator&=(const zFlag& _And);
+	zenInline const zFlag&			operator|=(const zFlag& _Or);
+	zenInline const zFlag&			operator^=(const zFlag& _Xor);
 
-	ZENInline zFlag					operator+ (const zFlag& _Add)const;
-	ZENInline zFlag					operator- (const zFlag& _Rem)const;
-	ZENInline zFlag					operator&(const zFlag& _And)const;
-	ZENInline zFlag					operator|(const zFlag& _Or)const;
-	ZENInline zFlag					operator^(const zFlag& _Xor)const;
+	zenInline zFlag					operator+ (const zFlag& _Add)const;
+	zenInline zFlag					operator- (const zFlag& _Rem)const;
+	zenInline zFlag					operator&(const zFlag& _And)const;
+	zenInline zFlag					operator|(const zFlag& _Or)const;
+	zenInline zFlag					operator^(const zFlag& _Xor)const;
 	
-	ZENInline const zFlag&			Reset();
-	ZENInline const zFlag&			Invert();
-	ZENInline zU8					CountActive();
-	ZENInline zU8					CountInactive();
+	zenInline const zFlag&			Reset();
+	zenInline const zFlag&			Invert();
+	zenInline zU8					CountActive();
+	zenInline zU8					CountInactive();
 
-	ZENInline bool					operator==( const zFlag& _Cmp )const;
-	ZENInline bool					operator!=( const zFlag& _Cmp )const;
+	zenInline bool					operator==( const zFlag& _Cmp )const;
+	zenInline bool					operator!=( const zFlag& _Cmp )const;
 	
 	template<typename... Ts>
 	constexpr static TStorage		Mask(TEnumFlag Value, Ts... r);
 	constexpr static TStorage		Mask(TEnumFlag _Value);
 protected:		
-	ZENInline						zFlag(TStorage _Mask);
+	zenInline						zFlag(TStorage _Mask);
 	TStorage						muFlags;
 };
 

@@ -11,7 +11,7 @@ bool GfxViewHAL_DX11::Initialize()
 	mpDepthView							= rRTDepthSurface.IsValid() ? rRTDepthSurface.HAL()->mpTargetDepthView : nullptr;
 	muColorCount						= 0;
 	zenMem::Zero(mpColorViews, sizeof(mpColorViews));
-	for(int idx(0), count(maRTColorConfig.Count()); idx<count; ++idx)
+	for(zUInt idx(0), count(maRTColorConfig.Count()); idx<count; ++idx)
 	{
 		zcRes::GfxTarget2DRef rRTColorSurface  = maRTColorConfig[idx].mrTargetSurface;
 		if( rRTColorSurface.HAL()->mpTargetColorView )

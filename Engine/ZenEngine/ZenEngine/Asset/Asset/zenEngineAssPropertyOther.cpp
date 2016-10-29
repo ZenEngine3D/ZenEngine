@@ -33,5 +33,8 @@ PropertyDefRef PropertyAsset::Create( const char* _zName, const char* _zDisplayN
 
 
 }} //namespace zen { namespace zenAss
+#else
+
+zenPreventEmptyFileWarning
 
 #endif //ZEN_ENGINETOOL

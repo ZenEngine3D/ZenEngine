@@ -29,7 +29,7 @@ namespace zbFile
 		const Filename&					operator=(const Filename& _Copy);
 		void							operator+=(const wchar_t* _zFilename);
 		void							Clear();
-		ZENInline bool					IsValid()const;
+		zenInline bool					IsValid()const;
 
 		const wchar_t*					GetName()const;
 		const wchar_t*					GetNameNoExt()const;
@@ -40,7 +40,7 @@ namespace zbFile
 		void							SplitFolder(zArrayDynamic<zArrayStatic<wchar_t>>& _aFolder)const;
 		
 	protected:	
-		ZENInline void					FindOffsets();
+		zenInline void					FindOffsets();
 		mutable zArrayDynamic<wchar_t>	mzFilename;			//!< Contains filename string, +2 chars to handle no offset for some filename component (ext, parentdir, ...)
 		zI16							muOffsetName;		//!< Offset to filename,extension
 		zI16							muOffsetParentPath;	//!< Offset to parent folder, filename, extension
@@ -67,10 +67,10 @@ namespace zbFile
 		};
 								FileInfo();
 		const Filename&			GetFilename()const	{return mFilename;}
-		ZENInline bool			IsDir()const		{return (muFlags&keFileFlag_Dir)!=0; }
-		ZENInline bool			IsFile()const		{return (muFlags&keFileFlag_File)!=0; }
-		ZENInline zI64			GetFileSize()const	{return miFileSize;}
-		ZENInline zI64			GetFilePos()const	{return miFilePos;}
+		zenInline bool			IsDir()const		{return (muFlags&keFileFlag_Dir)!=0; }
+		zenInline bool			IsFile()const		{return (muFlags&keFileFlag_File)!=0; }
+		zenInline zI64			GetFileSize()const	{return miFileSize;}
+		zenInline zI64			GetFilePos()const	{return miFilePos;}
 		bool					IsEOF()const;
 
 		void					Close();
@@ -99,7 +99,7 @@ namespace zbFile
 	{
 	zenClassDeclare(ManagerFile_Base, zbType::Manager);
 	public:
-		ZENInline const zWString&	GetRoot()const {return mzRootPath;}
+		zenInline const zWString&	GetRoot()const {return mzRootPath;}
 	
 	protected:
 		void						InitPath(const zWString& _zRootPath);

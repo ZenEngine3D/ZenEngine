@@ -14,10 +14,10 @@ public:
 	void										PackageLoad();
 	
 	zenAss::zPackageGroupRef					GroupCreate( const zWString& _zName, const zenAss::zPackageGroupRef& _rParent);
-	ZENInline const zenAss::zPackageGroupRef&	GroupGetRoot()const;
+	zenInline const zenAss::zPackageGroupRef&	GroupGetRoot()const;
 	void										GroupDelete( const zenAss::zPackageGroupRef& _rGroup );
 
-	ZENInline const zenAss::zArrayPackage&		PackageGet()const;
+	zenInline const zenAss::zArrayPackage&		PackageGet()const;
 	const zenAss::zPackageRef&					PackageGet( zU32 _uPackageID );
 	bool										PackageSave(const zenAss::zPackageRef& _rPackage);
 	void										PackageDelete( const zenAss::zPackageRef& _rPackage );	
@@ -28,11 +28,11 @@ public:
 	
 	void										AssetAdd( const zenAss::zAssetItemRef& _rAsset );
 	void										AssetDelete( zenAss::zAssetItemRef _rAsset ); 
-	ZENInline zenAss::zAssetID					GetAssetNextID( zenConst::eAssetType _eType);
-	ZENInline zU32								GetPackageNextID();
+	zenInline zenAss::zAssetID					GetAssetNextID( zenConst::eAssetType _eType);
+	zenInline zU32								GetPackageNextID();
 
 	bool										SaveAll();
-	ZENInline bool								IsLoading();
+	zenInline bool								IsLoading();
 protected:
 	
 

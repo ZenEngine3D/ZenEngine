@@ -25,8 +25,8 @@ namespace zcRes
 			void									FrameBegin();
 			void									FrameEnd();
 			zenSig::zSignalEmitter0&				GetSignalUIRender();
-			ZENInline const zenPerf::zEventRef&		GetHistoryEvent(eEventType _eEventType, zU32 _uIndex)const;
-			ZENInline zUInt							GetFrameCount()const;		
+			zenInline const zenPerf::zEventRef&		GetHistoryEvent(eEventType _eEventType, zU32 _uIndex)const;
+			zenInline zUInt							GetFrameCount()const;		
 			zenWnd::Window*							mpMainWindowOS = nullptr; //! @todo urgent : temp hack until merged gfx + OS window
 	
 		protected:
@@ -50,7 +50,7 @@ namespace zcRes
 			zenPerf::zEventRef						mrEventProfiling[keEvtTyp__Count];		//!< Which Event hierarchy to display for profiling
 			zArrayStatic<zenPerf::zEventRef>		maEventHistory[keEvtTyp__Count];		//!< Hierarchical history of last X frame of events (with timing)
 
-			zU32									muEventValidIndex = 0;					//!< First valid root event index
+			zUInt									muEventValidIndex = 0;					//!< First valid root event index
 			zU32									muEventValidCount = 0;					//!< Number of valid root events
 			zenPerf::zEventRef						mrInvalidEvent;		
 	public:

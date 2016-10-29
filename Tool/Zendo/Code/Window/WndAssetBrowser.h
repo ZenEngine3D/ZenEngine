@@ -8,9 +8,9 @@ public:
 							WndAssetBrowser(wxWindow *parent, const wxString& title);
 							~WndAssetBrowser();
 	enum enumAssetView{ keAssetView_Icon, keAssetView_List, keAssetView_Details, keAssetView__Count, keAssetView__Invalid };	
-	ZENInline bool			IsViewIcon()const	{ return meAssetView == keAssetView_Icon; }
-	ZENInline bool			IsViewList()const	{ return meAssetView == keAssetView_List; }
-	ZENInline bool			IsViewDetail()const	{ return meAssetView == keAssetView_Details; }
+	zenInline bool			IsViewIcon()const	{ return meAssetView == keAssetView_Icon; }
+	zenInline bool			IsViewList()const	{ return meAssetView == keAssetView_List; }
+	zenInline bool			IsViewDetail()const	{ return meAssetView == keAssetView_Details; }
 	
 	zenAss::zAssetItemRef	GetFirstSelectedItem(zenType::zFlagAssetType _TypeFilter = zenType::zFlagAssetType(true) );
 	void					SelectItem(zenAss::zAssetItemRef _rItem);

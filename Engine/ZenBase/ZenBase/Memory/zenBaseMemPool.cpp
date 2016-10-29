@@ -12,7 +12,7 @@ zAllocatorPool::zAllocatorPool()
 {
 }
 
-zAllocatorPool::zAllocatorPool( const zDebugString& _zName, size_t _uItemSize, zUInt _uItemCount, zU32 _uItemIncrease, zU32 _uAlign )
+zAllocatorPool::zAllocatorPool( const zDebugString& _zName, size_t _uItemSize, zU32 _uItemCount, zU32 _uItemIncrease, zU32 _uAlign )
 : zenMem::zAllocator(_zName)
 , mPoolReservedCount(0)
 , mPoolItemSize(_uItemSize)
@@ -52,7 +52,7 @@ void zAllocatorPool::SetIncreaseCount(zU32 _uIncreaseCount)
 	mPoolItemIncrease = _uIncreaseCount;
 }
 
-void zAllocatorPool::Init(const zDebugString& _zName, size_t _uItemSize, zUInt _uItemCount, zU32 _uItemIncrease, zU32 _uAlign )
+void zAllocatorPool::Init(const zDebugString& _zName, size_t _uItemSize, zU32 _uItemCount, zU32 _uItemIncrease, zU32 _uAlign )
 {
 	zenAssertMsg(_uItemSize%_uAlign==0, "Pool item size must be a multiple of alignment specified.");
 	mzAllocatorName		= _zName;
@@ -89,7 +89,7 @@ void zAllocatorPool::Free(void* _pAlloc, void* _pInfoAlloc)
 	mlstFreeItems.PushHead(*pPoolItemFree);	
 }
 
-void zAllocatorPool::MemoryIncrease(zUInt _uItemCount)
+void zAllocatorPool::MemoryIncrease(zU32 _uItemCount)
 {
 	size_t			uPoolItemSize	= GetAllocSize(mPoolItemSize, 0, mPoolItemAlign);
 	size_t			uTotalSize		= sizeof(PoolAlloc)+_uItemCount*uPoolItemSize;

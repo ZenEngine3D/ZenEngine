@@ -23,12 +23,12 @@ public:
 				void		Init(size_t _uItemSize, zU32 _uItemCount, zU32 _uItemIncrease);
 				void		MemoryIncrease(zU32 _uItemCount);
 				void		MemoryReleaseUnused();
-	ZENInline	size_t		GetItemSize()const;
-	ZENInline	size_t		GetReservedSize()const;
-	ZENInline	zU32		GetReservedCount()const;
-	ZENInline	zU32		GetIncreaseCount()const;
-	ZENInline	zU32		GetAllocatedCount()const;
-	ZENInline	void		SetIncreaseCount(zU32 _uIncreaseCount);
+	zenInline	size_t		GetItemSize()const;
+	zenInline	size_t		GetReservedSize()const;
+	zenInline	zU32		GetReservedCount()const;
+	zenInline	zU32		GetIncreaseCount()const;
+	zenInline	zU32		GetAllocatedCount()const;
+	zenInline	void		SetIncreaseCount(zU32 _uIncreaseCount);
 	
 				void		Clear();
 				void*		Allocate();

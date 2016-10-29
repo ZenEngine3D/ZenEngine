@@ -157,7 +157,7 @@ bool ISerializerExporter::ItemStarted(ResourceData& aItem)
 	oGetItemSize.SerializeStop();
 	if( bResult )
 	{
-		aItem.muSize		= oGetItemSize.GetSerializeSize();			
+		aItem.muSize		= static_cast<zU32>(oGetItemSize.GetSerializeSize());
 		aItem.mExportTime	= 0;
 		aItem.muVersion		= zcDepot::ExportData.GetEngineVersion( aItem.mResID.GetType() );
 		return true;

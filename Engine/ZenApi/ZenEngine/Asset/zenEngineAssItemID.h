@@ -8,14 +8,14 @@ namespace zen { namespace zenAss
 {	
 	struct zAssetID
 	{
-		ZENInline 				zAssetID();
-		ZENInline  				zAssetID(zenConst::eAssetType _eType, zU32 _uIndex);
-		ZENInline  				zAssetID(const zAssetID& _Copy);
-		ZENInline zAssetID&		operator=(const zAssetID& _Copy);
-		ZENInline bool			operator==(const zAssetID& _Copy)const;
-		ZENInline bool			operator!=(const zAssetID& _Copy)const;
-		ZENInline bool			IsValid()const;
-		ZENInline zU64			ToUInt()const;
+		zenInline 				zAssetID();
+		zenInline  				zAssetID(zenConst::eAssetType _eType, zU32 _uIndex);
+		zenInline  				zAssetID(const zAssetID& _Copy);
+		zenInline zAssetID&		operator=(const zAssetID& _Copy);
+		zenInline bool			operator==(const zAssetID& _Copy)const;
+		zenInline bool			operator!=(const zAssetID& _Copy)const;
+		zenInline bool			IsValid()const;
+		zenInline zU64			ToUInt()const;
 		zenConst::eAssetType	meType;
 		zU32					muIndex;
 	};

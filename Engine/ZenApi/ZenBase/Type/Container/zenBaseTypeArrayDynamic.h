@@ -9,7 +9,7 @@ namespace zen { namespace zenType
 	typedef zUInt(*GrowthPolicyFunction)(zUInt _uCurrentCount, zUInt _uNeededCount, zUInt _uItemSize); 
 	zUInt GrowthPolicyOneandHalf( zUInt _uCurrentCount, zUInt _uNeededCount, zUInt _uItemSize);
 
-	template<class TType, GrowthPolicyFunction TGrowthPolicy=GrowthPolicyOneandHalf>
+	template<class TType, GrowthPolicyFunction TGrowthPolicy=GrowthPolicyOneandHalf, size_t TAlign=zenDefaultAlign>
 	class zArrayDynamic : public zArrayBase<TType>
 	{
 	zenClassDeclare(zArrayDynamic, zArrayBase<TType>)
@@ -36,7 +36,7 @@ namespace zen { namespace zenType
 		zUInt						ReservedSize()const;
 		
 	protected:
-		ZENInline zUInt				AppendInternal(const TType* _pCopy, zUInt _uCount);		
+		zenInline zUInt				AppendInternal(const TType* _pCopy, zUInt _uCount);		
 		void						Shrink( );											//!< @brief	Reduce array size when needed
 		void						Grow( zUInt _auCountNeeded );						//!< @brief Increase array size when needed
 		void						GrowNoConstructor( zUInt _auCountNeeded );			//!< @brief Increase array size without calling TType's constructors

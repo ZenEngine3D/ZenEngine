@@ -13,8 +13,8 @@ typedef zList<DrawContext, &DrawContext::mlnkChild, false> TypeListChild;
 
 public:
 	
-	ZENInline const zcRes::GfxRenderPassRef&	GetRenderpass();
-	ZENInline void								AddCommand( const zEngineRef<zcGfx::Command>& _rCommand );
+	zenInline const zcRes::GfxRenderPassRef&	GetRenderpass();
+	zenInline void								AddCommand( const zEngineRef<zcGfx::Command>& _rCommand );
 	void										Submit();
 	void										Clear();
 

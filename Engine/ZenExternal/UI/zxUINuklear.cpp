@@ -12,12 +12,6 @@
 namespace zxNuklear
 {
 
-const zArrayStatic<zenRes::zGfxVertex::Element> aUIVerticeInfos = {
-		zenRes::zGfxVertex::Element(zenConst::keShaderElemType_Float, 2, zenConst::keShaderSemantic_Position,	offsetof(struct nk_draw_vertex,position)),
-		zenRes::zGfxVertex::Element(zenConst::keShaderElemType_Float, 2, zenConst::keShaderSemantic_UV,			offsetof(struct nk_draw_vertex,uv)),
-		zenRes::zGfxVertex::Element(zenConst::keShaderElemType_UByte, 4, zenConst::keShaderSemantic_Color,		offsetof(struct nk_draw_vertex,col))
-	};
-
 zxRenderData::zxRenderData()
 {
 	nk_init_default(&moContext, 0);
@@ -199,10 +193,8 @@ void zxNuklearHelper::Render(const zEngineRef<zxRenderData>& _rNuklearData, Wind
 				static int slider = 10;
 				static int check = nk_true;
 				nk_layout_row_dynamic(&_rNuklearData->moContext, 25, 1);
-				if (nk_menu_item_label(&_rNuklearData->moContext, "Hide", NK_TEXT_LEFT))
-					;//show_menu = nk_false;
-				if (nk_menu_item_label(&_rNuklearData->moContext, "About", NK_TEXT_LEFT))
-					;//show_app_about = nk_true;
+				//if (nk_menu_item_label(&_rNuklearData->moContext, "Hide", NK_TEXT_LEFT))show_menu = nk_false;
+				//if (nk_menu_item_label(&_rNuklearData->moContext, "About", NK_TEXT_LEFT))show_app_about = nk_true;
 				nk_progress(&_rNuklearData->moContext, &prog, 100, NK_MODIFIABLE);
 				nk_slider_int(&_rNuklearData->moContext, 0, &slider, 16, 1);
 				nk_checkbox_label(&_rNuklearData->moContext, "check", &check);
@@ -210,7 +202,7 @@ void zxNuklearHelper::Render(const zEngineRef<zxRenderData>& _rNuklearData, Wind
 			}
 			//nk_layout_row_end(&_rNuklearData->moContext);
 
-			float fRatio2(0.1);
+			float fRatio2(0.1f);
 		//	nk_layout_row_begin(&_rNuklearData->moContext, NK_STATIC, 20, 2);
 
 			//nk_layout_row(&_rNuklearData->moContext, NK_STATIC, 20, 2, &fRatio2);
@@ -221,10 +213,8 @@ void zxNuklearHelper::Render(const zEngineRef<zxRenderData>& _rNuklearData, Wind
 				static int slider = 10;
 				static int check = nk_true;
 				nk_layout_row_dynamic(&_rNuklearData->moContext, 25, 1);
-				if (nk_menu_item_label(&_rNuklearData->moContext, "Hide", NK_TEXT_LEFT))
-					;//show_menu = nk_false;
-				if (nk_menu_item_label(&_rNuklearData->moContext, "About", NK_TEXT_LEFT))
-					;//show_app_about = nk_true;
+				//if (nk_menu_item_label(&_rNuklearData->moContext, "Hide", NK_TEXT_LEFT))show_menu = nk_false;
+				//if (nk_menu_item_label(&_rNuklearData->moContext, "About", NK_TEXT_LEFT))show_app_about = nk_true;
 				nk_menu_end(&_rNuklearData->moContext);
 			}
 			nk_layout_row_end(&_rNuklearData->moContext);
@@ -334,6 +324,7 @@ void zxNuklearHelper::Render(const zEngineRef<zxRenderData>& _rNuklearData, Wind
 	//-------------------------------------------------------------------------
 	// Render results
 	//-------------------------------------------------------------------------
+#if 0 //Update to new Vertex Buffer method (like imgui) if we continue using this
     {        
         // setup buffers to load vertices and elements
         struct nk_buffer vbuf, ibuf;
@@ -341,12 +332,7 @@ void zxNuklearHelper::Render(const zEngineRef<zxRenderData>& _rNuklearData, Wind
 		zUInt TotalIdxCount = 16096;
 		if(_rNuklearData->muVertexCount < TotalVtxCount)
 		{
-			zArrayStatic<zenRes::zGfxVertex::Stream> aUIVerticeStreams(1);
-			_rNuklearData->muVertexCount	= static_cast<zUInt>(TotalVtxCount*1.25);
-			aUIVerticeStreams[0].muStride	= static_cast<zU32>(sizeof(struct nk_draw_vertex));
-			aUIVerticeStreams[0].maElements = aUIVerticeInfos;
-			aUIVerticeStreams[0].maData.SetCount(_rNuklearData->muVertexCount*sizeof(struct nk_draw_vertex));
-			_rNuklearData->mrVertexBuffer = zenRes::zGfxVertex::Create(aUIVerticeStreams, zFlagResUse(zenConst::keResUse_DynamicDiscard));
+			//...
 		}
 
 		if(_rNuklearData->muIndexCount < TotalIdxCount)
@@ -405,8 +391,9 @@ void zxNuklearHelper::Render(const zEngineRef<zxRenderData>& _rNuklearData, Wind
 			zenRes::zGfxMeshStrip rMeshStrip = zenRes::zGfxMeshStrip::Create(	_rNuklearData->mrVertexBuffer, 
 																				_rNuklearData->mrIndexBuffer, 
 																				mrShaderBinding, 
-																				marShaderParams, 0, idxCount, 0);
-			rMeshStrip.SetValue(zHash32("txFont"), _rNuklearData->mrFontTextureAtlas, mrFontSampler);
+																				/*marShaderParams,*/ 0, idxCount, 0); //SHADERCONST
+			rMeshStrip.SetValue(zHash32("txFont"), _rNuklearData->mrFontTextureAtlas);
+			rMeshStrip.SetValue(zHash32("txFont"), mrFontSampler);
 			rMeshStrip.SetValue(zHash32("ProjectionMatrix"), _rNuklearData->matOrthographic);
 
 			nk_draw_foreach(pCommand, &_rNuklearData->moContext, &_rNuklearData->moCommands)
@@ -443,6 +430,7 @@ void zxNuklearHelper::Render(const zEngineRef<zxRenderData>& _rNuklearData, Wind
         nk_clear(&_rNuklearData->moContext);
 
     }
+#endif
 }
 
 } // namespace zxImGui

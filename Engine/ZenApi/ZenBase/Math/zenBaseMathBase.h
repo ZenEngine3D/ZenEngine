@@ -46,21 +46,21 @@ namespace zen { namespace zenMath
 									: _MidValue*(1.0f-fRatio)	+ _EndValue*fRatio; 
 	}
 
-	ZENInline float Fract(float _fValue){ float fIntPart; return modf(_fValue, &fIntPart); }
+	zenInline float Fract(float _fValue){ float fIntPart; return modf(_fValue, &fIntPart); }
 
-	ZENInline bool IsPower2(zU32 x){ return ( (x > 0) && ((x & (x - 1)) == 0) ); }
-	ZENInline bool IsPower2(zU64 x){ return ( (x > 0) && ((x & (x - 1)) == 0) ); }
-	ZENInline bool IsPower2(zI32 x){ return ( (x > 0) && ((x & (x - 1)) == 0) ); }
-	ZENInline bool IsPower2(zI64 x){ return ( (x > 0) && ((x & (x - 1)) == 0) ); }
+	zenInline bool IsPower2(zU32 x){ return ( (x > 0) && ((x & (x - 1)) == 0) ); }
+	zenInline bool IsPower2(zU64 x){ return ( (x > 0) && ((x & (x - 1)) == 0) ); }
+	zenInline bool IsPower2(zI32 x){ return ( (x > 0) && ((x & (x - 1)) == 0) ); }
+	zenInline bool IsPower2(zI64 x){ return ( (x > 0) && ((x & (x - 1)) == 0) ); }
 
-	ZENInline zUInt RoundPow2( zUInt _Value, zUInt _Pow2Multiple )
+	zenInline zUInt RoundPow2( zUInt _Value, zUInt _Pow2Multiple )
 	{
 		zenAssert(IsPower2(_Pow2Multiple));
 		return (_Value + (_Pow2Multiple-1)) & ~(_Pow2Multiple-1);
 	}
 
 	template<class TType>
-	ZENInline TType RoundUp( TType _uSize, TType _uMultiple )
+	zenInline TType RoundUp( TType _uSize, TType _uMultiple )
 	{
 		return ((_uSize+_uMultiple-1) / _uMultiple) * _uMultiple;
 	}

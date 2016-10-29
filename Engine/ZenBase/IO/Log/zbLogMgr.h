@@ -30,17 +30,17 @@ class ManagerLog : public zbType::Manager
 zenClassDeclare(ManagerLog, zbType::Manager);
 public:  	
 				void			Reset			();
-	ZENInline	void			Clear			( eLogOutput _eOutput );
-	ZENInline	void			SetActive		( eLogOutput _eOutput, zenConst::eLogType _eType, bool _bActive=true );
-	ZENInline	bool			IsActive		( eLogOutput _eOutput, zenConst::eLogType _eType );
+	zenInline	void			Clear			( eLogOutput _eOutput );
+	zenInline	void			SetActive		( eLogOutput _eOutput, zenConst::eLogType _eType, bool _bActive=true );
+	zenInline	bool			IsActive		( eLogOutput _eOutput, zenConst::eLogType _eType );
 				
-	ZENInline	void			Log				( zenConst::eLogType _eLogType, const char* _sFormat, ... );
+	zenInline	void			Log				( zenConst::eLogType _eLogType, const char* _sFormat, ... );
 				void			Log				( zenConst::eLogType _eLogType, const char* _sFormat, const va_list _pArgs );		
-	ZENInline	void			Printf			( zenConst::eLogType _eLogType, const char* _sFormat, ... );		
+	zenInline	void			Printf			( zenConst::eLogType _eLogType, const char* _sFormat, ... );		
 				void			Printf			( zenConst::eLogType _eLogType, const char* _sFormat, const va_list _pArgs );				
 												  
-	ZENInline	const char*		GetTypeStamp	( zenConst::eLogType _eLogType );	
-	ZENInline	const char*		GetEmptyStamp	();
+	zenInline	const char*		GetTypeStamp	( zenConst::eLogType _eLogType );	
+	zenInline	const char*		GetEmptyStamp	();
 
 protected:
 	virtual	bool				Load			();
@@ -49,8 +49,8 @@ protected:
 	static	const char*			ssLogTypeDesc[zenConst::keLog__Count+1];	//!< Description of each error type
 };
 
-//ZENInline void Printf(eLogType _eType, const char* _zText, ...);
-//ZENInline void Log(eLogType _eType, const char* _zFormat, ... );
+//zenInline void Printf(eLogType _eType, const char* _zText, ...);
+//zenInline void Log(eLogType _eType, const char* _zFormat, ... );
 
 }   
 

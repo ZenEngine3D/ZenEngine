@@ -1,14 +1,7 @@
 #include "zxExternal.h"
-#include <Engine/ThirdParty/imgui/imgui.h>
 
 namespace zxImGui
 {
-
-const zArrayStatic<zenRes::zGfxVertex::Element> aUIVerticeInfos = {
-		zenRes::zGfxVertex::Element(zenConst::keShaderElemType_Float, 2, zenConst::keShaderSemantic_Position,	zenOffsetOf(&ImDrawVert::pos)),
-		zenRes::zGfxVertex::Element(zenConst::keShaderElemType_Float, 2, zenConst::keShaderSemantic_UV,			zenOffsetOf(&ImDrawVert::uv)),
-		zenRes::zGfxVertex::Element(zenConst::keShaderElemType_UByte, 4, zenConst::keShaderSemantic_Color,		zenOffsetOf(&ImDrawVert::col))
-	};
 
 zxImGUIHelper::zxImGUIHelper()
 {
@@ -22,8 +15,7 @@ zxImGUIHelper::zxImGUIHelper()
 	mrShaderBinding					= zenRes::zGfxShaderBinding::Create(mrShaderVertex, mrShaderPixel);
 	mrFontSampler					= zenRes::zGfxSampler::Create(zenConst::keTexFilter_Point, zenConst::keTexFilter_Point, zenConst::keTexWrap_Clamp, zenConst::keTexWrap_Clamp, 0);
 	mrStateRaster					= zenRes::zGfxStateRaster::Create(RasterConfig);
-	mrShaderBinding.CreateShaderParam(marShaderParams);
-
+	
 	// Font Texture
 	unsigned char* pixels;
 	int width, height;
@@ -32,7 +24,7 @@ zxImGUIHelper::zxImGUIHelper()
 	zArrayStatic<zU8> aFontRGBA;
 	aFontRGBA.Copy(pixels, width*height * 4);
 	mrFontTextureDefault			= zenRes::zGfxTexture2d::Create(zenConst::keTexFormat_RGBA8, zVec2U16(width, height), aFontRGBA);
-
+	
 	// imGUI config	
 	io.Fonts->TexID					= 0;	// Store our identifier (Always same texture at the moment)
 	io.Fonts->ClearInputData();				// Cleanup (don't clear the input data if you want to append new fonts later)
@@ -52,6 +44,26 @@ zxImGUIHelper::zxImGUIHelper()
 	io.KeyMap[ImGuiKey_Backspace]	= VK_BACK;
 	io.KeyMap[ImGuiKey_Enter]		= VK_RETURN;
 	io.KeyMap[ImGuiKey_Escape]		= VK_ESCAPE;
+}
+
+//=================================================================================================
+//! @details : Prep Shader resources array to initialize newly created mesh strip instead of
+//				having to create new ConstantBuffers every time and manually assign resources
+//-------------------------------------------------------------------------------------------------
+//=================================================================================================
+zxRenderData::zxRenderData()
+{
+	// Create resources array, for assigning to created mesh strip
+	zxImGUIHelper::Get().mrShaderBinding.CreateShaderParam(marShaderCBuffers);
+	marShaderResources.SetCount(3 + marShaderCBuffers.Count() );	
+	marShaderResources[0].mhResourceName		= zHash32("VInputAll");
+	marShaderResources[0].mResourceID			= zResID(); //Will be assigned on VertexCreation in zxImGuiHelper::Render
+	marShaderResources[1].mhResourceName		= zHash32("txFont.mTexture");
+	marShaderResources[1].mResourceID			= zxImGUIHelper::Get().mrFontTextureDefault.GetResID();
+	marShaderResources[2].mhResourceName		= zHash32("txFont.mSampler");
+	marShaderResources[2].mResourceID			= zxImGUIHelper::Get().mrFontSampler.GetResID();
+	for(zUInt idx(0), count(marShaderCBuffers.Count()); idx<count; ++idx)
+		marShaderResources[3+idx].mResourceID	= marShaderCBuffers[idx].GetResID();
 }
 
 //=================================================================================================
@@ -101,6 +113,10 @@ void zxImGUIHelper::Render(const zEngineRef<zxRenderData>& _rImGuiData, WindowIn
 		UIColorRTConfig.meBlendAlphaOp		= zenRes::zGfxRenderPass::ConfigColorRT::keBlendOp_Add;		
 		_rImGuiData->mrRenderpass			= zenRes::zGfxRenderPass::Create("RenderUI", 0, UIColorRTConfig, UIDepthRTConfig, mrStateRaster); //! @todo feature expose name
 		zenMath::MatrixProjectionOrthoLH(_rImGuiData->matOrthographic, _rImGuiData->mvScreenSize.x, _rImGuiData->mvScreenSize.y, 0, 1);
+
+		// Not sure which CBuffer has this parameter, assign it to all
+		for(zUInt idx(0), count(_rImGuiData->marShaderCBuffers.Count()); idx<count; ++idx)
+			_rImGuiData->marShaderCBuffers[idx].SetValue(zHash32("ProjectionMatrix"), _rImGuiData->matOrthographic);
 	}
 
 	
@@ -125,19 +141,16 @@ void zxImGUIHelper::Render(const zEngineRef<zxRenderData>& _rImGuiData, WindowIn
 		zenPerf::zScopedEventCpu EmitEvent("Update Vertex/Index");
 		//----------------------------------------------------------------------------
 		// Grow Vertex/Index buffer when needed		
-		if(_rImGuiData->muVertexCount < pImGuiData->TotalVtxCount)
+		if(_rImGuiData->muVertexCount < static_cast<zU32>(pImGuiData->TotalVtxCount) )
 		{
-			zArrayStatic<zenRes::zGfxVertex::Stream> aUIVerticeStreams(1);
-			_rImGuiData->muVertexCount = static_cast<zUInt>(pImGuiData->TotalVtxCount*1.25);
-			aUIVerticeStreams[0].muStride = static_cast<zU32>(sizeof(ImDrawVert));
-			aUIVerticeStreams[0].maElements = aUIVerticeInfos;
-			aUIVerticeStreams[0].maData.SetCount(_rImGuiData->muVertexCount*sizeof(ImDrawVert));
-			_rImGuiData->mrVertexBuffer = zenRes::zGfxVertex::Create(aUIVerticeStreams, zFlagResUse(zenConst::keResUse_DynamicDiscard));
+			_rImGuiData->muVertexCount						= static_cast<zU32>(pImGuiData->TotalVtxCount*1.25f);
+			_rImGuiData->mrVertexBuffer						= zenRes::zGfxStructBuffer<ImDrawVert>::Create(_rImGuiData->muVertexCount);			
+			_rImGuiData->marShaderResources[0].mResourceID	= _rImGuiData->mrVertexBuffer.GetResID();
 		}
 
-		if(_rImGuiData->muIndexCount < pImGuiData->TotalIdxCount)
+		if(_rImGuiData->muIndexCount < static_cast<zU32>(pImGuiData->TotalIdxCount))
 		{
-			_rImGuiData->muIndexCount = static_cast<zUInt>(pImGuiData->TotalIdxCount*1.25);
+			_rImGuiData->muIndexCount = static_cast<zU32>(pImGuiData->TotalIdxCount*1.25f);
 			if (sizeof(ImDrawIdx) == sizeof(zU16))
 			{
 				zArrayStatic<zU16> aIndices;
@@ -156,7 +169,7 @@ void zxImGUIHelper::Render(const zEngineRef<zxRenderData>& _rImGuiData, WindowIn
 		// Update content of vertex/index
 		if( _rImGuiData->muIndexCount && _rImGuiData->muVertexCount )
 		{		
-			ImDrawVert* pUIVertices = reinterpret_cast<ImDrawVert*>(_rImGuiData->mrVertexBuffer.Lock());
+			ImDrawVert* pUIVertices = _rImGuiData->mrVertexBuffer.Lock();
 			ImDrawIdx* pUIIndices	= reinterpret_cast<ImDrawIdx*>(_rImGuiData->mrIndexBuffer.Lock());
 			for (int n = 0; n < pImGuiData->CmdListsCount; ++n)
 			{
@@ -181,9 +194,7 @@ void zxImGUIHelper::Render(const zEngineRef<zxRenderData>& _rImGuiData, WindowIn
 		for (int n = 0; n < pImGuiData->CmdListsCount; n++)
 		{
 			const ImDrawList* cmd_list			= pImGuiData->CmdLists[n];
-			zenRes::zGfxMeshStrip rMeshStrip	= zenRes::zGfxMeshStrip::Create(_rImGuiData->mrVertexBuffer, _rImGuiData->mrIndexBuffer, mrShaderBinding, marShaderParams, 0, pImGuiData->TotalIdxCount, vtx_offset);
-			rMeshStrip.SetValue(zHash32("txFont"), mrFontTextureDefault, mrFontSampler);
-			rMeshStrip.SetValue(zHash32("ProjectionMatrix"), _rImGuiData->matOrthographic);
+			zenRes::zGfxMeshStrip rMeshStrip	= zenRes::zGfxMeshStrip::Create(_rImGuiData->mrIndexBuffer, mrShaderBinding, _rImGuiData->marShaderResources, 0, pImGuiData->TotalIdxCount, vtx_offset);
 			for (int cmd_i = 0; cmd_i < cmd_list->CmdBuffer.size(); cmd_i++)
 			{
 				zenPerf::zScopedEventCpu EmitEvent("ImGUI Draw test");

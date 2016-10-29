@@ -93,16 +93,14 @@ zShaderParamVector4<TType,TShaderType>::zShaderParamVector4( zHash32 _hName, con
 	mValue[3] = _vValues.xyzw[3];
 }
 
-zShaderTexture::zShaderTexture()
-: mhTextureName("")
-, mTextureID()
-, mSamplerID()
+zShaderResource::zShaderResource()
+: mhResourceName("")
+, mResourceID()
 {}
 
-zShaderTexture::zShaderTexture(zHash32 _hTextureName, zResID _TextureID, zResID _SamplerID)
-: mhTextureName(_hTextureName)
-, mTextureID(_TextureID)	
-, mSamplerID(_SamplerID)
+zShaderResource::zShaderResource(zHash32 _hTextureName, zResID _ResourceID)
+: mhResourceName(_hTextureName)
+, mResourceID(_ResourceID)	
 {}
 
 zShaderDefine::zShaderDefine()

@@ -17,7 +17,7 @@ zU32 zHamt<TKey, TValue, TIndex, TIndexBits>::Node::GetSlotCount() const
 //! @brief Check if a Node Slot is a leaf (contains value) or point to child node
 //-------------------------------------------------------------------------------------------------
 template<class TKey, class TValue, class TIndex, int TIndexBits>
-bool zHamt<TKey, TValue, TIndex, TIndexBits>::Node::IsLeafSlot( zUInt _uSlotID ) const 
+bool zHamt<TKey, TValue, TIndex, TIndexBits>::Node::IsLeafSlot( zU32 _uSlotID ) const 
 { 
 	return (mSlotLeaf & (TIndex(1)<<_uSlotID)) != 0; 
 }
@@ -26,7 +26,7 @@ bool zHamt<TKey, TValue, TIndex, TIndexBits>::Node::IsLeafSlot( zUInt _uSlotID )
 //! @brief Check if Node Index is being used in this Node 
 //-------------------------------------------------------------------------------------------------
 template<class TKey, class TValue, class TIndex, int TIndexBits>
-bool zHamt<TKey, TValue, TIndex, TIndexBits>::Node::IsUsedIndex( zUInt _uNodeIndex ) const 
+bool zHamt<TKey, TValue, TIndex, TIndexBits>::Node::IsUsedIndex( zU32 _uNodeIndex ) const 
 { 
 	return (mIndexUsed & (TIndex(1)<<_uNodeIndex)) != 0; 
 }
@@ -35,7 +35,7 @@ bool zHamt<TKey, TValue, TIndex, TIndexBits>::Node::IsUsedIndex( zUInt _uNodeInd
 //! @brief Get in which slot a Node Index is stored
 //-------------------------------------------------------------------------------------------------
 template<class TKey, class TValue, class TIndex, int TIndexBits>
-zU32 zHamt<TKey, TValue, TIndex, TIndexBits>::Node::GetSlotID( zUInt _uNodeIndex ) const 
+zU32 zHamt<TKey, TValue, TIndex, TIndexBits>::Node::GetSlotID( zU32 _uNodeIndex ) const 
 { 
 	// SlotID is amount of Active Index up to this NodeIndex
 	return zenMath::BitsCount( static_cast<TIndex>(mIndexUsed & ((TIndex(1)<<_uNodeIndex)-1)) ); 
@@ -70,7 +70,7 @@ zHamt<TKey, TValue, TIndex, TIndexBits>::Iterator::Iterator()
 template<class TKey, class TValue, class TIndex, int TIndexBits>
 zHamt<TKey, TValue, TIndex, TIndexBits>::Iterator::Iterator(const Iterator& _Copy)			
 { 
-	zenMem::Copy( this, &_Copy, sizeof(Iterator) ); 
+	zenMem::Copy( (zU8*)this, (zU8*)&_Copy, sizeof(Iterator) ); 
 }
 
 template<class TKey, class TValue, class TIndex, int TIndexBits>
@@ -82,7 +82,10 @@ zHamt<TKey, TValue, TIndex, TIndexBits>::Iterator::Iterator(const zHamt& _Parent
 template<class TKey, class TValue, class TIndex, int TIndexBits>
 void zHamt<TKey, TValue, TIndex, TIndexBits>::Iterator::operator=(const Iterator& _Copy)	
 { 
-	zenMem::Copy( this, &_Copy, sizeof(Iterator) );	
+	if( this != &_Copy )
+	{
+		zenMem::Copy( (zU8*)this, (const zU8*)&_Copy, sizeof(Iterator) );	
+	}
 }
 
 template<class TKey, class TValue, class TIndex, int TIndexBits>
@@ -179,7 +182,7 @@ zHamt< TKey, TValue, TIndex, TIndexBits>::zHamt()
 //! @param		_pAllocator		- Which allocator to use for memory allocations
 //==================================================================================================
 template<class TKey, class TValue, class TIndex, int TIndexBits>
-zHamt< TKey, TValue, TIndex, TIndexBits>::zHamt( zUInt _uReservePool )
+zHamt< TKey, TValue, TIndex, TIndexBits>::zHamt( zU32 _uReservePool )
 : mpRootNode(nullptr)
 , muCount(0)
 , mpDeleteItemCB(nullptr)
@@ -219,7 +222,7 @@ template<class TKey, class TValue, class TIndex, int TIndexBits>
 void zHamt< TKey, TValue, TIndex, TIndexBits>::Clear()
 {
 	ClearNode(mpRootNode);
-	for(zUInt uPoolIndex=0; uPoolIndex<kuPoolCount; ++uPoolIndex)
+	for(zU32 uPoolIndex=0; uPoolIndex<kuPoolCount; ++uPoolIndex)
 		mPools[uPoolIndex].Clear();
 	mpRootNode	= CreateEmptyNode(0);
 	muCount		= 0;
@@ -232,14 +235,14 @@ void zHamt< TKey, TValue, TIndex, TIndexBits>::Clear()
 //! @param		_pAllocator		- Memory source used to initialize each Pool zAllocator
 //==================================================================================================
 template<class TKey, class TValue, class TIndex, int TIndexBits>
-void zHamt< TKey, TValue, TIndex, TIndexBits>::Init( zUInt _uReservePool )
+void zHamt< TKey, TValue, TIndex, TIndexBits>::Init( zU32 _uReservePool )
 {	
 	zenAssertMsg(!IsInit(),"zHamt already initialized");			
 	zI32 iPoolItemLeft(static_cast<zI32>(_uReservePool)-1);
 	zI32 iPoolItemMin	= zenMath::Max<zI32>((iPoolItemLeft / 3) / kuSlotCount, 1);	//< @Note: A 1/3 of PoolItemCount get split evenly between each Pool. Remaining assigned with 1/2 less every time. Need metric to adjust for optimal value
 	iPoolItemLeft		= zenMath::Max<zI32>(iPoolItemLeft-iPoolItemMin*kuSlotCount, 0);
 	mPools[0].Init("HamtSmallPool", sizeof(Node), 1, 1 );
-	for(zUInt uPoolIndex=1; uPoolIndex<=kuSlotCount; ++uPoolIndex)
+	for(zU32 uPoolIndex=1; uPoolIndex<=kuSlotCount; ++uPoolIndex)
 	{
 		iPoolItemLeft = iPoolItemLeft / 2;
 		mPools[uPoolIndex].Init("HamtSmallPool", sizeof(Node) + sizeof(Node::Slot)*uPoolIndex, iPoolItemLeft+iPoolItemMin, iPoolItemMin );
@@ -418,9 +421,9 @@ bool zHamt< TKey, TValue, TIndex, TIndexBits>::Unset(const TKey _Key)
 {		
 	zenAssertMsg(IsInit(),"zHamt isn't initialized");
 	Node**		ppNodeTree[kuTreeMaxDepth];
-	zUInt		uSlotID[kuTreeMaxDepth];
-	zUInt		uNodeIndex[kuTreeMaxDepth];
-	zUInt		uDepth(0);			
+	zU32		uSlotID[kuTreeMaxDepth];
+	zU32		uNodeIndex[kuTreeMaxDepth];
+	zU32		uDepth(0);			
 	Node*		pNode = mpRootNode;
 	//-------------------------------------------------------
 	// Find hierarchy all the way down to Key entry
@@ -460,9 +463,9 @@ bool zHamt< TKey, TValue, TIndex, TIndexBits>::Unset(const TKey _Key)
 			Node* pNewNode			= CreateEmptyNode( uNewSlotCount );					
 			pNewNode->mIndexUsed	= pNode->mIndexUsed & ~(TIndex(1)<<uNodeIndex[uDepth]);
 			//Copy previous elements to new node
-			for(zUInt i=0; i<uNewSlotCount; ++i)
+			for(zU32 i=0; i<uNewSlotCount; ++i)
 			{
-				zUInt uOldSlotID		= (i >= uSlotID[uDepth]) ? i+1 : i;
+				zU32 uOldSlotID			= (i >= uSlotID[uDepth]) ? i+1 : i;
 				pNewNode->mpSlots[i]	= pNode->mpSlots[uOldSlotID];
 				pNewNode->mSlotLeaf		|= TIndex(pNode->IsLeafSlot(uOldSlotID)) << i;
 			}
@@ -609,13 +612,13 @@ const zHamt< TKey, TValue, TIndex, TIndexBits>& zHamt< TKey, TValue, TIndex, TIn
 		Clear();
 		zenDelnullptr(mpRootNode);
 		// Size pools to have just enough space for all allocated items per pool
-		for(zUInt poolIdx=0; poolIdx<kuPoolCount; ++poolIdx)
+		for(zU32 poolIdx=0; poolIdx<kuPoolCount; ++poolIdx)
 			mPools[poolIdx].MemoryIncrease( _Copy.mPools[poolIdx].GetTotalAllocCount() );
 	}
 	else
 	{
 		// Size pools to have just enough space for all allocated items per pool
-		for(zUInt poolIdx=0; poolIdx<=kuSlotCount; ++poolIdx)
+		for(zU32 poolIdx=0; poolIdx<=kuSlotCount; ++poolIdx)
 			mPools[poolIdx].Init("HamtSmallPool", _Copy.mPools[poolIdx].GetItemSize(), _Copy.mPools[poolIdx].GetTotalAllocCount(), _Copy.mPools[poolIdx].GetIncreaseCount() );
 	}
 			
@@ -687,11 +690,11 @@ zU32 zHamt< TKey, TValue, TIndex, TIndexBits>::Count() const
 template<class TKey, class TValue, class TIndex, int TIndexBits>
 typename zHamt<TKey, TValue, TIndex, TIndexBits>::Node* zHamt<TKey, TValue, TIndex, TIndexBits>::CreateNodeCopy(typename const zHamt::Node* _pNodeCopy )
 {
-	zUInt uSlotCount		= _pNodeCopy->GetSlotCount();
+	zU32 uSlotCount			= _pNodeCopy->GetSlotCount();
 	Node* pNewNode			= CreateEmptyNode( uSlotCount );
 	pNewNode->mIndexUsed	= _pNodeCopy->mIndexUsed;
 	pNewNode->mSlotLeaf		= _pNodeCopy->mSlotLeaf;
-	for(zUInt uSlotIdx=0; uSlotIdx<uSlotCount; ++uSlotIdx)
+	for(zU32 uSlotIdx=0; uSlotIdx<uSlotCount; ++uSlotIdx)
 	{
 		if( _pNodeCopy->IsLeafSlot(uSlotIdx) )	pNewNode->mpSlots[uSlotIdx]				= _pNodeCopy->mpSlots[uSlotIdx];
 		else									pNewNode->mpSlots[uSlotIdx].pChildNode	= CreateNodeCopy( _pNodeCopy->mpSlots[uSlotIdx].pChildNode );				
@@ -707,9 +710,9 @@ typename zHamt<TKey, TValue, TIndex, TIndexBits>::Node* zHamt<TKey, TValue, TInd
 //! @return		The NodeIndex of this key, at depth 'auDepth'
 //==================================================================================================
 template<class TKey, class TValue, class TIndex, int TIndexBits>
-zU32 zHamt< TKey, TValue, TIndex, TIndexBits>::GetNodeIndex( const TKey _uKey, zUInt _uDepth ) const
+zU32 zHamt< TKey, TValue, TIndex, TIndexBits>::GetNodeIndex( const TKey _uKey, zU32 _uDepth ) const
 {
-	int iShift	= (kuKeyBits-TIndexBits)-(_uDepth*TIndexBits);
+	zU32 iShift	= (kuKeyBits-TIndexBits)-(_uDepth*TIndexBits);
 	iShift		= iShift > 0 ? iShift : 0;
 	return (_uKey>>iShift)&kuIndexMask;
 }
@@ -799,7 +802,7 @@ bool zHamt< TKey, TValue, TIndex, TIndexBits>::GetNode(TKey _Key, Node**& _pPare
 template<class TKey, class TValue, class TIndex, int TIndexBits>
 void zHamt< TKey, TValue, TIndex, TIndexBits>::ClearNode( Node* _pNode )
 {	
-	for(zUInt slot=0, count(_pNode->GetSlotCount()); slot<count; ++slot)
+	for(zU32 slot=0, count(_pNode->GetSlotCount()); slot<count; ++slot)
 	{
 		if( !_pNode->IsLeafSlot(slot) )
 			ClearNode( _pNode->mpSlots[slot].pChildNode );
@@ -815,7 +818,7 @@ void zHamt< TKey, TValue, TIndex, TIndexBits>::ClearNode( Node* _pNode )
 //! @param		_Key	- Key entry where to store the value	
 //==================================================================================================
 template<class TKey, class TValue, class TIndex, int TIndexBits>
-TValue* zHamt< TKey, TValue, TIndex, TIndexBits>::SetSlotValue(TKey _Key, const TValue& _Value, Node** _ppParentNode, zUInt _uNodeIndex, zUInt _uSlotID, zUInt _uDepth)
+TValue* zHamt< TKey, TValue, TIndex, TIndexBits>::SetSlotValue(TKey _Key, const TValue& _Value, Node** _ppParentNode, zU32 _uNodeIndex, zU32 _uSlotID, zU32 _uDepth)
 {			
 	Node*	pNode(*_ppParentNode);
 	Node*	pNewNode(nullptr);
@@ -857,8 +860,8 @@ TValue* zHamt< TKey, TValue, TIndex, TIndexBits>::SetSlotValue(TKey _Key, const 
 	else
 	{
 		Node::Slot prevSlot	= pNode->mpSlots[_uSlotID];
-		zUInt uNodeIndexOld	= GetNodeIndex(prevSlot.Key, ++_uDepth);
-		zUInt uNodeIndexNew	= GetNodeIndex(_Key, _uDepth);
+		zU32 uNodeIndexOld	= GetNodeIndex(prevSlot.Key, ++_uDepth);
+		zU32 uNodeIndexNew	= GetNodeIndex(_Key, _uDepth);
 		pNode->mSlotLeaf	= pNode->mSlotLeaf & ~(TIndex(1)<<_uSlotID);	//Slot is now pointing to child node, not a leaf anymore
 
 		// While Node index of 2 node match, create child node

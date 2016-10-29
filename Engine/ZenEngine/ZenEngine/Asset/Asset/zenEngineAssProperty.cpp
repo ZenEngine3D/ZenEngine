@@ -104,5 +104,8 @@ zenConst::eAssetPropertyType PropertyDefinition::GetTypeFromName(const char* _zN
 }
 
 }} //namespace zen { namespace zenAss
+#else
+
+zenPreventEmptyFileWarning
 
 #endif //ZEN_ENGINETOOL

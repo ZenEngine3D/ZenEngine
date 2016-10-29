@@ -3,7 +3,7 @@
 #define __zCore_Res_Resource_h__
 
 //! @todo Clean : move this to proper location and implement it
-ZENInline bool zenIsResourceCreationThread()
+zenInline bool zenIsResourceCreationThread()
 {
 	return true;
 }
@@ -29,7 +29,7 @@ namespace zcRes
 	//! @brief	When a resource not created through exporter, 
 	//!			call this method to finalize its initialization
 	//=============================================================================================
-	ZENInline void RuntimeCreateFinalize( zenRes::zExportData& _NewResource, zenConst::eResType _eResType )
+	zenInline void RuntimeCreateFinalize( zenRes::zExportData& _NewResource, zenConst::eResType _eResType )
 	{
 		_NewResource.mResID			= zcMgr::Export.GetNewResourceID(_eResType);
 		_NewResource.muVersion		= zcDepot::ExportData.GetEngineVersion(_eResType);

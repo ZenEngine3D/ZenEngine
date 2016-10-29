@@ -121,7 +121,7 @@ namespace zen { namespace zenMath
 	//! @param _vEyeDir			- Look direction
 	//! @param _vUpDir			- Up position of camera (in worldspace)	
 	//=================================================================================================
-	ZENInline void MatrixLookToLH( Matrix& _matViewOut, V4 _vEyePos, V4 _vEyeDir, V4 _vUpDir )
+	zenInline void MatrixLookToLH( Matrix& _matViewOut, V4 _vEyePos, V4 _vEyeDir, V4 _vUpDir )
 	{		
 		zenAssert( !simdIsNearZero(_vEyeDir) );
 		zenAssert( !simdIsNearZero(_vUpDir) );
@@ -179,7 +179,7 @@ namespace zen { namespace zenMath
 	//! @param _vTargetPos		- Where we're looking at (target object )
 	//! @param _vUpDir			- Up position of camera (in worldspace)	
 	//=================================================================================================
-	ZENInline void MatrixLookAtLH( Matrix& _matViewOut, V4 _vEyePos, V4 _vTargetPos, V4 _vUpDir )
+	zenInline void MatrixLookAtLH( Matrix& _matViewOut, V4 _vEyePos, V4 _vTargetPos, V4 _vUpDir )
 	{
 		MatrixLookToLH(_matViewOut, _vEyePos, simdSub(_vTargetPos, _vEyePos ), _vUpDir );
 	}
@@ -194,7 +194,7 @@ namespace zen { namespace zenMath
 	//! @param _fNearZ					- Near clipping distance
 	//! @param _fFarZ					- Far clipping distance
 	//=================================================================================================
-	ZENInline void MatrixProjectionLH( Matrix& _matProjectionOut, float _fFovDegreeWidth, float _fAspectRatio, float _fNearZ, float _fFarZ )
+	zenInline void MatrixProjectionLH( Matrix& _matProjectionOut, float _fFovDegreeWidth, float _fAspectRatio, float _fNearZ, float _fFarZ )
 	{
 		zenAssert( _fFovDegreeWidth > zenConst::kfSmallNumber );
 		zenAssert( _fAspectRatio > zenConst::kfSmallNumber );

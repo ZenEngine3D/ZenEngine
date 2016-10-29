@@ -5,17 +5,6 @@
 
 namespace zcRes
 {
-
-//=================================================================================================
-	class GfxInputSignatureHAL_DX11 : public zcExp::ExportGfxInputSignatureDX11
-	{
-	zenClassDeclare(GfxInputSignatureHAL_DX11, zcExp::ExportGfxInputSignatureDX11)
-	public:
-		typedef zcExp::ExporterGfxInputSignatureDX11_DX11	RuntimeExporter;
-		bool												Initialize();
-	};
-	class GfxInputSignatureHAL : public GfxInputSignatureHAL_DX11{};
-	
 	//=================================================================================================
 	class GfxShaderVertexHAL_DX11 : public zcExp::ExportGfxShaderDX11
 	{
@@ -24,7 +13,6 @@ namespace zcRes
 		virtual										~GfxShaderVertexHAL_DX11();												
 		bool										Initialize();
 		struct ID3D11VertexShader*					mpVertexShader		= nullptr;		
-		GfxInputSignatureRef						mrGfxInputSignature;
 		typedef zcExp::ExporterGfxShaderDX11_DX11	RuntimeExporter;
 	};
 	class GfxShaderVertexHAL : public GfxShaderVertexHAL_DX11{};
@@ -39,7 +27,7 @@ namespace zcRes
 		struct ID3D11PixelShader*					mpPixelShader		= nullptr;
 		typedef zcExp::ExporterGfxShaderDX11_DX11	RuntimeExporter;
 	};	
-	class GfxShaderPixelHAL : public GfxShaderPixelHAL_DX11{};
+	class GfxShaderPixelHAL : public GfxShaderPixelHAL_DX11{};	
 }
 
 #endif

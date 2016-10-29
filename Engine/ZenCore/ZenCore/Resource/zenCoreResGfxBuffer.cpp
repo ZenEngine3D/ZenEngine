@@ -21,11 +21,6 @@ zGfxTarget2D zGfxTarget2D::Create(zenConst::eTextureFormat _eFormat, zVec2U16 _v
 	return zcExp::CreateGfxRenderTarget(_eFormat, _vDim, _bSrgb);
 }
 
-zGfxVertex zGfxVertex::Create(const zArrayBase<zGfxVertex::Stream>& _aStreams, zFlagResUse _ResourceUse)
-{
-	return zcExp::CreateGfxVertex(_aStreams, _ResourceUse);
-}
-
 zGfxIndex zGfxIndex::Create(const zArrayBase<zU16>& _Indices, zenConst::ePrimitiveType _ePrimitiveType)
 {
 	return zcExp::CreateGfxIndexBuffer(_Indices, _ePrimitiveType);
@@ -34,21 +29,6 @@ zGfxIndex zGfxIndex::Create(const zArrayBase<zU16>& _Indices, zenConst::ePrimiti
 zGfxIndex zGfxIndex::Create(const zArrayBase<zU32>& _Indices, zenConst::ePrimitiveType _ePrimitiveType)
 {
 	return zcExp::CreateGfxIndexBuffer(_Indices, _ePrimitiveType);
-}
-
-//=================================================================================================
-// GFX VERTEX
-//=================================================================================================
-zU8* zGfxVertex::Lock()
-{
-	zenAssertMsg(mpResource, "No valid resource assigned");
-	return mpResource->Lock();
-}
-	
-void zGfxVertex::Unlock(const zenGfx::zContext& rContext)
-{
-	zenAssertMsg(mpResource, "No valid resource assigned");
-	return mpResource->Unlock(rContext);
 }
 
 //=================================================================================================
@@ -100,12 +80,24 @@ zGfxTexture2d zGfxTarget2D::GetTexture2D()
 //=================================================================================================
 // GFX BUFFER
 //=================================================================================================
-zGfxBuffer zGfxBuffer::Create(zUInt _uElemSize, zU32 _uElemCount/*, zFlagResTexUse _UseFlags*/)
+void* zGfxBuffer::Lock()
+{
+	zenAssertMsg(mpResource, "No valid resource assigned");
+	return mpResource->Lock();
+}
+
+void zGfxBuffer::Unlock(const zenGfx::zContext& rContext)
+{
+	zenAssertMsg(mpResource, "No valid resource assigned");
+	mpResource->Unlock(rContext);
+}
+
+zGfxBuffer zGfxBuffer::Create(size_t _uElemSize, zU32 _uElemCount/*, zFlagResTexUse _UseFlags*/)
 {
 	return zcExp::CreateGfxBuffer(nullptr, 0, _uElemSize, _uElemCount/*, _UseFlags*/);
 }
 
-zGfxBuffer zGfxBuffer::Create(const zU8* _pData, zUInt _uDataSize, zUInt _uElemSize, zU32 _uElemCount/*, zFlagResTexUse _UseFlags*/)
+zGfxBuffer zGfxBuffer::Create(const zU8* _pData, size_t _uDataSize, size_t _uElemSize, zU32 _uElemCount/*, zFlagResTexUse _UseFlags*/)
 {
 	return zcExp::CreateGfxBuffer(_pData, _uDataSize, _uElemSize, _uElemCount/*, _UseFlags*/);
 }

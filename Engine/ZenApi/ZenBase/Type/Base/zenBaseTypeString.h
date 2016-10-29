@@ -15,24 +15,24 @@ class zString
 {
 zenClassDeclareNoParent(zString)
 public:
-	ZENInline 				zString();
-	ZENInline 				zString(const zString& _zString);
-	ZENInline 				zString(const char* _zString);
+	zenInline 				zString();
+	zenInline 				zString(const zString& _zString);
+	zenInline 				zString(const char* _zString);
 
-	ZENInline zString&		operator=(const zString& _zString);
-	ZENInline zString&		operator=(const char* _zString);
-	ZENInline zString&		operator+=(const zString& _zString);
-	ZENInline zString&		operator+=(const char* _zString);
-	ZENInline 				operator const char*() const;
-	ZENInline bool			operator==(const zString& _zString)const;
-	ZENInline bool			operator==(const char* _zString)const;	
-	ZENInline bool			operator!=(const zString& _zString)const;
-	ZENInline bool			operator!=(const char* _zString)const;
+	zenInline zString&		operator=(const zString& _zString);
+	zenInline zString&		operator=(const char* _zString);
+	zenInline zString&		operator+=(const zString& _zString);
+	zenInline zString&		operator+=(const char* _zString);
+	zenInline 				operator const char*() const;
+	zenInline bool			operator==(const zString& _zString)const;
+	zenInline bool			operator==(const char* _zString)const;	
+	zenInline bool			operator!=(const zString& _zString)const;
+	zenInline bool			operator!=(const char* _zString)const;
 
-	ZENInline const char*	Last(zUInt index=0)const;
-	ZENInline void			Split(char _Separator, zArrayStatic<zString>& _aStringOut, zUInt _uAdditionalArraySize=0 )const;
-	ZENInline void			Merge(const zArrayStatic<zString>& _aString, char _Separator, zInt _iMaxEntry=0);
-	ZENInline zUInt			Len()const;
+	zenInline const char*	Last(zUInt index=0)const;
+	zenInline void			Split(char _Separator, zArrayStatic<zString>& _aStringOut, zUInt _uAdditionalArraySize=0 )const;
+	zenInline void			Merge(const zArrayStatic<zString>& _aString, char _Separator, zInt _iMaxEntry=0);
+	zenInline zUInt			Len()const;
 	zString&				Copy(const char* _zString, zUInt _uCount=0xFFFFFFFF);
 
 	static void				Split(const char* _zString, char _Separator, zArrayStatic<zString>& _aStringOut, zUInt _uAdditionalArraySize=0 );
@@ -44,12 +44,12 @@ protected:
 template<class THashType>
 struct zStringHash
 { 		
-	ZENInline zStringHash(const char* _zString="");				
-	ZENInline const zStringHash& operator=(const zStringHash& _Copy);
-	ZENInline bool operator==(const zStringHash& _Compare)const;
-	ZENInline bool operator!=(const zStringHash& _Compare)const;
-	ZENInline bool operator==(const THashType& _hCompare)const;
-	ZENInline bool operator!=(const THashType& _hCompare)const;
+	zenInline zStringHash(const char* _zString="");				
+	zenInline const zStringHash& operator=(const zStringHash& _Copy);
+	zenInline bool operator==(const zStringHash& _Compare)const;
+	zenInline bool operator!=(const zStringHash& _Compare)const;
+	zenInline bool operator==(const THashType& _hCompare)const;
+	zenInline bool operator!=(const THashType& _hCompare)const;
 	zString		mzName; 
 	THashType	mhName; 
 	static zUInt Find( THashType _HashName, const zStringHash* _pFirst, zUInt _uCount );

@@ -13,12 +13,14 @@
 #define	ZEN_EXPORT_OR_RESOURCE_PC	ZEN_PLATFORM_PC
 #define	ZEN_EXPORT_PC				ZEN_BUILD_PC_GAMEORTOOL
 
-#define ZENInline					__inline
+#define zenInline					__inline
 #define ZENForceDebugInline			__forceinline
 #if !ZEN_BUILD_DEBUG
-	#define ZENForceInline			__forceinline
+	#define zenForceInline			__forceinline
 #else
-	#define ZENForceInline			ZENInline
+	#define zenForceInline			zenInline
 #endif
+
+#define zenPreventEmptyFileWarning	namespace { char sbPreventsWarning4221; };	//Prevent warning 4221(no public symbols) that can't be ignored.
 
 #endif

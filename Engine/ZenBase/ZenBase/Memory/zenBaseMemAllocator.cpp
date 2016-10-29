@@ -6,7 +6,7 @@
 namespace zen { namespace zenMem
 {
 
-ZENInline ScopedAllocator::TypeList& GetAllocatorScopeList()
+zenInline ScopedAllocator::TypeList& GetAllocatorScopeList()
 {
 	static ScopedAllocator::TypeList sOverideList;
 	return sOverideList;

@@ -185,6 +185,9 @@ LICENSE:
 #ifndef NK_H_
 #define NK_H_
 
+#pragma warning ( push ) 
+#pragma warning ( disable: 4996 ) // warning : fopen
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -19761,5 +19764,7 @@ NK_API void nk_menu_close(struct nk_context *ctx)
 NK_API void
 nk_menu_end(struct nk_context *ctx)
 {nk_contextual_end(ctx);}
+
+#pragma warning ( pop ) 
 
 #endif

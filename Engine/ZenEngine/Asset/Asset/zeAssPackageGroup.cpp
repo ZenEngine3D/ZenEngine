@@ -142,4 +142,8 @@ bool PackageGroup::IsParentOf(const zenAss::zPackageRef& _Child)const
 
 } //namespace zeAss
 
+#else
+
+zenPreventEmptyFileWarning
+
 #endif //ZEN_ENGINETOOL

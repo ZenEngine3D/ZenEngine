@@ -2,10 +2,13 @@
 #ifndef __LibZenExternal_IMGUI_h__
 #define __LibZenExternal_IMGUI_h__
 
+#include <Engine/ThirdParty/imgui/imgui.h>
 struct WindowInputState; //Forward declare
 
 namespace zxImGui
 {
+
+
 //=================================================================================================
 //! @class	zxRenderData 
 //-------------------------------------------------------------------------------------------------
@@ -17,15 +20,18 @@ class zxRenderData : public zRefCounted
 {
 zenClassDeclare(zxRenderData, zRefCounted)
 public:
+											zxRenderData();
 	alignas(16) zenMath::Matrix				matOrthographic;
 	zenRes::zGfxTarget2D					mrRendertarget;
 	zenRes::zGfxRenderPass					mrRenderpass;
-	zenRes::zGfxVertex						mrVertexBuffer;
 	zenRes::zGfxIndex						mrIndexBuffer;
-	zenSig::zSignalEmitter0					msigRenderUI;	
+	zenRes::zGfxStructBuffer<ImDrawVert>	mrVertexBuffer;
+	zArrayStatic<zenRes::zShaderResource>	marShaderResources;
+	zArrayStatic<zenRes::zGfxCBuffer>		marShaderCBuffers;
+	zenSig::zSignalEmitter0					msigRenderUI;
 	zVec2U16								mvScreenSize	= zVec2U16(0,0);
-	zUInt									muVertexCount	= 0; //! @todo Urgent have buffer accessors available 
-	zUInt									muIndexCount	= 0;
+	zU32									muVertexCount	= 0; //! @todo Urgent have buffer accessors available 
+	zU32									muIndexCount	= 0;
 };
 
 //=================================================================================================
@@ -49,9 +55,9 @@ protected:
 	zenRes::zGfxShaderVertex				mrShaderVertex;
 	zenRes::zGfxShaderPixel					mrShaderPixel;
 	zenRes::zGfxShaderBinding				mrShaderBinding;
-	zArrayStatic<zenRes::zGfxShaderParam>	marShaderParams;
 	zenRes::zGfxTexture2d					mrFontTextureDefault;
-	zenRes::zGfxSampler						mrFontSampler;
+	zenRes::zGfxSampler						mrFontSampler;	
+	friend class zxRenderData;
 };
 
 }

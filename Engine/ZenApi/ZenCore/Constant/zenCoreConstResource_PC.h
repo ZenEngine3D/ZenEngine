@@ -4,7 +4,7 @@
 
 namespace zen { namespace zenConst {
 
-const eResPlatform kCurrentPlatformOS	= zenConst::keResPlatform_Window;
+const ePlatform kCurrentPlatformOS	= zenConst::kePlatform_Window;
 
 } }  //namespace zen, Const 
 

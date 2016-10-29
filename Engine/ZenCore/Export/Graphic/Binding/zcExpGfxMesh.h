@@ -7,7 +7,7 @@ namespace zcExp
 	struct ExportInfoGfxMesh : public ExportInfoBase
 	{
 		zArrayStatic<zResID>	maMeshStripID;			//!< List of Mesh strips used this Mesh
-		static zResID			CallbackGetItemID(zenConst::eResPlatform _ePlatform, zenConst::eResType _eType, zenConst::eResSource _eSource, const zcExp::ExportInfoBase* _pExportInfo, bool& _bExistOut);
+		static zResID			CallbackGetItemID(ePlatform _ePlatform, zenConst::eResType _eType, zenConst::eResSource _eSource, const zcExp::ExportInfoBase* _pExportInfo, bool& _bExistOut);
 	};
 
 	class ExportGfxMesh : public zenRes::zExportData

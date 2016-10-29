@@ -11,34 +11,35 @@ namespace zcRes
 	{
 	zenClassDeclare(GfxMeshStripHAL_DX11, zcExp::ExportGfxMeshStrip)
 	public:
-		GfxMeshStripHAL_DX11()
-		{
-			static int i(0);
-			++i;
-		}
-		bool												Initialize();
-		void												SetValue(const zArrayBase<const zenRes::zShaderParameter*>& _aValues);
-		void												SetValue(const zenRes::zShaderParameter& _Value);
-		void												SetValue(const zHash32& _hParamName, const float& _fValue);
-		void												SetValue(const zHash32& _hParamName, const zVec2F& _vValue);
-		void												SetValue(const zHash32& _hParamName, const zVec3F& _vValue);
-		void												SetValue(const zHash32& _hParamName, const zVec4F& _vValue);
-		void												SetValue(const zHash32& _hParamName, const zenMath::Matrix& _matValue);
-		void												SetValue(const zHash32& _hTextureName, GfxTexture2dRef _rTexture);
-		void												SetValue(const zHash32& _hTextureName, GfxSamplerRef _rSampler);
-		void												SetValue(const zHash32& _hTextureName, GfxTexture2dRef _rTexture, GfxSamplerRef _rSampler);
+		bool									Initialize();
+		void									SetResource(const zHash32& _hResourceName, const GfxShaderResourceRef& _rResource, zU16 _uIndex=0 );
+		void									SetResource(const zHash32& _hResourceName, const zArrayBase<GfxShaderResourceRef>& _arResources );
+		void									SetValue(const zArrayBase<const zenRes::zShaderParameter*>& _aValues);
+		void									SetValue(const zenRes::zShaderParameter& _Value);		
+		template<class TParamType> void			SetValue(const zHash32& _hParamName, const TParamType& _Value, zU16 _uIndex=0);
 
-		GfxIndexRef											mrIndexBuffer;
-		GfxInputStreamRef									mrInputStream;			//!< Reference to input streams binding
-		GfxShaderBindingRef									mrShaderBinding;
-		zArrayStatic<GfxShaderParamRef>						marShaderParam;			//!< Array of all ShaderParam used by all Shaders stage
-		zArrayStatic<zArrayStatic<GfxTexture2dRef>>			marTexture;				//!< Per Shader stage texture input (Array sub Index = Slot)
-		zArrayStatic<zArrayStatic<GfxSamplerRef>>			marGfxSampler;			//!< Per Shader stage texture input (Array sub Index = Slot)
-
-		typedef zcExp::ExporterGfxMeshStrip					RuntimeExporter;
+		GfxIndexRef								mrIndexBuffer;
+		GfxShaderBindingRef						mrShaderBinding;													//!< Information on resources used between all shader stages
+		zArrayStatic<GfxCBufferRef>				marConstantBuffer;													//!< Array of all ShaderParam used by all Shaders stage @todo refactor to work like other resources?
+		zArrayStatic<GfxShaderResourceRef>		marShaderResources[keShaderStage__Count][keShaderRes__Count];		//!< List of all resources bound per 'shader stage'/'resource type'
+		zHash32									mhShaderResourceStamp[keShaderStage__Count][keShaderRes__Count];	//!< Hash of all resources bound per 'shader stage'/'resource type', used to quickly see if they're different than currently assign to GPU
+		
+		typedef zcExp::ExporterGfxMeshStrip		RuntimeExporter;
 	};
 	class GfxMeshStripHAL : public GfxMeshStripHAL_DX11{};
 	
+	template<class TParamType> 
+	void GfxMeshStripHAL_DX11::SetValue(const zHash32& _hParamName, const TParamType& _Value, zU16 _uIndex)
+	{
+		auto paramMask= mrShaderBinding.HAL()->mdCBufferParamMask[_hParamName];
+		while( paramMask != 0 )
+		{
+			zUInt cbufferIdx = zenMath::BitsScan( paramMask );
+			paramMask		^= (1<<cbufferIdx);
+			marConstantBuffer[cbufferIdx]->SetValue(_hParamName, _Value, _uIndex);
+		}
+	}
+
 	//=============================================================================================
 	//! @class	Bind together all strip of a Mesh
 	//=============================================================================================
@@ -46,40 +47,25 @@ namespace zcRes
 	{
 	zenClassDeclare(GfxMeshHAL_DX11, zcExp::ExportGfxMesh)
 	public:
-		bool												Initialize();
-		void												SetValue(const zArrayBase<const zenRes::zShaderParameter*>& _aValues);
-		void												SetValue(const zenRes::zShaderParameter& _Value);
-		void												SetValue(const zHash32& _hParamName, const float& _fValue);
-		void												SetValue(const zHash32& _hParamName, const zVec2F& _vValue);
-		void												SetValue(const zHash32& _hParamName, const zVec3F& _vValue);
-		void												SetValue(const zHash32& _hParamName, const zVec4F& _vValue);
-		void												SetValue(const zHash32& _hParamName, const zenMath::Matrix& _matValue);
-		void												SetValue(const zHash32& _hTextureName, GfxTexture2dRef _rTexture);
-		void												SetValue(const zHash32& _hTextureName, GfxSamplerRef _rSampler);
-		void												SetValue(const zHash32& _hTextureName, GfxTexture2dRef _rTexture, GfxSamplerRef _rSampler);
+		bool									Initialize();
+		void									SetResource(const zHash32& _hResourceName, const GfxShaderResourceRef& _rResource, zU16 _uIndex=0);
+		void									SetResource(const zHash32& _hResourceName, const zArrayBase<GfxShaderResourceRef>& _arResources );
+		void									SetValue(const zArrayBase<const zenRes::zShaderParameter*>& _aValues);
+		void									SetValue(const zenRes::zShaderParameter& _Value);
+		template<class TParamType> void			SetValue(const zHash32& _hParamName, const TParamType& _Value, zU16 _uIndex=0);
 
-		zArrayStatic<GfxMeshStripRef>						marGfxMeshStrip;		
-		typedef zcExp::ExporterGfxMesh						RuntimeExporter;
+		zArrayStatic<GfxMeshStripRef>			marGfxMeshStrip;		
+		typedef zcExp::ExporterGfxMesh			RuntimeExporter;
 	};
 	class GfxMeshHAL : public GfxMeshHAL_DX11{};
 	
-	//=============================================================================================
-	//! @class	Binding between a vertex shader and a VertexBuffer.
-	//!			Needed for proper mapping of vertex stream into Shader.	
-	//=============================================================================================
-	class GfxInputStreamHAL_DX11 : public zcExp::ExportGfxInputStream
+	template<class TParamType> void			
+	GfxMeshHAL_DX11::SetValue(const zHash32& _hParamName, const TParamType& _Value, zU16 _uIndex)
 	{
-	zenClassDeclare(GfxInputStreamHAL_DX11, zcExp::ExportGfxInputStream)
-	public:
-		virtual												~GfxInputStreamHAL_DX11();
-		bool												Initialize();
+		for(zUInt stripIdx(0), stripCount(marGfxMeshStrip.Count()); stripIdx<stripCount; ++stripIdx)
+			marGfxMeshStrip[stripIdx]->SetValue(_hParamName, _Value, _uIndex);
+	}
 
-		GfxVertexRef										mrVertexStream;
-		GfxInputSignatureRef								mrSignature;
-		ID3D11InputLayout*									mpInputLayout	= nullptr;	//!< Contain DX object for vertex input remapping
-		typedef zcExp::ExporterGfxInputStream				RuntimeExporter;
-	};
-	class GfxInputStreamHAL : public GfxInputStreamHAL_DX11{};
 
 	//=============================================================================================
 	//! @class	Bind together all shader stage, Shader parameters, texture used and sampler
@@ -88,13 +74,11 @@ namespace zcRes
 	{
 	zenClassDeclare(GfxShaderBindingHAL_DX11, zcExp::ExportGfxShaderBinding)
 	public:
-		bool												Initialize();
-		void												CreateShaderParam(zArrayStatic<zenRes::zGfxShaderParam>& _aShaderParamOut)const;
+		bool									Initialize();
+		void									CreateShaderParam(zArrayStatic<zenRes::zGfxCBuffer>& Out_aShaderParam)const;
 
-		GfxShaderAnyRef										marShader[zenConst::keShaderStage__Count];
-		zMap<TextureSlot>::Key32							mdStageSlotPerTexture;	//!< Texture Index of each Shader stage using this parameter name
-		zMap<zU32>::Key32									mdBufferPerParam;		//!< Bitmask of each ShaderParam containing this parameter name
-		typedef zcExp::ExporterGfxShaderBindingDX11_DX11	RuntimeExporter;
+		GfxShaderAnyRef							marShader[keShaderStage__Count];
+		typedef zcExp::ExporterGfxShaderBinding	RuntimeExporter;
 	};
 	class GfxShaderBindingHAL : public GfxShaderBindingHAL_DX11{};
 	

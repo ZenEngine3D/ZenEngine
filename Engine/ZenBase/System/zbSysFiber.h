@@ -26,7 +26,7 @@ public:
 	void						InfiniteLoop();
 	
 protected:	
-	ZENInline bool				CanResume(){ return mpRunningTask && mpRunningTask->CanResume(); }	
+	zenInline bool				CanResume(){ return mpRunningTask && mpRunningTask->CanResume(); }	
 	zenSys::zTask*				mpRunningTask;	
 	
 protected:

@@ -40,7 +40,8 @@ namespace zcPerf
 	{
 	zenClassDeclare(EventGPUCounter, EventGPU_Base)
 	public:
-		enum eType{ keType_DrawIndexed, keType_Compute, keType_ClearColor, keType_ClearDepth, keType_UpdateIndex, keType_UpdateVertex, keType__Count, keType__Invalid=keType__Count};
+		enum eType{ keType_DrawIndexed, keType_Compute, keType_ClearColor, keType_ClearDepth, keType_UpdateIndex, keType_UpdateVertex, 
+					keType_UpdateBuffer, keType__Count, keType__Invalid=keType__Count};
 		static zEngineRef<EventBase>	Create(eType _eCounterType);
 		virtual void					Start();
 

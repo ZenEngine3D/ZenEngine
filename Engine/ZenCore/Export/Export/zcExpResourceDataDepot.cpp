@@ -17,7 +17,6 @@ const zenConst::eEngineVersion gResourceVersions[]=
 	zenConst::keEngineVersion_Initial,		//keResType_GfxView,
 	zenConst::keEngineVersion_Initial,		//keResType_GfxWindow,
 	zenConst::keEngineVersion_Initial,		//keResType_GfxIndex,
-	zenConst::keEngineVersion_Initial,		//keResType_GfxVertex,
 	zenConst::keEngineVersion_Initial,		//keResType_GfxBuffer,
 	zenConst::keEngineVersion_Initial,		//keResType_GfxTexture2D,
 	zenConst::keEngineVersion_Initial,		//keResType_GfxSampler,
@@ -26,8 +25,6 @@ const zenConst::eEngineVersion gResourceVersions[]=
 	zenConst::keEngineVersion_Initial,		//keResType_GfxRasterizer,
 	zenConst::keEngineVersion_Initial,		//keResType_GfxMeshStrip,
 	zenConst::keEngineVersion_Initial,		//keResType_GfxMesh,
-	zenConst::keEngineVersion_Initial,		//keResType_GfxInputStream,
-	zenConst::keEngineVersion_Initial,		//keResType_GfxInputSignature,
 	zenConst::keEngineVersion_Initial,		//keResType_GfxRenderPass,
 };
 

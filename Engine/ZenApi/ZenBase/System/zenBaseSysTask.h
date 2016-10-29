@@ -20,9 +20,9 @@ public:
 
 	void						Suspend();
 	
-	ZENInline bool				IsRunning();
-	ZENInline bool				CanResume();
-	ZENInline zUInt				GetElapsedUSec();
+	zenInline bool				IsRunning();
+	zenInline bool				CanResume();
+	zenInline zUInt				GetElapsedUSec();
 	static zUInt				GetCPUCoreCount();
 
 	void						ProcessingStart();

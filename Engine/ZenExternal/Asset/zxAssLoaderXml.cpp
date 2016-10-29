@@ -437,4 +437,8 @@ void AssetLoaderXml::GetGroupFilename(zWString& _zFilenameOut, const zenAss::zPa
 
 }} //namespace zen { namespace zxAss
 
+#else
+
+zenPreventEmptyFileWarning
+
 #endif //ZEN_ENGINETOOL

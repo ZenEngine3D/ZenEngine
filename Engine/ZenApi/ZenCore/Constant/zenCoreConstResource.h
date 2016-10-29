@@ -5,40 +5,46 @@
 namespace zen { 
 	namespace zenConst 
 	{
-		enum eResSource
+	#if 0
+		template<typename TEnum>
+		constexpr auto zEnumInt(TEnum _EnumVal) -> typename std::underlying_type<TEnum>::type 
+		{
+			return static_cast<typename std::underlying_type<TEnum>::type>(_EnumVal);
+		}
+	#endif
+		enum eResSource : zU8
 		{
 			keResSource_Offline,	//!< Being exported in offline mode (converted to 'Loaded' on save)
 			keResSource_Loaded,		//!< Loaded from a package
 			keResSource_Runtime,	//!< Created at runtime, and using generated name
 			keResSource__Count,
-			keResSource__Invalid,
+			keResSource__Invalid=keResSource__Count,
 		};
 
-		enum eResPlatform
+		enum ePlatform : zU8
 		{
 			//--- Renderer ---
-			keResPlatform_DX11,
+			kePlatform_DX11,
 
 			//--- OS ---
-			keResPlatform_Window,
+			kePlatform_Window,
 
 			//--- ... ---
-			keResPlatform__Count,
-			keResPlatform__Invalid,
+			kePlatform__Count,
+			kePlatform__Invalid=kePlatform__Count,
 		};	
 
-		enum eResType{
+		enum eResType : zU8 {
 			//--- GFX ---
 			keResType_GfxShaderPixel,
 			keResType_GfxShaderVertex,
-			keResType_GfxShaderParamDef,
-			keResType_GfxShaderParam,
+			keResType_GfxCBufferDefinition,
+			keResType_GfxCBuffer,
 			keResType_GfxShaderBinding,
 			keResType_GfxTarget2D,
 			keResType_GfxView,
 			keResType_GfxWindow,
 			keResType_GfxIndex,
-			keResType_GfxVertex,
 			keResType_GfxBuffer,
 			keResType_GfxTexture2D,
 			keResType_GfxSampler,
@@ -47,23 +53,34 @@ namespace zen {
 			keResType_GfxRaster,
 			keResType_GfxMeshStrip,
 			keResType_GfxMesh,
-			keResType_GfxInputStream,
-			keResType_GfxInputSignature,
 			keResType_GfxRenderPass,
 			//--- .... ---	
 			keResType__Count,
 			keResType__Invalid=keResType__Count,
 		};
-
+		
 		enum eShaderElementType
 		{
 			keShaderElemType_Float,
-			keShaderElemType_SInt,
+			keShaderElemType_Int,
 			keShaderElemType_UInt,
-			keShaderElemType_UByte,
-			keShaderElemType_SByte,
+			keShaderElemType_Byte,
+			keShaderElemType_Char,
 			keShaderElemType__Count,
 			keShaderElemType__Invalid=keShaderElemType__Count
+		};
+
+		enum eShaderCBufferParamType
+		{
+			keShaderCBuffType_Float,	keShaderCBuffType_Float2, keShaderCBuffType_Float3, keShaderCBuffType_Float4,
+			keShaderCBuffType_Int,		keShaderCBuffType_Int2, keShaderCBuffType_Int3, keShaderCBuffType_Int4,
+			keShaderCBuffType_UInt,		keShaderCBuffType_UInt2, keShaderCBuffType_UInt3, keShaderCBuffType_UInt4,
+			keShaderCBuffType_Byte,		keShaderCBuffType_Byte2, keShaderCBuffType_Byte3, keShaderCBuffType_Byte4,
+			keShaderCBuffType_Char,		keShaderCBuffType_Char2, keShaderCBuffType_Char3, keShaderCBuffType_Char4,
+			keShaderCBuffType_Bool,		keShaderCBuffType_Bool2, keShaderCBuffType_Bool3, keShaderCBuffType_Bool4,
+			keShaderCBuffType_Struct, 
+			keShaderCBuffType__Count,
+			keShaderCBuffType__Invalid=keShaderCBuffType__Count
 		};
 
 		enum eShaderSemantic
@@ -151,10 +168,10 @@ namespace zen {
 
 	namespace zenType
 	{
-		typedef zFlag<zenConst::eResType,zenConst::keResType__Count, zU64>		zFlagResType;
-		typedef zFlag<zenConst::eResPlatform,zenConst::keResPlatform__Count>	zFlagResPlatform;
-		typedef zFlag<zenConst::eResourceUse,zenConst::keResUse__Count>			zFlagResUse;
-		typedef zFlag<zenConst::eTextureUse,zenConst::keTexCreate__Count>		zFlagResTexUse;		
+		typedef zFlag<eResType,		keResType__Count, zU64>	zFlagResType;
+		typedef zFlag<ePlatform,	(int)kePlatform__Count>		zFlagResPlatform;
+		typedef zFlag<eResourceUse,	keResUse__Count>		zFlagResUse;
+		typedef zFlag<eTextureUse,	keTexCreate__Count>		zFlagResTexUse;		
 	}
 
 	namespace zenConst

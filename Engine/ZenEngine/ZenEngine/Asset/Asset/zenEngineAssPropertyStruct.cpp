@@ -98,5 +98,8 @@ PropertyValueRef PropertyStruct::ValueRef::GetStructValue(zHash32 _hPropertyName
 }
 
 }} //namespace zen { namespace zenAss
+#else
+
+zenPreventEmptyFileWarning
 
 #endif //ZEN_ENGINETOOL

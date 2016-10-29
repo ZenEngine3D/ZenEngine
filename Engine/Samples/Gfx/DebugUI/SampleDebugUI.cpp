@@ -51,11 +51,6 @@ const zArrayStatic<zU16> aCubeIndices =
 	22,20,21,	23,20,22
 };
 
-const zArrayStatic<zenRes::zGfxVertex::Element> aCubeVerticeInfos = {
-	zenRes::zGfxVertex::Element(zenConst::keShaderElemType_Float, 3, zenConst::keShaderSemantic_Position,	static_cast<zU8>(zenOffsetOf(&SimpleVertex::Pos)) ),
-	zenRes::zGfxVertex::Element(zenConst::keShaderElemType_Float, 2, zenConst::keShaderSemantic_UV,			static_cast<zU8>(zenOffsetOf(&SimpleVertex::Tex)) ) 
-};
-
 bool SampleDebugUIInstance::IsDone()
 {
 	return false;
@@ -73,11 +68,6 @@ bool SampleDebugUIInstance::Init()
 
 	//-----------------------------------------------------------
 	// Prepare some data for asset creation
-	zArrayStatic<zenRes::zGfxVertex::Stream> aVerticeStreams(1);		
-	aVerticeStreams[0].muStride = sizeof(SimpleVertex);
-	aVerticeStreams[0].maData.Copy(reinterpret_cast<const zU8*>(aCubeVertices.First()), aCubeVertices.SizeMem());
-	aVerticeStreams[0].maElements = aCubeVerticeInfos;
-
 	zArrayStatic<zU8>			aTexRGBA;
 	zVec2U16					vTexSize(256,256);
 	zenConst::eTextureFormat	eTexFormat = zenConst::keTexFormat_RGBA8;
@@ -100,7 +90,6 @@ bool SampleDebugUIInstance::Init()
 	//---------------------------------------------------------------------
 	// Create rendering resources		
 	//---------------------------------------------------------------------	
-	mrCubeVertex									= zenRes::zGfxVertex::Create(aVerticeStreams, zFlagResUse());	
 	mrCubeIndex										= zenRes::zGfxIndex::Create( aCubeIndices, zenConst::kePrimType_TriangleList );
 	mrShaderVS										= zenRes::zGfxShaderVertex::Create( "Shader/Tutorial07.fx", "VS");
 	mrShaderPS										= zenRes::zGfxShaderPixel::Create( "Shader/Tutorial07.fx", "PS" );
@@ -109,7 +98,7 @@ bool SampleDebugUIInstance::Init()
 	
 	// Some bindings of render resource together
 	mrShaderBind									= zenRes::zGfxShaderBinding::Create(mrShaderVS, mrShaderPS);
-	mrCubeMeshStrip									= zenRes::zGfxMeshStrip::Create( mrCubeVertex, mrCubeIndex, mrShaderBind );
+	mrCubeMeshStrip									= zenRes::zGfxMeshStrip::Create( mrCubeIndex, mrShaderBind );
 	mrStateRaster									= zenRes::zGfxStateRaster::Create(zenRes::zGfxStateRaster::Config());
 		
 	//-------------------------------------------------
@@ -125,7 +114,8 @@ bool SampleDebugUIInstance::Init()
 	mrCubeMeshStrip.SetValue( zHash32("View"),		matView );
 	mrCubeMeshStrip.SetValue( zHash32("Projection"),matProjection );		
 	mrCubeMeshStrip.SetValue( zHash32("World"),		matWorld );
-	mrCubeMeshStrip.SetValue( zHash32("txColor"),	mrTexture, mrSampler);
+	mrCubeMeshStrip.SetResource( zHash32("txColor.mTexture"),	mrTexture);
+	mrCubeMeshStrip.SetResource( zHash32("txColor.mSampler"),	mrSampler);
 	mrCubeMeshStrip.SetValue( zHash32("vColor"),	zVec4F(1,1,1,1));
 
 	return true;

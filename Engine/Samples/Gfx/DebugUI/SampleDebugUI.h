@@ -32,7 +32,6 @@ protected:
 	zenMath::Matrix					matWorld;
 	zenMath::Matrix					matView;
 	zenMath::Matrix					matProjection;
-	zenRes::zGfxVertex				mrCubeVertex;	
 	zenRes::zGfxIndex				mrCubeIndex;	
 	zenRes::zGfxShaderVertex		mrShaderVS;	
 	zenRes::zGfxShaderPixel			mrShaderPS;	

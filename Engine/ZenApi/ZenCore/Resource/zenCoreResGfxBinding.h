@@ -43,12 +43,9 @@ namespace zen { namespace zenRes {
 	
 		static zGfxShaderBinding						Create(const zGfxShaderVertex& _VertexShader);
 		static zGfxShaderBinding						Create(const zGfxShaderVertex& _VertexShader, const zGfxShaderPixel& _PixelShader);
-		void											CreateShaderParam(zArrayStatic<zenRes::zGfxShaderParam>& _aShaderParamOut)const;
+		void											CreateShaderParam(zArrayStatic<zenRes::zGfxCBuffer>& _aShaderParamOut)const;
 	};
 
-	//! @todo Clean: remove this from api
-	//ZENClassResourceRefDeclare(zGfxInputStream, zenConst::keResType_GfxInputStream) };
-	
 	class zGfxView : public zcRes::GfxViewRef
 	{
 	zenClassDeclare(zGfxView, zcRes::GfxViewRef);
@@ -86,13 +83,12 @@ namespace zen { namespace zenRes {
 		void							SetValue(const zHash32& _hParamName, const zVec3F& _vValue);
 		void							SetValue(const zHash32& _hParamName, const zVec4F& _vValue);
 		void							SetValue(const zHash32& _hParamName, const zenMath::Matrix& _matValue);
-		void							SetValue(const zHash32& _hTextureName, const zGfxTexture2d& _rTexture );
-		void							SetValue(const zHash32& _hTextureName, const zGfxSampler& _rSampler );
-		void							SetValue(const zHash32& _hTextureName, const zGfxTexture2d& _rTexture, const zGfxSampler& _rSampler );
-		
-		static zGfxMeshStrip			Create(const zGfxVertex& _rVertexBuffer, const zGfxIndex& _rIndexBuffer, const zGfxShaderBinding& _rShaderBinding, const zArrayBase<zGfxShaderParam>& _arShaderParam, const zArrayBase<zShaderTexture>& _aTexture, zU32 _uIndexFirst=0, zU32 _uIndexCount=0xFFFFFFFF, zU32 _uVertexFirst=0); //! @todo clean remove the texture binding from create?
-		static zGfxMeshStrip			Create(const zGfxVertex& _rVertexBuffer, const zGfxIndex& _rIndexBuffer, const zGfxShaderBinding& _rShaderBinding, const zArrayBase<zGfxShaderParam>& _arShaderParam, zU32 _uIndexFirst=0, zU32 _uIndexCount=0xFFFFFFFF, zU32 _uVertexFirst = 0);
-		static zGfxMeshStrip			Create(const zGfxVertex& _rVertexBuffer, const zGfxIndex& _rIndexBuffer, const zGfxShaderBinding& _rShaderBinding, zU32 _uIndexFirst=0, zU32 _uIndexCount=0xFFFFFFFF, zU32 _uVertexFirst = 0);
+		void							SetResource(const zHash32& _hTextureName, const zGfxTexture2d& _rTexture, zU16 _uIndex=0 );
+		void							SetResource(const zHash32& _hSamplerName, const zGfxSampler& _rSampler, zU16 _uIndex=0 );
+		void							SetResource(const zHash32& _hBufferName, const zGfxBuffer& _rBuffer, zU16 _uIndex=0 );
+
+		static zGfxMeshStrip			Create(const zGfxIndex& _rIndexBuffer, const zGfxShaderBinding& _rShaderBinding, const zArrayBase<zShaderResource>& _aResources, zU32 _uIndexFirst=0, zU32 _uIndexCount=0xFFFFFFFF, zU32 _uVertexFirst=0);
+		static zGfxMeshStrip			Create(const zGfxIndex& _rIndexBuffer, const zGfxShaderBinding& _rShaderBinding, zU32 _uIndexFirst=0, zU32 _uIndexCount=0xFFFFFFFF, zU32 _uVertexFirst = 0);
 	};
 
 	class zGfxMesh : public zcRes::GfxMeshRef
@@ -109,9 +105,9 @@ namespace zen { namespace zenRes {
 		void							SetValue(const zHash32& _hParamName, const zVec3F& _vValue);
 		void							SetValue(const zHash32& _hParamName, const zVec4F& _vValue);
 		void							SetValue(const zHash32& _hParamName, const zenMath::Matrix& _matValue);
-		void							SetValue(const zHash32& _hTextureName, const zGfxTexture2d& _rTexture );
-		void							SetValue(const zHash32& _hTextureName, const zGfxSampler& _rSampler );
-		void							SetValue(const zHash32& _hTextureName, const zGfxTexture2d& _rTexture, const zGfxSampler& _rSampler );
+		void							SetResource(const zHash32& _hTextureName, const zGfxTexture2d& _rTexture, zU16 _uIndex=0 );
+		void							SetResource(const zHash32& _hSamplerName, const zGfxSampler& _rSampler, zU16 _uIndex=0 );
+		void							SetResource(const zHash32& _hBufferName, const zGfxBuffer& _rBuffer, zU16 _uIndex=0 );
 
 		static zGfxMesh					Create(const zArrayBase<zGfxMeshStrip>& _aMeshStrip);
 	};

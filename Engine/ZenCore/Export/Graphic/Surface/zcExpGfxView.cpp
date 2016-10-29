@@ -2,7 +2,7 @@
 
 namespace zcExp
 {
-	zResID ExportInfoGfxView::CallbackGetItemID(zenConst::eResPlatform _ePlatform, zenConst::eResType _eType, zenConst::eResSource _eSource, const zcExp::ExportInfoBase* _pExportInfo, bool& _bExistOut)
+	zResID ExportInfoGfxView::CallbackGetItemID(ePlatform _ePlatform, zenConst::eResType _eType, zenConst::eResSource _eSource, const zcExp::ExportInfoBase* _pExportInfo, bool& _bExistOut)
 	{
 		zenAssert(_eType==zenConst::keResType_GfxView);
 		zenAssert( _pExportInfo );

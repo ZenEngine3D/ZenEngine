@@ -2,7 +2,7 @@
 
 namespace zcExp
 {
-	zResID ExportInfoGfxShader::CallbackGetItemID(zenConst::eResPlatform _ePlatform, zenConst::eResType _eType, zenConst::eResSource _eSource, const zcExp::ExportInfoBase* _pExportInfo, bool& _bExistOut)
+	zResID ExportInfoGfxShader::CallbackGetItemID(ePlatform _ePlatform, zenConst::eResType _eType, zenConst::eResSource _eSource, const zcExp::ExportInfoBase* _pExportInfo, bool& _bExistOut)
 	{
 		zenAssert( zenConst::kFlagResShaders.Any(_eType) );
 		zenAssert( _pExportInfo );

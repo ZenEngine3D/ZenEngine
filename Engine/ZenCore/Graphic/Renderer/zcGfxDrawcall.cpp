@@ -104,24 +104,24 @@ void CommandUpdateIndex::Invoke()
 }
 
 //=================================================================================================
-// DRAW COMMAND UPDATE VERTEX BUFFER
+// DRAW COMMAND UPDATE BUFFER
 //=================================================================================================
-zEngineRef<Command>	CommandUpdateVertex::Create(const zcRes::GfxVertexRef& _rVertex, zU8* _pData, zUInt _uOffset, zUInt _uSize)
+zEngineRef<Command>	CommandUpdateBuffer::Create(const zcRes::GfxBufferRef& _rBuffer, zU8* _pData, zUInt _uOffset, zUInt _uSize)
 {
-	static zenMem::zAllocatorPool sMemPool("Pool CommandUpdateVertex", sizeof(CommandUpdateVertex), 128, 128);
-	CommandUpdateVertex* pCmdUpdateIndex = zenNew(&sMemPool) CommandUpdateVertex;
-	pCmdUpdateIndex->mrVertex			= _rVertex;
+	static zenMem::zAllocatorPool sMemPool("Pool CommandUpdateVertex", sizeof(CommandUpdateBuffer), 128, 128);
+	CommandUpdateBuffer* pCmdUpdateIndex = zenNew(&sMemPool) CommandUpdateBuffer;
+	pCmdUpdateIndex->mrBuffer			= _rBuffer;
 	pCmdUpdateIndex->mpData				= _pData;
 	pCmdUpdateIndex->muOffset			= _uOffset;
 	pCmdUpdateIndex->muSize				= _uSize;
-	pCmdUpdateIndex->SetSortKeyDataUpdate(_rVertex.GetResID().GetHashID());
+	pCmdUpdateIndex->SetSortKeyDataUpdate(_rBuffer.GetResID().GetHashID());
 	return pCmdUpdateIndex;
 }
 
-void CommandUpdateVertex::Invoke()
+void CommandUpdateBuffer::Invoke()
 {
-	zcPerf::EventGPUCounter::Create(zcPerf::EventGPUCounter::keType_UpdateVertex);
-	mrVertex->Update(mpData, muOffset, muSize);
+	zcPerf::EventGPUCounter::Create(zcPerf::EventGPUCounter::keType_UpdateBuffer);
+	mrBuffer->Update(mpData, muOffset, muSize);
 	zenDelArray( mpData );
 	mpData = nullptr;
 }

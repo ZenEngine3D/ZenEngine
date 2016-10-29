@@ -16,11 +16,11 @@ zenClassDeclareNoParent(Asset)
 public:
 	virtual												~Asset();
 
-	ZENInline const zenAss::zAssetID&					GetID()const;
-	ZENInline zU64										GetIDUInt()const;
-	ZENInline const zString&							GetName()const;
-	ZENInline const zString&							GetDescription()const;
-	ZENInline zenConst::eAssetType						GetType()const;
+	zenInline const zenAss::zAssetID&					GetID()const;
+	zenInline zU64										GetIDUInt()const;
+	zenInline const zString&							GetName()const;
+	zenInline const zString&							GetDescription()const;
+	zenInline zenConst::eAssetType						GetType()const;
 
 	void												InitDefault();
 	void												Init(zenAss::zAssetID _AssetID, const char* _zName, const zenAss::zPackageRef& _ParentPkg);
@@ -38,8 +38,8 @@ public:
 	
 	typedef zenSig::zSignal1<zenAss::PropertyValueRef>							SignalUpdatedProperty;
 	typedef zenSig::zSignal1<const zArrayDynamic<zenAss::PropertyValueRef>& >	SignalUpdatedProperties;
-	ZENInline SignalUpdatedProperty&					GetSignalUpdatedProperty();
-	ZENInline SignalUpdatedProperties&					GetSignalUpdatedProperties();
+	zenInline SignalUpdatedProperty&					GetSignalUpdatedProperty();
+	zenInline SignalUpdatedProperties&					GetSignalUpdatedProperties();
 protected:										
 														Asset();
 	void												RebuiltDescription();

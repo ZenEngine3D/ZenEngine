@@ -22,8 +22,8 @@ public:
 	bool							IsActive()const;
 	void							AddChild(EventBase& _Child);	
 	void							ShowStats( const zEngineRef<EventBase>& _rParent, double _fTotalTime, zUInt& _uItemCount, zUInt _uDepth );
-	ZENInline const zStringHash32&	GetName()const;
-	ZENInline zEngineRef<EventBase>	GetFirstChild()const;
+	zenInline const zStringHash32&	GetName()const;
+	zenInline zEngineRef<EventBase>	GetFirstChild()const;
 
 protected:	
 	zStringHash32					mzEventName		= zStringHash32("Unassigned");

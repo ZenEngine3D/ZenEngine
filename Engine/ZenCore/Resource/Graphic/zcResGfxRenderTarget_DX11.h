@@ -15,7 +15,7 @@ namespace zcRes
 		virtual bool						Initialize();
 		void								ReleaseBackbuffer();
 
-		ZENInline bool						IsDepth()const	{ return mpTargetDepthView != nullptr; }
+		zenInline bool						IsDepth()const	{ return mpTargetDepthView != nullptr; }
 		void								Clear(const zVec4F& _vRGBA);
 		void								Clear(float _fDepth=1, zU8 _uStencil=0, bool _bClearDepth=true, bool _bClearStencil=false);
 		

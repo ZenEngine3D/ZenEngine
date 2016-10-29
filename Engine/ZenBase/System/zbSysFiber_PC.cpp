@@ -18,7 +18,7 @@ DWORD WINAPI StartThread(LPVOID lpParameter)
 {
 	zUInt Id			= (zUInt)lpParameter;
 	gaLoadingFiber[Id]	= ConvertThreadToFiber(nullptr);	
-	SetThreadAffinityMask(GetCurrentThread(), 1<<Id);
+	SetThreadAffinityMask(GetCurrentThread(), zU64(1)<<Id);
 	FiberUpdateLoop(Id);
 	return 0;
 }

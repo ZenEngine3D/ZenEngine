@@ -10,7 +10,7 @@ namespace zcExp
 		const zenRes::zGfxRenderPass::ConfigDepthRT*				mpRTDepthConfig;
 		zVec2U16													mvDim;
 		zVec2S16													mvOrigin;
-		static zResID												CallbackGetItemID(zenConst::eResPlatform _ePlatform, zenConst::eResType _eType, zenConst::eResSource _eSource, const ExportInfoBase* _pExportInfo, bool& _bExistOut);
+		static zResID												CallbackGetItemID(ePlatform _ePlatform, zenConst::eResType _eType, zenConst::eResSource _eSource, const ExportInfoBase* _pExportInfo, bool& _bExistOut);
 	};
 	
 	class ExportGfxView : public zenRes::zExportData

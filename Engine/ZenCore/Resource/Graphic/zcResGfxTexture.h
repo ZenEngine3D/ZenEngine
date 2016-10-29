@@ -12,7 +12,7 @@ class GfxTexture2d : protected GfxTexture2dHAL
 zenClassDeclare(GfxTexture2d, GfxTexture2dHAL)
 public:
 	
-	ZENInline const zVec2U16& GetDim()
+	zenInline const zVec2U16& GetDim()
 	{ 
 		return maMipData.Count() ? maMipData[0].mvDim : zVec2U16::Zero; 
 	}

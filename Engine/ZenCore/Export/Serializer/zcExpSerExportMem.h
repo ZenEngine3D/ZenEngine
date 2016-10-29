@@ -8,7 +8,7 @@ class SerializerExportMem : public ISerializerExporter
 {
 zenClassDeclare(SerializerExportMem, ISerializerExporter)
 public:
-					SerializerExportMem(zUInt auAllocSize);
+					SerializerExportMem(size_t auAllocSize);
 	virtual			~SerializerExportMem();
 	bool			Save(const char* azFilename);
 protected:
@@ -24,11 +24,11 @@ protected:
 		typedef zList<Alloc, &Alloc::mlnkList, false> TypeList;
 	};						
 
-	void*			GetMemory	(zUInt auSize);
-	void			AddMemory	(zUInt auSize);
+	void*			GetMemory	(size_t auSize);
+	void			AddMemory	(size_t auSize);
 	
 	Alloc::TypeList	mlstAllocs;
-	zUInt			muAllocSize;
+	size_t			muAllocSize;
 
 //-------------------------------------------------------------------
 // Serializer_Base Interface

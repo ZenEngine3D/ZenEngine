@@ -4,7 +4,7 @@
 
 namespace zen { namespace zenType {
 
-template<class TType>
+template<class TType, size_t TAlign=zenDefaultAlign>
 class zArrayStatic : public zArrayBase<TType>
 {
 zenClassDeclare(zArrayStatic, zArrayBase<TType>)	
@@ -17,7 +17,7 @@ public:
 					
 	virtual			~zArrayStatic();
 				
-	void			Swap(zArrayStatic<TType>& _Copy);		//!< @brief Exchange content between 2 arrays
+	void			Swap(zArrayStatic<TType,TAlign>& _Copy);//!< @brief Exchange content between 2 arrays
 	virtual zUInt	SetCount(zUInt _uCount);				//!< @brief Resize array
 protected:
 	virtual zUInt	SetCountNoConstructor(zUInt _uCount);	//!< @brief Resize array without calling constructor (usefull for quick memcopy, use carefully)

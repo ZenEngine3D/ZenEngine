@@ -17,4 +17,8 @@ const zenAss::PropertyDefArray& GfxMesh::GetProperties()const
 
 } //namespace zeAss
 
+#else
+
+zenPreventEmptyFileWarning
+
 #endif //ZEN_ENGINETOOL

@@ -70,7 +70,7 @@ public:
 	{
 	}
 
-	ZENInline void Emit();
+	zenInline void Emit();
 
 	struct SignalInfo : public zSignalEmitterAsync::SignalInfo
 	{
@@ -91,7 +91,7 @@ zenClassDeclare(zSignalEmitterAsync1, zSignal1)
 public:
 					zSignalEmitterAsync1();
 					zSignalEmitterAsync1(zSignalEmitterAsyncGroup* _pEmitterGroup);
-	ZENInline void	Emit(TParam1);	
+	zenInline void	Emit(TParam1);	
 
 	struct SignalInfo : public zSignalEmitterAsync::SignalInfo
 	{
@@ -115,7 +115,7 @@ zenClassDeclare(zSignalEmitterAsync2, zSignal2)
 public:	
 					zSignalEmitterAsync2();
 					zSignalEmitterAsync2(zSignalEmitterAsyncGroup* _pEmitterGroup);
-	ZENInline void	Emit(TParam1, TParam2);
+	zenInline void	Emit(TParam1, TParam2);
 
 	struct SignalInfo : public zSignalEmitterAsync::SignalInfo
 	{
@@ -138,7 +138,7 @@ zenClassDeclare(zSignalEmitterAsync3, zSignalEmitter3)
 public:	
 					zSignalEmitterAsync3();
 					zSignalEmitterAsync3(zSignalEmitterAsyncGroup* _pEmitterGroup);
-	ZENInline void	Emit(TParam1, TParam2, TParam3);
+	zenInline void	Emit(TParam1, TParam2, TParam3);
 
 	struct SignalInfo : public zSignalEmitterAsync::SignalInfo
 	{

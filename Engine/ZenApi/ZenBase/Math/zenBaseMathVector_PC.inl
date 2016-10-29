@@ -115,13 +115,13 @@ float simdLengthInv( V4 _VectA )
     return simdLengthInvV(_VectA).m128_f32[0];    
 }
 
-ZENInline V4 simdNormalize( V4 _VectA )
+zenInline V4 simdNormalize( V4 _VectA )
 {
 	V4 vLength = simdLengthV(_VectA);
     return _mm_div_ps(_VectA, vLength);
 }
 
-ZENInline bool	simdIsNearZero( V4 _Vect )
+zenInline bool	simdIsNearZero( V4 _Vect )
 {
 	return simdDot( _Vect, _Vect ) < zenConst::kfSmallNumber;
 }

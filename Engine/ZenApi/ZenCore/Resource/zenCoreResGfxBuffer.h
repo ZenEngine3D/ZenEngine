@@ -4,51 +4,6 @@
 
 namespace zen { namespace zenRes 
 {	
-	class zGfxVertex : public zcRes::GfxVertexRef
-	{
-	zenClassDeclare(zGfxVertex, zcRes::GfxVertexRef);
-	public:
-		using Super::Super;
-		using Super::operator=;
-
-		struct Element
-		{
-		public:
-			Element(){};
-			Element(zenConst::eShaderElementType _eType, zU8 _ElementCount, zenConst::eShaderSemantic _eSemantic, zU8 _Offset )
-			: meType(_eType)
-			, meSemantic(_eSemantic)
-			, muVectorSize(_ElementCount)
-			, muOffset(_Offset)
-			{}
-
-			zenConst::eShaderElementType	meType;
-			zenConst::eShaderSemantic		meSemantic;
-			zU8								muVectorSize;
-			zU8								muOffset;		
-		};
-
-		struct Stream
-		{
-		public:
-			zArrayStatic<zU8>				maData;
-			zArrayStatic<Element>			maElements;
-			zU8								muStride;
-			Stream& operator=(const Stream& _Copy)
-			{
-				maData		= _Copy.maData;
-				maElements	= _Copy.maElements;
-				muStride	= _Copy.muStride;
-				return *this;
-			}
-		};
-	public:		
-		zU8*					Lock();
-		void					Unlock(const zenGfx::zContext& rContext);
-		
-		static zGfxVertex		Create(const zArrayBase<zGfxVertex::Stream>& _aStreams, zFlagResUse _ResourceUse);
-	};
-
 	class zGfxIndex : public zcRes::GfxIndexRef
 	{
 	zenClassDeclare(zGfxIndex, zcRes::GfxIndexRef);
@@ -88,28 +43,42 @@ namespace zen { namespace zenRes
 		
 		static zGfxTarget2D			Create(zenConst::eTextureFormat _eFormat, zVec2U16 _vDim, bool _bSrgb=true);
 	};
-	
+
 	class zGfxBuffer : public zcRes::GfxBufferRef
 	{
 	zenClassDeclare(zGfxBuffer, zcRes::GfxBufferRef);
 	public:		
 		using Super::Super;
 		using Super::operator=;
-				
-		template<class TData> static zGfxBuffer Create(zU32 _uElemCount/*, zFlagResTexUse _UseFlags*/)
-		{
-			return zGfxBuffer::Create( sizeof(TData), _uElemCount);
-		}
-		template<class TData> static zGfxBuffer Create(const zArrayBase<TData>& _aData, zU32 _uElemCount/*, zFlagResTexUse _UseFlags*/)
-		{
-			return zGfxBuffer::Create( reinterpret_cast<const zU8*>(_aData.First()), _aData.SizeMem(), sizeof(TData), _uElemCount);
-		}
-			
+		void*					Lock();
+		void					Unlock(const zenGfx::zContext& rContext);
 	protected:
-		static zGfxBuffer		Create(zUInt _uElemSize, zU32 _uElemCount/*, zFlagResTexUse _UseFlags*/);
-		static zGfxBuffer		Create(const zU8* _pData, zUInt _uDataSize, zUInt _uElemSize, zU32 _uElemCount/*, zFlagResTexUse _UseFlags*/);
+		static zGfxBuffer		Create(size_t _uElemSize, zU32 _uElemCount/*, zFlagResTexUse _UseFlags*/);
+		static zGfxBuffer		Create(const zU8* _pData, size_t _uDataSize, size_t _uElemSize, zU32 _uElemCount/*, zFlagResTexUse _UseFlags*/);
 	};
-	
+
+	template<class TStructData>
+	class zGfxStructBuffer : public zGfxBuffer
+	{
+	zenClassDeclare(zGfxStructBuffer, zGfxBuffer);
+	public:		
+		using Super::Super;
+		using Super::operator=;
+		
+		TStructData* Lock()
+		{
+			return reinterpret_cast<TStructData*>(Super::Lock());
+		}
+
+		static zGfxStructBuffer Create(zU32 _uElemCount/*, zFlagResTexUse _UseFlags*/)
+		{
+			return zGfxBuffer::Create( sizeof(TStructData), _uElemCount);
+		}
+		static zGfxStructBuffer Create(const zArrayBase<TStructData>& _aData, zU32 _uElemCount/*, zFlagResTexUse _UseFlags*/)
+		{
+			return zGfxBuffer::Create( reinterpret_cast<const zU8*>(_aData.First()), _aData.SizeMem(), sizeof(TStructData), _uElemCount);
+		}
+	};
 }} // namespace zen, zenRes
 
 #endif

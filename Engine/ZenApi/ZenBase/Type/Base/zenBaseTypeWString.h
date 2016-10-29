@@ -15,19 +15,19 @@ class zWString : public std::wstring
 {
 zenClassDeclare(zWString, std::wstring)
 public:
-	ZENInline					zWString();
-	ZENInline					zWString(const zWString& _Copy);
-	ZENInline					zWString(const std::wstring& _Copy);
-	ZENInline					zWString(const wchar_t* _pCopy);
-	ZENInline const zWString&	operator=(const zWString& _Copy);
-	ZENInline const zWString&	operator=(const std::wstring& _Copy);
-	ZENInline const zWString&	operator=(const wchar_t* _pCopy);	
-	ZENInline bool				operator==(const zWString& _zCmp)const;
-	ZENInline bool				operator!=(const zWString& _zCmp)const;
-	ZENInline bool				operator==(const wchar_t* _zCmp)const;
-	ZENInline bool				operator!=(const wchar_t* _zCmp)const;
-	ZENInline 					operator const zChar*() const;
-	ZENInline const zWString&	Prepend(const zWString& _Copy);
+	zenInline					zWString();
+	zenInline					zWString(const zWString& _Copy);
+	zenInline					zWString(const std::wstring& _Copy);
+	zenInline					zWString(const wchar_t* _pCopy);
+	zenInline const zWString&	operator=(const zWString& _Copy);
+	zenInline const zWString&	operator=(const std::wstring& _Copy);
+	zenInline const zWString&	operator=(const wchar_t* _pCopy);	
+	zenInline bool				operator==(const zWString& _zCmp)const;
+	zenInline bool				operator!=(const zWString& _zCmp)const;
+	zenInline bool				operator==(const wchar_t* _zCmp)const;
+	zenInline bool				operator!=(const wchar_t* _zCmp)const;
+	zenInline 					operator const zChar*() const;
+	zenInline const zWString&	Prepend(const zWString& _Copy);
 	void						Replace(wchar_t* _zSource, wchar_t* _zReplace, zUInt _uPos=0);
 
 };

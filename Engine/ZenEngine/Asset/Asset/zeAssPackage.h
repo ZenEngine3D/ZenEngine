@@ -12,28 +12,28 @@ namespace zeAss
 													Package			();
 		virtual										~Package		();
 				
-		ZENInline zU32								GetID			()const;
-		ZENInline const zWString&					GetName			()const;
-		ZENInline const zenAss::zPackageGroupRef&	GetParentGroup	()const;
-		ZENInline const zWString&					GetStorageInfo	()const;
+		zenInline zU32								GetID			()const;
+		zenInline const zWString&					GetName			()const;
+		zenInline const zenAss::zPackageGroupRef&	GetParentGroup	()const;
+		zenInline const zWString&					GetStorageInfo	()const;
 
 		void										SetName			(const zWString& _zName);		
 		void										SetStorageInfo	(const zWString& _zStorageInfo);
 		void										SetParentGroup	(const zenAss::zPackageGroupRef& _rParent);		
 		void										SetDirty		();
 
-		ZENInline const zenAss::zAssetItemRef&		GetAsset		(zenConst::eAssetType _eType, zU32 _uAssetID)const;
-		ZENInline const zenAss::zArrayAsset&		GetAsset		(zenConst::eAssetType _eType)const;
+		zenInline const zenAss::zAssetItemRef&		GetAsset		(zenConst::eAssetType _eType, zU32 _uAssetID)const;
+		zenInline const zenAss::zArrayAsset&		GetAsset		(zenConst::eAssetType _eType)const;
 		
 		void										Unload			();		//! @todo Asset: Useful?
 		
 		void										Delete			();		
 
 		bool										Init			(zU32 _uID, const zWString& _zName, const zenAss::zPackageGroupRef& _rGroupParent, zU32 _uEngineVer);
-		ZENInline void								AssetAdd		(const zenAss::zAssetItemRef& _rAsset);
-		ZENInline void								AssetRem		(const zenAss::zAssetItemRef& _rAsset);
+		zenInline void								AssetAdd		(const zenAss::zAssetItemRef& _rAsset);
+		zenInline void								AssetRem		(const zenAss::zAssetItemRef& _rAsset);
 		
-		ZENInline bool								GetDirty			()const;
+		zenInline bool								GetDirty			()const;
 
 	protected:				
 		bool										Save			(class AssetSerializer &_Serializer, bool _bDirtyParent);

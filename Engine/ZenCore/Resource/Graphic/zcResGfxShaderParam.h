@@ -6,16 +6,17 @@
 
 namespace zcRes
 {
-	class GfxShaderParamDef : protected GfxShaderParamDefHAL
+	class GfxCBufferDefinition : protected GfxCBufferDefinitionHAL
 	{
-	zenClassDeclare(GfxShaderParamDef, GfxShaderParamDefHAL)
+	zenClassDeclare(GfxCBufferDefinition, GfxCBufferDefinitionHAL)
 	public:
 	};
 
-	class GfxShaderParam : protected GfxShaderParamHAL
+	class GfxCBuffer : protected GfxCBufferHAL
 	{
-	zenClassDeclare(GfxShaderParam, GfxShaderParamHAL)
+	zenClassDeclare(GfxCBuffer, GfxCBufferHAL)
 	public:
+		const zcRes::GfxCBufferDefinitionRef& GetParent();
 		using Super::SetValue;
 	};	
 }

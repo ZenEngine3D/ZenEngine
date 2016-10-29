@@ -68,20 +68,27 @@ zenClassDeclare(ManagerRender, ManagerRender_Base)
 public:
 	struct RenderContext
 	{
-		RenderContext();
-		zcRes::GfxRenderPassRef			mrRenderpass		= nullptr;
-		zcRes::GfxViewRef				mrStateView			= nullptr;
-		zcRes::GfxStateBlendRef			mrStateBlend		= nullptr;
-		zcRes::GfxStateDepthStencilRef	mrStateDepthStencil	= nullptr;
-		zcRes::GfxStateRasterRef		mrStateRaster		= nullptr;
-		zcRes::GfxInputStreamRef		mrInputStream		= nullptr;		
-		zcRes::GfxShaderAnyRef			marShader[zenConst::keShaderStage__Count];				
-		zcRes::GfxSamplerRef			maCurrentSampler[zenConst::keShaderStage__Count][zcExp::kuDX11_TexturePerStageMax];
-		zcRes::GfxTexture2dRef			maCurrentTexture[zenConst::keShaderStage__Count][zcExp::kuDX11_TexturePerStageMax];
-		zU16							muPerStageTextureCount[zenConst::keShaderStage__Count];
-		D3D11_PRIMITIVE_TOPOLOGY		mePrimitiveType		= D3D_PRIMITIVE_TOPOLOGY_UNDEFINED;
-		zVec4U16						mvScreenScissor		= zVec4U16(0, 0, 0, 0);
-		bool							mbScreenScissorOn	= false;
+												RenderContext();
+		zcRes::GfxRenderPassRef					mrRenderpass		= nullptr;
+		zcRes::GfxViewRef						mrStateView			= nullptr;
+		zcRes::GfxStateBlendRef					mrStateBlend		= nullptr;
+		zcRes::GfxStateDepthStencilRef			mrStateDepthStencil	= nullptr;
+		zcRes::GfxStateRasterRef				mrStateRaster		= nullptr;
+		
+		// Useful for debugging/tracking but not needed
+		zcRes::GfxShaderAnyRef					marShader[keShaderStage__Count];
+		zcRes::GfxSamplerRef					marSampler[keShaderStage__Count][zcExp::kuDX11_SamplerPerStageMax];
+		zcRes::GfxCBufferRef					marCBuffer[keShaderStage__Count][zcExp::kuDX11_CBufferPerStageMax];
+		zcRes::GfxShaderResourceRef				marResource[keShaderStage__Count][zcExp::kuDX11_ResourcesPerStageMax];		
+		// Info on input shaders resources
+		zHash32									mahShaderInputStamp[keShaderStage__Count][keShaderRes__Count];				//!< Hash of assigned resources per stage/restype, to quickly know if something has changed
+		zU16									maShaderInputSlotCount[keShaderStage__Count][keShaderRes__Count];			//!< Slot count to last valid Resource view per resource type
+		ID3D11ShaderResourceView*				maResourceView[keShaderStage__Count][zcExp::kuDX11_ResourcesPerStageMax];	//!< Resource view of all assigned resources (textures, structbuffer, uav, ...)
+		eShaderResource							maResourceType[keShaderStage__Count][zcExp::kuDX11_ResourcesPerStageMax];	//!< Resource type assigned to matching resourceview slot
+		
+		D3D11_PRIMITIVE_TOPOLOGY				mePrimitiveType		= D3D_PRIMITIVE_TOPOLOGY_UNDEFINED;
+		zVec4U16								mvScreenScissor		= zVec4U16(0, 0, 0, 0);
+		bool									mbScreenScissorOn	= false;
 	};
 
 	virtual void								FrameBegin(zcRes::GfxWindowRef _FrameWindow);
@@ -98,22 +105,29 @@ public:
 	ID3D11Device*								DX11GetDevice(){return mDX11pDevice;}
 	ID3D11DeviceContext*						DX11GetDeviceContext(){return mDX11pContextImmediate;}
 	DXGI_FORMAT									ZenFormatToNative( zenConst::eTextureFormat _eTexFormat )const { return meFormatConversion[_eTexFormat]; }
-	void										UnbindTextures();
-	void										UnbindResources();
-protected:
-	ZENInline void								UpdateGPUState(const zEngineRef<zcGfx::Command>& _rDrawcall, RenderContext& _Context);
-	ZENInline void								UpdateShaderState(const zcGfx::CommandDraw& _Drawcall, RenderContext& _Context);
+	
+//! @todo urgent clean this up
+	void										UnbindTextures(){};
+	void										UnbindResources(){};
 
-	zEngineRef<zcGfx::Command>					mrPreviousDrawcall;	
+protected:
+	zenInline void								UpdateGPUState(const zEngineRef<zcGfx::Command>& _rDrawcall, RenderContext& _Context);
+	zenInline void								UpdateShaderState(const zcGfx::CommandDraw& _Drawcall, RenderContext& _Context);	
+	zenInline void								UpdateShaderState_Samplers(const zcGfx::CommandDraw& _Drawcall, RenderContext& _Context, eShaderStage _eShaderStage);
+	zenInline void								UpdateShaderState_ConstantBuffers(const zcGfx::CommandDraw& _Drawcall, RenderContext& _Context, eShaderStage _eShaderStage);
+	zenInline void								UpdateShaderState_Textures(zU16& Out_ChangedFirst, zU16& Out_ChangedLast, const zcGfx::CommandDraw& _Drawcall, RenderContext& _Context, eShaderStage _eShaderStage);	
+	zenInline void								UpdateShaderState_StructBuffers(zU16& Out_ChangedFirst, zU16& Out_ChangedLast, const zcGfx::CommandDraw& _Drawcall, RenderContext& _Context, eShaderStage _eShaderStage);
+	zEngineRef<zcGfx::Command>					mrPreviousDrawcall;
 	DXGI_FORMAT									meFormatConversion[zenConst::keTexFormat__Count];
 	D3D_DRIVER_TYPE								mDX11DriverType			= D3D_DRIVER_TYPE_NULL;
 	D3D_FEATURE_LEVEL							mDX11FeatureLevel		= D3D_FEATURE_LEVEL_11_0;
 	ID3D11Device*								mDX11pDevice			= nullptr;
-	ID3D11DeviceContext*						mDX11pContextImmediate	= nullptr;	
+	ID3D11DeviceContext*						mDX11pContextImmediate	= nullptr;
+	ID3D11InputLayout*							mDX11pEmptyInputLayout	= nullptr;
 	ID3DUserDefinedAnnotation*					mDX11pPerf				= nullptr;
-	bool										mbTextureUnbound		= false;
-	bool										mbResourceUnbound		= false;
-	bool										mbDX11ProfilerDetected	= true;
+	bool										mbTextureUnbind			= false;
+	bool										mbResourceUnbind		= false;
+	bool										mbDX11ProfilerDetected	= true;		
 	zEngineRef<DX11QueryDisjoint>				mrQueryDisjoint;
 //---------------------------------------------------------
 // ManagerBase Section

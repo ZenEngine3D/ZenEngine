@@ -36,7 +36,7 @@ public:
 	virtual void Join() { }		//!< Blocks the calling thread until this thread has stopped.
 	virtual void Detach() { }
 
-	ZENInline zU32 GetThreadID()const { return mThreadID; }
+	zenInline zU32 GetThreadID()const { return mThreadID; }
 
 protected:
 	zU32 mThreadID;

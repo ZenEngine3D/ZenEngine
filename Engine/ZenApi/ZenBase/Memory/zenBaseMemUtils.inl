@@ -21,5 +21,11 @@ void Copy(TType* _pDestination, const TType* _pSource, zUInt _uCount)
 	}		
 }
 
+template<class TType>
+void Zero(TType& _Destination)
+{
+	Zero( (void*)&_Destination, sizeof(_Destination) );
+}
+
 }} // namespace zen { namespace zenMem
 

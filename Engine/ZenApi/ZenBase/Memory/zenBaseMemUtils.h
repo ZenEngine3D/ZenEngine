@@ -9,6 +9,8 @@ namespace zen { namespace zenMem
 	void CopyRaw	(void* _pDestination, const void* _pSource, size_t _uSize);
 	void Set		(void* _pDestination, int _pValue, size_t _uSize);
 	void Zero		(void* _pDestination, size_t _uSize);
+	template<class TType>
+	void Zero		(TType& _Destination);
 }} // namespace zen { namespace zenMem
 
 

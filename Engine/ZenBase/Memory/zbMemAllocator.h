@@ -25,7 +25,7 @@ namespace zbMem
 		zHash32					mhStamp;
 		zU32					muOffset : 31;
 		zU32					mbIsArray: 1;
-		ZENInline bool			IsValid(){return mhStamp==zHash32("ValidAlloc");}
+		zenInline bool			IsValid(){return mhStamp==zHash32("ValidAlloc");}
 		bool					IsArray(){return mbIsArray;};
 		void					Set(zenMem::zAllocator* _pAllocator, zU32 _uAllocOffset, size_t _uAllocSize, bool _bIsArray);
 	};			

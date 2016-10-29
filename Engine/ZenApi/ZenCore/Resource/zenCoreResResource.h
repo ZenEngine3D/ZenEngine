@@ -14,8 +14,7 @@ namespace zen { namespace zenRes {
 		zTimeStamp			mExportTime;	//!< When resource was exported
 		zResID				mResID;			//!< Resource unique ID
 	};
-	
-		
+			
 	//----------------------------------------------
 	template< class TResourceClass, class TResourceHAL, zU64 TTypeMask >
 	class zResourceRef;
@@ -72,31 +71,40 @@ namespace zen { namespace zenRes {
 
 #include "zenCoreResResource.inl"
 
+// Forward Declarations
+namespace zcExp
+{
+	class ExportGfxShader;
+};
+
 namespace zcRes
 {
-typedef zenRes::zResourceRef<class zenRes::zExportData,	class zenRes::zExportData,		0xFFFFFFFFFFFFFFFF>								ResourceAnyRef;
+// Resources Reference Declaration
 typedef zenRes::zResourceRef<class GfxSampler,			class GfxSamplerHAL,			zEnumMask<zU64>(keResType_GfxSampler)>			GfxSamplerRef;
 typedef zenRes::zResourceRef<class GfxRenderPass,		class GfxRenderPassHAL, 		zEnumMask<zU64>(keResType_GfxRenderPass)>		GfxRenderPassRef;
 typedef zenRes::zResourceRef<class GfxMeshStrip,		class GfxMeshStripHAL,			zEnumMask<zU64>(keResType_GfxMeshStrip)>		GfxMeshStripRef;
 typedef zenRes::zResourceRef<class GfxMesh,				class GfxMeshHAL,				zEnumMask<zU64>(keResType_GfxMesh)>				GfxMeshRef;
 typedef zenRes::zResourceRef<class GfxShaderBinding,	class GfxShaderBindingHAL,		zEnumMask<zU64>(keResType_GfxShaderBinding)>	GfxShaderBindingRef;
-typedef zenRes::zResourceRef<class GfxShaderParamDef,	class GfxShaderParamDefHAL,		zEnumMask<zU64>(keResType_GfxShaderParamDef)>	GfxShaderParamDefRef;
-typedef zenRes::zResourceRef<class GfxShaderParam,		class GfxShaderParamHAL,		zEnumMask<zU64>(keResType_GfxShaderParam)>		GfxShaderParamRef;
-typedef zenRes::zResourceRef<class GfxInputSignature,	class GfxInputSignatureHAL,		zEnumMask<zU64>(keResType_GfxInputSignature)>	GfxInputSignatureRef;
-typedef zenRes::zResourceRef<class GfxInputStream,		class GfxInputStreamHAL,		zEnumMask<zU64>(keResType_GfxInputStream)>		GfxInputStreamRef;
-typedef zenRes::zResourceRef<class zExportData,			class zExportData,				zEnumMask<zU64>(keResType_GfxShaderPixel, keResType_GfxShaderVertex) > GfxShaderAnyRef;
+typedef zenRes::zResourceRef<class GfxCBufferDefinition,class GfxCBufferDefinitionHAL,	zEnumMask<zU64>(keResType_GfxCBufferDefinition)>GfxCBufferDefinitionRef;
+typedef zenRes::zResourceRef<class GfxCBuffer,			class GfxCBufferHAL,			zEnumMask<zU64>(keResType_GfxCBuffer)>			GfxCBufferRef;
+typedef zenRes::zResourceRef<class GfxBuffer,			class GfxBufferHAL,				zEnumMask<zU64>(keResType_GfxBuffer)>			GfxBufferRef;
 typedef zenRes::zResourceRef<class GfxShaderPixel,		class GfxShaderPixelHAL,		zEnumMask<zU64>(keResType_GfxShaderPixel)>		GfxShaderPixelRef;
 typedef zenRes::zResourceRef<class GfxShaderVertex,		class GfxShaderVertexHAL,		zEnumMask<zU64>(keResType_GfxShaderVertex)>		GfxShaderVertexRef;
 typedef zenRes::zResourceRef<class GfxStateBlend,		class GfxStateBlendHAL,			zEnumMask<zU64>(keResType_GfxBlend)>			GfxStateBlendRef;
 typedef zenRes::zResourceRef<class GfxStateDepthStencil,class GfxStateDepthStencilHAL,	zEnumMask<zU64>(keResType_GfxDepthStencil)>		GfxStateDepthStencilRef;
 typedef zenRes::zResourceRef<class GfxStateRaster,		class GfxStateRasterHAL,		zEnumMask<zU64>(keResType_GfxRaster)>			GfxStateRasterRef;
-typedef zenRes::zResourceRef<class GfxVertex,			class GfxVertexHAL,				zEnumMask<zU64>(keResType_GfxVertex)>			GfxVertexRef;
 typedef zenRes::zResourceRef<class GfxWindow,			class GfxWindowHAL,				zEnumMask<zU64>(keResType_GfxWindow)>			GfxWindowRef;
 typedef zenRes::zResourceRef<class GfxView,				class GfxViewHAL,				zEnumMask<zU64>(keResType_GfxView)>				GfxViewRef;
 typedef zenRes::zResourceRef<class GfxTarget2D,			class GfxTarget2DHAL,			zEnumMask<zU64>(keResType_GfxTarget2D)>			GfxTarget2DRef;
 typedef zenRes::zResourceRef<class GfxTexture2d,		class GfxTexture2dHAL,			zEnumMask<zU64>(keResType_GfxTexture2D)>		GfxTexture2dRef;
 typedef zenRes::zResourceRef<class GfxIndex,			class GfxIndexHAL,				zEnumMask<zU64>(keResType_GfxIndex)>			GfxIndexRef;
-typedef zenRes::zResourceRef<class GfxBuffer,			class GfxBufferHAL,				zEnumMask<zU64>(keResType_GfxBuffer)>			GfxBufferRef;
+
+// Grouped Resources Declaration (more than one type of resource supported by smartpointer)
+typedef zenRes::zResourceRef<class zenRes::zExportData,	class zenRes::zExportData,		0xFFFFFFFFFFFFFFFF>								ResourceAnyRef;
+typedef zenRes::zResourceRef<zcExp::ExportGfxShader,	zcExp::ExportGfxShader,			
+		zEnumMask<zU64>(keResType_GfxShaderPixel, keResType_GfxShaderVertex) >															GfxShaderAnyRef;
+typedef zenRes::zResourceRef<class zenRes::zExportData,	class zenRes::zExportData,		
+		zEnumMask<zU64>(keResType_GfxSampler, keResType_GfxTexture2D, keResType_GfxBuffer, keResType_GfxCBuffer) >						GfxShaderResourceRef;
 
 };
 

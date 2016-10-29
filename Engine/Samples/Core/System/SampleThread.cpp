@@ -10,7 +10,7 @@ zUInt* gpSortDataTask	= nullptr;
 
 namespace sample
 {
-	ZENInline zUInt* SortSplit(zUInt* _pLeft, zUInt* _pRight)
+	zenInline zUInt* SortSplit(zUInt* _pLeft, zUInt* _pRight)
 	{
 		zUInt* Pivot( _pLeft );
 		zenSwap(*Pivot, _pLeft[(_pRight-_pLeft)/2]);
@@ -29,7 +29,7 @@ namespace sample
 		return _pRight;
 	}
 
-	ZENInline void Sort(zUInt* _pStart, zUInt* _pEnd)
+	zenInline void Sort(zUInt* _pStart, zUInt* _pEnd)
 	{
 		zUInt* pSplit = SortSplit(_pStart, _pEnd);
 		if( pSplit-_pStart >= 2 )

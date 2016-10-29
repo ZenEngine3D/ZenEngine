@@ -7,15 +7,6 @@
 namespace zcRes
 {
 	//=============================================================================================
-	//! @class	Binding between a vertex shader and a VertexBuffer.
-	//!			Needed for proper mapping of vertex stream into Shader.	
-	//=============================================================================================
-	class GfxInputStream : public GfxInputStreamHAL
-	{
-	zenClassDeclare(GfxInputStream, GfxInputStreamHAL)
-	};
-
-	//=============================================================================================
 	//! @class	Binding geometry to shader
 	//=============================================================================================
 	class GfxMeshStrip : protected GfxMeshStripHAL
@@ -23,9 +14,10 @@ namespace zcRes
 	zenClassDeclare(GfxMeshStrip, GfxMeshStripHAL)
 	public:
 		using Super::SetValue;
-		ZENInline zU32 GetVertexFirst()const{return muVertexFirst;}
-		ZENInline zU32 GetIndexFirst()const{return muIndexFirst;}
-		ZENInline zU32 GetIndexCount()const{return muIndexCount;}
+		using Super::SetResource;
+		zenInline zU32 GetVertexFirst()const{return muVertexFirst;}
+		zenInline zU32 GetIndexFirst()const{return muIndexFirst;}
+		zenInline zU32 GetIndexCount()const{return muIndexCount;}
 	};
 
 	//=============================================================================================
@@ -35,8 +27,9 @@ namespace zcRes
 	{
 	zenClassDeclare(GfxMesh, GfxMeshHAL)
 	public:		
-		const zArrayStatic<GfxMeshStripRef>&	GetMeshStrips()const;	
+		const zArrayStatic<GfxMeshStripRef>& GetMeshStrips()const;	
 		using Super::SetValue;
+		using Super::SetResource;
 	};
 
 	class GfxShaderBinding : protected GfxShaderBindingHAL

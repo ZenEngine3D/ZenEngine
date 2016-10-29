@@ -51,12 +51,12 @@ namespace zen { namespace zenType
 		struct Node
 		{
 			struct Slot	{	TKey Key; union { Node* pChildNode; zU8 aValue[sizeof(TValue)]; }; 
-							ZENInline TValue& Value(){return *(TValue*)aValue;} };
+							zenInline TValue& Value(){return *(TValue*)aValue;} };
 
 			zU32				GetSlotCount() const;						//! @brief Get count of valid Slots in this node
-			bool				IsLeafSlot( zUInt _uSlotID ) const;			//! @brief Check if a Node Slot is a leaf (contains value) or point to child node
-			bool				IsUsedIndex( zUInt _uNodeIndex ) const;		//! @brief Check if Node Index is being used in this Node 
-			zU32				GetSlotID( zUInt _uNodeIndex ) const;		//! @brief Get in which slot a Node Index is stored
+			bool				IsLeafSlot(zU32 _uSlotID) const;			//! @brief Check if a Node Slot is a leaf (contains value) or point to child node
+			bool				IsUsedIndex(zU32 _uNodeIndex) const;		//! @brief Check if Node Index is being used in this Node 
+			zU32				GetSlotID(zU32 _uNodeIndex) const;		//! @brief Get in which slot a Node Index is stored
 			int					GetFirstUsedSlotID()const;					//! @brief Return first used slotID (-1 if none)			
 			int					GetLastUsedSlotID()const;					//! @brief Return last used slotID (-1 if none)
 
@@ -97,44 +97,56 @@ namespace zen { namespace zenType
 		// Main Class
 		//=================================================================================================
 								zHamt();
-								zHamt( zUInt _uReservePool);
+								zHamt( zU32 _uReservePool);
 								~zHamt();
 		
-		void					Init( zUInt _uReservePool);													//!< @brief Initialize the HashTable
-		ZENInline bool			Exist(const TKey _Key)const;															    
-		ZENInline bool			IsInit()const;																			    
-		ZENInline zU32			Count() const;																	//!< @brief Number of element (leaf node) stored in hashmap		
-																														    
-		void					Clear();																				    
-		void					SetDefaultValue( const TValue& _Value );										//!< @brief Set value return when no value found
+		void					Init( zU32 _uReservePool);													//!< @brief Initialize the HashTable
+		zenInline bool			Exist(const TKey _Key)const;															    
+		zenInline bool			IsInit()const;																			    
+		zenInline zU32			Count() const;																//!< @brief Number of element (leaf node) stored in hashmap		
+																													    
+		void					Clear();																			    
+		void					SetDefaultValue( const TValue& _Value );									//!< @brief Set value return when no value found
 
-		const TValue&			Get( const TKey _Key ) const;													//!< @brief Return value stored at a key entry
-		bool					Get(const TKey _Key, TValue& _ValueOut) const;									//!< @brief Return value stored at a key entry
-		//bool					Get(const TKey _Key, TValue*& _pValueOut) const;								//!< @brief Return value stored at a key entry
-		ZENInline const TValue&	operator[](const TKey _Key)const;												//!< @brief Return value stored at that key entry																											    
-		TValue&					GetAdd(const TKey _Key);														//!< @brief Return value stored at that key entry
-		bool					Unset(const TKey _Key);															//!< @brief Remove the value stored at that key entry
-																														    																														    
-		void					SetAll( const TValue& _Value );													//!< @brief Set all value in table, to specified value
-		void					Set(const TKey _Key, const TValue& _Value);										//!< @brief Assign value at a certain key entry
-		bool					SetReplace(const TKey _Key, const TValue& _Value, TValue& _OldValueOut);		//!< @brief Assign value at a certain key entry		
-		void					Export( zArrayBase<TKey>& _aKey, zArrayBase<TValue>& _aValue ) const;			//!< @brief Copy the content key/value of this hamt to carrays
+		const TValue&			Get(const TKey _Key ) const;												//!< @brief Return value stored at a key entry
+		bool					Get(const TKey _Key, TValue& _ValueOut) const;								//!< @brief Return value stored at a key entry
+		//bool					Get(const TKey _Key, TValue*& _pValueOut) const;							//!< @brief Return value stored at a key entry
+		zenInline const TValue&	operator[](const TKey _Key)const;											//!< @brief Return value stored at that key entry																											    
+		TValue&					GetAdd(const TKey _Key);													//!< @brief Return value stored at that key entry
+		bool					Unset(const TKey _Key);														//!< @brief Remove the value stored at that key entry
+																													    																														    
+		void					SetAll( const TValue& _Value );												//!< @brief Set all value in table, to specified value
+		void					Set(const TKey _Key, const TValue& _Value);									//!< @brief Assign value at a certain key entry
+		bool					SetReplace(const TKey _Key, const TValue& _Value, TValue& _OldValueOut);	//!< @brief Assign value at a certain key entry		
+		void					Export( zArrayBase<TKey>& _aKey, zArrayBase<TValue>& _aValue ) const;		//!< @brief Copy the content key/value of this hamt to carrays
 		void					Import( const zArrayBase<TKey>& _aKey, const zArrayBase<TValue>& _aValue );	//!< @brief Copy the content key/value from arrays to this hamt
 		const zHamt&			operator=(const zHamt& _Copy);													//!< @brief Copy the content of another Hamt
 																														    																														    
-		void					GetFirst(Iterator& _It) const;													//!< @brief Initialize iterator to first element of the hamt
-		void					GetLast(Iterator& _It) const;													//!< @brief Initialize iterator to last element of the hamt
-		TKey					GetFirstUnusedKey()const;														//!< @brief Find the first available key in the hashmap
-		void					DebugPrint(const TKey _First, TKey _Last) const;								//!< @brief Print structure of the tree
-		size_t					GetMemoryFootprint();															//!< @brief Return the amount of memory used by this structure		
-		void					SetDeleteItemCB(DeleteItemCB _pCallback){mpDeleteItemCB = _pCallback;}			//!< @todo clean Call constructor/destructor by default instead of relying callback, too unreliable/forgetfull
+		void					GetFirst(Iterator& _It) const;												//!< @brief Initialize iterator to first element of the hamt
+		void					GetLast(Iterator& _It) const;												//!< @brief Initialize iterator to last element of the hamt
+		Iterator				GetFirst() const															//!< @brief Initialize iterator to first element of the hamt
+								{
+									Iterator it;	
+									GetFirst(it);
+									return it;
+								}
+		Iterator				GetLast() const																//!< @brief Initialize iterator to last element of the hamt
+								{
+									Iterator it;	
+									GetLast(it);
+									return it;
+								}
+		TKey					GetFirstUnusedKey()const;													//!< @brief Find the first available key in the hashmap
+		void					DebugPrint(const TKey _First, TKey _Last) const;							//!< @brief Print structure of the tree
+		size_t					GetMemoryFootprint();														//!< @brief Return the amount of memory used by this structure		
+		void					SetDeleteItemCB(DeleteItemCB _pCallback){mpDeleteItemCB = _pCallback;}		//!< @todo clean Call constructor/destructor by default instead of relying callback, too unreliable/forgetfull
 	protected:
 		
-		Node*					CreateNodeCopy( const Node* _pNodeCopy );										//!< @brief	Create a copy of a node
-		zU32					GetNodeIndex( const TKey _uKey, zUInt _uDepth ) const;							//!< @brief	Return the key NodeIndex at a certain tree depth
-		Node*					CreateEmptyNode(zU32 _uSlotCount);												//!< @brief	Return a new empty node with requested number of slots
-		void					ClearNode( Node* _pNode );														//!< @brief	Remove every child node of this node
-		TValue*					SetSlotValue(TKey _Key, const TValue& _Value, Node** _ppParentNode, zUInt _uNodeIndex, zUInt _uSlotID, zUInt _uDepth);	//!< @brief		Get the slot in a node associated to a Key. 
+		Node*					CreateNodeCopy( const Node* _pNodeCopy );									//!< @brief	Create a copy of a node
+		zU32					GetNodeIndex( const TKey _uKey, zU32 _uDepth ) const;						//!< @brief	Return the key NodeIndex at a certain tree depth
+		Node*					CreateEmptyNode(zU32 _uSlotCount);											//!< @brief	Return a new empty node with requested number of slots
+		void					ClearNode( Node* _pNode );													//!< @brief	Remove every child node of this node
+		TValue*					SetSlotValue(TKey _Key, const TValue& _Value, Node** _ppParentNode, zU32 _uNodeIndex, zU32 _uSlotID, zU32 _uDepth);	//!< @brief		Get the slot in a node associated to a Key. 
 		bool					GetNode(TKey _Key, const Node**& _pParentSlot, zU32& _uNodeIndex, zU32& _uSlotID, zU32& _uDepth) const;	//!< @brief Find the Node(and relevant infos) associated to a Key entry
 		bool					GetNode(TKey _Key, Node**& _pParentSlot, zU32& _uNodeIndex, zU32& _uSlotID, zU32& _uDepth);	//!< @brief	Find the Node(and relevant infos) associated to a Key entry		
 				

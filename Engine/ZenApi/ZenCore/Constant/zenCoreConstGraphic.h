@@ -12,6 +12,18 @@ namespace zen { namespace zenConst
 		keShaderStage__Invalid
 	};
 
+	enum eShaderResource
+	{ 
+		keShaderRes_Texture, 
+		keShaderRes_Sampler, 
+		keShaderRes_CBuffer,	//! @todo clean
+		keShaderRes_Buffer, 
+		keShaderRes_BufferRW,	//! @todo clean
+		keShaderRes_Unknown, 
+		keShaderRes__Count, 
+		keShaderRes__Invalid=keShaderRes__Count 
+	};
+
 	enum eColorChannel
 	{
 		keColor_R,

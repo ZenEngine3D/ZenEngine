@@ -30,7 +30,6 @@ public:
 	alignas(16) zenMath::Matrix				matOrthographic;
 	zenRes::zGfxTarget2D					mrRendertarget		= nullptr;	
 	zenRes::zGfxRenderPass					mrRenderpass		= nullptr;		
-	zenRes::zGfxVertex						mrVertexBuffer		= nullptr;
 	zenRes::zGfxIndex						mrIndexBuffer		= nullptr;	
 	zenRes::zGfxTexture2d					mrFontTextureAtlas	= nullptr;
 	zenSig::zSignalEmitter0					msigRenderUI;	
@@ -64,11 +63,11 @@ public:
 
 protected:									
 	zenRes::zGfxStateRaster				mrStateRaster;	
-	zenRes::zGfxShaderVertex				mrShaderVertex;
-	zenRes::zGfxShaderPixel					mrShaderPixel;
-	zenRes::zGfxShaderBinding				mrShaderBinding;
-	zArrayStatic<zenRes::zGfxShaderParam>	marShaderParams;	
-	zenRes::zGfxSampler						mrFontSampler;	
+	zenRes::zGfxShaderVertex			mrShaderVertex;
+	zenRes::zGfxShaderPixel				mrShaderPixel;
+	zenRes::zGfxShaderBinding			mrShaderBinding;
+	zArrayStatic<zenRes::zGfxCBuffer>	marShaderParams;	
+	zenRes::zGfxSampler					mrFontSampler;	
 };
 
 }

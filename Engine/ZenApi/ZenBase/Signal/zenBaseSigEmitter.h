@@ -15,8 +15,8 @@ class zSignalEmitter0 : public zSignal0
 {
 zenClassDeclare(zSignalEmitter0, zSignal)
 public:
-	ZENInline void Emit()const;
-	ZENInline void DisconnectAll();
+	zenInline void Emit()const;
+	zenInline void DisconnectAll();
 };
 
 //=================================================================================================
@@ -30,8 +30,8 @@ class zSignalEmitter1 : public zSignal1<TParam1>
 {
 zenClassDeclare(zSignalEmitter1, zSignal1)
 public:
-	ZENInline void Emit(TParam1)const;
-	ZENInline void DisconnectAll();
+	zenInline void Emit(TParam1)const;
+	zenInline void DisconnectAll();
 };
 
 //=================================================================================================
@@ -45,8 +45,8 @@ class zSignalEmitter2 : public zSignal2<TParam1, TParam2>
 {
 zenClassDeclare(zSignalEmitter2, zSignal2)
 public:
-	ZENInline void Emit(TParam1, TParam2)const;
-	ZENInline void DisconnectAll();
+	zenInline void Emit(TParam1, TParam2)const;
+	zenInline void DisconnectAll();
 };
 
 //=================================================================================================
@@ -60,8 +60,8 @@ class zSignalEmitter3 : public zSignal3<TParam1, TParam2, TParam3>
 {
 zenClassDeclare(zSignalEmitter3, zSignal3)
 public:
-	ZENInline void Emit(TParam1, TParam2, TParam3)const;
-	ZENInline void DisconnectAll();
+	zenInline void Emit(TParam1, TParam2, TParam3)const;
+	zenInline void DisconnectAll();
 };
 
 

@@ -20,7 +20,7 @@ function Orion_ConfigureBuild()
 	--[[ Build version config ]]--
 	configuration		( "Debug" )
 		defines			( {"DEBUG", "_DEBUG", "ZEN_BUILD_DEBUG"} )
-		flags 			( {"Symbols"} )
+		flags 			( {"Symbols","FatalWarnings"} )
 		optimize		( "Off" )
 		targetsuffix 	( "_Deb" )
 	configuration 		( "Release" )
@@ -111,7 +111,7 @@ function Orion_AddProjectCommon(aFilesExt, aPathList, aPchFile )
 	os.mkdir		( vOutputRoot .. "/" .. project().name ) -- Needed for pch file creation
 	location 		( vOutputRoot .. "/" .. project().name )
 	objdir			( vOutputRoot .. "/" .. project().name .. "/obj" )
-	includedirs 	( {vSourceRoot, vSourceRoot .. "/Engine/ZenApi"} )
+	includedirs 	( {vSourceRoot, vSourceRoot .. "/Engine", vSourceRoot .. "/Engine/ZenApi"} )
 	-- ToDo find more generalize way to do this
 	vpaths 			( {["Api/*"] = "../../../Engine/ZenApi/ZenBase" } )
 	vpaths 			( {["Api/*"] = "../../../Engine/ZenApi/ZenCore" } )

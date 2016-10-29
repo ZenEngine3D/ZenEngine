@@ -12,14 +12,14 @@ namespace zeAss
 																	PackageGroup	(const zWString& _zName, zenAss::zPackageGroupRef _Parent);
 		virtual														~PackageGroup	();		
 		
-		ZENInline const zWString&									GetName			()const;
-		ZENInline const zenAss::zPackageGroupRef&					GetParentGroup	()const;
-		ZENInline const zArrayDynamic<zenAss::zPackageRef>&			GetPackages		()const;
-		ZENInline const zArrayDynamic<zenAss::zPackageGroupRef>&	GetChildren		()const;
-		ZENInline zHash64											GetNameHashID	()const;
-		ZENInline const zWString&									GetStorageInfo	()const;
-		ZENInline bool												GetDirty		()const;
-		ZENInline bool												GetDirtyChild	()const;
+		zenInline const zWString&									GetName			()const;
+		zenInline const zenAss::zPackageGroupRef&					GetParentGroup	()const;
+		zenInline const zArrayDynamic<zenAss::zPackageRef>&			GetPackages		()const;
+		zenInline const zArrayDynamic<zenAss::zPackageGroupRef>&	GetChildren		()const;
+		zenInline zHash64											GetNameHashID	()const;
+		zenInline const zWString&									GetStorageInfo	()const;
+		zenInline bool												GetDirty		()const;
+		zenInline bool												GetDirtyChild	()const;
 		zUInt														GetPackageCount	()const;
 
 		bool														IsParentOf		(const zenAss::zPackageGroupRef& _Child)const;
@@ -27,7 +27,7 @@ namespace zeAss
 
 		void														SetParentGroup	(const zenAss::zPackageGroupRef& _rParent);
 		void														SetName			(const zWString& _zName);
-		ZENInline void												SetStorageInfo	(const zWString& _zStorageInfo);
+		zenInline void												SetStorageInfo	(const zWString& _zStorageInfo);
 				
 		void														Delete			();
 

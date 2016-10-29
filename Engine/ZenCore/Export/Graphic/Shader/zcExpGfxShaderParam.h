@@ -4,19 +4,50 @@
 
 namespace zcExp
 {
-	
-enum eShaderParamFreq
+//==================================================================================================
+// Expected parameters for CBuffer creation
+//==================================================================================================
+struct ExportInfoGfxShaderParam : public ExportInfoBase
 {
-	keShaderParamFreq_Global		= 0,
-	keShaderParamFreq_PerViewPhase	= 1,		
-	keShaderParamFreq_PerMeshOnce	= 2,
-	keShaderParamFreq_PerMesh		= 3,
-	keShaderParamFreq_PerStripOnce	= 4,
-	keShaderParamFreq_PerStrip		= 5,
-	keShaderParamFreq__Count,
-	keShaderParamFreq__Invalid
+	zResID	mParentParamDefID;
 };
 
+//==================================================================================================
+// Base data of a CBUffer send to resource creation
+//==================================================================================================
+class ExportGfxCBuffer : public zenRes::zExportData
+{
+zenClassDeclare(ExportGfxCBuffer, zenRes::zExportData)
+public:
+	zResID					mParentParamDefID;	//!< Parent ShaderParam definition
+	zArrayStatic<zU8, 16>	maParameterValues;	//!< Bytes data for all buffer values (see ShaderParamDef for each parameter start offset in array)
+};
+
+//==================================================================================================
+// Create a new CBuffer 
+//==================================================================================================
+class ExporterGfxCBuffer : public ExporterBase
+{
+zenClassDeclare(ExporterGfxCBuffer, ExporterBase)
+public:
+typedef zEngineRef<ExportGfxCBuffer>	ExportResultRef; //todo use proper ref class
+										ExporterGfxCBuffer(const ExportResultRef& _rExportOut);
+protected:	
+	virtual bool						ExportStart();
+	ExportResultRef						mrExport;
+};
+
+//==================================================================================================
+// CBuffer creation
+//==================================================================================================
+zResID	CreateGfxCBuffer(zResID _ParentParamDefID);							//!< @brief Create a new Constant Buffer
+zResID	CreateGfxCBuffer(zResID _ParentShaderID, zU8 _uCBufferSlot);		//!< @brief Create a new Constant Buffer
+zResID	CreateGfxCBuffer(zResID _ParentShaderID, zHash32 _hCBufferName);	//!< @brief Create a new Constant Buffer
+
+//==================================================================================================
+// Various Pre-defined shader parameter type that can be used to assign value to CBuffers.
+// They allow settting multiple values of different type at the same time
+//==================================================================================================
 class ParameterBase
 {
 zenClassDeclareNoParent(ParameterBase)
@@ -141,16 +172,6 @@ typedef ParameterVector3< float, zenConst::keShaderElemType_Float > ParameterFlo
 typedef ParameterVector4< float, zenConst::keShaderElemType_Float > ParameterFloat4;
 
 
-struct ExportInfoGfxShaderParam : public ExportInfoBase
-{
-	zResID	mParentParamDefID;
-};
-
-zResID	CreateGfxShaderParam(zResID _ParentParamDefID);
-zResID	CreateGfxShaderParam(zResID _ParentShaderID, zcExp::eShaderParamFreq _eShaderParamIndex);
-
 }
-
-#include "zcExpGfxShaderParamDX11.h"
 
 #endif

@@ -3,30 +3,12 @@
 namespace zcRes
 {
 
-GfxInputStreamHAL_DX11::~GfxInputStreamHAL_DX11()
+bool IsSystemCBuffer( zResID _CBufferDefId, zHash32 _hName )
 {
-	if( mpInputLayout )
-		mpInputLayout->Release();
-	mpInputLayout = nullptr;
+	const zHash32 hVertexInput("cbVertexInput");
+	return _hName == hVertexInput;
 }
 
-bool GfxInputStreamHAL_DX11::Initialize()
-{
-	bool bSuccess(FALSE);	
-	mrVertexStream	= mVertexBufferID;
-	mrSignature		= mShaderInputSignatureID;
-	if( mrVertexStream.IsValid() && mrSignature.IsValid() )
-	{
-		HRESULT hr = zcMgr::GfxRender.DX11GetDevice()->CreateInputLayout(	mrVertexStream.HAL()->maElementDef.First(), 
-																			mrVertexStream.HAL()->maElementDef.Count(),
-																			mrSignature.HAL()->maDummyShaderCode.First(), 
-																			mrSignature.HAL()->maDummyShaderCode.SizeMem(), 
-																			&mpInputLayout );
-		bSuccess = SUCCEEDED( hr );		
-	}
-
-	return bSuccess;
-}
 
 //=================================================================================================
 
@@ -44,251 +26,133 @@ void GfxMeshHAL_DX11::SetValue(const zArrayBase<const zenRes::zShaderParameter*>
 	for(zUInt stripIdx(0), stripCount(marGfxMeshStrip.Count()); stripIdx<stripCount; ++stripIdx)
 		marGfxMeshStrip[stripIdx]->SetValue(_aValues);
 }
+
 void GfxMeshHAL_DX11::SetValue(const zenRes::zShaderParameter& _Value)
 {
 	for(zUInt stripIdx(0), stripCount(marGfxMeshStrip.Count()); stripIdx<stripCount; ++stripIdx)
 		marGfxMeshStrip[stripIdx]->SetValue(_Value);
 }
-void GfxMeshHAL_DX11::SetValue(const zHash32& _hParamName, const float& _fValue)
+
+void GfxMeshHAL_DX11::SetResource(const zHash32& _hResourceName, const GfxShaderResourceRef& _rResource, zU16 _uIndex)
 {
 	for(zUInt stripIdx(0), stripCount(marGfxMeshStrip.Count()); stripIdx<stripCount; ++stripIdx)
-		marGfxMeshStrip[stripIdx]->SetValue(_hParamName, _fValue);
-}
-void GfxMeshHAL_DX11::SetValue(const zHash32& _hParamName, const zVec2F& _vValue)
-{
-	for(zUInt stripIdx(0), stripCount(marGfxMeshStrip.Count()); stripIdx<stripCount; ++stripIdx)
-		marGfxMeshStrip[stripIdx]->SetValue(_hParamName, _vValue);
-}
-void GfxMeshHAL_DX11::SetValue(const zHash32& _hParamName, const zVec3F& _vValue)
-{
-	for(zUInt stripIdx(0), stripCount(marGfxMeshStrip.Count()); stripIdx<stripCount; ++stripIdx)
-		marGfxMeshStrip[stripIdx]->SetValue(_hParamName, _vValue);
-}
-void GfxMeshHAL_DX11::SetValue(const zHash32& _hParamName, const zVec4F& _vValue)
-{
-	for(zUInt stripIdx(0), stripCount(marGfxMeshStrip.Count()); stripIdx<stripCount; ++stripIdx)
-		marGfxMeshStrip[stripIdx]->SetValue(_hParamName, _vValue);
-}
-void GfxMeshHAL_DX11::SetValue(const zHash32& _hParamName, const zenMath::Matrix& _matValue)
-{
-	for(zUInt stripIdx(0), stripCount(marGfxMeshStrip.Count()); stripIdx<stripCount; ++stripIdx)
-		marGfxMeshStrip[stripIdx]->SetValue(_hParamName, _matValue);
-}
-void GfxMeshHAL_DX11::SetValue(const zHash32& _hTextureName, GfxTexture2dRef _rTexture )
-{
-	for(zUInt stripIdx(0), stripCount(marGfxMeshStrip.Count()); stripIdx<stripCount; ++stripIdx)
-		marGfxMeshStrip[stripIdx]->SetValue(_hTextureName, _rTexture);
-}
-void GfxMeshHAL_DX11::SetValue(const zHash32& _hTextureName, GfxSamplerRef _rSampler )
-{
-	for(zUInt stripIdx(0), stripCount(marGfxMeshStrip.Count()); stripIdx<stripCount; ++stripIdx)
-		marGfxMeshStrip[stripIdx]->SetValue(_hTextureName, _rSampler);
-}
-void GfxMeshHAL_DX11::SetValue(const zHash32& _hTextureName, GfxTexture2dRef _rTexture, GfxSamplerRef _rSampler )
-{
-	for(zUInt stripIdx(0), stripCount(marGfxMeshStrip.Count()); stripIdx<stripCount; ++stripIdx)
-		marGfxMeshStrip[stripIdx]->SetValue(_hTextureName, _rTexture, _rSampler);
+		marGfxMeshStrip[stripIdx]->SetResource(_hResourceName, _rResource, _uIndex);
 }
 
+void GfxMeshHAL_DX11::SetResource(const zHash32& _hResourceName, const zArrayBase<GfxShaderResourceRef>& _arResources)
+{
+	for(zUInt stripIdx(0), stripCount(marGfxMeshStrip.Count()); stripIdx<stripCount; ++stripIdx)
+		marGfxMeshStrip[stripIdx]->SetResource(_hResourceName, _arResources);
+}
 //=================================================================================================
 
 bool GfxMeshStripHAL_DX11::Initialize()
 {
+	zenMem::Zero(mhShaderResourceStamp);
+
 	mrIndexBuffer			= mIndexBufferID;
-	mrInputStream			= mStreamBindingID;
 	mrShaderBinding			= mShaderBindingID;
 
-	marShaderParam.SetCount(maShaderParamID.Count());
-	for(zUInt idx(0), count(marShaderParam.Count()); idx<count; ++idx)
-		marShaderParam[idx] = maShaderParamID[idx];
-		
-	marTexture.SetCount( zenConst::keShaderStage__Count );
-	marGfxSampler.SetCount( zenConst::keShaderStage__Count );	
-	for(zUInt stageIdx(0), stageCount(maTextureID.Count()); stageIdx<stageCount; ++stageIdx )
-	{	
-		zenAssert( maTextureID[stageIdx].Count() == maSamplerID[stageIdx].Count() );
-		marTexture[stageIdx].SetCount(maTextureID[stageIdx].Count());
-		marGfxSampler[stageIdx].SetCount(maTextureID[stageIdx].Count());
-		for(zUInt idx(0), count(marTexture[stageIdx].Count()); idx<count; ++idx)
-		{
-			marTexture[stageIdx][idx]		= maTextureID[stageIdx][idx];
-			marGfxSampler[stageIdx][idx]	= maSamplerID[stageIdx][idx];
-		}
-	}
-	//! @todo Missing: assign default texture for the one not assigned
+ 	marConstantBuffer.SetCount(maConstanBufferID.Count());
+ 	for(zUInt idx(0), count(marConstantBuffer.Count()); idx<count; ++idx)
+ 		marConstantBuffer[idx] = maConstanBufferID[idx];
 
+	//! @todo Missing: assign default resource for the one not assigned
+	for(zUInt stageIdx(0); stageIdx<keShaderStage__Count; ++stageIdx )
+		for(zUInt resTypeIdx(0); resTypeIdx<keShaderRes__Count; ++resTypeIdx)
+			marShaderResources[stageIdx][resTypeIdx].Copy( maResourceID[stageIdx][resTypeIdx] );
+
+	SetValue(zHash32("VtxInput_Offset"), muVertexFirst );
 	return true;
-}
-
-void GfxMeshStripHAL_DX11::SetValue(const zenRes::zShaderParameter& _Value)
-{
-	zUInt idxStage	= 0;
-	zU32 paramMask	= mrShaderBinding.HAL()->mdBufferPerParam[_Value.mhName];
-	while( paramMask != 0 )
-	{
-		if( (paramMask&1)!=0 )
-			marShaderParam[idxStage]->SetValue(_Value);
-		
-		paramMask = paramMask>>1;
-		++idxStage;
-	}
 }
 
 void GfxMeshStripHAL_DX11::SetValue(const zArrayBase<const zenRes::zShaderParameter*>& _aValues)
 {
 	for(zUInt valIdx(0), valCount(_aValues.Count()); valIdx<valCount; ++valIdx)
 	{
-		zUInt idxStage							= 0;
 		const zenRes::zShaderParameter* pValue	= _aValues[valIdx];
-		zU32 paramMask							= mrShaderBinding.HAL()->mdBufferPerParam[pValue->mhName];
+		auto paramMask							= mrShaderBinding.HAL()->mdCBufferParamMask[pValue->mhName];
 		while( paramMask != 0 )
 		{
-			if( (paramMask&1)!=0 )
-				marShaderParam[idxStage]->SetValue(*pValue);
-			
-			paramMask = paramMask>>1;
-			++idxStage;
+			zUInt cbufferIdx = zenMath::BitsScan( paramMask );
+			paramMask		^= (1<<cbufferIdx);
+			marConstantBuffer[cbufferIdx]->SetValue(*pValue);
 		}
 	}
 }
 
-void GfxMeshStripHAL_DX11::SetValue(const zHash32& _hParamName, const float& _fValue)
-{
-	zUInt idxStage	= 0;
-	zU32 paramMask	= mrShaderBinding.HAL()->mdBufferPerParam[_hParamName];
+void GfxMeshStripHAL_DX11::SetValue(const zenRes::zShaderParameter& _Value)
+{	
+	auto paramMask	= mrShaderBinding.HAL()->mdCBufferParamMask[_Value.mhName];
 	while( paramMask != 0 )
 	{
-		if( (paramMask&1)!=0 )
-			marShaderParam[idxStage]->SetValue(_hParamName, _fValue);
-		
-		paramMask = paramMask>>1;
-		++idxStage;
+		zUInt cbufferIdx = zenMath::BitsScan( paramMask );
+		paramMask		^= (1<<cbufferIdx);
+		marConstantBuffer[cbufferIdx]->SetValue(_Value);
 	}
 }
 
-void GfxMeshStripHAL_DX11::SetValue(const zHash32& _hParamName, const zVec2F& _vValue)
+void GfxMeshStripHAL_DX11::SetResource(const zHash32& _hResourceName, const GfxShaderResourceRef& _rResource, zU16 _uIndex )
 {
-	zUInt idxStage	= 0;
-	zU32 paramMask	= mrShaderBinding.HAL()->mdBufferPerParam[_hParamName];
-	while( paramMask != 0 )
-	{
-		if( (paramMask&1)!=0 )
-			marShaderParam[idxStage]->SetValue(_hParamName, _vValue);
-		
-		paramMask = paramMask>>1;
-		++idxStage;
-	}
-}
-
-void GfxMeshStripHAL_DX11::SetValue(const zHash32& _hParamName, const zVec3F& _vValue)
-{
-	zUInt idxStage	= 0;
-	zU32 paramMask	= mrShaderBinding.HAL()->mdBufferPerParam[_hParamName];
-	while( paramMask != 0 )
-	{
-		if( (paramMask&1)!=0 )
-			marShaderParam[idxStage]->SetValue(_hParamName, _vValue);
-		
-		paramMask = paramMask>>1;
-		++idxStage;
-	}
-}
-
-void GfxMeshStripHAL_DX11::SetValue(const zHash32& _hParamName, const zVec4F& _vValue)
-{
-	zUInt idxStage	= 0;
-	zU32 paramMask	= mrShaderBinding.HAL()->mdBufferPerParam[_hParamName];
-	while( paramMask != 0 )
-	{
-		if( (paramMask&1)!=0 )
-			marShaderParam[idxStage]->SetValue(_hParamName, _vValue);
-		
-		paramMask = paramMask>>1;
-		++idxStage;
-	}	
-}
-
-void GfxMeshStripHAL_DX11::SetValue(const zHash32& _hParamName, const zenMath::Matrix& _matValue)
-{
-	zUInt idxStage	= 0;
-	zU32 paramMask	= mrShaderBinding.HAL()->mdBufferPerParam[_hParamName];
-	while( paramMask != 0 )
-	{
-		if( (paramMask&1)!=0 )
-			marShaderParam[idxStage]->SetValue(_hParamName, _matValue);
-		
-		paramMask = paramMask>>1;
-		++idxStage;
-	}
-}
-
-void GfxMeshStripHAL_DX11::SetValue(const zHash32& _hTextureName, GfxTexture2dRef _rTexture )
-{		
-	zcExp::ExportGfxShaderBinding::TextureSlot SlotInfos;
-	if( mrShaderBinding.HAL()->mdStageSlotPerTexture.Get(_hTextureName, SlotInfos) )
+	zcExp::ExportGfxShaderBinding::ShaderBindInfoIndex PerStageBindInfo;
+	if( mrShaderBinding.HAL()->mdResourceBind.Get(_hResourceName, PerStageBindInfo) )
 	{
 		for(zUInt stageIdx(0); stageIdx<zenConst::keShaderStage__Count; ++stageIdx)
 		{
-			zenWarningMsg( SlotInfos.muCount[stageIdx] <= 1, "Trying to set a single Texture to texture array.");
-			if( SlotInfos.muCount[stageIdx] > 0 )
-				marTexture[stageIdx][SlotInfos.muSlot[stageIdx]] = _rTexture;
-		}
-	}	
-}
-
-void GfxMeshStripHAL_DX11::SetValue(const zHash32& _hTextureName, GfxSamplerRef _rSampler )
-{
-	zcExp::ExportGfxShaderBinding::TextureSlot SlotInfos;
-	if( mrShaderBinding.HAL()->mdStageSlotPerTexture.Get(_hTextureName, SlotInfos) )
-	{
-		for(zUInt stageIdx(0); stageIdx<zenConst::keShaderStage__Count; ++stageIdx)
-		{
-			zenWarningMsg( SlotInfos.muCount[stageIdx] <= 1, "Trying to set a single Texture to texture array.");
-			if( SlotInfos.muCount[stageIdx] > 0 )
-				marGfxSampler[stageIdx][SlotInfos.muSlot[stageIdx]] = _rSampler;				
-		}
-	}	
-}
-
-void GfxMeshStripHAL_DX11::SetValue(const zHash32& _hTextureName, GfxTexture2dRef _rTexture, GfxSamplerRef _rSampler )
-{
-	zcExp::ExportGfxShaderBinding::TextureSlot SlotInfos;
-	if( mrShaderBinding.HAL()->mdStageSlotPerTexture.Get(_hTextureName, SlotInfos) )
-	{
-		for(zUInt stageIdx(0); stageIdx<zenConst::keShaderStage__Count; ++stageIdx)
-		{
-			zenWarningMsg( SlotInfos.muCount[stageIdx] <= 1, "Trying to set a single Texture to texture array.");
-			if( SlotInfos.muCount[stageIdx] > 0 )
+			auto resIndex					= PerStageBindInfo.muShaderResIndex[stageIdx];
+			const GfxShaderAnyRef&  rShader	= mrShaderBinding.HAL()->marShader[stageIdx];
+			if( rShader.IsValid() && resIndex < rShader.HAL()->maResourceBinding.Count() )
 			{
-				marTexture[stageIdx][SlotInfos.muSlot[stageIdx]] = _rTexture;
-				marGfxSampler[stageIdx][SlotInfos.muSlot[stageIdx]] = _rSampler;
+				const zcExp::ExportGfxShader::ShaderBindInfo& BindInfo		= rShader->maResourceBinding[ resIndex ];
+				zU8 uSlotOffset												= static_cast<zU8>(zenMath::Min<zU16>(_uIndex, BindInfo.muSlotCount));
+				zU8 uSlotIndex												= BindInfo.muSlotIndex+uSlotOffset;
+				//zenAssertMsg(uSlotIndex==_uIndex, "Invalid array index"); //!todo warning Error Message
+				marShaderResources[stageIdx][BindInfo.meType][uSlotIndex]	= _rResource;
+				mhShaderResourceStamp[stageIdx][BindInfo.meType]			= 0;
 			}
 		}
-	}	
+ 	}
+}
+
+void GfxMeshStripHAL_DX11::SetResource(const zHash32& _hResourceName, const zArrayBase<GfxShaderResourceRef>& _arResources )
+{
+	zcExp::ExportGfxShaderBinding::ShaderBindInfoIndex PerStageBindInfo;
+	if( mrShaderBinding.HAL()->mdResourceBind.Get(_hResourceName, PerStageBindInfo) )
+	{
+		for(zUInt stageIdx(0); stageIdx<zenConst::keShaderStage__Count; ++stageIdx)
+		{
+			auto resIndex					= PerStageBindInfo.muShaderResIndex[stageIdx];
+			const GfxShaderAnyRef&  rShader	= mrShaderBinding.HAL()->marShader[stageIdx];
+			if( rShader.IsValid() && resIndex < rShader.HAL()->maResourceBinding.Count() )
+			{
+				const zcExp::ExportGfxShader::ShaderBindInfo& BindInfo				= rShader->maResourceBinding[ resIndex ];
+				mhShaderResourceStamp[stageIdx][BindInfo.meType]					= 0;
+				for( zU8 slotIdx(0), slotCount(zenMath::Min((zU8)_arResources.Count(), BindInfo.muSlotCount)); slotIdx<slotCount; ++slotIdx )
+					marShaderResources[stageIdx][BindInfo.meType][BindInfo.muSlotIndex+slotIdx] = _arResources[slotIdx];
+			}
+		}
+ 	}
 }
 
 //=================================================================================================
 bool GfxShaderBindingHAL_DX11::Initialize()
 {
 	for(zUInt idx(0); idx<zenConst::keShaderStage__Count; ++idx)
-		if( maShaderID[idx].IsValid() )
-			marShader[idx] =  maShaderID[idx];
-			
-	mdStageSlotPerTexture.Init(maTextureName.Count()*2);	
-	mdStageSlotPerTexture.Import( maTextureName, maTextureBind );
-	mdStageSlotPerTexture.SetDefaultValue(zcExp::ExportGfxShaderBinding::TextureSlot());
-
-	mdBufferPerParam.Init(maParameterName.Count()*2);	
-	mdBufferPerParam.Import( maParameterName, maParameterMask );
-	mdBufferPerParam.SetDefaultValue(0);
+		marShader[idx] =  maShaderID[idx];
+		
 	return true;
 }
 
-void GfxShaderBindingHAL_DX11::CreateShaderParam(zArrayStatic<zenRes::zGfxShaderParam>& _aShaderParamOut)const
+void GfxShaderBindingHAL_DX11::CreateShaderParam(zArrayStatic<zenRes::zGfxCBuffer>& Out_aShaderParam)const
 {
-	_aShaderParamOut.SetCount( maParamDefID.Count() );
-	for(int idx(0), count(maParamDefID.Count()); idx<count; ++idx)
-		_aShaderParamOut[idx] = zcExp::CreateGfxShaderParam( maParamDefID[idx] );
+	zUInt uValidShaderCount(0);
+	zenRes::zGfxCBuffer arValidCBuffer[zcExp::kuDX11_CBufferPerStageMax];		
+	for(zUInt idx(0), count(maCBufferParentID.Count()); idx<count; ++idx)
+	{
+		if( IsSystemCBuffer(maCBufferParentID[idx], maResourceName[maCBufferParentBindIndex[idx]] ) == false )
+			arValidCBuffer[uValidShaderCount++] = zcExp::CreateGfxCBuffer( maCBufferParentID[idx] );
+	}
+	Out_aShaderParam.Copy(arValidCBuffer, uValidShaderCount);
 }
 
 }

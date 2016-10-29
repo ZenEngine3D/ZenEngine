@@ -30,7 +30,7 @@ namespace zen { namespace zenMem
 		virtual						~zAllocator			();
 		size_t						GetTotalAllocSize	()const {return muTotalAllocSize;}
 		zUInt						GetTotalAllocCount	()const {return muTotalAllocCount;}
-		ZENInline zHash32			GetValidityStamp	()const {return mh32ValidStamp;}
+		zenInline zHash32			GetValidityStamp	()const {return mh32ValidStamp;}
 		static zAllocator&			GetDefault			();
 	
 	protected:

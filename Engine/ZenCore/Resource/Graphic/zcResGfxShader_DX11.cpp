@@ -3,13 +3,6 @@
 namespace zcRes
 {
 //=================================================================================================
-
-bool GfxInputSignatureHAL_DX11::Initialize()
-{
-	return true;
-}
-
-//=================================================================================================
 GfxShaderVertexHAL_DX11::~GfxShaderVertexHAL_DX11()
 {
 	if( mpVertexShader )
@@ -19,7 +12,6 @@ GfxShaderVertexHAL_DX11::~GfxShaderVertexHAL_DX11()
 
 bool GfxShaderVertexHAL_DX11::Initialize()
 {		
-	mrGfxInputSignature = mShaderInputSignatureID;
 	HRESULT hr			= zcMgr::GfxRender.DX11GetDevice()->CreateVertexShader( maCompiledShader.First(), maCompiledShader.SizeMem(), nullptr, &mpVertexShader );
 	return SUCCEEDED(hr);
 }

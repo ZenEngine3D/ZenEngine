@@ -11,7 +11,7 @@ namespace zcExp
 	public:				
 	typedef zEngineRef<ExportGfxSamplerDX11>	ExportResultRef; //todo use proper ref class
 												ExporterGfxSamplerDX11_DX11(const ExportResultRef& _rExportOut);
-		static zResID							CallbackGetItemID(zenConst::eResPlatform _ePlatform, zenConst::eResType _eType, zenConst::eResSource _eSource, const ExportInfoBase* _pExportInfo, bool& _bExistOut);
+		static zResID							CallbackGetItemID(ePlatform _ePlatform, zenConst::eResType _eType, zenConst::eResSource _eSource, const ExportInfoBase* _pExportInfo, bool& _bExistOut);
 	protected:	
 		virtual bool							ExportWork(bool _bIsTHRTask);	
 		ExportResultRef							mrExport;
@@ -23,7 +23,7 @@ namespace zcExp
 	public:				
 	typedef zEngineRef<ExportGfxStateBlendDX11>	ExportResultRef; //todo use proper ref class
 												ExporterGfxStateBlendDX11_DX11(const ExportResultRef& _rExportOut);
-		static zResID							CallbackGetItemID(zenConst::eResPlatform _ePlatform, zenConst::eResType _eType, zenConst::eResSource _eSource, const ExportInfoBase* _pExportInfo, bool& _bExistOut);
+		static zResID							CallbackGetItemID(ePlatform _ePlatform, zenConst::eResType _eType, zenConst::eResSource _eSource, const ExportInfoBase* _pExportInfo, bool& _bExistOut);
 	protected:	
 		virtual bool							ExportWork(bool _bIsTHRTask);	
 		ExportResultRef							mrExport;
@@ -35,7 +35,7 @@ namespace zcExp
 	public:
 	typedef zEngineRef<ExportGfxStateDepthStencilDX11>	ExportResultRef; //todo use proper ref class
 														ExporterGfxStateDepthStencilDX11_DX11(const ExportResultRef& _rExportOut);
-		static zResID									CallbackGetItemID(zenConst::eResPlatform _ePlatform, zenConst::eResType _eType, zenConst::eResSource _eSource, const ExportInfoBase* _pExportInfo, bool& _bExistOut);
+		static zResID									CallbackGetItemID(ePlatform _ePlatform, zenConst::eResType _eType, zenConst::eResSource _eSource, const ExportInfoBase* _pExportInfo, bool& _bExistOut);
 	protected:	
 		virtual bool									ExportWork(bool _bIsTHRTask);	
 		ExportResultRef									mrExport;
@@ -47,7 +47,7 @@ namespace zcExp
 	public:
 	typedef zEngineRef<ExportGfxStateRasterDX11>	ExportResultRef; //todo use proper ref class
 													ExporterGfxStateRasterDX11_DX11(const ExportResultRef& _rExportOut);
-		static zResID								CallbackGetItemID(zenConst::eResPlatform _ePlatform, zenConst::eResType _eType, zenConst::eResSource _eSource, const ExportInfoBase* _pExportInfo, bool& _bExistOut);
+		static zResID								CallbackGetItemID(ePlatform _ePlatform, zenConst::eResType _eType, zenConst::eResSource _eSource, const ExportInfoBase* _pExportInfo, bool& _bExistOut);
 	protected:	
 		virtual bool								ExportWork(bool _bIsTHRTask);	
 		ExportResultRef								mrExport;

@@ -16,25 +16,26 @@ namespace zen { namespace zenType {
 			kePlatformType_GFX,
 			kePlatformType__Count,
 		};
-		zResID():mhName(""), meType(zenConst::keResType__Invalid), mePlatform(zenConst::keResPlatform__Invalid), meSource(zenConst::keResSource_Runtime){}
-		zResID(NameHash _hName, zenConst::eResPlatform _ePlatform, zenConst::eResType _eType, zenConst::eResSource _eSource):mhName(_hName), meType(_eType), mePlatform(_ePlatform), meSource(_eSource){}								
+		zResID():mhName(""), meType(keResType__Invalid), mePlatform(kePlatform__Invalid), meSource(keResSource_Runtime){}
+		zResID(NameHash _hName, ePlatform _ePlatform, zenConst::eResType _eType, zenConst::eResSource _eSource):mhName(_hName), meType(_eType), mePlatform(_ePlatform), meSource(_eSource){}								
 
-		ZENInline const NameHash&			GetName()const									{ return mhName; }
-		ZENInline zenConst::eResType		GetType()const									{ return static_cast<zenConst::eResType>(meType); }
-		ZENInline zenConst::eResPlatform	GetPlatform()const								{ return static_cast<zenConst::eResPlatform>(mePlatform); } 
-		ZENInline zenConst::eResSource		GetSource()const								{ return static_cast<zenConst::eResSource>(meSource); }
-		ZENInline zU64						GetHashID()const								{ return muHashID; }
-		ZENInline void						SetName(NameHash _hName)						{ mhName = _hName; }
-		ZENInline void						SetType(zenConst::eResType _eResType)			{ meType = _eResType; }
-		ZENInline void						SetPlatform(zenConst::eResPlatform _ePlatform)	{ mePlatform = _ePlatform; }
-		ZENInline void						SetSource(zenConst::eResSource _eSource)		{ meSource = _eSource; }
-		ZENInline bool						IsRuntime()const								{ return meSource==zenConst::keResSource_Runtime; }
-		ZENInline bool						IsExport()const									{ return meSource==zenConst::keResSource_Offline; }
-		ZENInline bool						IsLoaded()const									{ return meSource==zenConst::keResSource_Loaded; }
-		ZENInline bool						IsValid()const									{ return meType < zenConst::keResType__Count; }
-		ZENInline bool						operator==(const zResID& _Compare)const			{return muHashID == _Compare.muHashID;};
-		ZENInline bool						operator!=(const zResID& _Compare)const			{return muHashID != _Compare.muHashID;};
-		const zResID&						operator=(const zResID& _Copy)					{muHashID = _Copy.muHashID; return *this;}
+		zenInline const NameHash&	GetName()const							{ return mhName; }
+		zenInline eResType			GetType()const							{ return meType; }
+		zenInline ePlatform			GetPlatform()const						{ return mePlatform; } 
+		zenInline eResSource		GetSource()const						{ return meSource; }
+		zenInline zU64				GetHashID()const						{ return muHashID; }
+		zenInline void				SetName(NameHash _hName)				{ mhName = _hName; }
+		zenInline void				SetType(zenConst::eResType _eResType)	{ meType = _eResType; }
+		zenInline void				SetPlatform(ePlatform _ePlatform)		{ mePlatform = _ePlatform; }
+		zenInline void				SetSource(zenConst::eResSource _eSource){ meSource = _eSource; }
+		zenInline bool				IsRuntime()const						{ return meSource==keResSource_Runtime; }
+		zenInline bool				IsExport()const							{ return meSource==keResSource_Offline; }
+		zenInline bool				IsLoaded()const							{ return meSource==keResSource_Loaded; }
+		zenInline bool				IsValid()const							{ return meType < keResType__Count; }
+		zenInline bool				operator==(const zResID& _Compare)const	{return muHashID == _Compare.muHashID;};
+		zenInline bool				operator!=(const zResID& _Compare)const	{return muHashID != _Compare.muHashID;};
+		const zResID&				operator=(const zResID& _Copy)			{muHashID = _Copy.muHashID; return *this;}
+		const zResID&				operator=(const zU64& _Copy)			{muHashID = _Copy; zenAssert(meType<keResType__Count && meSource<keResSource__Count && mePlatform<kePlatform__Count); return *this;}
 
 	protected:
 		union
@@ -43,9 +44,9 @@ namespace zen { namespace zenType {
 			struct 
 			{			
 				NameHash	mhName;		//!< Hashed name of the resource
-				zU16		meType;		//!< Resource type (eType)
-				zU8			mePlatform;	//!< Platform this should be used on
-				zU8			meSource;	//!< Source of the resource (eSource)			
+				eResType	meType;		//!< Resource type (eType)
+				ePlatform	mePlatform;	//!< Platform this should be used on
+				eResSource	meSource;	//!< Source of the resource (eSource)			
 			};
 			zU64 muHashID;
 		};

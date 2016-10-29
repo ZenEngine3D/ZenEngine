@@ -7,40 +7,43 @@ namespace zcExp
 	struct ExportInfoGfxShaderBinding : public ExportInfoBase
 	{
 		zArrayStatic<zResID>	maShaderID;			//!< List of shaders to tie together (vertex, pixel, ...)			
-		static zResID			CallbackGetItemID(zenConst::eResPlatform _ePlatform, zenConst::eResType _eType, zenConst::eResSource _eSource, const zcExp::ExportInfoBase* _pExportInfo, bool& _bExistOut);
+		static zResID			CallbackGetItemID(ePlatform _ePlatform, zenConst::eResType _eType, zenConst::eResSource _eSource, const zcExp::ExportInfoBase* _pExportInfo, bool& _bExistOut);
 	};
 
+	//! @todo clean will need a common object for shaderbinsing instance, shared between computer shader and Meshstrip
 	class ExportGfxShaderBinding : public zenRes::zExportData
 	{
 	zenClassDeclare(ExportGfxShaderBinding, zenRes::zExportData)
 	public:
-		//! @class Used to track texture SlotIndex and SlotCount
-		struct TextureSlot //: public zcExp::ISerialize
-		{	
-							TextureSlot() { zenStaticAssertMsg( sizeof(muCollapsedSlots) >= sizeof(zU8)*zenConst::keShaderStage__Count, "More stage that can fit in a zU64" ); }
-			//virtual bool	Serialize( zcExp::Serializer_Base& _Serializer ){ return true; } //! @todo Missing: serialize			 
-			union { zU8 muSlot[zenConst::keShaderStage__Count]; zU64 muCollapsedSlots=0; };
-			union {	zU8 muCount[zenConst::keShaderStage__Count]; zU64 muCollapsedCounts=0; };
+		union ShaderBindInfoIndex
+		{
+			zU8	 muShaderResIndex[keShaderStage__Count];	// Index in each shader stage maResourceBinding
+			zU64 muResourceCollapsed=0xFFFFFFFFFFFFFFFF;
 		};
 
-		//virtual bool				Serialize( zcExp::Serializer_Base& _Serializer ){return true;}
-		zArrayStatic<zResID>		maShaderID;				//!< Shader used in each shader stage
-		zArrayStatic<zResID>		maParamDefID;			//!< Shader parameter definition used by all bound shader stages				//! @todo clean export save/load dictionary instead of 2 arrays
-		zArrayStatic<zU8>			maStagePerParamDef;		//!< Valid stages bitfield for each ShaderParam (index matches maParamDefID array)				
-		zArrayStatic<zHash32>		maTextureName;			//!< List of all texture names used in this binding								//! @todo clean export save/load dictionary instead of 2 arrays
-		zArrayStatic<TextureSlot>	maTextureBind;			//!< Info on texture slots used (1 per TextureName)		
-		zArrayStatic<zHash32>		maParameterName;		//!< List of all parameter names used in this binding							//! @todo clean export save/load dictionary instead of 2 arrays
-		zArrayStatic<zU32>			maParameterMask;		//!< List of ShaderParam parameter are used in (1 entry per maParameterName)				
+		//virtual bool						Serialize( zcExp::Serializer_Base& _Serializer ){return true;}
+		zArrayStatic<zResID>				maShaderID;					//!< ShaderID of each shader stage
+		zArrayStatic<zResID>				maCBufferParentID;			//!< List of CBufferDef ResID used in any shader stages of thsi binding
+		zArrayStatic<zU8>					maCBufferParentBindIndex;	//!< List of CBufferDef index in this binding list of resources (match CBufferParentID)
+		zArrayStatic<zHash32>				maCBufferParamName;			//!< List of parameter names used in any shaders stages of thsi binding
+		zArrayStatic<zU32>					maCBufferParamMask;			//!< List of CBufferDef this parameter name is used in	(match maCBufferParamName)
+		zArrayStatic<zHash32>				maResourceName;				//!< List of resources names used in this binding
+		zArrayStatic<ShaderBindInfoIndex>	maResourceBind;				//!< List of resources binding info in each shader stage (match maResourceName index)
+		
+		//! @todo Clean (should go in common resource class)		
+		zMap<ShaderBindInfoIndex>::Key32	mdResourceBind;				//!< Hashmap of Resources binding info per resource name
+		zMap<zU32>::Key32					mdCBufferParamMask;			//!< Hashmap of which CBufferDefinition a parameter name is in
 	};
 
 	class ExporterGfxShaderBinding : public ExporterBase
 	{
 	zenClassDeclare(ExporterGfxShaderBinding, ExporterBase)
-	public:											
-											ExporterGfxShaderBinding(zenRes::zExportData* _pExportOut);
+	public:						
+	typedef zEngineRef<ExportGfxShaderBinding>	ExportResultRef; //todo use proper ref class
+												ExporterGfxShaderBinding(const ExportResultRef& _rExportOut);
 	protected:	
-		virtual bool						ExportStart();		
-		zMap<zU8>::Key64					mdStagePerParamDef;		//!< ParamDef needed for this binding, with stage mask they applied to (automatically computed at export)
+		virtual bool							ExportStart();		
+		ExportResultRef							mrExport;
 	};
 
 	zResID CreateGfxShaderBinding(const zArrayBase<zResID>& _aShaderID);	

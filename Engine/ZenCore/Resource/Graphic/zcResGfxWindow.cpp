@@ -7,9 +7,9 @@
 namespace zcRes
 {
 
-struct EventHeaderInfo { zU32 muAlignX; const char* mzName; };
+struct EventHeaderInfo { float mfAlignX; const char* mzName; };
 enum eCpuEventHeader{ keCpuEventHdr_Name, keCpuEventHdr_Time, keCpuEventHdr_Parent, keCpuEventHdr_Frame, keCpuEventHdr_GroupCount, keCpuEventHdr__Count};
-static const EventHeaderInfo gaEventCpuHeader[keCpuEventHdr__Count]={ {20, "Event Name"}, {300, "Time"}, {375, "Parent"}, {425, "Frame"}, {475, "Count"} };
+static const EventHeaderInfo gaEventCpuHeader[keCpuEventHdr__Count]={ {20.f, "Event Name"}, {300.f, "Time"}, {375.f, "Parent"}, {425.f, "Frame"}, {475.f, "Count"} };
 
 GfxWindow::GfxWindow()
 {
@@ -39,7 +39,7 @@ zenSig::zSignalEmitter0& GfxWindow::GetSignalUIRender()
 void GfxWindow::FrameBegin()
 {
 	char zFrameNameTemp[256];
-	sprintf(zFrameNameTemp, "Frame %06i", muFrameCount++);
+	sprintf(zFrameNameTemp, "Frame %06i", static_cast<int>(muFrameCount++));
 	zStringHash32 zFrameName(zFrameNameTemp);
 	zcMgr::GfxRender.FrameBegin(this);
 	
@@ -86,17 +86,17 @@ void GfxWindow::FrameEnd()
 	// Auto display event profiling when there's a spike
 	if( mbUIAutoDisplaySpike )
 	{
-		for(zUInt idxEventType(0); idxEventType < keEvtTyp__Count; ++idxEventType)
+		for(zU32 idxEventType(0); idxEventType < keEvtTyp__Count; ++idxEventType)
 		{			
 			if( !mrEventProfiling[idxEventType].IsValid() && muEventValidCount > 8 )
 			{
-				float fTimeTotal(0);
-				for (zUInt idx(1); idx < muEventValidCount; ++idx)
+				double fTimeTotal(0);
+				for (zU32 idx(1); idx < muEventValidCount; ++idx)
 					fTimeTotal += GetHistoryEvent((eEventType)idxEventType, idx)->GetElapsedMs();
 			
 				zenPerf::zEventRef rEvent	= GetHistoryEvent((eEventType)idxEventType, 0);
 				double fAvgTime				= fTimeTotal/(muEventValidCount-1);
-				double fSpikeTime			= fAvgTime * zenMath::Lerp(3.0, 1.25, fAvgTime/5.0 ); //Increase amount of time needed for spike, when running fast and small time change can easily be detected as one
+				double fSpikeTime			= fAvgTime * zenMath::Lerp(3.0, 1.25, static_cast<float>(fAvgTime/5.0) ); //Increase amount of time needed for spike, when running fast and small time change can easily be detected as one
 				if( rEvent->GetElapsedMs() > fSpikeTime )
 				{
 					mbUIEventShow[idxEventType]		= true;
@@ -141,8 +141,8 @@ void GfxWindow::UIRenderFps( )
 		if (ImGui::BeginMainMenuBar())
 		{
 			float StartPos				= ImGui::GetCursorPos().x;
-			float fTimeMsCPU			= rEventCPU->GetElapsedMs();
-			float fTimeMsGPU			= rEventGPU->GetElapsedMs();			
+			float fTimeMsCPU			= static_cast<float>(rEventCPU->GetElapsedMs());
+			float fTimeMsGPU			= static_cast<float>(rEventGPU->GetElapsedMs());
 			ImGui::SameLine(ImGui::GetContentRegionAvailWidth()-100);	// Put fps text on the right side
 			ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.8f, 0.8f, 1.0f, 1.0f));
 			ImGui::Text("CPU:%6.02fms", fTimeMsCPU);
@@ -189,14 +189,14 @@ void GfxWindow::UIRenderStatsHistogram(eEventType _eEventType, const char* _zHis
 	zArrayStatic<float>	aFrameMs;
 	zcRes::GfxWindowRef rWindow						= this;
 	const zUInt uFrameIndex							= rWindow->GetFrameCount();
-	zUInt uStatCount								= 0;
+	int uStatCount									= 0;
 	float fMinFrameMs								= 9999.f;
 	const zArrayStatic<zenPerf::zEventRef>& aEvents	= maEventHistory[_eEventType];
 	aFrameMs.SetCount(muEventValidCount);
 	for (zUInt idx(0); idx < muEventValidCount; ++idx)
 	{
 		const zUInt uHistoryIndex	= (muEventValidIndex + idx) % keEventHistoryCount;
-		float frameMs				= aEvents[uHistoryIndex].IsValid() ? aEvents[uHistoryIndex]->GetElapsedMs() : 0.f;
+		float frameMs				= aEvents[uHistoryIndex].IsValid() ? static_cast<float>(aEvents[uHistoryIndex]->GetElapsedMs()) : 0.f;
 		if (frameMs > 0)
 		{
 			aFrameMs[uStatCount++]	= frameMs;
@@ -259,7 +259,7 @@ void GfxWindow::UIRenderEvents( )
 					ImGui::Text("");
 					for (zUInt idx(0); idx < keCpuEventHdr__Count; ++idx)
 					{
-						ImGui::SameLine(gaEventCpuHeader[idx].muAlignX);
+						ImGui::SameLine(gaEventCpuHeader[idx].mfAlignX);
 						ImGui::Text(gaEventCpuHeader[idx].mzName);
 					}
 					UIRenderEventTree(rEvent, rEvent->GetElapsedMs(), rEvent->GetElapsedMs(), uItemCount);
@@ -326,7 +326,7 @@ void GfxWindow::UIRenderEventTree(const zenPerf::zEventRef& _rProfilEvent, doubl
 	bool bOpenNode = UIRenderEventTreeItem(_rProfilEvent->GetName().mzName, uSibblingCount > 1 ? fSibblingTime : _rProfilEvent->GetElapsedMs(), _fTotalTime, _fParentTime, _uItemCount, uChildCount + uSibblingCount, _uDepth, uChildCount>0);
 	++_uItemCount;
 
-	float fTimeUnscoped = _rProfilEvent->GetElapsedMs()-fTimeChilds;
+	float fTimeUnscoped = static_cast<float>(_rProfilEvent->GetElapsedMs()-fTimeChilds);
 	if( bOpenNode && fTimeUnscoped > 0.001f && uSibblingCount <= 1 )
 	{
 		UIRenderEventTreeItem("Untagged", fTimeUnscoped, _fTotalTime, _rProfilEvent->GetElapsedMs(), _uItemCount, 0, _uDepth+1, false);
@@ -374,36 +374,36 @@ bool GfxWindow::UIRenderEventTreeItem(const zString& _zEventName, double _fEvent
 {
 	const bool bIsHeader	= _uChildCount > 1 && _fEventTime > 0.01f;
 	bool bOpenNode			= false;
-	float fOpacityMul		= bIsHeader > 0 ? 2.5f : 1.f;
+	float fOpacityMul		= bIsHeader ? 2.5f : 1.f;
 
 	ImGui::PushStyleColor(ImGuiCol_Header, _uItemCount % 2 ?		ImVec4(0.4f, 0.2f, 0.2f, 0.15f*fOpacityMul) : ImVec4(0.2f, 0.2f, 0.4f, 0.15f*fOpacityMul));
 	ImGui::PushStyleColor(ImGuiCol_HeaderHovered, _uItemCount % 2 ? ImVec4(0.4f, 0.2f, 0.2f, 0.8f*fOpacityMul)	: ImVec4(0.2f, 0.2f, 0.4f, 0.8f*fOpacityMul));
 	if( bIsHeader )
 	{		
 		bOpenNode = ImGui::CollapsingHeader("", _zEventName, true, _bHeaderStartOpen);
-		ImGui::SameLine(gaEventCpuHeader[keCpuEventHdr_Name].muAlignX + _uDepth*20);
+		ImGui::SameLine(gaEventCpuHeader[keCpuEventHdr_Name].mfAlignX + _uDepth*20);
 	}
 	else
 	{
 		ImGui::Selectable("", true, ImGuiSelectableFlags_SpanAllColumns);
-		ImGui::SameLine(gaEventCpuHeader[keCpuEventHdr_Name].muAlignX + _uDepth*20 - 20);
+		ImGui::SameLine(gaEventCpuHeader[keCpuEventHdr_Name].mfAlignX + _uDepth*20 - 20);
 		ImGui::Bullet();
 	}
 
 	ImGui::Text(_zEventName);
 	if( _fEventTime > 0.0f )
 	{
-		ImGui::SameLine(gaEventCpuHeader[keCpuEventHdr_Time].muAlignX);
+		ImGui::SameLine(gaEventCpuHeader[keCpuEventHdr_Time].mfAlignX);
 		ImGui::Text("%06.3fms", _fEventTime);
-		ImGui::SameLine(gaEventCpuHeader[keCpuEventHdr_Parent].muAlignX);
+		ImGui::SameLine(gaEventCpuHeader[keCpuEventHdr_Parent].mfAlignX);
 		ImGui::Text("%5.3f", _fEventTime / _fParentTime);
-		ImGui::SameLine(gaEventCpuHeader[keCpuEventHdr_Frame].muAlignX);
+		ImGui::SameLine(gaEventCpuHeader[keCpuEventHdr_Frame].mfAlignX);
 		ImGui::Text("%5.3f", _fEventTime / _fTotalTime);
 	}
 
 	if( _uChildCount > 0 )
 	{
-		ImGui::SameLine(gaEventCpuHeader[keCpuEventHdr_GroupCount].muAlignX);
+		ImGui::SameLine(gaEventCpuHeader[keCpuEventHdr_GroupCount].mfAlignX);
 		ImGui::Text("%03i", _uChildCount);
 	}
 

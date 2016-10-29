@@ -17,7 +17,7 @@ namespace zbFile
 		void				Write(zI64& iFilePos, zI64& iFileSize, const void* pxSource, const zU32 uNumBytes);
 		void				Flush();
 	protected:
-		ZENInlineForce void	Copy(const FileInfo_PC &_Copy)	{mhFileHandle = _Copy.mhFileHandle;}
+		zenInlineForce void	Copy(const FileInfo_PC &_Copy)	{mhFileHandle = _Copy.mhFileHandle;}
 		HANDLE				mhFileHandle;
 	};
 }  

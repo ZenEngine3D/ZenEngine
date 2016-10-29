@@ -17,14 +17,14 @@ bool ExporterGfxIndexDX11_DX11::ExportWork(bool _bIsTHRTask)
 	{
 		mrExportData->meIndiceFormat	= DXGI_FORMAT_R16_UINT;
 		mrExportData->muIndiceSize		= 2;
-		mrExportData->muIndiceCount		= pExportInfo->maIndice16.Count();;
+		mrExportData->muIndiceCount		= static_cast<zU32>(pExportInfo->maIndice16.Count());
 		mrExportData->maIndices.Copy( (zU8*)pExportInfo->maIndice16.First(), pExportInfo->maIndice16.SizeMem() );
 	}
 	else
 	{
 		mrExportData->meIndiceFormat	= DXGI_FORMAT_R32_UINT;
 		mrExportData->muIndiceSize		= 4;		
-		mrExportData->muIndiceCount		= pExportInfo->maIndice32.Count();
+		mrExportData->muIndiceCount		= static_cast<zU32>(pExportInfo->maIndice32.Count());
 		mrExportData->maIndices.Copy( (zU8*)pExportInfo->maIndice32.First(), pExportInfo->maIndice32.SizeMem() );
 	}
 	

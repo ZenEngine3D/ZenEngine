@@ -171,5 +171,8 @@ bool ManagerAsset::SaveAll()
 }
 
 } //namespace zeAss
+#else
+
+zenPreventEmptyFileWarning
 
 #endif //ZEN_ENGINETOOL

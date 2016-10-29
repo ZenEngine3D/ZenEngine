@@ -113,5 +113,8 @@ void Package::Delete()
 }
 
 } //namespace zeAss
+#else
+
+zenPreventEmptyFileWarning
 
 #endif //ZEN_ENGINETOOL

@@ -31,7 +31,7 @@ protected:
 	virtual bool				ExportStart();									//!< @brief Called from Thread:Main before the start of export
 	virtual bool				ExportWork(bool _bIsTHRTask){return TRUE;};		//!< @brief Called from Thread:Main or Thread:Task for main export operation (must be threadsafe)
 	virtual bool				ExportEnd();									//!< @brief Called from Thread:Main, for some post export task 
-	ZENInline	void			ExportSkipWork();								//!< @brief Call in ExportStart to avoid launching a job for this
+	zenInline	void			ExportSkipWork();								//!< @brief Call in ExportStart to avoid launching a job for this
 	ExportDataRef				mrExportData	= nullptr;
 	ExportInfoBase*				mpExportInfo	= nullptr;						//!< @brief	Informations needed to export this item (child class a child ExportInfo with parameters specific to them)	
 	
@@ -46,13 +46,13 @@ public:
 	virtual bool ExportStart();
 };
 
-ZENInline void ExporterBase::ExportSkipWork()
+zenInline void ExporterBase::ExportSkipWork()
 {
 	zenAssertMsg(mpExportInfo, "Call only from ExportStart()"); 
 	mpExportInfo->mbSuccessWork = TRUE;
 }
 
-ZENInline zResID ValidateItemID(zenConst::eResPlatform _ePlatform, zenConst::eResType _eType, zenConst::eResSource _eSource, zResID::NameHash _hName, bool& _bExistOut)
+zenInline zResID ValidateItemID(ePlatform _ePlatform, zenConst::eResType _eType, zenConst::eResSource _eSource, zResID::NameHash _hName, bool& _bExistOut)
 {
 	zResID newResID(_hName, _ePlatform, _eType, _eSource);
 	zEngineConstRef<zenRes::zExportData> rExportData	= zcDepot::ExportData.GetAnySource( newResID );

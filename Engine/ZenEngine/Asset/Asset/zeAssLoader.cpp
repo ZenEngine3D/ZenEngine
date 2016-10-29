@@ -16,5 +16,8 @@ void AssetSerializer::AddAsset(const zenAss::zAssetItemRef& _rAsset)
 }
 
 } //namespace zeAss
+#else
+
+zenPreventEmptyFileWarning
 
 #endif //ZEN_ENGINETOOL

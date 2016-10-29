@@ -10,21 +10,21 @@ class zRegion
 {
 zenClassDeclareNoParent(zRegion)
 public:
-	ZENInlineForce zRegion(void); //need to specialize for different types (right now there is a default implementation for zI8, zU8, zI16, zU16, zI32, zU32, zI64, zU64, float, double)
-	ZENInlineForce zRegion(const _Type_ inX1, const _Type_ inY1, const _Type_ inX2, const _Type_ inY2);
-	ZENInlineForce zRegion(const zRegion& xOther);
+	zenInlineForce zRegion(void); //need to specialize for different types (right now there is a default implementation for zI8, zU8, zI16, zU16, zI32, zU32, zI64, zU64, float, double)
+	zenInlineForce zRegion(const _Type_ inX1, const _Type_ inY1, const _Type_ inX2, const _Type_ inY2);
+	zenInlineForce zRegion(const zRegion& xOther);
 
-	ZENInlineForce bool operator!= (const zRegion& xOther);
+	zenInlineForce bool operator!= (const zRegion& xOther);
 
-	ZENInlineForce void Intersect(const zRegion& xBox1, const zRegion& xBox2);
-	ZENInlineForce void Intersect(const zRegion& xBox);
-	ZENInlineForce bool IsInside(_Type_ inX, _Type_ inY);
+	zenInlineForce void Intersect(const zRegion& xBox1, const zRegion& xBox2);
+	zenInlineForce void Intersect(const zRegion& xBox);
+	zenInlineForce bool IsInside(_Type_ inX, _Type_ inY);
 
-	ZENInlineForce void Offset(const zVector2<_Type_>* pxOffset);
-	ZENInlineForce bool IsInside(const zVector2<_Type_>* pxOffset);
+	zenInlineForce void Offset(const zVector2<_Type_>* pxOffset);
+	zenInlineForce bool IsInside(const zVector2<_Type_>* pxOffset);
 
-	ZENInlineForce bool IsZero(void);
-	ZENInlineForce const zRegion& SetZero(void);
+	zenInlineForce bool IsZero(void);
+	zenInlineForce const zRegion& SetZero(void);
 
 	union
 	{

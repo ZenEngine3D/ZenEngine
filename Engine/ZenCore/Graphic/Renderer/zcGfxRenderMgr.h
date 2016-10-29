@@ -24,7 +24,7 @@ public:
 
 	//! @todo Clean: move to more generic ZENFormat testing functions file?
 	bool									IsDepth( zenConst::eTextureFormat _eTexFormat ) const { return _eTexFormat>=zenConst::keTexFormat__DepthFirst && _eTexFormat<=zenConst::keTexFormat__DepthLast; }
-	ZENInline zUInt							GetFrameRendered()const;
+	zenInline zUInt							GetFrameRendered()const;
 protected:
 	zUInt									muFrameRendered = 0;
 };

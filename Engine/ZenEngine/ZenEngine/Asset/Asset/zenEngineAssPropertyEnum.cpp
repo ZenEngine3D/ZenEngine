@@ -68,5 +68,8 @@ const PropertyEnum::ValueRef& PropertyEnum::ValueRef::operator=(const char* _zEn
 }
 
 }} //namespace zen { namespace zenAss
+#else
+
+zenPreventEmptyFileWarning
 
 #endif //ZEN_ENGINETOOL

@@ -15,14 +15,14 @@ namespace zen { namespace zenType
 class zListLink
 {
 public:
-    ZENInline				~zListLink();		
-	ZENInline void			SetNull();							//!< Use to set pointer to null. Doing so will break the list if element was in one
-	ZENInline bool			IsInList()const;					//!< @brief True if this link has been added to a list
+    zenInline				~zListLink();		
+	zenInline void			SetNull();							//!< Use to set pointer to null. Doing so will break the list if element was in one
+	zenInline bool			IsInList()const;					//!< @brief True if this link has been added to a list
 
 protected:
-	ZENInline void			Remove();							//!< @brief Remove item from the list this zListLink belongs to	
-	ZENInline zListLink*	GetNext()const;						//!< @brief Get the next item zListLink object
-	ZENInline zListLink*	GetPrev()const;						//!< @brief Get the previous item zListLink object	
+	zenInline void			Remove();							//!< @brief Remove item from the list this zListLink belongs to	
+	zenInline zListLink*	GetNext()const;						//!< @brief Get the next item zListLink object
+	zenInline zListLink*	GetPrev()const;						//!< @brief Get the previous item zListLink object	
 	zListLink*				mpPrevLink = nullptr;				//!< Pointer to next link (lower bit set to 1 if pointing to list root, invalid)
 	zListLink*				mpNextLink = nullptr;				//!< Pointer to previous link (lower bit set to 1 if pointing to list root, invalid)
 	template<class T, zListLink T::*, bool> friend class zList;

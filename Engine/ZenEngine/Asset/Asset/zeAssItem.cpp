@@ -164,5 +164,8 @@ void TestProperty::slotPropertyUpdate(zenAss::PropertyValueRef _rUpdated)
 }
 
 } //namespace zeAss
+#else
+
+zenPreventEmptyFileWarning
 
 #endif //ZEN_ENGINETOOL

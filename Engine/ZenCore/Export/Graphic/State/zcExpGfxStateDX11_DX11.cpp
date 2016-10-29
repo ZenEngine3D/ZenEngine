@@ -113,9 +113,9 @@ namespace zcExp
 		return TRUE;
 	}
 
-	zResID ExporterGfxSamplerDX11_DX11::CallbackGetItemID(zenConst::eResPlatform _ePlatform, zenConst::eResType _eType, zenConst::eResSource _eSource, const zcExp::ExportInfoBase* _pExportInfo, bool& _bExistOut)
+	zResID ExporterGfxSamplerDX11_DX11::CallbackGetItemID(ePlatform _ePlatform, zenConst::eResType _eType, zenConst::eResSource _eSource, const zcExp::ExportInfoBase* _pExportInfo, bool& _bExistOut)
 	{
-		zenAssert(_ePlatform==zenConst::keResPlatform_DX11 && _eType==zenConst::keResType_GfxSampler);
+		zenAssert(_ePlatform==zenConst::kePlatform_DX11 && _eType==zenConst::keResType_GfxSampler);
 		zenAssert( _pExportInfo );
 		const ExportInfoGfxSampler* pExportInfo	= static_cast<const ExportInfoGfxSampler*>(_pExportInfo);
 		zUInt uSize								= zenOffsetAfter(&ExportInfoGfxSampler::mvBorderColor) - zenOffsetOf(&ExportInfoGfxSampler::meFilterMin);
@@ -163,9 +163,9 @@ namespace zcExp
 		return TRUE;
 	}
 
-	zResID ExporterGfxStateBlendDX11_DX11::CallbackGetItemID(zenConst::eResPlatform _ePlatform, zenConst::eResType _eType, zenConst::eResSource _eSource, const zcExp::ExportInfoBase* _pExportInfo, bool& _bExistOut)
+	zResID ExporterGfxStateBlendDX11_DX11::CallbackGetItemID(ePlatform _ePlatform, zenConst::eResType _eType, zenConst::eResSource _eSource, const zcExp::ExportInfoBase* _pExportInfo, bool& _bExistOut)
 	{
-		zenAssert(_ePlatform==zenConst::keResPlatform_DX11 && _eType==zenConst::keResType_GfxBlend);
+		zenAssert(_ePlatform==zenConst::kePlatform_DX11 && _eType==zenConst::keResType_GfxBlend);
 		zenAssert( _pExportInfo );
 		const ExportInfoGfxStateBlend* pExportInfo	= static_cast<const ExportInfoGfxStateBlend*>(_pExportInfo);
 		zenAssert( pExportInfo->mpaRenderTargetConfig->IsEmpty()==false );
@@ -176,7 +176,7 @@ namespace zcExp
 	//////////////////////////////////////////////////////////////////////////
 	//SerialGfxDepthStencil_DX11
 	//////////////////////////////////////////////////////////////////////////
-	ZENInline void SetDepthStencilOpDesc(D3D11_DEPTH_STENCILOP_DESC& _StencilConfigDX11Out, const zenRes::zGfxRenderPass::ConfigDepthRT::ConfigStencil& _StencilConfigIn)
+	zenInline void SetDepthStencilOpDesc(D3D11_DEPTH_STENCILOP_DESC& _StencilConfigDX11Out, const zenRes::zGfxRenderPass::ConfigDepthRT::ConfigStencil& _StencilConfigIn)
 	{		
 		zenAssert( gaStencilOpTranslator.Count() == zenRes::zGfxRenderPass::ConfigDepthRT::keStencilOp__Count );
 		_StencilConfigDX11Out.StencilFunc			= gaComparisonTestTranslator[_StencilConfigIn.meStencilTest];
@@ -211,9 +211,9 @@ namespace zcExp
 		return TRUE;
 	}
 
-	zResID ExporterGfxStateDepthStencilDX11_DX11::CallbackGetItemID(zenConst::eResPlatform _ePlatform, zenConst::eResType _eType, zenConst::eResSource _eSource, const zcExp::ExportInfoBase* _pExportInfo, bool& _bExistOut)
+	zResID ExporterGfxStateDepthStencilDX11_DX11::CallbackGetItemID(ePlatform _ePlatform, zenConst::eResType _eType, zenConst::eResSource _eSource, const zcExp::ExportInfoBase* _pExportInfo, bool& _bExistOut)
 	{
-		zenAssert(_ePlatform==zenConst::keResPlatform_DX11 && _eType==zenConst::keResType_GfxDepthStencil);
+		zenAssert(_ePlatform==zenConst::kePlatform_DX11 && _eType==zenConst::keResType_GfxDepthStencil);
 		zenAssert( _pExportInfo );
 		const ExportInfoGfxStateDepthStencil* pExportInfo	= static_cast<const ExportInfoGfxStateDepthStencil*>(_pExportInfo);
 		zenAssert( pExportInfo->mpDepthStencilConfig );
@@ -248,9 +248,9 @@ namespace zcExp
 		return TRUE;
 	}
 
-	zResID ExporterGfxStateRasterDX11_DX11::CallbackGetItemID(zenConst::eResPlatform _ePlatform, zenConst::eResType _eType, zenConst::eResSource _eSource, const zcExp::ExportInfoBase* _pExportInfo, bool& _bExistOut)
+	zResID ExporterGfxStateRasterDX11_DX11::CallbackGetItemID(ePlatform _ePlatform, zenConst::eResType _eType, zenConst::eResSource _eSource, const zcExp::ExportInfoBase* _pExportInfo, bool& _bExistOut)
 	{
-		zenAssert(_ePlatform==zenConst::keResPlatform_DX11 && _eType==zenConst::keResType_GfxRaster);
+		zenAssert(_ePlatform==zenConst::kePlatform_DX11 && _eType==zenConst::keResType_GfxRaster);
 		zenAssert( _pExportInfo );
 		const ExportInfoGfxStateRaster* pExportInfo	= static_cast<const ExportInfoGfxStateRaster*>(_pExportInfo);
 		zResID::NameHash hName((void*)&pExportInfo->mRasterConfig, sizeof(zenRes::zGfxStateRaster::Config) );

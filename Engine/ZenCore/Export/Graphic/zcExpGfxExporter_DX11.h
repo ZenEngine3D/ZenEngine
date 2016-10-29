@@ -1,11 +1,5 @@
-#include "Mesh/zcExpGfxIndexDX11_DX11.h"
-#include "Mesh/zcExpGfxVertexDX11_DX11.h"
-#include "Shader/zcExpGfxShaderDX11_DX11.h"
-#include "Shader/zcExpGfxShaderInputSignatureDX11_DX11.h"
-#include "Shader/zcExpGfxShaderParamDefDX11_DX11.h"
-#include "Shader/zcExpGfxShaderParamDX11_DX11.h"
-#include "Surface/zcExpGfxTextureDX11_DX11.h"
-#include "Binding/zcExpGfxShaderBinding_DX11.h"
-#include "State/zcExpGfxStateDX11_DX11.h"
-#include "Buffer/zcExpGfxBuffer_DX11.h"
-
+#include <ZenCore/Export/Graphic/Buffer/zcExpGfxIndexDX11_DX11.h>
+#include <ZenCore/Export/Graphic/Buffer/zcExpGfxBuffer_DX11.h>
+#include <ZenCore/Export/Graphic/Shader/zcExpGfxShaderDX11_DX11.h>
+#include <ZenCore/Export/Graphic/Surface/zcExpGfxTextureDX11_DX11.h>
+#include <ZenCore/Export/Graphic/State/zcExpGfxStateDX11_DX11.h>

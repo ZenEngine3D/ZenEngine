@@ -9,7 +9,7 @@
 //=================================================================================================
 
 #define ZENAlign(_VAR_,_BYTESALIGN_)	__declspec(align(_BYTESALIGN_)) _VAR_
-#define ZENInlineForce					__forceinline 
+#define zenInlineForce					__forceinline 
 #ifdef _MSC_VER 
 #define ZENRestrict						__restrict
 #endif

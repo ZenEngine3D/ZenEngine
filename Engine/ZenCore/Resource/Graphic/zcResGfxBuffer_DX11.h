@@ -10,7 +10,7 @@ class GfxBufferHAL_DX11 : public zcExp::ExportGfxBuffer
 public:	
 	virtual										~GfxBufferHAL_DX11();
 	bool										Initialize();
-	//void										Update(zU8* _pData, zUInt _uOffset = 0, zUInt _uSize = 0xFFFFFFFFFFFFFFFF);
+	void										Update(zU8* _pData, zUInt _uOffset = 0, zUInt _uSize = 0xFFFFFFFFFFFFFFFF);
 
 	ID3D11Buffer*								mpBuffer;
 	ID3D11ShaderResourceView*					mpSRV;

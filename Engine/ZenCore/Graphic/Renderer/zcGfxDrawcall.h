@@ -75,9 +75,9 @@ public:
 	static float			sfCommandCount;			//!< Number of command issued this frame. Used to set command priority when sorting. (made it a float to avoid float/int conversion cost for each drawcall)
 protected:
 							Command();
-	ZENInline void			SetSortKeyDraw		( const zcRes::GfxRenderPassRef& _rRenderPass, float _fPriority, const zcRes::GfxMeshStripRef& _rMeshStrip ); 	
-	ZENInline void			SetSortKeyCompute	( const zcRes::GfxRenderPassRef& _rRenderPass, float _fPriority, zU32 _uShaderBindingID, bool _bBeforeDraw=true);
-	ZENInline void			SetSortKeyDataUpdate( zU64 _uResID ); 	
+	zenInline void			SetSortKeyDraw		( const zcRes::GfxRenderPassRef& _rRenderPass, float _fPriority, const zcRes::GfxMeshStripRef& _rMeshStrip ); 	
+	zenInline void			SetSortKeyCompute	( const zcRes::GfxRenderPassRef& _rRenderPass, float _fPriority, zU32 _uShaderBindingID, bool _bBeforeDraw=true);
+	zenInline void			SetSortKeyDataUpdate( zU64 _uResID ); 	
 };
 
 class CommandDraw : public Command
@@ -138,15 +138,15 @@ protected:
 	zUInt						muSize;
 };
 
-class CommandUpdateVertex : public Command
+class CommandUpdateBuffer : public Command
 {
-zenClassDeclare(CommandUpdateVertex, Command)
+zenClassDeclare(CommandUpdateBuffer, Command)
 public:
-	static zEngineRef<Command>	Create( const zcRes::GfxVertexRef& _rVertex, zU8* _pData, zUInt _uOffset=0, zUInt _uSize=0xFFFFFFFFFFFFFFFF);
+	static zEngineRef<Command>	Create( const zcRes::GfxBufferRef& _rBuffer, zU8* _pData, zUInt _uOffset=0, zUInt _uSize=0xFFFFFFFFFFFFFFFF);
 	virtual void				Invoke();
 
 protected:	
-	zcRes::GfxVertexRef			mrVertex;
+	zcRes::GfxBufferRef			mrBuffer;
 	zU8*						mpData;
 	zUInt						muOffset;
 	zUInt						muSize;

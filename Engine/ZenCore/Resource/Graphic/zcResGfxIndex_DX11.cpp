@@ -20,7 +20,7 @@ bool GfxIndexHAL_DX11::Initialize()
 	D3D11_USAGE eUsage(D3D11_USAGE_DYNAMIC);
 	UINT uCpuAccess(D3D11_CPU_ACCESS_WRITE);
 	D3D11_BUFFER_DESC IndexDesc;
-	IndexDesc.ByteWidth				= maIndices.SizeMem();
+	IndexDesc.ByteWidth				= static_cast<UINT>(maIndices.SizeMem());
 	IndexDesc.Usage					= eUsage;
 	IndexDesc.BindFlags				= D3D11_BIND_INDEX_BUFFER;
 	IndexDesc.CPUAccessFlags		= uCpuAccess;
@@ -31,7 +31,7 @@ bool GfxIndexHAL_DX11::Initialize()
 	InitData.pSysMem				= maIndices.First();
 	InitData.SysMemPitch			= 0;
 	InitData.SysMemSlicePitch		= 0;
-	HRESULT hr = zcMgr::GfxRender.DX11GetDevice()->CreateBuffer(&IndexDesc, &InitData, &mpIndiceBuffer);
+	HRESULT hr						= zcMgr::GfxRender.DX11GetDevice()->CreateBuffer(&IndexDesc, &InitData, &mpIndiceBuffer);
 
 	return SUCCEEDED(hr);
 }
