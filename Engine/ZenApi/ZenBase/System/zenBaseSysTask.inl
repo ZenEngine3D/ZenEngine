@@ -17,7 +17,7 @@ bool zTask::IsRunning()
 
 zUInt zTask::GetElapsedUSec()
 {
-	return muElapsed + (IsRunning() ? (zenSys::GetTimeUSec() - muProfilingTimer) : 0);
+	return static_cast<zUInt>(muElapsed + (IsRunning() ? (zenSys::GetTimeUSec() - muProfilingTimer) : 0));
 }
 
 }}

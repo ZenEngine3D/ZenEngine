@@ -28,7 +28,7 @@ PropertyValueRef PropertyArray::Allocate(const zAssetItemRef& _rOwnerAsset)const
 	//! @todo Clean : Removing const qualifier, since 'zGameConstRef' doesn't take a const reference at the moment...
 	//					We know that all accessors won't modify the object, except for ReferenceAdd/Rem with mRerCount needing to be mutable.
 	ValueRef rArrayVal = zenNew(&sAllocPool) ValueProperty(_rOwnerAsset, this);
-	ValueStorage aArrayVal( mDefault.Count() );
+	ValueStorage aArrayVal( (zU32)mDefault.Count() );
 	for(zUInt idx(0), count(mDefault.Count()); idx<count; ++idx)
 		aArrayVal[idx] = mDefault[idx].Clone(_rOwnerAsset);
 
@@ -43,7 +43,7 @@ PropertyValueRef PropertyArray::Clone(const zAssetItemRef& _rOwnerAsset, const P
 	ValueRef rValueToClone				= _rValue;	
 	ValueRef rValueCloned 				= zenNew(&sAllocPool) ValueProperty(rValueToClone->mrOwnerAsset, this);	
 	const ValueStorage& aArrayToClone	= rValueToClone.GetValue();	
-	ValueStorage aArrayCloned(aArrayToClone.Count());	
+	ValueStorage aArrayCloned((zU32)aArrayToClone.Count());	
 	for(zUInt idx(0), count(aArrayToClone.Count()); idx<count; ++idx)
 		aArrayCloned[idx] = aArrayToClone[idx].Clone(_rValue->mrOwnerAsset);
 	

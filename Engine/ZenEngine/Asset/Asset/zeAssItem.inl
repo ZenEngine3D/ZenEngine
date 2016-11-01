@@ -78,7 +78,7 @@ zInt AssetTyped<AssetTypedType>::GetValueIndex(zHash32 _hPropertyName)const
 	if( !sbInit )
 	{
 		const zenAss::PropertyDefArray& aPropertyDef = GetProperties();
-		sdPropertyIndex.Init(aPropertyDef.Count()*2);
+		sdPropertyIndex.Init( static_cast<zU32>(aPropertyDef.Count()*2) );
 		sdPropertyIndex.SetDefaultValue(-1);
 		for(zInt idx(0), count(aPropertyDef.Count()); idx<count; ++idx)
 			sdPropertyIndex.Set( aPropertyDef[idx]->mName.mhName, idx );

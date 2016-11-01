@@ -25,11 +25,11 @@ public:
 	void												InitDefault();
 	void												Init(zenAss::zAssetID _AssetID, const char* _zName, const zenAss::zPackageRef& _ParentPkg);
 	void												SetPackage(const zenAss::zPackageRef& _rParentPkg);
-	ZENForceInline const zenAss::zPackageRef&			GetPackage(){ return mrPackage; }
+	zenForceInline const zenAss::zPackageRef&			GetPackage(){ return mrPackage; }
 
-	ZENForceInline zUInt								GetValueCount()const;
-	ZENForceInline zenAss::PropertyValueRef				GetValue(zUInt _uValIndex);
-	ZENForceInline zenAss::PropertyValueRef				GetValue(zHash32 _hPropertyName);
+	zenForceInline zUInt								GetValueCount()const;
+	zenForceInline zenAss::PropertyValueRef				GetValue(zUInt _uValIndex);
+	zenForceInline zenAss::PropertyValueRef				GetValue(zHash32 _hPropertyName);
 
 	virtual const zenAss::PropertyDefArray&				GetProperties()const = 0;								//!< Child class return the list of property definition they are made of
 	virtual zInt										GetValueIndex(zHash32 _hPropertyName)const = 0;

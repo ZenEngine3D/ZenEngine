@@ -1,8 +1,6 @@
 vDefaultCppExt			= {".h", ".inl", ".cpp"}
 vLibEngineGame 			= {"libZenBase", "libZenCore", "libZenEngine", "libZenExternal", "lib3rdImgui"  }
 vLibEngineTool 			= {"libZenBase", "libZenCore", "libZenEngine", "libZenExternal", "lib3rdImgui", "lib3rdPugiXml" }
-bLibEngineGameRender	= {"d3d11", "d3dcompiler", "dxguid"}	--TODO per platform config
-bLibEngineToolRender	= {"d3d11", "d3dcompiler", "dxguid"}
 
 --[[ Useful bit of code 
 if vPath:sub(vPath,-1) ~= '/' then
@@ -15,46 +13,76 @@ if vPath:sub(vPath,-1) ~= '/' then
 -- 	Setup the build parameter per build/platform configuration
 -- ============================================================================
 function Orion_ConfigureBuild()
-	local vIsLib = kind() == "StaticLib"	
+
+	--[[ Configurations ]]--
+	language 			( "C++" )	
+	filter 'configurations:Debug'
+		defines			{"DEBUG", "_DEBUG", "ZEN_BUILD_DEBUG"}
+		flags 			{"FatalWarnings", "FatalCompileWarnings"}
+		optimize		'Off'
+		symbols			'On'
+		targetsuffix 	'_%{cfg.platform}_Deb'
+	filter 'configurations:Release'
+		defines			{'NDEBUG', 'ZEN_BUILD_RELEASE'}
+		flags 			{ }
+		optimize		'On'
+		symbols			'On'
+		targetsuffix 	'_%{cfg.platform}_Rel'
+	filter 'configurations:Final'
+		defines			{'NDEBUG', 'ZEN_BUILD_FINAL'}
+		flags 			{ }
+		optimize		'On'
+		symbols			'Off'
+		targetsuffix 	'_%{cfg.platform}_Fin'
+	filter {}
 	
-	--[[ Build version config ]]--
-	configuration		( "Debug" )
-		defines			( {"DEBUG", "_DEBUG", "ZEN_BUILD_DEBUG"} )
-		flags 			( {"Symbols","FatalWarnings"} )
-		optimize		( "Off" )
-		targetsuffix 	( "_Deb" )
-	configuration 		( "Release" )
-		defines			( {"NDEBUG", "ZEN_BUILD_RELEASE"} )
-		flags 			( {"Symbols"} )
-		optimize		( "On" )
-		targetsuffix 	( "_Rel")
-	configuration 		( "Final" )
-		defines			( {"NDEBUG", "ZEN_BUILD_FINAL"} )
-		optimize		( "Full" )
+	--[[ Platforms ]]--	
+	filter 'platforms:PC*' 
+		system 			'Windows'
+		defines			{'WIN32', '_WINDOWS', 'ZEN_PLATFORM=PC', 'ZEN_PLATFORM_PC=1', 'ZEN_RENDERER=DX11', 'ZEN_RENDERER_DX11=1'}
+		flags 			{'EnableSSE2'}
 	
-	--[[ Platform ]]--
-	configuration		( "PC*")
-		system 			( "Windows")
-		defines			( {"WIN32","_WINDOWS", "ZEN_PLATFORM=PC", "ZEN_PLATFORM_PC=1", "ZEN_RENDERER=DX11", "ZEN_RENDERER_DX11=1"})
-		debugdir		( vSourceRoot .. "/Build/Content")
-	--[[	
-	configuration		( "PCGame32")
-		architecture 	( "x32")
-		defines			( {"ZEN_ENGINEGAME=1"})
-		targetdir 		( vOutputRoot .. iif(vIsLib, "/" .. project().name .. "/Game32", "/../[Bin]/Windows32") )
-	configuration 		( "PCTool32")
-		architecture 	( "x32")
-		defines			( {"ZEN_ENGINETOOL=1"})
-		targetdir 		( vOutputRoot .. iif(vIsLib, "/" .. project().name .. "/Tool32", "/../[Bin]/Windows32") )
-	]]--	
-	configuration 		( "PCGame64")
-		architecture 	( "x64")		
-		defines			( {"ZEN_ENGINEGAME=1"})
-		targetdir 		( vOutputRoot .. iif(vIsLib, "/" .. project().name .. "/Game64", "/../[Bin]/Windows64") )	
-	configuration 		( "PCTool64")
-		architecture 	( "x64")
-		defines			( {"ZEN_ENGINETOOL=1"})
-		targetdir 		( vOutputRoot .. iif(vIsLib, "/" .. project().name .. "/Tool64", "/../[Bin]/Windows64") )	
+	filter 'platforms:*64*'							architecture 	'x64'	
+	filter 'platforms:PCTool*'						defines			{'ZEN_ENGINETOOL=1'}
+	filter 'platforms:not PCTool*'					defines			{'ZEN_ENGINEGAME=1'}
+	filter {}
+	
+	--[[ Output Dir ]]--
+	objdir 	( vOutputRoot .. '/%{prj.name}/obj' )
+	debugdir( vSourceRoot .. "/Build/Content" )
+	filter { 'kind:ConsoleApp' }					targetdir(vOutputRoot .. '/../[Bin]/%{cfg.platform}')		
+	filter { 'kind:SharedLib or StaticLib' }		targetdir('%{cfg.objdir}')
+		
+	--[[ Remove compiling of platform specific files not valid for current build ]]--	
+	filter {'files:**_*', 'files:not **_Base.*'}	flags { "ExcludeFromBuild" }
+	filter {'platforms:PC*', 'files:**_PC.*' }		removeflags { "ExcludeFromBuild" }
+	filter {'platforms:*DX11', 'files:**_DX11.*' }	removeflags { "ExcludeFromBuild" }
+	filter {'platforms:*DX12', 'files:**_DX12.*' }	removeflags { "ExcludeFromBuild" }
+	
+	filter {}
+end
+
+function Orion_AddGameLibs()
+	filter {'platforms:*DX11'}
+		links	{vLibEngineGame, "d3d11", "d3dcompiler", "dxguid"}
+		--{vLibEngineGame, bLibEngineGameRender, aLibs}
+		--bLibEngineGameRender	= 	--TODO per platform config
+	filter {'platforms:*DX12'}
+	
+	filter{}
+	
+--vLibEngineGame 			= {"libZenBase", "libZenCore", "libZenEngine", "libZenExternal", "lib3rdImgui"  }
+--vLibEngineTool 			= {"libZenBase", "libZenCore", "libZenEngine", "libZenExternal", "lib3rdImgui", "lib3rdPugiXml" }
+end
+
+function Orion_AddToolLibs()
+	filter {'platforms:*DX11'}
+		links	{vLibEngineTool, "d3d11", "d3dcompiler", "dxguid"}
+		--bLibEngineGameRender	= {"d3d11", "d3dcompiler", "dxguid"}	--TODO per platform config
+	filter {'platforms:*DX12'}
+	
+	filter{}
+bLibEngineToolRender	= {"d3d11", "d3dcompiler", "dxguid"}
 end
 
 -- ============================================================================
@@ -68,7 +96,8 @@ function Orion_ConfigurePCH(aPathList, aPchFile)
 	if #aPchFile == 0 then return end
 	
 	vPchDir 		= ""
-	vPchNameHeader 	= path.getbasename(aPchFile) .. ".h"	
+	vPchNameHeader 	= path.getbasename(aPchFile) .. ".h"
+
 	if os.isfile( vSourceRoot .. "/" .. aPchFile ) then
 		vPchDir	= path.getdirectory(vSourceRoot .. "/" .. aPchFile)
 	end
@@ -98,7 +127,6 @@ function Orion_ConfigurePCH(aPathList, aPchFile)
 	files			( vPchNameSource )
 	pchsource		( vPchNameSource )
 	pchheader		( vPchNameHeader )	
-	
 end
 
 -- ============================================================================
@@ -107,26 +135,27 @@ end
 -- 		aPchFile		: Name of PCH header filename ("" if none is used)
 -- 		aFilesExt		: List of supported files extensions to add
 -- ============================================================================
-function Orion_AddProjectCommon(aFilesExt, aPathList, aPchFile )			
+function Orion_AddProjectCommon(aFilesExt, aPathList, aPchFile )				
 	os.mkdir		( vOutputRoot .. "/" .. project().name ) -- Needed for pch file creation
-	location 		( vOutputRoot .. "/" .. project().name )
-	objdir			( vOutputRoot .. "/" .. project().name .. "/obj" )
+	location 		( vOutputRoot .. "/" .. project().name )	
 	includedirs 	( {vSourceRoot, vSourceRoot .. "/Engine", vSourceRoot .. "/Engine/ZenApi"} )
-	-- ToDo find more generalize way to do this
-	vpaths 			( {["Api/*"] = "../../../Engine/ZenApi/ZenBase" } )
-	vpaths 			( {["Api/*"] = "../../../Engine/ZenApi/ZenCore" } )
-	vpaths 			( {["Api/*"] = "../../../Engine/ZenApi/ZenEngine" } )
-	language 		( "C++" )	
-	Orion_ConfigurePCH	( aPathList, aPchFile )
 	
-	for i, vPath in ipairs(aPathList) do 		
+	-- ToDo find more generalize way to do this
+	vpaths 			( {["Api/*"] = vSourceRoot .. "/Engine/ZenApi/ZenBase/*" } )
+	vpaths 			( {["Api/*"] = vSourceRoot .. "/Engine/ZenApi/ZenCore/*" } )
+	vpaths 			( {["Api/*"] = vSourceRoot .. "/Engine/ZenApi/ZenEngine/*" } )
+	vpaths 			( {["Api/*"] = vSourceRoot .. "/Engine/ZenBase/ZenBase/*" } )
+	vpaths 			( {["Api/*"] = vSourceRoot .. "/Engine/ZenCore/ZenCore/*" } )
+	vpaths 			( {["Api/*"] = vSourceRoot .. "/Engine/ZenEngine/ZenEngine/*" } )
+	
+	Orion_ConfigurePCH	( aPathList, aPchFile )	
+	for i, vPath in ipairs(aPathList) do
+		vpaths( {["*"] = vSourceRoot .. "/" .. vPath } )
 		for j, vExt in ipairs(aFilesExt) do 
 			files( vSourceRoot .. "/" .. vPath .. vExt )			
 			--print("[" .. project().name .. "] Adding : " .. vPath .. vExt)
-		end
-		vpaths( {["*"] = vSourceRoot .. "/" .. vPath .. "/**" } )
+		end 
 	end
-	
 	Orion_ConfigureBuild()
 end
 
@@ -142,18 +171,13 @@ function Orion_AddProjectWxWidget()
 	vLibsDebug = {"wxmsw31ud_core", "wxbase31ud", "wxmsw31ud_aui", "wxmsw31ud_propgrid", "wxmsw31ud_adv", "wxjpegd", "wxpngd", "wxzlibd", "wxregexud", "wxexpatd", "wxtiffd"}
 	vLibsRelease = {"wxmsw31u_core", "wxbase31u", "wxmsw31u_aui", "wxmsw31u_propgrid", "wxmsw31u_adv", "wxjpeg", "wxpng", "wxzlib", "wxregexu", "wxexpat", "wxtiff"}
 	
-	configuration		( {} )
-		includedirs		( {vSourceRoot .. "/Engine/ThirdParty/[wxWidgets]/include"} )
-		includedirs		( {vSourceRoot .. "/Engine/ThirdParty/[wxWidgets]/include/msvc"} )	
-		defines			( {"WXUSINGDLL=1", "wxMSVC_VERSION=140"} )		
-	configuration		( "*64")
-		libdirs 		(vSourceRoot .. "/Engine/ThirdParty/[wxWidgets]/lib/vc140_x64_dll")
-	configuration( "PC*" )	
+	includedirs		{vSourceRoot .. "/Engine/ThirdParty/[wxWidgets]/include"}
+	includedirs		{vSourceRoot .. "/Engine/ThirdParty/[wxWidgets]/include/msvc"}
+	defines			{"WXUSINGDLL=1", "wxMSVC_VERSION=140"}
+	links			{vLibsRelease}
+	filter 'platforms:PC*64'
+		libdirs 		{vSourceRoot .. "/Engine/ThirdParty/[wxWidgets]/lib/vc140_x64_dll"}
+	filter 'platforms:PC*'
 		postbuildcommands { "xcopy \"" .. vSourceRoot .. "/Engine/ThirdParty/[wxWidgets]/lib/vc140_x64_dll\\*.dll\" \"$(TargetDir)\" /Y /D" } --xcopy doesn't support '/' with wirldcard, so last one is a '\'
-	configuration		( "Debug" )
-		links			( vLibsRelease )
-	configuration 		( "Release" )
-		links			( vLibsRelease )
-	configuration 		( "Final" )
-		links			( vLibsRelease )	
+	filter {}
 end

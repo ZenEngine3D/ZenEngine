@@ -12,6 +12,10 @@ Orion_AddGameAndToolLib("libZenExternal",	"ZenEngine",	{"Engine/ZenExternal/**",
 Orion_AddGameAndToolLib("lib3rdPugiXml",	"ZenEngine/ThirdParty",	{"Engine/ThirdParty/pugixml/src/*"},				"")
 Orion_AddGameAndToolLib("lib3rdImgui",		"ZenEngine/ThirdParty",	{"Engine/ThirdParty/imgui/*"},						"")
 
+-- Need to remove the nocompile flag on imgui, since their filenames conflict with our 'filename_platformtype' convention
+filter {'files:**imgui_*' }	removeflags { "ExcludeFromBuild" }
+filter {}
+
 -------------------------------------------------------------------------------
 -- Engine Samples
 -------------------------------------------------------------------------------

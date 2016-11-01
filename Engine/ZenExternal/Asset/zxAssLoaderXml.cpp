@@ -111,7 +111,7 @@ void LoadPropertyValue( const zenAss::PropertyValueRef& _rValue, const pugi::xml
 		zenAss::PropertyArray::ValueRef rValueTyped(_rValue);
 		zUInt uCount	= _Node.attribute("Num").as_uint();
 		uCount			= zenMath::Clamp( uCount, rValueTyped.GetDefinition().muEntryCountMin, rValueTyped.GetDefinition().muEntryCountMax );				
-		zenAss::PropertyArray::ValueStorage aArrayVal( uCount );
+		zenAss::PropertyArray::ValueStorage aArrayVal( (zU32)uCount );
 		for (pugi::xml_node _NodeChild = _Node.child(kzXmlName_Node_Property); _NodeChild; _NodeChild = _NodeChild.next_sibling(kzXmlName_Node_Property))
 		{
 			zInt idx = _NodeChild.attribute("Index").as_int()-1;

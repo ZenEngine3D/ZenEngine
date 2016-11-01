@@ -14,7 +14,7 @@
 #define	ZEN_EXPORT_PC				ZEN_BUILD_PC_GAMEORTOOL
 
 #define zenInline					__inline
-#define ZENForceDebugInline			__forceinline
+#define zenForceDebugInline			__forceinline
 #if !ZEN_BUILD_DEBUG
 	#define zenForceInline			__forceinline
 #else

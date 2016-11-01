@@ -1,14 +1,10 @@
---vPlatformGame 	= {"PCGame32", "PCGame64"}
---vPlatformTool 	= {"PCTool32", "PCTool64"}
-vPlatformGame 	= {"PCGame64"}
-vPlatformTool 	= {"PCTool64"}
+vPlatformGame 	= {'PC64DX11','PC64DX12'}
+vPlatformTool 	= {'PCTool64DX11','PCTool64DX12'}
 vPlatformAll 	= {vPlatformGame, vPlatformTool}
-
 solution( "Zen" )    
     location 			( vOutputRoot )
 	configurations		( {"Debug", "Release", "Final"} )
 	platforms 			( vPlatformAll )
-	flags				( {"Unicode"} )
-	
+	characterset 		( "Unicode" )
 	dofile("Engine/PRJEngine.lua")
 	dofile("Tool/PRJTool.lua")

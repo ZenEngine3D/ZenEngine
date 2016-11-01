@@ -11,8 +11,8 @@ PropertyDefRef PropertyEnum::Create( const char* _zName, const char* _zDisplayNa
 	PropertyEnum* pNewDefinition	= zenNew(&sAllocPool) zenAss::PropertyEnum(_zName, _zDisplayName, _zDescription, _bShowInAssetDesc, _bIsEditable);
 	pNewDefinition->mDefault		= _Default;
 	pNewDefinition->maEnumValues.Copy(_pEntries, _uEntryCount);
-	pNewDefinition->mdKeyToIndex.Init(_uEntryCount*2);
-	pNewDefinition->maValueToIndex.Init(_uEntryCount*2);
+	pNewDefinition->mdKeyToIndex.Init( (zU32)_uEntryCount*2);
+	pNewDefinition->maValueToIndex.Init((zU32)_uEntryCount*2);
 	for(zUInt idx(0); idx<_uEntryCount; ++idx)
 	{
 		pNewDefinition->mdKeyToIndex.Set(_pEntries[idx].mValueKey.mhName, idx);
