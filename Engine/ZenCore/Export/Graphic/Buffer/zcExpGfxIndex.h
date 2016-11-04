@@ -26,5 +26,6 @@ namespace zcExp
 }
 
 #include "zcExpGfxIndexDX11.h"
+#include "zcExpGfxIndexDX12.h"
 
 #endif

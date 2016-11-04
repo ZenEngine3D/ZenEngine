@@ -36,5 +36,6 @@ namespace zcExp
 }
 
 #include "zcExpGfxStateDX11.h"
+#include "zcExpGfxStateDX12.h"
 
 #endif

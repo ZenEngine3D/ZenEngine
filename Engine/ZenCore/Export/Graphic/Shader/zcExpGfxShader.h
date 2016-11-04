@@ -41,5 +41,6 @@ namespace zcExp
 }
 
 #include "zcExpGfxShaderDX11.h"
+#include "zcExpGfxShaderDX12.h"
 
 #endif

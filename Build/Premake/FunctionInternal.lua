@@ -38,10 +38,12 @@ function Orion_ConfigureBuild()
 	
 	--[[ Platforms ]]--	
 	filter 'platforms:PC*' 
-		system 			'Windows'
-		defines			{'WIN32', '_WINDOWS', 'ZEN_PLATFORM=PC', 'ZEN_PLATFORM_PC=1', 'ZEN_RENDERER=DX11', 'ZEN_RENDERER_DX11=1'}
+		system 			'Windows'		
 		flags 			{'EnableSSE2'}
-	
+		
+	filter 'platforms:PC*'							defines			{'WIN32', '_WINDOWS', 'ZEN_PLATFORM=PC', 'ZEN_PLATFORM_PC=1'}
+	filter 'platforms:*DX11' 						defines			{'ZEN_RENDERER=DX11', 'ZEN_RENDERER_DX11=1'}
+	filter 'platforms:*DX12' 						defines			{'ZEN_RENDERER=DX12', 'ZEN_RENDERER_DX12=1'}	
 	filter 'platforms:*64*'							architecture 	'x64'	
 	filter 'platforms:PCTool*'						defines			{'ZEN_ENGINETOOL=1'}
 	filter 'platforms:not PCTool*'					defines			{'ZEN_ENGINEGAME=1'}
@@ -62,27 +64,16 @@ function Orion_ConfigureBuild()
 	filter {}
 end
 
-function Orion_AddGameLibs()
-	filter {'platforms:*DX11'}
-		links	{vLibEngineGame, "d3d11", "d3dcompiler", "dxguid"}
-		--{vLibEngineGame, bLibEngineGameRender, aLibs}
-		--bLibEngineGameRender	= 	--TODO per platform config
-	filter {'platforms:*DX12'}
-	
-	filter{}
-	
---vLibEngineGame 			= {"libZenBase", "libZenCore", "libZenEngine", "libZenExternal", "lib3rdImgui"  }
---vLibEngineTool 			= {"libZenBase", "libZenCore", "libZenEngine", "libZenExternal", "lib3rdImgui", "lib3rdPugiXml" }
+function Orion_AddGameLibs()	
+	filter {'platforms:*DX11'}	links	{"d3d11", "d3dcompiler", "dxguid"}
+	filter {'platforms:*DX12'}	links	{"d3d11", "d3dcompiler", "dxguid"}
+	filter{} 					links	{vLibEngineGame}
 end
 
-function Orion_AddToolLibs()
-	filter {'platforms:*DX11'}
-		links	{vLibEngineTool, "d3d11", "d3dcompiler", "dxguid"}
-		--bLibEngineGameRender	= {"d3d11", "d3dcompiler", "dxguid"}	--TODO per platform config
-	filter {'platforms:*DX12'}
-	
-	filter{}
-bLibEngineToolRender	= {"d3d11", "d3dcompiler", "dxguid"}
+function Orion_AddToolLibs()	
+	filter {'platforms:*DX11'}	links	{"d3d11", "d3dcompiler", "dxguid"}
+	filter {'platforms:*DX12'}	links	{"d3d11", "d3dcompiler", "dxguid"}
+	filter{}					links	{vLibEngineTool}
 end
 
 -- ============================================================================

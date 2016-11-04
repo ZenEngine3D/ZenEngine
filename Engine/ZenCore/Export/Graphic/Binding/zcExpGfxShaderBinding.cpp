@@ -4,7 +4,7 @@ namespace zcExp
 {
 	zResID ExportInfoGfxShaderBinding::CallbackGetItemID(ePlatform _ePlatform, zenConst::eResType _eType, zenConst::eResSource _eSource, const zcExp::ExportInfoBase* _pExportInfo, bool& _bExistOut)
 	{
-		zenAssert(_ePlatform==zenConst::kePlatform_DX11 && _eType==zenConst::keResType_GfxShaderBinding);
+		zenAssert(_eType==zenConst::keResType_GfxShaderBinding);
 		zenAssert( _pExportInfo );
 		const ExportInfoGfxShaderBinding* pExportInfo = static_cast<const ExportInfoGfxShaderBinding*>(_pExportInfo);
 

@@ -3,5 +3,6 @@
 #define __zCore_Exp_Gfx_Window_Base_h__
 
 #include "zcExpGfxWindowDX11.h"
+#include "zcExpGfxWindowDX12.h"
 
 #endif

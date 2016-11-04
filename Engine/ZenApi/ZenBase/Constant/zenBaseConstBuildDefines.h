@@ -69,6 +69,7 @@
 //=================================================================================================
 //! Support for multi-platform file include
 //=================================================================================================
+//! @todo 2 This should be only on engine side, no api
 #define ZENComma								,															//Useful to insert a comma, inside a macro call, without interpreting it as a new macro parameter
 #define ZENStringDefineB(_S_)					#_S_														//Convert parameter into a string
 #define ZENStringDefine(_S_)					ZENStringDefineB(_S_)										//Convert content of a define into a string

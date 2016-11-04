@@ -5,13 +5,6 @@
 namespace zen { 
 	namespace zenConst 
 	{
-	#if 0
-		template<typename TEnum>
-		constexpr auto zEnumInt(TEnum _EnumVal) -> typename std::underlying_type<TEnum>::type 
-		{
-			return static_cast<typename std::underlying_type<TEnum>::type>(_EnumVal);
-		}
-	#endif
 		enum eResSource : zU8
 		{
 			keResSource_Offline,	//!< Being exported in offline mode (converted to 'Loaded' on save)
@@ -23,12 +16,16 @@ namespace zen {
 
 		enum ePlatform : zU8
 		{
-			//--- Renderer ---
-			kePlatform_DX11,
+			//--- Graphics Api ---
+			kePlatform__GfxFirst,
+			kePlatform_DX11=kePlatform__GfxFirst,
+			kePlatform_DX12,
+			kePlatform__GfxLast=kePlatform_DX12,
 
 			//--- OS ---
-			kePlatform_Window,
-
+			kePlatform__OSFirst,
+			kePlatform_Window=kePlatform__OSFirst,
+			kePlatform__OSLast=kePlatform_Window,
 			//--- ... ---
 			kePlatform__Count,
 			kePlatform__Invalid=kePlatform__Count,
