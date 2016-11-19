@@ -1,6 +1,7 @@
 #include "zcCore.h"
 
 #if ZEN_EXPORT_DX12
+//SF DX12 
 
 namespace zcExp
 {
@@ -51,15 +52,15 @@ namespace zcExp
 			};
 
 	//////////////////////////////////////////////////////////////////////////
-	//ExporterGfxSamplerDX11_DX11
+	//ExporterGfxSamplerDX12_DX12
 	//////////////////////////////////////////////////////////////////////////
-	ExporterGfxSamplerDX11_DX11::ExporterGfxSamplerDX11_DX11(const ExportResultRef& _rExportOut)
+	ExporterGfxSamplerDX12_DX12::ExporterGfxSamplerDX12_DX12(const ExportResultRef& _rExportOut)
 	: ExporterBase(_rExportOut.GetSafe())
 	, mrExport(_rExportOut)
 	{
 		zenAssert(mrExport.IsValid());
 	}
-	bool ExporterGfxSamplerDX11_DX11::ExportWork(bool _bIsTHRTask)
+	bool ExporterGfxSamplerDX12_DX12::ExportWork(bool _bIsTHRTask)
 	{		
 		ExportInfoGfxSampler* pExportInfo = static_cast<ExportInfoGfxSampler*>(mpExportInfo);
 		ZeroMemory( &mrExport->mSamplerDesc, sizeof(mrExport->mSamplerDesc) );
@@ -113,7 +114,7 @@ namespace zcExp
 		return TRUE;
 	}
 
-	zResID ExporterGfxSamplerDX11_DX11::CallbackGetItemID(ePlatform _ePlatform, zenConst::eResType _eType, zenConst::eResSource _eSource, const zcExp::ExportInfoBase* _pExportInfo, bool& _bExistOut)
+	zResID ExporterGfxSamplerDX12_DX12::CallbackGetItemID(ePlatform _ePlatform, zenConst::eResType _eType, zenConst::eResSource _eSource, const zcExp::ExportInfoBase* _pExportInfo, bool& _bExistOut)
 	{
 		zenAssert(_ePlatform==zenConst::kePlatform_DX12 && _eType==zenConst::keResType_GfxSampler);
 		zenAssert( _pExportInfo );
@@ -124,16 +125,16 @@ namespace zcExp
 	}
 	
 	//////////////////////////////////////////////////////////////////////////
-	//SerialGfxBlend_DX11
+	//SerialGfxBlend_DX12
 	//////////////////////////////////////////////////////////////////////////
-	ExporterGfxStateBlendDX11_DX11::ExporterGfxStateBlendDX11_DX11(const ExportResultRef& _rExportOut)
+	ExporterGfxStateBlendDX12_DX12::ExporterGfxStateBlendDX12_DX12(const ExportResultRef& _rExportOut)
 	: ExporterBase(_rExportOut.GetSafe())
 	, mrExport(_rExportOut)
 	{
 		zenAssert(mrExport.IsValid());
 	}
 
-	bool ExporterGfxStateBlendDX11_DX11::ExportWork(bool _bIsTHRTask)
+	bool ExporterGfxStateBlendDX12_DX12::ExportWork(bool _bIsTHRTask)
 	{		
 		ExportInfoGfxStateBlend* pExportInfo = static_cast<ExportInfoGfxStateBlend*>(mpExportInfo);		
 		zenAssert(gaBlendValueTranslator.Count() == zenRes::zGfxRenderPass::ConfigColorRT::keBlendVal__Count);
@@ -163,7 +164,7 @@ namespace zcExp
 		return TRUE;
 	}
 
-	zResID ExporterGfxStateBlendDX11_DX11::CallbackGetItemID(ePlatform _ePlatform, zenConst::eResType _eType, zenConst::eResSource _eSource, const zcExp::ExportInfoBase* _pExportInfo, bool& _bExistOut)
+	zResID ExporterGfxStateBlendDX12_DX12::CallbackGetItemID(ePlatform _ePlatform, zenConst::eResType _eType, zenConst::eResSource _eSource, const zcExp::ExportInfoBase* _pExportInfo, bool& _bExistOut)
 	{
 		zenAssert(_ePlatform==zenConst::kePlatform_DX12 && _eType==zenConst::keResType_GfxBlend);
 		zenAssert( _pExportInfo );
@@ -174,25 +175,25 @@ namespace zcExp
 	}
 
 	//////////////////////////////////////////////////////////////////////////
-	//SerialGfxDepthStencil_DX11
+	//SerialGfxDepthStencil_DX12
 	//////////////////////////////////////////////////////////////////////////
-	zenInline void SetDepthStencilOpDesc(D3D11_DEPTH_STENCILOP_DESC& _StencilConfigDX11Out, const zenRes::zGfxRenderPass::ConfigDepthRT::ConfigStencil& _StencilConfigIn)
+	zenInline void SetDepthStencilOpDesc(D3D11_DEPTH_STENCILOP_DESC& _StencilConfigDX12Out, const zenRes::zGfxRenderPass::ConfigDepthRT::ConfigStencil& _StencilConfigIn)
 	{		
 		zenAssert( gaStencilOpTranslator.Count() == zenRes::zGfxRenderPass::ConfigDepthRT::keStencilOp__Count );
-		_StencilConfigDX11Out.StencilFunc			= gaComparisonTestTranslator[_StencilConfigIn.meStencilTest];
-		_StencilConfigDX11Out.StencilFailOp			= gaStencilOpTranslator[_StencilConfigIn.meStencilFailOp];		
-		_StencilConfigDX11Out.StencilPassOp			= gaStencilOpTranslator[_StencilConfigIn.meStencilPassOp];
-		_StencilConfigDX11Out.StencilDepthFailOp	= gaStencilOpTranslator[_StencilConfigIn.meDepthFailOp];		
+		_StencilConfigDX12Out.StencilFunc			= gaComparisonTestTranslator[_StencilConfigIn.meStencilTest];
+		_StencilConfigDX12Out.StencilFailOp			= gaStencilOpTranslator[_StencilConfigIn.meStencilFailOp];		
+		_StencilConfigDX12Out.StencilPassOp			= gaStencilOpTranslator[_StencilConfigIn.meStencilPassOp];
+		_StencilConfigDX12Out.StencilDepthFailOp	= gaStencilOpTranslator[_StencilConfigIn.meDepthFailOp];		
 	}
 
-	ExporterGfxStateDepthStencilDX11_DX11::ExporterGfxStateDepthStencilDX11_DX11(const ExportResultRef& _rExportOut)
+	ExporterGfxStateDepthStencilDX12_DX12::ExporterGfxStateDepthStencilDX12_DX12(const ExportResultRef& _rExportOut)
 	: ExporterBase(_rExportOut.GetSafe())
 	, mrExport(_rExportOut)
 	{
 		zenAssert(_rExportOut.IsValid());
 	}
 
-	bool ExporterGfxStateDepthStencilDX11_DX11::ExportWork(bool _bIsTHRTask)
+	bool ExporterGfxStateDepthStencilDX12_DX12::ExportWork(bool _bIsTHRTask)
 	{		
 		zenAssert( gaComparisonTestTranslator.Count() == zenRes::zGfxRenderPass::ConfigDepthRT::keCmpTest__Count );
 		ExportInfoGfxStateDepthStencil* pExportInfo				= static_cast<ExportInfoGfxStateDepthStencil*>(mpExportInfo);
@@ -211,7 +212,7 @@ namespace zcExp
 		return TRUE;
 	}
 
-	zResID ExporterGfxStateDepthStencilDX11_DX11::CallbackGetItemID(ePlatform _ePlatform, zenConst::eResType _eType, zenConst::eResSource _eSource, const zcExp::ExportInfoBase* _pExportInfo, bool& _bExistOut)
+	zResID ExporterGfxStateDepthStencilDX12_DX12::CallbackGetItemID(ePlatform _ePlatform, zenConst::eResType _eType, zenConst::eResSource _eSource, const zcExp::ExportInfoBase* _pExportInfo, bool& _bExistOut)
 	{
 		zenAssert(_ePlatform==zenConst::kePlatform_DX12 && _eType==zenConst::keResType_GfxDepthStencil);
 		zenAssert( _pExportInfo );
@@ -222,16 +223,16 @@ namespace zcExp
 	}
 
 	//////////////////////////////////////////////////////////////////////////
-	//SerialGfxRasterizer_DX11
+	//SerialGfxRasterizer_DX12
 	//////////////////////////////////////////////////////////////////////////
-	ExporterGfxStateRasterDX11_DX11::ExporterGfxStateRasterDX11_DX11(const ExportResultRef& _rExportOut)
+	ExporterGfxStateRasterDX12_DX12::ExporterGfxStateRasterDX12_DX12(const ExportResultRef& _rExportOut)
 	: ExporterBase(_rExportOut.GetSafe())
 	, mrExport(_rExportOut)
 	{
 		zenAssert(mrExport.IsValid());
 	}
 
-	bool ExporterGfxStateRasterDX11_DX11::ExportWork(bool _bIsTHRTask)
+	bool ExporterGfxStateRasterDX12_DX12::ExportWork(bool _bIsTHRTask)
 	{		
 		ExportInfoGfxStateRaster* pExportInfo			= static_cast<ExportInfoGfxStateRaster*>(mpExportInfo);
 		zenRes::zGfxStateRaster::Config& Config			= pExportInfo->mRasterConfig;
@@ -248,7 +249,7 @@ namespace zcExp
 		return TRUE;
 	}
 
-	zResID ExporterGfxStateRasterDX11_DX11::CallbackGetItemID(ePlatform _ePlatform, zenConst::eResType _eType, zenConst::eResSource _eSource, const zcExp::ExportInfoBase* _pExportInfo, bool& _bExistOut)
+	zResID ExporterGfxStateRasterDX12_DX12::CallbackGetItemID(ePlatform _ePlatform, zenConst::eResType _eType, zenConst::eResSource _eSource, const zcExp::ExportInfoBase* _pExportInfo, bool& _bExistOut)
 	{
 		zenAssert(_ePlatform==zenConst::kePlatform_DX12 && _eType==zenConst::keResType_GfxRaster);
 		zenAssert( _pExportInfo );

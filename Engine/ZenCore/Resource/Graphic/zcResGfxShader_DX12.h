@@ -6,28 +6,28 @@
 namespace zcRes
 {
 	//=================================================================================================
-	class GfxShaderVertexHAL_DX11 : public zcExp::ExportGfxShaderDX11
+	class GfxShaderVertexHAL_DX12 : public zcExp::ExportGfxShaderDX12
 	{
-	zenClassDeclare(GfxShaderVertexHAL_DX11, zcExp::ExportGfxShaderDX11)
+	zenClassDeclare(GfxShaderVertexHAL_DX12, zcExp::ExportGfxShaderDX12)
 	public:												
-		virtual										~GfxShaderVertexHAL_DX11();												
+		virtual										~GfxShaderVertexHAL_DX12();												
 		bool										Initialize();
 		struct ID3D11VertexShader*					mpVertexShader		= nullptr;		
-		typedef zcExp::ExporterGfxShaderDX11_DX11	RuntimeExporter;
+		typedef zcExp::ExporterGfxShaderDX12_DX12	RuntimeExporter;
 	};
-	class GfxShaderVertexHAL : public GfxShaderVertexHAL_DX11{};
+	class GfxShaderVertexHAL : public GfxShaderVertexHAL_DX12{};
 
 	//=================================================================================================	
-	class GfxShaderPixelHAL_DX11 : public zcExp::ExportGfxShaderDX11
+	class GfxShaderPixelHAL_DX12 : public zcExp::ExportGfxShaderDX12
 	{
-	zenClassDeclare(GfxShaderPixelHAL_DX11, zcExp::ExportGfxShaderDX11)
+	zenClassDeclare(GfxShaderPixelHAL_DX12, zcExp::ExportGfxShaderDX12)
 	public:											
-		virtual										~GfxShaderPixelHAL_DX11();												
+		virtual										~GfxShaderPixelHAL_DX12();												
 		bool										Initialize();
 		struct ID3D11PixelShader*					mpPixelShader		= nullptr;
-		typedef zcExp::ExporterGfxShaderDX11_DX11	RuntimeExporter;
+		typedef zcExp::ExporterGfxShaderDX12_DX12	RuntimeExporter;
 	};	
-	class GfxShaderPixelHAL : public GfxShaderPixelHAL_DX11{};	
+	class GfxShaderPixelHAL : public GfxShaderPixelHAL_DX12{};	
 }
 
 #endif

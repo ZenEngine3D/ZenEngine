@@ -1,16 +1,18 @@
 #include "zcCore.h"
 
+//SF DX12 
+
 namespace zcExp
 {
 
-ExporterGfxBuffer_DX11::ExporterGfxBuffer_DX11(const ExportDataRef& _rExportData)
+ExporterGfxBuffer_DX12::ExporterGfxBuffer_DX12(const ExportDataRef& _rExportData)
 : ExporterBase(_rExportData.GetSafe())
 , mrExportData(_rExportData)
 {
 	zenAssert(mrExportData.IsValid());
 }
 
-bool ExporterGfxBuffer_DX11::ExportStart()
+bool ExporterGfxBuffer_DX12::ExportStart()
 {		
 	ExportInfoGfxBuffer* pExportInfo = static_cast<ExportInfoGfxBuffer*>(mpExportInfo);	
 	mrExportData->muElementSize		= pExportInfo->muElementSize;

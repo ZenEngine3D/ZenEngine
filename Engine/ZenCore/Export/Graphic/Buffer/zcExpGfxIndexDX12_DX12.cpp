@@ -1,16 +1,18 @@
 #include "zcCore.h"
 
+//SF DX12 
+
 namespace zcExp
 {
 
-ExporterGfxIndexDX11_DX11::ExporterGfxIndexDX11_DX11(const ExportDataRef& _rExportData)
+ExporterGfxIndexDX12_DX12::ExporterGfxIndexDX12_DX12(const ExportDataRef& _rExportData)
 : ExporterBase(_rExportData.GetSafe())
 , mrExportData(_rExportData)
 {
 	zenAssert(mrExportData.IsValid());
 }
 
-bool ExporterGfxIndexDX11_DX11::ExportWork(bool _bIsTHRTask)
+bool ExporterGfxIndexDX12_DX12::ExportWork(bool _bIsTHRTask)
 {	
 	ExportInfoGfxIndex* pExportInfo = static_cast<ExportInfoGfxIndex*>(mpExportInfo);
 	if( pExportInfo->maIndice16.Count() > 0 )

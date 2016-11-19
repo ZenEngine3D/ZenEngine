@@ -5,9 +5,9 @@
 
 namespace zcExp
 {	
-	class ExportGfxShaderDX11 : public ExportGfxShader
+	class ExportGfxShaderDX12 : public ExportGfxShader
 	{
-	zenClassDeclare(ExportGfxShaderDX11, ExportGfxShader)
+	zenClassDeclare(ExportGfxShaderDX12, ExportGfxShader)
 	public:		
 		zArrayStatic<zU8>			maCompiledShader;			//!< Compiled shader code		
 	};

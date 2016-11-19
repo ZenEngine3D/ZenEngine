@@ -130,7 +130,7 @@ void SampleDebugUIInstance::UpdateBackbuffers()
 		{	
 			zenRes::zGfxRenderPass::ConfigColorRT	FinalColorRTConfig;
 			zenRes::zGfxRenderPass::ConfigDepthRT	FinalDepthRTConfig;					
-			mrBackbufferDepth						= zenRes::zGfxTarget2D::Create(zenConst::keTexFormat_D24S8, vBackbufferDim ); 
+			mrBackbufferDepth						= zenRes::zGfxTarget2D::Create(zenConst::keTexFormat_D32, vBackbufferDim ); 
 			FinalColorRTConfig.mrTargetSurface		= mrMainWindowGfx.GetBackbuffer();
 			FinalDepthRTConfig.mrTargetSurface		= mrBackbufferDepth;
 			FinalDepthRTConfig.mbDepthEnable		= true;

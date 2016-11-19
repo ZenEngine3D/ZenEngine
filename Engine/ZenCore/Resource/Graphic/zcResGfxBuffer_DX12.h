@@ -6,19 +6,19 @@
 namespace zcRes
 {
 
-class GfxBufferHAL_DX11 : public zcExp::ExportGfxBuffer
+class GfxBufferHAL_DX12 : public zcExp::ExportGfxBuffer
 {
 public:	
-	virtual										~GfxBufferHAL_DX11();
+	virtual										~GfxBufferHAL_DX12();
 	bool										Initialize();
 	void										Update(zU8* _pData, zUInt _uOffset = 0, zUInt _uSize = 0xFFFFFFFFFFFFFFFF);
 
 	ID3D11Buffer*								mpBuffer;
 	ID3D11ShaderResourceView*					mpSRV;
 	ID3D11UnorderedAccessView*					mpUAV;
-	typedef zcExp::ExporterGfxBuffer_DX11		RuntimeExporter;
+	typedef zcExp::ExporterGfxBuffer_DX12		RuntimeExporter;
 };
-class GfxBufferHAL : public GfxBufferHAL_DX11{};
+class GfxBufferHAL : public GfxBufferHAL_DX12{};
 
 }
 

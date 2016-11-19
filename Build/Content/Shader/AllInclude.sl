@@ -1,7 +1,7 @@
 #include "AllDefinitions.sl"
 	
 	
-#if SHADER_DX11
+#if SHADER_DX11 || SHADER_DX12
 	#pragma pack_matrix( row_major )	
 	
 	cbuffer cbVertexInput : register( b2 )

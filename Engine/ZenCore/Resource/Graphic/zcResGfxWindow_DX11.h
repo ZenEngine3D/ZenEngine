@@ -11,7 +11,9 @@ namespace zcRes
 		virtual							~GfxWindowHAL_DX11();												
 		bool							Initialize();
 		bool							PerformResize();
-		
+		void							FrameBegin();
+		void							FrameEnd();
+
 		IDXGISwapChain*					mpDX11SwapChain				= nullptr;
 		GfxTarget2DRef					mrBackbufferColor[2];
 		zenConst::eTextureFormat		meBackbufferColorFormat		= zenConst::keTexFormat_RGBA8; //! @todo clean feature expose desired format in ResData
@@ -21,7 +23,7 @@ namespace zcRes
 	public:
 		static GfxWindowRef				RuntimeCreate(HWND _WindowHandle);
 	};
-	class GfxWindowHAL : public GfxWindowHAL_DX11{};
+	class GfxWindowHAL : public GfxWindowHAL_DX11{ zenClassDeclare(GfxWindowHAL, GfxWindowHAL_DX11) };
 }
 
 #endif

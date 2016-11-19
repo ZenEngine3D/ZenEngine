@@ -1,9 +1,11 @@
 #include "zcCore.h"
 
+//SF DX12 
+
 namespace zcRes
 {
 
-GfxBufferHAL_DX11::~GfxBufferHAL_DX11()
+GfxBufferHAL_DX12::~GfxBufferHAL_DX12()
 {
 	if( mpBuffer )
 	{
@@ -12,8 +14,11 @@ GfxBufferHAL_DX11::~GfxBufferHAL_DX11()
 	}
 }
 
-bool GfxBufferHAL_DX11::Initialize()
+bool GfxBufferHAL_DX12::Initialize()
 {
+#if DISABLE_DX12
+	return false;
+#else
 	//! @todo Urgent configure resource creations flags (for all buffer type)
 	D3D11_BUFFER_DESC BufferDesc; 
 	ZeroMemory(&BufferDesc, sizeof(BufferDesc));	
@@ -33,27 +38,30 @@ bool GfxBufferHAL_DX11::Initialize()
 	
 	mpSRV = nullptr;
 	mpUAV = nullptr;
-	HRESULT hr = zcMgr::GfxRender.DX11GetDevice()->CreateBuffer(&BufferDesc, maData.Count() ? &InitData : nullptr, &mpBuffer);	
+	HRESULT hr = zcMgr::GfxRender.DX12GetDevice()->CreateBuffer(&BufferDesc, maData.Count() ? &InitData : nullptr, &mpBuffer);	
 	if( SUCCEEDED(hr) )
-		hr = zcMgr::GfxRender.DX11GetDevice()->CreateShaderResourceView(mpBuffer, nullptr, &mpSRV);
+		hr = zcMgr::GfxRender.DX12GetDevice()->CreateShaderResourceView(mpBuffer, nullptr, &mpSRV);
 
 	//! @todo optim only create if gpu write active
 	if( SUCCEEDED(hr) && (BufferDesc.MiscFlags & D3D11_BIND_UNORDERED_ACCESS) )
-		hr = zcMgr::GfxRender.DX11GetDevice()->CreateUnorderedAccessView(mpBuffer, nullptr, &mpUAV);
+		hr = zcMgr::GfxRender.DX12GetDevice()->CreateUnorderedAccessView(mpBuffer, nullptr, &mpUAV);
 
 	return SUCCEEDED(hr);
+#endif
 }
 	
-void GfxBufferHAL_DX11::Update(zU8* _pData, zUInt _uOffset, zUInt _uSize)
+void GfxBufferHAL_DX12::Update(zU8* _pData, zUInt _uOffset, zUInt _uSize)
 {
+#if !DISABLE_DX12
 	//! @todo optim select proper write type
 //	zenAssert(maStreamBuffer[0] != nullptr);
 	D3D11_MAPPED_SUBRESOURCE mapRes;
 	_uOffset		= 0; //! @todo Urgent support partial updates
 	_uSize			= zenMath::Min(_uSize, (zUInt)muElementCount*muElementStride - _uOffset);
-	HRESULT result	= zcMgr::GfxRender.DX11GetDeviceContext()->Map(mpBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mapRes);
+	HRESULT result	= zcMgr::GfxRender.DX12GetDeviceContext()->Map(mpBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mapRes);
 	memcpy((zU8*)mapRes.pData, _pData, _uSize); 
-	zcMgr::GfxRender.DX11GetDeviceContext()->Unmap(mpBuffer, 0);
+	zcMgr::GfxRender.DX12GetDeviceContext()->Unmap(mpBuffer, 0);
+#endif
 }
 
 }

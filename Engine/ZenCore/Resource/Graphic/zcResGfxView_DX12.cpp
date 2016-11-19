@@ -1,10 +1,12 @@
 #include "zcCore.h"
 
+//SF DX12
 namespace zcRes
 {
 		
-bool GfxViewHAL_DX11::Initialize()
+bool GfxViewHAL_DX12::Initialize()
 {
+#if !DISABLE_DX12
 	zenAssert(maRTColorConfig.Count() < D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT);
 
 	GfxTarget2DRef rRTDepthSurface		= mRTDepthConfig.mrTargetSurface;
@@ -26,7 +28,7 @@ bool GfxViewHAL_DX11::Initialize()
 	mViewport.TopLeftY	= (FLOAT)mvOrigin.y;
 	mViewport.MinDepth	= 0.0f;
 	mViewport.MaxDepth	= 1.0f; 
-
+#endif
 	return true;
 }
 

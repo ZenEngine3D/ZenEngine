@@ -6,25 +6,25 @@
 namespace zcRes
 {
 	//==============================================================================================
-	// GfxCBufferDefinitionHAL_DX11 
+	// GfxCBufferDefinitionHAL_DX12 
 	//==============================================================================================
-	class GfxCBufferDefinitionHAL_DX11 : public zcExp::ExportGfxCBufferDefinition
+	class GfxCBufferDefinitionHAL_DX12 : public zcExp::ExportGfxCBufferDefinition
 	{
-	zenClassDeclare(GfxCBufferDefinitionHAL_DX11, zcExp::ExportGfxCBufferDefinition)
+	zenClassDeclare(GfxCBufferDefinitionHAL_DX12, zcExp::ExportGfxCBufferDefinition)
 	public:
 		bool										Initialize();				
 		typedef zcExp::ExporterGfxShaderParamDef	RuntimeExporter;
 	};
-	class GfxCBufferDefinitionHAL : public GfxCBufferDefinitionHAL_DX11{};
+	class GfxCBufferDefinitionHAL : public GfxCBufferDefinitionHAL_DX12{};
 	
 	//==============================================================================================
-	// GfxCBufferHAL_DX11
+	// GfxCBufferHAL_DX12
 	//==============================================================================================
-	class GfxCBufferHAL_DX11 : public zcExp::ExportGfxCBuffer
+	class GfxCBufferHAL_DX12 : public zcExp::ExportGfxCBuffer
 	{
-	zenClassDeclare(GfxCBufferHAL_DX11, zcExp::ExportGfxCBuffer)
+	zenClassDeclare(GfxCBufferHAL_DX12, zcExp::ExportGfxCBuffer)
 	public:
-		virtual										~GfxCBufferHAL_DX11();
+		virtual										~GfxCBufferHAL_DX12();
 		bool										Initialize();
 		void										Update( ID3D11DeviceContext& DirectXContext );
 		void										SetValue(const zenRes::zShaderParameter& _Value);	
@@ -36,11 +36,11 @@ namespace zcRes
 		mutable bool								mbUpdated				= false;	//!< True when parameter value was changed and must update GPU buffer		
 		typedef zcExp::ExporterGfxCBuffer			RuntimeExporter;
 	};
-	class GfxCBufferHAL : public GfxCBufferHAL_DX11{};
+	class GfxCBufferHAL : public GfxCBufferHAL_DX12{};
 
 
 	template<class TParamType>
-	void GfxCBufferHAL_DX11::SetValue(const zHash32& _hParamName, const TParamType& _Value, zU16 _uIndex)
+	void GfxCBufferHAL_DX12::SetValue(const zHash32& _hParamName, const TParamType& _Value, zU16 _uIndex)
 	{
 		zcExp::GfxCBufferParamInfo ItemInfo;
 		if( mrCBufferParent.HAL()->mdParamInfo.Get(_hParamName, ItemInfo) )

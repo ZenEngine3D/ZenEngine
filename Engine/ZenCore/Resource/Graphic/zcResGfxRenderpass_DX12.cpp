@@ -1,9 +1,11 @@
 #include "zcCore.h"
 
+//SF DX12
+
 namespace zcRes
 {
 
-bool GfxRenderPassHAL_DX11::Initialize()
+bool GfxRenderPassHAL_DX12::Initialize()
 {		
 	mrStateBlend		= mBlendStateID;
 	mrStateDepthStencil	= mDepthStencilStateID;

@@ -15,7 +15,10 @@ if vPath:sub(vPath,-1) ~= '/' then
 function Orion_ConfigureBuild()
 
 	--[[ Configurations ]]--
-	language 			( "C++" )	
+	language 			( "C++" )
+	systemversion 		("10.0.14393.0")
+	--rtti 				('Off')
+	
 	filter 'configurations:Debug'
 		defines			{"DEBUG", "_DEBUG", "ZEN_BUILD_DEBUG"}
 		flags 			{"FatalWarnings", "FatalCompileWarnings"}
@@ -38,13 +41,21 @@ function Orion_ConfigureBuild()
 	
 	--[[ Platforms ]]--	
 	filter 'platforms:PC*' 
-		system 			'Windows'		
-		flags 			{'EnableSSE2'}
+		system 			'Windows'				
+		flags 			{'EnableSSE2'}		
+		defines			{'WIN32', '_WINDOWS', 'ZEN_PLATFORM=PC', 'ZEN_PLATFORM_PC=1'}
+
+	filter 'platforms:*DX11' 						
+		defines			{'ZEN_RENDERER=DX11', 'ZEN_RENDERER_DX11=1'}
+		--systemversion 	'8.1'
 		
-	filter 'platforms:PC*'							defines			{'WIN32', '_WINDOWS', 'ZEN_PLATFORM=PC', 'ZEN_PLATFORM_PC=1'}
-	filter 'platforms:*DX11' 						defines			{'ZEN_RENDERER=DX11', 'ZEN_RENDERER_DX11=1'}
-	filter 'platforms:*DX12' 						defines			{'ZEN_RENDERER=DX12', 'ZEN_RENDERER_DX12=1'}	
-	filter 'platforms:*64*'							architecture 	'x64'	
+	filter 'platforms:*DX12' 						
+		defines			{'ZEN_RENDERER=DX12', 'ZEN_RENDERER_DX12=1'}	
+		--systemversion 	'10.0.14393.0'
+
+	filter 'platforms:*64*'							
+		architecture 	'x64'	
+		
 	filter 'platforms:PCTool*'						defines			{'ZEN_ENGINETOOL=1'}
 	filter 'platforms:not PCTool*'					defines			{'ZEN_ENGINEGAME=1'}
 	filter {}
@@ -66,13 +77,13 @@ end
 
 function Orion_AddGameLibs()	
 	filter {'platforms:*DX11'}	links	{"d3d11", "d3dcompiler", "dxguid"}
-	filter {'platforms:*DX12'}	links	{"d3d11", "d3dcompiler", "dxguid"}
+	filter {'platforms:*DX12'}	links	{"d3d12", "d3dcompiler", "dxgi", "dxguid"}
 	filter{} 					links	{vLibEngineGame}
 end
 
 function Orion_AddToolLibs()	
 	filter {'platforms:*DX11'}	links	{"d3d11", "d3dcompiler", "dxguid"}
-	filter {'platforms:*DX12'}	links	{"d3d11", "d3dcompiler", "dxguid"}
+	filter {'platforms:*DX12'}	links	{"d3d12", "d3dcompiler", "dxgi", "dxguid"}
 	filter{}					links	{vLibEngineTool}
 end
 

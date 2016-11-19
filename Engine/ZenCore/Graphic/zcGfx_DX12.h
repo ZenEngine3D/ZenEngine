@@ -3,7 +3,11 @@
 #define __zCore_Gfx_Base_DX12_h__ 
 //SF DX12
 
-#include <d3d11.h>
-#include <d3d11_1.h>	// For ID3DUserDefinedAnnotation
+#include <d3d12.h>
+#include <wrl.h>
+#include <DXGI1_4.h>
+
+template<class TResouce>
+using DirectXComRef = Microsoft::WRL::ComPtr<TResouce>;
 
 #endif

@@ -70,7 +70,8 @@ bool SampleRendererInstance::Init()
 {
 	Super::Init();
 	CreateGfxWindow( zVec2U16(1280, 800), zVec2U16(0,0) );
-	
+
+#if !DISABLE_DX12	
 	mrVertexBufferPos		= zenRes::zGfxStructBuffer<zVec3F>::Create(aCubeVerticesPos, (zU32)aCubeVerticesPos.Count() /*, zFlagResUse()*/ ); 
 	mrVertexBufferColorUv	= zenRes::zGfxStructBuffer<BufferColorUV>::Create(aCubeVerticesColorUV, (zU32)aCubeVerticesColorUV.Count() /*, zFlagResUse()*/ ); 
 
@@ -127,7 +128,7 @@ bool SampleRendererInstance::Init()
 	zenRes::zGfxRenderPass::ConfigDepthRT				RenderToTextureDepthRTConfig;
 	mrRenderToTextureRT1								= zenRes::zGfxTarget2D::Create(zenConst::keTexFormat_RGBA8, zVec2U16(512,512) );
 	mrRenderToTextureRT2								= zenRes::zGfxTarget2D::Create(zenConst::keTexFormat_RGBA8, zVec2U16(512,512) );
-	mrRenderToTextureDepth								= zenRes::zGfxTarget2D::Create(zenConst::keTexFormat_D24S8, zVec2U16(512,512) );
+	mrRenderToTextureDepth								= zenRes::zGfxTarget2D::Create(zenConst::keTexFormat_D32, zVec2U16(512,512) );
 	aRenderToTextureColorRTConfig.SetCount(2);	
 	aRenderToTextureColorRTConfig[0].mrTargetSurface	= mrRenderToTextureRT1;
 	aRenderToTextureColorRTConfig[1].mrTargetSurface	= mrRenderToTextureRT2;
@@ -194,7 +195,8 @@ bool SampleRendererInstance::Init()
 
 	rCube4MeshStripA.SetValue( zHash32("vColor"),				zVec4F(1,0.2f,0.2f,1));
 	rCube4MeshStripB.SetValue( zHash32("vColor"),				zVec4F(0.2f,1,0.2f,1));	
-	
+#endif
+
 	return true;
 }
 
@@ -205,7 +207,7 @@ void SampleRendererInstance::UpdateBackbuffers()
 		zenRes::zGfxRenderPass::ConfigColorRT	FinalColorRTConfig;
 		zenRes::zGfxRenderPass::ConfigDepthRT	FinalDepthRTConfig;		
 		zVec2U16 vBackbufferDim					= mrMainWindowGfx.GetBackbuffer().GetDim();
-		mrBackbufferDepth						= zenRes::zGfxTarget2D::Create(zenConst::keTexFormat_D24S8, vBackbufferDim ); 
+		mrBackbufferDepth						= zenRes::zGfxTarget2D::Create(zenConst::keTexFormat_D32, vBackbufferDim ); 
 		FinalColorRTConfig.mrTargetSurface		= mrMainWindowGfx.GetBackbuffer();
 		FinalDepthRTConfig.mrTargetSurface		= mrBackbufferDepth;
 		FinalDepthRTConfig.mbDepthEnable		= true;
@@ -214,6 +216,7 @@ void SampleRendererInstance::UpdateBackbuffers()
 		mrRndPassFinal							= zenRes::zGfxRenderPass::Create("RenderBackbufferFinal", 2, FinalColorRTConfig, FinalDepthRTConfig, mrStateRaster);	
 		zenMath::MatrixProjectionLH( matProjection, 60, float(vBackbufferDim.y)/float(vBackbufferDim.x), 0.01f, 100.f );
 	}
+
 }
 
 void SampleRendererInstance::Destroy()
@@ -224,19 +227,24 @@ void SampleRendererInstance::Destroy()
 
 void SampleRendererInstance::Update()
 {	
-	Super::Update();
-	UpdateBackbuffers();
+	Super::Update();	
 	
 	//---------------------------------------------------------------------
 	// Render loop
 	//---------------------------------------------------------------------
 	mrMainWindowGfx.FrameBegin();
+	UpdateBackbuffers();
+
 	zenGfx::zContext rContextRoot				= zenGfx::zContext::Create("RenderLoop");
 	zenGfx::zContext rContextRenderToTexture	= zenGfx::zContext::Create("RenderToTexture",	rContextRoot, mrRndPassTexture);
 	zenGfx::zContext rContextFinal				= zenGfx::zContext::Create("Final",				rContextRoot, mrRndPassFinal);
 			
 	float t = static_cast<float>(zenSys::GetElapsedSec() / 3.0);	// Update our time animation
-	
+#if DISABLE_DX12	
+	zVec4F vClearColor = zenMath::TriLerp( zVec4F(0.05f,0.05f,0.05f,1), zVec4F(0.1f,0.1f,0.20f,1), zVec4F(0.05f,0.05f,0.05f,1), zenMath::Fract(t) );
+	zenGfx::zCommand::ClearColor(rContextFinal, mrMainWindowGfx.GetBackbuffer(), vClearColor);
+	zenGfx::zCommand::ClearDepthStencil(rContextFinal, mrBackbufferDepth);
+#else
 	//-----------------------------------------------------------------
 	// Render cube in RenderTarget
 	//-----------------------------------------------------------------
@@ -276,7 +284,8 @@ void SampleRendererInstance::Update()
 	mrCube4Mesh.SetValue( zHash32("World"),				matWorld[3] );
 	mrCube4Mesh.SetValue( zHash32("Projection"),		matProjection );
 	zenGfx::zCommand::DrawMesh(rContextFinal, 0, mrCube4Mesh);
-	
+#endif
+
 	rContextRoot.Submit();
 
 	mrMainWindowGfx.FrameEnd();

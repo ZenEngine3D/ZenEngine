@@ -37,7 +37,7 @@ namespace zcRes
 				{
 					if( SUCCEEDED(pDXGIFactory->CreateSwapChain( DX11pDevice, &SwapDesc, &pDXSwapChain)) )
 					{						
-						static zenMem::zAllocatorPool sMemPool("Pool GfxWindow", sizeof(GfxWindow), 128, 128);
+						static zenMem::zAllocatorPool sMemPool("Pool GfxWindow", sizeof(GfxWindow), 32, 32);
 						GfxWindowRef rResource						= zenNew(&sMemPool) GfxWindow();		
 						bool bValid									= true;						
 						rResource.HAL()->mhWindow					= _WindowHandle;
@@ -102,5 +102,15 @@ namespace zcRes
 		
 		mvPendingResize.SetZero();
 		return bResize;
+	}
+
+	void GfxWindowHAL_DX11::FrameBegin()
+	{
+		GfxWindow* pWindow				= reinterpret_cast<GfxWindow*>(this);
+		pWindow->mrBackbufferCurrent	= mrBackbufferColor[pWindow->GetFrameCount()%zenArrayCount(mrBackbufferColor)];
+	}
+
+	void GfxWindowHAL_DX11::FrameEnd()
+	{
 	}
 }

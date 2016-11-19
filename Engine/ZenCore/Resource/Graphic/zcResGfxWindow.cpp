@@ -27,7 +27,7 @@ GfxWindow::GfxWindow()
 
 const GfxTarget2DRef& GfxWindow::GetBackbuffer() 
 {		
-	return mrBackbufferColor[ muFrameCount % zenArrayCount(mrBackbufferColor) ];
+	return mrBackbufferCurrent;
 }
 
 zenSig::zSignalEmitter0& GfxWindow::GetSignalUIRender()
@@ -38,6 +38,7 @@ zenSig::zSignalEmitter0& GfxWindow::GetSignalUIRender()
 
 void GfxWindow::FrameBegin()
 {
+	Super::FrameBegin();
 	char zFrameNameTemp[256];
 	sprintf(zFrameNameTemp, "Frame %06i", static_cast<int>(muFrameCount++));
 	zStringHash32 zFrameName(zFrameNameTemp);
@@ -53,8 +54,10 @@ void GfxWindow::FrameBegin()
 void GfxWindow::FrameEnd()
 {
 	zenAssertMsg( this == zcGfx::grWindowRender.Get(), "Ending frame with different window than started");	
-	//! @todo urgent cleanup this messy access
+	
+	//! @todo 2 cleanup this messy access
 	// Editor doesn't have OS windows associated...
+#if !DISABLE_DX12
 	if( mpMainWindowOS )
 	{
 		WindowInputState InputData;
@@ -65,10 +68,12 @@ void GfxWindow::FrameEnd()
 		mrNuklearData->mrRendertarget = GetBackbuffer();
 		zxNuklear::zxNuklearHelper::Get().Render(mrNuklearData, &InputData);
 	}
+#endif
 	const zUInt uHistoryIndex = muFrameCount%keEventHistoryCount;
 	maEventHistory[keEvtTyp_CPU][uHistoryIndex]->Stop();
 	maEventHistory[keEvtTyp_GPU][uHistoryIndex]->Stop();
 	zcMgr::GfxRender.FrameEnd();
+	Super::FrameEnd();
 
 	// Find first valid root event from history (values returned by GPU)
 	muEventValidIndex	= muFrameCount + keEventHistoryCount;
@@ -105,6 +110,7 @@ void GfxWindow::FrameEnd()
 			}
 		}
 	}
+	
 }
 
 void GfxWindow::UIRenderCB()

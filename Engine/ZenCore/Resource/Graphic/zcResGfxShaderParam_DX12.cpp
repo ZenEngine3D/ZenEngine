@@ -1,9 +1,10 @@
 #include "zcCore.h"
 
+//SF DX12
 namespace zcRes
 {
 
-bool GfxCBufferDefinitionHAL_DX11::Initialize()
+bool GfxCBufferDefinitionHAL_DX12::Initialize()
 {
 	return TRUE;
 }
@@ -11,15 +12,18 @@ bool GfxCBufferDefinitionHAL_DX11::Initialize()
 
 //=================================================================================================
 
-GfxCBufferHAL_DX11::~GfxCBufferHAL_DX11()
+GfxCBufferHAL_DX12::~GfxCBufferHAL_DX12()
 {
 	if(mpBufferBinding)
 		mpBufferBinding->Release();
 	mpBufferBinding = nullptr;
 }
 
-bool GfxCBufferHAL_DX11::Initialize()
+bool GfxCBufferHAL_DX12::Initialize()
 {
+#if DISABLE_DX12
+	return false;
+#else
 	D3D11_BUFFER_DESC		bufferDesc;
 	D3D11_SUBRESOURCE_DATA	initData;
 	ZeroMemory( &bufferDesc, sizeof(bufferDesc) );
@@ -32,11 +36,12 @@ bool GfxCBufferHAL_DX11::Initialize()
 	initData.pSysMem			= maParameterValues.First();
 	initData.SysMemPitch		= 0;
 	initData.SysMemSlicePitch	= 0;
-	HRESULT hr					= zcMgr::GfxRender.DX11GetDevice()->CreateBuffer( &bufferDesc, &initData, &mpBufferBinding );		
+	HRESULT hr					= zcMgr::GfxRender.DX12GetDevice()->CreateBuffer( &bufferDesc, &initData, &mpBufferBinding );		
 	return SUCCEEDED(hr) && mrCBufferParent.IsValid();
+#endif
 }
 
-void GfxCBufferHAL_DX11::Update( ID3D11DeviceContext& DirectXContext )
+void GfxCBufferHAL_DX12::Update( ID3D11DeviceContext& DirectXContext )
 {
 	if( mbUpdated )
 	{
@@ -45,7 +50,7 @@ void GfxCBufferHAL_DX11::Update( ID3D11DeviceContext& DirectXContext )
 	}
 }
 
-void GfxCBufferHAL_DX11::SetValue(const zcExp::ParameterBase& _Value)
+void GfxCBufferHAL_DX12::SetValue(const zcExp::ParameterBase& _Value)
 {
 	zcExp::GfxCBufferParamInfo ItemInfo;
 	if( mrCBufferParent.HAL()->mdParamInfo.Get(_Value.mhName, ItemInfo) )
@@ -55,7 +60,7 @@ void GfxCBufferHAL_DX11::SetValue(const zcExp::ParameterBase& _Value)
 	}	
 }
 
-void GfxCBufferHAL_DX11::SetValue(const zenRes::zShaderParameter& _Value)
+void GfxCBufferHAL_DX12::SetValue(const zenRes::zShaderParameter& _Value)
 {
 	zcExp::GfxCBufferParamInfo ItemInfo;
 	if( mrCBufferParent.HAL()->mdParamInfo.Get(_Value.mhName, ItemInfo) )

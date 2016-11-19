@@ -6,17 +6,17 @@
 namespace zcRes
 {
 
-class GfxIndexHAL_DX11 : public zcExp::ExportGfxIndexDX11
+class GfxIndexHAL_DX12 : public zcExp::ExportGfxIndexDX12
 {
 public:	
-	virtual										~GfxIndexHAL_DX11();
+	virtual										~GfxIndexHAL_DX12();
 	bool										Initialize();
 	void										Update(zU8* _pData, zUInt _uOffset = 0, zUInt _uSize = 0xFFFFFFFFFFFFFFFF);
 
 	ID3D11Buffer*								mpIndiceBuffer;
-	typedef zcExp::ExporterGfxIndexDX11_DX11	RuntimeExporter;
+	typedef zcExp::ExporterGfxIndexDX12_DX12	RuntimeExporter;
 };
-class GfxIndexHAL : public GfxIndexHAL_DX11{};
+class GfxIndexHAL : public GfxIndexHAL_DX12{};
 
 }
 

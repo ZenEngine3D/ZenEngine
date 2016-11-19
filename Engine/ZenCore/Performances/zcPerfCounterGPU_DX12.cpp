@@ -1,27 +1,29 @@
 #include "zcCore.h"
 
+//SF DX12 
+
 namespace zcPerf
 {
-	EventGPU_DX11::EventGPU_DX11(const zStringHash32& _EventName) 
+	EventGPU_DX12::EventGPU_DX12(const zStringHash32& _EventName) 
 	: Super(_EventName) 
 	{
 	}
 
-	void EventGPU_DX11::Start()
+	void EventGPU_DX12::Start()
 	{
 		Super::Start();
 		zcMgr::GfxRender.NamedEventBegin(mzEventName);
-		mrQueryTimestampStart = zcGfx::DX11QueryTimestamp::Create();
+		mrQueryTimestampStart = zcGfx::DX12QueryTimestamp::Create();
 	}
 
-	void EventGPU_DX11::Stop()
+	void EventGPU_DX12::Stop()
 	{
-		mrQueryTimestampStop = zcGfx::DX11QueryTimestamp::Create();
+		mrQueryTimestampStop = zcGfx::DX12QueryTimestamp::Create();
 		zcMgr::GfxRender.NamedEventEnd();
 		Super::Stop();		
 	}
 
-	double EventGPU_DX11::GetElapsedMs()
+	double EventGPU_DX12::GetElapsedMs()
 	{
 		if( muTimeElapsed == 0 && mrQueryTimestampStart.IsValid() && mrQueryTimestampStop.IsValid() && mrQueryTimestampStart->GetTimestampUSec() > 0 && mrQueryTimestampStop->GetTimestampUSec() > 0)
 		{

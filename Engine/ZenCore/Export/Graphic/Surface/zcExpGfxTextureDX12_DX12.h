@@ -6,13 +6,13 @@
 namespace zcExp
 {	
 
-class ExporterGfxTexture2dDX11_DX11 : public ExporterBase
+class ExporterGfxTexture2dDX12_DX12 : public ExporterBase
 {
-zenClassDeclare(ExporterGfxTexture2dDX11_DX11, ExporterBase)
+zenClassDeclare(ExporterGfxTexture2dDX12_DX12, ExporterBase)
 public:
 
 typedef zEngineRef<ExportGfxTexture2d>	ExportResultRef; //todo use proper ref class
-										ExporterGfxTexture2dDX11_DX11(const ExportResultRef& _rExportOut);
+										ExporterGfxTexture2dDX12_DX12(const ExportResultRef& _rExportOut);
 protected:	
 	virtual bool				ExportWork(bool _bIsTHRTask);	
 	ExportResultRef				mrExport;

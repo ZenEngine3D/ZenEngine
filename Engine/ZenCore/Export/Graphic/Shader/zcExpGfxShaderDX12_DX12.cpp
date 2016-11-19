@@ -5,6 +5,8 @@
 #include <D3D11Shader.h>
 #include <D3Dcompiler.h>
 
+//SF DX12
+
 namespace zcExp
 {
 
@@ -64,7 +66,7 @@ void ProcessCBufferDef(		zArrayStatic<zHash32>&					Out_aCBufferParamName,
 	}
 }
 
-ExporterGfxShaderDX11_DX11::ExporterGfxShaderDX11_DX11(const ExportResultRef& _rExportOut)
+ExporterGfxShaderDX12_DX12::ExporterGfxShaderDX12_DX12(const ExportResultRef& _rExportOut)
 : ExporterBase(_rExportOut.GetSafe())
 , mrExport(_rExportOut)
 {
@@ -75,7 +77,7 @@ ExporterGfxShaderDX11_DX11::ExporterGfxShaderDX11_DX11(const ExportResultRef& _r
 //! @details	
 //! @return 	true if successful
 //=================================================================================================
-bool ExporterGfxShaderDX11_DX11::ExportWorkCompile()
+bool ExporterGfxShaderDX12_DX12::ExportWorkCompile()
 {
 	HRESULT		hr(S_OK);
 	DWORD		dwShaderFlags(D3DCOMPILE_ENABLE_STRICTNESS);
@@ -108,7 +110,7 @@ bool ExporterGfxShaderDX11_DX11::ExportWorkCompile()
 			++pEntry;
 		}
 	}
-	pDefineCur->Name = "SHADER_DX11";								pDefineCur->Definition	= "1";		pDefineCur++;
+	pDefineCur->Name = "SHADER_DX12";								pDefineCur->Definition	= "1";		pDefineCur++;
 	pDefineCur->Name = pzShaderDefine[pExportInfo->meShaderStage];	pDefineCur->Definition	= "1";		pDefineCur++;
 	pDefineCur->Name = 0;											pDefineCur->Definition	= nullptr;	pDefineCur++;
 	zenAssertMsg(pDefineCur-pDefines == uUserDefineCount+uSystemDefineCount, "System define count doesn't match what was expected");
@@ -159,7 +161,7 @@ bool ExporterGfxShaderDX11_DX11::ExportWorkCompile()
 //! @details	
 //! @return 	true if successful
 //=================================================================================================
-bool ExporterGfxShaderDX11_DX11::ExportWorkExtractResources()
+bool ExporterGfxShaderDX12_DX12::ExportWorkExtractResources()
 {
 	ExportInfoGfxShader*					pExportInfo = static_cast<ExportInfoGfxShader*>(mpExportInfo);
 	ID3D11ShaderReflection*					pGfxShaderReflection(nullptr);	
@@ -246,7 +248,7 @@ bool ExporterGfxShaderDX11_DX11::ExportWorkExtractResources()
 	return FALSE;
 }
 
-bool ExporterGfxShaderDX11_DX11::ExportWork(bool _bIsTHRTask)
+bool ExporterGfxShaderDX12_DX12::ExportWork(bool _bIsTHRTask)
 {
 	zenAssert(mrExport.IsValid());
 	return ExportWorkCompile() && ExportWorkExtractResources();
@@ -257,7 +259,7 @@ bool ExporterGfxShaderDX11_DX11::ExportWork(bool _bIsTHRTask)
 //! @details	Check for the existence of ShaderParam, and if not present, request their creation
 //! @return 	true
 //=================================================================================================
-bool ExporterGfxShaderDX11_DX11::ExportEnd()
+bool ExporterGfxShaderDX12_DX12::ExportEnd()
 {
 	if( mpExportInfo->IsSuccess() && Super::ExportEnd() )	
 	{

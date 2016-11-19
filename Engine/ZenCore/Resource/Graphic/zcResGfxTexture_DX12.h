@@ -4,17 +4,18 @@
 //SF DX12
 namespace zcRes
 {
-	class GfxTexture2dHAL_DX11 : public zcExp::ExportGfxTexture2d
+	class GfxTexture2dHAL_DX12 : public zcExp::ExportGfxTexture2d
 	{
 	public:
-		virtual											~GfxTexture2dHAL_DX11();
+		virtual											~GfxTexture2dHAL_DX12();
 		bool											Initialize();
 	
-		ID3D11Texture2D*								mpTextureBuffer;
-		ID3D11ShaderResourceView*						mpTextureView;
-		typedef zcExp::ExporterGfxTexture2dDX11_DX11	RuntimeExporter;
+		DirectXComRef<ID3D12Resource>					mrTextureResource;
+		zcGfx::DescriptorSRV							mTextureView;
+		//! @todo 3 Add support for UAV and Stencil view
+		typedef zcExp::ExporterGfxTexture2dDX12_DX12	RuntimeExporter;
 	};
-	class GfxTexture2dHAL : public GfxTexture2dHAL_DX11{};
+	class GfxTexture2dHAL : public GfxTexture2dHAL_DX12{};
 
 }
 
