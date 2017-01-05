@@ -32,3 +32,4 @@ Orion_AddGameExe("SampleBaseSystem",	"Samples", 	{"Engine/Samples/Core/System/**
 -- SAMPLE GFX --
 Orion_AddGameExe("SampleGfxBasic",		"Samples",	{"Engine/Samples/Gfx/Renderer/**"},	vPCHEngineEngine, {})
 Orion_AddGameExe("SampleGfxDebugUI",	"Samples",	{"Engine/Samples/Gfx/DebugUI/**"},	vPCHEngineEngine, {})
+Orion_AddGameExe("SampleGfxDirextX12",	"Samples",	{"Engine/Samples/Gfx/DirectX12/**"},vPCHEngineEngine, {})

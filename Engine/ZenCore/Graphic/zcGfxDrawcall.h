@@ -2,6 +2,8 @@
 #ifndef __zCore_Gfx_Renderer_Drawcall_h__
 #define __zCore_Gfx_Renderer_Drawcall_h__
 
+//! @todo 5 Clean : rename these files GfxDrawCommand
+
 namespace zcGfx
 {
 
@@ -102,7 +104,7 @@ public:
 	virtual void				Invoke();
 
 protected:
-	zcRes::GfxTarget2DRef	mrRTColor;
+	zcRes::GfxTarget2DRef		mrRTColor;
 	zVec4F						mvColor;
 	zColorMask					mColorMask;
 	zVec2S16					mvOrigin;
@@ -117,43 +119,16 @@ public:
 	virtual void				Invoke();
 
 protected:
-	zcRes::GfxTarget2DRef	mrRTDepthStencil;
+	zcRes::GfxTarget2DRef		mrRTDepthStencil;
 	bool						mbClearDepth;
 	float						mfDepthValue;
 	bool						mbClearStencil;
 	zU8							muStencilValue;
 };
 
-class CommandUpdateIndex : public Command
-{
-	zenClassDeclare(CommandUpdateIndex, Command)
-public:
-	static zEngineRef<Command>	Create( const zcRes::GfxIndexRef& _rIndex, zU8* _pData, zUInt _uOffset=0, zUInt _uSize=0xFFFFFFFFFFFFFFFF);
-	virtual void				Invoke();
-
-protected:	
-	zcRes::GfxIndexRef			mrIndex;
-	zU8*						mpData;
-	zUInt						muOffset;
-	zUInt						muSize;
-};
-
-class CommandUpdateBuffer : public Command
-{
-zenClassDeclare(CommandUpdateBuffer, Command)
-public:
-	static zEngineRef<Command>	Create( const zcRes::GfxBufferRef& _rBuffer, zU8* _pData, zUInt _uOffset=0, zUInt _uSize=0xFFFFFFFFFFFFFFFF);
-	virtual void				Invoke();
-
-protected:	
-	zcRes::GfxBufferRef			mrBuffer;
-	zU8*						mpData;
-	zUInt						muOffset;
-	zUInt						muSize;
-};
-
 }
 
+#include ZENHeaderRenderer(zcGfxDrawcall)
 #include "zcGfxDrawcall.inl"
 
 #endif

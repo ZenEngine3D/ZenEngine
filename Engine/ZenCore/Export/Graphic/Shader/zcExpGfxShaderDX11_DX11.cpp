@@ -1,7 +1,6 @@
 #include "zcCore.h"
-#if ZEN_EXPORT_OR_RESOURCE_DX11
 
-#include <D3D11.h>
+//#include <D3D11.h>
 #include <D3D11Shader.h>
 #include <D3Dcompiler.h>
 
@@ -124,7 +123,7 @@ bool ExporterGfxShaderDX11_DX11::ExportWorkCompile()
 #if defined( DEBUG ) || defined( _DEBUG )
 	dwShaderFlags |= D3DCOMPILE_DEBUG;
 #endif
-
+	
 	mrExport->maCompiledShader.Clear();
 	hr = D3DCompileFromFile( 
 		zFilename, 
@@ -273,4 +272,3 @@ bool ExporterGfxShaderDX11_DX11::ExportEnd()
 
 }
 
-#endif //ZEN_EXPORT_OR_RESOURCE_DX11

@@ -28,8 +28,7 @@ namespace zcRes
 		zenInline const zenPerf::zEventRef&		GetHistoryEvent(eEventType _eEventType, zU32 _uIndex)const;
 		zenInline zUInt							GetFrameCount()const;		
 		zenWnd::Window*							mpMainWindowOS = nullptr; //! @todo urgent : temp hack until merged gfx + OS window
-	
-		zUInt									muCurrentBackbuffer		= 0; // @todo 1 temp workaround dx12
+			
 	protected:
 		void									UIRenderCB();
 		void									UIRenderFps();
@@ -40,7 +39,7 @@ namespace zcRes
 		bool									UIRenderEventTreeItem(const zString& _zEventName, double _fEventTime, double _fTotalTime, double _fParentTime, zUInt _uItemCount, zUInt _uChildCount, zUInt _uDepth, bool _bHeaderStartOpen);
 		
 		zUInt									muFrameCount			= 0;
-		GfxTarget2DRef							mrBackbufferCurrent;
+		GfxTarget2DRef							mrBackbufferCurrent		= nullptr;		//!< BackBuffer where we should render final results for this frame
 		zEngineRef<zxImGui::zxRenderData>		mrImGuiData				= nullptr;
 		zEngineRef<zxNuklear::zxRenderData>		mrNuklearData			= nullptr;
 		bool									mbUIShowFps				= true;
@@ -55,6 +54,7 @@ namespace zcRes
 		zUInt									muEventValidIndex = 0;					//!< First valid root event index
 		zU32									muEventValidCount = 0;					//!< Number of valid root events
 		zenPerf::zEventRef						mrInvalidEvent;		
+		//zUInt									muCurrentBackbuffer		= 0; // @todo 1 temp workaround dx12
 	public:
 		using									Super::PerformResize;
 		friend class							GfxWindowHAL::Super;

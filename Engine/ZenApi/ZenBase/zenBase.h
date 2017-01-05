@@ -3,6 +3,7 @@
 #define __zenApi_Base_Api_h__
 
 namespace zen{ namespace zenType{}; namespace zenConst{} };
+using namespace std;
 using namespace zen;
 using namespace zen::zenType;
 using namespace zen::zenConst;

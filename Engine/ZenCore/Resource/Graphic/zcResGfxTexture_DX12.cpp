@@ -11,7 +11,7 @@ GfxTexture2dHAL_DX12::~GfxTexture2dHAL_DX12()
 
 bool GfxTexture2dHAL_DX12::Initialize()
 {
-#if DISABLE_DX12
+#if ZEN_RENDERER_DX12
 	D3D12_RESOURCE_DESC		TextureDesc = {};	
 	D3D12_CLEAR_VALUE		DefaultClearValue = {};
 	D3D12_RESOURCE_STATES	ResourceState = D3D12_RESOURCE_STATE_COMMON;
@@ -116,7 +116,7 @@ bool GfxTexture2dHAL_DX12::Initialize()
     SrvDesc.Texture2D.MipLevels				= static_cast<UINT>(maMipData.Count());
     SrvDesc.Texture2D.PlaneSlice			= 0;
     SrvDesc.Texture2D.ResourceMinLODClamp	= 0;
-	mTextureView							= zcGfx::DescriptorSRV::Allocate();
+	mTextureView							= zcGfx::DescriptorSRV_UAV_CBV::Allocate();
 	zcMgr::GfxRender.GetDevice()->CreateShaderResourceView(mrTextureResource.Get(), &SrvDesc, mTextureView.GetHandle());
 
 	return true;

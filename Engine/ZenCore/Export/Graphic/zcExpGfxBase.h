@@ -2,7 +2,6 @@
 #ifndef __zCore_Exp_Gfx_Base_h__
 #define __zCore_Exp_Gfx_Base_h__ 
 
-#include ZENHeaderPlatform(zcExpGfxBase)
 #include "Graphic/State/zcExpGfxState.h"
 #include "Graphic/Surface/zcExpGfxTexture.h"
 #include "Graphic/Surface/zcExpGfxRenderTarget.h"
@@ -17,6 +16,10 @@
 #include "Graphic/Binding/zcExpGfxMesh.h"
 #include "Graphic/Binding/zcExpGfxShaderBinding.h"
 #include "Graphic/Binding/zcExpGfxRenderpass.h"
+
+#include "Graphic/zcExpGfxBaseDX11.h"
+#include "Graphic/zcExpGfxBaseDX12.h"
+
 #include ZENHeaderRenderer(zcExpGfxExporter)
 
 #endif

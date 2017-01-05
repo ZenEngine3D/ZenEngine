@@ -11,9 +11,12 @@ class GfxIndexHAL_DX12 : public zcExp::ExportGfxIndexDX12
 public:	
 	virtual										~GfxIndexHAL_DX12();
 	bool										Initialize();
-	void										Update(zU8* _pData, zUInt _uOffset = 0, zUInt _uSize = 0xFFFFFFFFFFFFFFFF);
+	zU8*										Lock();
+	void										Unlock(const zenGfx::zContext& _rContext);
 
-	ID3D11Buffer*								mpIndiceBuffer;
+	DirectXComRef<ID3D12Resource>				mrBuffer;
+	DirectXComRef<ID3D12Resource>				mrLockData;
+	D3D12_RESOURCE_STATES						meBufferState;
 	typedef zcExp::ExporterGfxIndexDX12_DX12	RuntimeExporter;
 };
 class GfxIndexHAL : public GfxIndexHAL_DX12{};

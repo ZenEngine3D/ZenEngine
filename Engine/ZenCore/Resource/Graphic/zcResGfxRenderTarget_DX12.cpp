@@ -42,7 +42,7 @@ GfxTarget2DRef GfxTarget2DHAL_DX12::RuntimeCreate(const DirectXComRef<IDXGISwapC
 //==================================================================================================
 bool GfxTarget2DHAL_DX12::Initialize()
 {
-#if DISABLE_DX12
+#if ZEN_RENDERER_DX12
 	const DirectXComRef<ID3D12Resource> rSurface;
 	GfxTarget2DRef	rRenderTarget	= (GfxTarget2D*)this;
 	GfxTexture2dRef	rTexture		= rRenderTarget->GetTexture2D();
@@ -98,7 +98,7 @@ bool GfxTarget2DHAL_DX12::InitializeCommon(const DirectXComRef<ID3D12Resource>& 
 //==================================================================================================
 void GfxTarget2DHAL_DX12::ReleaseBackbuffer()
 {
-#if !DISABLE_DX12
+#if !ZEN_RENDERER_DX12
 	if( mpTargetColorView )
 		mpTargetColorView->Release();
 	mpTargetColorView = nullptr;

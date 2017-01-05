@@ -225,7 +225,6 @@ bool ManagerRender::Unload()
 void ManagerRender::FrameBegin(zcRes::GfxWindowRef _FrameWindow)
 {
 	Super::FrameBegin(_FrameWindow);
-	zcGfx::Command::ResetCommandCount();
 	mDX11pContextImmediate->IASetInputLayout( mDX11pEmptyInputLayout );
 	mrPreviousDrawcall		= nullptr;
 	mbDX11ProfilerDetected	= mDX11pPerf && mDX11pPerf->GetStatus();
@@ -443,7 +442,7 @@ void ManagerRender::UpdateShaderState(const zcGfx::CommandDraw& _Drawcall, Rende
 	const zcRes::GfxIndexRef&			rIndex		= rMeshStrip.HAL()->mrIndexBuffer;
 	const zcRes::GfxShaderBindingRef&	rShaderBind	= rMeshStrip.HAL()->mrShaderBinding;			
 	const zcRes::GfxViewRef&			rView		= _Context.mrStateView;
-
+	
 	if( _Context.mePrimitiveType != rIndex.HAL()->mePrimitiveType )
 	{
 		_Context.mePrimitiveType = rIndex.HAL()->mePrimitiveType;
@@ -489,6 +488,7 @@ void ManagerRender::UpdateShaderState(const zcGfx::CommandDraw& _Drawcall, Rende
 		{
 			const zArrayStatic<zcRes::GfxShaderResourceRef>& arResources	= rMeshStrip.HAL()->marShaderResources[stageIdx][resTypeIdx];
 			zHash32 zMeshStripResStamp										= rMeshStrip.HAL()->mhShaderResourceStamp[stageIdx][resTypeIdx];
+
 			if( (zU32)zMeshStripResStamp == 0 )
 			{
 				zMeshStripResStamp = zHash32();

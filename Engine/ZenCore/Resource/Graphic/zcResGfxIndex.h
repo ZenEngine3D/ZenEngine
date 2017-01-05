@@ -11,12 +11,8 @@ class GfxIndex : protected GfxIndexHAL
 {
 zenClassDeclare(GfxIndex, GfxIndexHAL)
 public:
-	zU8*				Lock();
-	void				Unlock(const zenGfx::zContext& _rContext);		
-
-	using				GfxIndexHAL::Update;	// Expose HAL method
-protected:	
-	zU8*				mpLockData = nullptr; //! @todo safe support multi threading (lock return context?)
+	using 				GfxIndexHAL::Lock;		// Expose HAL method
+	using 				GfxIndexHAL::Unlock;	// Expose HAL method
 };
 
 }

@@ -36,15 +36,27 @@ bool GfxIndexHAL_DX11::Initialize()
 	return SUCCEEDED(hr);
 }
 
-void GfxIndexHAL_DX11::Update(zU8* _pData, zUInt _uOffset, zUInt _uSize)
+zU8* GfxIndexHAL_DX11::Lock()
 {
-	zenAssert(mpIndiceBuffer);	
-	D3D11_MAPPED_SUBRESOURCE mapRes;
-	_uOffset		= 0;//zenMath::Min(_uOffset, (zUInt)muIndiceCount); //! @todo Urgent support partial updates
-	_uSize			= zenMath::Min(_uSize, (zUInt)maIndices.SizeMem() - _uOffset);
-	HRESULT result	= zcMgr::GfxRender.DX11GetDeviceContext()->Map(mpIndiceBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mapRes);
-	memcpy((zU8*)mapRes.pData, _pData, _uSize); 
-	zcMgr::GfxRender.DX11GetDeviceContext()->Unmap(mpIndiceBuffer, 0);
+	zenAssertMsg(mpLockData==nullptr, "Need to unlock buffer before locking it again");
+
+	//! @todo 3 Optim lock type and copy data if needed
+	//! @todo 3 Optim Use ring buffer for this	
+	//! @todo 3 Clean Design MemBuffer class to handle data copy between cpu/gpu
+	//! @todo 3 Optim return directx11 map pointer directly
+	//					Ref: https://developer.nvidia.com/sites/default/files/akamai/gamedev/files/gdc12/Efficient_Buffer_Management_McDonald.pdf
+	mpLockData = zenNewDefault zU8[ maIndices.SizeMem() ];		
+	return mpLockData;
+}
+
+void GfxIndexHAL_DX11::Unlock(const zenGfx::zContext& _rContext)
+{
+	//! @todo Urgent Update Cpu copy at frame end
+	zenAssertMsg(mpLockData != nullptr, "Need to lock buffer before unlocking it");
+	zcRes::GfxIndexRef rIndex = reinterpret_cast<GfxIndex*>(this);
+	zEngineRef<zcGfx::Command> rCommand = zcGfx::CommandUpdateIndexDX11::Create( rIndex, mpLockData );
+	mpLockData							= nullptr;
+	_rContext->AddCommand(rCommand.Get());
 }
 
 }

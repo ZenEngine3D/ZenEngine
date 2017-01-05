@@ -1,7 +1,6 @@
 #pragma once
-#if !defined(__zCore_Exp_Gfx_GfxShader_DX12_h__) && ZEN_EXPORT_OR_RESOURCE_DX12
+#ifndef __zCore_Exp_Gfx_GfxShader_DX12_h__
 #define __zCore_Exp_Gfx_GfxShader_DX12_h__
-//SF DX12
 
 namespace zcExp
 {	
@@ -9,7 +8,7 @@ namespace zcExp
 	{
 	zenClassDeclare(ExportGfxShaderDX12, ExportGfxShader)
 	public:		
-		zArrayStatic<zU8>			maCompiledShader;			//!< Compiled shader code		
+		zArrayStatic<zU8> maCompiledShader;	//!< Compiled shader code		
 	};
 }
 

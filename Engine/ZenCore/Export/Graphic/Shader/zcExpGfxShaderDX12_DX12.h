@@ -1,7 +1,6 @@
 #pragma once
 #ifndef __zCore_Exp_Gfx_GfxShader_DX12_DX12_h__
 #define __zCore_Exp_Gfx_GfxShader_DX12_DX12_h__
-//SF DX12
 
 namespace zcExp
 {	
@@ -9,7 +8,7 @@ namespace zcExp
 	{
 	zenClassDeclare(ExporterGfxShaderDX12_DX12, ExporterBase)
 	public:				
-		typedef zEngineRef<ExportGfxShaderDX12>				ExportResultRef; //todo use proper ref class
+		typedef zEngineRef<ExportGfxShaderDX12>				ExportResultRef; //todo 3 use proper ref class
 															ExporterGfxShaderDX12_DX12(const ExportResultRef& _rExportOut);
 	protected:	
 		virtual bool										ExportWork(bool _bIsTHRTask);

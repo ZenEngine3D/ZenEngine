@@ -65,11 +65,11 @@ zEngineRef<Command> CommandClearDepthStencil::Create( const zcRes::GfxRenderPass
 {
 	static zenMem::zAllocatorPool sMemPool("Pool CommandClearDepth", sizeof(CommandClearDepthStencil), 128, 128 );
 	CommandClearDepthStencil* pCmdClearDepthStencil	= zenNew(&sMemPool) CommandClearDepthStencil;		
-	pCmdClearDepthStencil->mrRTDepthStencil	= _rRTDepth;
-	pCmdClearDepthStencil->mbClearDepth		= _bClearDepth;
-	pCmdClearDepthStencil->mfDepthValue		= _fDepthValue;
-	pCmdClearDepthStencil->mbClearStencil	= _bClearStencil;
-	pCmdClearDepthStencil->muStencilValue	= _uStencilValue;
+	pCmdClearDepthStencil->mrRTDepthStencil			= _rRTDepth;
+	pCmdClearDepthStencil->mbClearDepth				= _bClearDepth;
+	pCmdClearDepthStencil->mfDepthValue				= _fDepthValue;
+	pCmdClearDepthStencil->mbClearStencil			= _bClearStencil;
+	pCmdClearDepthStencil->muStencilValue			= _uStencilValue;
 	pCmdClearDepthStencil->SetSortKeyDataUpdate(_rRTDepth.GetResID().GetHashID());
 	return pCmdClearDepthStencil;
 }
@@ -78,52 +78,6 @@ void CommandClearDepthStencil::Invoke()
 {
 	zcPerf::EventGPUCounter::Create(zcPerf::EventGPUCounter::keType_ClearDepth);
 	mrRTDepthStencil->Clear(mfDepthValue, muStencilValue, mbClearDepth, mbClearStencil);
-}
-
-//=================================================================================================
-// DRAW COMMAND UPDATE INDEX BUFFER
-//=================================================================================================
-zEngineRef<Command>	CommandUpdateIndex::Create(const zcRes::GfxIndexRef& _rIndex, zU8* _pData, zUInt _uOffset, zUInt _uSize)
-{
-	static zenMem::zAllocatorPool sMemPool("Pool CommandUpdateIndex", sizeof(CommandUpdateIndex), 128, 128);
-	CommandUpdateIndex* pCmdUpdateIndex = zenNew(&sMemPool) CommandUpdateIndex;
-	pCmdUpdateIndex->mrIndex			= _rIndex;
-	pCmdUpdateIndex->mpData				= _pData;
-	pCmdUpdateIndex->muOffset			= _uOffset;
-	pCmdUpdateIndex->muSize				= _uSize;
-	pCmdUpdateIndex->SetSortKeyDataUpdate(_rIndex.GetResID().GetHashID());
-	return pCmdUpdateIndex;
-}
-
-void CommandUpdateIndex::Invoke()
-{
-	zcPerf::EventGPUCounter::Create(zcPerf::EventGPUCounter::keType_UpdateIndex);
-	mrIndex->Update(mpData, muOffset, muSize);
-	zenDelArray( mpData );
-	mpData = nullptr;
-}
-
-//=================================================================================================
-// DRAW COMMAND UPDATE BUFFER
-//=================================================================================================
-zEngineRef<Command>	CommandUpdateBuffer::Create(const zcRes::GfxBufferRef& _rBuffer, zU8* _pData, zUInt _uOffset, zUInt _uSize)
-{
-	static zenMem::zAllocatorPool sMemPool("Pool CommandUpdateVertex", sizeof(CommandUpdateBuffer), 128, 128);
-	CommandUpdateBuffer* pCmdUpdateIndex = zenNew(&sMemPool) CommandUpdateBuffer;
-	pCmdUpdateIndex->mrBuffer			= _rBuffer;
-	pCmdUpdateIndex->mpData				= _pData;
-	pCmdUpdateIndex->muOffset			= _uOffset;
-	pCmdUpdateIndex->muSize				= _uSize;
-	pCmdUpdateIndex->SetSortKeyDataUpdate(_rBuffer.GetResID().GetHashID());
-	return pCmdUpdateIndex;
-}
-
-void CommandUpdateBuffer::Invoke()
-{
-	zcPerf::EventGPUCounter::Create(zcPerf::EventGPUCounter::keType_UpdateBuffer);
-	mrBuffer->Update(mpData, muOffset, muSize);
-	zenDelArray( mpData );
-	mpData = nullptr;
 }
 
 }

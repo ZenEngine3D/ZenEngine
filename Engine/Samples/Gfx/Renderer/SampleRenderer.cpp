@@ -1,6 +1,13 @@
 #include "zenEngine.h"
 #include "SampleRenderer.h"
 
+int main (int argc, char * const argv[])
+{
+	sample::SampleRendererInstance EngineInstance;
+	zenSys::LaunchEngine( &EngineInstance, argc, argv );	
+	return 0;	
+}
+
 //=================================================================================================
 //! @example SampleGfxRenderer.cpp
 //! Renderer initialization and test
@@ -71,10 +78,6 @@ bool SampleRendererInstance::Init()
 	Super::Init();
 	CreateGfxWindow( zVec2U16(1280, 800), zVec2U16(0,0) );
 
-#if !DISABLE_DX12	
-	mrVertexBufferPos		= zenRes::zGfxStructBuffer<zVec3F>::Create(aCubeVerticesPos, (zU32)aCubeVerticesPos.Count() /*, zFlagResUse()*/ ); 
-	mrVertexBufferColorUv	= zenRes::zGfxStructBuffer<BufferColorUV>::Create(aCubeVerticesColorUV, (zU32)aCubeVerticesColorUV.Count() /*, zFlagResUse()*/ ); 
-
 	//-----------------------------------------------------------
 	// Prepare some data for asset creation
 	zArrayStatic<zU8>			aTexRGBA;
@@ -100,14 +103,16 @@ bool SampleRendererInstance::Init()
 	//---------------------------------------------------------------------
 	// Create rendering resources		
 	//---------------------------------------------------------------------	
-	mrCubeIndex											= zenRes::zGfxIndex::Create( zArrayStatic<zU16>(CubeIndices, zenArrayCount(CubeIndices), TRUE), zenConst::kePrimType_TriangleList );
-	mrShaderVS											= zenRes::zGfxShaderVertex::Create( "Shader/Tutorial07.fx", "VS");
 	mrShaderPS											= zenRes::zGfxShaderPixel::Create( "Shader/Tutorial07.fx", "PS", aShaderDefines );		
 	mrShaderPS2Output									= zenRes::zGfxShaderPixel::Create( "Shader/Tutorial07.fx", "PS2Output", aShaderDefines );		
+	mrShaderVS											= zenRes::zGfxShaderVertex::Create( "Shader/Tutorial07.fx", "VS");	
+	mrCubeIndex											= zenRes::zGfxIndex::Create( zArrayStatic<zU16>(CubeIndices, zenArrayCount(CubeIndices), TRUE), zenConst::kePrimType_TriangleList );
+	mrVertexBufferPos									= zenRes::zGfxStructBuffer<zVec3F>::Create(aCubeVerticesPos, (zU32)aCubeVerticesPos.Count() /*, zFlagResUse()*/ ); 
+	mrVertexBufferColorUv								= zenRes::zGfxStructBuffer<BufferColorUV>::Create(aCubeVerticesColorUV, (zU32)aCubeVerticesColorUV.Count() /*, zFlagResUse()*/ ); 	
 	mrTexture											= zenRes::zGfxTexture2d::Create(zenConst::keTexFormat_RGBA8, vTexSize, aTexRGBA );
 	mrSampler											= zenRes::zGfxSampler::Create(zenConst::keTexFilter_Trilinear, zenConst::keTexFilter_Bilinear, zenConst::keTexWrap_Clamp, zenConst::keTexWrap_Clamp, 0);
 	mrSampler2											= zenRes::zGfxSampler::Create(zenConst::keTexFilter_Point, zenConst::keTexFilter_Point, zenConst::keTexWrap_Clamp, zenConst::keTexWrap_Clamp, 0);	
-	
+
 	// Some bindings of render resource together
 	mrShaderBind										= zenRes::zGfxShaderBinding::Create(mrShaderVS, mrShaderPS);
 	mrShader2OutputBind									= zenRes::zGfxShaderBinding::Create(mrShaderVS, mrShaderPS2Output);
@@ -195,7 +200,6 @@ bool SampleRendererInstance::Init()
 
 	rCube4MeshStripA.SetValue( zHash32("vColor"),				zVec4F(1,0.2f,0.2f,1));
 	rCube4MeshStripB.SetValue( zHash32("vColor"),				zVec4F(0.2f,1,0.2f,1));	
-#endif
 
 	return true;
 }
@@ -240,11 +244,7 @@ void SampleRendererInstance::Update()
 	zenGfx::zContext rContextFinal				= zenGfx::zContext::Create("Final",				rContextRoot, mrRndPassFinal);
 			
 	float t = static_cast<float>(zenSys::GetElapsedSec() / 3.0);	// Update our time animation
-#if DISABLE_DX12	
-	zVec4F vClearColor = zenMath::TriLerp( zVec4F(0.05f,0.05f,0.05f,1), zVec4F(0.1f,0.1f,0.20f,1), zVec4F(0.05f,0.05f,0.05f,1), zenMath::Fract(t) );
-	zenGfx::zCommand::ClearColor(rContextFinal, mrMainWindowGfx.GetBackbuffer(), vClearColor);
-	zenGfx::zCommand::ClearDepthStencil(rContextFinal, mrBackbufferDepth);
-#else
+
 	//-----------------------------------------------------------------
 	// Render cube in RenderTarget
 	//-----------------------------------------------------------------
@@ -284,7 +284,6 @@ void SampleRendererInstance::Update()
 	mrCube4Mesh.SetValue( zHash32("World"),				matWorld[3] );
 	mrCube4Mesh.SetValue( zHash32("Projection"),		matProjection );
 	zenGfx::zCommand::DrawMesh(rContextFinal, 0, mrCube4Mesh);
-#endif
 
 	rContextRoot.Submit();
 

@@ -95,6 +95,8 @@ public:
 		return NewDesc;
 	}
 	
+	static const DirectXComRef<ID3D12DescriptorHeap>& GetDescHeap() {return srDXDescriptorHeap;}
+
 	static bool Initialize( D3D12_DESCRIPTOR_HEAP_TYPE _eHeapType, D3D12_DESCRIPTOR_HEAP_FLAGS _eFlags=D3D12_DESCRIPTOR_HEAP_FLAG_NONE )
 	{
 		zenAssertMsg(suDescriptorSize == 0, "Resource Descriptor Heap already initialized");
@@ -110,25 +112,7 @@ public:
 		srDXCPUHandle			= srDXDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
 		srDXGPUHandle			= srDXDescriptorHeap->GetGPUDescriptorHandleForHeapStart();
 		suDescriptorSize		= zcMgr::GfxRender.GetDevice()->GetDescriptorHandleIncrementSize(_eHeapType);
-		saDescriptorUsed.SetRange(0, DescriptorRTV::kuHeapCount, false);
-
-		
-		DirectXComRef< ID3D12DescriptorHeap > m_srvHeap;
-		D3D12_CPU_DESCRIPTOR_HANDLE m_srvHeapCPUHandle;
-		D3D12_GPU_DESCRIPTOR_HANDLE m_srvHeapGPUHandle;
-
-		D3D12_DESCRIPTOR_HEAP_DESC srvHeapDesc;		
-		srvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
-		srvHeapDesc.NumDescriptors = 10000;//DirectX12::g_numShaderResourceDesciptors;
-		srvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
-		srvHeapDesc.NodeMask = 0;
-		if(FAILED(zcMgr::GfxRender.GetDevice()->CreateDescriptorHeap(&srvHeapDesc, IID_PPV_ARGS(&m_srvHeap))))
-			throw "Failed to create shader resource view descriptor heap";
-		//ox_debugOnly(m_srvHeap->SetName(L"Renderer::m_srvHeap"));
-		//ox_renew(m_srvHeapAllocator, 0, DirectX12::g_numShaderResourceDesciptors);
-		m_srvHeapCPUHandle = m_srvHeap->GetCPUDescriptorHandleForHeapStart();
-		m_srvHeapGPUHandle = m_srvHeap->GetGPUDescriptorHandleForHeapStart();
-		
+		saDescriptorUsed.SetRange(0, ResourceDescriptor::kuHeapCount, false);
 		return true;
 	}
 protected:
@@ -150,14 +134,16 @@ template<int TType, int THeapCount>	D3D12_GPU_DESCRIPTOR_HANDLE			ResourceDescri
 template<int TType, int THeapCount>	zUInt								ResourceDescriptor<TType,THeapCount>::suDescriptorSize = 0;
 template<int TType, int THeapCount>	zArrayBits							ResourceDescriptor<TType,THeapCount>::saDescriptorUsed;
 
-using DescriptorRTV = ResourceDescriptor<0, 128>;
-using DescriptorDSV = ResourceDescriptor<1, 64>;
-using DescriptorSRV = ResourceDescriptor<2, 128>;
+using DescriptorRTV			= ResourceDescriptor<0, 128>;
+using DescriptorDSV			= ResourceDescriptor<1, 64>;
+using DescriptorSRV_UAV_CBV = ResourceDescriptor<2, 1024>;
+
 
 //=================================================================================================
 //! @brief		zbType::Manager used to control hardware DX12 renderer
 //! @details	
 //=================================================================================================	
+//! @todo 3 rename to _DX12
 class ManagerRender : public ManagerRender_Base
 {
 zenClassDeclare(ManagerRender, ManagerRender_Base)
@@ -190,81 +176,80 @@ public:
 		bool									mbScreenScissorOn	= false;
 	};
 
-	virtual void								FrameBegin(zcRes::GfxWindowRef _FrameWindow);
-	virtual void								FrameEnd();
-	void										Render(zArrayDynamic<zEngineRef<zcGfx::Command>>& _aDrawcalls);
-	void										NamedEventBegin(const zStringHash32& zName);
-	void										NamedEventEnd();
-	const zEngineRef<DX12QueryDisjoint>&		GetQueryDisjoint()const;
+	virtual void									FrameBegin(zcRes::GfxWindowRef _FrameWindow);
+	virtual void									FrameEnd();
+	void											Render(zArrayDynamic<zEngineRef<zcGfx::Command>>& _aDrawcalls);
+	void											NamedEventBegin(const zStringHash32& zName);
+	void											NamedEventEnd();
+	const zEngineRef<DX12QueryDisjoint>&			GetQueryDisjoint()const;
 
 //---------------------------------------------------------
 // DirectX device infos
 //---------------------------------------------------------
 public:		
-	const DirectXComRef<IDXGIFactory4>&			GetFactory()const			{return mrDXFactory;}
-	const DirectXComRef<ID3D12Device>&			GetDevice()const			{return mrDXDevice;}
-	//const DirectXComRef<ID3D12CommandAllocator>&GetCommandAllocator()const	{return mrDXCommandAllocator;}
-//	CommandQueue&								GetCmdQueueDirect()			{return mrCmdQueueDirect;}	
-	//CommandListManager&							GetCommandMgr()				{return mCommandManager;}
-	//ID3D12GraphicsCommandList*					GetCommandList()			{return mCommandList;}
-	DXGI_FORMAT									ZenFormatToNative( zenConst::eTextureFormat _eTexFormat )const		{ return meFormatConv[_eTexFormat]; }
-	DXGI_FORMAT									ZenFormatToTypeless( zenConst::eTextureFormat _eTexFormat )const	{ return meFormatConvTypeless[_eTexFormat]; }
-	DXGI_FORMAT									ZenFormatToDepthDSV( zenConst::eTextureFormat _eTexFormat )const	{ return meFormatConvDepthDSV[_eTexFormat]; }
-	DXGI_FORMAT									ZenFormatToDepthSRV( zenConst::eTextureFormat _eTexFormat )const	{ return meFormatConvDepthSRV[_eTexFormat]; }
-	DXGI_FORMAT									ZenFormatToStencilSRV( zenConst::eTextureFormat _eTexFormat )const	{ return meFormatConvStencilSRV[_eTexFormat]; }
+	const DirectXComRef<IDXGIFactory4>&				GetFactory()const			{return mrDXFactory;}
+	const DirectXComRef<ID3D12Device>&				GetDevice()const			{return mrDXDevice;}
+
+	DXGI_FORMAT										ZenFormatToNative( zenConst::eTextureFormat _eTexFormat )const		{ return meFormatConv[_eTexFormat]; }
+	DXGI_FORMAT										ZenFormatToTypeless( zenConst::eTextureFormat _eTexFormat )const	{ return meFormatConvTypeless[_eTexFormat]; }
+	DXGI_FORMAT										ZenFormatToDepthDSV( zenConst::eTextureFormat _eTexFormat )const	{ return meFormatConvDepthDSV[_eTexFormat]; }
+	DXGI_FORMAT										ZenFormatToDepthSRV( zenConst::eTextureFormat _eTexFormat )const	{ return meFormatConvDepthSRV[_eTexFormat]; }
+	DXGI_FORMAT										ZenFormatToStencilSRV( zenConst::eTextureFormat _eTexFormat )const	{ return meFormatConvStencilSRV[_eTexFormat]; }
 	
 //! @todo urgent clean this up
-	void										UnbindTextures(){};
-	void										UnbindResources(){};
+	void											UnbindTextures(){};
+	void											UnbindResources(){};
+	
+	DirectXComRef<ID3D12Resource>&					GetTempResourceHandle();
 
 protected:
-	zenInline void								UpdateGPUState(const zEngineRef<zcGfx::Command>& _rDrawcall, RenderContext& _Context);
-	zenInline void								UpdateShaderState(const zcGfx::CommandDraw& _Drawcall, RenderContext& _Context);	
-	zenInline void								UpdateShaderState_Samplers(const zcGfx::CommandDraw& _Drawcall, RenderContext& _Context, eShaderStage _eShaderStage);
-	zenInline void								UpdateShaderState_ConstantBuffers(const zcGfx::CommandDraw& _Drawcall, RenderContext& _Context, eShaderStage _eShaderStage);
-	zenInline void								UpdateShaderState_Textures(zU16& Out_ChangedFirst, zU16& Out_ChangedLast, const zcGfx::CommandDraw& _Drawcall, RenderContext& _Context, eShaderStage _eShaderStage);	
-	zenInline void								UpdateShaderState_StructBuffers(zU16& Out_ChangedFirst, zU16& Out_ChangedLast, const zcGfx::CommandDraw& _Drawcall, RenderContext& _Context, eShaderStage _eShaderStage);
-	zEngineRef<zcGfx::Command>					mrPreviousDrawcall;
-	DXGI_FORMAT									meFormatConv[zenConst::keTexFormat__Count];
-	DXGI_FORMAT									meFormatConvTypeless[zenConst::keTexFormat__Count];
-	DXGI_FORMAT									meFormatConvDepthDSV[zenConst::keTexFormat__Count];
-	DXGI_FORMAT									meFormatConvDepthSRV[zenConst::keTexFormat__Count];
-	DXGI_FORMAT									meFormatConvStencilSRV[zenConst::keTexFormat__Count];
+	//! @todo 2 Move this per context, for multithreading
+	zenInline void									UpdateGPUState(const zEngineRef<zcGfx::Command>& _rDrawcall, RenderContext& _Context);
+	zenInline void									UpdateShaderState(const zcGfx::CommandDraw& _Drawcall, RenderContext& _Context);	
+	zenInline void									UpdateShaderState_Samplers(const zcGfx::CommandDraw& _Drawcall, RenderContext& _Context, eShaderStage _eShaderStage);
+	zenInline void									UpdateShaderState_ConstantBuffers(const zcGfx::CommandDraw& _Drawcall, RenderContext& _Context, eShaderStage _eShaderStage);
+	zenInline void									UpdateShaderState_Textures(zU16& Out_ChangedFirst, zU16& Out_ChangedLast, const zcGfx::CommandDraw& _Drawcall, RenderContext& _Context, eShaderStage _eShaderStage);	
+	zenInline void									UpdateShaderState_StructBuffers(zU16& Out_ChangedFirst, zU16& Out_ChangedLast, const zcGfx::CommandDraw& _Drawcall, RenderContext& _Context, eShaderStage _eShaderStage);
+	zEngineRef<zcGfx::Command>						mrPreviousDrawcall;
 
-	//ID3D12Device*								mDX12pDevice			= nullptr;
-	//ID3D11DeviceContext*						mDX12pContextImmediate	= nullptr; //SF
-	//ID3DUserDefinedAnnotation*					mDX12pPerf				= nullptr;
+	DXGI_FORMAT										meFormatConv[zenConst::keTexFormat__Count];
+	DXGI_FORMAT										meFormatConvTypeless[zenConst::keTexFormat__Count];
+	DXGI_FORMAT										meFormatConvDepthDSV[zenConst::keTexFormat__Count];
+	DXGI_FORMAT										meFormatConvDepthSRV[zenConst::keTexFormat__Count];
+	DXGI_FORMAT										meFormatConvStencilSRV[zenConst::keTexFormat__Count];
 
-	DirectXComRef<IDXGIFactory4>				mrDXFactory;
-	DirectXComRef< IDXGIAdapter3 >				mrDXAdapter;
-	DirectXComRef<ID3D12Device>					mrDXDevice;
-	DirectXComRef<ID3D12GraphicsCommandList>	mrDXCommandList; //! @todo 3 have this per gfx context for multithreading
-	DirectXComRef<ID3D12Debug1>					mrDXDebugController;
+	DirectXComRef<IDXGIFactory4>					mrDXFactory;
+	DirectXComRef<IDXGIAdapter3>					mrDXAdapter;
+	DirectXComRef<ID3D12Device>						mrDXDevice;
+	DirectXComRef<ID3D12Debug1>						mrDXDebugController;
+	zcGfx::RootSignature							mRootSignature;
+	zArrayDynamic<DirectXComRef<ID3D12Resource>>	marTempResource[2];		//!< Temp allocated resources freed after 2 frames
 
 public:
-	DirectXComRef<ID3D12CommandAllocator>		m_commandAllocator;
-	DirectXComRef<ID3D12CommandQueue>			m_commandQueue;
-	DirectXComRef<ID3D12GraphicsCommandList>	m_commandList;
+	
+	DirectXComRef<ID3D12CommandAllocator>			m_commandAllocator;
+	DirectXComRef<ID3D12CommandQueue>				m_commandQueue;
+	DirectXComRef<ID3D12GraphicsCommandList>		m_commandList;			//!< @todo 3 have this per gfx context for multithreading
+	
 	// Synchronization objects.
-	HANDLE										m_fenceEvent;
-	DirectXComRef<ID3D12Fence>					m_fence;
-	UINT64										m_fenceValue;
-	void										WaitForPreviousFrame();
-	//CommandListManager							mCommandManager;
-	//ID3D12GraphicsCommandList*					mCommandList			= nullptr;
-	//ID3D12CommandAllocator*						mCurrentAllocator		= nullptr;
+	HANDLE											m_fenceEvent;
+	DirectXComRef<ID3D12Fence>						m_fence;
+	UINT64											m_fenceValue;
+	void											WaitForPreviousFrame();
+
 protected:
 	
-	bool										mbTextureUnbind			= false;
-	bool										mbResourceUnbind		= false;
-	bool										mbDX12ProfilerDetected	= true;		
-	zEngineRef<DX12QueryDisjoint>				mrQueryDisjoint;
+	bool											mbTextureUnbind		= false;
+	bool											mbResourceUnbind	= false;
+	bool											mbProfilerDetected	= false;		
+	zEngineRef<DX12QueryDisjoint>					mrQueryDisjoint;
+
 //---------------------------------------------------------
 // ManagerBase Section
 //---------------------------------------------------------
 public:
-	virtual	bool			Load			();
-	virtual	bool			Unload			();
+	virtual	bool									Load();
+	virtual	bool									Unload();
 };
 
 }

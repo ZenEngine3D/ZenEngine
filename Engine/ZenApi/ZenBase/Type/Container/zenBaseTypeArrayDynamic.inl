@@ -25,7 +25,6 @@ zArrayDynamic<TType, TGrowthPolicy, TAlign>::zArrayDynamic(std::initializer_list
 , muCountReserved(0)
 , muCountReservedMin(0)
 {
-	Append()
 	muCount					= (zUInt)_Entries.size();
 	const TType* pItemSrc	= _Entries.begin();
 	Grow(muCount);	
@@ -207,7 +206,7 @@ void zArrayDynamic<TType, TGrowthPolicy, TAlign>::Shrink( )
 	if( uWantedCount < muCountReserved && uWantedCount > muCountReservedMin)
 	{
 		TType* pNewData = zenNewDefault TType[uWantedCount];
-		zenMem::Copy(pNewData, mpData, muCount );
+		zenMem::Copy(pNewData, mpData, muCount);
 		zenDelnullptrArray(mpData);
 		mpData			= pNewData;
 		muCountReserved	= uWantedCount;

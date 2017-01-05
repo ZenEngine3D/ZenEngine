@@ -57,7 +57,7 @@ void GfxWindow::FrameEnd()
 	
 	//! @todo 2 cleanup this messy access
 	// Editor doesn't have OS windows associated...
-#if !DISABLE_DX12
+#if !ZEN_RENDERER_DX12
 	if( mpMainWindowOS )
 	{
 		WindowInputState InputData;

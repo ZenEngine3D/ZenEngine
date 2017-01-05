@@ -10,24 +10,24 @@ namespace zcExp
 	{
 	zenClassDeclare(ExporterGfxSamplerDX12_DX12, ExporterBase)
 	public:				
-	typedef zEngineRef<ExportGfxSamplerDX12>	ExportResultRef; //todo use proper ref class
-												ExporterGfxSamplerDX12_DX12(const ExportResultRef& _rExportOut);
-		static zResID							CallbackGetItemID(ePlatform _ePlatform, zenConst::eResType _eType, zenConst::eResSource _eSource, const ExportInfoBase* _pExportInfo, bool& _bExistOut);
+	typedef zEngineRef<ExportGfxSamplerDX12>			ExportResultRef; //todo use proper ref class
+														ExporterGfxSamplerDX12_DX12(const ExportResultRef& _rExportOut);
+		static zResID									CallbackGetItemID(ePlatform _ePlatform, zenConst::eResType _eType, zenConst::eResSource _eSource, const ExportInfoBase* _pExportInfo, bool& _bExistOut);
 	protected:	
-		virtual bool							ExportWork(bool _bIsTHRTask);	
-		ExportResultRef							mrExport;
+		virtual bool									ExportWork(bool _bIsTHRTask);	
+		ExportResultRef									mrExport;
 	};
 
 	class ExporterGfxStateBlendDX12_DX12 : public ExporterBase
 	{
 	zenClassDeclare(ExporterGfxStateBlendDX12_DX12, ExporterBase)
 	public:				
-	typedef zEngineRef<ExportGfxStateBlendDX12>	ExportResultRef; //todo use proper ref class
-												ExporterGfxStateBlendDX12_DX12(const ExportResultRef& _rExportOut);
-		static zResID							CallbackGetItemID(ePlatform _ePlatform, zenConst::eResType _eType, zenConst::eResSource _eSource, const ExportInfoBase* _pExportInfo, bool& _bExistOut);
+	typedef zEngineRef<ExportGfxStateBlendDX12>			ExportResultRef; //todo use proper ref class
+														ExporterGfxStateBlendDX12_DX12(const ExportResultRef& _rExportOut);
+		static zResID									CallbackGetItemID(ePlatform _ePlatform, zenConst::eResType _eType, zenConst::eResSource _eSource, const ExportInfoBase* _pExportInfo, bool& _bExistOut);
 	protected:	
-		virtual bool							ExportWork(bool _bIsTHRTask);	
-		ExportResultRef							mrExport;
+		virtual bool									ExportWork(bool _bIsTHRTask);	
+		ExportResultRef									mrExport;
 	};
 
 	class ExporterGfxStateDepthStencilDX12_DX12 : public ExporterBase
@@ -46,12 +46,12 @@ namespace zcExp
 	{
 	zenClassDeclare(ExporterGfxStateRasterDX12_DX12, ExporterBase)
 	public:
-	typedef zEngineRef<ExportGfxStateRasterDX12>	ExportResultRef; //todo use proper ref class
-													ExporterGfxStateRasterDX12_DX12(const ExportResultRef& _rExportOut);
-		static zResID								CallbackGetItemID(ePlatform _ePlatform, zenConst::eResType _eType, zenConst::eResSource _eSource, const ExportInfoBase* _pExportInfo, bool& _bExistOut);
+	typedef zEngineRef<ExportGfxStateRasterDX12>		ExportResultRef; //todo use proper ref class
+														ExporterGfxStateRasterDX12_DX12(const ExportResultRef& _rExportOut);
+		static zResID									CallbackGetItemID(ePlatform _ePlatform, zenConst::eResType _eType, zenConst::eResSource _eSource, const ExportInfoBase* _pExportInfo, bool& _bExistOut);
 	protected:	
-		virtual bool								ExportWork(bool _bIsTHRTask);	
-		ExportResultRef								mrExport;
+		virtual bool									ExportWork(bool _bIsTHRTask);	
+		ExportResultRef									mrExport;
 	};
 }
 

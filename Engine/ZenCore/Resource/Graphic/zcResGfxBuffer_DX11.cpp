@@ -43,17 +43,21 @@ bool GfxBufferHAL_DX11::Initialize()
 
 	return SUCCEEDED(hr);
 }
-	
-void GfxBufferHAL_DX11::Update(zU8* _pData, zUInt _uOffset, zUInt _uSize)
+
+void* GfxBufferHAL_DX11::Lock()
 {
-	//! @todo optim select proper write type
-//	zenAssert(maStreamBuffer[0] != nullptr);
-	D3D11_MAPPED_SUBRESOURCE mapRes;
-	_uOffset		= 0; //! @todo Urgent support partial updates
-	_uSize			= zenMath::Min(_uSize, (zUInt)muElementCount*muElementStride - _uOffset);
-	HRESULT result	= zcMgr::GfxRender.DX11GetDeviceContext()->Map(mpBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mapRes);
-	memcpy((zU8*)mapRes.pData, _pData, _uSize); 
-	zcMgr::GfxRender.DX11GetDeviceContext()->Unmap(mpBuffer, 0);
+	zenAssertMsg(mpLockData==nullptr, "Need to unlock buffer before locking it again");
+	mpLockData = zenNewDefault zU8[ muElementCount*muElementStride ]; //!todo 2 perf Use ring buffer instead
+	return mpLockData;
+}
+
+void GfxBufferHAL_DX11::Unlock(const zenGfx::zContext& _rContext)
+{
+	//! @todo Urgent Update Cpu copy at frame end
+	zenAssertMsg(mpLockData!=nullptr, "Need to lock buffer before unlocking it");
+	zEngineRef<zcGfx::Command> rCommand = zcGfx::CommandUpdateBufferDX11::Create(reinterpret_cast<GfxBuffer*>(this), mpLockData);
+	mpLockData							= nullptr;
+	_rContext->AddCommand(rCommand.Get());
 }
 
 }

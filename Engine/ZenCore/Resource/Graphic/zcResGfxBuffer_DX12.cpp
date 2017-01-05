@@ -7,61 +7,83 @@ namespace zcRes
 
 GfxBufferHAL_DX12::~GfxBufferHAL_DX12()
 {
-	if( mpBuffer )
-	{
-		mpBuffer->Release();
-		mpBuffer = nullptr;
-	}
 }
 
 bool GfxBufferHAL_DX12::Initialize()
 {
-#if DISABLE_DX12
-	return false;
-#else
-	//! @todo Urgent configure resource creations flags (for all buffer type)
-	D3D11_BUFFER_DESC BufferDesc; 
-	ZeroMemory(&BufferDesc, sizeof(BufferDesc));	
-	BufferDesc.ByteWidth				= muElementCount*muElementStride;
-	BufferDesc.MiscFlags				= D3D11_RESOURCE_MISC_BUFFER_STRUCTURED;	
-	//BufferDesc.BindFlags				= D3D11_BIND_UNORDERED_ACCESS|D3D11_BIND_SHADER_RESOURCE;  //! @todo optim only create if gpu write active
-	BufferDesc.BindFlags				= D3D11_BIND_SHADER_RESOURCE;  //Can't support uav while cpu access on
-	BufferDesc.CPUAccessFlags			= D3D11_CPU_ACCESS_WRITE;	//! @todo Optim implement useage flags
-	BufferDesc.Usage					= D3D11_USAGE_DYNAMIC;		//! @todo Optim implement useage flags
-	BufferDesc.StructureByteStride		= muElementStride;
-	
-	D3D11_SUBRESOURCE_DATA InitData;
-	zenAssert( maData.Count()==0 || maData.Count() == BufferDesc.ByteWidth);
-	InitData.pSysMem					= maData.Count() ? maData.First() : nullptr;
-	InitData.SysMemPitch				= 0;
-	InitData.SysMemSlicePitch			= 0;
-	
-	mpSRV = nullptr;
-	mpUAV = nullptr;
-	HRESULT hr = zcMgr::GfxRender.DX12GetDevice()->CreateBuffer(&BufferDesc, maData.Count() ? &InitData : nullptr, &mpBuffer);	
-	if( SUCCEEDED(hr) )
-		hr = zcMgr::GfxRender.DX12GetDevice()->CreateShaderResourceView(mpBuffer, nullptr, &mpSRV);
+	CD3DX12_HEAP_PROPERTIES DefaultHeapProperties(D3D12_HEAP_TYPE_DEFAULT);
+	CD3DX12_RESOURCE_DESC BufferDesc = CD3DX12_RESOURCE_DESC::Buffer((UINT)muElementCount*muElementStride);
+	HRESULT hr = zcMgr::GfxRender.GetDevice()->CreateCommittedResource(
+			&DefaultHeapProperties,
+			D3D12_HEAP_FLAG_NONE,
+			&BufferDesc,
+			D3D12_RESOURCE_STATE_COPY_DEST,
+			nullptr,
+			IID_PPV_ARGS(&mrBuffer));
 
-	//! @todo optim only create if gpu write active
-	if( SUCCEEDED(hr) && (BufferDesc.MiscFlags & D3D11_BIND_UNORDERED_ACCESS) )
-		hr = zcMgr::GfxRender.DX12GetDevice()->CreateUnorderedAccessView(mpBuffer, nullptr, &mpUAV);
+	// Create view on Buffer resource
+	D3D12_SHADER_RESOURCE_VIEW_DESC SrvDesc = {};
+	SrvDesc.Format						= DXGI_FORMAT_UNKNOWN;
+	SrvDesc.ViewDimension				= D3D12_SRV_DIMENSION_BUFFER;
+    SrvDesc.Shader4ComponentMapping		= D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+	SrvDesc.Buffer.FirstElement			= 0;
+	SrvDesc.Buffer.NumElements			= muElementCount;
+	SrvDesc.Buffer.StructureByteStride	= muElementStride;
+	SrvDesc.Buffer.Flags				= D3D12_BUFFER_SRV_FLAG_NONE;	    
+	mBufferView							= zcGfx::DescriptorSRV_UAV_CBV::Allocate();
+	zcMgr::GfxRender.GetDevice()->CreateShaderResourceView(mrBuffer.Get(), &SrvDesc, mBufferView.GetHandle());
 
-	return SUCCEEDED(hr);
-#endif
+	// Send Resource update command
+	void* pUploadData = Lock();
+	if( !pUploadData )
+		return false;
+
+	zenMem::Copy( reinterpret_cast<zU8*>(pUploadData), maData.First(), maData.SizeMem() );
+	Unlock(zenGfx::zContext::GetFrameContext());
+	return true;
 }
-	
-void GfxBufferHAL_DX12::Update(zU8* _pData, zUInt _uOffset, zUInt _uSize)
+
+void* GfxBufferHAL_DX12::Lock()
 {
-#if !DISABLE_DX12
-	//! @todo optim select proper write type
-//	zenAssert(maStreamBuffer[0] != nullptr);
-	D3D11_MAPPED_SUBRESOURCE mapRes;
-	_uOffset		= 0; //! @todo Urgent support partial updates
-	_uSize			= zenMath::Min(_uSize, (zUInt)muElementCount*muElementStride - _uOffset);
-	HRESULT result	= zcMgr::GfxRender.DX12GetDeviceContext()->Map(mpBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mapRes);
-	memcpy((zU8*)mapRes.pData, _pData, _uSize); 
-	zcMgr::GfxRender.DX12GetDeviceContext()->Unmap(mpBuffer, 0);
-#endif
+	zenAssert(mrLockData.Get() == nullptr);
+
+	// Allocate temp memory to upload data to buffer
+	UINT64 uUploadBufferSize		= 0;
+	D3D12_RESOURCE_DESC BufferDesc	= mrBuffer->GetDesc();
+	zcMgr::GfxRender.GetDevice()->GetCopyableFootprints(&BufferDesc, 0, 1, 0, nullptr, nullptr, nullptr, &uUploadBufferSize);
+	
+	HRESULT hr = zcMgr::GfxRender.GetDevice()->CreateCommittedResource(
+					&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),
+					D3D12_HEAP_FLAG_NONE,
+					&CD3DX12_RESOURCE_DESC::Buffer(uUploadBufferSize),
+					D3D12_RESOURCE_STATE_GENERIC_READ,
+					nullptr,
+					IID_PPV_ARGS(&mrLockData));
+	if (FAILED(hr) )
+		return nullptr;
+	
+	// Get cpu memory pointer
+	void* pData;
+    hr = mrLockData->Map(0, NULL, &pData);
+    if (FAILED(hr) )
+		return nullptr;
+
+	return pData;
+}
+
+void GfxBufferHAL_DX12::Unlock(const zenGfx::zContext& _rContext)
+{
+	zenAssert(mrLockData.Get() != nullptr);
+	mrLockData->Unmap(0, NULL);
+
+	//DirectXComRef<ID3D12Resource>& rTemphandle	= zcMgr::GfxRender.GetTempResourceHandle();
+	//rTemphandle									= mrLockData;	//Keep the memory alive until gpu is done with it (temp handle valid 2 frames)
+
+	zcRes::GfxBufferRef rBuffer					= reinterpret_cast<zcRes::GfxBuffer*>(this);
+	zEngineRef<zcGfx::Command> rCommand			= zcGfx::CommandUpdateBufferDX12::Create(rBuffer, 0, maData.SizeMem());
+	mrLockData									= nullptr;
+
+	_rContext->AddCommand(rCommand.Get());
 }
 
 }

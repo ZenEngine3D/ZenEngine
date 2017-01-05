@@ -40,7 +40,4 @@ namespace zcExp
 	zResID CreateGfxShaderPixel	( const char* _zFilename, const char* _zEntryname, const zArrayBase<zenRes::zShaderDefine>& _aDefines );
 }
 
-#include "zcExpGfxShaderDX11.h"
-#include "zcExpGfxShaderDX12.h"
-
 #endif

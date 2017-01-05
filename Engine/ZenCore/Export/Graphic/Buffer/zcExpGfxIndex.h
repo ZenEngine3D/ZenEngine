@@ -25,7 +25,4 @@ namespace zcExp
 	zResID CreateGfxIndexBuffer(const zArrayBase<zU32>& _Indices, zenConst::ePrimitiveType _ePrimitiveType);
 }
 
-#include "zcExpGfxIndexDX11.h"
-#include "zcExpGfxIndexDX12.h"
-
 #endif

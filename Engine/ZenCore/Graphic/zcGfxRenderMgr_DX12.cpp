@@ -16,7 +16,7 @@ DX12QueryTimestamp::List	DX12QueryTimestamp::slstQueryCreated;
 
 DX12QueryDisjoint::DX12QueryDisjoint()
 {
-#if !DISABLE_DX12
+#if !ZEN_RENDERER_DX12
 	D3D11_QUERY_DESC QueryDesc;
 	QueryDesc.Query		= D3D11_QUERY_TIMESTAMP_DISJOINT;
 	QueryDesc.MiscFlags	= 0;
@@ -33,7 +33,7 @@ void DX12QueryDisjoint::ReferenceDeleteCB()
 
 void DX12QueryDisjoint::Start()
 {
-#if !DISABLE_DX12
+#if !ZEN_RENDERER_DX12
 	muFrameStop				= zUInt(-1);
 	mbValidResult			= false;
 	mDisjointInfo.Disjoint	= true;
@@ -43,7 +43,7 @@ void DX12QueryDisjoint::Start()
 
 void DX12QueryDisjoint::Stop()
 {
-#if !DISABLE_DX12
+#if !ZEN_RENDERER_DX12
 	if( muFrameStop )
 	{
 		muFrameStop	= zcMgr::GfxRender.GetFrameRendered();
@@ -54,7 +54,7 @@ void DX12QueryDisjoint::Stop()
 
 zU64 DX12QueryDisjoint::GetClockRate()
 {
-#if !DISABLE_DX12
+#if !ZEN_RENDERER_DX12
 	zenAssertMsg(muFrameStop != zUInt(-1), "Query need to be started and stopped before we get results back");
 	zenAssertMsg(muFrameStop < zcMgr::GfxRender.GetFrameRendered(), "Must wait a complete frame before getting results");
 	if( !mbValidResult ) 
@@ -79,7 +79,7 @@ zEngineRef<DX12QueryDisjoint> DX12QueryDisjoint::Create()
 
 DX12QueryTimestamp::DX12QueryTimestamp()
 {
-#if !DISABLE_DX12
+#if !ZEN_RENDERER_DX12
 	D3D11_QUERY_DESC QueryDesc;
 	QueryDesc.Query		= D3D11_QUERY_TIMESTAMP;
 	QueryDesc.MiscFlags	= 0;
@@ -102,7 +102,7 @@ void DX12QueryTimestamp::ReferenceDeleteCB()
 
 zU64 DX12QueryTimestamp::GetTimestampUSec()
 {	
-#if !DISABLE_DX12
+#if !ZEN_RENDERER_DX12
 	if( mbValidResult == false )
 	{
 		zU64 uClockRate = mrQueryDisjoint->GetClockRate();		
@@ -119,7 +119,7 @@ zU64 DX12QueryTimestamp::GetTimestampUSec()
 
 zEngineRef<DX12QueryTimestamp> DX12QueryTimestamp::Create()
 {	
-#if !DISABLE_DX12
+#if !ZEN_RENDERER_DX12
 	const zUInt uGrowSize = 128;
 	if( slstQueryCreated.IsEmpty() )
 	{
@@ -224,6 +224,11 @@ bool ManagerRender::Load()
 	// Pending Format to add: DXGI_FORMAT_X32_TYPELESS_G8X24_UINT
 	meFormatConvStencilSRV[zenConst::keTexFormat_D24S8]	= DXGI_FORMAT_X24_TYPELESS_G8_UINT;
 
+	//----------------------------------------------------------------------------------------------
+	// Create DirectX Device
+	//----------------------------------------------------------------------------------------------
+	UINT uDxgiFactoryFlags = 0;
+
 	// Enable the D3D12 debug layer.
 	if( _DEBUG )
 	{
@@ -231,18 +236,19 @@ bool ManagerRender::Load()
 		{
 			mrDXDebugController->EnableDebugLayer();
 			mrDXDebugController->SetEnableGPUBasedValidation(true);
-		}
+			uDxgiFactoryFlags |= DXGI_CREATE_FACTORY_DEBUG;
+		}	
 	}
 
 	// Create DirectX GI Factory	
-	hr = CreateDXGIFactory1(IID_PPV_ARGS(&mrDXFactory) );
+	hr = CreateDXGIFactory2(uDxgiFactoryFlags, IID_PPV_ARGS(&mrDXFactory) );
 	if( FAILED(hr) )
 		return false;
 	
 	//SF Temp Find first valid GPU
 	{
 		Microsoft::WRL::ComPtr<IDXGIAdapter1> hardwareAdapter;
-	#if 0
+	#if 1
 		GetHardwareAdapter(mrDXFactory.Get(), &hardwareAdapter);
 	#else
 		hr = mrDXFactory->EnumWarpAdapter(IID_PPV_ARGS(&hardwareAdapter));
@@ -256,8 +262,7 @@ bool ManagerRender::Load()
 
 	#endif
 	}
-
-	// Create DirectX Device
+	
 	hr =  D3D12CreateDevice(mrDXAdapter.Get(), D3D_FEATURE_LEVEL_11_0, IID_PPV_ARGS(&mrDXDevice) );
 	if( FAILED( hr ) )
 		return FALSE;
@@ -265,15 +270,19 @@ bool ManagerRender::Load()
 #if !ZEN_BUILD_FINAL	
 	mrDXDevice->SetStablePowerState(TRUE); // Prevent the GPU from overclocking or underclocking to get consistent timings
 #endif
-
+	//----------------------------------------------------------------------------------------------
 	// Create Descriptors heap		
-	if( !DescriptorSRV::Initialize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE) )
-		return FALSE;
+	//----------------------------------------------------------------------------------------------
+	if( !DescriptorSRV_UAV_CBV::Initialize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE) )
+		return false;
 	if( !DescriptorRTV::Initialize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV) )
-		return FALSE;
+		return false;
 	if( !DescriptorDSV::Initialize(D3D12_DESCRIPTOR_HEAP_TYPE_DSV) )
-		return FALSE;
-
+		return false;
+	
+	//----------------------------------------------------------------------------------------------
+	// Create Commandlist/Queue
+	//----------------------------------------------------------------------------------------------
 	//mCommandManager.Create(mrDXDevice.Get());
 	hr = mrDXDevice->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&m_commandAllocator));
 	if( FAILED( hr ) )
@@ -292,8 +301,20 @@ bool ManagerRender::Load()
 	queueDesc.Type = D3D12_COMMAND_LIST_TYPE_DIRECT;
 	mrDXDevice->CreateCommandQueue(&queueDesc, IID_PPV_ARGS(&m_commandQueue));
 
+	//----------------------------------------------------------------------------------------------
+	// Create a root signature 
+	//----------------------------------------------------------------------------------------------
+	{
+		RootSignature::StaticInitialize();
 
+		CD3DX12_DESCRIPTOR_RANGE1 SRVTable;
+		SRVTable.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV,			1, 0, 0, D3D12_DESCRIPTOR_RANGE_FLAG_DATA_STATIC);
+		mRootSignature = RootSignature({RootSignature::SlotTable(1,	&SRVTable,	D3D12_SHADER_VISIBILITY_PIXEL)}, D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
+	}
+
+	//----------------------------------------------------------------------------------------------
 	// Create synchronization objects and wait until assets have been uploaded to the GPU.
+	//----------------------------------------------------------------------------------------------
 	{
 		mrDXDevice->CreateFence(0, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&m_fence));
 		m_fenceValue = 1;
@@ -323,40 +344,20 @@ bool ManagerRender::Load()
 
 bool ManagerRender::Unload()
 {
-#if !DISABLE_DX12
+#if !ZEN_RENDERER_DX12
 	if( mDX12pPerf ) 
 		mDX12pPerf->Release();
 #endif	
 	//mrDXCmdQueueDirect.Reset(); //SF Clear/Release?
 	mrDXDevice.Reset();
 	mrDXFactory.Reset();
-#if !DISABLE_DX12
+#if !ZEN_RENDERER_DX12
 	mDX12pPerf				= nullptr;
 	mDX12pContextImmediate	= nullptr;
 #endif
 	
 	return true;
 }
-
-
- inline D3D12_RESOURCE_BARRIER Transition(
-        _In_ ID3D12Resource* pResource,
-        D3D12_RESOURCE_STATES stateBefore,
-        D3D12_RESOURCE_STATES stateAfter,
-        UINT subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES,
-        D3D12_RESOURCE_BARRIER_FLAGS flags = D3D12_RESOURCE_BARRIER_FLAG_NONE)
-    {
-        D3D12_RESOURCE_BARRIER result;
-        ZeroMemory(&result, sizeof(result));
-        D3D12_RESOURCE_BARRIER &barrier = result;
-        result.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
-        result.Flags = flags;
-        barrier.Transition.pResource = pResource;
-        barrier.Transition.StateBefore = stateBefore;
-        barrier.Transition.StateAfter = stateAfter;
-        barrier.Transition.Subresource = subresource;
-        return result;
-    }
 
  void ManagerRender::WaitForPreviousFrame()
 {
@@ -381,11 +382,9 @@ bool ManagerRender::Unload()
 }
 
 void ManagerRender::FrameBegin(zcRes::GfxWindowRef _FrameWindow)
-{
+{	
 	WaitForPreviousFrame();
-	Super::FrameBegin(_FrameWindow);
-	zcGfx::Command::ResetCommandCount();	
-	const zcRes::GfxTarget2DRef& rBackbuffer = grWindowRender->GetBackbuffer();
+	marTempResource[muFrameRendered%zenArrayCount(marTempResource)].Clear();
 
 	// Command list allocators can only be reset when the associated 
 	// command lists have finished execution on the GPU; apps should use 
@@ -396,17 +395,25 @@ void ManagerRender::FrameBegin(zcRes::GfxWindowRef _FrameWindow)
 	// list, that command list can then be reset at any time and must be before re-recording.
 	m_commandList->Reset(m_commandAllocator.Get(), nullptr);
 
-	// Indicate that the back buffer will be used as a render target.
-	D3D12_RESOURCE_BARRIER Barrier = Transition(rBackbuffer.HAL()->mrTextureResource.Get(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET);
-	m_commandList->ResourceBarrier(1, &Barrier );
-
-	//mCommandManager.CreateNewCommandList(D3D12_COMMAND_LIST_TYPE_DIRECT, &mCommandList, &mCurrentAllocator);
-	m_commandList->OMSetRenderTargets(1, &rBackbuffer.HAL()->mTargetColorView.GetHandle(), FALSE, nullptr);
+	Super::FrameBegin(_FrameWindow);
 	
+	//----------------------------------------------------------------------------------------------
+	//! @todo 3 move this down gpu pipeline
+	m_commandList->SetGraphicsRootSignature(mRootSignature.Get());
 
-#if !DISABLE_DX12
+	ID3D12DescriptorHeap* ppHeaps[] = { DescriptorSRV_UAV_CBV::GetDescHeap().Get() };
+	m_commandList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
+	for( UINT i(0); i<zenArrayCount(ppHeaps); ++i )
+		m_commandList->SetGraphicsRootDescriptorTable(i, ppHeaps[i]->GetGPUDescriptorHandleForHeapStart());
+	//----------------------------------------------------------------------------------------------
+
+	// Indicate that the back buffer will be used as a render target.
+	const zcRes::GfxTarget2DRef& rBackbuffer = grWindowRender->GetBackbuffer();
+	m_commandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(rBackbuffer.HAL()->mrTextureResource.Get(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET) );
+	
+#if !ZEN_RENDERER_DX12
 	mrPreviousDrawcall		= nullptr;
-	mbDX12ProfilerDetected	= mDX12pPerf && mDX12pPerf->GetStatus();
+	mbProfilerDetected		= mDX12pPerf && mDX12pPerf->GetStatus();
 	mrQueryDisjoint			= DX12QueryDisjoint::Create();
 	mrQueryDisjoint->Start();
 #endif
@@ -419,8 +426,7 @@ void ManagerRender::FrameEnd()
 	//mrQueryDisjoint->Stop();		
 
 	// Indicate that the back buffer will now be used to present.
-	D3D12_RESOURCE_BARRIER Barrier = Transition(rBackbuffer.HAL()->mrTextureResource.Get(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT);
-	m_commandList->ResourceBarrier(1, &Barrier);
+	m_commandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(rBackbuffer.HAL()->mrTextureResource.Get(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT));
 
 	HRESULT hr = m_commandList->Close();
 	if (FAILED(hr))
@@ -445,13 +451,13 @@ void ManagerRender::FrameEnd()
 	m_PreviousRefreshCount = FrameStatistics.SyncRefreshCount;
 	*/
 	UnbindResources();
-	Super::FrameEnd();
+	Super::FrameEnd();	
 }
 
 void ManagerRender::NamedEventBegin(const zStringHash32& zName)
 {
-#if !DISABLE_DX12
-	if( mbDX12ProfilerDetected )
+#if !ZEN_RENDERER_DX12
+	if( mbProfilerDetected )
 	{
 		WCHAR zEventName[64];
 		mbstowcs_s(nullptr, zEventName, zName.mzName, zenArrayCount(zEventName));
@@ -462,8 +468,8 @@ void ManagerRender::NamedEventBegin(const zStringHash32& zName)
 
 void ManagerRender::NamedEventEnd()
 {
-#if !DISABLE_DX12
-	if( mbDX12ProfilerDetected )
+#if !ZEN_RENDERER_DX12
+	if( mbProfilerDetected )
 		mDX12pPerf->EndEvent();
 #endif
 }
@@ -475,7 +481,7 @@ const zEngineRef<DX12QueryDisjoint>& ManagerRender::GetQueryDisjoint()const
 
 void ManagerRender::UpdateGPUState(const zEngineRef<zcGfx::Command>& _rDrawcall, RenderContext& _Context)
 {
-#if !DISABLE_DX12
+#if !ZEN_RENDERER_DX12
 	if( _Context.mrRenderpass != _rDrawcall->mrRenderPass )
 	{			
 		_Context.mrRenderpass						= _rDrawcall->mrRenderPass;
@@ -520,7 +526,7 @@ void ManagerRender::UpdateGPUState(const zEngineRef<zcGfx::Command>& _rDrawcall,
 //==================================================================================================
 void ManagerRender::UpdateShaderState_Samplers(const zcGfx::CommandDraw& _Drawcall, RenderContext& _Context, eShaderStage _eShaderStage )
 {	
-#if !DISABLE_DX12
+#if !ZEN_RENDERER_DX12
 	ID3D11SamplerState*	aResourceView[zcExp::kuDX12_SamplerPerStageMax];
 	const eShaderResource kShaderRes							= keShaderRes_Sampler;	
 	const zArrayStatic<zcRes::GfxShaderResourceRef>& arResource	= _Drawcall.mrMeshStrip.HAL()->marShaderResources[_eShaderStage][kShaderRes];
@@ -558,7 +564,7 @@ void ManagerRender::UpdateShaderState_Samplers(const zcGfx::CommandDraw& _Drawca
 //==================================================================================================
 void ManagerRender::UpdateShaderState_ConstantBuffers(const zcGfx::CommandDraw& _Drawcall, RenderContext& _Context, eShaderStage _eShaderStage )
 {	
-#if !DISABLE_DX12
+#if !ZEN_RENDERER_DX12
 	ID3D11Buffer* aResourceView[zcExp::kuDX12_CBufferPerStageMax];
 	const eShaderResource kShaderRes							= keShaderRes_CBuffer;	
 	const zArrayStatic<zcRes::GfxShaderResourceRef>& arResource	= _Drawcall.mrMeshStrip.HAL()->marShaderResources[_eShaderStage][kShaderRes];
@@ -600,7 +606,7 @@ void ManagerRender::UpdateShaderState_ConstantBuffers(const zcGfx::CommandDraw& 
 //==================================================================================================
 void ManagerRender::UpdateShaderState_Textures(zU16& Out_ChangedFirst, zU16& Out_ChangedLast, const zcGfx::CommandDraw& _Drawcall, RenderContext& _Context, eShaderStage _eShaderStage)
 {	
-#if !DISABLE_DX12
+#if !ZEN_RENDERER_DX12
 	const eShaderResource kShaderRes							= keShaderRes_Texture;
 	const zArrayStatic<zcRes::GfxShaderResourceRef>& arResource = _Drawcall.mrMeshStrip.HAL()->marShaderResources[_eShaderStage][kShaderRes];
 	zU16 uValidCount											= 0;
@@ -629,7 +635,7 @@ void ManagerRender::UpdateShaderState_Textures(zU16& Out_ChangedFirst, zU16& Out
 //==================================================================================================
 void ManagerRender::UpdateShaderState_StructBuffers(zU16& Out_ChangedFirst, zU16& Out_ChangedLast, const zcGfx::CommandDraw& _Drawcall, RenderContext& _Context, eShaderStage _eShaderStage)
 {	
-#if !DISABLE_DX12
+#if !ZEN_RENDERER_DX12
 	const eShaderResource kShaderRes							= keShaderRes_Buffer;
 	const zArrayStatic<zcRes::GfxShaderResourceRef>& arResource = _Drawcall.mrMeshStrip.HAL()->marShaderResources[_eShaderStage][kShaderRes];
 	zU16 uValidCount											= 0;
@@ -659,7 +665,7 @@ void ManagerRender::UpdateShaderState_StructBuffers(zU16& Out_ChangedFirst, zU16
 //==================================================================================================
 void ManagerRender::UpdateShaderState(const zcGfx::CommandDraw& _Drawcall, RenderContext& _Context)
 {
-#if !DISABLE_DX12
+#if !ZEN_RENDERER_DX12
 	UINT UnusedOffset = 0;
 	const zcRes::GfxMeshStripRef&		rMeshStrip	= _Drawcall.mrMeshStrip;
 	const zcRes::GfxIndexRef&			rIndex		= rMeshStrip.HAL()->mrIndexBuffer;
@@ -774,7 +780,7 @@ void ManagerRender::Render(zArrayDynamic<zEngineRef<zcGfx::Command>>& _aDrawcall
 						const zcRes::GfxMeshStripRef& rMeshStrip = pCommandDraw->mrMeshStrip;
 						UpdateGPUState(*prDrawcall, Context);
 						UpdateShaderState(*pCommandDraw, Context);
-					#if !DISABLE_DX12
+					#if !ZEN_RENDERER_DX12
 						mDX12pContextImmediate->DrawIndexed(pCommandDraw->muIndexCount, pCommandDraw->muIndexFirst, rMeshStrip.HAL()->muVertexFirst);
 					#endif
 					}
@@ -790,6 +796,12 @@ void ManagerRender::Render(zArrayDynamic<zEngineRef<zcGfx::Command>>& _aDrawcall
 		mrPreviousDrawcall = *_aDrawcalls.Last();
 	}
 
+}
+
+DirectXComRef<ID3D12Resource>& ManagerRender::GetTempResourceHandle()
+{
+	marTempResource[muFrameRendered%zenArrayCount(marTempResource)].Push(nullptr);
+	return *marTempResource[muFrameRendered%zenArrayCount(marTempResource)].Last();
 }
 
 #if 0 //SHADERCONST

@@ -1,7 +1,6 @@
 #pragma once
 #ifndef __zCore_Res_Gfx_Shaders_DX12_h__
 #define __zCore_Res_Gfx_Shaders_DX12_h__
-//SF DX12
 
 namespace zcRes
 {
@@ -12,7 +11,7 @@ namespace zcRes
 	public:												
 		virtual										~GfxShaderVertexHAL_DX12();												
 		bool										Initialize();
-		struct ID3D11VertexShader*					mpVertexShader		= nullptr;		
+		D3D12_SHADER_BYTECODE						mDXShaderCode;
 		typedef zcExp::ExporterGfxShaderDX12_DX12	RuntimeExporter;
 	};
 	class GfxShaderVertexHAL : public GfxShaderVertexHAL_DX12{};
@@ -24,7 +23,7 @@ namespace zcRes
 	public:											
 		virtual										~GfxShaderPixelHAL_DX12();												
 		bool										Initialize();
-		struct ID3D11PixelShader*					mpPixelShader		= nullptr;
+		D3D12_SHADER_BYTECODE						mDXShaderCode;
 		typedef zcExp::ExporterGfxShaderDX12_DX12	RuntimeExporter;
 	};	
 	class GfxShaderPixelHAL : public GfxShaderPixelHAL_DX12{};	

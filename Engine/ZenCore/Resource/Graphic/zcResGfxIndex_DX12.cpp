@@ -7,52 +7,74 @@ namespace zcRes
 
 GfxIndexHAL_DX12::~GfxIndexHAL_DX12()
 {
-	if( mpIndiceBuffer )
-	{
-		mpIndiceBuffer->Release();
-		mpIndiceBuffer = nullptr;
-	}
+
 }
 
 bool GfxIndexHAL_DX12::Initialize()
 {
-#if DISABLE_DX12
+	HRESULT hr = zcMgr::GfxRender.GetDevice()->CreateCommittedResource(
+					&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT),
+					D3D12_HEAP_FLAG_NONE,
+					&CD3DX12_RESOURCE_DESC::Buffer(maIndices.SizeMem()),
+					D3D12_RESOURCE_STATE_COPY_DEST,
+					nullptr,
+					IID_PPV_ARGS(&mrBuffer));
+	
+	// Create resource update command
+	if( SUCCEEDED(hr) )
+	{		
+		void* pUploadData = Lock();
+		if( pUploadData )
+		{
+			zenMem::Copy( reinterpret_cast<zU8*>(pUploadData), maIndices.First(), maIndices.SizeMem() );
+			Unlock(zenGfx::zContext::GetFrameContext());
+			return true;
+		}
+	}
+
 	return false;
-#else
-	//! @todo Missing: configure resource creations flags
-	//D3D11_USAGE eUsage(D3D11_USAGE_DEFAULT);
-	//zUInt uCpuAccess(0);
-	D3D11_USAGE eUsage(D3D11_USAGE_DYNAMIC);
-	UINT uCpuAccess(D3D11_CPU_ACCESS_WRITE);
-	D3D11_BUFFER_DESC IndexDesc;
-	IndexDesc.ByteWidth				= static_cast<UINT>(maIndices.SizeMem());
-	IndexDesc.Usage					= eUsage;
-	IndexDesc.BindFlags				= D3D11_BIND_INDEX_BUFFER;
-	IndexDesc.CPUAccessFlags		= uCpuAccess;
-	IndexDesc.MiscFlags				= 0;
-	IndexDesc.StructureByteStride	= 0;
-
-	D3D11_SUBRESOURCE_DATA InitData;
-	InitData.pSysMem				= maIndices.First();
-	InitData.SysMemPitch			= 0;
-	InitData.SysMemSlicePitch		= 0;
-	HRESULT hr						= zcMgr::GfxRender.DX12GetDevice()->CreateBuffer(&IndexDesc, &InitData, &mpIndiceBuffer);
-
-	return SUCCEEDED(hr);
-#endif
 }
 
-void GfxIndexHAL_DX12::Update(zU8* _pData, zUInt _uOffset, zUInt _uSize)
+zU8* GfxIndexHAL_DX12::Lock()
 {
-	zenAssert(mpIndiceBuffer);	
-#if !DISABLE_DX12
-	D3D11_MAPPED_SUBRESOURCE mapRes;
-	_uOffset		= 0;//zenMath::Min(_uOffset, (zUInt)muIndiceCount); //! @todo Urgent support partial updates
-	_uSize			= zenMath::Min(_uSize, (zUInt)maIndices.SizeMem() - _uOffset);
-	HRESULT result	= zcMgr::GfxRender.DX12GetDeviceContext()->Map(mpIndiceBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mapRes);
-	memcpy((zU8*)mapRes.pData, _pData, _uSize); 
-	zcMgr::GfxRender.DX12GetDeviceContext()->Unmap(mpIndiceBuffer, 0);
-#endif
+	zenAssert(mrLockData.Get() == nullptr);
+
+	// Allocate temp memory to upload data to buffer
+	UINT64 uUploadBufferSize		= 0;
+	D3D12_RESOURCE_DESC BufferDesc	= mrBuffer->GetDesc();
+	zcMgr::GfxRender.GetDevice()->GetCopyableFootprints(&BufferDesc, 0, 1, 0, nullptr, nullptr, nullptr, &uUploadBufferSize);
+	
+	HRESULT hr = zcMgr::GfxRender.GetDevice()->CreateCommittedResource(
+					&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),
+					D3D12_HEAP_FLAG_NONE,
+					&CD3DX12_RESOURCE_DESC::Buffer(uUploadBufferSize),
+					D3D12_RESOURCE_STATE_GENERIC_READ,
+					nullptr,
+					IID_PPV_ARGS(&mrLockData));
+	
+	if( SUCCEEDED(hr) )
+	{		
+		void* pData;		
+		hr = mrLockData->Map(0, NULL, &pData);	// Get cpu memory pointer
+		if (SUCCEEDED(hr) )
+			return reinterpret_cast<zU8*>(pData);
+	}
+	return nullptr;
+}
+
+void GfxIndexHAL_DX12::Unlock(const zenGfx::zContext& _rContext)
+{
+	zenAssert(mrLockData.Get() != nullptr);
+	mrLockData->Unmap(0, NULL);
+
+	//DirectXComRef<ID3D12Resource>& rTemphandle	= zcMgr::GfxRender.GetTempResourceHandle();
+	//rTemphandle									= mrLockData;	//Keep the memory alive until gpu is done with it (temp handle valid 2 frames)
+	//! @todo 2 support partial updates
+	zcRes::GfxIndexRef rBuffer					= reinterpret_cast<zcRes::GfxIndex*>(this);
+	zEngineRef<zcGfx::Command> rCommand			= zcGfx::CommandUpdateIndexDX12::Create(rBuffer, 0, maIndices.SizeMem());
+	mrLockData									= nullptr;
+
+	_rContext->AddCommand(rCommand.Get());
 }
 
 }

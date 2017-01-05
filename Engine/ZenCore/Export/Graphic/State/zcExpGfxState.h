@@ -35,7 +35,4 @@ namespace zcExp
 	zResID CreateGfxBlend( const zArrayBase<zenRes::zGfxRenderPass::ConfigColorRT>& _aTargetColorConfig);
 }
 
-#include "zcExpGfxStateDX11.h"
-#include "zcExpGfxStateDX12.h"
-
 #endif

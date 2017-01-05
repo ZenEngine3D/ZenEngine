@@ -1,6 +1,13 @@
 #include "zenEngine.h"
 #include "SampleDebugUI.h"
 
+int main (int argc, char * const argv[])
+{
+	sample::SampleDebugUIInstance EngineInstance;
+	zenSys::LaunchEngine( &EngineInstance, argc, argv );	
+	return 0;	
+}
+
 //=================================================================================================
 //! @example SampleGfxRenderer.cpp
 //! Renderer initialization and test
@@ -8,38 +15,44 @@
 namespace sample
 {
 
-const zArrayStatic<SimpleVertex> aCubeVertices =
+const zArrayStatic<zVec3F> aCubeVerticesPos =
 {
-	{ zVec3F( -1.0f, 1.0f, -1.0f ),	zVec2F( 0.0f, 1.0f ) },
-	{ zVec3F( 1.0f, 1.0f, -1.0f ),	zVec2F( 1.0f, 1.0f ) },
-	{ zVec3F( 1.0f, 1.0f, 1.0f ),	zVec2F( 1.0f, 0.0f ) },
-	{ zVec3F( -1.0f, 1.0f, 1.0f ),	zVec2F( 0.0f, 0.0f ) },
-
-	{ zVec3F( -1.0f, -1.0f, -1.0f ),zVec2F( 0.0f, 1.0f ) },
-	{ zVec3F( 1.0f, -1.0f, -1.0f ),	zVec2F( 1.0f, 1.0f ) },
-	{ zVec3F( 1.0f, -1.0f, 1.0f ),	zVec2F( 1.0f, 0.0f ) },
-	{ zVec3F( -1.0f, -1.0f, 1.0f ),	zVec2F( 0.0f, 0.0f ) },
-
-	{ zVec3F( -1.0f, -1.0f, 1.0f ),	zVec2F( 0.0f, 1.0f ) },
-	{ zVec3F( -1.0f, -1.0f, -1.0f ),zVec2F( 1.0f, 1.0f ) },
-	{ zVec3F( -1.0f, 1.0f, -1.0f ),	zVec2F( 1.0f, 0.0f ) },
-	{ zVec3F( -1.0f, 1.0f, 1.0f ),	zVec2F( 0.0f, 0.0f ) },
-
-	{ zVec3F( 1.0f, -1.0f, 1.0f ),	zVec2F( 0.0f, 1.0f ) },
-	{ zVec3F( 1.0f, -1.0f, -1.0f ),	zVec2F( 1.0f, 1.0f ) },
-	{ zVec3F( 1.0f, 1.0f, -1.0f ),	zVec2F( 1.0f, 0.0f ) },
-	{ zVec3F( 1.0f, 1.0f, 1.0f ),	zVec2F( 0.0f, 0.0f ) },
-
-	{ zVec3F( -1.0f, -1.0f, -1.0f ),zVec2F( 0.0f, 1.0f ) },
-	{ zVec3F( 1.0f, -1.0f, -1.0f ),	zVec2F( 1.0f, 1.0f ) },
-	{ zVec3F( 1.0f, 1.0f, -1.0f ),	zVec2F( 1.0f, 0.0f ) },
-	{ zVec3F( -1.0f, 1.0f, -1.0f ),	zVec2F( 0.0f, 0.0f ) },
-
-	{ zVec3F( -1.0f, -1.0f, 1.0f ),	zVec2F( 0.0f, 1.0f ) },
-	{ zVec3F( 1.0f, -1.0f, 1.0f ),	zVec2F( 1.0f, 1.0f ) },
-	{ zVec3F( 1.0f, 1.0f, 1.0f ),	zVec2F( 1.0f, 0.0f ) },
-	{ zVec3F( -1.0f, 1.0f, 1.0f ),	zVec2F( 0.0f, 0.0f ) },
+	zVec3F( -1.0f, 1.0f, -1.0f ),	zVec3F( 1.0f, 1.0f, -1.0f ),	zVec3F( 1.0f, 1.0f, 1.0f ),		zVec3F( -1.0f, 1.0f, 1.0f ),
+	zVec3F( -1.0f, -1.0f, -1.0f ),	zVec3F( 1.0f, -1.0f, -1.0f ),	zVec3F( 1.0f, -1.0f, 1.0f ),	zVec3F( -1.0f, -1.0f, 1.0f ),
+	zVec3F( -1.0f, -1.0f, 1.0f ),	zVec3F( -1.0f, -1.0f, -1.0f ),	zVec3F( -1.0f, 1.0f, -1.0f ),	zVec3F( -1.0f, 1.0f, 1.0f ),
+	zVec3F( 1.0f, -1.0f, 1.0f ),	zVec3F( 1.0f, -1.0f, -1.0f ),	zVec3F( 1.0f, 1.0f, -1.0f ),	zVec3F( 1.0f, 1.0f, 1.0f ),
+	zVec3F( -1.0f, -1.0f, -1.0f ),	zVec3F( 1.0f, -1.0f, -1.0f ),	zVec3F( 1.0f, 1.0f, -1.0f ),	zVec3F( -1.0f, 1.0f, -1.0f ),
+	zVec3F( -1.0f, -1.0f, 1.0f ),	zVec3F( 1.0f, -1.0f, 1.0f ),	zVec3F( 1.0f, 1.0f, 1.0f ),		zVec3F( -1.0f, 1.0f, 1.0f ),
 };
+
+const zArrayStatic<BufferColorUV> aCubeVerticesColorUV =
+{
+	{ zVec4U8( 0xFF, 0xFF, 0xFF, 0xFF ), zVec2F( 0.0f, 1.0f ) }, //Face 0
+	{ zVec4U8( 0xFF, 0xFF, 0xFF, 0xFF ), zVec2F( 1.0f, 1.0f ) },
+	{ zVec4U8( 0xFF, 0xFF, 0xFF, 0xFF ), zVec2F( 1.0f, 0.0f ) },
+	{ zVec4U8( 0xFF, 0xFF, 0xFF, 0xFF ), zVec2F( 0.0f, 0.0f ) },
+	{ zVec4U8( 0xFF, 0xFF, 0xFF, 0xFF ), zVec2F( 0.0f, 1.0f ) }, //Face 1
+	{ zVec4U8( 0xFF, 0xFF, 0xFF, 0xFF ), zVec2F( 1.0f, 1.0f ) },
+	{ zVec4U8( 0xFF, 0xFF, 0xFF, 0xFF ), zVec2F( 1.0f, 0.0f ) },
+	{ zVec4U8( 0xFF, 0xFF, 0xFF, 0xFF ), zVec2F( 0.0f, 0.0f ) },
+	{ zVec4U8( 0xFF, 0xFF, 0xFF, 0xFF ), zVec2F( 0.0f, 1.0f ) }, //Face 2
+	{ zVec4U8( 0xFF, 0xFF, 0xFF, 0xFF ), zVec2F( 1.0f, 1.0f ) },
+	{ zVec4U8( 0xFF, 0xFF, 0xFF, 0xFF ), zVec2F( 1.0f, 0.0f ) },
+	{ zVec4U8( 0xFF, 0xFF, 0xFF, 0xFF ), zVec2F( 0.0f, 0.0f ) },
+	{ zVec4U8( 0xFF, 0xFF, 0xFF, 0xFF ), zVec2F( 0.0f, 1.0f ) }, //Face 3
+	{ zVec4U8( 0xFF, 0xFF, 0xFF, 0xFF ), zVec2F( 1.0f, 1.0f ) },
+	{ zVec4U8( 0xFF, 0xFF, 0xFF, 0xFF ), zVec2F( 1.0f, 0.0f ) },
+	{ zVec4U8( 0xFF, 0xFF, 0xFF, 0xFF ), zVec2F( 0.0f, 0.0f ) },
+	{ zVec4U8( 0xFF, 0xFF, 0xFF, 0xFF ), zVec2F( 0.0f, 1.0f ) }, //Face 4
+	{ zVec4U8( 0xFF, 0xFF, 0xFF, 0xFF ), zVec2F( 1.0f, 1.0f ) },
+	{ zVec4U8( 0xFF, 0xFF, 0xFF, 0xFF ), zVec2F( 1.0f, 0.0f ) },
+	{ zVec4U8( 0xFF, 0xFF, 0xFF, 0xFF ), zVec2F( 0.0f, 0.0f ) },
+	{ zVec4U8( 0xFF, 0xFF, 0xFF, 0xFF ), zVec2F( 0.0f, 1.0f ) }, //Face 5
+	{ zVec4U8( 0xFF, 0xFF, 0xFF, 0xFF ), zVec2F( 1.0f, 1.0f ) },
+	{ zVec4U8( 0xFF, 0xFF, 0xFF, 0xFF ), zVec2F( 1.0f, 0.0f ) },
+	{ zVec4U8( 0xFF, 0xFF, 0xFF, 0xFF ), zVec2F( 0.0f, 0.0f ) },
+};
+
 
 const zArrayStatic<zU16> aCubeIndices =
 {
@@ -84,13 +97,13 @@ bool SampleDebugUIInstance::Init()
 		}
 	};
 
-	zArrayStatic<const zenRes::zShaderParameter*> aParamAll = { &zenRes::zShaderFloat4(zHash32("vMeshColor"),	zVec4F(.7f,.7f,.7f,1)),
-																&zenRes::zShaderFloat4(zHash32("vColor"),		zVec4F(1.f,1.f,1.f,1.f)) };
-
 	//---------------------------------------------------------------------
 	// Create rendering resources		
 	//---------------------------------------------------------------------	
 	mrCubeIndex										= zenRes::zGfxIndex::Create( aCubeIndices, zenConst::kePrimType_TriangleList );
+	mrVertexBufferPos								= zenRes::zGfxStructBuffer<zVec3F>::Create(aCubeVerticesPos, (zU32)aCubeVerticesPos.Count() /*, zFlagResUse()*/ ); 
+	mrVertexBufferColorUv							= zenRes::zGfxStructBuffer<BufferColorUV>::Create(aCubeVerticesColorUV, (zU32)aCubeVerticesColorUV.Count() /*, zFlagResUse()*/ );
+
 	mrShaderVS										= zenRes::zGfxShaderVertex::Create( "Shader/Tutorial07.fx", "VS");
 	mrShaderPS										= zenRes::zGfxShaderPixel::Create( "Shader/Tutorial07.fx", "PS" );
 	mrTexture										= zenRes::zGfxTexture2d::Create(zenConst::keTexFormat_RGBA8, vTexSize, aTexRGBA );
@@ -110,13 +123,16 @@ bool SampleDebugUIInstance::Init()
 	zenMath::MatrixLookAtLH(matView, vEye, vAt, vUp );		
 	matWorld.SetIdentity();
 	matWorld.SetPos(zenMath::simdXYZW(3.0f, 0.0f, 0.0f, 1.0f));
-	mrCubeMeshStrip.SetValue( aParamAll );
-	mrCubeMeshStrip.SetValue( zHash32("View"),		matView );
-	mrCubeMeshStrip.SetValue( zHash32("Projection"),matProjection );		
-	mrCubeMeshStrip.SetValue( zHash32("World"),		matWorld );
-	mrCubeMeshStrip.SetResource( zHash32("txColor.mTexture"),	mrTexture);
-	mrCubeMeshStrip.SetResource( zHash32("txColor.mSampler"),	mrSampler);
-	mrCubeMeshStrip.SetValue( zHash32("vColor"),	zVec4F(1,1,1,1));
+
+	mrCubeMeshStrip.SetValue(		zHash32("View"),				matView );
+	mrCubeMeshStrip.SetValue(		zHash32("Projection"),			matProjection );		
+	mrCubeMeshStrip.SetValue(		zHash32("World"),				matWorld );
+	mrCubeMeshStrip.SetValue(		zHash32("vMeshColor"),			zVec4F(.7f,.7f,.7f,1) );
+	mrCubeMeshStrip.SetValue(		zHash32("vColor"),				zVec4F(1.f,1.f,1.f,1.f) );
+	mrCubeMeshStrip.SetResource(	zHash32("VInputPosition"),		mrVertexBufferPos);
+	mrCubeMeshStrip.SetResource(	zHash32("VInputColorUV"),		mrVertexBufferColorUv);
+	mrCubeMeshStrip.SetResource(	zHash32("txColor.mTexture"),	mrTexture);
+	mrCubeMeshStrip.SetResource(	zHash32("txColor.mSampler"),	mrSampler);	
 
 	return true;
 }
@@ -152,13 +168,12 @@ void SampleDebugUIInstance::Update()
 	Super::Update();
 	zenPerf::zScopedEventCpu EmitEvent("SampleDebugUIInstance::Update");
 
-	UpdateBackbuffers();
-
 	//---------------------------------------------------------------------
 	// Render loop
 	//---------------------------------------------------------------------
 	{		
-		mrMainWindowGfx.FrameBegin();						
+		mrMainWindowGfx.FrameBegin();
+		UpdateBackbuffers();
 		{			
 			zenPerf::zScopedEventCpu EmitEvent("Draw");
 			zenGfx::zContext rCxtRender	= zenGfx::zContext::Create("RenderLoop", mrRndPassFinal);

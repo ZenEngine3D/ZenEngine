@@ -47,7 +47,4 @@ namespace zcExp
 
 }
 
-#include "zcExpGfxTextureDX11.h"
-#include "zcExpGfxTextureDX12.h"
-
 #endif

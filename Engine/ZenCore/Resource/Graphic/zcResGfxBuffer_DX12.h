@@ -11,11 +11,13 @@ class GfxBufferHAL_DX12 : public zcExp::ExportGfxBuffer
 public:	
 	virtual										~GfxBufferHAL_DX12();
 	bool										Initialize();
-	void										Update(zU8* _pData, zUInt _uOffset = 0, zUInt _uSize = 0xFFFFFFFFFFFFFFFF);
+	void*										Lock();
+	void										Unlock(const zenGfx::zContext& _rContext);
 
-	ID3D11Buffer*								mpBuffer;
-	ID3D11ShaderResourceView*					mpSRV;
-	ID3D11UnorderedAccessView*					mpUAV;
+	DirectXComRef<ID3D12Resource>				mrBuffer;
+	DirectXComRef<ID3D12Resource>				mrLockData;
+	D3D12_RESOURCE_STATES						meBufferState;
+	zcGfx::DescriptorSRV_UAV_CBV				mBufferView;
 	typedef zcExp::ExporterGfxBuffer_DX12		RuntimeExporter;
 };
 class GfxBufferHAL : public GfxBufferHAL_DX12{};

@@ -15,7 +15,7 @@ namespace zcRes
 	}
 	bool GfxSamplerHAL_DX12::Initialize()
 	{	
-	#if DISABLE_DX12
+	#if ZEN_RENDERER_DX12
 		return false;
 	#else
 		HRESULT hr = zcMgr::GfxRender.DX12GetDevice()->CreateSamplerState( &mSamplerDesc, &mpSamplerState );
@@ -35,7 +35,7 @@ namespace zcRes
 
 	bool GfxStateBlendHAL_DX12::Initialize()
 	{
-	#if DISABLE_DX12
+	#if ZEN_RENDERER_DX12
 		return false;
 	#else
 		HRESULT hr = zcMgr::GfxRender.DX12GetDevice()->CreateBlendState( &mBlendDesc, &mpBlendState );
@@ -60,7 +60,7 @@ namespace zcRes
 
 	bool GfxStateDepthStencilHAL_DX12::Initialize()
 	{
-	#if DISABLE_DX12
+	#if ZEN_RENDERER_DX12
 		return false;
 	#else
 		HRESULT hr = zcMgr::GfxRender.DX12GetDevice()->CreateDepthStencilState( &mDepthStencilDesc, &mpDepthStencilState );
@@ -81,7 +81,7 @@ namespace zcRes
 
 	bool GfxStateRasterHAL_DX12::Initialize()
 	{
-	#if DISABLE_DX12
+	#if ZEN_RENDERER_DX12
 		return false;
 	#else
 		HRESULT hr			= zcMgr::GfxRender.DX12GetDevice()->CreateRasterizerState( &mRasterizerDesc, &mpRasterizerState );

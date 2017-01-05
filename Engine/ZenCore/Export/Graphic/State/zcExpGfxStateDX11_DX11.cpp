@@ -1,7 +1,5 @@
 #include "zcCore.h"
 
-#if ZEN_EXPORT_DX11
-
 namespace zcExp
 {
 	static const zArrayStatic<D3D11_COMPARISON_FUNC> gaComparisonTestTranslator = {	
@@ -258,5 +256,3 @@ namespace zcExp
 	}
 
 }
-
-#endif //ZEN_EXPORT_OR_RESOURCE_DX11

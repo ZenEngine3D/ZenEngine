@@ -1,5 +1,5 @@
 #pragma once
-#if !defined(__zCore_ExpGfxStateDX11_h__) && ZEN_EXPORT_OR_RESOURCE_DX11
+#ifndef __zCore_ExpGfxStateDX11_h__
 #define __zCore_ExpGfxStateDX11_h__
 
 namespace zcExp

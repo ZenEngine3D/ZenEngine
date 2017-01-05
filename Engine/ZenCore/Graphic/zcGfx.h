@@ -17,8 +17,8 @@
 //=================================================================================================
 
 #include ZENHeaderRenderer( zcGfx )
-#include "Renderer/zcGfxDrawcall.h"
-#include "Renderer/zcGfxContext.h"
-#include "Renderer/zcGfxRenderMgr.h"
+#include "zcGfxDrawcall.h"
+#include "zcGfxContext.h"
+#include "zcGfxRenderMgr.h"
 
 #endif

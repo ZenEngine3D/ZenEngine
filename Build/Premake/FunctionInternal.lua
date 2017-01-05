@@ -1,4 +1,4 @@
-vDefaultCppExt			= {".h", ".inl", ".cpp"}
+vDefaultCppExt			= {".h", ".inl", ".cpp", ".natvis"}
 vLibEngineGame 			= {"libZenBase", "libZenCore", "libZenEngine", "libZenExternal", "lib3rdImgui"  }
 vLibEngineTool 			= {"libZenBase", "libZenCore", "libZenEngine", "libZenExternal", "lib3rdImgui", "lib3rdPugiXml" }
 
@@ -72,6 +72,7 @@ function Orion_ConfigureBuild()
 	filter {'platforms:*DX11', 'files:**_DX11.*' }	removeflags { "ExcludeFromBuild" }
 	filter {'platforms:*DX12', 'files:**_DX12.*' }	removeflags { "ExcludeFromBuild" }
 	
+	filter {'files:**.natvis', 'not platforms:PC*' }flags { "ExcludeFromBuild" } --Todo this doesn't seem to remove file form build, investigate
 	filter {}
 end
 

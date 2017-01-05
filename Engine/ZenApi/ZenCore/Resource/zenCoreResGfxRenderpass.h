@@ -107,10 +107,11 @@ namespace zen { namespace zenGfx
 	class zContext : public zEngineRef<zcGfx::DrawContext>
 	{
 	zenClassDeclare(zContext, zEngineRef<zcGfx::DrawContext>);
-	public:	
+	public:
 		void					Submit();
 		static zContext			Create(const zStringHash32& _zContextName, const zContext& _rParent=zContext(), const zenRes::zGfxRenderPass& _rRenderState=zenRes::zGfxRenderPass());
 		static zContext			Create(const zStringHash32& _zContextName, const zenRes::zGfxRenderPass& _rRenderState);
+		static const zContext&	GetFrameContext();
 		using zEngineRef<zcGfx::DrawContext>::operator=;
 	};
 }}

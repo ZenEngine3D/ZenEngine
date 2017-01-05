@@ -11,7 +11,7 @@ namespace zcRes
 		bool											Initialize();
 	
 		DirectXComRef<ID3D12Resource>					mrTextureResource;
-		zcGfx::DescriptorSRV							mTextureView;
+		zcGfx::DescriptorSRV_UAV_CBV					mTextureView;
 		//! @todo 3 Add support for UAV and Stencil view
 		typedef zcExp::ExporterGfxTexture2dDX12_DX12	RuntimeExporter;
 	};

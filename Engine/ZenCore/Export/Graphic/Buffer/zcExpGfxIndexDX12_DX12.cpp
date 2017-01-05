@@ -1,7 +1,5 @@
 #include "zcCore.h"
 
-//SF DX12 
-
 namespace zcExp
 {
 
@@ -33,23 +31,23 @@ bool ExporterGfxIndexDX12_DX12::ExportWork(bool _bIsTHRTask)
 	switch( pExportInfo->mePrimitiveType )
 	{
 	case zenConst::kePrimType_PointList:		
-		mrExportData->mePrimitiveType	= D3D11_PRIMITIVE_TOPOLOGY_POINTLIST;
+		mrExportData->mePrimitiveType	= D3D_PRIMITIVE_TOPOLOGY_POINTLIST;
 		mrExportData->muPrimitiveCount	= mrExportData->muIndiceCount;
 		break;
 	case zenConst::kePrimType_LineList:		
-		mrExportData->mePrimitiveType	= D3D11_PRIMITIVE_TOPOLOGY_LINELIST;
+		mrExportData->mePrimitiveType	= D3D_PRIMITIVE_TOPOLOGY_LINELIST;
 		mrExportData->muPrimitiveCount	= mrExportData->muIndiceCount/2;
 		break;
 	case zenConst::kePrimType_LineStrip:		
-		mrExportData->mePrimitiveType	= D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP;
+		mrExportData->mePrimitiveType	= D3D_PRIMITIVE_TOPOLOGY_LINESTRIP;
 		mrExportData->muPrimitiveCount	= mrExportData->muIndiceCount-1;
 		break;
 	case zenConst::kePrimType_TriangleList:	
-		mrExportData->mePrimitiveType	= D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+		mrExportData->mePrimitiveType	= D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 		mrExportData->muPrimitiveCount	= mrExportData->muIndiceCount/3;
 		break;
 	case zenConst::kePrimType_TriangleStrip:	
-		mrExportData->mePrimitiveType	= D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP;
+		mrExportData->mePrimitiveType	= D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP;
 		mrExportData->muPrimitiveCount	= mrExportData->muIndiceCount-2;
 		break;
 	default:

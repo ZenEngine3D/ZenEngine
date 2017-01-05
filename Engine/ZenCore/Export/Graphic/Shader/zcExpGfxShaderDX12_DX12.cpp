@@ -1,11 +1,7 @@
 #include "zcCore.h"
-#if ZEN_EXPORT_OR_RESOURCE_DX12
 
-#include <D3D11.h>
-#include <D3D11Shader.h>
+#include <D3D12Shader.h>
 #include <D3Dcompiler.h>
-
-//SF DX12
 
 namespace zcExp
 {
@@ -17,9 +13,9 @@ namespace zcExp
 void ProcessCBufferDef(		zArrayStatic<zHash32>&					Out_aCBufferParamName,
 							zArrayStatic<GfxCBufferParamInfo>&		Out_aCBufferParamInfo,
 							zArrayStatic<zU8>&						Out_aCBufferDefaultValues,
-							ID3D11ShaderReflection&					_GfxShaderReflection, 
-							ID3D11ShaderReflectionConstantBuffer*	_pBufferReflection,  
-							const D3D11_SHADER_BUFFER_DESC&			_BufferDesc )
+							ID3D12ShaderReflection&					_GfxShaderReflection, 
+							ID3D12ShaderReflectionConstantBuffer*	_pBufferReflection,  
+							const D3D12_SHADER_BUFFER_DESC&			_BufferDesc )
 {		
 	Out_aCBufferParamName.SetCount( _BufferDesc.Variables );
 	Out_aCBufferParamInfo.SetCount( _BufferDesc.Variables );
@@ -27,13 +23,13 @@ void ProcessCBufferDef(		zArrayStatic<zHash32>&					Out_aCBufferParamName,
 
 	// Find hash of parameters informations
 	zResID::NameHash			hName;
-	D3D11_SHADER_VARIABLE_DESC	VarDesc;
-	D3D11_SHADER_TYPE_DESC		TypeDesc;	
+	D3D12_SHADER_VARIABLE_DESC	VarDesc;
+	D3D12_SHADER_TYPE_DESC		TypeDesc;	
 	for ( UINT uParamIdx = 0; uParamIdx < _BufferDesc.Variables; uParamIdx++ )
 	{
 		// Retrieve variable description and type
-		ID3D11ShaderReflectionVariable* pVariable	= _pBufferReflection->GetVariableByIndex( uParamIdx );
-		ID3D11ShaderReflectionType* pType			= pVariable->GetType();
+		ID3D12ShaderReflectionVariable* pVariable	= _pBufferReflection->GetVariableByIndex( uParamIdx );
+		ID3D12ShaderReflectionType* pType			= pVariable->GetType();
 		pVariable->GetDesc( &VarDesc );		
 		pType->GetDesc( &TypeDesc );
 
@@ -84,19 +80,20 @@ bool ExporterGfxShaderDX12_DX12::ExportWorkCompile()
 	ID3DBlob*	pErrorBlob;
 	ID3DBlob*	pCompiledBlob;		
 	ExportInfoGfxShader* pExportInfo = static_cast<ExportInfoGfxShader*>(mpExportInfo);
-	const char* pzShaderStage[]={"vs_5_0","ps_5_0"};	//Must match eShaderStage enum
+	//! @todo 4 Switch to SM5.1
+	const char* pzShaderStage[]={"vs_5_0","ps_5_0"};	//Must match eShaderStage enum 
 	const char* pzShaderDefine[keShaderStage__Count]={"SHADER_VERTEX","SHADER_PIXEL"};
 	//-------------------------------------------------------------------------
 	// Import defines setting for shader compiler preprocessor
 	//-------------------------------------------------------------------------
-	D3D10_SHADER_MACRO pDefines[128];
+	D3D_SHADER_MACRO pDefines[128];
 	zUInt uUserDefineCount			= pExportInfo->maDefines.Count();
 	const zUInt uSystemDefineCount	= 3;
 	zenAssertMsg(uUserDefineCount+uSystemDefineCount <= zenArrayCount(pDefines), "Too many defines included, increase capacity");
 	zenStaticAssert(zenArrayCount(pzShaderStage) == keShaderStage__Count);
 	zenStaticAssert(zenArrayCount(pzShaderDefine) == keShaderStage__Count);
 
-	D3D10_SHADER_MACRO*	pDefineCur	= pDefines;
+	D3D_SHADER_MACRO*	pDefineCur	= pDefines;
 	uUserDefineCount				= zenMath::Min(uUserDefineCount, zUInt(zenArrayCount(pDefines)-3));	
 	if( uUserDefineCount )
 	{		
@@ -164,16 +161,16 @@ bool ExporterGfxShaderDX12_DX12::ExportWorkCompile()
 bool ExporterGfxShaderDX12_DX12::ExportWorkExtractResources()
 {
 	ExportInfoGfxShader*					pExportInfo = static_cast<ExportInfoGfxShader*>(mpExportInfo);
-	ID3D11ShaderReflection*					pGfxShaderReflection(nullptr);	
+	ID3D12ShaderReflection*					pGfxShaderReflection(nullptr);	
 	
 	zenMem::Zero(mrExport->maResourceBindCount);
 	zenMem::Zero(mrExport->maResourceBindMax);
 	zU32 uCBufferIdx(0);
 	mrExport->meShaderStage	= pExportInfo->mExportResID.meType == zenConst::keResType_GfxShaderPixel ? zenConst::keShaderStage_Pixel : zenConst::keShaderStage_Vertex;
 
-	if( SUCCEEDED( D3DReflect( mrExport->maCompiledShader.First(), mrExport->maCompiledShader.SizeMem(), IID_ID3D11ShaderReflection, (void**) &pGfxShaderReflection ) ) )
+	if( SUCCEEDED( D3DReflect( mrExport->maCompiledShader.First(), mrExport->maCompiledShader.SizeMem(), IID_ID3D12ShaderReflection, (void**) &pGfxShaderReflection ) ) )
 	{
-		D3D11_SHADER_DESC shaderDesc;
+		D3D12_SHADER_DESC shaderDesc;
 		zUInt uBoundCBufferCount(0);
 		pGfxShaderReflection->GetDesc( &shaderDesc );
 		mrExport->maResourceBinding.SetCount( shaderDesc.BoundResources );
@@ -182,7 +179,7 @@ bool ExporterGfxShaderDX12_DX12::ExportWorkExtractResources()
 		// So first find out how many there is
 		for( UINT uResIdx=0; uResIdx<shaderDesc.BoundResources; ++uResIdx )
 		{
-			D3D11_SHADER_INPUT_BIND_DESC resourceDesc;
+			D3D12_SHADER_INPUT_BIND_DESC resourceDesc;
 			if( SUCCEEDED( pGfxShaderReflection->GetResourceBindingDesc(uResIdx, &resourceDesc ) ) && resourceDesc.Type == D3D_SIT_CBUFFER )
 				++uBoundCBufferCount;
 		}
@@ -195,12 +192,12 @@ bool ExporterGfxShaderDX12_DX12::ExportWorkExtractResources()
 		
 		for( UINT uResIdx=0; uResIdx<shaderDesc.BoundResources; ++uResIdx )
 		{
-			D3D11_SHADER_INPUT_BIND_DESC resourceDesc;
+			D3D12_SHADER_INPUT_BIND_DESC resourceDesc;
 			ExportGfxShader::ShaderBindInfo& ResInfo	= mrExport->maResourceBinding[uResIdx];
-			ResInfo.meType							= keShaderRes_Unknown;
-			ResInfo.muSlotIndex						= 0;
-			ResInfo.muSlotCount						= 0;
-			ResInfo.muMemSize						= 0;
+			ResInfo.meType								= keShaderRes_Unknown;
+			ResInfo.muSlotIndex							= 0;
+			ResInfo.muSlotCount							= 0;
+			ResInfo.muMemSize							= 0;
 
 			if( SUCCEEDED( pGfxShaderReflection->GetResourceBindingDesc(uResIdx, &resourceDesc ) ) )
 			{								
@@ -217,8 +214,8 @@ bool ExporterGfxShaderDX12_DX12::ExportWorkExtractResources()
 				}
 				else if( resourceDesc.Type == D3D_SIT_CBUFFER )
 				{
-					ID3D11ShaderReflectionConstantBuffer* pBufferReflect = pGfxShaderReflection->GetConstantBufferByName( resourceDesc.Name );
-					D3D11_SHADER_BUFFER_DESC bufferDesc;
+					ID3D12ShaderReflectionConstantBuffer* pBufferReflect = pGfxShaderReflection->GetConstantBufferByName( resourceDesc.Name );
+					D3D12_SHADER_BUFFER_DESC bufferDesc;
 					pBufferReflect->GetDesc( &bufferDesc );
 					//zenAssert(resourceDesc.BindPoint<zcExp::keShaderParamFreq__Count);					
 					zenAssertMsg( resourceDesc.BindCount == 1, "No current support for array of constants buffer");					
@@ -230,8 +227,8 @@ bool ExporterGfxShaderDX12_DX12::ExportWorkExtractResources()
 				}
 				else if( resourceDesc.Type == D3D_SIT_STRUCTURED)
 				{
-					ID3D11ShaderReflectionConstantBuffer* pBufferReflect = pGfxShaderReflection->GetConstantBufferByName( resourceDesc.Name );
-					D3D11_SHADER_BUFFER_DESC bufferDesc;
+					ID3D12ShaderReflectionConstantBuffer* pBufferReflect = pGfxShaderReflection->GetConstantBufferByName( resourceDesc.Name );
+					D3D12_SHADER_BUFFER_DESC bufferDesc;
 					pBufferReflect->GetDesc( &bufferDesc );		
 					ResInfo.meType		= keShaderRes_Buffer;
 					ResInfo.muMemSize	= bufferDesc.Size;
@@ -274,5 +271,3 @@ bool ExporterGfxShaderDX12_DX12::ExportEnd()
 }
 
 }
-
-#endif //ZEN_EXPORT_OR_RESOURCE_DX12

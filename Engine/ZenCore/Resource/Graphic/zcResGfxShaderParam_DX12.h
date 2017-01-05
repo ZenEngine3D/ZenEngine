@@ -32,7 +32,11 @@ namespace zcRes
 		template<class TParamType> void				SetValue(const zHash32& _hParamName, const TParamType& _Value, zU16 _uIndex=0);
 
 		GfxCBufferDefinitionRef						mrCBufferParent;					//!< Parent Definition of this CBuffer
-		ID3D11Buffer*								mpBufferBinding			= nullptr;	//!< DirectX object for buffer
+		DirectXComRef<ID3D12Resource>				mrBuffer;
+		DirectXComRef<ID3D12Resource>				mrLockData;
+		D3D12_RESOURCE_STATES						meBufferState;		
+		zcGfx::DescriptorSRV_UAV_CBV				mCBufferView;
+		zU8*										mpCBufferMapped			= nullptr;	//!< CPU address of constant buffer we can write to
 		mutable bool								mbUpdated				= false;	//!< True when parameter value was changed and must update GPU buffer		
 		typedef zcExp::ExporterGfxCBuffer			RuntimeExporter;
 	};

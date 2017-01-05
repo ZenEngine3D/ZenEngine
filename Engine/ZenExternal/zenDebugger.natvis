@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?> 
+<AutoVisualizer xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010">
+
+<!--################################################################################################
+      Basic types
+    ################################################################################################-->
+  <Type Name="zen::zenType::zResID" >
+    <DisplayString>{{ {meType,en} Name={mhName.muHash,H} }}</DisplayString>
+    <Expand>
+      <Item Name="mhName">mhName.muHash,H</Item>
+      <Item Name="meType">meType</Item>
+      <Item Name="mePlatform">mePlatform</Item>
+      <Item Name="meSource">meSource</Item>
+      <Item Name="muHashID">muHashID,H</Item>
+    </Expand>
+  </Type >
+  
+  <!--################################################################################################
+      Ref pointers
+    ################################################################################################-->
+  <Type Name="RefPointed" >
+    <AlternativeType Name="zen::zenType::zRefCounted"/>
+    <DisplayString>{{ RefCount={miRefCount} }}</DisplayString>
+  </Type >
+  
+  <Type Name="RefPointers" >
+    <AlternativeType Name="zen::zenType::zEngineRef&lt;*&gt;"/>
+    <AlternativeType Name="zen::zenType::zGameRef&lt;*&gt;"/>
+        
+    <DisplayString Condition="mpReference == nullptr">null</DisplayString>
+    <DisplayString>{($T1*)mpReference,na}</DisplayString>
+    <Expand >
+      <ExpandedItem>($T1*)mpReference</ExpandedItem>
+    </Expand>
+  </Type>
+
+  <Type Name="Resources" > 
+    <AlternativeType Name="zen::zenRes::zResourceRef&lt;*,*,*&gt;"/>
+    <AlternativeType Name="zen::zenRes::zResourceConstRef&lt;*,*,*&gt;"/>
+
+    <DisplayString Condition="mpResource == nullptr">null</DisplayString>
+    <DisplayString>{($T1*)mpResource,na} {mpResource->mResID.meType,en}</DisplayString>
+    <Expand>
+      <Item Name="[ResID]" Condition="mpResource != nullptr">mpResource->mResID</Item>
+      <ExpandedItem Condition="mpResource != nullptr">($T1*)mpResource</ExpandedItem>      
+    </Expand>
+  </Type>
+  
+<!--################################################################################################
+      Arrays
+    ################################################################################################-->
+  <Type Name="Arrays" >
+    <AlternativeType Name="zen::zenType::zArrayStatic&lt;*,*&gt;"/>
+    <AlternativeType Name="zen::zenType::zArrayDynamic&lt;*,*,*&gt;"/>
+    
+    <DisplayString> Array {{ Count={muCount}, Mem={sizeof(*mpData)*muCount} }}</DisplayString>
+    <Expand>
+<!--  ==============================================================================================
+        Array infos 
+      ==============================================================================================-->
+      <Synthetic Name="[Reserved]" Optional="true">
+        <DisplayString>{{ Count={muCountReserved}, Mem={sizeof(*mpData)*muCountReserved} }}</DisplayString>
+        <Expand>
+          <Item Name="[Count]">muCountReserved</Item>
+          <Item Name="[Memory]">sizeof(*mpData)*muCountReserved</Item>
+        </Expand>
+      </Synthetic>
+
+<!--  ==============================================================================================
+        List Items 0-9
+      ==============================================================================================-->
+      <ArrayItems>
+        <Size Condition="muCount &lt; 10">muCount</Size>
+        <Size>10</Size>
+        <ValuePointer>mpData</ValuePointer>
+      </ArrayItems>
+<!--  ==============================================================================================
+        List Items 10-99
+      ==============================================================================================-->
+      <Synthetic Name="[...]" Condition="muCount &gt;= 10">
+        <DisplayString Condition="muCount &lt;= 100">[10-{muCount}]</DisplayString>
+        <DisplayString>[10-99]</DisplayString>
+        <Expand>
+          <ArrayItems>
+            <Size Condition="muCount &lt; 100">muCount-10</Size>
+            <Size>90</Size>
+            <LowerBound>10</LowerBound>
+            <ValuePointer>mpData+10</ValuePointer>
+          </ArrayItems>
+        </Expand>       
+      </Synthetic>
+<!--  ==============================================================================================
+        List Items 100-xxx
+      ==============================================================================================-->      
+      <Synthetic Name="[...]" Condition="muCount &gt;= 100">
+        <DisplayString>[10-{muCount}]</DisplayString>
+        <Expand>
+          <ArrayItems>
+            <Size>muCount-10</Size>
+            <LowerBound>10</LowerBound>
+            <ValuePointer>mpData+10</ValuePointer>
+          </ArrayItems>
+        </Expand>
+      </Synthetic>
+      
+    </Expand >
+  </Type>
+  
+</AutoVisualizer>

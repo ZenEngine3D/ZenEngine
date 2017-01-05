@@ -10,9 +10,11 @@ class GfxIndexHAL_DX11 : public zcExp::ExportGfxIndexDX11
 public:	
 	virtual										~GfxIndexHAL_DX11();
 	bool										Initialize();
-	void										Update(zU8* _pData, zUInt _uOffset = 0, zUInt _uSize = 0xFFFFFFFFFFFFFFFF);
-
+	zU8*										Lock();
+	void										Unlock(const zenGfx::zContext& _rContext);
+	
 	ID3D11Buffer*								mpIndiceBuffer;
+	zU8*										mpLockData = nullptr; //! @todo safe support multi threading (lock return context?)
 	typedef zcExp::ExporterGfxIndexDX11_DX11	RuntimeExporter;
 };
 class GfxIndexHAL : public GfxIndexHAL_DX11{};

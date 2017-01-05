@@ -1,7 +1,6 @@
 #pragma once
-#if !defined(__zCore_Exp_Gfx_GfxWindow_DX12_h__) && ZEN_EXPORT_OR_RESOURCE_DX12
+#ifndef __zCore_Exp_Gfx_GfxWindow_DX12_h__
 #define __zCore_Exp_Gfx_GfxWindow_DX12_h__
-//SF DX12
 
 namespace zcExp
 {
@@ -12,6 +11,5 @@ namespace zcExp
 		HWND					mhWindow;
 	};
 }
-
 
 #endif

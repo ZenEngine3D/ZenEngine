@@ -10,8 +10,10 @@ class GfxBufferHAL_DX11 : public zcExp::ExportGfxBuffer
 public:	
 	virtual										~GfxBufferHAL_DX11();
 	bool										Initialize();
-	void										Update(zU8* _pData, zUInt _uOffset = 0, zUInt _uSize = 0xFFFFFFFFFFFFFFFF);
-
+	void*										Lock();
+	void										Unlock(const zenGfx::zContext& _rContext);
+	
+	zU8*										mpLockData = nullptr; //! @todo safe support multi threading (lock return context?)
 	ID3D11Buffer*								mpBuffer;
 	ID3D11ShaderResourceView*					mpSRV;
 	ID3D11UnorderedAccessView*					mpUAV;
