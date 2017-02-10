@@ -5,12 +5,12 @@
 namespace zcExp
 {	
 
-	class ExporterGfxSamplerDX11_DX11 : public ExporterBase
+	class ExporterGfxStateSamplerDX11_DX11 : public ExporterBase
 	{
-	zenClassDeclare(ExporterGfxSamplerDX11_DX11, ExporterBase)
+	zenClassDeclare(ExporterGfxStateSamplerDX11_DX11, ExporterBase)
 	public:				
-	typedef zEngineRef<ExportGfxSamplerDX11>	ExportResultRef; //todo use proper ref class
-												ExporterGfxSamplerDX11_DX11(const ExportResultRef& _rExportOut);
+	typedef zEngineRef<ExportGfxStateSamplerDX11>	ExportResultRef; //todo use proper ref class
+												ExporterGfxStateSamplerDX11_DX11(const ExportResultRef& _rExportOut);
 		static zResID							CallbackGetItemID(ePlatform _ePlatform, zenConst::eResType _eType, zenConst::eResSource _eSource, const ExportInfoBase* _pExportInfo, bool& _bExistOut);
 	protected:	
 		virtual bool							ExportWork(bool _bIsTHRTask);	

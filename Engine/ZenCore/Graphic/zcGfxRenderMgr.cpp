@@ -1,5 +1,10 @@
 #include "zcCore.h"
 
+namespace zcMgr 
+{ 
+	zcGfx::ManagerRender_HAL GfxRender; 	
+}
+
 namespace zcGfx
 {
 

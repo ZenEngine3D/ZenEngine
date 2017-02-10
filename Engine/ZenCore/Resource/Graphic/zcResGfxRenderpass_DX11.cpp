@@ -3,7 +3,7 @@
 namespace zcRes
 {
 
-bool GfxRenderPassHAL_DX11::Initialize()
+bool GfxRenderPass_DX11::Initialize()
 {		
 	mrStateBlend		= mBlendStateID;
 	mrStateDepthStencil	= mDepthStencilStateID;

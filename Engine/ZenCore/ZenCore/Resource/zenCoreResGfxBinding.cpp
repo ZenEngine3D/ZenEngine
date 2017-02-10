@@ -142,13 +142,13 @@ void zGfxMesh::SetValue(const zHash32& _hParamName, const zenMath::Matrix& _matV
 	mpResource->SetValue(_hParamName, _matValue);
 }
 
-void zGfxMesh::SetResource(const zHash32& _hTextureName, const zGfxTexture2d& _rTexture, zU16 _uIndex )
+void zGfxMesh::SetResource(const zHash32& _hTextureName, const zGfxTexture2D& _rTexture, zU16 _uIndex )
 {
 	zenAssertMsg(mpResource, "No valid resource assigned");
 	mpResource->SetResource(_hTextureName, _rTexture, _uIndex);
 }
 
-void zGfxMesh::SetResource(const zHash32& _hTextureName, const zGfxSampler& _rSampler, zU16 _uIndex )
+void zGfxMesh::SetResource(const zHash32& _hTextureName, const zGfxStateSampler& _rSampler, zU16 _uIndex )
 {
 	zenAssertMsg(mpResource, "No valid resource assigned");
 	mpResource->SetResource(_hTextureName, _rSampler, _uIndex);
@@ -204,13 +204,13 @@ void zGfxMeshStrip::SetValue(const zHash32& _hParamName, const zenMath::Matrix& 
 	mpResource->SetValue(_hParamName, _matValue);
 }
 
-void zGfxMeshStrip::SetResource(const zHash32& _hTextureName, const zGfxTexture2d& _rTexture, zU16 _uIndex )
+void zGfxMeshStrip::SetResource(const zHash32& _hTextureName, const zGfxTexture2D& _rTexture, zU16 _uIndex )
 {
 	zenAssertMsg(mpResource, "No valid resource assigned");
 	mpResource->SetResource(_hTextureName, _rTexture, _uIndex);
 }
 
-void zGfxMeshStrip::SetResource(const zHash32& _hTextureName, const zGfxSampler& _rSampler, zU16 _uIndex )
+void zGfxMeshStrip::SetResource(const zHash32& _hTextureName, const zGfxStateSampler& _rSampler, zU16 _uIndex )
 {
 	zenAssertMsg(mpResource, "No valid resource assigned");
 	mpResource->SetResource(_hTextureName, _rSampler, _uIndex);

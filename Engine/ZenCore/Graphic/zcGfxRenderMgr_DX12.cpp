@@ -2,11 +2,51 @@
 #include <DXGI.h>
 #include <DXGI1_4.h>
 
-//#include <D3D12Shader.h>
-//#include <D3Dcompiler.h>
-namespace zcMgr { zcGfx::ManagerRender GfxRender; }
-
 //SF DX12
+
+//==============================================================================================
+//! Temp texture creation
+//! @todo 0 remove this once texture support added
+//==============================================================================================
+// Generate a simple black and white checkerboard texture.
+static const UINT TextureWidth = 256;
+static const UINT TextureHeight = 256;
+static const UINT TexturePixelSize = 4;	// The number of bytes used to represent a pixel in the texture.
+std::vector<UINT8> GenerateTextureData()
+{
+	const UINT rowPitch = TextureWidth * TexturePixelSize;
+	const UINT cellPitch = rowPitch >> 3;		// The width of a cell in the checkboard texture.
+	const UINT cellHeight = TextureWidth >> 3;	// The height of a cell in the checkerboard texture.
+	const UINT textureSize = rowPitch * TextureHeight;
+
+	std::vector<UINT8> data(textureSize);
+	UINT8* pData = &data[0];
+
+	for (UINT n = 0; n < textureSize; n += TexturePixelSize)
+	{
+		UINT x = n % rowPitch;
+		UINT y = n / rowPitch;
+		UINT i = x / cellPitch;
+		UINT j = y / cellHeight;
+
+		if (i % 2 == j % 2)
+		{
+			pData[n] = 0x00;		// R
+			pData[n + 1] = 0x00;	// G
+			pData[n + 2] = 0x00;	// B
+			pData[n + 3] = 0xff;	// A
+		}
+		else
+		{
+			pData[n] = 0xff;		// R
+			pData[n + 1] = 0xff;	// G
+			pData[n + 2] = 0xff;	// B
+			pData[n + 3] = 0xff;	// A
+		}
+	}
+
+	return data;
+}
 
 namespace zcGfx
 {
@@ -138,14 +178,6 @@ zEngineRef<DX12QueryTimestamp> DX12QueryTimestamp::Create()
 #endif
 }
 
-ManagerRender::RenderContext::RenderContext()
-{
-	zenMem::Zero(mahShaderInputStamp);	
-	zenMem::Zero(maShaderInputSlotCount);
-	zenMem::Zero(maResourceView);
-	zenMem::Zero(maResourceType);
-}
-
 // Helper function for acquiring the first available hardware adapter that supports Direct3D 12.
 // If no such adapter can be found, *ppAdapter will be set to nullptr.
 void GetHardwareAdapter(IDXGIFactory2* pFactory, IDXGIAdapter1** ppAdapter)
@@ -176,7 +208,7 @@ void GetHardwareAdapter(IDXGIFactory2* pFactory, IDXGIAdapter1** ppAdapter)
 	*ppAdapter = adapter.Detach();
 }
 
-bool ManagerRender::Load()
+bool ManagerRender_DX12::Load()
 {	
 	HRESULT hr	= S_OK;
 	
@@ -230,15 +262,14 @@ bool ManagerRender::Load()
 	UINT uDxgiFactoryFlags = 0;
 
 	// Enable the D3D12 debug layer.
-	if( _DEBUG )
+#if _DEBUG
+	if (SUCCEEDED(D3D12GetDebugInterface(IID_PPV_ARGS(&mrDXDebugController))))
 	{
-		if (SUCCEEDED(D3D12GetDebugInterface(IID_PPV_ARGS(&mrDXDebugController))))
-		{
-			mrDXDebugController->EnableDebugLayer();
-			mrDXDebugController->SetEnableGPUBasedValidation(true);
-			uDxgiFactoryFlags |= DXGI_CREATE_FACTORY_DEBUG;
-		}	
-	}
+		mrDXDebugController->EnableDebugLayer();
+		mrDXDebugController->SetEnableGPUBasedValidation(true);
+		uDxgiFactoryFlags |= DXGI_CREATE_FACTORY_DEBUG;
+	}	
+#endif
 
 	// Create DirectX GI Factory	
 	hr = CreateDXGIFactory2(uDxgiFactoryFlags, IID_PPV_ARGS(&mrDXFactory) );
@@ -284,22 +315,30 @@ bool ManagerRender::Load()
 	// Create Commandlist/Queue
 	//----------------------------------------------------------------------------------------------
 	//mCommandManager.Create(mrDXDevice.Get());
-	hr = mrDXDevice->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&m_commandAllocator));
+	hr = mrDXDevice->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&mrCommandAllocator));
 	if( FAILED( hr ) )
 		return FALSE;	
 	
 	// Create the command list.
-	mrDXDevice->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, m_commandAllocator.Get(), nullptr, IID_PPV_ARGS(&m_commandList));
+	DirectXComRef<ID3D12GraphicsCommandList>* pCmdList = &marCommandList[0][0];
 
-	// Command lists are created in the recording state, but there is nothing
-	// to record yet. The main loop expects it to be closed, so close it now.
-	m_commandList->Close();
+	
+	for( zUInt idxCmdList(0); idxCmdList< sizeof(marCommandList) / sizeof(DirectXComRef<ID3D12GraphicsCommandList>); ++idxCmdList )
+	{
+		DirectXComRef<ID3D12GraphicsCommandList> rCmdList;
+		mrDXDevice->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, mrCommandAllocator.Get(), nullptr, IID_PPV_ARGS(&rCmdList));
+		wchar_t zName[64];
+		swprintf_s(zName, L"CommandList %02i", static_cast<int>(idxCmdList) );
+		rCmdList->SetName( zName );		
+		rCmdList->Close(); // Command lists are created in the recording state but main loop expects it to be closed
+		pCmdList[idxCmdList] = rCmdList;
+	}
 
 	// Describe and create the command queue.
 	D3D12_COMMAND_QUEUE_DESC queueDesc = {};
 	queueDesc.Flags = D3D12_COMMAND_QUEUE_FLAG_NONE;
 	queueDesc.Type = D3D12_COMMAND_LIST_TYPE_DIRECT;
-	mrDXDevice->CreateCommandQueue(&queueDesc, IID_PPV_ARGS(&m_commandQueue));
+	mrDXDevice->CreateCommandQueue(&queueDesc, IID_PPV_ARGS(&mrCommandQueue));
 
 	//----------------------------------------------------------------------------------------------
 	// Create a root signature 
@@ -308,10 +347,136 @@ bool ManagerRender::Load()
 		RootSignature::StaticInitialize();
 
 		CD3DX12_DESCRIPTOR_RANGE1 SRVTable;
-		SRVTable.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV,			1, 0, 0, D3D12_DESCRIPTOR_RANGE_FLAG_DATA_STATIC);
-		mRootSignature = RootSignature({RootSignature::SlotTable(1,	&SRVTable,	D3D12_SHADER_VISIBILITY_PIXEL)}, D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
+		SRVTable.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0, 0, D3D12_DESCRIPTOR_RANGE_FLAG_DATA_STATIC);
+		mRootSignatureDefault = RootSignature({RootSignature::SlotTable(1,	&SRVTable,	D3D12_SHADER_VISIBILITY_PIXEL)}, D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
 	}
 
+	//==============================================================================================
+	//! Temp PSO creation
+	//! @todo 0 replace this with proper PSO support 
+	//==============================================================================================
+	// Command list allocators can only be reset when the associated 
+	// command lists have finished execution on the GPU; apps should use 
+	// fences to determine GPU execution progress.
+	mrCommandAllocator->Reset();
+
+	// However, when ExecuteCommandList() is called on a particular command 
+	// list, that command list can then be reset at any time and must be before re-recording.
+	marCommandList[0][0]->Reset(mrCommandAllocator.Get(), nullptr);
+
+	static zenRes::zGfxShaderVertex	srShaderVS;	
+	static zenRes::zGfxShaderPixel	srShaderPS;	
+	srShaderVS	= zenRes::zGfxShaderVertex::Create( "Shader/DX12Sample.sl", "VSMain");
+	srShaderPS	= zenRes::zGfxShaderPixel::Create( "Shader/DX12Sample.sl", "PSMain" );
+
+	// Define the vertex input layout.
+	D3D12_INPUT_ELEMENT_DESC inputElementDescs[] =
+	{
+		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
+		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 }
+	};
+
+	// Describe and create the graphics pipeline state object (PSO).
+	D3D12_GRAPHICS_PIPELINE_STATE_DESC psoDesc = {};
+	psoDesc.InputLayout = { inputElementDescs, _countof(inputElementDescs) };
+	psoDesc.pRootSignature = mRootSignatureDefault.Get();
+	psoDesc.VS = srShaderVS.HAL()->mDXShaderCode;
+	psoDesc.PS = srShaderPS.HAL()->mDXShaderCode;//CD3DX12_SHADER_BYTECODE(pixelShader.Get());
+	psoDesc.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
+	psoDesc.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
+	psoDesc.DepthStencilState.DepthEnable = FALSE;
+	psoDesc.DepthStencilState.StencilEnable = FALSE;
+	psoDesc.SampleMask = UINT_MAX;
+	psoDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+	psoDesc.NumRenderTargets = 1;
+	psoDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;
+	psoDesc.SampleDesc.Count = 1;
+	hr = mrDXDevice->CreateGraphicsPipelineState(&psoDesc, IID_PPV_ARGS(&mTmpPipelineState));
+	if( FAILED(hr) )
+		return false;
+
+	//==============================================================================================
+	//! Temp VertexBuffer creation
+	//! @todo 0 replace this with proper Buffer support 
+	//==============================================================================================
+	// Create the vertex buffer.
+	{
+		float m_aspectRatio = 1280.f / 800.f;
+		// Define the geometry for a triangle.
+		Vertex triangleVertices[] =
+		{
+			{ { 0.0f, 0.25f * m_aspectRatio, 0.0f }, { 0.5f, 0.0f } },
+			{ { 0.25f, -0.25f * m_aspectRatio, 0.0f }, { 1.0f, 1.0f } },
+			{ { -0.25f, -0.25f * m_aspectRatio, 0.0f }, { 0.0f, 1.0f } }
+		};
+
+		const UINT vertexBufferSize = sizeof(triangleVertices);
+
+		// Note: using upload heaps to transfer static data like vert buffers is not 
+		// recommended. Every time the GPU needs it, the upload heap will be marshalled 
+		// over. Please read up on Default Heap usage. An upload heap is used here for 
+		// code simplicity and because there are very few verts to actually transfer.
+		hr = mrDXDevice->CreateCommittedResource(
+			&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),
+			D3D12_HEAP_FLAG_NONE,
+			&CD3DX12_RESOURCE_DESC::Buffer(vertexBufferSize),
+			D3D12_RESOURCE_STATE_GENERIC_READ,
+			nullptr,
+			IID_PPV_ARGS(&mTmpVertexBuffer));
+		
+		if( FAILED(hr) )
+			return false;
+		zSetGfxResourceName(mTmpVertexBuffer, L"TempVertexBuffer");
+
+		// Copy the triangle data to the vertex buffer.
+		UINT8* pVertexDataBegin;
+		CD3DX12_RANGE readRange(0, 0);		// We do not intend to read from this resource on the CPU.
+		hr = mTmpVertexBuffer->Map(0, &readRange, reinterpret_cast<void**>(&pVertexDataBegin));
+		if( FAILED(hr) )
+			return false;
+
+		memcpy(pVertexDataBegin, triangleVertices, sizeof(triangleVertices));
+		mTmpVertexBuffer->Unmap(0, nullptr);
+
+		// Initialize the vertex buffer view.
+		mTmpVertexBufferView.BufferLocation = mTmpVertexBuffer->GetGPUVirtualAddress();
+		mTmpVertexBufferView.StrideInBytes = sizeof(Vertex);
+		mTmpVertexBufferView.SizeInBytes = vertexBufferSize;
+	}
+
+	//==============================================================================================
+	//! Temp Texture creation
+	//! @todo 0 replace this with proper texture support 
+	//==============================================================================================
+
+	//-----------------------------------------------------------
+	// Prepare some data for asset creation
+	zArrayStatic<zU8>			aTexRGBA;
+	zVec2U16					vTexSize(256,256);
+	zenConst::eTextureFormat	eTexFormat = zenConst::keTexFormat_RGBA8;
+	aTexRGBA.SetCount( vTexSize.x*vTexSize.y*4 );
+	zU8*						pTexCur = aTexRGBA.First();
+	for(zUInt line=0; line<vTexSize.y; ++line)
+	{
+		for(zUInt col=0; col<vTexSize.x; ++col)
+		{
+			*pTexCur++ = (line/16+col/16) % 2 == 0 ? 0xFF : 0x10;
+			*pTexCur++ = (line/16+col/16) % 2 == 0 ? 0xFF : 0x10;
+			*pTexCur++ = (line/16+col/16) % 2 == 0 ? 0xFF : 0xFF;
+			*pTexCur++ = 1;
+		}
+	};
+
+	mrTmpTexture	= zenRes::zGfxTexture2D::Create(zenConst::keTexFormat_RGBA8, vTexSize, aTexRGBA );
+	
+	// Close the command list and execute it to begin the initial GPU setup.
+	hr = marCommandList[0][0]->Close();
+	if( FAILED(hr) )
+		return false;
+
+	ID3D12CommandList* ppCommandLists[] = { marCommandList[0][0].Get() };
+	mrCommandQueue->ExecuteCommandLists(_countof(ppCommandLists), ppCommandLists);
+	
 	//----------------------------------------------------------------------------------------------
 	// Create synchronization objects and wait until assets have been uploaded to the GPU.
 	//----------------------------------------------------------------------------------------------
@@ -342,7 +507,7 @@ bool ManagerRender::Load()
 	return true;
 }
 
-bool ManagerRender::Unload()
+bool ManagerRender_DX12::Unload()
 {
 #if !ZEN_RENDERER_DX12
 	if( mDX12pPerf ) 
@@ -359,7 +524,7 @@ bool ManagerRender::Unload()
 	return true;
 }
 
- void ManagerRender::WaitForPreviousFrame()
+ void ManagerRender_DX12::WaitForPreviousFrame()
 {
 	// WAITING FOR THE FRAME TO COMPLETE BEFORE CONTINUING IS NOT BEST PRACTICE.
 	// This is code implemented as such for simplicity. The D3D12HelloFrameBuffering
@@ -368,7 +533,7 @@ bool ManagerRender::Unload()
 
 	// Signal and increment the fence value.
 	const UINT64 fence = m_fenceValue;
-	m_commandQueue->Signal(m_fence.Get(), fence);
+	mrCommandQueue->Signal(m_fence.Get(), fence);
 	m_fenceValue++;
 
 	// Wait until the previous frame is finished.
@@ -381,7 +546,7 @@ bool ManagerRender::Unload()
 	//m_frameIndex = m_swapChain->GetCurrentBackBufferIndex();
 }
 
-void ManagerRender::FrameBegin(zcRes::GfxWindowRef _FrameWindow)
+void ManagerRender_DX12::FrameBegin(zcRes::GfxWindowRef _FrameWindow)
 {	
 	WaitForPreviousFrame();
 	marTempResource[muFrameRendered%zenArrayCount(marTempResource)].Clear();
@@ -389,27 +554,19 @@ void ManagerRender::FrameBegin(zcRes::GfxWindowRef _FrameWindow)
 	// Command list allocators can only be reset when the associated 
 	// command lists have finished execution on the GPU; apps should use 
 	// fences to determine GPU execution progress.
-	m_commandAllocator->Reset();
+	mrCommandAllocator->Reset();
 
+	//! @todo 1 support mutiple context/cmdlist
 	// However, when ExecuteCommandList() is called on a particular command 
 	// list, that command list can then be reset at any time and must be before re-recording.
-	m_commandList->Reset(m_commandAllocator.Get(), nullptr);
+	marCommandList[0][muFrameRendered%2]->Reset(mrCommandAllocator.Get(), nullptr);
 
+	mGpuContext[0].Reset( mrDXDevice, marCommandList[0][muFrameRendered%2] );
 	Super::FrameBegin(_FrameWindow);
-	
-	//----------------------------------------------------------------------------------------------
-	//! @todo 3 move this down gpu pipeline
-	m_commandList->SetGraphicsRootSignature(mRootSignature.Get());
-
-	ID3D12DescriptorHeap* ppHeaps[] = { DescriptorSRV_UAV_CBV::GetDescHeap().Get() };
-	m_commandList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
-	for( UINT i(0); i<zenArrayCount(ppHeaps); ++i )
-		m_commandList->SetGraphicsRootDescriptorTable(i, ppHeaps[i]->GetGPUDescriptorHandleForHeapStart());
-	//----------------------------------------------------------------------------------------------
 
 	// Indicate that the back buffer will be used as a render target.
 	const zcRes::GfxTarget2DRef& rBackbuffer = grWindowRender->GetBackbuffer();
-	m_commandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(rBackbuffer.HAL()->mrTextureResource.Get(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET) );
+	mGpuContext[0].GetCommandList()->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(rBackbuffer.HAL()->mrResource.Get(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET) );
 	
 #if !ZEN_RENDERER_DX12
 	mrPreviousDrawcall		= nullptr;
@@ -419,20 +576,20 @@ void ManagerRender::FrameBegin(zcRes::GfxWindowRef _FrameWindow)
 #endif
 }
 
-void ManagerRender::FrameEnd()
+void ManagerRender_DX12::FrameEnd()
 {	
 	const zcRes::GfxTarget2DRef& rBackbuffer = grWindowRender->GetBackbuffer();
 
 	//mrQueryDisjoint->Stop();		
 
 	// Indicate that the back buffer will now be used to present.
-	m_commandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(rBackbuffer.HAL()->mrTextureResource.Get(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT));
+	mGpuContext[0].GetCommandList()->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(rBackbuffer.HAL()->mrResource.Get(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT));
 
-	HRESULT hr = m_commandList->Close();
+	HRESULT hr = mGpuContext[0].GetCommandList()->Close();
 	if (FAILED(hr))
 		return;
-	ID3D12CommandList* ppCommandLists[] = { m_commandList.Get() };
-	m_commandQueue->ExecuteCommandLists(zenArrayCount(ppCommandLists), ppCommandLists);
+	ID3D12CommandList* ppCommandLists[] = { marCommandList[0][muFrameRendered%2].Get() };
+	mrCommandQueue->ExecuteCommandLists(zenArrayCount(ppCommandLists), ppCommandLists);
 	grWindowRender.HAL()->mrDXSwapChain->Present( 0, 0 );	
 	
 	/*
@@ -450,11 +607,10 @@ void ManagerRender::FrameEnd()
 	m_PreviousPresentCount = FrameStatistics.PresentCount;
 	m_PreviousRefreshCount = FrameStatistics.SyncRefreshCount;
 	*/
-	UnbindResources();
 	Super::FrameEnd();	
 }
 
-void ManagerRender::NamedEventBegin(const zStringHash32& zName)
+void ManagerRender_DX12::NamedEventBegin(const zStringHash32& zName)
 {
 #if !ZEN_RENDERER_DX12
 	if( mbProfilerDetected )
@@ -466,7 +622,7 @@ void ManagerRender::NamedEventBegin(const zStringHash32& zName)
 #endif
 }
 
-void ManagerRender::NamedEventEnd()
+void ManagerRender_DX12::NamedEventEnd()
 {
 #if !ZEN_RENDERER_DX12
 	if( mbProfilerDetected )
@@ -474,331 +630,17 @@ void ManagerRender::NamedEventEnd()
 #endif
 }
 
-const zEngineRef<DX12QueryDisjoint>& ManagerRender::GetQueryDisjoint()const
+const zEngineRef<DX12QueryDisjoint>& ManagerRender_DX12::GetQueryDisjoint()const
 {
 	return mrQueryDisjoint;
 }
 
-void ManagerRender::UpdateGPUState(const zEngineRef<zcGfx::Command>& _rDrawcall, RenderContext& _Context)
-{
-#if !ZEN_RENDERER_DX12
-	if( _Context.mrRenderpass != _rDrawcall->mrRenderPass )
-	{			
-		_Context.mrRenderpass						= _rDrawcall->mrRenderPass;
-		const zcRes::GfxRenderPassRef& rRenderpass	= _Context.mrRenderpass;
-
-		if( _Context.mrStateRaster !=  rRenderpass.HAL()->mrStateRaster )
-		{			
-			_Context.mrStateRaster		= rRenderpass.HAL()->mrStateRaster;
-			_Context.mbScreenScissorOn	= _Context.mrStateRaster.HAL()->mRasterizerDesc.ScissorEnable == TRUE;
-			mDX12pContextImmediate->RSSetState(_Context.mrStateRaster.HAL()->mpRasterizerState);
-		}
-		if( _Context.mrStateBlend != rRenderpass.HAL()->mrStateBlend )
-		{			
-			_Context.mrStateBlend		= rRenderpass.HAL()->mrStateBlend;
-			mDX12pContextImmediate->OMSetBlendState(	_Context.mrStateBlend.HAL()->mpBlendState, 
-														_Context.mrStateBlend.HAL()->mafBlendFactor, 
-														_Context.mrStateBlend.HAL()->muSampleMask );
-		}
-		if( _Context.mrStateDepthStencil != rRenderpass.HAL()->mrStateDepthStencil )
-		{				
-			_Context.mrStateDepthStencil= rRenderpass.HAL()->mrStateDepthStencil;
-			mDX12pContextImmediate->OMSetDepthStencilState(	_Context.mrStateDepthStencil.HAL()->mpDepthStencilState, 
-															_Context.mrStateDepthStencil.HAL()->muStencilValue);
-		}
-		if( _Context.mrStateView != rRenderpass.HAL()->mrStateView )
-		{
-			const zcRes::GfxViewRef& rNewView		= rRenderpass->mrStateView;
-			const zcRes::GfxViewRef& rPreviousView	= _Context.mrStateView;
-			UINT maxCount							= zenMath::Max( rNewView.HAL()->muColorCount, rPreviousView.IsValid() ? rPreviousView.HAL()->muColorCount : 0);
-			_Context.mrStateView					= rNewView;
-			
-			zcMgr::GfxRender.UnbindTextures();
-			mDX12pContextImmediate->OMSetRenderTargets(maxCount, rNewView.HAL()->mpColorViews, rNewView.HAL()->mpDepthView );
-			mDX12pContextImmediate->RSSetViewports( 1, &rNewView.HAL()->mViewport );
-		}
-	}
-#endif
+void ManagerRender_DX12::Render(zArrayDynamic<zEngineRef<zcGfx::Command>>& _aDrawcalls)
+{		
+	mGpuContext[0].Submit(_aDrawcalls);
 }
 
-//==================================================================================================
-//! @details Compare current bound samplers with wanted one and update their binding if different
-//==================================================================================================
-void ManagerRender::UpdateShaderState_Samplers(const zcGfx::CommandDraw& _Drawcall, RenderContext& _Context, eShaderStage _eShaderStage )
-{	
-#if !ZEN_RENDERER_DX12
-	ID3D11SamplerState*	aResourceView[zcExp::kuDX12_SamplerPerStageMax];
-	const eShaderResource kShaderRes							= keShaderRes_Sampler;	
-	const zArrayStatic<zcRes::GfxShaderResourceRef>& arResource	= _Drawcall.mrMeshStrip.HAL()->marShaderResources[_eShaderStage][kShaderRes];
-	
-	// Retrieve samplers new slots assignment
-	zU16 uChangedFirst(0xFFFF), uChangedLast(0), uValidCount(0), uResCount(static_cast<zU16>(arResource.Count()));
-	zU16 uAssignCount = zenMath::Max(uResCount, _Context.maShaderInputSlotCount[_eShaderStage][kShaderRes]);
-	for( zU16 slotIdx(0); slotIdx<uAssignCount; ++slotIdx )
-	{
-		_Context.marSampler[_eShaderStage][slotIdx]	= slotIdx < uResCount ? arResource[slotIdx] : nullptr;
-		zcRes::GfxSamplerRef& rResource				= _Context.marSampler[_eShaderStage][slotIdx];
-		ID3D11SamplerState* pDXView					= rResource.IsValid() ? rResource.HAL()->mpSamplerState	: nullptr;		
-		uChangedFirst								= pDXView != aResourceView[slotIdx]	? zenMath::Min(uChangedFirst, slotIdx)	: uChangedFirst;
-		uChangedLast								= pDXView != aResourceView[slotIdx]	? slotIdx								: uChangedLast;
-		uValidCount									= pDXView							? slotIdx+1								: uValidCount;
-		aResourceView[slotIdx]						= pDXView;
-	}
-
-	// Send it to API
-	_Context.maShaderInputSlotCount[_eShaderStage][kShaderRes] = uValidCount;
-	if( uChangedLast >= uChangedFirst )
-	{
-		switch( _eShaderStage )
-		{
-		case keShaderStage_Vertex:	DX12GetDeviceContext()->VSSetSamplers( uChangedFirst, uChangedLast-uChangedFirst+1, &aResourceView[uChangedFirst] ); break;
-		case keShaderStage_Pixel:	DX12GetDeviceContext()->PSSetSamplers( uChangedFirst, uChangedLast-uChangedFirst+1, &aResourceView[uChangedFirst] ); break;
-		default: break;
-		}
-	}
-#endif
-}
-
-//==================================================================================================
-//! @details Compare current bound Constant Buffers with wanted one and update their binding if different
-//==================================================================================================
-void ManagerRender::UpdateShaderState_ConstantBuffers(const zcGfx::CommandDraw& _Drawcall, RenderContext& _Context, eShaderStage _eShaderStage )
-{	
-#if !ZEN_RENDERER_DX12
-	ID3D11Buffer* aResourceView[zcExp::kuDX12_CBufferPerStageMax];
-	const eShaderResource kShaderRes							= keShaderRes_CBuffer;	
-	const zArrayStatic<zcRes::GfxShaderResourceRef>& arResource	= _Drawcall.mrMeshStrip.HAL()->marShaderResources[_eShaderStage][kShaderRes];
-	
-	// Retrieve samplers new slots assignment
-	zU16 uChangedFirst(0xFFFF), uChangedLast(0), uValidCount(0), uSlotCount(static_cast<zU16>(arResource.Count()));
-	zU16 uAssignCount = zenMath::Max(uSlotCount, _Context.maShaderInputSlotCount[_eShaderStage][kShaderRes]);
-	for( zU16 slotIdx(0); slotIdx<uAssignCount; ++slotIdx )
-	{
-		_Context.marCBuffer[_eShaderStage][slotIdx]	= slotIdx < uSlotCount ? arResource[slotIdx] : nullptr;
-		zcRes::GfxCBufferRef& rResource				= _Context.marCBuffer[_eShaderStage][slotIdx];
-		ID3D11Buffer* pDXView						= rResource.IsValid() ? rResource.HAL()->mpBufferBinding : nullptr;		
-		uChangedFirst								= pDXView != aResourceView[slotIdx]	? zenMath::Min(uChangedFirst, slotIdx)	: uChangedFirst;
-		uChangedLast								= pDXView != aResourceView[slotIdx]	? slotIdx								: uChangedLast;
-		uValidCount									= pDXView							? slotIdx+1								: uValidCount;
-		aResourceView[slotIdx]						= pDXView;
-		
-		//Must update CBuffer constant value if updated
-		if( rResource.IsValid() )
-			rResource.HAL()->Update( *DX12GetDeviceContext() ); 
-	}
-
-	// Send it to API
-	_Context.maShaderInputSlotCount[_eShaderStage][kShaderRes] = uValidCount;
-	if( uChangedLast >= uChangedFirst )
-	{
-		switch( _eShaderStage )
-		{
-			case keShaderStage_Vertex:	DX12GetDeviceContext()->VSSetConstantBuffers( uChangedFirst, uChangedLast-uChangedFirst+1, &aResourceView[uChangedFirst] );	break;
-			case keShaderStage_Pixel:	DX12GetDeviceContext()->PSSetConstantBuffers( uChangedFirst, uChangedLast-uChangedFirst+1, &aResourceView[uChangedFirst] );	break;		
-			default: break;
-		}
-	}
-#endif
-}
-
-//==================================================================================================
-//! @details Compare current bound textures with wanted one and update their binding if different
-//==================================================================================================
-void ManagerRender::UpdateShaderState_Textures(zU16& Out_ChangedFirst, zU16& Out_ChangedLast, const zcGfx::CommandDraw& _Drawcall, RenderContext& _Context, eShaderStage _eShaderStage)
-{	
-#if !ZEN_RENDERER_DX12
-	const eShaderResource kShaderRes							= keShaderRes_Texture;
-	const zArrayStatic<zcRes::GfxShaderResourceRef>& arResource = _Drawcall.mrMeshStrip.HAL()->marShaderResources[_eShaderStage][kShaderRes];
-	zU16 uValidCount											= 0;
-	const zU16 uSlotCount										= static_cast<zU16>(arResource.Count());
-	const zU16 uAssignCount										= zenMath::Max(uSlotCount, _Context.maShaderInputSlotCount[_eShaderStage][kShaderRes]);	
-	for( zU16 slotIdx(0); slotIdx<uAssignCount; ++slotIdx )
-	{
-		zcRes::GfxTexture2dRef rResource					= slotIdx < uSlotCount	? arResource[slotIdx]			: nullptr;
-		ID3D11ShaderResourceView* pDXView					= rResource.IsValid()	? rResource.HAL()->mpTextureView : nullptr;
-		if( pDXView || _Context.maResourceType[_eShaderStage][slotIdx] == kShaderRes )
-		{
-			Out_ChangedFirst								= pDXView && pDXView != _Context.maResourceView[_eShaderStage][slotIdx] ? zenMath::Min(Out_ChangedFirst, slotIdx)	: Out_ChangedFirst;
-			Out_ChangedLast									= pDXView && pDXView != _Context.maResourceView[_eShaderStage][slotIdx] ? zenMath::Max(Out_ChangedLast, slotIdx)	: Out_ChangedLast;
-			uValidCount										= pDXView	? slotIdx+1	: uValidCount;
-			_Context.maResourceType[_eShaderStage][slotIdx]	= pDXView	? kShaderRes : keShaderRes__Invalid;
-			_Context.maResourceView[_eShaderStage][slotIdx]	= pDXView;			
-			_Context.marResource[_eShaderStage][slotIdx]	= rResource;
-		}		
-	}
-	_Context.maShaderInputSlotCount[_eShaderStage][kShaderRes] = uValidCount;
-#endif
-}
-
-//==================================================================================================
-//! @details Compare current bound textures with wanted one and update their binding if different
-//==================================================================================================
-void ManagerRender::UpdateShaderState_StructBuffers(zU16& Out_ChangedFirst, zU16& Out_ChangedLast, const zcGfx::CommandDraw& _Drawcall, RenderContext& _Context, eShaderStage _eShaderStage)
-{	
-#if !ZEN_RENDERER_DX12
-	const eShaderResource kShaderRes							= keShaderRes_Buffer;
-	const zArrayStatic<zcRes::GfxShaderResourceRef>& arResource = _Drawcall.mrMeshStrip.HAL()->marShaderResources[_eShaderStage][kShaderRes];
-	zU16 uValidCount											= 0;
-	const zU16 uSlotCount										= static_cast<zU16>(arResource.Count());
-	const zU16 uAssignCount										= zenMath::Max(uSlotCount, _Context.maShaderInputSlotCount[_eShaderStage][kShaderRes]);
-	
-	for( zU16 slotIdx(0); slotIdx<uAssignCount; ++slotIdx )
-	{
-		zcRes::GfxBufferRef rResource						= slotIdx < uSlotCount	? arResource[slotIdx]		: nullptr;
-		ID3D11ShaderResourceView* pDXView					= rResource.IsValid()	? rResource.HAL()->mpSRV	: nullptr;
-		if( pDXView || _Context.maResourceType[_eShaderStage][slotIdx] == kShaderRes )
-		{
-			Out_ChangedFirst								= pDXView && pDXView != _Context.maResourceView[_eShaderStage][slotIdx] ? zenMath::Min(Out_ChangedFirst, slotIdx)	: Out_ChangedFirst;
-			Out_ChangedLast									= pDXView && pDXView != _Context.maResourceView[_eShaderStage][slotIdx] ? zenMath::Max(Out_ChangedLast, slotIdx)	: Out_ChangedLast;
-			uValidCount										= pDXView	? slotIdx+1	: uValidCount;
-			_Context.maResourceType[_eShaderStage][slotIdx]	= pDXView	? kShaderRes : keShaderRes__Invalid;
-			_Context.maResourceView[_eShaderStage][slotIdx]	= pDXView;			
-			_Context.marResource[_eShaderStage][slotIdx]	= rResource;
-		}		
-	}
-	_Context.maShaderInputSlotCount[_eShaderStage][kShaderRes] = uValidCount;
-#endif
-}
-
-//==================================================================================================
-//! @details Check all GPU states, and update the one that differ from current Drawcall
-//==================================================================================================
-void ManagerRender::UpdateShaderState(const zcGfx::CommandDraw& _Drawcall, RenderContext& _Context)
-{
-#if !ZEN_RENDERER_DX12
-	UINT UnusedOffset = 0;
-	const zcRes::GfxMeshStripRef&		rMeshStrip	= _Drawcall.mrMeshStrip;
-	const zcRes::GfxIndexRef&			rIndex		= rMeshStrip.HAL()->mrIndexBuffer;
-	const zcRes::GfxShaderBindingRef&	rShaderBind	= rMeshStrip.HAL()->mrShaderBinding;			
-	const zcRes::GfxViewRef&			rView		= _Context.mrStateView;
-
-	if( _Context.mePrimitiveType != rIndex.HAL()->mePrimitiveType )
-	{
-		_Context.mePrimitiveType = rIndex.HAL()->mePrimitiveType;
-		mDX12pContextImmediate->IASetPrimitiveTopology( rIndex.HAL()->mePrimitiveType );
-	}
-	
-	if( _Context.marShader[zenConst::keShaderStage_Vertex] != rShaderBind.HAL()->marShader[zenConst::keShaderStage_Vertex] )
-	{
-		_Context.marShader[zenConst::keShaderStage_Vertex]	= rShaderBind.HAL()->marShader[zenConst::keShaderStage_Vertex];
-		zcRes::GfxShaderVertexRef rShaderVertex				= _Context.marShader[zenConst::keShaderStage_Vertex];
-		mDX12pContextImmediate->VSSetShader( rShaderVertex.HAL()->mpVertexShader, nullptr, 0 );
-	}
-	
-	if( _Context.marShader[zenConst::keShaderStage_Pixel]!= rShaderBind.HAL()->marShader[zenConst::keShaderStage_Pixel] )
-	{
-		_Context.marShader[zenConst::keShaderStage_Pixel]	= rShaderBind.HAL()->marShader[zenConst::keShaderStage_Pixel];
-		zcRes::GfxShaderPixelRef rShaderPixel				= _Context.marShader[zenConst::keShaderStage_Pixel];
-		mDX12pContextImmediate->PSSetShader( rShaderPixel.HAL()->mpPixelShader, nullptr, 0 );
-	}
-	
-	if(_Context.mbScreenScissorOn || _Context.mvScreenScissor != _Drawcall.mvScreenScissor )
-	{
-		D3D11_RECT ScissorRect;
-		_Context.mvScreenScissor	= _Drawcall.mvScreenScissor;		
-		ScissorRect.left			= _Drawcall.mvScreenScissor.x;
-		ScissorRect.top				= _Drawcall.mvScreenScissor.y;
-		ScissorRect.right			= zenMath::Min<zU16>(_Drawcall.mvScreenScissor.z, (zU16)rView.HAL()->mViewport.Width);
-		ScissorRect.bottom			= zenMath::Min<zU16>(_Drawcall.mvScreenScissor.w, (zU16)rView.HAL()->mViewport.Height);
-		mDX12pContextImmediate->RSSetScissorRects(1, &ScissorRect);
-	}
-	
-	mDX12pContextImmediate->IASetIndexBuffer	( rIndex.HAL()->mpIndiceBuffer, rIndex.HAL()->meIndiceFormat, 0 );	
-
-	//----------------------------------------------------------------------------------------------
-	// Assign Shader input resources for each stage
-	//----------------------------------------------------------------------------------------------
-	for(zUInt stageIdx(0); stageIdx<keShaderStage__Count; ++stageIdx)
-	{						
-		// Check resource setup stamp to detect if there was a change
-		const eShaderStage eStageIdx = (eShaderStage)stageIdx;
-		bool bUpdated[keShaderRes__Count];
-		for(zUInt resTypeIdx(0);resTypeIdx<keShaderRes__Count; ++resTypeIdx)
-		{
-			const zArrayStatic<zcRes::GfxShaderResourceRef>& arResources	= rMeshStrip.HAL()->marShaderResources[stageIdx][resTypeIdx];
-			zHash32 zMeshStripResStamp										= rMeshStrip.HAL()->mhShaderResourceStamp[stageIdx][resTypeIdx];
-			if( (zU32)zMeshStripResStamp == 0 )
-			{
-				zMeshStripResStamp = zHash32();
-				for(zUInt resIdx(0), resCount(arResources.Count()); resIdx<resCount; ++resIdx)
-					zMeshStripResStamp.Append( arResources[resIdx].IsValid() ? (void*)&arResources[resIdx]->mResID : (void*)&zResID(), sizeof(zResID) );
-				rMeshStrip.HAL()->mhShaderResourceStamp[stageIdx][resTypeIdx] = zMeshStripResStamp;
-			}
-
-			bUpdated[resTypeIdx]								= _Context.mahShaderInputStamp[stageIdx][resTypeIdx] != zMeshStripResStamp;
-			_Context.mahShaderInputStamp[stageIdx][resTypeIdx]	= zMeshStripResStamp;
-		}
-		
-		// Special case shader resources update
-		if( bUpdated[keShaderRes_Sampler] )
-			UpdateShaderState_Samplers( _Drawcall, _Context, eStageIdx);
-		if( bUpdated[keShaderRes_CBuffer] )
-			UpdateShaderState_ConstantBuffers( _Drawcall, _Context, eStageIdx);
-		
-		// Generic shader resources update
-		zU16 uResChangeStart(0xFFFF), uResChangeEnd(0);
-		if( bUpdated[keShaderRes_Buffer] )
-			UpdateShaderState_StructBuffers( uResChangeStart, uResChangeEnd, _Drawcall, _Context, eStageIdx);
-		if( bUpdated[keShaderRes_Texture] )
-			UpdateShaderState_Textures( uResChangeStart, uResChangeEnd, _Drawcall, _Context, eStageIdx);
-		if( uResChangeEnd >= uResChangeStart )
-		{
-			switch( eStageIdx )
-			{
-			case keShaderStage_Vertex:	DX12GetDeviceContext()->VSSetShaderResources( uResChangeStart, uResChangeEnd-uResChangeStart+1, &_Context.maResourceView[stageIdx][uResChangeStart] );	break;
-			case keShaderStage_Pixel:	DX12GetDeviceContext()->PSSetShaderResources( uResChangeStart, uResChangeEnd-uResChangeStart+1, &_Context.maResourceView[stageIdx][uResChangeStart] );	break;
-			default: break;
-			}
-		}
-	}
-	
-	mbTextureUnbind		= false;
-	mbResourceUnbind	= false;
-#endif
-}
-
-void ManagerRender::Render(zArrayDynamic<zEngineRef<zcGfx::Command>>& _aDrawcalls)
-{	
-
-	if(_aDrawcalls.Count() )
-	{
-		//_aDrawcalls.Sort(); //! @todo urgent re-add sorting
-		RenderContext Context;
-		zEngineRef<zcGfx::Command>*	prDrawcall = _aDrawcalls.First();
-		for(zUInt i(0), count(_aDrawcalls.Count()); i<count; ++i, ++prDrawcall)
-		{	
-			if( (*prDrawcall).IsValid()/* && (*prDrawcall)->mrRenderPass.IsValid()*/ )
-			{	
-				// Render Commands other than Draw/Compute
-				//! @todo Perf test compared to virtual method
-				if( (*prDrawcall)->mbIsCommandDraw )
-				{
-					zcGfx::CommandDraw* pCommandDraw = static_cast<zcGfx::CommandDraw*>( (*prDrawcall).Get() );
-					if( pCommandDraw->mrMeshStrip.IsValid() )
-					{
-						zcPerf::EventGPUCounter::Create(zcPerf::EventGPUCounter::keType_DrawIndexed);
-						const zcRes::GfxMeshStripRef& rMeshStrip = pCommandDraw->mrMeshStrip;
-						UpdateGPUState(*prDrawcall, Context);
-						UpdateShaderState(*pCommandDraw, Context);
-					#if !ZEN_RENDERER_DX12
-						mDX12pContextImmediate->DrawIndexed(pCommandDraw->muIndexCount, pCommandDraw->muIndexFirst, rMeshStrip.HAL()->muVertexFirst);
-					#endif
-					}
-				}
-				// All other type of command use 'slower' virtual method 'invoke' instead of type casting
-				else 
-				{
-					(*prDrawcall)->Invoke();					
-				}
-				
-			}
-		}
-		mrPreviousDrawcall = *_aDrawcalls.Last();
-	}
-
-}
-
-DirectXComRef<ID3D12Resource>& ManagerRender::GetTempResourceHandle()
+DirectXComRef<ID3D12Resource>& ManagerRender_DX12::GetTempResourceHandle()
 {
 	marTempResource[muFrameRendered%zenArrayCount(marTempResource)].Push(nullptr);
 	return *marTempResource[muFrameRendered%zenArrayCount(marTempResource)].Last();

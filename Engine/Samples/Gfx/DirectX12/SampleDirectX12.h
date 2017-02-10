@@ -34,8 +34,8 @@ protected:
 
 	zenRes::zGfxShaderVertex				mrShaderVS;	
 	zenRes::zGfxShaderPixel					mrShaderPS;	
-	zenRes::zGfxTexture2d					mrTexture;	
-	zenRes::zGfxSampler						mrSampler;	
+	zenRes::zGfxTexture2D					mrTexture;	
+	zenRes::zGfxStateSampler						mrSampler;	
 	zenRes::zGfxShaderBinding				mrShaderBind;
 	zenRes::zGfxMeshStrip					mrCubeMeshStrip;
 

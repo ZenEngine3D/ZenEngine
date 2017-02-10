@@ -4,7 +4,7 @@
 //SF DX12
 namespace zcRes
 {
-	class GfxViewHAL_DX12 : public zcExp::ExportGfxView
+	class GfxView_DX12 : public zcExp::ExportGfxView
 	{
 	public:
 		bool										Initialize();
@@ -15,8 +15,6 @@ namespace zcRes
 
 		typedef zcExp::ExporterGfxView				RuntimeExporter;
 	};
-	class GfxViewHAL : public GfxViewHAL_DX12{};
-
 }
 
 #endif

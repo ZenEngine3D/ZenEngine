@@ -20,6 +20,6 @@
 #include "Graphic/zcExpGfxBaseDX11.h"
 #include "Graphic/zcExpGfxBaseDX12.h"
 
-#include ZENHeaderRenderer(zcExpGfxExporter)
+#include zenHeaderRenderer(zcExpGfxExporter)
 
 #endif

@@ -78,33 +78,47 @@ namespace zcExp
 };
 
 namespace zcRes
-{
-// Resources Reference Declaration
-typedef zenRes::zResourceRef<class GfxSampler,			class GfxSamplerHAL,			zEnumMask<zU64>(keResType_GfxSampler)>			GfxSamplerRef;
-typedef zenRes::zResourceRef<class GfxRenderPass,		class GfxRenderPassHAL, 		zEnumMask<zU64>(keResType_GfxRenderPass)>		GfxRenderPassRef;
-typedef zenRes::zResourceRef<class GfxMeshStrip,		class GfxMeshStripHAL,			zEnumMask<zU64>(keResType_GfxMeshStrip)>		GfxMeshStripRef;
-typedef zenRes::zResourceRef<class GfxMesh,				class GfxMeshHAL,				zEnumMask<zU64>(keResType_GfxMesh)>				GfxMeshRef;
-typedef zenRes::zResourceRef<class GfxShaderBinding,	class GfxShaderBindingHAL,		zEnumMask<zU64>(keResType_GfxShaderBinding)>	GfxShaderBindingRef;
-typedef zenRes::zResourceRef<class GfxCBufferDefinition,class GfxCBufferDefinitionHAL,	zEnumMask<zU64>(keResType_GfxCBufferDefinition)>GfxCBufferDefinitionRef;
-typedef zenRes::zResourceRef<class GfxCBuffer,			class GfxCBufferHAL,			zEnumMask<zU64>(keResType_GfxCBuffer)>			GfxCBufferRef;
-typedef zenRes::zResourceRef<class GfxBuffer,			class GfxBufferHAL,				zEnumMask<zU64>(keResType_GfxBuffer)>			GfxBufferRef;
-typedef zenRes::zResourceRef<class GfxShaderPixel,		class GfxShaderPixelHAL,		zEnumMask<zU64>(keResType_GfxShaderPixel)>		GfxShaderPixelRef;
-typedef zenRes::zResourceRef<class GfxShaderVertex,		class GfxShaderVertexHAL,		zEnumMask<zU64>(keResType_GfxShaderVertex)>		GfxShaderVertexRef;
-typedef zenRes::zResourceRef<class GfxStateBlend,		class GfxStateBlendHAL,			zEnumMask<zU64>(keResType_GfxBlend)>			GfxStateBlendRef;
-typedef zenRes::zResourceRef<class GfxStateDepthStencil,class GfxStateDepthStencilHAL,	zEnumMask<zU64>(keResType_GfxDepthStencil)>		GfxStateDepthStencilRef;
-typedef zenRes::zResourceRef<class GfxStateRaster,		class GfxStateRasterHAL,		zEnumMask<zU64>(keResType_GfxRaster)>			GfxStateRasterRef;
-typedef zenRes::zResourceRef<class GfxWindow,			class GfxWindowHAL,				zEnumMask<zU64>(keResType_GfxWindow)>			GfxWindowRef;
-typedef zenRes::zResourceRef<class GfxView,				class GfxViewHAL,				zEnumMask<zU64>(keResType_GfxView)>				GfxViewRef;
-typedef zenRes::zResourceRef<class GfxTarget2D,			class GfxTarget2DHAL,			zEnumMask<zU64>(keResType_GfxTarget2D)>			GfxTarget2DRef;
-typedef zenRes::zResourceRef<class GfxTexture2d,		class GfxTexture2dHAL,			zEnumMask<zU64>(keResType_GfxTexture2D)>		GfxTexture2dRef;
-typedef zenRes::zResourceRef<class GfxIndex,			class GfxIndexHAL,				zEnumMask<zU64>(keResType_GfxIndex)>			GfxIndexRef;
+{	
+	//==============================================================================================
+	//! @detail	Add support for a resource, creating an alias for the HAL class and adding 
+	//!			ResourceRef object associated.
+	//!			Exemple :	AddResourceSupport(GfxBuffer) 
+	//!						-Adds alias 'GfxBuffer_HAL' for class GfxBuffer_(RENDERER)
+	//!						-Adds alias 'GfxBufferRef' for RefClass supporting GfxBuffer object 
+	//!							with type 'keResType_Buffer'
+	//==============================================================================================
+	#define AddResourceSupport(_ResClassName_)													\
+		using _ResClassName_##_HAL	= class zenDefineStich3(_ResClassName_, _, ZEN_RENDERER);	\
+		using _ResClassName_##Ref	= zenRes::zResourceRef<class _ResClassName_, _ResClassName_##_HAL, zEnumMask<zU64>(keResType_##_ResClassName_)>;
+	
+	AddResourceSupport(GfxRenderPass);
+	AddResourceSupport(GfxMeshStrip);
+	AddResourceSupport(GfxMesh);
+	AddResourceSupport(GfxShaderBinding);
+	AddResourceSupport(GfxCBufferDefinition);
+	AddResourceSupport(GfxCBuffer);
+	AddResourceSupport(GfxBuffer);
+	AddResourceSupport(GfxShaderPixel);
+	AddResourceSupport(GfxShaderVertex);
+	AddResourceSupport(GfxStateSampler);
+	AddResourceSupport(GfxStateBlend);
+	AddResourceSupport(GfxStateDepthStencil);
+	AddResourceSupport(GfxStateRaster);
+	AddResourceSupport(GfxView);
+	AddResourceSupport(GfxTarget2D);
+	AddResourceSupport(GfxTexture2D);
+	AddResourceSupport(GfxIndex);
+	AddResourceSupport(GfxWindow);
 
-// Grouped Resources Declaration (more than one type of resource supported by smartpointer)
-typedef zenRes::zResourceRef<class zenRes::zExportData,	class zenRes::zExportData,		0xFFFFFFFFFFFFFFFF>								ResourceAnyRef;
-typedef zenRes::zResourceRef<zcExp::ExportGfxShader,	zcExp::ExportGfxShader,			
-		zEnumMask<zU64>(keResType_GfxShaderPixel, keResType_GfxShaderVertex) >															GfxShaderAnyRef;
-typedef zenRes::zResourceRef<class zenRes::zExportData,	class zenRes::zExportData,		
-		zEnumMask<zU64>(keResType_GfxSampler, keResType_GfxTexture2D, keResType_GfxBuffer, keResType_GfxCBuffer) >						GfxShaderResourceRef;
+	// Grouped Resources Declaration (more than one type of resource supported by smartpointer)
+	using ResourceAnyRef		= zenRes::zResourceRef<	class zenRes::zExportData,		class zenRes::zExportData,		
+									0xFFFFFFFFFFFFFFFF>;
+	
+	using GfxShaderAnyRef		= zenRes::zResourceRef<	class zcExp::ExportGfxShader,	class zcExp::ExportGfxShader,
+									zEnumMask<zU64>(keResType_GfxShaderPixel, keResType_GfxShaderVertex) >;
+	
+	using GfxShaderResourceRef	= zenRes::zResourceRef<	class zenRes::zExportData,		class zenRes::zExportData,
+									zEnumMask<zU64>(keResType_GfxStateSampler, keResType_GfxTexture2D, keResType_GfxBuffer, keResType_GfxCBuffer) >;
 
 };
 

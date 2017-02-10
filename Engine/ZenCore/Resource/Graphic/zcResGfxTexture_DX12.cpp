@@ -3,19 +3,21 @@
 namespace zcRes
 {
 
-//SF DX12
-GfxTexture2dHAL_DX12::~GfxTexture2dHAL_DX12()
+GfxTexture2D_DX12::~GfxTexture2D_DX12()
 {
 	mTextureView.Free();
 }
 
-bool GfxTexture2dHAL_DX12::Initialize()
+bool GfxTexture2D_DX12::Initialize()
 {
-#if ZEN_RENDERER_DX12
-	D3D12_RESOURCE_DESC		TextureDesc = {};	
-	D3D12_CLEAR_VALUE		DefaultClearValue = {};
-	D3D12_RESOURCE_STATES	ResourceState = D3D12_RESOURCE_STATE_COMMON;
-
+	const bool			bUploadData			= maMipData[0].maData.Count() > 0 && !mCreationFlags.Any(zenConst::keTexCreate_RenderTarget);
+	D3D12_RESOURCE_DESC	TextureDesc			= {};	
+	D3D12_CLEAR_VALUE	DefaultClearValue	= {};
+	meResourceState							= bUploadData ? D3D12_RESOURCE_STATE_COPY_DEST : D3D12_RESOURCE_STATE_COMMON;
+	
+	//----------------------------------------------------------------------------------------------
+	// Allocate GPU memory for ressource
+	//----------------------------------------------------------------------------------------------
 	bool bIsDepth					= zcMgr::GfxRender.IsDepth(meFormat);
 	D3D12_CLEAR_VALUE* pClearValue	= nullptr;
 	TextureDesc.Dimension			= D3D12_RESOURCE_DIMENSION_TEXTURE2D;	
@@ -36,20 +38,20 @@ bool GfxTexture2dHAL_DX12::Initialize()
 		DefaultClearValue.Format	= zcMgr::GfxRender.ZenFormatToNative(meFormat);
 		if( bIsDepth )
 		{
-			ResourceState							= D3D12_RESOURCE_STATE_DEPTH_WRITE;
+			meResourceState							= D3D12_RESOURCE_STATE_DEPTH_WRITE;
 			TextureDesc.Flags						|= D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL;
 			DefaultClearValue.DepthStencil.Depth	= 1;
 			DefaultClearValue.DepthStencil.Stencil	= 0;
 		}
 		else
 		{
-			ResourceState				= D3D12_RESOURCE_STATE_RENDER_TARGET;
+			meResourceState				= D3D12_RESOURCE_STATE_RENDER_TARGET;
 			TextureDesc.Flags			|= D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET;			
 			DefaultClearValue.Color[0]	= DefaultClearValue.Color[1] = DefaultClearValue.Color[2] = 0;
 			DefaultClearValue.Color[3]	= 1;
 		}
 	}	
-
+	
 	D3D12_HEAP_PROPERTIES ResourceHeap	= {};
 	ResourceHeap.Type					= D3D12_HEAP_TYPE_DEFAULT;
     ResourceHeap.CPUPageProperty		= D3D12_CPU_PAGE_PROPERTY_UNKNOWN;
@@ -60,53 +62,39 @@ bool GfxTexture2dHAL_DX12::Initialize()
 						&ResourceHeap,
 						D3D12_HEAP_FLAG_NONE,
 						&TextureDesc,
-						ResourceState,
+						meResourceState,
 						pClearValue,
-						IID_PPV_ARGS(&mrTextureResource) );
+						IID_PPV_ARGS(&mrResource) );
 	if( FAILED(hr) )
 		return nullptr;
-#if 0 //Upload texture data
-	// Note: ComPtr's are CPU objects but this resource needs to stay in scope until
-	// the command list that references it has finished executing on the GPU.
-	// We will flush the GPU at the end of this method to ensure the resource is not
-	// prematurely destroyed.
-	DirectXComRef<ID3D12Resource> rTextureUploadHeap;
-	UINT64 RequiredSize					= 0;
-	D3D12_RESOURCE_DESC TextureDesc		= mrTextureResource->GetDesc();    
-	D3D12_HEAP_PROPERTIES UploadHeap	= {D3D12_HEAP_TYPE_UPLOAD, D3D12_CPU_PAGE_PROPERTY_UNKNOWN, D3D12_MEMORY_POOL_UNKNOWN, 1, 1};
-    zcMgr::GfxRender.GetDevice()->GetCopyableFootprints(&TextureDesc, 0, maMipData.Count(), 0, nullptr, nullptr, nullptr, &RequiredSize);
-
-	D3D12_RESOURCE_DESC UploadDesc	= {};
-	UploadDesc.Dimension			= D3D12_RESOURCE_DIMENSION_BUFFER;
-    UploadDesc.Alignment			= 0;
-    UploadDesc.Width				= RequiredSize;
-    UploadDesc.Height				= 1;
-    UploadDesc.DepthOrArraySize		= 1;
-    UploadDesc.MipLevels			= maMipData.Count();
-    UploadDesc.Format				= DXGI_FORMAT_UNKNOWN;
-	UploadDesc.SampleDesc			= {1,0};
-    UploadDesc.Layout				= D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
-    UploadDesc.Flags				= D3D12_RESOURCE_FLAG_NONE;
-
-	// Create the GPU upload buffer.
-	hr = zcMgr::GfxRender.GetDevice()->CreateCommittedResource(
-						&UploadHeap,
-						D3D12_HEAP_FLAG_NONE,
-						&UploadDesc,
-						D3D12_RESOURCE_STATE_GENERIC_READ,
-						nullptr,
-						IID_PPV_ARGS(&rTextureUploadHeap)));
-
 	
-	D3D12_SUBRESOURCE_DATA textureData	= {};
-	textureData.pData					= &texture[0];
-	textureData.RowPitch				= TextureWidth * TexturePixelSize;
-	textureData.SlicePitch				= textureData.RowPitch * TextureHeight;
+	zSetGfxResourceName(mrResource, mResID, nullptr);
+	
 
-	UpdateSubresources(m_commandList.Get(), m_texture.Get(), textureUploadHeap.Get(), 0, 0, 1, &textureData);
-	m_commandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(m_texture.Get(), D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE));
-#endif
+	//----------------------------------------------------------------------------------------------
+	// Upload Texture data if present
+	//! @todo support mipmaps
+	//----------------------------------------------------------------------------------------------
+	if( bUploadData )
+	{		
+		//for(zUInt mipIdx(0); mipIdx<TextureDesc.MipLevels; ++mipIdx)
+		for(zUInt mipIdx(0); mipIdx<1; ++mipIdx)
+		{			
+			if( maMipData[mipIdx].maData.Count() > 0 )
+			{
+				zU8* pUploadData = reinterpret_cast<zU8*>(Lock());
+				if( pUploadData )
+				{
+					zenMem::Copy(pUploadData, maMipData[mipIdx].maData.First(), maMipData[mipIdx].maData.SizeMem() );
+					Unlock(zenGfx::zContext::GetFrameContext());					
+				}
+			}
+		}
+	}
 
+	//----------------------------------------------------------------------------------------------
+	// Create the Shader Resource View
+	//----------------------------------------------------------------------------------------------
 	// Describe and create a SRV for the texture.	
 	D3D12_SHADER_RESOURCE_VIEW_DESC SrvDesc = {};
 	SrvDesc.Format							= bIsDepth ? zcMgr::GfxRender.ZenFormatToDepthSRV(meFormat) : zcMgr::GfxRender.ZenFormatToNative(meFormat);
@@ -117,61 +105,65 @@ bool GfxTexture2dHAL_DX12::Initialize()
     SrvDesc.Texture2D.PlaneSlice			= 0;
     SrvDesc.Texture2D.ResourceMinLODClamp	= 0;
 	mTextureView							= zcGfx::DescriptorSRV_UAV_CBV::Allocate();
-	zcMgr::GfxRender.GetDevice()->CreateShaderResourceView(mrTextureResource.Get(), &SrvDesc, mTextureView.GetHandle());
+	zcMgr::GfxRender.GetDevice()->CreateShaderResourceView(mrResource.Get(), &SrvDesc, mTextureView.GetCpuHandle());
 
 	return true;
-#else
-	D3D11_TEXTURE2D_DESC			bufferDesc;		ZeroMemory( &bufferDesc, sizeof(bufferDesc) );
-	D3D11_SHADER_RESOURCE_VIEW_DESC viewDesc;		ZeroMemory( &viewDesc, sizeof(viewDesc) );
-	D3D11_SUBRESOURCE_DATA			aInitData[16];	ZeroMemory( aInitData, sizeof(aInitData) );
-	
-	bool bIsDepth							= zcMgr::GfxRender.IsDepth(meFormat);
-	bufferDesc.Width						= maMipData[0].mvDim.x;
-	bufferDesc.Height						= maMipData[0].mvDim.y;
-	bufferDesc.MipLevels					= static_cast<UINT>(maMipData.Count());
-	bufferDesc.ArraySize					= 1;
-	bufferDesc.Format						= zcMgr::GfxRender.ZenFormatToNative(meFormat);
-	bufferDesc.SampleDesc.Count				= 1;
-	bufferDesc.SampleDesc.Quality			= 0;
-	bufferDesc.CPUAccessFlags				= 0;
-	bufferDesc.MiscFlags					= 0;
+}
 
-	if( mCreationFlags.All(zenConst::keTexCreate_RenderTarget) )
-	{			
-		bufferDesc.Usage					= D3D11_USAGE_DEFAULT;
-		bufferDesc.BindFlags				= bIsDepth ? D3D11_BIND_DEPTH_STENCIL : D3D11_BIND_SHADER_RESOURCE|D3D11_BIND_RENDER_TARGET;
-	}
-	else
+
+void* GfxTexture2D_DX12::Lock()
+{
+	zenAssert(mrResourceUpload.Get() == nullptr);
+
+	UINT16					uMipCount		= 1; //maMipData.Count()
+	UINT64					uRequiredSize	= 0;
+	D3D12_RESOURCE_DESC		TextureDesc		= mrResource->GetDesc();    
+	D3D12_HEAP_PROPERTIES	UploadHeap		= {D3D12_HEAP_TYPE_UPLOAD, D3D12_CPU_PAGE_PROPERTY_UNKNOWN, D3D12_MEMORY_POOL_UNKNOWN, 1, 1};
+	zcMgr::GfxRender.GetDevice()->GetCopyableFootprints(&TextureDesc, 0, uMipCount, 0, nullptr, nullptr, nullptr, &uRequiredSize);
+			
+	D3D12_RESOURCE_DESC UploadDesc	= {};
+	UploadDesc.Dimension			= D3D12_RESOURCE_DIMENSION_BUFFER;
+	UploadDesc.Alignment			= 0;
+	UploadDesc.Width				= uRequiredSize;
+	UploadDesc.Height				= 1;
+	UploadDesc.DepthOrArraySize		= 1;
+	UploadDesc.MipLevels			= uMipCount;
+	UploadDesc.Format				= DXGI_FORMAT_UNKNOWN;
+	UploadDesc.SampleDesc			= {1,0};
+	UploadDesc.Layout				= D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
+	UploadDesc.Flags				= D3D12_RESOURCE_FLAG_NONE;
+
+	// Create the GPU upload buffer.
+	HRESULT hr = zcMgr::GfxRender.GetDevice()->CreateCommittedResource(
+						&UploadHeap,
+						D3D12_HEAP_FLAG_NONE,
+						&UploadDesc,
+						D3D12_RESOURCE_STATE_GENERIC_READ,
+						nullptr,
+						IID_PPV_ARGS(&mrResourceUpload));
+
+	if( SUCCEEDED(hr) )
 	{
-		zenAssertMsg(!bIsDepth, "Only RenderTarget can be of type 'Depth'.");
-		bufferDesc.Usage					= D3D11_USAGE_IMMUTABLE;
-		bufferDesc.BindFlags				= D3D11_BIND_SHADER_RESOURCE;
+		zSetGfxResourceName(mrResourceUpload, mResID, L"Texture UploadData");
+		void* pData(nullptr);
+		hr = mrResourceUpload->Map(0, NULL, &pData);
+		if (SUCCEEDED(hr) )
+			return pData;
 	}
 
-	bool bValidInitData(false);
-	for(zUInt mipIdx(0); mipIdx<bufferDesc.MipLevels; ++mipIdx)
-	{
-		zenAssert(mipIdx < zenArrayCount(aInitData));			
-		if( maMipData[mipIdx].maData.Count() > 0 )
-		{
-			bValidInitData					= true;
-			aInitData[mipIdx].pSysMem		= maMipData[mipIdx].maData.First();
-			aInitData[mipIdx].SysMemPitch	= zcExp::GetTextureBlockInfo(meFormat).muSize*maMipData[mipIdx].mvDim.x;
-		}			
-	}
+	return nullptr;
+}
 
-	HRESULT ret = zcMgr::GfxRender.DX12GetDevice()->CreateTexture2D( &bufferDesc, bValidInitData ? aInitData : nullptr, &mpTextureBuffer );
-	if( SUCCEEDED(ret) && !bIsDepth)
-	{
-		viewDesc.Format						= bufferDesc.Format;
-		viewDesc.ViewDimension				= D3D11_SRV_DIMENSION_TEXTURE2D;
-		viewDesc.Texture2D.MostDetailedMip	= 0;
-		viewDesc.Texture2D.MipLevels		= bufferDesc.MipLevels;
-		ret									= zcMgr::GfxRender.DX12GetDevice()->CreateShaderResourceView( mpTextureBuffer, &viewDesc, &mpTextureView );
-	}
+void GfxTexture2D_DX12::Unlock(const zenGfx::zContext& _rContext)
+{
+	zenAssert(mrResourceUpload.Get() != nullptr);
+	mrResourceUpload->Unmap(0, NULL);
 
-	return SUCCEEDED(ret);
-#endif
+	zcRes::GfxTexture2DRef rTexture				= reinterpret_cast<zcRes::GfxTexture2D*>(this);
+	zEngineRef<zcGfx::Command> rCommand			= zcGfx::CommandUpdateTexture_DX12::Create(rTexture, maMipData[0].maData.SizeMem());
+	mrResourceUpload							= nullptr;
+
+	_rContext->AddCommand(rCommand.Get());
 }
 
 }

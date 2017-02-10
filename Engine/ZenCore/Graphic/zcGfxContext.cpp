@@ -51,7 +51,7 @@ void DrawContext::Clear()
 void DrawContext::Submit()
 {
 	zenAssertMsg( mbRootContext, "Can only submit a root context");
-	SubmitInternal();
+	SubmitInternal();	
 }
 
 void DrawContext::SubmitInternal()
@@ -62,8 +62,11 @@ void DrawContext::SubmitInternal()
 		zenPerf::zScopedEventGpu Event(mzName);
 		mbSubmitted = true;
 		if( !marDrawcalls.IsEmpty() )
+		{
+			//marDrawcalls.Sort(); //! @todo 1 urgent re-add sorting
 			zcMgr::GfxRender.Render(marDrawcalls);
-	
+		}
+
 		DrawContext* pChildCur = mlstChilds.GetHead();
 		while( pChildCur )
 		{
@@ -72,6 +75,5 @@ void DrawContext::SubmitInternal()
 		}	
 	}
 }
-
 
 }

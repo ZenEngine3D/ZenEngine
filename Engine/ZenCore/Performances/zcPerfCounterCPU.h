@@ -17,13 +17,13 @@ namespace zcPerf
 	};
 }
 
-#include ZENHeaderPlatform(zcPerfCounterCPU)
+#include zenHeaderPlatform(zcPerfCounterCPU)
 
 namespace zcPerf 
 {
-	class EventCPU : public EventCPU_Platform
+	class EventCPU : public EventCPU_HAL
 	{
-	zenClassDeclare(EventCPU, EventCPU_Platform)
+	zenClassDeclare(EventCPU, EventCPU_HAL)
 	public:						
 		static zEngineRef<EventBase>	Create(const zStringHash32& _EventName);
 

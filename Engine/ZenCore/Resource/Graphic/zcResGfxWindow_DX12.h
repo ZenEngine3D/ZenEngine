@@ -5,11 +5,11 @@
 //SF DX12
 namespace zcRes
 {
-	class GfxWindowHAL_DX12 : public zcExp::ExportGfxWindowDX12
+	class GfxWindow_DX12 : public zcExp::ExportGfxWindowDX12
 	{
-	zenClassDeclare(GfxWindowHAL_DX12, zcExp::ExportGfxWindowDX12)
+	zenClassDeclare(GfxWindow_DX12, zcExp::ExportGfxWindowDX12)
 	public:
-		virtual									~GfxWindowHAL_DX12();												
+		virtual									~GfxWindow_DX12();												
 		bool									Initialize();
 		bool									PerformResize();
 		void									FrameBegin();
@@ -24,8 +24,6 @@ namespace zcRes
 	public:
 		static GfxWindowRef						RuntimeCreate(HWND _WindowHandle);
 	};
-	
-	class GfxWindowHAL : public GfxWindowHAL_DX12 { zenClassDeclare(GfxWindowHAL, GfxWindowHAL_DX12) };
 }
 
 #endif

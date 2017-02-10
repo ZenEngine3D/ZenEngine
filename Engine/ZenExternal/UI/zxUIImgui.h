@@ -55,8 +55,8 @@ protected:
 	zenRes::zGfxShaderVertex				mrShaderVertex;
 	zenRes::zGfxShaderPixel					mrShaderPixel;
 	zenRes::zGfxShaderBinding				mrShaderBinding;
-	zenRes::zGfxTexture2d					mrFontTextureDefault;
-	zenRes::zGfxSampler						mrFontSampler;	
+	zenRes::zGfxTexture2D					mrFontTextureDefault;
+	zenRes::zGfxStateSampler						mrFontSampler;	
 	friend class zxRenderData;
 };
 

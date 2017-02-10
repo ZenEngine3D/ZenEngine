@@ -3,11 +3,11 @@
 namespace zcRes
 {
 //=================================================================================================
-GfxShaderVertexHAL_DX12::~GfxShaderVertexHAL_DX12()
+GfxShaderVertex_DX12::~GfxShaderVertex_DX12()
 {
 }
 
-bool GfxShaderVertexHAL_DX12::Initialize()
+bool GfxShaderVertex_DX12::Initialize()
 {		
 	mDXShaderCode.pShaderBytecode	= maCompiledShader.First();
 	mDXShaderCode.BytecodeLength	= maCompiledShader.SizeMem();
@@ -15,11 +15,11 @@ bool GfxShaderVertexHAL_DX12::Initialize()
 }
 
 //=================================================================================================
-GfxShaderPixelHAL_DX12::~GfxShaderPixelHAL_DX12()
+GfxShaderPixel_DX12::~GfxShaderPixel_DX12()
 {	
 }
 
-bool GfxShaderPixelHAL_DX12::Initialize()
+bool GfxShaderPixel_DX12::Initialize()
 {		
 	mDXShaderCode.pShaderBytecode	= maCompiledShader.First();
 	mDXShaderCode.BytecodeLength	= maCompiledShader.SizeMem();

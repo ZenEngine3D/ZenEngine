@@ -38,10 +38,10 @@ zUInt ManagerRender_Base::GetFrameRendered()const
 
 }
 
-#include ZENHeaderRenderer( zcGfxRenderMgr )
+#include zenHeaderRenderer( zcGfxRenderMgr )
 
 namespace zcMgr { 
-	extern zcGfx::ManagerRender GfxRender; 	
+	extern zcGfx::ManagerRender_HAL GfxRender; 	
 }
 
 #endif

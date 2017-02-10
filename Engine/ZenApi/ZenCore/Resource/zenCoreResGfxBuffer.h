@@ -18,16 +18,16 @@ namespace zen { namespace zenRes
 		static zGfxIndex		Create(const zArrayBase<zU32>& _Indices, zenConst::ePrimitiveType _ePrimitiveType);
 	};
 
-	class zGfxTexture2d : public zcRes::GfxTexture2dRef
+	class zGfxTexture2D : public zcRes::GfxTexture2DRef
 	{
-	zenClassDeclare(zGfxTexture2d, zcRes::GfxTexture2dRef);
+	zenClassDeclare(zGfxTexture2D, zcRes::GfxTexture2DRef);
 	public:
 		using Super::Super;
 		using Super::operator=;
 		
 		const zVec2U16&			GetDim();
-		static zGfxTexture2d	Create(zenConst::eTextureFormat _eFormat, zVec2U16 _vDim, zFlagResTexUse _CreationFlags=zFlagResTexUse());		
-		static zGfxTexture2d	Create(zenConst::eTextureFormat _eFormat, zVec2U16 _vDim, const zArrayBase<zU8>& _aRawData, zFlagResTexUse _CreationFlags=zFlagResTexUse());
+		static zGfxTexture2D	Create(zenConst::eTextureFormat _eFormat, zVec2U16 _vDim, zFlagResTexUse _CreationFlags=zFlagResTexUse());		
+		static zGfxTexture2D	Create(zenConst::eTextureFormat _eFormat, zVec2U16 _vDim, const zArrayBase<zU8>& _aRawData, zFlagResTexUse _CreationFlags=zFlagResTexUse());
 	};
 
 	class zGfxTarget2D : public zcRes::GfxTarget2DRef
@@ -39,7 +39,7 @@ namespace zen { namespace zenRes
 
 		bool						IsDepth()const;
 		const zVec2U16&				GetDim()const;
-		zGfxTexture2d				GetTexture2D();
+		zGfxTexture2D				GetTexture2D();
 		
 		static zGfxTarget2D			Create(zenConst::eTextureFormat _eFormat, zVec2U16 _vDim, bool _bSrgb=true);
 	};

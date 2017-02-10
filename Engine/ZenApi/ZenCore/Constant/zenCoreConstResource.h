@@ -44,10 +44,10 @@ namespace zen {
 			keResType_GfxIndex,
 			keResType_GfxBuffer,
 			keResType_GfxTexture2D,
-			keResType_GfxSampler,
-			keResType_GfxBlend,
-			keResType_GfxDepthStencil,
-			keResType_GfxRaster,
+			keResType_GfxStateSampler,
+			keResType_GfxStateBlend,
+			keResType_GfxStateDepthStencil,
+			keResType_GfxStateRaster,
 			keResType_GfxMeshStrip,
 			keResType_GfxMesh,
 			keResType_GfxRenderPass,
@@ -180,7 +180,7 @@ namespace zen {
 
 }  //namespace zen
 
-#include ZENHeaderPlatform(zenCoreConstResource)
-#include ZENHeaderRenderer(zenCoreConstResource)
+#include zenHeaderPlatform(zenCoreConstResource)
+#include zenHeaderRenderer(zenCoreConstResource)
 
 #endif

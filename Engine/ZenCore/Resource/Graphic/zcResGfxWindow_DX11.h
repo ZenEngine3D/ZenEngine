@@ -1,14 +1,13 @@
 #pragma once
-#ifndef __zCore_Res_Gfx_GfxWindow_DX11_h__
-#define __zCore_Res_Gfx_GfxWindow_DX11_h__
 
 namespace zcRes
 {
-	class GfxWindowHAL_DX11 : public zcExp::ExportGfxWindowDX11
+//! @todo 2 clean rename all xxx_DX11 to xxx_HAL, skipping the typedef
+	class GfxWindow_DX11 : public zcExp::ExportGfxWindowDX11
 	{
-	zenClassDeclare(GfxWindowHAL_DX11, zcExp::ExportGfxWindowDX11)
+	zenClassDeclare(GfxWindow_DX11, zcExp::ExportGfxWindowDX11)
 	public:
-		virtual							~GfxWindowHAL_DX11();												
+		virtual							~GfxWindow_DX11();												
 		bool							Initialize();
 		bool							PerformResize();
 		void							FrameBegin();
@@ -23,7 +22,4 @@ namespace zcRes
 	public:
 		static GfxWindowRef				RuntimeCreate(HWND _WindowHandle);
 	};
-	class GfxWindowHAL : public GfxWindowHAL_DX11{ zenClassDeclare(GfxWindowHAL, GfxWindowHAL_DX11) };
 }
-
-#endif

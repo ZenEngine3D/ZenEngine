@@ -1,22 +1,22 @@
 #pragma once
-#ifndef __zCore_Res_Gfx_Texture_DX12_h__
-#define __zCore_Res_Gfx_Texture_DX12_h__
-//SF DX12
+
 namespace zcRes
 {
-	class GfxTexture2dHAL_DX12 : public zcExp::ExportGfxTexture2d
+	class GfxTexture2D_DX12 : public zcExp::ExportGfxTexture2D
 	{
 	public:
-		virtual											~GfxTexture2dHAL_DX12();
+		virtual											~GfxTexture2D_DX12();
 		bool											Initialize();
-	
-		DirectXComRef<ID3D12Resource>					mrTextureResource;
-		zcGfx::DescriptorSRV_UAV_CBV					mTextureView;
+		void*											Lock();	//!< @todo 2 Support mipmap
+		void											Unlock(const zenGfx::zContext& _rContext);
+		//! @todo 1 package these 3 members in 1 object with common methods for data upload
+		DirectXComRef<ID3D12Resource>					mrResource;			//!< DirectX memory mapping for this resource
+		DirectXComRef<ID3D12Resource>					mrResourceUpload;	//!< Upload memory allocated to stream-in a texture
+		D3D12_RESOURCE_STATES							meResourceState;	//!< Current GPU access to this resource (used for barrier updates)	
+		
+		zcGfx::DescriptorSRV_UAV_CBV					mTextureView;		
+		
 		//! @todo 3 Add support for UAV and Stencil view
-		typedef zcExp::ExporterGfxTexture2dDX12_DX12	RuntimeExporter;
+		typedef zcExp::ExporterGfxTexture2DDX12_DX12	RuntimeExporter;
 	};
-	class GfxTexture2dHAL : public GfxTexture2dHAL_DX12{};
-
 }
-
-#endif

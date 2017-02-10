@@ -18,10 +18,10 @@
 #define ZENEmpty4(_A,_B,_C,_D)																	
 #define ZENEmpty5(_A,_B,_C,_D,_E)																
 
-#define ZENDefineStich2B(DEFINE1, DEFINE2)			DEFINE1##DEFINE2
-#define ZENDefineStich3B(DEFINE1, DEFINE2, DEFINE3)	DEFINE1##DEFINE2##DEFINE3
-#define ZENDefineStich2(DEFINE1, DEFINE2)			ZENDefineStich2B(DEFINE1,DEFINE2)
-#define ZENDefineStich3(DEFINE1, DEFINE2, DEFINE3)	ZENDefineStich3B(DEFINE1,DEFINE2,DEFINE3)
+#define zenDefineStich2B(DEFINE1, DEFINE2)			DEFINE1##DEFINE2
+#define zenDefineStich3B(DEFINE1, DEFINE2, DEFINE3)	DEFINE1##DEFINE2##DEFINE3
+#define zenDefineStich2(DEFINE1, DEFINE2)			zenDefineStich2B(DEFINE1,DEFINE2)
+#define zenDefineStich3(DEFINE1, DEFINE2, DEFINE3)	zenDefineStich3B(DEFINE1,DEFINE2,DEFINE3)
 //! @endcond DOXYGEN_IGNORE
 
 
@@ -34,7 +34,7 @@
 #define zenClassDeclareNoParent(_Class_)			public: void zenClassDeclareCheck(){ zenStaticAssertMsg( sizeof(*this) == sizeof(_Class_), "Wrong Class name in ClassDeclare macro" );}
 #define zenClassDeclare(_Class_, _ClassParent_)		zenClassDeclareNoParent(_Class_)			\
 													public: typedef _ClassParent_ Super;
-#include ZENHeaderPlatform(zenBaseConstMacro)
+#include zenHeaderPlatform(zenBaseConstMacro)
 
 #endif
 

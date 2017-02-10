@@ -4,7 +4,7 @@
 
 namespace zcExp
 {
-	struct ExportInfoGfxSampler : public ExportInfoBase
+	struct ExportInfoGfxStateSampler : public ExportInfoBase
 	{			
 		zenConst::eTextureFiltering	meFilterMin;
 		zenConst::eTextureFiltering	meFilterMag;
@@ -29,7 +29,7 @@ namespace zcExp
 		zenRes::zGfxStateRaster::Config	mRasterConfig;
 	};
 		
-	zResID CreateGfxSampler( zenConst::eTextureFiltering _eFilterMin=zenConst::keTexFilter_Bilinear, zenConst::eTextureFiltering _eFilterMag=zenConst::keTexFilter_Bilinear, zenConst::eTextureWrap _eWrapU=zenConst::keTexWrap_Repeat, zenConst::eTextureWrap _eWrapV=zenConst::keTexWrap_Repeat, float _fLodBias=0, const zVec4F& _vBorderColor=zVec4F(0,0,0,1) );	
+	zResID CreateGfxStateSampler( zenConst::eTextureFiltering _eFilterMin=zenConst::keTexFilter_Bilinear, zenConst::eTextureFiltering _eFilterMag=zenConst::keTexFilter_Bilinear, zenConst::eTextureWrap _eWrapU=zenConst::keTexWrap_Repeat, zenConst::eTextureWrap _eWrapV=zenConst::keTexWrap_Repeat, float _fLodBias=0, const zVec4F& _vBorderColor=zVec4F(0,0,0,1) );	
 	zResID CreateGfxRasterizer( const zenRes::zGfxStateRaster::Config& _RasterConfig );
 	zResID CreateGfxDepthStencil( const zenRes::zGfxRenderPass::ConfigDepthRT& _DepthStencilConfig );
 	zResID CreateGfxBlend( const zArrayBase<zenRes::zGfxRenderPass::ConfigColorRT>& _aTargetColorConfig);

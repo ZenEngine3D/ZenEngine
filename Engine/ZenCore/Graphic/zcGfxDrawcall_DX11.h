@@ -1,17 +1,41 @@
 #pragma once
-#ifndef __zCore_Gfx_Renderer_Drawcall_DX11_h__
-#define __zCore_Gfx_Renderer_Drawcall_DX11_h__
 
-namespace zcGfx
+namespace zcGfx 
 {
+//==================================================================================================
+// Generic Command supported on all platforms
+//==================================================================================================
 
-class CommandUpdateIndexDX11 : public Command
+class CommandDraw_DX11 : public zcGfx::CommandDraw				
+{ 
+zenClassDeclare(CommandDraw, CommandDraw)
+public: 
+	virtual void Invoke(zcGfx::GPUContext& _Context); 
+};
+
+class CommandClearColor_DX11 : public zcGfx::CommandClearColor			
+{ 
+zenClassDeclare(CommandClearColor, CommandClearColor)
+public: 
+	virtual void Invoke(zcGfx::GPUContext& _Context); 
+};
+
+class CommandClearDepthStencil_DX11	: public zcGfx::CommandClearDepthStencil	
+{ 
+zenClassDeclare(CommandClearDepthStencil, CommandClearDepthStencil)
+public: 
+	virtual void Invoke(zcGfx::GPUContext& _Context); 
+};
+
+//==================================================================================================
+// Platform specific Commands
+//==================================================================================================
+class CommandUpdateIndex_DX11 : public zcGfx::Command
 {
-zenClassDeclare(CommandUpdateIndexDX11, Command)
+zenClassDeclare(CommandUpdateIndex_DX11, zcGfx::Command)
 public:
-	static zEngineRef<Command>	Create( const zcRes::GfxIndexRef& _rIndex, zU8* _pData, zUInt _uOffset=0, zUInt _uSize=0xFFFFFFFFFFFFFFFF);
-	virtual void				Invoke();
-
+	static zEngineRef<Command>	Create(const zcRes::GfxIndexRef& _rIndex, zU8* _pData, zUInt _uOffset=0, zUInt _uSize=0xFFFFFFFFFFFFFFFF);
+	void						Invoke(zcGfx::GPUContext& _Context);
 protected:	
 	zcRes::GfxIndexRef			mrIndex;
 	zU8*						mpData;
@@ -19,12 +43,12 @@ protected:
 	zUInt						muSize;
 };
 
-class CommandUpdateBufferDX11 : public Command
+class CommandUpdateBuffer_DX11 : public zcGfx::Command
 {
-zenClassDeclare(CommandUpdateBufferDX11, Command)
+zenClassDeclare(CommandUpdateBuffer_DX11, zcGfx::Command)
 public:
-	static zEngineRef<Command>	Create( const zcRes::GfxBufferRef& _rBuffer, zU8* _pUpdateData, zUInt _uOffset=0, zUInt _uSize=0xFFFFFFFFFFFFFFFF);
-	virtual void				Invoke();
+	static zEngineRef<Command>	Create(const zcRes::GfxBufferRef& _rBuffer, zU8* _pUpdateData, zUInt _uOffset=0, zUInt _uSize=0xFFFFFFFFFFFFFFFF);
+	void						Invoke(zcGfx::GPUContext& _Context);
 
 protected:	
 	zcRes::GfxBufferRef			mrBuffer;
@@ -35,4 +59,3 @@ protected:
 
 }
 
-#endif

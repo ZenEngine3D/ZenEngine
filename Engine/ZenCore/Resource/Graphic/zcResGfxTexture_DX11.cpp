@@ -3,7 +3,7 @@
 namespace zcRes
 {
 
-GfxTexture2dHAL_DX11::~GfxTexture2dHAL_DX11()
+GfxTexture2D_DX11::~GfxTexture2D_DX11()
 {
 	if( mpTextureBuffer )	
 		mpTextureBuffer->Release();
@@ -14,7 +14,7 @@ GfxTexture2dHAL_DX11::~GfxTexture2dHAL_DX11()
 	mpTextureView	= nullptr;
 }
 
-bool GfxTexture2dHAL_DX11::Initialize()
+bool GfxTexture2D_DX11::Initialize()
 {
 	D3D11_TEXTURE2D_DESC			bufferDesc;		ZeroMemory( &bufferDesc, sizeof(bufferDesc) );
 	D3D11_SHADER_RESOURCE_VIEW_DESC viewDesc;		ZeroMemory( &viewDesc, sizeof(viewDesc) );
@@ -55,14 +55,14 @@ bool GfxTexture2dHAL_DX11::Initialize()
 		}			
 	}
 
-	HRESULT ret = zcMgr::GfxRender.DX11GetDevice()->CreateTexture2D( &bufferDesc, bValidInitData ? aInitData : nullptr, &mpTextureBuffer );
+	HRESULT ret = zcMgr::GfxRender.GetDevice()->CreateTexture2D( &bufferDesc, bValidInitData ? aInitData : nullptr, &mpTextureBuffer );
 	if( SUCCEEDED(ret) && !bIsDepth)
 	{
 		viewDesc.Format						= bufferDesc.Format;
 		viewDesc.ViewDimension				= D3D11_SRV_DIMENSION_TEXTURE2D;
 		viewDesc.Texture2D.MostDetailedMip	= 0;
 		viewDesc.Texture2D.MipLevels		= bufferDesc.MipLevels;
-		ret									= zcMgr::GfxRender.DX11GetDevice()->CreateShaderResourceView( mpTextureBuffer, &viewDesc, &mpTextureView );
+		ret									= zcMgr::GfxRender.GetDevice()->CreateShaderResourceView( mpTextureBuffer, &viewDesc, &mpTextureView );
 	}
 
 	return SUCCEEDED(ret);

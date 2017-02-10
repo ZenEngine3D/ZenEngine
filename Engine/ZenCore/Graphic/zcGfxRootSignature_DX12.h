@@ -187,6 +187,8 @@ public:
 									RootSignature(const zArrayBase<CD3DX12_ROOT_PARAMETER1>& _Entries, D3D12_ROOT_SIGNATURE_FLAGS _Flags=D3D12_ROOT_SIGNATURE_FLAG_NONE);
 		
 	zenInline ID3D12RootSignature*	Get()const{ return mrRootSignature.Get();}
+	bool							operator==(const RootSignature& _Cmp)const;
+	bool							operator!=(const RootSignature& _Cmp)const;
 
 	static bool						StaticInitialize();
 

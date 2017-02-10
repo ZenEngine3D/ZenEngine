@@ -2,19 +2,19 @@
 #ifndef __zCore_Res_Gfx_GfxShaderParam_h__
 #define __zCore_Res_Gfx_GfxShaderParam_h__
 
-#include ZENHeaderRenderer( zcResGfxShaderParam )
+#include zenHeaderRenderer( zcResGfxShaderParam )
 
 namespace zcRes
 {
-	class GfxCBufferDefinition : protected GfxCBufferDefinitionHAL
+	class GfxCBufferDefinition : protected GfxCBufferDefinition_HAL
 	{
-	zenClassDeclare(GfxCBufferDefinition, GfxCBufferDefinitionHAL)
+	zenClassDeclare(GfxCBufferDefinition, GfxCBufferDefinition_HAL)
 	public:
 	};
 
-	class GfxCBuffer : protected GfxCBufferHAL
+	class GfxCBuffer : protected GfxCBuffer_HAL
 	{
-	zenClassDeclare(GfxCBuffer, GfxCBufferHAL)
+	zenClassDeclare(GfxCBuffer, GfxCBuffer_HAL)
 	public:
 		const zcRes::GfxCBufferDefinitionRef& GetParent();
 		using Super::SetValue;

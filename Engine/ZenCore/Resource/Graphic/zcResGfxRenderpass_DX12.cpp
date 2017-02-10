@@ -5,7 +5,7 @@
 namespace zcRes
 {
 
-bool GfxRenderPassHAL_DX12::Initialize()
+bool GfxRenderPass_DX12::Initialize()
 {		
 	mrStateBlend		= mBlendStateID;
 	mrStateDepthStencil	= mDepthStencilStateID;

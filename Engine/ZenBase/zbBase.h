@@ -1,6 +1,4 @@
 #pragma once
-#ifndef __zBase_Base_h__
-#define __zBase_Base_h__ 
 
 //=================================================================================================
 //! @file		libZenBaseBase.h
@@ -28,9 +26,8 @@
 //! @details	Contains basic data type definitions, etc...
 //=================================================================================================
 #include <ZenBase/zenBase.h>
-#include <Engine/ZenBase/Type/zbType.h>
-#include <Engine/ZenBase/Memory/zbMem.h>
-#include <Engine/ZenBase/System/zbSys.h>
-#include <Engine/ZenBase/IO/zbIo.h>
-
-#endif
+#include "zbBaseHAL.h"
+#include "Type/zbType.h"
+#include "Memory/zbMem.h"
+#include "System/zbSys.h"
+#include "IO/zbIo.h"

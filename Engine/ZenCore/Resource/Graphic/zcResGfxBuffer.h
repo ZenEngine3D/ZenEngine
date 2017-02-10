@@ -2,17 +2,17 @@
 #ifndef __zCore_Res_Gfx_GfxBuffer_h__
 #define __zCore_Res_Gfx_GfxBuffer_h__
 
-#include ZENHeaderRenderer(zcResGfxBuffer)
+#include zenHeaderRenderer(zcResGfxBuffer)
 
 namespace zcRes
 {
 
-class GfxBuffer : protected GfxBufferHAL
+class GfxBuffer : protected GfxBuffer_HAL
 {
-zenClassDeclare(GfxBuffer, GfxBufferHAL)
+zenClassDeclare(GfxBuffer, GfxBuffer_HAL)
 public:	
-	using	GfxBufferHAL::Lock;
-	using	GfxBufferHAL::Unlock;
+	using	Super::Lock;
+	using	Super::Unlock;
 };
 
 }

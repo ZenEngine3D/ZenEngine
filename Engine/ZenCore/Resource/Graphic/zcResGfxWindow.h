@@ -1,19 +1,17 @@
 #pragma once
-#ifndef __zCore_Res_Gfx_GfxWindow_h__
-#define __zCore_Res_Gfx_GfxWindow_h__
 
 namespace zxImGui	{ class zxRenderData; } //Forward declare
 namespace zxNuklear { class zxRenderData; } //Forward declare
 namespace zen { namespace zenWnd { class Window; } }
 
 
-#include ZENHeaderRenderer(zcResGfxWindow)
+#include zenHeaderRenderer(zcResGfxWindow)
 
 namespace zcRes
 {
-	class GfxWindow : protected GfxWindowHAL, public zenSig::zSlot
+	class GfxWindow : protected GfxWindow_HAL, public zenSig::zSlot
 	{
-	zenClassDeclare(GfxWindow, GfxWindowHAL)
+	zenClassDeclare(GfxWindow, GfxWindow_HAL)
 	public:
 		enum eConstant{ keEventHistoryCount = 128 };		
 		enum eEventType{ keEvtTyp_CPU, keEvtTyp_GPU, keEvtTyp__Count, keEvtTyp__Invalid=keEvtTyp__Count};
@@ -57,7 +55,8 @@ namespace zcRes
 		//zUInt									muCurrentBackbuffer		= 0; // @todo 1 temp workaround dx12
 	public:
 		using									Super::PerformResize;
-		friend class							GfxWindowHAL::Super;
+		using									Super::RuntimeCreate;
+		friend 									GfxWindow_HAL;
 	};
 
 	const zenPerf::zEventRef& GfxWindow::GetHistoryEvent(GfxWindow::eEventType _eEventType, zU32 _uIndex)const
@@ -74,5 +73,3 @@ namespace zcRes
 		return muFrameCount;
 	}
 }
-
-#endif

@@ -49,13 +49,13 @@ namespace zbFile
 
 }
 
-#include ZENHeaderPlatform( zbFileInfo )
+#include zenHeaderPlatform( zbFileInfo )
 
 namespace zbFile
 {
-	class FileInfo : public ZENClassPlatform(FileInfo)
+	class FileInfo : public zenClassPlatform(FileInfo)
 	{
-	zenClassDeclare(FileInfo, ZENClassPlatform(FileInfo));
+	zenClassDeclare(FileInfo, zenClassPlatform(FileInfo));
 	public:
 		struct FileTime
 		{
@@ -92,7 +92,7 @@ namespace zbFile
 		bool					mbValidHandle;
 		
 		friend class			ManagerFile;
-		friend class			ZENClassPlatform(ManagerFile);
+		friend class			zenClassPlatform(ManagerFile);
 	};
 
 	class ManagerFile_Base : public zbType::Manager
@@ -109,13 +109,13 @@ namespace zbFile
 
 
 
-#include ZENHeaderPlatform( zbFileManager )
+#include zenHeaderPlatform( zbFileManager )
 
 namespace zbFile
 {
-	class ManagerFile : public ZENClassPlatform(ManagerFile)
+	class ManagerFile : public zenClassPlatform(ManagerFile)
 	{
-	zenClassDeclare(ManagerFile, ZENClassPlatform(ManagerFile));
+	zenClassDeclare(ManagerFile, zenClassPlatform(ManagerFile));
 	public:
 
 		bool IsExistFile( const Filename& _filename )

@@ -3,7 +3,7 @@
 //SF DX12
 namespace zcRes
 {
-	GfxWindowRef GfxWindowHAL_DX12::RuntimeCreate(HWND _WindowHandle)
+	GfxWindowRef GfxWindow_DX12::RuntimeCreate(HWND _WindowHandle)
 	{
 		RECT						rc;		
 		zenConst::eTextureFormat	eColorFormat = zenConst::keTexFormat_RGBA8; //! @todo clean feature expose desired format in ResData		
@@ -26,7 +26,7 @@ namespace zcRes
 		DirectXComRef<IDXGISwapChain1>	rSwapChain;
 
 		HRESULT hr = zcMgr::GfxRender.GetFactory()->CreateSwapChainForHwnd(
-						zcMgr::GfxRender.m_commandQueue.Get(),
+						zcMgr::GfxRender.mrCommandQueue.Get(),
 						_WindowHandle,
 						&SwapchainDesc,
 						nullptr,
@@ -50,7 +50,7 @@ namespace zcRes
 
 		for(zUInt idx(0); idx<zenArrayCount(mrBackbufferColor) && bValid; ++idx)
 		{
-			rResource.HAL()->mrBackbufferColor[idx]	= GfxTarget2DHAL_DX12::RuntimeCreate(rSwapChain, eColorFormat, idx);							
+			rResource.HAL()->mrBackbufferColor[idx]	= GfxTarget2D_DX12::RuntimeCreate(rSwapChain, eColorFormat, idx);							
 			bValid									= rResource.HAL()->mrBackbufferColor[idx].IsValid();
 		}
 
@@ -63,7 +63,7 @@ namespace zcRes
 		return nullptr;
 	}
 
-	GfxWindowHAL_DX12::~GfxWindowHAL_DX12()
+	GfxWindow_DX12::~GfxWindow_DX12()
 	{
 	}
 
@@ -75,7 +75,7 @@ namespace zcRes
 	//--------------------------------------------------------------------------------------------------
 	//! @return		
 	//==================================================================================================
-	bool GfxWindowHAL_DX12::PerformResize()
+	bool GfxWindow_DX12::PerformResize()
 	{
 		zenAssertMsg(zcGfx::grWindowRender.IsValid()==false || zcGfx::grWindowRender.Get() != dynamic_cast<GfxWindow*>(this), "This method should only be called in ManagerBase::FrameStart()");
 
@@ -94,7 +94,7 @@ namespace zcRes
 			
 			for(zUInt idx(0); idx<zenArrayCount(mrBackbufferColor) && bValid; ++idx)
 			{
-				mrBackbufferColor[idx]	= GfxTarget2DHAL_DX12::RuntimeCreate(*mpDX12SwapChain, meBackbufferColorFormat, idx);				
+				mrBackbufferColor[idx]	= GfxTarget2D_DX12::RuntimeCreate(*mpDX12SwapChain, meBackbufferColorFormat, idx);				
 				bValid					= mrBackbufferColor[idx].IsValid();
 			}
 		}
@@ -103,14 +103,14 @@ namespace zcRes
 		return bResize;
 	}
 
-	void GfxWindowHAL_DX12::FrameBegin()
+	void GfxWindow_DX12::FrameBegin()
 	{
 		GfxWindow* pWindow				= reinterpret_cast<GfxWindow*>(this);
 		UINT uIndexCurrent				= mrDXSwapChain->GetCurrentBackBufferIndex();
 		pWindow->mrBackbufferCurrent	= mrBackbufferColor[uIndexCurrent];
 	}
 
-	void GfxWindowHAL_DX12::FrameEnd()
+	void GfxWindow_DX12::FrameEnd()
 	{
 	}
 	

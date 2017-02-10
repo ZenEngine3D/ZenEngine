@@ -4,7 +4,7 @@
 namespace zcRes
 {
 		
-bool GfxViewHAL_DX12::Initialize()
+bool GfxView_DX12::Initialize()
 {
 #if !ZEN_RENDERER_DX12
 	zenAssert(maRTColorConfig.Count() < D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT);

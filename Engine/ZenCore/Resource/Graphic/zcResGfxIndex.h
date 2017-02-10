@@ -2,17 +2,17 @@
 #ifndef __zCore_Res_Gfx_GfxIndex_h__
 #define __zCore_Res_Gfx_GfxIndex_h__
 
-#include ZENHeaderRenderer(zcResGfxIndex)
+#include zenHeaderRenderer(zcResGfxIndex)
 
 namespace zcRes
 {
 
-class GfxIndex : protected GfxIndexHAL
+class GfxIndex : protected GfxIndex_HAL
 {
-zenClassDeclare(GfxIndex, GfxIndexHAL)
+zenClassDeclare(GfxIndex, GfxIndex_HAL)
 public:
-	using 				GfxIndexHAL::Lock;		// Expose HAL method
-	using 				GfxIndexHAL::Unlock;	// Expose HAL method
+	using 			Super::Lock;	// Expose HAL method
+	using 			Super::Unlock;	// Expose HAL method
 };
 
 }

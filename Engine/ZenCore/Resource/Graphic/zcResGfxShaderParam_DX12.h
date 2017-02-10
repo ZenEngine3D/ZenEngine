@@ -6,45 +6,42 @@
 namespace zcRes
 {
 	//==============================================================================================
-	// GfxCBufferDefinitionHAL_DX12 
+	// GfxCBufferDefinition_DX12 
 	//==============================================================================================
-	class GfxCBufferDefinitionHAL_DX12 : public zcExp::ExportGfxCBufferDefinition
+	class GfxCBufferDefinition_DX12 : public zcExp::ExportGfxCBufferDefinition
 	{
-	zenClassDeclare(GfxCBufferDefinitionHAL_DX12, zcExp::ExportGfxCBufferDefinition)
+	zenClassDeclare(GfxCBufferDefinition_DX12, zcExp::ExportGfxCBufferDefinition)
 	public:
 		bool										Initialize();				
 		typedef zcExp::ExporterGfxShaderParamDef	RuntimeExporter;
 	};
-	class GfxCBufferDefinitionHAL : public GfxCBufferDefinitionHAL_DX12{};
 	
 	//==============================================================================================
-	// GfxCBufferHAL_DX12
+	// GfxCBuffer_DX12
 	//==============================================================================================
-	class GfxCBufferHAL_DX12 : public zcExp::ExportGfxCBuffer
+	class GfxCBuffer_DX12 : public zcExp::ExportGfxCBuffer
 	{
-	zenClassDeclare(GfxCBufferHAL_DX12, zcExp::ExportGfxCBuffer)
+	zenClassDeclare(GfxCBuffer_DX12, zcExp::ExportGfxCBuffer)
 	public:
-		virtual										~GfxCBufferHAL_DX12();
+		virtual										~GfxCBuffer_DX12();
 		bool										Initialize();
 		void										Update( ID3D11DeviceContext& DirectXContext );
 		void										SetValue(const zenRes::zShaderParameter& _Value);	
 		void										SetValue(const zcExp::ParameterBase& _Value);	
 		template<class TParamType> void				SetValue(const zHash32& _hParamName, const TParamType& _Value, zU16 _uIndex=0);
 
-		GfxCBufferDefinitionRef						mrCBufferParent;					//!< Parent Definition of this CBuffer
-		DirectXComRef<ID3D12Resource>				mrBuffer;
-		DirectXComRef<ID3D12Resource>				mrLockData;
-		D3D12_RESOURCE_STATES						meBufferState;		
+		DirectXComRef<ID3D12Resource>				mrResource;			//!< DirectX memory mapping for this resource
+		DirectXComRef<ID3D12Resource>				mrResourceUpload;	//!< DirectX memory used to update GPU data from CPU
+		D3D12_RESOURCE_STATES						meResourceState;	//!< Current GPU access to this resource (used for barrier updates)	
 		zcGfx::DescriptorSRV_UAV_CBV				mCBufferView;
 		zU8*										mpCBufferMapped			= nullptr;	//!< CPU address of constant buffer we can write to
+		GfxCBufferDefinitionRef						mrCBufferParent;					//!< Parent Definition of this CBuffer		
 		mutable bool								mbUpdated				= false;	//!< True when parameter value was changed and must update GPU buffer		
 		typedef zcExp::ExporterGfxCBuffer			RuntimeExporter;
 	};
-	class GfxCBufferHAL : public GfxCBufferHAL_DX12{};
-
 
 	template<class TParamType>
-	void GfxCBufferHAL_DX12::SetValue(const zHash32& _hParamName, const TParamType& _Value, zU16 _uIndex)
+	void GfxCBuffer_DX12::SetValue(const zHash32& _hParamName, const TParamType& _Value, zU16 _uIndex)
 	{
 		zcExp::GfxCBufferParamInfo ItemInfo;
 		if( mrCBufferParent.HAL()->mdParamInfo.Get(_hParamName, ItemInfo) )

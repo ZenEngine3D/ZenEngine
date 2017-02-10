@@ -16,9 +16,10 @@
 //! @section	mainpage-LibGraphic Section Gfx Library
 //=================================================================================================
 
-#include ZENHeaderRenderer( zcGfx )
-#include "zcGfxDrawcall.h"
+#include zenHeaderRenderer( zcGfx )
 #include "zcGfxContext.h"
+#include "zcGfxDrawcall.h"
+#include "zcGfxGPUContext.h"
 #include "zcGfxRenderMgr.h"
 
 #endif

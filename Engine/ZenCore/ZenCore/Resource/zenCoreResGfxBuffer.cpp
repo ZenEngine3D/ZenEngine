@@ -5,13 +5,13 @@ namespace zen { namespace zenRes {
 //=================================================================================================
 // CREATES
 //=================================================================================================
-zGfxTexture2d zGfxTexture2d::Create(zenConst::eTextureFormat _eFormat, zVec2U16 _vDim, zFlagResTexUse _CreationFlags)
+zGfxTexture2D zGfxTexture2D::Create(zenConst::eTextureFormat _eFormat, zVec2U16 _vDim, zFlagResTexUse _CreationFlags)
 {
 	static zArrayStatic<zU8> aEmpty(zUInt(0));
 	return zcExp::CreateGfxTexture2D(_eFormat, _CreationFlags, _vDim, aEmpty);
 }
 
-zGfxTexture2d zGfxTexture2d::Create(zenConst::eTextureFormat _eFormat, zVec2U16 _vDim, const zArrayBase<zU8>& _aRawData, zFlagResTexUse _CreationFlags)
+zGfxTexture2D zGfxTexture2D::Create(zenConst::eTextureFormat _eFormat, zVec2U16 _vDim, const zArrayBase<zU8>& _aRawData, zFlagResTexUse _CreationFlags)
 {
 	return zcExp::CreateGfxTexture2D(_eFormat, _CreationFlags, _vDim, _aRawData);
 }
@@ -49,10 +49,10 @@ void zGfxIndex::Unlock(const zenGfx::zContext& rContext)
 //=================================================================================================
 // GFX TEXTURE2D
 //=================================================================================================
-const zVec2U16& zGfxTexture2d::GetDim()
+const zVec2U16& zGfxTexture2D::GetDim()
 {
 	zenAssertMsg(mpResource, "No valid resource assigned");
-	zcRes::GfxTexture2d* pTexture = static_cast<zcRes::GfxTexture2d*>(mpResource);
+	zcRes::GfxTexture2D* pTexture = static_cast<zcRes::GfxTexture2D*>(mpResource);
 	return pTexture->GetDim();
 }
 
@@ -71,7 +71,7 @@ const zVec2U16& zGfxTarget2D::GetDim() const
 	return mpResource->GetDim();
 }
 
-zGfxTexture2d zGfxTarget2D::GetTexture2D()
+zGfxTexture2D zGfxTarget2D::GetTexture2D()
 {
 	zenAssertMsg(mpResource, "No valid resource assigned");
 	return mpResource->GetTexture2D();

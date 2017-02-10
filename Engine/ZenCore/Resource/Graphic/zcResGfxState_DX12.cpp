@@ -5,15 +5,15 @@
 namespace zcRes
 {
 	//////////////////////////////////////////////////////////////////////////
-	// GfxSamplerHAL
+	// GfxStateSamplerHAL
 	//////////////////////////////////////////////////////////////////////////
-	GfxSamplerHAL_DX12::~GfxSamplerHAL_DX12()
+	GfxStateSampler_DX12::~GfxStateSampler_DX12()
 	{
 		if( mpSamplerState )
 			mpSamplerState->Release();
 		mpSamplerState = nullptr;
 	}
-	bool GfxSamplerHAL_DX12::Initialize()
+	bool GfxStateSampler_DX12::Initialize()
 	{	
 	#if ZEN_RENDERER_DX12
 		return false;
@@ -26,14 +26,14 @@ namespace zcRes
 	//////////////////////////////////////////////////////////////////////////
 	//GfxBlend_DX12
 	//////////////////////////////////////////////////////////////////////////
-	GfxStateBlendHAL_DX12::~GfxStateBlendHAL_DX12()
+	GfxStateBlend_DX12::~GfxStateBlend_DX12()
 	{	
 		if( mpBlendState )
 			mpBlendState->Release();
 		mpBlendState = nullptr;
 	}
 
-	bool GfxStateBlendHAL_DX12::Initialize()
+	bool GfxStateBlend_DX12::Initialize()
 	{
 	#if ZEN_RENDERER_DX12
 		return false;
@@ -51,14 +51,14 @@ namespace zcRes
 	//////////////////////////////////////////////////////////////////////////
 	//GfxDepthStencil_DX12
 	//////////////////////////////////////////////////////////////////////////
-	GfxStateDepthStencilHAL_DX12::~GfxStateDepthStencilHAL_DX12()
+	GfxStateDepthStencil_DX12::~GfxStateDepthStencil_DX12()
 	{	
 		if( mpDepthStencilState )
 			mpDepthStencilState->Release();
 		mpDepthStencilState = nullptr;
 	}
 
-	bool GfxStateDepthStencilHAL_DX12::Initialize()
+	bool GfxStateDepthStencil_DX12::Initialize()
 	{
 	#if ZEN_RENDERER_DX12
 		return false;
@@ -72,14 +72,14 @@ namespace zcRes
 	//////////////////////////////////////////////////////////////////////////
 	//GfxRasterizer_DX12
 	//////////////////////////////////////////////////////////////////////////
-	GfxStateRasterHAL_DX12::~GfxStateRasterHAL_DX12()
+	GfxStateRaster_DX12::~GfxStateRaster_DX12()
 	{	
 		if( mpRasterizerState )
 			mpRasterizerState->Release();
 		mpRasterizerState = nullptr;
 	}
 
-	bool GfxStateRasterHAL_DX12::Initialize()
+	bool GfxStateRaster_DX12::Initialize()
 	{
 	#if ZEN_RENDERER_DX12
 		return false;

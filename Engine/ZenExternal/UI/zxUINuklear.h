@@ -31,7 +31,7 @@ public:
 	zenRes::zGfxTarget2D					mrRendertarget		= nullptr;	
 	zenRes::zGfxRenderPass					mrRenderpass		= nullptr;		
 	zenRes::zGfxIndex						mrIndexBuffer		= nullptr;	
-	zenRes::zGfxTexture2d					mrFontTextureAtlas	= nullptr;
+	zenRes::zGfxTexture2D					mrFontTextureAtlas	= nullptr;
 	zenSig::zSignalEmitter0					msigRenderUI;	
 	zVec2U16								mvScreenSize		= zVec2U16(0,0);
 	zUInt									muVertexCount		= 0; //! @todo Urgent have buffer accessors available 
@@ -67,7 +67,7 @@ protected:
 	zenRes::zGfxShaderPixel				mrShaderPixel;
 	zenRes::zGfxShaderBinding			mrShaderBinding;
 	zArrayStatic<zenRes::zGfxCBuffer>	marShaderParams;	
-	zenRes::zGfxSampler					mrFontSampler;	
+	zenRes::zGfxStateSampler					mrFontSampler;	
 };
 
 }

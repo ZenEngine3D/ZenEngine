@@ -16,7 +16,7 @@ class Command : public zRefCounted
 {
 zenClassDeclare(Command, zRefCounted)
 public:											
-	virtual void			Invoke(){};	//!< Used by non drawing drawcall, else skip virtual call and render directly
+	virtual void			Invoke(class GPUContext& _Context){};	//!< Used by non drawing drawcall, else skip virtual call and render directly
 	static void				ResetCommandCount();
 
 //protected:			
@@ -71,7 +71,6 @@ public:
 		};		
 	};
 
-	bool					mbIsCommandDraw	= false;
 	RenderStateSortID		mSortId;
 	zcRes::GfxRenderPassRef	mrRenderPass;
 	static float			sfCommandCount;			//!< Number of command issued this frame. Used to set command priority when sorting. (made it a float to avoid float/int conversion cost for each drawcall)
@@ -88,12 +87,11 @@ zenClassDeclare(CommandDraw, Command)
 public:
 	static zEngineRef<Command>	Create(	const zcRes::GfxRenderPassRef& _rRenderPass, const zcRes::GfxMeshStripRef& _rMeshStrip, zU32 _uIndexFirst=0, zU32 _uIndexCount=0xFFFFFFFF, const zVec4U16& _vScreenScissor = zVec4U16(0,0,0xFFFF,0xFFFF));
 
-protected:
+// protected: //! @todo 1 clean remove public access (needed for gfxmgr::updatestate
 	zcRes::GfxMeshStripRef		mrMeshStrip;
 	zVec4U16					mvScreenScissor;
 	zU32						muIndexFirst	= 0;
 	zU32						muIndexCount	= 0xFFFFFFFF;
-	friend class ManagerRender;
 };
 
 class CommandClearColor : public Command
@@ -101,7 +99,6 @@ class CommandClearColor : public Command
 zenClassDeclare(CommandClearColor, Command)
 public:
 	static zEngineRef<Command>	Create( const zcRes::GfxRenderPassRef& _rRenderPass, const zcRes::GfxTarget2DRef& _rRTColor, const zVec4F& _vRGBA,  const zColorMask& _ColorMask=zenConst::kColorMaskRGBA, const zVec2S16& _vOrigin=zVec2S16(0,0), const zVec2U16& _vDim=zVec2U16(0,0) );
-	virtual void				Invoke();
 
 protected:
 	zcRes::GfxTarget2DRef		mrRTColor;
@@ -116,7 +113,6 @@ class CommandClearDepthStencil : public Command
 zenClassDeclare(CommandClearDepthStencil, Command)
 public:
 	static zEngineRef<Command>	Create( const zcRes::GfxRenderPassRef& _rRenderPass, const zcRes::GfxTarget2DRef& _rRTDepth, bool _bClearDepth, float _fDepthValue=1.f, bool _bClearStencil=false, zU8 _uStencilValue=128);
-	virtual void				Invoke();
 
 protected:
 	zcRes::GfxTarget2DRef		mrRTDepthStencil;
@@ -128,7 +124,7 @@ protected:
 
 }
 
-#include ZENHeaderRenderer(zcGfxDrawcall)
+#include zenHeaderRenderer(zcGfxDrawcall)
 #include "zcGfxDrawcall.inl"
 
 #endif

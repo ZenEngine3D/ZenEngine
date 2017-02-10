@@ -71,4 +71,14 @@ RootSignature::RootSignature(const zArrayBase<CD3DX12_ROOT_PARAMETER1>& _Entries
 	}
 }
 
+bool RootSignature::operator==(const RootSignature& _Cmp)const
+{
+	return mrRootSignature.Get() == _Cmp.Get();
+}
+
+bool RootSignature::operator!=(const RootSignature& _Cmp)const
+{
+	return mrRootSignature.Get() != _Cmp.Get();
+}
+
 }

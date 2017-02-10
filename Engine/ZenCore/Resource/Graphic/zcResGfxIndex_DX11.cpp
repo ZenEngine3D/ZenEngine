@@ -3,7 +3,7 @@
 namespace zcRes
 {
 
-GfxIndexHAL_DX11::~GfxIndexHAL_DX11()
+GfxIndex_DX11::~GfxIndex_DX11()
 {
 	if( mpIndiceBuffer )
 	{
@@ -12,7 +12,7 @@ GfxIndexHAL_DX11::~GfxIndexHAL_DX11()
 	}
 }
 
-bool GfxIndexHAL_DX11::Initialize()
+bool GfxIndex_DX11::Initialize()
 {
 	//! @todo Missing: configure resource creations flags
 	//D3D11_USAGE eUsage(D3D11_USAGE_DEFAULT);
@@ -31,12 +31,12 @@ bool GfxIndexHAL_DX11::Initialize()
 	InitData.pSysMem				= maIndices.First();
 	InitData.SysMemPitch			= 0;
 	InitData.SysMemSlicePitch		= 0;
-	HRESULT hr						= zcMgr::GfxRender.DX11GetDevice()->CreateBuffer(&IndexDesc, &InitData, &mpIndiceBuffer);
+	HRESULT hr						= zcMgr::GfxRender.GetDevice()->CreateBuffer(&IndexDesc, &InitData, &mpIndiceBuffer);
 
 	return SUCCEEDED(hr);
 }
 
-zU8* GfxIndexHAL_DX11::Lock()
+zU8* GfxIndex_DX11::Lock()
 {
 	zenAssertMsg(mpLockData==nullptr, "Need to unlock buffer before locking it again");
 
@@ -49,12 +49,12 @@ zU8* GfxIndexHAL_DX11::Lock()
 	return mpLockData;
 }
 
-void GfxIndexHAL_DX11::Unlock(const zenGfx::zContext& _rContext)
+void GfxIndex_DX11::Unlock(const zenGfx::zContext& _rContext)
 {
 	//! @todo Urgent Update Cpu copy at frame end
 	zenAssertMsg(mpLockData != nullptr, "Need to lock buffer before unlocking it");
-	zcRes::GfxIndexRef rIndex = reinterpret_cast<GfxIndex*>(this);
-	zEngineRef<zcGfx::Command> rCommand = zcGfx::CommandUpdateIndexDX11::Create( rIndex, mpLockData );
+	zcRes::GfxIndexRef rIndex			= reinterpret_cast<GfxIndex*>(this);
+	zEngineRef<zcGfx::Command> rCommand = zcGfx::CommandUpdateIndex_DX11::Create( rIndex, mpLockData );
 	mpLockData							= nullptr;
 	_rContext->AddCommand(rCommand.Get());
 }

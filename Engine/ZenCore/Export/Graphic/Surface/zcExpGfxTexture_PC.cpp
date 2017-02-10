@@ -3,7 +3,7 @@
 namespace zcExp
 {
 
-bool GenerateTexture( zArrayStatic<MipInfo>& _aOutMips, const ExportInfoGfxTexture2d& _ExportInfo )
+bool GenerateTexture( zArrayStatic<MipInfo>& _aOutMips, const ExportInfoGfxTexture2D& _ExportInfo )
 {
 	if( _ExportInfo.meFormatInput != _ExportInfo.meFormatOutput )
 	{

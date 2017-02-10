@@ -10,7 +10,7 @@ namespace zbFile
 
 	
 FileInfo::FileInfo()
-	: ZENClassPlatform(FileInfo)()
+	: zenClassPlatform(FileInfo)()
 	, miFileSize(0)
 	, miFilePos(0)
 	, muFlags(0)

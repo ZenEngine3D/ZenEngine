@@ -106,8 +106,8 @@ bool SampleDebugUIInstance::Init()
 
 	mrShaderVS										= zenRes::zGfxShaderVertex::Create( "Shader/Tutorial07.fx", "VS");
 	mrShaderPS										= zenRes::zGfxShaderPixel::Create( "Shader/Tutorial07.fx", "PS" );
-	mrTexture										= zenRes::zGfxTexture2d::Create(zenConst::keTexFormat_RGBA8, vTexSize, aTexRGBA );
-	mrSampler										= zenRes::zGfxSampler::Create(zenConst::keTexFilter_Trilinear, zenConst::keTexFilter_Trilinear, zenConst::keTexWrap_Clamp, zenConst::keTexWrap_Clamp, 0);
+	mrTexture										= zenRes::zGfxTexture2D::Create(zenConst::keTexFormat_RGBA8, vTexSize, aTexRGBA );
+	mrSampler										= zenRes::zGfxStateSampler::Create(zenConst::keTexFilter_Trilinear, zenConst::keTexFilter_Trilinear, zenConst::keTexWrap_Clamp, zenConst::keTexWrap_Clamp, 0);
 	
 	// Some bindings of render resource together
 	mrShaderBind									= zenRes::zGfxShaderBinding::Create(mrShaderVS, mrShaderPS);
@@ -186,8 +186,12 @@ void SampleDebugUIInstance::Update()
 
 			zenGfx::zCommand::ClearColor(rCxtRender, mrMainWindowGfx.GetBackbuffer(), vClearColor);
 			zenGfx::zCommand::ClearDepthStencil(rCxtRender, mrBackbufferDepth);
+			
+			//static int sCount(10000);
+			//for(int i(0); i<sCount; ++i)
 			zenGfx::zCommand::DrawMesh(rCxtRender, 0, mrCubeMeshStrip);
-			rCxtRender.Submit();		
+			
+			rCxtRender.Submit();
 		}		
 		mrMainWindowGfx.FrameEnd();
 	}

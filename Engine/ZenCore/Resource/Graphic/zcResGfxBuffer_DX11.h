@@ -5,10 +5,10 @@
 namespace zcRes
 {
 
-class GfxBufferHAL_DX11 : public zcExp::ExportGfxBuffer
+class GfxBuffer_DX11 : public zcExp::ExportGfxBuffer
 {
 public:	
-	virtual										~GfxBufferHAL_DX11();
+	virtual										~GfxBuffer_DX11();
 	bool										Initialize();
 	void*										Lock();
 	void										Unlock(const zenGfx::zContext& _rContext);
@@ -19,7 +19,6 @@ public:
 	ID3D11UnorderedAccessView*					mpUAV;
 	typedef zcExp::ExporterGfxBuffer_DX11		RuntimeExporter;
 };
-class GfxBufferHAL : public GfxBufferHAL_DX11{};
 
 }
 

@@ -1,6 +1,4 @@
 #pragma once
-#ifndef __LibZenEngine_Perf_CounterCPU_PC_h__
-#define __LibZenEngine_Perf_CounterCPU_PC_h__
 
 namespace zcPerf 
 {
@@ -16,8 +14,5 @@ protected:
 											EventCPU_PC(const zStringHash32& _EventName);
 };
 
-typedef EventCPU_PC EventCPU_Platform;
-
 }
 
-#endif

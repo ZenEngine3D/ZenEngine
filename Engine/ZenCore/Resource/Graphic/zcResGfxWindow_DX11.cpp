@@ -2,7 +2,7 @@
 
 namespace zcRes
 {
-	GfxWindowRef GfxWindowHAL_DX11::RuntimeCreate(HWND _WindowHandle)
+	GfxWindowRef GfxWindow_DX11::RuntimeCreate(HWND _WindowHandle)
 	{
 		RECT						rc;
 		IDXGIDevice*				pDXGIDevice;
@@ -27,7 +27,7 @@ namespace zcRes
 		SwapDesc.SampleDesc.Quality					= 0;
 		SwapDesc.Windowed							= TRUE;
 		SwapDesc.SwapEffect							= DXGI_SWAP_EFFECT_DISCARD;
-		ID3D11Device*   DX11pDevice					= zcMgr::GfxRender.DX11GetDevice();		
+		ID3D11Device*   DX11pDevice					= zcMgr::GfxRender.GetDevice();		
 		
 		if( SUCCEEDED(DX11pDevice->QueryInterface(__uuidof(IDXGIDevice), (void **)&pDXGIDevice)) )
 		{
@@ -46,7 +46,7 @@ namespace zcRes
 						rResource.HAL()->mvSize						= zVec2U16(zU16(rc.right-rc.left), zU16(rc.bottom-rc.top));
 						for(zUInt idx(0); idx<zenArrayCount(mrBackbufferColor) && bValid; ++idx)
 						{
-							rResource.HAL()->mrBackbufferColor[idx]	= GfxTarget2DHAL_DX11::RuntimeCreate(*pDXSwapChain, eColorFormat, idx);							
+							rResource.HAL()->mrBackbufferColor[idx]	= GfxTarget2D_DX11::RuntimeCreate(*pDXSwapChain, eColorFormat, idx);							
 							bValid									= rResource.HAL()->mrBackbufferColor[idx].IsValid();
 						}
 
@@ -63,7 +63,7 @@ namespace zcRes
 		return nullptr;		
 	}
 
-	GfxWindowHAL_DX11::~GfxWindowHAL_DX11()
+	GfxWindow_DX11::~GfxWindow_DX11()
 	{
 		if( mpDX11SwapChain )
 			mpDX11SwapChain->Release();	
@@ -77,7 +77,7 @@ namespace zcRes
 	//--------------------------------------------------------------------------------------------------
 	//! @return		
 	//==================================================================================================
-	bool GfxWindowHAL_DX11::PerformResize()
+	bool GfxWindow_DX11::PerformResize()
 	{
 		zenAssert(mpDX11SwapChain);
 		zenAssertMsg(zcGfx::grWindowRender.IsValid()==false || zcGfx::grWindowRender.Get() != dynamic_cast<GfxWindow*>(this), "This method should only be called in ManagerBase::FrameStart()");
@@ -95,7 +95,7 @@ namespace zcRes
 			
 			for(zUInt idx(0); idx<zenArrayCount(mrBackbufferColor) && bValid; ++idx)
 			{
-				mrBackbufferColor[idx]	= GfxTarget2DHAL_DX11::RuntimeCreate(*mpDX11SwapChain, meBackbufferColorFormat, idx);				
+				mrBackbufferColor[idx]	= GfxTarget2D_DX11::RuntimeCreate(*mpDX11SwapChain, meBackbufferColorFormat, idx);				
 				bValid					= mrBackbufferColor[idx].IsValid();
 			}
 		}
@@ -104,13 +104,13 @@ namespace zcRes
 		return bResize;
 	}
 
-	void GfxWindowHAL_DX11::FrameBegin()
+	void GfxWindow_DX11::FrameBegin()
 	{
 		GfxWindow* pWindow				= reinterpret_cast<GfxWindow*>(this);
 		pWindow->mrBackbufferCurrent	= mrBackbufferColor[pWindow->GetFrameCount()%zenArrayCount(mrBackbufferColor)];
 	}
 
-	void GfxWindowHAL_DX11::FrameEnd()
+	void GfxWindow_DX11::FrameEnd()
 	{
 	}
 }

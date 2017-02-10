@@ -12,7 +12,7 @@ static const zStringHash32 gaGPUCounterName[] = {
 	zStringHash32("Cmd Update Index"),		//keType_UpdateIndex
 	zStringHash32("Cmd Update Vertex"),		//keType_UpdateVertex
 	zStringHash32("Cmd Update Buffer"),		//keType_UpdateBuffer
-
+	zStringHash32("Cmd Update Texture"),	//keType_UpdateTexture
 	zStringHash32("Cmd Invalid"),			//keType__Count
 };
 

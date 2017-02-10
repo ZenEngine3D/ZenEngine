@@ -14,7 +14,7 @@ bool IsSystemCBuffer( zResID _CBufferDefId, zHash32 _hName )
 
 //=================================================================================================
 
-bool GfxMeshHAL_DX12::Initialize()
+bool GfxMesh_DX12::Initialize()
 {
 	marGfxMeshStrip.SetCount( maMeshStripID.Count() );
 	for(zUInt stripIdx(0), stripCount(marGfxMeshStrip.Count()); stripIdx<stripCount; ++stripIdx)
@@ -23,32 +23,32 @@ bool GfxMeshHAL_DX12::Initialize()
 	return true;
 }
 
-void GfxMeshHAL_DX12::SetValue(const zArrayBase<const zenRes::zShaderParameter*>& _aValues)
+void GfxMesh_DX12::SetValue(const zArrayBase<const zenRes::zShaderParameter*>& _aValues)
 {
 	for(zUInt stripIdx(0), stripCount(marGfxMeshStrip.Count()); stripIdx<stripCount; ++stripIdx)
 		marGfxMeshStrip[stripIdx]->SetValue(_aValues);
 }
 
-void GfxMeshHAL_DX12::SetValue(const zenRes::zShaderParameter& _Value)
+void GfxMesh_DX12::SetValue(const zenRes::zShaderParameter& _Value)
 {
 	for(zUInt stripIdx(0), stripCount(marGfxMeshStrip.Count()); stripIdx<stripCount; ++stripIdx)
 		marGfxMeshStrip[stripIdx]->SetValue(_Value);
 }
 
-void GfxMeshHAL_DX12::SetResource(const zHash32& _hResourceName, const GfxShaderResourceRef& _rResource, zU16 _uIndex)
+void GfxMesh_DX12::SetResource(const zHash32& _hResourceName, const GfxShaderResourceRef& _rResource, zU16 _uIndex)
 {
 	for(zUInt stripIdx(0), stripCount(marGfxMeshStrip.Count()); stripIdx<stripCount; ++stripIdx)
 		marGfxMeshStrip[stripIdx]->SetResource(_hResourceName, _rResource, _uIndex);
 }
 
-void GfxMeshHAL_DX12::SetResource(const zHash32& _hResourceName, const zArrayBase<GfxShaderResourceRef>& _arResources)
+void GfxMesh_DX12::SetResource(const zHash32& _hResourceName, const zArrayBase<GfxShaderResourceRef>& _arResources)
 {
 	for(zUInt stripIdx(0), stripCount(marGfxMeshStrip.Count()); stripIdx<stripCount; ++stripIdx)
 		marGfxMeshStrip[stripIdx]->SetResource(_hResourceName, _arResources);
 }
 //=================================================================================================
 
-bool GfxMeshStripHAL_DX12::Initialize()
+bool GfxMeshStrip_DX12::Initialize()
 {
 	zenMem::Zero(mhShaderResourceStamp);
 
@@ -64,11 +64,11 @@ bool GfxMeshStripHAL_DX12::Initialize()
 		for(zUInt resTypeIdx(0); resTypeIdx<keShaderRes__Count; ++resTypeIdx)
 			marShaderResources[stageIdx][resTypeIdx].Copy( maResourceID[stageIdx][resTypeIdx] );
 
-	SetValue(zHash32("VtxInput_Offset"), muVertexFirst );
+	SetValue(zHash32("VtxInput_Offset"), muVertexFirst ); //! @todo 1 clean remove this, store in root signature constant instead
 	return true;
 }
 
-void GfxMeshStripHAL_DX12::SetValue(const zArrayBase<const zenRes::zShaderParameter*>& _aValues)
+void GfxMeshStrip_DX12::SetValue(const zArrayBase<const zenRes::zShaderParameter*>& _aValues)
 {
 	for(zUInt valIdx(0), valCount(_aValues.Count()); valIdx<valCount; ++valIdx)
 	{
@@ -83,7 +83,7 @@ void GfxMeshStripHAL_DX12::SetValue(const zArrayBase<const zenRes::zShaderParame
 	}
 }
 
-void GfxMeshStripHAL_DX12::SetValue(const zenRes::zShaderParameter& _Value)
+void GfxMeshStrip_DX12::SetValue(const zenRes::zShaderParameter& _Value)
 {	
 	auto paramMask	= mrShaderBinding.HAL()->mdCBufferParamMask[_Value.mhName];
 	while( paramMask != 0 )
@@ -94,7 +94,7 @@ void GfxMeshStripHAL_DX12::SetValue(const zenRes::zShaderParameter& _Value)
 	}
 }
 
-void GfxMeshStripHAL_DX12::SetResource(const zHash32& _hResourceName, const GfxShaderResourceRef& _rResource, zU16 _uIndex )
+void GfxMeshStrip_DX12::SetResource(const zHash32& _hResourceName, const GfxShaderResourceRef& _rResource, zU16 _uIndex )
 {
 	zcExp::ExportGfxShaderBinding::ShaderBindInfoIndex PerStageBindInfo;
 	if( mrShaderBinding.HAL()->mdResourceBind.Get(_hResourceName, PerStageBindInfo) )
@@ -116,7 +116,7 @@ void GfxMeshStripHAL_DX12::SetResource(const zHash32& _hResourceName, const GfxS
  	}
 }
 
-void GfxMeshStripHAL_DX12::SetResource(const zHash32& _hResourceName, const zArrayBase<GfxShaderResourceRef>& _arResources )
+void GfxMeshStrip_DX12::SetResource(const zHash32& _hResourceName, const zArrayBase<GfxShaderResourceRef>& _arResources )
 {
 	zcExp::ExportGfxShaderBinding::ShaderBindInfoIndex PerStageBindInfo;
 	if( mrShaderBinding.HAL()->mdResourceBind.Get(_hResourceName, PerStageBindInfo) )
@@ -137,7 +137,7 @@ void GfxMeshStripHAL_DX12::SetResource(const zHash32& _hResourceName, const zArr
 }
 
 //=================================================================================================
-bool GfxShaderBindingHAL_DX12::Initialize()
+bool GfxShaderBinding_DX12::Initialize()
 {
 	for(zUInt idx(0); idx<zenConst::keShaderStage__Count; ++idx)
 		marShader[idx] =  maShaderID[idx];
@@ -145,7 +145,7 @@ bool GfxShaderBindingHAL_DX12::Initialize()
 	return true;
 }
 
-void GfxShaderBindingHAL_DX12::CreateShaderParam(zArrayStatic<zenRes::zGfxCBuffer>& Out_aShaderParam)const
+void GfxShaderBinding_DX12::CreateShaderParam(zArrayStatic<zenRes::zGfxCBuffer>& Out_aShaderParam)const
 {
 	zUInt uValidShaderCount(0);
 	zenRes::zGfxCBuffer arValidCBuffer[zcExp::kuDX12_CBufferPerStageMax];		

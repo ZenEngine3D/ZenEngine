@@ -1,6 +1,4 @@
 #pragma once
-#ifndef __zbSystem_Fiber_PC_h__
-#define __zbSystem_Fiber_PC_h__
 
 namespace zbSys
 {
@@ -19,8 +17,4 @@ protected:
 	LPVOID			mpFiber;	
 };
 
-typedef zbFiber_PC zbFiber_Platform;
-
 }
-
-#endif

@@ -4,7 +4,7 @@
 namespace zcRes
 {
 
-bool GfxCBufferDefinitionHAL_DX12::Initialize()
+bool GfxCBufferDefinition_DX12::Initialize()
 {
 	return TRUE;
 }
@@ -12,17 +12,17 @@ bool GfxCBufferDefinitionHAL_DX12::Initialize()
 
 //=================================================================================================
 
-GfxCBufferHAL_DX12::~GfxCBufferHAL_DX12()
+GfxCBuffer_DX12::~GfxCBuffer_DX12()
 {
-	if( mrBuffer.Get() != nullptr && mpCBufferMapped )
+	if( mrResource.Get() != nullptr && mpCBufferMapped )
 	{
 		CD3DX12_RANGE WriteRange(0, 0);	//Nothing to write to gpu
-		mrBuffer->Unmap(0, &WriteRange);
+		mrResource->Unmap(0, &WriteRange);
 		mpCBufferMapped = nullptr;
 	}
 }
 
-bool GfxCBufferHAL_DX12::Initialize()
+bool GfxCBuffer_DX12::Initialize()
 {	
 	mrCBufferParent		= mParentParamDefID;
 	if( mrCBufferParent.IsValid() )
@@ -33,19 +33,21 @@ bool GfxCBufferHAL_DX12::Initialize()
 								D3D12_HEAP_FLAG_NONE,
 								&CD3DX12_RESOURCE_DESC::Buffer(uAlignedSize),
 								D3D12_RESOURCE_STATE_GENERIC_READ,
-								nullptr, IID_PPV_ARGS(&mrBuffer));	
+								nullptr, IID_PPV_ARGS(&mrResource));	
 		if( SUCCEEDED(hr) )
 		{
+			zSetGfxResourceName(mrResource, mResID, nullptr);
+
 			// Create constant buffer views to access the upload buffer.
 			D3D12_CONSTANT_BUFFER_VIEW_DESC desc;
 			mCBufferView		= zcGfx::DescriptorSRV_UAV_CBV::Allocate();						
-			desc.BufferLocation = mrBuffer->GetGPUVirtualAddress();
+			desc.BufferLocation = mrResource->GetGPUVirtualAddress();
 			desc.SizeInBytes	= uAlignedSize;
-			zcMgr::GfxRender.GetDevice()->CreateConstantBufferView(&desc, mCBufferView.GetHandle());
+			zcMgr::GfxRender.GetDevice()->CreateConstantBufferView(&desc, mCBufferView.GetCpuHandle());
 
 			// Map the constant buffers.
 			CD3DX12_RANGE readRange(0, 0);		// We do not intend to read from this resource on the CPU.
-			hr = mrBuffer->Map(0, &readRange, reinterpret_cast<void**>(&mpCBufferMapped));
+			hr = mrResource->Map(0, &readRange, reinterpret_cast<void**>(&mpCBufferMapped));
 			if( SUCCEEDED(hr) )
 			{
 				// We don't unmap this until the app closes. Keeping things mapped for the lifetime of the resource is okay.
@@ -57,7 +59,7 @@ bool GfxCBufferHAL_DX12::Initialize()
 	return false;
 }
 
-void GfxCBufferHAL_DX12::Update( ID3D11DeviceContext& DirectXContext )
+void GfxCBuffer_DX12::Update( ID3D11DeviceContext& DirectXContext )
 {
 	if( mbUpdated && mpCBufferMapped )
 	{
@@ -66,7 +68,7 @@ void GfxCBufferHAL_DX12::Update( ID3D11DeviceContext& DirectXContext )
 	}
 }
 
-void GfxCBufferHAL_DX12::SetValue(const zcExp::ParameterBase& _Value)
+void GfxCBuffer_DX12::SetValue(const zcExp::ParameterBase& _Value)
 {
 	zcExp::GfxCBufferParamInfo ItemInfo;
 	if( mrCBufferParent.HAL()->mdParamInfo.Get(_Value.mhName, ItemInfo) )
@@ -76,7 +78,7 @@ void GfxCBufferHAL_DX12::SetValue(const zcExp::ParameterBase& _Value)
 	}	
 }
 
-void GfxCBufferHAL_DX12::SetValue(const zenRes::zShaderParameter& _Value)
+void GfxCBuffer_DX12::SetValue(const zenRes::zShaderParameter& _Value)
 {
 	zcExp::GfxCBufferParamInfo ItemInfo;
 	if( mrCBufferParent.HAL()->mdParamInfo.Get(_Value.mhName, ItemInfo) )

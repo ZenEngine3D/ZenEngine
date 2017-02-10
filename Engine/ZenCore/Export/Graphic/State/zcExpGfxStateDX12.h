@@ -4,9 +4,9 @@
 
 namespace zcExp
 {	
-	class ExportGfxSamplerDX12 : public zenRes::zExportData
+	class ExportGfxStateSamplerDX12 : public zenRes::zExportData
 	{
-	zenClassDeclare(ExportGfxSamplerDX12, zenRes::zExportData)
+	zenClassDeclare(ExportGfxStateSamplerDX12, zenRes::zExportData)
 	public:
 		D3D12_SAMPLER_DESC			mSamplerDesc;
 	};

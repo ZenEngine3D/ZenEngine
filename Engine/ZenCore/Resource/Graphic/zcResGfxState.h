@@ -2,28 +2,28 @@
 #ifndef __zCore_Res_Gfx_State_h__
 #define __zCore_Res_Gfx_State_h__
 
-#include ZENHeaderRenderer(zcResGfxState)
+#include zenHeaderRenderer(zcResGfxState)
 
 namespace zcRes
 {
-	class GfxSampler : protected GfxSamplerHAL
+	class GfxStateSampler : protected GfxStateSampler_HAL
 	{
-	zenClassDeclare(GfxSampler, GfxSamplerHAL)
+	zenClassDeclare(GfxStateSampler, GfxStateSampler_HAL)
 	};
 
-	class GfxStateBlend : protected GfxStateBlendHAL
+	class GfxStateBlend : protected GfxStateBlend_HAL
 	{
-	zenClassDeclare(GfxStateBlend, GfxStateBlendHAL)		
+	zenClassDeclare(GfxStateBlend, GfxStateBlend_HAL)		
 	};
 
-	class GfxStateDepthStencil : protected GfxStateDepthStencilHAL
+	class GfxStateDepthStencil : protected GfxStateDepthStencil_HAL
 	{
-	zenClassDeclare(GfxStateDepthStencil, GfxStateDepthStencilHAL)		
+	zenClassDeclare(GfxStateDepthStencil, GfxStateDepthStencil_HAL)		
 	};
 
-	class GfxStateRaster : protected GfxStateRasterHAL
+	class GfxStateRaster : protected GfxStateRaster_HAL
 	{
-	zenClassDeclare(GfxStateRaster, GfxStateRasterHAL)		
+	zenClassDeclare(GfxStateRaster, GfxStateRaster_HAL)		
 	};
 }
 

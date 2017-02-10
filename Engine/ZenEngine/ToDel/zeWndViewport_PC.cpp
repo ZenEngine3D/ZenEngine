@@ -20,7 +20,7 @@ namespace zen { namespace zenWnd
 
 		if( meMainWindowThreadStatus == keThread_Running )
 		{
-			mGfxWindow = zcRes::GfxWindowHAL::RuntimeCreate( mhMainWindow );
+			mGfxWindow = zcRes::GfxWindow::RuntimeCreate( mhMainWindow );
 			return meMainWindowThreadStatus == keThread_Running;
 		}
 		return false;

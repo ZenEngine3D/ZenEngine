@@ -8,9 +8,9 @@ namespace zcRes
 	//=============================================================================================
 	//! @class	Bind together all the GPU states needed for a drawcall
 	//=============================================================================================
-	class GfxRenderPassHAL_DX12 : public zcExp::ExportGfxRenderPass
+	class GfxRenderPass_DX12 : public zcExp::ExportGfxRenderPass
 	{
-	zenClassDeclare(GfxRenderPassHAL_DX12, zcExp::ExportGfxRenderPass)
+	zenClassDeclare(GfxRenderPass_DX12, zcExp::ExportGfxRenderPass)
 	public:
 		bool									Initialize();
 		GfxStateBlendRef						mrStateBlend;
@@ -19,7 +19,6 @@ namespace zcRes
 		GfxViewRef								mrStateView;
 		typedef zcExp::ExporterGfxRenderPass	RuntimeExporter;
 	};
-	class GfxRenderPassHAL : public GfxRenderPassHAL_DX12{};
 }
 
 #endif

@@ -4,13 +4,13 @@
 
 namespace zen { namespace zenRes {	
 
-	class zGfxSampler : public zcRes::GfxSamplerRef
+	class zGfxStateSampler : public zcRes::GfxStateSamplerRef
 	{
-	zenClassDeclare(zGfxSampler, zcRes::GfxSamplerRef);
+	zenClassDeclare(zGfxStateSampler, zcRes::GfxStateSamplerRef);
 	public:
 		using Super::Super;
 		using Super::operator=;
-		static zGfxSampler				Create( zenConst::eTextureFiltering _eFilterMin=zenConst::keTexFilter_Bilinear, zenConst::eTextureFiltering _eFilterMag=zenConst::keTexFilter_Bilinear, zenConst::eTextureWrap _eWrapU=zenConst::keTexWrap_Repeat, zenConst::eTextureWrap _eWrapV=zenConst::keTexWrap_Repeat, float _fLodBias=0, const zVec4F& _vBorderColor=zVec4F(0,0,0,1) );
+		static zGfxStateSampler				Create( zenConst::eTextureFiltering _eFilterMin=zenConst::keTexFilter_Bilinear, zenConst::eTextureFiltering _eFilterMag=zenConst::keTexFilter_Bilinear, zenConst::eTextureWrap _eWrapU=zenConst::keTexWrap_Repeat, zenConst::eTextureWrap _eWrapV=zenConst::keTexWrap_Repeat, float _fLodBias=0, const zVec4F& _vBorderColor=zVec4F(0,0,0,1) );
 	};
 
 	class zGfxStateBlend : public zcRes::GfxStateBlendRef

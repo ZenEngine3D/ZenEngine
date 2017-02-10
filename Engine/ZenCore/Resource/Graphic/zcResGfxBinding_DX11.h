@@ -7,9 +7,9 @@ namespace zcRes
 	//=============================================================================================
 	//! @class	Binding geometry to shader
 	//=============================================================================================
-	class GfxMeshStripHAL_DX11 : public zcExp::ExportGfxMeshStrip
+	class GfxMeshStrip_DX11 : public zcExp::ExportGfxMeshStrip
 	{
-	zenClassDeclare(GfxMeshStripHAL_DX11, zcExp::ExportGfxMeshStrip)
+	zenClassDeclare(GfxMeshStrip_DX11, zcExp::ExportGfxMeshStrip)
 	public:
 		bool									Initialize();
 		void									SetResource(const zHash32& _hResourceName, const GfxShaderResourceRef& _rResource, zU16 _uIndex=0 );
@@ -26,10 +26,9 @@ namespace zcRes
 		
 		typedef zcExp::ExporterGfxMeshStrip		RuntimeExporter;
 	};
-	class GfxMeshStripHAL : public GfxMeshStripHAL_DX11{};
 	
 	template<class TParamType> 
-	void GfxMeshStripHAL_DX11::SetValue(const zHash32& _hParamName, const TParamType& _Value, zU16 _uIndex)
+	void GfxMeshStrip_DX11::SetValue(const zHash32& _hParamName, const TParamType& _Value, zU16 _uIndex)
 	{
 		auto paramMask= mrShaderBinding.HAL()->mdCBufferParamMask[_hParamName];
 		while( paramMask != 0 )
@@ -43,9 +42,9 @@ namespace zcRes
 	//=============================================================================================
 	//! @class	Bind together all strip of a Mesh
 	//=============================================================================================
-	class GfxMeshHAL_DX11 : public zcExp::ExportGfxMesh
+	class GfxMesh_DX11 : public zcExp::ExportGfxMesh
 	{
-	zenClassDeclare(GfxMeshHAL_DX11, zcExp::ExportGfxMesh)
+	zenClassDeclare(GfxMesh_DX11, zcExp::ExportGfxMesh)
 	public:
 		bool									Initialize();
 		void									SetResource(const zHash32& _hResourceName, const GfxShaderResourceRef& _rResource, zU16 _uIndex=0);
@@ -57,10 +56,9 @@ namespace zcRes
 		zArrayStatic<GfxMeshStripRef>			marGfxMeshStrip;		
 		typedef zcExp::ExporterGfxMesh			RuntimeExporter;
 	};
-	class GfxMeshHAL : public GfxMeshHAL_DX11{};
 	
 	template<class TParamType> void			
-	GfxMeshHAL_DX11::SetValue(const zHash32& _hParamName, const TParamType& _Value, zU16 _uIndex)
+	GfxMesh_DX11::SetValue(const zHash32& _hParamName, const TParamType& _Value, zU16 _uIndex)
 	{
 		for(zUInt stripIdx(0), stripCount(marGfxMeshStrip.Count()); stripIdx<stripCount; ++stripIdx)
 			marGfxMeshStrip[stripIdx]->SetValue(_hParamName, _Value, _uIndex);
@@ -70,9 +68,9 @@ namespace zcRes
 	//=============================================================================================
 	//! @class	Bind together all shader stage, Shader parameters, texture used and sampler
 	//=============================================================================================
-	class GfxShaderBindingHAL_DX11 : public zcExp::ExportGfxShaderBinding
+	class GfxShaderBinding_DX11 : public zcExp::ExportGfxShaderBinding
 	{
-	zenClassDeclare(GfxShaderBindingHAL_DX11, zcExp::ExportGfxShaderBinding)
+	zenClassDeclare(GfxShaderBinding_DX11, zcExp::ExportGfxShaderBinding)
 	public:
 		bool									Initialize();
 		void									CreateShaderParam(zArrayStatic<zenRes::zGfxCBuffer>& Out_aShaderParam)const;
@@ -80,7 +78,6 @@ namespace zcRes
 		GfxShaderAnyRef							marShader[keShaderStage__Count];
 		typedef zcExp::ExporterGfxShaderBinding	RuntimeExporter;
 	};
-	class GfxShaderBindingHAL : public GfxShaderBindingHAL_DX11{};
 	
 }
 

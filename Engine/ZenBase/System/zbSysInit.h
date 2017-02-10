@@ -12,6 +12,6 @@ namespace zbSys
 	bool IsSystemActive();	
 }
 
-#include ZENHeaderPlatform( zbSysInit )
+#include zenHeaderPlatform( zbSysInit )
 
 #endif

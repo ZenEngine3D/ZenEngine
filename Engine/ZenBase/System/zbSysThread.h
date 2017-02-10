@@ -56,6 +56,6 @@ private:
 */
 }
 
-#include ZENHeaderPlatform( zbSysThread )
+#include zenHeaderPlatform( zbSysThread )
 
 #endif

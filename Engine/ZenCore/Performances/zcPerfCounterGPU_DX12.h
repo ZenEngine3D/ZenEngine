@@ -1,6 +1,5 @@
 #pragma once
-#ifndef __LibZenEngine_Perf_CounterGPU_DX12_h__
-#define __LibZenEngine_Perf_CounterGPU_DX12_h__
+
 //SF DX12
 
 namespace zcGfx { class DX12QueryTimestamp; } //forward declare
@@ -22,8 +21,5 @@ protected:
 	zEngineRef<zcGfx::DX12QueryTimestamp>	mrQueryTimestampStop;
 };
 
-typedef EventGPU_DX12 EventGPU_Platform ;
-
 }
 
-#endif

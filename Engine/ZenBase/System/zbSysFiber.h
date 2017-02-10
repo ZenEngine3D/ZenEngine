@@ -3,7 +3,7 @@
 #define __zBase_System_Fiber_h__
 
 #include "zbSysFiber_base.h"
-#include ZENHeaderPlatform( zbSysFiber )
+#include zenHeaderPlatform( zbSysFiber )
 
 
 //=================================================================================================
@@ -12,9 +12,9 @@
 namespace zbSys
 {
 
-class zbFiber : public zbFiber_Platform
+class zbFiber : public zbFiber_HAL
 {
-zenClassDeclare(zbFiber, zbFiber_Platform);
+zenClassDeclare(zbFiber, zbFiber_HAL);
 public:
 	enum eConst{ keFiberCount = 256, keThreadMax=32 };
 

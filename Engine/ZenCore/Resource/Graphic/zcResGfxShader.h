@@ -2,19 +2,19 @@
 #ifndef __zCore_Res_Gfx_Shaders_h__
 #define __zCore_Res_Gfx_Shaders_h__
 
-#include ZENHeaderRenderer(zcResGfxShader)
+#include zenHeaderRenderer(zcResGfxShader)
 
 namespace zcRes
 {
 
-class GfxShaderVertex : protected GfxShaderVertexHAL
+class GfxShaderVertex : protected GfxShaderVertex_HAL
 {
-zenClassDeclare(GfxShaderVertex, GfxShaderVertexHAL)
+zenClassDeclare(GfxShaderVertex, GfxShaderVertex_HAL)
 };
 
-class GfxShaderPixel : protected GfxShaderPixelHAL
+class GfxShaderPixel : protected GfxShaderPixel_HAL
 {
-zenClassDeclare(GfxShaderPixel, GfxShaderPixelHAL)
+zenClassDeclare(GfxShaderPixel, GfxShaderPixel_HAL)
 };
 
 }

@@ -2,14 +2,14 @@
 #ifndef __zCore_Res_Gfx_Texture_h__
 #define __zCore_Res_Gfx_Texture_h__
 
-#include ZENHeaderRenderer( zcResGfxTexture )
+#include zenHeaderRenderer( zcResGfxTexture )
 
 namespace zcRes
 {
 
-class GfxTexture2d : protected GfxTexture2dHAL
+class GfxTexture2D : protected GfxTexture2D_HAL
 {
-zenClassDeclare(GfxTexture2d, GfxTexture2dHAL)
+zenClassDeclare(GfxTexture2D, GfxTexture2D_HAL)
 public:
 	
 	zenInline const zVec2U16& GetDim()

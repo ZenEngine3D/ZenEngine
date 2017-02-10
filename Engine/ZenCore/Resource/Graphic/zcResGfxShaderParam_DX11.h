@@ -5,25 +5,24 @@
 namespace zcRes
 {
 	//==============================================================================================
-	// GfxCBufferDefinitionHAL_DX11 
+	// GfxCBufferDefinition_DX11 
 	//==============================================================================================
-	class GfxCBufferDefinitionHAL_DX11 : public zcExp::ExportGfxCBufferDefinition
+	class GfxCBufferDefinition_DX11 : public zcExp::ExportGfxCBufferDefinition
 	{
-	zenClassDeclare(GfxCBufferDefinitionHAL_DX11, zcExp::ExportGfxCBufferDefinition)
+	zenClassDeclare(GfxCBufferDefinition_DX11, zcExp::ExportGfxCBufferDefinition)
 	public:
 		bool										Initialize();				
 		typedef zcExp::ExporterGfxShaderParamDef	RuntimeExporter;
 	};
-	class GfxCBufferDefinitionHAL : public GfxCBufferDefinitionHAL_DX11{};
 	
 	//==============================================================================================
-	// GfxCBufferHAL_DX11
+	// GfxCBuffer_DX11
 	//==============================================================================================
-	class GfxCBufferHAL_DX11 : public zcExp::ExportGfxCBuffer
+	class GfxCBuffer_DX11 : public zcExp::ExportGfxCBuffer
 	{
-	zenClassDeclare(GfxCBufferHAL_DX11, zcExp::ExportGfxCBuffer)
+	zenClassDeclare(GfxCBuffer_DX11, zcExp::ExportGfxCBuffer)
 	public:
-		virtual										~GfxCBufferHAL_DX11();
+		virtual										~GfxCBuffer_DX11();
 		bool										Initialize();
 		void										Update( ID3D11DeviceContext& DirectXContext );
 		void										SetValue(const zenRes::zShaderParameter& _Value);	
@@ -35,11 +34,9 @@ namespace zcRes
 		mutable bool								mbUpdated				= false;	//!< True when parameter value was changed and must update GPU buffer		
 		typedef zcExp::ExporterGfxCBuffer			RuntimeExporter;
 	};
-	class GfxCBufferHAL : public GfxCBufferHAL_DX11{};
-
 
 	template<class TParamType>
-	void GfxCBufferHAL_DX11::SetValue(const zHash32& _hParamName, const TParamType& _Value, zU16 _uIndex)
+	void GfxCBuffer_DX11::SetValue(const zHash32& _hParamName, const TParamType& _Value, zU16 _uIndex)
 	{
 		zcExp::GfxCBufferParamInfo ItemInfo;
 		if( mrCBufferParent.HAL()->mdParamInfo.Get(_hParamName, ItemInfo) )

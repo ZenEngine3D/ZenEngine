@@ -106,8 +106,8 @@ bool SampleDirextX12Instance::Init()
 
 	mrShaderVS										= zenRes::zGfxShaderVertex::Create( "Shader/DX12Sample.sl", "VSMain");
 	mrShaderPS										= zenRes::zGfxShaderPixel::Create( "Shader/DX12Sample.sl", "PSMain" );
-	mrTexture										= zenRes::zGfxTexture2d::Create(zenConst::keTexFormat_RGBA8, vTexSize, aTexRGBA );
-	mrSampler										= zenRes::zGfxSampler::Create(zenConst::keTexFilter_Trilinear, zenConst::keTexFilter_Trilinear, zenConst::keTexWrap_Clamp, zenConst::keTexWrap_Clamp, 0);
+	//mrTexture										= zenRes::zGfxTexture2D::Create(zenConst::keTexFormat_RGBA8, vTexSize, aTexRGBA );
+	//mrSampler										= zenRes::zGfxStateSampler::Create(zenConst::keTexFilter_Trilinear, zenConst::keTexFilter_Trilinear, zenConst::keTexWrap_Clamp, zenConst::keTexWrap_Clamp, 0);
 	
 	// Some bindings of render resource together
 	mrShaderBind									= zenRes::zGfxShaderBinding::Create(mrShaderVS, mrShaderPS);
@@ -117,9 +117,9 @@ bool SampleDirextX12Instance::Init()
 	//-------------------------------------------------
 	// Init some shader values
 	//---------------------------------------------------------------------
-	mrCubeMeshStrip.SetResource(	zHash32("g_texture"),	mrTexture);
-	mrCubeMeshStrip.SetResource(	zHash32("g_sampler"),	mrSampler);	
-
+	//mrCubeMeshStrip.SetResource(	zHash32("g_texture"),	mrTexture);
+	//mrCubeMeshStrip.SetResource(	zHash32("g_sampler"),	mrSampler);	
+	
 	return true;
 }
 

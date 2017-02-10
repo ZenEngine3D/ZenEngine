@@ -38,9 +38,9 @@ protected:
 	zenRes::zGfxShaderVertex				mrShaderVS;	
 	zenRes::zGfxShaderPixel					mrShaderPS;	
 	zenRes::zGfxShaderPixel					mrShaderPS2Output;		
-	zenRes::zGfxTexture2d					mrTexture;	
-	zenRes::zGfxSampler						mrSampler;	
-	zenRes::zGfxSampler						mrSampler2;		
+	zenRes::zGfxTexture2D					mrTexture;	
+	zenRes::zGfxStateSampler						mrSampler;	
+	zenRes::zGfxStateSampler						mrSampler2;		
 	zenRes::zGfxShaderBinding				mrShaderBind;
 	zenRes::zGfxShaderBinding				mrShader2OutputBind;
 	zenRes::zGfxMeshStrip					mrCube1MeshStrip;

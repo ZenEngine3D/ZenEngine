@@ -6,21 +6,20 @@
 namespace zcRes
 {
 
-class GfxBufferHAL_DX12 : public zcExp::ExportGfxBuffer
+class GfxBuffer_DX12 : public zcExp::ExportGfxBuffer
 {
 public:	
-	virtual										~GfxBufferHAL_DX12();
+	virtual										~GfxBuffer_DX12();
 	bool										Initialize();
 	void*										Lock();
 	void										Unlock(const zenGfx::zContext& _rContext);
 
-	DirectXComRef<ID3D12Resource>				mrBuffer;
-	DirectXComRef<ID3D12Resource>				mrLockData;
-	D3D12_RESOURCE_STATES						meBufferState;
+	DirectXComRef<ID3D12Resource>				mrResource;			//!< DirectX memory mapping for this resource
+	DirectXComRef<ID3D12Resource>				mrResourceUpload;	//!< Temp directX memory used to update GPU data from CPU
+	D3D12_RESOURCE_STATES						meResourceState;	//!< Current GPU access to this resource (used for barrier updates)	
 	zcGfx::DescriptorSRV_UAV_CBV				mBufferView;
 	typedef zcExp::ExporterGfxBuffer_DX12		RuntimeExporter;
 };
-class GfxBufferHAL : public GfxBufferHAL_DX12{};
 
 }
 

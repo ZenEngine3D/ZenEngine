@@ -41,8 +41,8 @@ const TextureBlockInfo& GetTextureBlockInfo( zenConst::eTextureFormat _eFormat )
 //=================================================================================================
 zResID CreateGfxTexture2D(zenConst::eTextureFormat _eFormat, zFlagResTexUse _CreationFlags, zVec2U16 _vDim, const zArrayBase<zU8>& _aRawData)
 {
-	static zenMem::zAllocatorPool sMemPool("Pool CreateTexture2D", sizeof(ExportInfoGfxTexture2d), 1, 5 );
-	ExportInfoGfxTexture2d* pExportInfo		= zenNew(&sMemPool) ExportInfoGfxTexture2d;
+	static zenMem::zAllocatorPool sMemPool("Pool CreateTexture2D", sizeof(ExportInfoGfxTexture2D), 1, 5 );
+	ExportInfoGfxTexture2D* pExportInfo		= zenNew(&sMemPool) ExportInfoGfxTexture2D;
 	const zcExp::TextureBlockInfo& BlockInfo	= zcExp::GetTextureBlockInfo(_eFormat);
 	pExportInfo->maMipData.SetCount(1);
 	pExportInfo->maMipData[0].maData			= _aRawData;

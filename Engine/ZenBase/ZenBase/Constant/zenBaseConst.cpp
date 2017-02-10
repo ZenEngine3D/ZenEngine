@@ -4,22 +4,22 @@ namespace zen { namespace zenConst {
 
 	#define TYP_LINE_A(N)		=
 	#define TYP_LINE_B(N)		-	
-	extern const char kzLineA10[11]			= ZENRepeatString(10, TYP_LINE_A, ZENEmpty1);	
-	extern const char kzLineA20[21]			= ZENRepeatString(20, TYP_LINE_A, ZENEmpty1);
-	extern const char kzLineA30[31]			= ZENRepeatString(30, TYP_LINE_A, ZENEmpty1);
-	extern const char kzLineA40[41]			= ZENRepeatString(40, TYP_LINE_A, ZENEmpty1);
-	extern const char kzLineA50[51]			= ZENRepeatString(50, TYP_LINE_A, ZENEmpty1);
-	extern const char kzLineA60[61]			= ZENRepeatString(60, TYP_LINE_A, ZENEmpty1);
-	extern const char kzLineA70[71]			= ZENRepeatString(70, TYP_LINE_A, ZENEmpty1);
-	extern const char kzLineA80[81]			= ZENRepeatString(80, TYP_LINE_A, ZENEmpty1);
-	extern const char kzLineB10[11]			= ZENRepeatString(10, TYP_LINE_B, ZENEmpty1);
-	extern const char kzLineB20[21]			= ZENRepeatString(20, TYP_LINE_B, ZENEmpty1);
-	extern const char kzLineB30[31]			= ZENRepeatString(30, TYP_LINE_B, ZENEmpty1);
-	extern const char kzLineB40[41]			= ZENRepeatString(40, TYP_LINE_B, ZENEmpty1);
-	extern const char kzLineB50[51]			= ZENRepeatString(50, TYP_LINE_B, ZENEmpty1);
-	extern const char kzLineB60[61]			= ZENRepeatString(60, TYP_LINE_B, ZENEmpty1);
-	extern const char kzLineB70[71]			= ZENRepeatString(70, TYP_LINE_B, ZENEmpty1);
-	extern const char kzLineB80[81]			= ZENRepeatString(80, TYP_LINE_B, ZENEmpty1);	
+	extern const char kzLineA10[11]			= zenRepeatString(10, TYP_LINE_A, ZENEmpty1);	
+	extern const char kzLineA20[21]			= zenRepeatString(20, TYP_LINE_A, ZENEmpty1);
+	extern const char kzLineA30[31]			= zenRepeatString(30, TYP_LINE_A, ZENEmpty1);
+	extern const char kzLineA40[41]			= zenRepeatString(40, TYP_LINE_A, ZENEmpty1);
+	extern const char kzLineA50[51]			= zenRepeatString(50, TYP_LINE_A, ZENEmpty1);
+	extern const char kzLineA60[61]			= zenRepeatString(60, TYP_LINE_A, ZENEmpty1);
+	extern const char kzLineA70[71]			= zenRepeatString(70, TYP_LINE_A, ZENEmpty1);
+	extern const char kzLineA80[81]			= zenRepeatString(80, TYP_LINE_A, ZENEmpty1);
+	extern const char kzLineB10[11]			= zenRepeatString(10, TYP_LINE_B, ZENEmpty1);
+	extern const char kzLineB20[21]			= zenRepeatString(20, TYP_LINE_B, ZENEmpty1);
+	extern const char kzLineB30[31]			= zenRepeatString(30, TYP_LINE_B, ZENEmpty1);
+	extern const char kzLineB40[41]			= zenRepeatString(40, TYP_LINE_B, ZENEmpty1);
+	extern const char kzLineB50[51]			= zenRepeatString(50, TYP_LINE_B, ZENEmpty1);
+	extern const char kzLineB60[61]			= zenRepeatString(60, TYP_LINE_B, ZENEmpty1);
+	extern const char kzLineB70[71]			= zenRepeatString(70, TYP_LINE_B, ZENEmpty1);
+	extern const char kzLineB80[81]			= zenRepeatString(80, TYP_LINE_B, ZENEmpty1);	
 	extern const char* kzFalseTrue[2]		= {"False","True"};
 	
 	extern const float		kfSmallNumber	= 0.0001f;

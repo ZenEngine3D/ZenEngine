@@ -24,7 +24,7 @@ namespace zcExp
 		zU32					muStride;			
 	};
 
-	struct ExportInfoGfxTexture2d : public ExportInfoBase
+	struct ExportInfoGfxTexture2D : public ExportInfoBase
 	{	
 		zArrayStatic<MipInfo>		maMipData;
 		zenConst::eTextureFormat	meFormatInput;	
@@ -33,9 +33,9 @@ namespace zcExp
 		zU8							mbGenerateMip;
 	};
 
-	class ExportGfxTexture2d : public zenRes::zExportData
+	class ExportGfxTexture2D : public zenRes::zExportData
 	{
-	zenClassDeclare(ExportGfxTexture2d, zenRes::zExportData)
+	zenClassDeclare(ExportGfxTexture2D, zenRes::zExportData)
 	public:
 		zArrayStatic<MipInfo>		maMipData;
 		zenConst::eTextureFormat	meFormat;

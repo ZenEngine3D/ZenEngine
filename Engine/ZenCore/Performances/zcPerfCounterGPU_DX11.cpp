@@ -7,16 +7,16 @@ namespace zcPerf
 	{
 	}
 
-	void EventGPU_DX11::Start()
+	void EventGPU_DX11::Start(  )
 	{
 		Super::Start();
 		zcMgr::GfxRender.NamedEventBegin(mzEventName);
-		mrQueryTimestampStart = zcGfx::DX11QueryTimestamp::Create();
+		mrQueryTimestampStart = zcGfx::QueryTimestamp_DX11::Create();
 	}
 
-	void EventGPU_DX11::Stop()
+	void EventGPU_DX11::Stop(  )
 	{
-		mrQueryTimestampStop = zcGfx::DX11QueryTimestamp::Create();
+		mrQueryTimestampStop = zcGfx::QueryTimestamp_DX11::Create();
 		zcMgr::GfxRender.NamedEventEnd();
 		Super::Stop();		
 	}

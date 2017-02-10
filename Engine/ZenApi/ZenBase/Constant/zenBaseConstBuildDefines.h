@@ -61,33 +61,34 @@
 #define ZEN_ASSERT_ON (ZEN_ASSERT_BREAK_ON || ZEN_ASSERT_MSG_ON)
 
 #if ZEN_DEBUGINFO_ON || ZEN_ASSERT_ON
-	#define ZENDbgCode( _Code_ )			_Code_
+	#define zenDbgCode( _Code_ )			_Code_
 #else
-	#define ZENDbgCode( _Code_ )
+	#define zenDbgCode( _Code_ )
 #endif
 
 //=================================================================================================
 //! Support for multi-platform file include
 //=================================================================================================
 //! @todo 2 This should be only on engine side, no api
-#define ZENComma								,															//Useful to insert a comma, inside a macro call, without interpreting it as a new macro parameter
-#define ZENStringDefineB(_S_)					#_S_														//Convert parameter into a string
-#define ZENStringDefine(_S_)					ZENStringDefineB(_S_)										//Convert content of a define into a string
-#define ZENFilenameB(PREFIX, SUFFIX, EXT)		PREFIX##_##SUFFIX##EXT										//Used to generate platform based filename by others macros
-#define ZENFilename(PREFIX, SUFFIX, EXT)		ZENFilenameB(PREFIX, SUFFIX, EXT )							//Used to generate platform based filename by others macros
+//! @todo 2 Rename defines without caplock, in a difference changelist
+#define zenComma								,															//Useful to insert a comma, inside a macro call, without interpreting it as a new macro parameter
+#define zenStringDefineB(_S_)					#_S_														//Convert parameter into a string
+#define zenStringDefine(_S_)					zenStringDefineB(_S_)										//Convert content of a define into a string
+#define zenFilenameB(PREFIX, SUFFIX, EXT)		PREFIX##_##SUFFIX##EXT										//Used to generate platform based filename by others macros
+#define zenFilename(PREFIX, SUFFIX, EXT)		zenFilenameB(PREFIX, SUFFIX, EXT )							//Used to generate platform based filename by others macros
 
-#define ZENHeaderFile(HEADERNAME, DEFINE)		ZENStringDefine( ZENFilename(HEADERNAME, DEFINE, .h) )		//!< Header filename for current Platform type
-#define zenInlineFile(HEADERNAME, DEFINE)		ZENStringDefine( ZENFilename(HEADERNAME, DEFINE, .inl) )	//!< Header filename for current Platform type
+#define zenHeaderFile(HEADERNAME, DEFINE)		zenStringDefine( zenFilename(HEADERNAME, DEFINE, .h) )		//!< Header filename for current Platform type
+#define zenInlineFile(HEADERNAME, DEFINE)		zenStringDefine( zenFilename(HEADERNAME, DEFINE, .inl) )	//!< Header filename for current Platform type
 
-#define ZENHeaderPlatform(HEADERNAME)			ZENHeaderFile(HEADERNAME,	ZEN_PLATFORM)					//!< Header filename for current Platform type
+#define zenHeaderPlatform(HEADERNAME)			zenHeaderFile(HEADERNAME,	ZEN_PLATFORM)					//!< Header filename for current Platform type
 #define zenInlinePlatform(HEADERNAME)			zenInlineFile(HEADERNAME,	ZEN_PLATFORM)					//!< Inline Header filename for current Platform type
-#define ZENClassPlatform(CLASSNAME)				ZENDefineStich3(CLASSNAME, _, ZEN_PLATFORM)					//!< Header filename for current Platform type
+#define zenClassPlatform(CLASSNAME)				zenDefineStich3(CLASSNAME, _, ZEN_PLATFORM)					//!< Header filename for current Platform type
 
-#define ZENHeaderRenderer(HEADERNAME)			ZENHeaderFile(HEADERNAME, ZEN_RENDERER)						//!< Header filename for current Renderer type
+#define zenHeaderRenderer(HEADERNAME)			zenHeaderFile(HEADERNAME, ZEN_RENDERER)						//!< Header filename for current Renderer type
 #define zenInlineRenderer(HEADERNAME)			zenInlineFile(HEADERNAME, ZEN_RENDERER)						//!< Inline Header filename for current Renderer type
-#define ZENClassRenderer(CLASSNAME)				ZENDefineStich3(CLASSNAME, _, ZEN_RENDERER)					//!< Header filename for current Platform type
+#define zenClassRenderer(CLASSNAME)				zenDefineStich3(CLASSNAME, _, ZEN_RENDERER)					//!< Header filename for current Platform type
 
-#include ZENHeaderPlatform(zenBaseConstBuildDefines)
-#include ZENHeaderRenderer(zenBaseConstBuildDefines)
+#include zenHeaderPlatform(zenBaseConstBuildDefines)
+#include zenHeaderRenderer(zenBaseConstBuildDefines)
 
 #endif

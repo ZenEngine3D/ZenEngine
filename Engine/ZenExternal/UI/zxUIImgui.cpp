@@ -13,7 +13,7 @@ zxImGUIHelper::zxImGUIHelper()
 	mrShaderVertex					= zenRes::zGfxShaderVertex::Create("Shader/ImGui.sl", "VSMain");
 	mrShaderPixel					= zenRes::zGfxShaderPixel::Create("Shader/ImGui.sl", "PSMain");
 	mrShaderBinding					= zenRes::zGfxShaderBinding::Create(mrShaderVertex, mrShaderPixel);
-	mrFontSampler					= zenRes::zGfxSampler::Create(zenConst::keTexFilter_Point, zenConst::keTexFilter_Point, zenConst::keTexWrap_Clamp, zenConst::keTexWrap_Clamp, 0);
+	mrFontSampler					= zenRes::zGfxStateSampler::Create(zenConst::keTexFilter_Point, zenConst::keTexFilter_Point, zenConst::keTexWrap_Clamp, zenConst::keTexWrap_Clamp, 0);
 	mrStateRaster					= zenRes::zGfxStateRaster::Create(RasterConfig);
 	
 	// Font Texture
@@ -23,8 +23,9 @@ zxImGUIHelper::zxImGUIHelper()
 	io.Fonts->GetTexDataAsRGBA32(&pixels, &width, &height);
 	zArrayStatic<zU8> aFontRGBA;
 	aFontRGBA.Copy(pixels, width*height * 4);
-	mrFontTextureDefault			= zenRes::zGfxTexture2d::Create(zenConst::keTexFormat_RGBA8, zVec2U16(width, height), aFontRGBA);
-	
+#if !ZEN_RENDERER_DX12
+	mrFontTextureDefault			= zenRes::zGfxTexture2D::Create(zenConst::keTexFormat_RGBA8, zVec2U16(width, height), aFontRGBA);
+#endif
 	// imGUI config	
 	io.Fonts->TexID					= 0;	// Store our identifier (Always same texture at the moment)
 	io.Fonts->ClearInputData();				// Cleanup (don't clear the input data if you want to append new fonts later)

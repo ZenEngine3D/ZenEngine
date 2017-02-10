@@ -3,7 +3,7 @@
 namespace zcRes
 {
 
-GfxBufferHAL_DX11::~GfxBufferHAL_DX11()
+GfxBuffer_DX11::~GfxBuffer_DX11()
 {
 	if( mpBuffer )
 	{
@@ -12,7 +12,7 @@ GfxBufferHAL_DX11::~GfxBufferHAL_DX11()
 	}
 }
 
-bool GfxBufferHAL_DX11::Initialize()
+bool GfxBuffer_DX11::Initialize()
 {
 	//! @todo Urgent configure resource creations flags (for all buffer type)
 	D3D11_BUFFER_DESC BufferDesc; 
@@ -33,29 +33,29 @@ bool GfxBufferHAL_DX11::Initialize()
 	
 	mpSRV = nullptr;
 	mpUAV = nullptr;
-	HRESULT hr = zcMgr::GfxRender.DX11GetDevice()->CreateBuffer(&BufferDesc, maData.Count() ? &InitData : nullptr, &mpBuffer);	
+	HRESULT hr = zcMgr::GfxRender.GetDevice()->CreateBuffer(&BufferDesc, maData.Count() ? &InitData : nullptr, &mpBuffer);	
 	if( SUCCEEDED(hr) )
-		hr = zcMgr::GfxRender.DX11GetDevice()->CreateShaderResourceView(mpBuffer, nullptr, &mpSRV);
+		hr = zcMgr::GfxRender.GetDevice()->CreateShaderResourceView(mpBuffer, nullptr, &mpSRV);
 
 	//! @todo optim only create if gpu write active
 	if( SUCCEEDED(hr) && (BufferDesc.MiscFlags & D3D11_BIND_UNORDERED_ACCESS) )
-		hr = zcMgr::GfxRender.DX11GetDevice()->CreateUnorderedAccessView(mpBuffer, nullptr, &mpUAV);
+		hr = zcMgr::GfxRender.GetDevice()->CreateUnorderedAccessView(mpBuffer, nullptr, &mpUAV);
 
 	return SUCCEEDED(hr);
 }
 
-void* GfxBufferHAL_DX11::Lock()
+void* GfxBuffer_DX11::Lock()
 {
 	zenAssertMsg(mpLockData==nullptr, "Need to unlock buffer before locking it again");
 	mpLockData = zenNewDefault zU8[ muElementCount*muElementStride ]; //!todo 2 perf Use ring buffer instead
 	return mpLockData;
 }
 
-void GfxBufferHAL_DX11::Unlock(const zenGfx::zContext& _rContext)
+void GfxBuffer_DX11::Unlock(const zenGfx::zContext& _rContext)
 {
-	//! @todo Urgent Update Cpu copy at frame end
+	//! @todo 2 Update Cpu copy at frame end
 	zenAssertMsg(mpLockData!=nullptr, "Need to lock buffer before unlocking it");
-	zEngineRef<zcGfx::Command> rCommand = zcGfx::CommandUpdateBufferDX11::Create(reinterpret_cast<GfxBuffer*>(this), mpLockData);
+	zEngineRef<zcGfx::Command> rCommand	= zcGfx::CommandUpdateBuffer_DX11::Create(reinterpret_cast<GfxBuffer*>(this), mpLockData);
 	mpLockData							= nullptr;
 	_rContext->AddCommand(rCommand.Get());
 }

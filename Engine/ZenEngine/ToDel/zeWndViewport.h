@@ -33,6 +33,6 @@ enum eMouseButton
 	zArrayDynamic<zU16>				maCharacterPressed;
 };
 
-#include ZENHeaderPlatform( zeWndViewport )
+#include zenHeaderPlatform( zeWndViewport )
 
 #endif
