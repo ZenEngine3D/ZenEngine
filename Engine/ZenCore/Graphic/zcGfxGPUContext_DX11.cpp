@@ -214,34 +214,36 @@ void GPUContext_DX11::UpdateState(const zcGfx::CommandDraw& _Drawcall)
 	if( mePrimitiveType != rIndex.HAL()->mePrimitiveType )
 	{
 		mePrimitiveType = rIndex.HAL()->mePrimitiveType;
-		mpDeviceContext->IASetPrimitiveTopology( rIndex.HAL()->mePrimitiveType );
+		mpDeviceContext->IASetPrimitiveTopology( mePrimitiveType );
 	}
 	
 	if( marShader[zenConst::keShaderStage_Vertex] != rShaderBind.HAL()->marShader[zenConst::keShaderStage_Vertex] )
 	{
 		marShader[zenConst::keShaderStage_Vertex]	= rShaderBind.HAL()->marShader[zenConst::keShaderStage_Vertex];
-		zcRes::GfxShaderVertexRef rShaderVertex				= marShader[zenConst::keShaderStage_Vertex];
+		zcRes::GfxShaderVertexRef rShaderVertex		= marShader[zenConst::keShaderStage_Vertex];
 		mpDeviceContext->VSSetShader( rShaderVertex.HAL()->mpVertexShader, nullptr, 0 );
 	}
 	
 	if( marShader[zenConst::keShaderStage_Pixel]!= rShaderBind.HAL()->marShader[zenConst::keShaderStage_Pixel] )
 	{
 		marShader[zenConst::keShaderStage_Pixel]	= rShaderBind.HAL()->marShader[zenConst::keShaderStage_Pixel];
-		zcRes::GfxShaderPixelRef rShaderPixel				= marShader[zenConst::keShaderStage_Pixel];
+		zcRes::GfxShaderPixelRef rShaderPixel		= marShader[zenConst::keShaderStage_Pixel];
 		mpDeviceContext->PSSetShader( rShaderPixel.HAL()->mpPixelShader, nullptr, 0 );
 	}
 	
-	if(mbScreenScissorOn || mvScreenScissor != _Drawcall.mvScreenScissor )
+
+	if( mbScreenScissorOn )
 	{
-		D3D11_RECT ScissorRect;
-		mvScreenScissor				= _Drawcall.mvScreenScissor;		
-		ScissorRect.left			= _Drawcall.mvScreenScissor.x;
-		ScissorRect.top				= _Drawcall.mvScreenScissor.y;
-		ScissorRect.right			= zenMath::Min<zU16>(_Drawcall.mvScreenScissor.z, (zU16)rView.HAL()->mViewport.Width);
-		ScissorRect.bottom			= zenMath::Min<zU16>(_Drawcall.mvScreenScissor.w, (zU16)rView.HAL()->mViewport.Height);
-		mpDeviceContext->RSSetScissorRects(1, &ScissorRect);
+		zVec4U16 vScreenScissor = _Drawcall.mvScreenScissor;
+		vScreenScissor.z		= zenMath::Min<zU16>(vScreenScissor.z, (zU16)rView.HAL()->mViewport.Width+vScreenScissor.x);
+		vScreenScissor.w		= zenMath::Min<zU16>(vScreenScissor.w, (zU16)rView.HAL()->mViewport.Height+vScreenScissor.y);
+		if( mvScreenScissor != vScreenScissor )
+		{
+			D3D11_RECT ScissorRect	= {vScreenScissor.x, vScreenScissor.y, vScreenScissor.z, vScreenScissor.w};
+			mvScreenScissor			= vScreenScissor;
+			mpDeviceContext->RSSetScissorRects(1, &ScissorRect);
+		}
 	}
-	
 	mpDeviceContext->IASetIndexBuffer	( rIndex.HAL()->mpIndiceBuffer, rIndex.HAL()->meIndiceFormat, 0 );	
 
 	//----------------------------------------------------------------------------------------------

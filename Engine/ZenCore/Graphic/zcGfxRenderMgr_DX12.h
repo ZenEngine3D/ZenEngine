@@ -213,14 +213,18 @@ public:
 	D3D12_VERTEX_BUFFER_VIEW						mTmpVertexBufferView;
 	zcGfx::DescriptorSRV_UAV_CBV					mTmpTextureView;
 	zenRes::zGfxTexture2D							mrTmpTexture;
+	zenRes::zGfxShaderVertex						mrTmpShaderVS;	
+	zenRes::zGfxShaderPixel							mrTmpShaderPS;	
 	// Synchronization objects.
 	HANDLE											m_fenceEvent;
 	DirectXComRef<ID3D12Fence>						m_fence;
 	UINT64											m_fenceValue;
 	void											WaitForPreviousFrame();
 
+	
+
 protected:
-	GPUContext										mGpuContext[kuContextCount];	//!< @note Only 1 context for the moment, increase when multihreading is supported	
+	GPUContext										mGpuContext[kuContextCount];	//!< @note Only 1 context for the moment, increase when multihreading is supported		
 	bool											mbTextureUnbind		= false;
 	bool											mbResourceUnbind	= false;
 	bool											mbProfilerDetected	= false;		

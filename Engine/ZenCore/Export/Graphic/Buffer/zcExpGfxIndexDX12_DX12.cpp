@@ -30,24 +30,29 @@ bool ExporterGfxIndexDX12_DX12::ExportWork(bool _bIsTHRTask)
 	
 	switch( pExportInfo->mePrimitiveType )
 	{
-	case zenConst::kePrimType_PointList:		
-		mrExportData->mePrimitiveType	= D3D_PRIMITIVE_TOPOLOGY_POINTLIST;
+	case zenConst::kePrimType_PointList:			
+		mrExportData->mePrimitive		= D3D_PRIMITIVE_TOPOLOGY_POINTLIST;
+		mrExportData->mePrimitiveType	= D3D12_PRIMITIVE_TOPOLOGY_TYPE_POINT;
 		mrExportData->muPrimitiveCount	= mrExportData->muIndiceCount;
 		break;
 	case zenConst::kePrimType_LineList:		
-		mrExportData->mePrimitiveType	= D3D_PRIMITIVE_TOPOLOGY_LINELIST;
+		mrExportData->mePrimitive		= D3D_PRIMITIVE_TOPOLOGY_LINELIST;
+		mrExportData->mePrimitiveType	= D3D12_PRIMITIVE_TOPOLOGY_TYPE_LINE;
 		mrExportData->muPrimitiveCount	= mrExportData->muIndiceCount/2;
 		break;
 	case zenConst::kePrimType_LineStrip:		
-		mrExportData->mePrimitiveType	= D3D_PRIMITIVE_TOPOLOGY_LINESTRIP;
+		mrExportData->mePrimitive		= D3D_PRIMITIVE_TOPOLOGY_LINESTRIP;
+		mrExportData->mePrimitiveType	= D3D12_PRIMITIVE_TOPOLOGY_TYPE_LINE;
 		mrExportData->muPrimitiveCount	= mrExportData->muIndiceCount-1;
 		break;
 	case zenConst::kePrimType_TriangleList:	
-		mrExportData->mePrimitiveType	= D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+		mrExportData->mePrimitive		= D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+		mrExportData->mePrimitiveType	= D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
 		mrExportData->muPrimitiveCount	= mrExportData->muIndiceCount/3;
 		break;
 	case zenConst::kePrimType_TriangleStrip:	
-		mrExportData->mePrimitiveType	= D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP;
+		mrExportData->mePrimitive		= D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP;
+		mrExportData->mePrimitiveType	= D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
 		mrExportData->muPrimitiveCount	= mrExportData->muIndiceCount-2;
 		break;
 	default:

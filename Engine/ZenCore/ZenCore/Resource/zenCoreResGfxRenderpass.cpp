@@ -46,7 +46,7 @@ void zCommand::DrawMesh(const zContext& _rContext, float _fPriority, const zenRe
 	zenAssert(rRenderpass.IsValid());
 	zenAssert(_rMeshStrip.IsValid());
 
-	zEngineRef<zcGfx::Command> rCommand			= zcGfx::CommandDraw::Create(rRenderpass, _rMeshStrip, _uIndexFirst, _uIndexCount, _vScreenScissor).GetSafe();	
+	zEngineRef<zcGfx::Command> rCommand			= zcGfx::CommandDraw_HAL::Create(rRenderpass, _rMeshStrip, _uIndexFirst, _uIndexCount, _vScreenScissor).GetSafe();	
 	_rContext->AddCommand(rCommand.Get());
 }
 
@@ -60,7 +60,7 @@ void zCommand::DrawMesh(const zContext& _rContext, float _fPriority, const zenRe
 	for(zUInt idx(0), count(aMeshStrips.Count()); idx<count; ++idx)
 	{		
 		zcRes::GfxMeshStripRef rMeshStrip			= aMeshStrips[idx];
-		zEngineRef<zcGfx::Command> rCommand			= zcGfx::CommandDraw::Create(rRenderpass, rMeshStrip, _uIndexFirst, _uIndexCount, _vScreenScissor).GetSafe();	
+		zEngineRef<zcGfx::Command> rCommand			= zcGfx::CommandDraw_HAL::Create(rRenderpass, rMeshStrip, _uIndexFirst, _uIndexCount, _vScreenScissor).GetSafe();	
 		_rContext->AddCommand(rCommand.Get());
 	}
 }
@@ -71,7 +71,7 @@ void zCommand::ClearColor(const zContext& _rContext, const zenRes::zGfxTarget2D&
 	zenAssert(rRenderpass.IsValid());
 	zenAssert(!_rRTColor->IsDepth());
 		
-	zEngineRef<zcGfx::Command> rCommand			= zcGfx::CommandClearColor::Create(rRenderpass, _rRTColor, _vRGBA, _ColorMask, _vOrigin, _vDim);
+	zEngineRef<zcGfx::Command> rCommand			= zcGfx::CommandClearColor_HAL::Create(rRenderpass, _rRTColor, _vRGBA, _ColorMask, _vOrigin, _vDim);
 	_rContext->AddCommand(rCommand);
 }
 
@@ -81,7 +81,7 @@ void zCommand::ClearDepthStencil(const zContext& _rContext, const zenRes::zGfxTa
 	zenAssert(rRenderpass.IsValid() && _rRTDepthStencil.IsValid());
 	zenAssert(_rRTDepthStencil->IsDepth());
 
-	zEngineRef<zcGfx::Command> rCommand			= zcGfx::CommandClearDepthStencil::Create(rRenderpass, _rRTDepthStencil, _bClearDepth, _fDepthValue, _bClearStencil, _uStencilValue).GetSafe();	
+	zEngineRef<zcGfx::Command> rCommand			= zcGfx::CommandClearDepthStencil_HAL::Create(rRenderpass, _rRTDepthStencil, _bClearDepth, _fDepthValue, _bClearStencil, _uStencilValue).GetSafe();	
 	_rContext->AddCommand(rCommand);
 }
 

@@ -5,6 +5,7 @@
 #include <wrl.h>
 #include "ZenExternal/DX12/d3dx12.h"
 
+
 template<class TResouce>
 using DirectXComRef = Microsoft::WRL::ComPtr<TResouce>;
 
@@ -52,4 +53,5 @@ zenInline void zSetGfxResourceName( const DirectXComRef<ID3D12Resource>& _rResou
 #endif
 }
 
-#include <ZenCore/Graphic/zcGfxRootSignature_DX12.h>
+#include <ZenCore/Graphic/DX12/zcGfxRootSignature_DX12.h>
+#include <ZenCore/Graphic/DX12/zcGfxPso_DX12.h>

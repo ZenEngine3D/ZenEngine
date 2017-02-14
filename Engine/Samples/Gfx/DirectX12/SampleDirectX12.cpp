@@ -126,22 +126,22 @@ bool SampleDirextX12Instance::Init()
 void SampleDirextX12Instance::UpdateBackbuffers()
 {
 	zenPerf::zScopedEventCpu EmitEvent("UpdateBackbuffers");
-	if( !mrRndPassFinal.IsValid() || mrMainWindowGfx.PerformResize() )
+	if( !mrBackbufferDepth.IsValid() || mrMainWindowGfx.PerformResize() )
 	{	
-		zVec2U16 vBackbufferDim = mrMainWindowGfx.GetBackbuffer().GetDim();
-		{	
-			zenRes::zGfxRenderPass::ConfigColorRT	FinalColorRTConfig;
-			zenRes::zGfxRenderPass::ConfigDepthRT	FinalDepthRTConfig;					
-			mrBackbufferDepth						= zenRes::zGfxTarget2D::Create(zenConst::keTexFormat_D32, vBackbufferDim ); 
-			FinalColorRTConfig.mrTargetSurface		= mrMainWindowGfx.GetBackbuffer();
-			FinalDepthRTConfig.mrTargetSurface		= mrBackbufferDepth;
-			FinalDepthRTConfig.mbDepthEnable		= true;
-			FinalDepthRTConfig.mbDepthWrite			= true;
-			FinalDepthRTConfig.meDepthTest			= zenRes::zGfxRenderPass::ConfigDepthRT::keCmpTest_Less;
-			mrRndPassFinal							= zenRes::zGfxRenderPass::Create("RenderBackbufferFinal", 2, FinalColorRTConfig, FinalDepthRTConfig, mrStateRaster);	
-			//zenMath::MatrixProjectionLH( matProjection, 60, float(vBackbufferDim.y)/float(vBackbufferDim.x), 0.01f, 100.f );
-		}
+		zVec2U16 vBackbufferDim		= mrMainWindowGfx.GetBackbuffer().GetDim();
+		mrBackbufferDepth			= zenRes::zGfxTarget2D::Create(zenConst::keTexFormat_D32, vBackbufferDim ); 
+		//zenMath::MatrixProjectionLH( matProjection, 60, float(vBackbufferDim.y)/float(vBackbufferDim.x), 0.01f, 100.f );
 	}
+	
+	// Recreates final RenderPass each frame, since backbuffer Target2d gets pingpong-ed
+	zenRes::zGfxRenderPass::ConfigColorRT	FinalColorRTConfig;
+	zenRes::zGfxRenderPass::ConfigDepthRT	FinalDepthRTConfig;								
+	FinalColorRTConfig.mrTargetSurface		= mrMainWindowGfx.GetBackbuffer();
+	FinalDepthRTConfig.mrTargetSurface		= mrBackbufferDepth;
+	FinalDepthRTConfig.mbDepthEnable		= true;
+	FinalDepthRTConfig.mbDepthWrite			= true;
+	FinalDepthRTConfig.meDepthTest			= zenRes::zGfxRenderPass::ConfigDepthRT::keCmpTest_Less;
+	mrRndPassFinal							= zenRes::zGfxRenderPass::Create("RenderBackbufferFinal", 0, FinalColorRTConfig, FinalDepthRTConfig, mrStateRaster);
 }
 
 void SampleDirextX12Instance::Destroy()

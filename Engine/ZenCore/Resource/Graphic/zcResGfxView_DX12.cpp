@@ -6,29 +6,22 @@ namespace zcRes
 		
 bool GfxView_DX12::Initialize()
 {
-#if !ZEN_RENDERER_DX12
-	zenAssert(maRTColorConfig.Count() < D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT);
-
+	zenAssert(maRTColorConfig.Count() < D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT);	
+	/*
 	GfxTarget2DRef rRTDepthSurface		= mRTDepthConfig.mrTargetSurface;
-	mpDepthView							= rRTDepthSurface.IsValid() ? rRTDepthSurface.HAL()->mpTargetDepthView : nullptr;
-	muColorCount						= 0;
-	zenMem::Zero(mpColorViews, sizeof(mpColorViews));
+	//! @todo 1 support null view
+//	mDepthView							= rRTDepthSurface.IsValid() ? rRTDepthSurface.HAL()->mTargetDepthView : nullptr;
+	mDepthView							= rRTDepthSurface.HAL()->mTargetDepthView.GetCpuHandle();
+	muColorCount						= 0;	
 	for(zUInt idx(0), count(maRTColorConfig.Count()); idx<count; ++idx)
 	{
-		zcRes::GfxTarget2DRef rRTColorSurface  = maRTColorConfig[idx].mrTargetSurface;
-		if( rRTColorSurface.HAL()->mpTargetColorView )
-			mpColorViews[muColorCount++] = rRTColorSurface.HAL()->mpTargetColorView;
+		const GfxTarget2D_HAL* const pTarget	= maRTColorConfig[idx].mrTargetSurface.HAL();
+		//mColorViews[idx]						= pTarget->mTargetColorView.IsValid() ? pTarget->mTargetColorView.GetCpuHandle() : nullptr;
+		maColorViews[idx]						= pTarget->mTargetColorView.GetCpuHandle();
+		muColorCount							+= pTarget->mTargetColorView.IsValid();
 	}
-
-	//! @todo Support min/max depth rendering
-	zenMem::Zero(&mViewport, sizeof(mViewport));		
-	mViewport.Width		= (FLOAT)mvDim.x;
-	mViewport.Height	= (FLOAT)mvDim.y;	
-	mViewport.TopLeftX	= (FLOAT)mvOrigin.x;
-	mViewport.TopLeftY	= (FLOAT)mvOrigin.y;
-	mViewport.MinDepth	= 0.0f;
-	mViewport.MaxDepth	= 1.0f; 
-#endif
+	*/
+	mViewport							= CD3DX12_VIEWPORT(mvOrigin.x, mvOrigin.y, mvDim.x, mvDim.y);
 	return true;
 }
 

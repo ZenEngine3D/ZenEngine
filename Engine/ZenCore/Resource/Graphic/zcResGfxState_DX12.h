@@ -1,6 +1,5 @@
 #pragma once
-#ifndef __zCore_Res_Gfx_State_DX12_h__
-#define __zCore_Res_Gfx_State_DX12_h__
+
 //SF DX12
 
 namespace zcRes
@@ -18,12 +17,8 @@ namespace zcRes
 	class GfxStateBlend_DX12 : public zcExp::ExportGfxStateBlendDX12
 	{
 	zenClassDeclare(GfxStateBlend_DX12, zcExp::ExportGfxStateBlendDX12)
-	public:
-		virtual													~GfxStateBlend_DX12();												
-		bool													Initialize();
-		ID3D11BlendState*										mpBlendState		= nullptr;
-		UINT													muSampleMask		= 0;
-		float													mafBlendFactor[4]	= {0,0,0,0}; 
+	public:		
+		zenInline bool											Initialize(){return true;}
 		typedef zcExp::ExporterGfxStateBlendDX12_DX12			RuntimeExporter;
 	};	
 	
@@ -31,10 +26,8 @@ namespace zcRes
 	{
 	zenClassDeclare(GfxStateDepthStencil_DX12, zcExp::ExportGfxStateDepthStencilDX12)
 	public:
-		virtual													~GfxStateDepthStencil_DX12();												
-		bool													Initialize();
-		ID3D11DepthStencilState*								mpDepthStencilState	= nullptr;
-		UINT													muStencilValue		= 0x80;
+		zenInline bool											Initialize(){return true;}
+		UINT													muStencilValue		= 0x80;	//! @todo 3 Support stencil on all platforms
 		typedef zcExp::ExporterGfxStateDepthStencilDX12_DX12	RuntimeExporter;
 	};
 	
@@ -42,13 +35,8 @@ namespace zcRes
 	{
 	zenClassDeclare(GfxStateRaster_DX12, zcExp::ExportGfxStateRasterDX12)
 	public:
-		virtual													~GfxStateRaster_DX12();												
-		bool													Initialize();
-		ID3D11RasterizerState*									mpRasterizerState	= nullptr;	
-		//bool													mbScreenScissorOn	= false;	//! @todo clean : remove this once proxy is collapsed with owner
+		zenInline bool											Initialize(){return true;}
 		typedef zcExp::ExporterGfxStateRasterDX12_DX12			RuntimeExporter;
 	};
 
 }
-
-#endif

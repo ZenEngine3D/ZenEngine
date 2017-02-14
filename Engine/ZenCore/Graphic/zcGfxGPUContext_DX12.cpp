@@ -12,6 +12,8 @@ void GPUContext_DX12::Reset(const DirectXComRef<ID3D12Device>& _rDevice, const D
 	mrDevice		= _rDevice;
 	mrCommandList	= _rCommandList;
 	mRootSignature	= RootSignature();
+	mrPSO			= nullptr;
+	mePrimitive		= D3D_PRIMITIVE_TOPOLOGY_UNDEFINED;
 
 #if !ZEN_RENDERER_DX12
 	zenMem::Zero(mahShaderInputStamp);	
@@ -37,7 +39,7 @@ void GPUContext_DX12::Reset(const DirectXComRef<ID3D12Device>& _rDevice, const D
 //==================================================================================================
 //! @details Compare current bound samplers with wanted one and update their binding if different
 //==================================================================================================
-void GPUContext_DX12::UpdateShaderState_Samplers( const zcGfx::CommandDraw& _Drawcall, eShaderStage _eShaderStage )
+void GPUContext_DX12::UpdateShaderState_Samplers( const zcGfx::CommandDraw_HAL& _Drawcall, eShaderStage _eShaderStage )
 {	
 #if !ZEN_RENDERER_DX12
 	ID3D11SamplerState*	aResourceView[zcExp::kuDX11_SamplerPerStageMax];
@@ -75,7 +77,7 @@ void GPUContext_DX12::UpdateShaderState_Samplers( const zcGfx::CommandDraw& _Dra
 //==================================================================================================
 //! @details Compare current bound Constant Buffers with wanted one and update their binding if different
 //==================================================================================================
-void GPUContext_DX12::UpdateShaderState_ConstantBuffers( const zcGfx::CommandDraw& _Drawcall, eShaderStage _eShaderStage )
+void GPUContext_DX12::UpdateShaderState_ConstantBuffers( const zcGfx::CommandDraw_HAL& _Drawcall, eShaderStage _eShaderStage )
 {	
 #if !ZEN_RENDERER_DX12
 	ID3D11Buffer* aResourceView[zcExp::kuDX11_CBufferPerStageMax];
@@ -117,7 +119,7 @@ void GPUContext_DX12::UpdateShaderState_ConstantBuffers( const zcGfx::CommandDra
 //==================================================================================================
 //! @details Compare current bound textures with wanted one and update their binding if different
 //==================================================================================================
-void GPUContext_DX12::UpdateShaderState_Textures( zU16& Out_ChangedFirst, zU16& Out_ChangedLast, const zcGfx::CommandDraw& _Drawcall, eShaderStage _eShaderStage)
+void GPUContext_DX12::UpdateShaderState_Textures( zU16& Out_ChangedFirst, zU16& Out_ChangedLast, const zcGfx::CommandDraw_HAL& _Drawcall, eShaderStage _eShaderStage)
 {	
 #if !ZEN_RENDERER_DX12
 	const eShaderResource kShaderRes							= keShaderRes_Texture;
@@ -146,7 +148,7 @@ void GPUContext_DX12::UpdateShaderState_Textures( zU16& Out_ChangedFirst, zU16& 
 //==================================================================================================
 //! @details Compare current bound textures with wanted one and update their binding if different
 //==================================================================================================
-void GPUContext_DX12::UpdateShaderState_StructBuffers( zU16& Out_ChangedFirst, zU16& Out_ChangedLast, const zcGfx::CommandDraw& _Drawcall, eShaderStage _eShaderStage)
+void GPUContext_DX12::UpdateShaderState_StructBuffers( zU16& Out_ChangedFirst, zU16& Out_ChangedLast, const zcGfx::CommandDraw_HAL& _Drawcall, eShaderStage _eShaderStage)
 {	
 #if !ZEN_RENDERER_DX12
 	const eShaderResource kShaderRes							= keShaderRes_Buffer;
@@ -176,64 +178,103 @@ void GPUContext_DX12::UpdateShaderState_StructBuffers( zU16& Out_ChangedFirst, z
 //==================================================================================================
 //! @details 
 //==================================================================================================
-void GPUContext_DX12::UpdateStateRenderpass(const zcGfx::CommandDraw& _Drawcall)
+void GPUContext_DX12::UpdateStateRenderpass(const zcGfx::CommandDraw_HAL& _Drawcall)
 {	
-	//SF @todo 0 support this
-	if( mRootSignature != zcMgr::GfxRender.mRootSignatureDefault )
-	{
-		mRootSignature = zcMgr::GfxRender.mRootSignatureDefault;
-		mrCommandList->SetGraphicsRootSignature( mRootSignature.Get() );
-	}
-	mrCommandList->SetPipelineState( zcMgr::GfxRender.mTmpPipelineState.Get() ); //! @todo 0 support this
-
-#if !ZEN_RENDERER_DX12
 	if( mrRenderpass != _Drawcall.mrRenderPass )
-	{			
+	{
 		mrRenderpass		= _Drawcall.mrRenderPass;
-		auto rRenderpassHAL	= mrRenderpass.HAL();
-		if( mrStateRaster != rRenderpassHAL->mrStateRaster )
-		{			
-			mrStateRaster		= rRenderpassHAL->mrStateRaster;
-			mbScreenScissorOn	= mrStateRaster.HAL()->mRasterizerDesc.ScissorEnable == TRUE;
-			mpDeviceContext->RSSetState( mrStateRaster.HAL()->mpRasterizerState);
-		}
-		if( mrStateBlend != rRenderpassHAL->mrStateBlend )
-		{			
-			mrStateBlend		= rRenderpassHAL->mrStateBlend;
-			mpDeviceContext->OMSetBlendState( mrStateBlend.HAL()->mpBlendState, mrStateBlend.HAL()->mafBlendFactor, mrStateBlend.HAL()->muSampleMask );
-		}
-		if( mrStateDepthStencil != rRenderpassHAL->mrStateDepthStencil )
-		{				
-			mrStateDepthStencil	= rRenderpassHAL->mrStateDepthStencil;
-			mpDeviceContext->OMSetDepthStencilState( mrStateDepthStencil.HAL()->mpDepthStencilState, mrStateDepthStencil.HAL()->muStencilValue );
-		}
+		auto rRenderpassHAL	= _Drawcall.mrRenderPass.HAL();
+		
 		if( mrStateView != mrRenderpass.HAL()->mrStateView )
-		{
-			const zcRes::GfxViewRef& rNewView		= mrRenderpass->mrStateView;
-			const zcRes::GfxViewRef& rPreviousView	= mrStateView;
-			UINT maxCount							= zenMath::Max( rNewView.HAL()->muColorCount, rPreviousView.IsValid() ? rPreviousView.HAL()->muColorCount : 0);
-			mrStateView								= rNewView;
+		{	
+			mrStateView								= mrRenderpass.HAL()->mrStateView;
+			const zcRes::GfxView_HAL* const ViewHAL	= mrStateView.HAL();
 			
-			zcMgr::GfxRender.UnbindTextures();
-			mpDeviceContext->OMSetRenderTargets(maxCount, rNewView.HAL()->mpColorViews, rNewView.HAL()->mpDepthView );
-			mpDeviceContext->RSSetViewports( 1, &rNewView.HAL()->mViewport );
-		}
+			//! @todo 0 supports descriptor heap properly						
+			zUInt						uTargetCount(ViewHAL->maRTColorConfig.Count());
+			D3D12_CPU_DESCRIPTOR_HANDLE aCpuHandles[D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT];			
+			for(zUInt idxTarget(0); idxTarget<uTargetCount; ++idxTarget )
+			{
+				zcRes::GfxTarget2DRef rTarget	= ViewHAL->maRTColorConfig[idxTarget].mrTargetSurface;
+				if( rTarget.IsValid() )
+					aCpuHandles[idxTarget]		= rTarget.HAL()->mTargetColorView.GetCpuHandle();
+			}
+
+			D3D12_CPU_DESCRIPTOR_HANDLE* pDepthHandle(nullptr);
+			D3D12_CPU_DESCRIPTOR_HANDLE DepthHandle;
+			zcRes::GfxTarget2DRef rDepthTarget	= ViewHAL->mRTDepthConfig.mrTargetSurface;
+			if( rDepthTarget.IsValid() )
+			{
+				pDepthHandle	= &DepthHandle;
+				DepthHandle		= rDepthTarget.HAL()->mTargetDepthView.GetCpuHandle();
+				mrCommandList->OMSetStencilRef( mrRenderpass.HAL()->mrStateDepthStencil.HAL()->muStencilValue );
+			}
+			
+			mrCommandList->OMSetRenderTargets((UINT)uTargetCount, aCpuHandles, false, pDepthHandle);			
+			mrCommandList->RSSetViewports(1, &ViewHAL->mViewport);
+		}		
 	}
-#endif
 }
 
 //==================================================================================================
 //! @details Check all GPU states, and update the one that differ from current Drawcall
 //==================================================================================================
-void GPUContext_DX12::UpdateState(const CommandDraw& _Drawcall)
+void GPUContext_DX12::UpdateState(const CommandDraw_HAL& _Drawcall)
 {
-	const zcRes::GfxMeshStripRef&		rMeshStrip	= _Drawcall.mrMeshStrip;
-	const zcRes::GfxIndexRef&			rIndex		= rMeshStrip.HAL()->mrIndexBuffer;
-	const zcRes::GfxShaderBindingRef&	rShaderBind	= rMeshStrip.HAL()->mrShaderBinding;			
-	const zcRes::GfxViewRef&			rView		= mrStateView;
+	const zcRes::GfxMeshStripRef& rMeshStrip		= _Drawcall.mrMeshStrip;
+	const zcRes::GfxIndexRef& rIndex				= rMeshStrip.HAL()->mrIndexBuffer;
+	const zcRes::GfxShaderBindingRef& rShaderBind	= rMeshStrip.HAL()->mrShaderBinding;			
+	const zcRes::GfxViewRef& rView					= mrStateView;
 	
+	//SF @todo 0 support this
+	//----------------------------------------------------------------------------------------------
+	// Root Signature
+	//----------------------------------------------------------------------------------------------
+	if( mRootSignature != zcMgr::GfxRender.mRootSignatureDefault )
+	{
+		mRootSignature = zcMgr::GfxRender.mRootSignatureDefault;
+		mrPSO			= nullptr;
+		mrCommandList->SetGraphicsRootSignature( mRootSignature.Get() );
+	}
+
+	//----------------------------------------------------------------------------------------------
+	// Pipeline State Object
+	//----------------------------------------------------------------------------------------------
+	if( mrPSO != _Drawcall.mrPSO )
+	{
+		mrPSO = _Drawcall.mrPSO;
+		mrCommandList->SetPipelineState( mrPSO->GetPSO() );		
+	}
+
+	//----------------------------------------------------------------------------------------------
+	// ...
+	//----------------------------------------------------------------------------------------------
 	UpdateStateRenderpass(_Drawcall);
+
+	//----------------------------------------------------------------------------------------------
+	// Primitive Topology (point, triangle strip, line list, ...)
+	//----------------------------------------------------------------------------------------------
+	if( mePrimitive != rIndex.HAL()->mePrimitive )
+	{
+		mePrimitive = rIndex.HAL()->mePrimitive;
+		mrCommandList->IASetPrimitiveTopology( mePrimitive );
+	}
 	
+	mrCommandList->IASetVertexBuffers(0, 1, &zcMgr::GfxRender.mTmpVertexBufferView); //! @todo 0 
+
+	//----------------------------------------------------------------------------------------------
+	// Per drawcall scissor setting
+	//----------------------------------------------------------------------------------------------
+	zVec4U16 vScreenScissor = _Drawcall.mvScreenScissor;
+	vScreenScissor.z		= zenMath::Min<zU16>(vScreenScissor.z, (zU16)rView.HAL()->mViewport.Width + vScreenScissor.x);
+	vScreenScissor.w		= zenMath::Min<zU16>(vScreenScissor.w, (zU16)rView.HAL()->mViewport.Height + vScreenScissor.y);
+	if( mvScreenScissor != vScreenScissor )
+	{
+		D3D12_RECT ScissorRect	= {vScreenScissor.x, vScreenScissor.y, vScreenScissor.z, vScreenScissor.w};
+		mrCommandList->RSSetScissorRects(1, &ScissorRect);
+	}
+
+
 #if !ZEN_RENDERER_DX12
 	UINT UnusedOffset = 0;
 	const zcRes::GfxMeshStripRef&		rMeshStrip	= _Drawcall.mrMeshStrip;

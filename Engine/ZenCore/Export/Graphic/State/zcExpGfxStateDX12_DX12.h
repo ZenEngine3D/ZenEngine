@@ -10,7 +10,7 @@ namespace zcExp
 	{
 	zenClassDeclare(ExporterGfxStateSamplerDX12_DX12, ExporterBase)
 	public:				
-	typedef zEngineRef<ExportGfxStateSamplerDX12>			ExportResultRef; //todo use proper ref class
+	typedef zEngineRef<ExportGfxStateSamplerDX12>		ExportResultRef; //todo use proper ref class
 														ExporterGfxStateSamplerDX12_DX12(const ExportResultRef& _rExportOut);
 		static zResID									CallbackGetItemID(ePlatform _ePlatform, zenConst::eResType _eType, zenConst::eResSource _eSource, const ExportInfoBase* _pExportInfo, bool& _bExistOut);
 	protected:	

@@ -139,7 +139,7 @@ namespace zen { namespace zenType
 		TKey					GetFirstUnusedKey()const;													//!< @brief Find the first available key in the hashmap
 		void					DebugPrint(const TKey _First, TKey _Last) const;							//!< @brief Print structure of the tree
 		size_t					GetMemoryFootprint();														//!< @brief Return the amount of memory used by this structure		
-		void					SetDeleteItemCB(DeleteItemCB _pCallback){mpDeleteItemCB = _pCallback;}		//!< @todo clean Call constructor/destructor by default instead of relying callback, too unreliable/forgetfull
+		void					SetDeleteItemCB(DeleteItemCB _pCallback){mpDeleteItemCB = _pCallback;}		//!< @todo 2 clean Call constructor/destructor by default instead of relying callback, too unreliable/forgetfull
 	protected:
 		
 		Node*					CreateNodeCopy( const Node* _pNodeCopy );									//!< @brief	Create a copy of a node

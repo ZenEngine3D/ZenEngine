@@ -256,6 +256,8 @@ bool ManagerRender_DX12::Load()
 	// Pending Format to add: DXGI_FORMAT_X32_TYPELESS_G8X24_UINT
 	meFormatConvStencilSRV[zenConst::keTexFormat_D24S8]	= DXGI_FORMAT_X24_TYPELESS_G8_UINT;
 
+	PSO_DX12::StaticInitialize();
+
 	//----------------------------------------------------------------------------------------------
 	// Create DirectX Device
 	//----------------------------------------------------------------------------------------------
@@ -364,10 +366,8 @@ bool ManagerRender_DX12::Load()
 	// list, that command list can then be reset at any time and must be before re-recording.
 	marCommandList[0][0]->Reset(mrCommandAllocator.Get(), nullptr);
 
-	static zenRes::zGfxShaderVertex	srShaderVS;	
-	static zenRes::zGfxShaderPixel	srShaderPS;	
-	srShaderVS	= zenRes::zGfxShaderVertex::Create( "Shader/DX12Sample.sl", "VSMain");
-	srShaderPS	= zenRes::zGfxShaderPixel::Create( "Shader/DX12Sample.sl", "PSMain" );
+	mrTmpShaderVS	= zenRes::zGfxShaderVertex::Create( "Shader/DX12Sample.sl", "VSMain");
+	mrTmpShaderPS	= zenRes::zGfxShaderPixel::Create( "Shader/DX12Sample.sl", "PSMain" );
 
 	// Define the vertex input layout.
 	D3D12_INPUT_ELEMENT_DESC inputElementDescs[] =
@@ -380,8 +380,8 @@ bool ManagerRender_DX12::Load()
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC psoDesc = {};
 	psoDesc.InputLayout = { inputElementDescs, _countof(inputElementDescs) };
 	psoDesc.pRootSignature = mRootSignatureDefault.Get();
-	psoDesc.VS = srShaderVS.HAL()->mDXShaderCode;
-	psoDesc.PS = srShaderPS.HAL()->mDXShaderCode;//CD3DX12_SHADER_BYTECODE(pixelShader.Get());
+	psoDesc.VS = mrTmpShaderVS.HAL()->mDXShaderCode;
+	psoDesc.PS = mrTmpShaderPS.HAL()->mDXShaderCode;
 	psoDesc.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
 	psoDesc.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
 	psoDesc.DepthStencilState.DepthEnable = FALSE;

@@ -244,7 +244,6 @@ namespace zcExp
 		mrExport->mRasterizerDesc.FillMode				= Config.mbWireFrame ? D3D12_FILL_MODE_WIREFRAME : D3D12_FILL_MODE_SOLID;
 		mrExport->mRasterizerDesc.FrontCounterClockwise	= !Config.mbFrontClockwise;
 		mrExport->mRasterizerDesc.MultisampleEnable		= Config.mbMultisampleEnable;
-//		mrExport->mRasterizerDesc.ScissorEnable			= Config.mbScissorEnable; // @todo 1 figure out where scissor enable went
 		mrExport->mRasterizerDesc.SlopeScaledDepthBias	= Config.mfSlopeScaledDepthBias;
 		return TRUE;
 	}

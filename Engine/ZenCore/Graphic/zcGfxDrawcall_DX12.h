@@ -10,21 +10,23 @@ class CommandDraw_DX12 : public CommandDraw
 { 
 zenClassDeclare(CommandDraw_DX12, CommandDraw)
 public: 
-	virtual void Invoke(GPUContext& _Context); 
+	static zEngineRef<Command>		Create(	const zcRes::GfxRenderPassRef& _rRenderPass, const zcRes::GfxMeshStripRef& _rMeshStrip, zU32 _uIndexFirst=0, zU32 _uIndexCount=0xFFFFFFFF, const zVec4U16& _vScreenScissor = zVec4U16(0,0,0xFFFF,0xFFFF));
+	virtual void					Invoke(GPUContext& _Context);
+	zEngineRef<PSO_DX12>			mrPSO;
 };
 
 class CommandClearColor_DX12 : public CommandClearColor
 { 
 zenClassDeclare(CommandClearColor_DX12, CommandClearColor)
 public: 
-	virtual void Invoke(GPUContext& _Context); 
+	virtual void					Invoke(GPUContext& _Context); 
 };
 
 class CommandClearDepthStencil_DX12 : public CommandClearDepthStencil
 { 
 zenClassDeclare(CommandClearDepthStencil_DX12, CommandClearDepthStencil)
 public: 
-	virtual void Invoke(GPUContext& _Context); 
+	virtual void					Invoke(GPUContext& _Context); 
 };
 
 //==================================================================================================

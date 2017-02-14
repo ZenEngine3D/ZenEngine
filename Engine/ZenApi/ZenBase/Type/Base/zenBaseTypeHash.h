@@ -130,7 +130,6 @@ namespace zen { namespace zenType
 		zenInlineForce				zHash64(const zHash64& _hCopy);
 		zenInlineForce				zHash64(const zU64& _uCopy);
 		zenInlineForce				zHash64(const zI64& _iCopy);
-		
 
 	protected:
 		zU64 muHash;

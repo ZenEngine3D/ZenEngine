@@ -6,53 +6,30 @@ namespace zcGfx
 //=================================================================================================
 // DRAW COMMAND 
 //=================================================================================================
+zEngineRef<Command> CommandDraw_DX12::Create(const zcRes::GfxRenderPassRef& _rRenderPass, const zcRes::GfxMeshStripRef& _rMeshStrip, zU32 _uIndexFirst, zU32 _uIndexCount, const zVec4U16& _vScreenScissor)
+{
+	zEngineRef<Command> rCommand	= CommandDraw::Create( _rRenderPass, _rMeshStrip, _uIndexFirst, _uIndexCount, _vScreenScissor );
+	CommandDraw_DX12* pCommandDraw	= reinterpret_cast<CommandDraw_DX12*>( rCommand.GetSafe() );
+	pCommandDraw->mrPSO				= PSO_DX12::GetAdd( _rRenderPass, _rMeshStrip );
+	return rCommand;
+}
+
 void CommandDraw_DX12::Invoke(GPUContext& _Context)
 {
-	if( mrMeshStrip.IsValid() )
+	if( mrMeshStrip.IsValid() && mrPSO->IsCompiled() )
 	{
-		//==============================================================================================
+		zcPerf::EventGPUCounter::Create(zcPerf::EventGPUCounter::keType_DrawIndexed);		//! @todo 1 optim find cheaper method to count # drawcall, large memory/time overhead with large drawcount		
+		_Context.UpdateState( *this );
+
 		//! @todo 0 remove all of this hacked code
-		//==============================================================================================
-		static zUInt sLastFrameCount = 0xFFFF;
-		if( sLastFrameCount != zcMgr::GfxRender.muFrameRendered )
-		{
-			const zcRes::GfxTarget2DRef& rBackbuffer = zcGfx::grWindowRender->GetBackbuffer();
-		
-			// Set necessary state.
-			//m_commandList->SetGraphicsRootSignature(mRootSignature.Get());
-			//m_commandList->SetPipelineState( mTmpPipelineState.Get() );
-			zcMgr::GfxRender.mGpuContext[0].UpdateState( *this );
+		ID3D12DescriptorHeap* ppHeaps[] = { zcGfx::DescriptorSRV_UAV_CBV::GetDescHeap().Get() };
+		zcMgr::GfxRender.mGpuContext[0].GetCommandList()->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
+		zcMgr::GfxRender.mGpuContext[0].GetCommandList()->SetGraphicsRootDescriptorTable(0, zcMgr::GfxRender.mrTmpTexture.HAL()->mTextureView.GetGpuHandle());
+		// Record commands.
+// 		zcMgr::GfxRender.mGpuContext[0].GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+// 		zcMgr::GfxRender.mGpuContext[0].GetCommandList()->IASetVertexBuffers(0, 1, &zcMgr::GfxRender.mTmpVertexBufferView);
 
-			ID3D12DescriptorHeap* ppHeaps[] = { zcGfx::DescriptorSRV_UAV_CBV::GetDescHeap().Get() };
-			zcMgr::GfxRender.mGpuContext[0].GetCommandList()->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
-
-			UINT width(1280), height(800);
-			CD3DX12_VIEWPORT m_viewport(0.0f, 0.0f, static_cast<float>(width), static_cast<float>(height));
-			CD3DX12_RECT m_scissorRect(0, 0, static_cast<LONG>(width), static_cast<LONG>(height));
-	
-			zcMgr::GfxRender.mGpuContext[0].GetCommandList()->SetGraphicsRootDescriptorTable(0, zcMgr::GfxRender.mrTmpTexture.HAL()->mTextureView.GetGpuHandle());
-			zcMgr::GfxRender.mGpuContext[0].GetCommandList()->RSSetViewports(1, &m_viewport);
-			zcMgr::GfxRender.mGpuContext[0].GetCommandList()->RSSetScissorRects(1, &m_scissorRect);
-
-			//CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(m_rtvHeap->GetCPUDescriptorHandleForHeapStart(), m_frameIndex, m_rtvDescriptorSize);
-			//m_commandList->OMSetRenderTargets(1, &rtvHandle, FALSE, nullptr);
-			D3D12_CPU_DESCRIPTOR_HANDLE CpuHandle = rBackbuffer.HAL()->mTargetColorView.GetCpuHandle();
-			zcMgr::GfxRender.mGpuContext[0].GetCommandList()->OMSetRenderTargets(1, &CpuHandle, FALSE, nullptr);
-
-			// Record commands.
-			//const float clearColor[] = { 0.0f, 0.2f, 0.4f, 1.0f };
-			//m_commandList->ClearRenderTargetView(rtvHandle, clearColor, 0, nullptr);
-			zcMgr::GfxRender.mGpuContext[0].GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-			zcMgr::GfxRender.mGpuContext[0].GetCommandList()->IASetVertexBuffers(0, 1, &zcMgr::GfxRender.mTmpVertexBufferView);
-			zcMgr::GfxRender.mGpuContext[0].GetCommandList()->DrawInstanced(3, 1, 0, 0);
-
-			sLastFrameCount = zcMgr::GfxRender.muFrameRendered; // Here to render 1st triangle only
-		}
-		//==============================================================================================
-
-		//zcPerf::EventGPUCounter::Create(zcPerf::EventGPUCounter::keType_DrawIndexed);		//! @todo 1 optim find cheaper method to count # drawcall, large memory/time overhead with large drawcount
-		//_Context.UpdateState(*this);
-		//_Context.GetDeviceContext()->DrawIndexed(muIndexCount, muIndexFirst, mrMeshStrip.HAL()->muVertexFirst);
+		_Context.GetCommandList()->DrawInstanced(3, 1, 0, 0);
 	}
 }
 
@@ -62,7 +39,8 @@ void CommandDraw_DX12::Invoke(GPUContext& _Context)
 void CommandClearColor_DX12::Invoke(GPUContext& _Context)
 {	
 	zcPerf::EventGPUCounter::Create(zcPerf::EventGPUCounter::keType_ClearColor);
-	//_Context.GetDeviceContext()->ClearRenderTargetView( mrRTColor.HAL()->mpTargetColorView, mvColor.xyzw );	
+	if( mrRTColor.IsValid() && mrRTColor.HAL()->mTargetColorView.IsValid() )
+		_Context.GetCommandList()->ClearRenderTargetView(mrRTColor.HAL()->mTargetColorView.GetCpuHandle(), mvColor.xyzw, 0, nullptr);
 }
 
 //=================================================================================================
@@ -70,10 +48,11 @@ void CommandClearColor_DX12::Invoke(GPUContext& _Context)
 //=================================================================================================
 void CommandClearDepthStencil_DX12::Invoke(GPUContext& _Context)
 {
-	zcPerf::EventGPUCounter::Create(zcPerf::EventGPUCounter::keType_ClearDepth);	
-	//UINT ClearFlags  = mbClearDepth		? D3D11_CLEAR_DEPTH		: 0;
-	//ClearFlags		|= mbClearStencil	? D3D11_CLEAR_STENCIL	: 0; 
-	//_Context.GetDeviceContext()->ClearDepthStencilView( mrRTDepthStencil.HAL()->mpTargetDepthView, ClearFlags, mfDepthValue, muStencilValue );
+	zcPerf::EventGPUCounter::Create(zcPerf::EventGPUCounter::keType_ClearDepth);
+	UINT ClearFlags  = mbClearDepth		? D3D12_CLEAR_FLAG_DEPTH	: 0;
+	ClearFlags		|= mbClearStencil	? D3D12_CLEAR_FLAG_STENCIL	: 0; 
+	if( mrRTDepthStencil.IsValid() && mrRTDepthStencil.HAL()->mTargetDepthView.IsValid() )
+		_Context.GetCommandList()->ClearDepthStencilView( mrRTDepthStencil.HAL()->mTargetDepthView.GetCpuHandle(), (D3D12_CLEAR_FLAGS)ClearFlags, mfDepthValue, muStencilValue, 0, nullptr);
 }
 
 

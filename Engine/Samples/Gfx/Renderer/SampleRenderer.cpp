@@ -206,21 +206,24 @@ bool SampleRendererInstance::Init()
 
 void SampleRendererInstance::UpdateBackbuffers()
 {
-	if( !mrRndPassFinal.IsValid() || mrMainWindowGfx.PerformResize() )
+	zenPerf::zScopedEventCpu EmitEvent("UpdateBackbuffers");
+
+	if( !mrBackbufferDepth.IsValid() || mrMainWindowGfx.PerformResize() )
 	{	
-		zenRes::zGfxRenderPass::ConfigColorRT	FinalColorRTConfig;
-		zenRes::zGfxRenderPass::ConfigDepthRT	FinalDepthRTConfig;		
-		zVec2U16 vBackbufferDim					= mrMainWindowGfx.GetBackbuffer().GetDim();
-		mrBackbufferDepth						= zenRes::zGfxTarget2D::Create(zenConst::keTexFormat_D32, vBackbufferDim ); 
-		FinalColorRTConfig.mrTargetSurface		= mrMainWindowGfx.GetBackbuffer();
-		FinalDepthRTConfig.mrTargetSurface		= mrBackbufferDepth;
-		FinalDepthRTConfig.mbDepthEnable		= true;
-		FinalDepthRTConfig.mbDepthWrite			= true;
-		FinalDepthRTConfig.meDepthTest			= zenRes::zGfxRenderPass::ConfigDepthRT::keCmpTest_Less;
-		mrRndPassFinal							= zenRes::zGfxRenderPass::Create("RenderBackbufferFinal", 2, FinalColorRTConfig, FinalDepthRTConfig, mrStateRaster);	
+		zVec2U16 vBackbufferDim		= mrMainWindowGfx.GetBackbuffer().GetDim();
+		mrBackbufferDepth			= zenRes::zGfxTarget2D::Create(zenConst::keTexFormat_D32, vBackbufferDim ); 
 		zenMath::MatrixProjectionLH( matProjection, 60, float(vBackbufferDim.y)/float(vBackbufferDim.x), 0.01f, 100.f );
 	}
-
+	
+	// Recreates final RenderPass each frame, since backbuffer Target2d gets pingpong-ed
+	zenRes::zGfxRenderPass::ConfigColorRT	FinalColorRTConfig;
+	zenRes::zGfxRenderPass::ConfigDepthRT	FinalDepthRTConfig;								
+	FinalColorRTConfig.mrTargetSurface		= mrMainWindowGfx.GetBackbuffer();
+	FinalDepthRTConfig.mrTargetSurface		= mrBackbufferDepth;
+	FinalDepthRTConfig.mbDepthEnable		= true;
+	FinalDepthRTConfig.mbDepthWrite			= true;
+	FinalDepthRTConfig.meDepthTest			= zenRes::zGfxRenderPass::ConfigDepthRT::keCmpTest_Less;
+	mrRndPassFinal							= zenRes::zGfxRenderPass::Create("RenderBackbufferFinal", 0, FinalColorRTConfig, FinalDepthRTConfig, mrStateRaster);
 }
 
 void SampleRendererInstance::Destroy()
