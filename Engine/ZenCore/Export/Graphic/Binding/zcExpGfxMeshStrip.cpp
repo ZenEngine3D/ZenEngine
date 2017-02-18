@@ -52,7 +52,7 @@ namespace zcExp
 				if( ResID.IsValid() )
 				{
 					ExportGfxShaderBinding::ShaderBindInfoIndex resInfo;
-					const zHash32& zResName	= aResources[resIdx].mhResourceName;									
+					zHash32 zResName		= aResources[resIdx].mhResourceName;									
 					bool bValidAssignedRes	= rShaderBinding->mdResourceBind.Get(zResName, resInfo);
 				
 					// Special case for CBuffer, also need to assign ResID in another array and find it by parent CBufferDefinition 

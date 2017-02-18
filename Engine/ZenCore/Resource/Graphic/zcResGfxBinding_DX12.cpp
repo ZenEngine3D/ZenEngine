@@ -35,13 +35,13 @@ void GfxMesh_DX12::SetValue(const zenRes::zShaderParameter& _Value)
 		marGfxMeshStrip[stripIdx]->SetValue(_Value);
 }
 
-void GfxMesh_DX12::SetResource(const zHash32& _hResourceName, const GfxShaderResourceRef& _rResource, zU16 _uIndex)
+void GfxMesh_DX12::SetResource(zHash32 _hResourceName, const GfxShaderResourceRef& _rResource, zU16 _uIndex)
 {
 	for(zUInt stripIdx(0), stripCount(marGfxMeshStrip.Count()); stripIdx<stripCount; ++stripIdx)
 		marGfxMeshStrip[stripIdx]->SetResource(_hResourceName, _rResource, _uIndex);
 }
 
-void GfxMesh_DX12::SetResource(const zHash32& _hResourceName, const zArrayBase<GfxShaderResourceRef>& _arResources)
+void GfxMesh_DX12::SetResource(zHash32 _hResourceName, const zArrayBase<GfxShaderResourceRef>& _arResources)
 {
 	for(zUInt stripIdx(0), stripCount(marGfxMeshStrip.Count()); stripIdx<stripCount; ++stripIdx)
 		marGfxMeshStrip[stripIdx]->SetResource(_hResourceName, _arResources);
@@ -94,7 +94,7 @@ void GfxMeshStrip_DX12::SetValue(const zenRes::zShaderParameter& _Value)
 	}
 }
 
-void GfxMeshStrip_DX12::SetResource(const zHash32& _hResourceName, const GfxShaderResourceRef& _rResource, zU16 _uIndex )
+void GfxMeshStrip_DX12::SetResource(zHash32 _hResourceName, const GfxShaderResourceRef& _rResource, zU16 _uIndex )
 {
 	zcExp::ExportGfxShaderBinding::ShaderBindInfoIndex PerStageBindInfo;
 	if( mrShaderBinding.HAL()->mdResourceBind.Get(_hResourceName, PerStageBindInfo) )
@@ -116,7 +116,7 @@ void GfxMeshStrip_DX12::SetResource(const zHash32& _hResourceName, const GfxShad
  	}
 }
 
-void GfxMeshStrip_DX12::SetResource(const zHash32& _hResourceName, const zArrayBase<GfxShaderResourceRef>& _arResources )
+void GfxMeshStrip_DX12::SetResource(zHash32 _hResourceName, const zArrayBase<GfxShaderResourceRef>& _arResources )
 {
 	zcExp::ExportGfxShaderBinding::ShaderBindInfoIndex PerStageBindInfo;
 	if( mrShaderBinding.HAL()->mdResourceBind.Get(_hResourceName, PerStageBindInfo) )

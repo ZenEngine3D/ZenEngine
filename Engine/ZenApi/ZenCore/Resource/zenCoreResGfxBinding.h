@@ -79,14 +79,14 @@ namespace zen { namespace zenRes {
 
 		void							SetValue(const zShaderParameter& _Value);			
 		void							SetValue(const zArrayBase<const zShaderParameter*>& _aValues);	
-		void							SetValue(const zHash32& _hParamName, const float& _fValue);
-		void							SetValue(const zHash32& _hParamName, const zVec2F& _vValue);
-		void							SetValue(const zHash32& _hParamName, const zVec3F& _vValue);
-		void							SetValue(const zHash32& _hParamName, const zVec4F& _vValue);
-		void							SetValue(const zHash32& _hParamName, const zenMath::Matrix& _matValue);
-		void							SetResource(const zHash32& _hTextureName, const zGfxTexture2D& _rTexture, zU16 _uIndex=0 );
-		void							SetResource(const zHash32& _hSamplerName, const zGfxStateSampler& _rSampler, zU16 _uIndex=0 );
-		void							SetResource(const zHash32& _hBufferName, const zGfxBuffer& _rBuffer, zU16 _uIndex=0 );
+		void							SetValue(zHash32 _hParamName, const float& _fValue);
+		void							SetValue(zHash32 _hParamName, const zVec2F& _vValue);
+		void							SetValue(zHash32 _hParamName, const zVec3F& _vValue);
+		void							SetValue(zHash32 _hParamName, const zVec4F& _vValue);
+		void							SetValue(zHash32 _hParamName, const zenMath::Matrix& _matValue);
+		void							SetResource(zHash32 _hTextureName, const zGfxTexture2D& _rTexture, zU16 _uIndex=0 );
+		void							SetResource(zHash32 _hSamplerName, const zGfxStateSampler& _rSampler, zU16 _uIndex=0 );
+		void							SetResource(zHash32 _hBufferName, const zGfxBuffer& _rBuffer, zU16 _uIndex=0 );
 
 		static zGfxMeshStrip			Create(const zGfxIndex& _rIndexBuffer, const zGfxShaderBinding& _rShaderBinding, const zArrayBase<zShaderResource>& _aResources, zU32 _uIndexFirst=0, zU32 _uIndexCount=0xFFFFFFFF, zU32 _uVertexFirst=0);
 		static zGfxMeshStrip			Create(const zGfxIndex& _rIndexBuffer, const zGfxShaderBinding& _rShaderBinding, zU32 _uIndexFirst=0, zU32 _uIndexCount=0xFFFFFFFF, zU32 _uVertexFirst = 0);
@@ -101,14 +101,14 @@ namespace zen { namespace zenRes {
 
 		void							SetValue(const zShaderParameter& _Value);			
 		void							SetValue(const zArrayBase<const zShaderParameter*>& _aValues);	
-		void							SetValue(const zHash32& _hParamName, const float& _fValue);
-		void							SetValue(const zHash32& _hParamName, const zVec2F& _vValue);
-		void							SetValue(const zHash32& _hParamName, const zVec3F& _vValue);
-		void							SetValue(const zHash32& _hParamName, const zVec4F& _vValue);
-		void							SetValue(const zHash32& _hParamName, const zenMath::Matrix& _matValue);
-		void							SetResource(const zHash32& _hTextureName, const zGfxTexture2D& _rTexture, zU16 _uIndex=0 );
-		void							SetResource(const zHash32& _hSamplerName, const zGfxStateSampler& _rSampler, zU16 _uIndex=0 );
-		void							SetResource(const zHash32& _hBufferName, const zGfxBuffer& _rBuffer, zU16 _uIndex=0 );
+		void							SetValue(zHash32 _hParamName, const float& _fValue);
+		void							SetValue(zHash32 _hParamName, const zVec2F& _vValue);
+		void							SetValue(zHash32 _hParamName, const zVec3F& _vValue);
+		void							SetValue(zHash32 _hParamName, const zVec4F& _vValue);
+		void							SetValue(zHash32 _hParamName, const zenMath::Matrix& _matValue);
+		void							SetResource(zHash32 _hTextureName, const zGfxTexture2D& _rTexture, zU16 _uIndex=0 );
+		void							SetResource(zHash32 _hSamplerName, const zGfxStateSampler& _rSampler, zU16 _uIndex=0 );
+		void							SetResource(zHash32 _hBufferName, const zGfxBuffer& _rBuffer, zU16 _uIndex=0 );
 
 		static zGfxMesh					Create(const zArrayBase<zGfxMeshStrip>& _aMeshStrip);
 	};

@@ -12,11 +12,11 @@ namespace zcRes
 	zenClassDeclare(GfxMeshStrip_DX11, zcExp::ExportGfxMeshStrip)
 	public:
 		bool									Initialize();
-		void									SetResource(const zHash32& _hResourceName, const GfxShaderResourceRef& _rResource, zU16 _uIndex=0 );
-		void									SetResource(const zHash32& _hResourceName, const zArrayBase<GfxShaderResourceRef>& _arResources );
+		void									SetResource(zHash32 _hResourceName, const GfxShaderResourceRef& _rResource, zU16 _uIndex=0 );
+		void									SetResource(zHash32 _hResourceName, const zArrayBase<GfxShaderResourceRef>& _arResources );
 		void									SetValue(const zArrayBase<const zenRes::zShaderParameter*>& _aValues);
 		void									SetValue(const zenRes::zShaderParameter& _Value);		
-		template<class TParamType> void			SetValue(const zHash32& _hParamName, const TParamType& _Value, zU16 _uIndex=0);
+		template<class TParamType> void			SetValue(zHash32 _hParamName, const TParamType& _Value, zU16 _uIndex=0);
 
 		GfxIndexRef								mrIndexBuffer;
 		GfxShaderBindingRef						mrShaderBinding;													//!< Information on resources used between all shader stages
@@ -28,7 +28,7 @@ namespace zcRes
 	};
 	
 	template<class TParamType> 
-	void GfxMeshStrip_DX11::SetValue(const zHash32& _hParamName, const TParamType& _Value, zU16 _uIndex)
+	void GfxMeshStrip_DX11::SetValue(zHash32 _hParamName, const TParamType& _Value, zU16 _uIndex)
 	{
 		auto paramMask= mrShaderBinding.HAL()->mdCBufferParamMask[_hParamName];
 		while( paramMask != 0 )
@@ -47,18 +47,18 @@ namespace zcRes
 	zenClassDeclare(GfxMesh_DX11, zcExp::ExportGfxMesh)
 	public:
 		bool									Initialize();
-		void									SetResource(const zHash32& _hResourceName, const GfxShaderResourceRef& _rResource, zU16 _uIndex=0);
-		void									SetResource(const zHash32& _hResourceName, const zArrayBase<GfxShaderResourceRef>& _arResources );
+		void									SetResource(zHash32 _hResourceName, const GfxShaderResourceRef& _rResource, zU16 _uIndex=0);
+		void									SetResource(zHash32 _hResourceName, const zArrayBase<GfxShaderResourceRef>& _arResources );
 		void									SetValue(const zArrayBase<const zenRes::zShaderParameter*>& _aValues);
 		void									SetValue(const zenRes::zShaderParameter& _Value);
-		template<class TParamType> void			SetValue(const zHash32& _hParamName, const TParamType& _Value, zU16 _uIndex=0);
+		template<class TParamType> void			SetValue(zHash32 _hParamName, const TParamType& _Value, zU16 _uIndex=0);
 
 		zArrayStatic<GfxMeshStripRef>			marGfxMeshStrip;		
 		typedef zcExp::ExporterGfxMesh			RuntimeExporter;
 	};
 	
 	template<class TParamType> void			
-	GfxMesh_DX11::SetValue(const zHash32& _hParamName, const TParamType& _Value, zU16 _uIndex)
+	GfxMesh_DX11::SetValue(zHash32 _hParamName, const TParamType& _Value, zU16 _uIndex)
 	{
 		for(zUInt stripIdx(0), stripCount(marGfxMeshStrip.Count()); stripIdx<stripCount; ++stripIdx)
 			marGfxMeshStrip[stripIdx]->SetValue(_hParamName, _Value, _uIndex);

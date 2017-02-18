@@ -41,22 +41,22 @@ zHash32& zHash32::Append(const void* _pData, zUInt _uSize)
 	return *this;
 }
 
-bool zHash32::operator==(const zHash32& _hCmpr)	
+bool zHash32::operator==(zHash32 _hCmpr)	
 { 
 	return muHash == _hCmpr.muHash; 
 }
 
-bool zHash32::operator!=(const zHash32& _hCmpr)	
+bool zHash32::operator!=(zHash32 _hCmpr)	
 { 
 	return muHash != _hCmpr.muHash; 
 }
 
-zHash32& zHash32::operator=(const zHash32& _hCopy)	
+zHash32& zHash32::operator=(zHash32 _hCopy)	
 { 
 	muHash = _hCopy.muHash; return *this; 
 }
 
-zHash32& zHash32::operator=(const zU32& _uCopy)		
+zHash32& zHash32::operator=(zU32 _uCopy)		
 { 
 	muHash = _uCopy; return *this; 
 }
@@ -67,13 +67,19 @@ zHash32::operator const zU32&()const
 }
 
 zHash32::zHash32()						
-: muHash(keFNV32_Seed){}
+: muHash(keFNV32_Seed)
+{
+}
 
-zHash32::zHash32(const zU32& _uCopy)				
-: muHash(_uCopy){}
+zHash32::zHash32(zU32 _uCopy)				
+: muHash(_uCopy)
+{
+}
 
-zHash32::zHash32(const zI32& _iCopy)				
-: muHash(_iCopy){}
+zHash32::zHash32(zI32 _iCopy)				
+: muHash(_iCopy)
+{
+}
 
 template<std::size_t TLen>
 zHash32::zHash32(const char(&_zString)[TLen])
@@ -144,24 +150,26 @@ zHash64& zHash64::Append(const void* _pData, zUInt _uSize )
 	return *this;
 }
 
-bool zHash64::operator==(const zHash64& _hCmpr)	
+bool zHash64::operator==(zHash64 _hCmpr)	
 { 
 	return muHash == _hCmpr.muHash; 
 }
 
-bool zHash64::operator!=(const zHash64& _hCmpr)	
+bool zHash64::operator!=(zHash64 _hCmpr)	
 { 
 	return muHash != _hCmpr.muHash; 
 }
 
 zHash64& zHash64::operator=(const zHash64& _hCopy)	
 { 
-	muHash = _hCopy.muHash; return *this; 
+	muHash = _hCopy.muHash; 
+	return *this; 
 }
 
-zHash64& zHash64::operator=(const zU64& _uCopy)		
+zHash64& zHash64::operator=(zU64 _uCopy)		
 { 
-	muHash = _uCopy; return *this; 
+	muHash = _uCopy; 
+	return *this; 
 }
 
 zHash64::operator const zU64&()const				
@@ -173,15 +181,11 @@ zHash64::zHash64()
 : muHash(keFNV64_Seed)
 {}
 
-zHash64::zHash64(const zHash64& _hCopy)			
-: muHash(_hCopy.muHash)
-{}
-
-zHash64::zHash64(const zU64& _uCopy)				
+zHash64::zHash64(zU64 _uCopy)				
 : muHash(_uCopy)
 {}
 
-zHash64::zHash64(const zI64& _iCopy)				
+zHash64::zHash64(zI64 _iCopy)				
 : muHash(_iCopy)
 {}
 

@@ -1,6 +1,5 @@
 #pragma once
-#ifndef __zCore_Res_Gfx_GfxIndex_DX12_h__
-#define __zCore_Res_Gfx_GfxIndex_DX12_h__
+
 //SF DX12
 namespace zcRes
 {
@@ -21,4 +20,3 @@ public:
 
 }
 
-#endif

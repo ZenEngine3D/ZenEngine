@@ -58,23 +58,23 @@ namespace zen { namespace zenType
 		//=================================================================================================	
 		// Comparators and assignation
 		//=================================================================================================	
-		zenInline bool				operator==(const zHash32& _hCmpr);
-		zenInline bool				operator!=(const zHash32& _hCmpr);
-		zenInline zHash32&			operator=(const zHash32& _hCopy);
-		zenInline zHash32&			operator=(const zU32& _uCopy);
+		zenInline bool				operator==(zHash32 _hCmpr);
+		zenInline bool				operator!=(zHash32 _hCmpr);
+		zenInline zHash32&			operator=(zHash32 _hCopy);
+		zenInline zHash32&			operator=(zU32 _uCopy);
 		zenInline operator const	zU32&()const;
 
 		//=================================================================================================	
 		// Constructors
 		//=================================================================================================	
-		zenInlineForce				zHash32();		
+		zenInlineForce				zHash32();
 		template<std::size_t TLen>	zHash32(const char(&_zString)[TLen]);
 		zenInlineForce				zHash32(char* _zString);
 		zenInlineForce				zHash32(ConstCharWrapper _zStr);
 		zenInlineForce				zHash32(const void* _pData, zUInt _uSize);
 		zenInlineForce				zHash32(const wchar_t* _zStr);
-		zenInlineForce				zHash32(const zU32& _uCopy);
-		zenInlineForce				zHash32(const zI32& _iCopy);
+		zenInlineForce				zHash32(zU32 _uCopy);
+		zenInlineForce				zHash32(zI32 _iCopy);
 		
 	protected:
 		zU32 muHash;
@@ -112,10 +112,10 @@ namespace zen { namespace zenType
 		//=================================================================================================	
 		// Comparators and assignation
 		//=================================================================================================	
-		zenInline bool				operator==(const zHash64& _hCmpr);
-		zenInline bool				operator!=(const zHash64& _hCmpr);
+		zenInline bool				operator==(zHash64 _hCmpr);
+		zenInline bool				operator!=(zHash64 _hCmpr);
 		zenInline zHash64&			operator=(const zHash64& _hCopy);
-		zenInline zHash64&			operator=(const zU64& _uCopy);
+		zenInline zHash64&			operator=(zU64 _uCopy);
 		zenInline					operator const zU64&()const;
 
 		//=================================================================================================	
@@ -127,9 +127,8 @@ namespace zen { namespace zenType
 		zenInlineForce				zHash64(char* _zString);
 		zenInlineForce				zHash64(const wchar_t* _zString);
 		zenInlineForce				zHash64(const void* _pData, zUInt _uSize);
-		zenInlineForce				zHash64(const zHash64& _hCopy);
-		zenInlineForce				zHash64(const zU64& _uCopy);
-		zenInlineForce				zHash64(const zI64& _iCopy);
+		zenInlineForce				zHash64(zU64 _uCopy);
+		zenInlineForce				zHash64(zI64 _iCopy);
 
 	protected:
 		zU64 muHash;

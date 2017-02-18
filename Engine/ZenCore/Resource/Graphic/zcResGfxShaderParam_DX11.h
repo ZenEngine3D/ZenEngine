@@ -27,7 +27,7 @@ namespace zcRes
 		void										Update( ID3D11DeviceContext& DirectXContext );
 		void										SetValue(const zenRes::zShaderParameter& _Value);	
 		void										SetValue(const zcExp::ParameterBase& _Value);	
-		template<class TParamType> void				SetValue(const zHash32& _hParamName, const TParamType& _Value, zU16 _uIndex=0);
+		template<class TParamType> void				SetValue(zHash32 _hParamName, const TParamType& _Value, zU16 _uIndex=0);
 
 		GfxCBufferDefinitionRef						mrCBufferParent;					//!< Parent Definition of this CBuffer
 		ID3D11Buffer*								mpBufferBinding			= nullptr;	//!< DirectX object for buffer
@@ -36,7 +36,7 @@ namespace zcRes
 	};
 
 	template<class TParamType>
-	void GfxCBuffer_DX11::SetValue(const zHash32& _hParamName, const TParamType& _Value, zU16 _uIndex)
+	void GfxCBuffer_DX11::SetValue(zHash32 _hParamName, const TParamType& _Value, zU16 _uIndex)
 	{
 		zcExp::GfxCBufferParamInfo ItemInfo;
 		if( mrCBufferParent.HAL()->mdParamInfo.Get(_hParamName, ItemInfo) )

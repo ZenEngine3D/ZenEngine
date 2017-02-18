@@ -35,7 +35,7 @@ namespace zen { namespace zenType {
 		zenInline bool				operator==(const zResID& _Compare)const	{return muHashID == _Compare.muHashID;};
 		zenInline bool				operator!=(const zResID& _Compare)const	{return muHashID != _Compare.muHashID;};
 		const zResID&				operator=(const zResID& _Copy)			{muHashID = _Copy.muHashID; return *this;}
-		const zResID&				operator=(const zU64& _Copy)			{muHashID = _Copy; zenAssert(meType<keResType__Count && meSource<keResSource__Count && mePlatform<kePlatform__Count); return *this;}
+		const zResID&				operator=(zU64 _Copy)			{muHashID = _Copy; zenAssert(meType<keResType__Count && meSource<keResSource__Count && mePlatform<kePlatform__Count); return *this;}
 
 	protected:
 		union
