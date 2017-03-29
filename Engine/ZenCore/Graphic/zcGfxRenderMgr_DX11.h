@@ -71,7 +71,7 @@ zenClassDeclare(ManagerRender_DX11, ManagerRender_Base)
 public:
 	virtual void							FrameBegin(zcRes::GfxWindowRef _FrameWindow);
 	virtual void							FrameEnd();
-	void									Render(zArrayDynamic<zEngineRef<zcGfx::Command>>& _aDrawcalls);
+	void									Render(ScopedDrawlist& _Drawlist);
 	void									NamedEventBegin(const zStringHash32& zName);
 	void									NamedEventEnd();
 	const zEngineRef<QueryDisjoint_DX11>&	GetQueryDisjoint()const;

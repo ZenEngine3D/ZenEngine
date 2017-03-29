@@ -10,11 +10,9 @@ public:
 	virtual										~GfxIndex_DX12();
 	bool										Initialize();
 	zU8*										Lock();
-	void										Unlock(const zenGfx::zContext& _rContext);
+	void										Unlock(const zenGfx::zScopedDrawlist& _rContext);
 
-	DirectXComRef<ID3D12Resource>				mrResource;			//!< DirectX memory mapping for this resource
-	DirectXComRef<ID3D12Resource>				mrResourceUpload;	//!< Temp directX memory used to update GPU data from CPU
-	D3D12_RESOURCE_STATES						meResourceState;	//!< Current GPU access to this resource (used for barrier updates)	
+	zcGfx::GpuMemoryResIndex					mResource;
 	typedef zcExp::ExporterGfxIndexDX12_DX12	RuntimeExporter;
 };
 

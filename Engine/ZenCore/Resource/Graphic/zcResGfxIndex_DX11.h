@@ -11,7 +11,7 @@ public:
 	virtual										~GfxIndex_DX11();
 	bool										Initialize();
 	zU8*										Lock();
-	void										Unlock(const zenGfx::zContext& _rContext);
+	void										Unlock(const zenGfx::zScopedDrawlist& _rContext);
 	
 	ID3D11Buffer*								mpIndiceBuffer;
 	zU8*										mpLockData = nullptr; //! @todo safe support multi threading (lock return context?)

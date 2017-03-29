@@ -175,8 +175,9 @@ bool ExporterGfxShaderDX12_DX12::ExportWorkExtractResources()
 		pGfxShaderReflection->GetDesc( &shaderDesc );
 		mrExport->maResourceBinding.SetCount( shaderDesc.BoundResources );
 
-		// Can't rely on 'shaderDesc.ConstantBuffers' for CBuffer count, since list even unbound one
-		// So first find out how many there is
+		//------------------------------------------------------------------------------------------
+		// Can't rely on 'shaderDesc.ConstantBuffers' for CBuffer count, since it list unbounded one
+		// So first find out how many there is and allocate array to store their informatins
 		for( UINT uResIdx=0; uResIdx<shaderDesc.BoundResources; ++uResIdx )
 		{
 			D3D12_SHADER_INPUT_BIND_DESC resourceDesc;
@@ -189,7 +190,8 @@ bool ExporterGfxShaderDX12_DX12::ExportWorkExtractResources()
 		maCBufferParamName.SetCount( uBoundCBufferCount );
 		maCBufferParamInfo.SetCount( uBoundCBufferCount );
 		maCBufferDefaultValues.SetCount( uBoundCBufferCount );
-		
+		//------------------------------------------------------------------------------------------
+
 		for( UINT uResIdx=0; uResIdx<shaderDesc.BoundResources; ++uResIdx )
 		{
 			D3D12_SHADER_INPUT_BIND_DESC resourceDesc;

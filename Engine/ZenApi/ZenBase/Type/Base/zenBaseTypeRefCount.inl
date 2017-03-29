@@ -99,10 +99,23 @@ const zEngineRef<TRefCountedType>& zEngineRef<TRefCountedType>::operator=(const 
 	}
 	
 	template<class TRefCountedType>
+	const TRefCountedType* zEngineRef<TRefCountedType>::GetConst()const
+	{
+		return static_cast<const TRefCountedType*>(mpReference);
+	}
+
+	template<class TRefCountedType>
 	TRefCountedType* zEngineRef<TRefCountedType>::GetSafe()const
 	{
 		zenAssert(IsValid());
 		return static_cast<TRefCountedType*>(mpReference);
+	}
+
+	template<class TRefCountedType>
+	const TRefCountedType* zEngineRef<TRefCountedType>::GetConstSafe()const
+	{
+		zenAssert(IsValid());
+		return static_cast<const TRefCountedType*>(mpReference);
 	}
 
 	template<class TRefCountedType>

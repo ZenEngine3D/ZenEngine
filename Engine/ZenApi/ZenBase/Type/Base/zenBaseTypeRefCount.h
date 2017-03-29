@@ -57,7 +57,9 @@ namespace zen { namespace zenType {
 		zenInline const zEngineRef&			operator=(const zEngineRef& _Copy);
 	#if ZEN_ENGINELIB
 		zenInline TRefCountedType*			Get()const;				//!< @note Only use on engine side, else won't compile
+		zenInline const TRefCountedType*	GetConst()const;		//!< @note Only use on engine side, else won't compile
 		zenInline TRefCountedType*			GetSafe()const;			//!< @note Only use on engine side, else won't compile
+		zenInline const TRefCountedType*	GetConstSafe()const;	//!< @note Only use on engine side, else won't compile
 		zenInline TRefCountedType*			operator->()const;		//!< @note Only use on engine side, else won't compile				
 	#endif
 		using Super::operator==;

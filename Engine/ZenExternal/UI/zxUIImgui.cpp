@@ -135,7 +135,7 @@ void zxImGUIHelper::Render(const zEngineRef<zxRenderData>& _rImGuiData, WindowIn
 	}
 
 	ImDrawData* pImGuiData		= ImGui::GetDrawData();
-	zenGfx::zContext rUIContext	= zenGfx::zContext::Create("ImGui", _rImGuiData->mrRenderpass);
+	zenGfx::zScopedDrawlist rUIContext	= zenGfx::zScopedDrawlist::Create("ImGui", _rImGuiData->mrRenderpass);
 	//----------------------------------------------------------------------------
 	// Generates Vertex and Index buffer	
 	{	

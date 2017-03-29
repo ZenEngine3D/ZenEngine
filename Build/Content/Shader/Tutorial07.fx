@@ -75,7 +75,7 @@ PS_INPUT VS( uint VertexId : SV_VertexID )
 float4 PS( PS_INPUT VertexInput) : SV_Target
 {
 	float4 texColor = TextureSample2D( txColor, VertexInput.UV );
-	//return float4(texColor.rgb*TestBufferUpdate[0].rgb, 1);
+	//return float4(texColor.rgb*TestBufferUpdate[0].rgb, 1);	
 	return float4(vColor.rgb*VertexInput.Color.rgb*texColor.rgb, VertexInput.Color.a );
 }
 

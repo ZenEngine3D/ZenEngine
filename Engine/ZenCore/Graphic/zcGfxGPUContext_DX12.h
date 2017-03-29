@@ -8,7 +8,7 @@ class GPUContext_DX12 : public GPUContext_Base
 zenClassDeclare(GPUContext_DX12, GPUContext_Base)
 public:
 									
-	void										Reset(const DirectXComRef<ID3D12Device>& _rDevice, const DirectXComRef<ID3D12GraphicsCommandList>& _rCommandList );
+	void										Reset(const DirectXComRef<ID3D12Device>& _rDevice, const DirectXComRef<ID3D12GraphicsCommandList>& _rCommandList, const DirectXComRef<ID3D12DescriptorHeap>& _rResViewDescHeap );
 	void										UpdateState(const zcGfx::CommandDraw_HAL& _Drawcall);
 	zenInline const DirectXComRef<ID3D12GraphicsCommandList>& GetCommandList()const;
 	
@@ -21,29 +21,13 @@ public:
 	
 	DirectXComRef<ID3D12Device>					mrDevice;
 	DirectXComRef<ID3D12GraphicsCommandList>	mrCommandList;
+	DirectXComRef<ID3D12DescriptorHeap>			mrResViewDescHeap;
+	zArrayDynamic<D3D12_RESOURCE_BARRIER>		maPendingBarriers;
+
 	zcGfx::RootSignature						mRootSignature;
 	zEngineRef<PSO_DX12>						mrPSO;
 	zVec4U16									mvScreenScissor		= zVec4U16(0, 0, 0, 0);
 	D3D12_PRIMITIVE_TOPOLOGY					mePrimitive			= D3D_PRIMITIVE_TOPOLOGY_UNDEFINED;
-
-
-	// Info on input shaders resources
-	/*
-	zHash32							mahShaderInputStamp[keShaderStage__Count][keShaderRes__Count];				//!< Hash of assigned resources per stage/restype, to quickly know if something has changed
-	zU16							maShaderInputSlotCount[keShaderStage__Count][keShaderRes__Count];			//!< Slot count to last valid Resource view per resource type
-	ID3D11ShaderResourceView*		maResourceView[keShaderStage__Count][zcExp::kuDX11_ResourcesPerStageMax];	//!< Resource view of all assigned resources (textures, structbuffer, uav, ...)
-	eShaderResource					maResourceType[keShaderStage__Count][zcExp::kuDX11_ResourcesPerStageMax];	//!< Resource type assigned to matching resourceview slot
-		
-	D3D11_PRIMITIVE_TOPOLOGY		mePrimitiveType		= D3D_PRIMITIVE_TOPOLOGY_UNDEFINED;
-	zVec4U16						mvScreenScissor		= zVec4U16(0, 0, 0, 0);
-	bool							mbScreenScissorOn	= false;
-
-	// Useful for debugging/tracking but not needed
-	zcRes::GfxShaderAnyRef			marShader[keShaderStage__Count];
-	zcRes::GfxSamplerRef			marSampler[keShaderStage__Count][zcExp::kuDX11_SamplerPerStageMax];
-	zcRes::GfxCBufferRef			marCBuffer[keShaderStage__Count][zcExp::kuDX11_CBufferPerStageMax];
-	zcRes::GfxShaderResourceRef		marResource[keShaderStage__Count][zcExp::kuDX11_ResourcesPerStageMax];		
-	*/
 };
 
 }

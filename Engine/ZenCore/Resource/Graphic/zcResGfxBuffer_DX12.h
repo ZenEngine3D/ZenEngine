@@ -6,18 +6,29 @@
 namespace zcRes
 {
 
+class GfxShaderResourceDescRef : public GfxShaderResourceRef
+{
+zenClassDeclare(GfxShaderResourceDescRef, GfxShaderResourceRef);
+public:
+
+	const GfxShaderResourceDescRef&				operator=(const GfxShaderResourceRef& _rResource);
+	const GfxShaderResourceDescRef&				operator=(const GfxShaderResourceDescRef& _rResource);
+	const GfxShaderResourceDescRef&				operator=(zenRes::zExportData* _pResource);
+	zcGfx::GpuMemoryResStandard*				GetGpuBuffer()const{return mpGPUBuffer;} //! @todo 1 find good name for this and the buffer ptr
+protected:
+	void										UpdateGPUBuffer();
+	zcGfx::GpuMemoryResStandard*				mpGPUBuffer = nullptr; 
+};
+
 class GfxBuffer_DX12 : public zcExp::ExportGfxBuffer
 {
 public:	
 	virtual										~GfxBuffer_DX12();
 	bool										Initialize();
 	void*										Lock();
-	void										Unlock(const zenGfx::zContext& _rContext);
+	void										Unlock(const zenGfx::zScopedDrawlist& _rContext);
 
-	DirectXComRef<ID3D12Resource>				mrResource;			//!< DirectX memory mapping for this resource
-	DirectXComRef<ID3D12Resource>				mrResourceUpload;	//!< Temp directX memory used to update GPU data from CPU
-	D3D12_RESOURCE_STATES						meResourceState;	//!< Current GPU access to this resource (used for barrier updates)	
-	zcGfx::DescriptorSRV_UAV_CBV				mBufferView;
+	zcGfx::GpuMemoryResStandard					mResource;
 	typedef zcExp::ExporterGfxBuffer_DX12		RuntimeExporter;
 };
 

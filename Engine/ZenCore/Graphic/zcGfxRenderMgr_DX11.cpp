@@ -256,9 +256,9 @@ const zEngineRef<QueryDisjoint_DX11>& ManagerRender_DX11::GetQueryDisjoint()cons
 	return mrQueryDisjoint;
 }
 
-void ManagerRender_DX11::Render(zArrayDynamic<zEngineRef<zcGfx::Command>>& _aDrawcalls)
+void ManagerRender_DX11::Render(ScopedDrawlist& _Drawlist)
 {	
-	mGpuContext[0].Submit(_aDrawcalls);
+	mGpuContext[0].Submit(_Drawlist.GetCommands());
 }
 
 }

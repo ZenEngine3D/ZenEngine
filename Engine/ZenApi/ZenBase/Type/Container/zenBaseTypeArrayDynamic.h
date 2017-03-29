@@ -6,6 +6,7 @@ namespace zen { namespace zenType
 {
 
 	//! @brief Default array size increase policy (1.5x needed size)
+	//! @todo 1 safety constructor/destructor not called on individual item, just on array resize...
 	typedef zUInt(*GrowthPolicyFunction)(zUInt _uCurrentCount, zUInt _uNeededCount, zUInt _uItemSize); 
 	zUInt GrowthPolicyOneandHalf( zUInt _uCurrentCount, zUInt _uNeededCount, zUInt _uItemSize);
 
@@ -31,6 +32,7 @@ namespace zen { namespace zenType
 		void						RemoveSwap( zUInt _uIndex );
 		void						RemoveSwap( const TType& _Item );
 
+		//void						Reset( zUInt _uReserveCount ) //! @todo Implement optimized setcount=0 + reserve
 		void						Reserve(zUInt _uCount);		
 		zUInt						ReservedCount()const;
 		zUInt						ReservedSize()const;

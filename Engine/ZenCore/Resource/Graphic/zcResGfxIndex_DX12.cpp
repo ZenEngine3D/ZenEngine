@@ -13,20 +13,25 @@ GfxIndex_DX12::~GfxIndex_DX12()
 bool GfxIndex_DX12::Initialize()
 {
 	bool bUploadData	= maIndices.SizeMem() > 0;
-	meResourceState		= bUploadData ? D3D12_RESOURCE_STATE_COPY_DEST : D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
+	mResource.meState	= bUploadData ? D3D12_RESOURCE_STATE_COPY_DEST : D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
 
 	HRESULT hr = zcMgr::GfxRender.GetDevice()->CreateCommittedResource(
 					&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT),
 					D3D12_HEAP_FLAG_NONE,
 					&CD3DX12_RESOURCE_DESC::Buffer(maIndices.SizeMem()),
-					meResourceState,
+					mResource.meState,
 					nullptr,
-					IID_PPV_ARGS(&mrResource));
+					IID_PPV_ARGS(&mResource.mrResource));
 	
 	if( FAILED(hr) )
 		return false;
 
-	zSetGfxResourceName(mrResource, mResID, nullptr);
+	// Create view on Buffer resource
+	mResource.mView.BufferLocation	= mResource.mrResource->GetGPUVirtualAddress();
+	mResource.mView.SizeInBytes		= static_cast<UINT>(maIndices.SizeMem());
+	mResource.mView.Format			= meIndiceFormat;
+
+	zSetGfxResourceName(mResource.mrResource, mResID, nullptr);
 	
 	// Create resource update command
 	if( bUploadData )
@@ -35,7 +40,7 @@ bool GfxIndex_DX12::Initialize()
 		if( pUploadData )
 		{
 			zenMem::Copy( reinterpret_cast<zU8*>(pUploadData), maIndices.First(), maIndices.SizeMem() );
-			Unlock(zenGfx::zContext::GetFrameContext());
+			Unlock(zenGfx::zScopedDrawlist::GetFrameContext());
 			return true;
 		}
 	}
@@ -44,11 +49,12 @@ bool GfxIndex_DX12::Initialize()
 
 zU8* GfxIndex_DX12::Lock()
 {
-	zenAssert(mrResourceUpload.Get() == nullptr);
+	zenAssert(mResource.mrUpload.Get() == nullptr);
+	zU8* pLockData(nullptr);
 
 	// Allocate temp memory to upload data to buffer
 	UINT64 uUploadBufferSize		= 0;
-	D3D12_RESOURCE_DESC BufferDesc	= mrResource->GetDesc();
+	D3D12_RESOURCE_DESC BufferDesc	= mResource.mrResource->GetDesc();
 	zcMgr::GfxRender.GetDevice()->GetCopyableFootprints(&BufferDesc, 0, 1, 0, nullptr, nullptr, nullptr, &uUploadBufferSize);
 	
 	HRESULT hr = zcMgr::GfxRender.GetDevice()->CreateCommittedResource(
@@ -57,31 +63,26 @@ zU8* GfxIndex_DX12::Lock()
 					&CD3DX12_RESOURCE_DESC::Buffer(uUploadBufferSize),
 					D3D12_RESOURCE_STATE_GENERIC_READ,
 					nullptr,
-					IID_PPV_ARGS(&mrResourceUpload));
+					IID_PPV_ARGS(&mResource.mrUpload));
 	
-	zSetGfxResourceName(mrResourceUpload, mResID, L"Index UploadData");
-
 	if( SUCCEEDED(hr) )
-	{		
-		void* pData;		
-		hr = mrResourceUpload->Map(0, NULL, &pData);	// Get cpu memory pointer
-		if (SUCCEEDED(hr) )
-			return reinterpret_cast<zU8*>(pData);
+	{				
+		zSetGfxResourceName(mResource.mrUpload, mResID, L"Index UploadData");
+		hr			= mResource.mrUpload->Map(0, NULL, reinterpret_cast<void**>(&pLockData));	// Get cpu memory pointer
+		pLockData	= SUCCEEDED(hr) ? pLockData : nullptr;
 	}
-	return nullptr;
+	return pLockData;
 }
 
-void GfxIndex_DX12::Unlock(const zenGfx::zContext& _rContext)
+void GfxIndex_DX12::Unlock(const zenGfx::zScopedDrawlist& _rContext)
 {
-	zenAssert(mrResourceUpload.Get() != nullptr);
-	mrResourceUpload->Unmap(0, NULL);
+	zenAssert(mResource.mrUpload.Get() != nullptr);
+	mResource.mrUpload->Unmap(0, NULL);
 
 	//! @todo 2 support partial updates
-	zcRes::GfxIndexRef rBuffer					= reinterpret_cast<zcRes::GfxIndex*>(this);
-	zEngineRef<zcGfx::Command> rCommand			= zcGfx::CommandUpdateIndex_DX12::Create(rBuffer, 0, maIndices.SizeMem());
-	mrResourceUpload							= nullptr;
-
-	_rContext->AddCommand(rCommand.Get());
+	zcRes::GfxIndexRef rBuffer = reinterpret_cast<zcRes::GfxIndex*>(this);
+	zcGfx::CommandUpdateIndex_DX12::Add(_rContext, rBuffer, 0, maIndices.SizeMem());
+	mResource.mrUpload = nullptr;
 }
 
 }

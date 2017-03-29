@@ -20,17 +20,6 @@ public:
 	static void				ResetCommandCount();
 
 //protected:			
-	enum eGPUPipelineMode
-	{
-		keGpuPipe_DataUpdate,
-		keGpuPipe_PreDrawCompute,
-		keGpuPipe_Vertex, 
-		keGpuPipe_VertexPixel, 
-		keGpuPipe_VertexPixelGeo, 
-		keGpuPipe_VertexPixelDomainHull, 
-		keGpuPipe_PostDrawCompute,
-	};
-
 	union RenderStateSortID
 	{
 		// Put highest cost state change item last
@@ -68,12 +57,13 @@ public:
 		{
 			zU64	mSortKeyLo;
 			zU64	mSortKeyHi;
-		};		
+		};
+		bool operator>(const RenderStateSortID& _Cmp)const { return mSortKeyHi > _Cmp.mSortKeyHi || (mSortKeyHi == _Cmp.mSortKeyHi && mSortKeyLo > _Cmp.mSortKeyLo); }
 	};
 
 	RenderStateSortID		mSortId;
 	zcRes::GfxRenderPassRef	mrRenderPass;
-	static float			sfCommandCount;			//!< Number of command issued this frame. Used to set command priority when sorting. (made it a float to avoid float/int conversion cost for each drawcall)
+	static float			sfCommandCount;			//!< Number of command issued this frame. Used to set command priority when sorting. (made it a float to avoid float/int conversion cost for each drawcall)	
 protected:
 							Command();
 	zenInline void			SetSortKeyDraw		( const zcRes::GfxRenderPassRef& _rRenderPass, float _fPriority, const zcRes::GfxMeshStripRef& _rMeshStrip ); 	
@@ -81,11 +71,16 @@ protected:
 	zenInline void			SetSortKeyDataUpdate( zU64 _uResID ); 	
 };
 
+zenInline bool operator>(const zEngineRef<zcGfx::Command>& _rCmp1, const zEngineRef<zcGfx::Command>& _rCmp2)
+{	 
+	return _rCmp1.GetConst() && _rCmp2.GetConst() && _rCmp1.GetConst()->mSortId > _rCmp2.GetConst()->mSortId;
+}
+
 class CommandDraw : public Command
 {
 zenClassDeclare(CommandDraw, Command)
 public:
-	static zEngineRef<Command>	Create(	const zcRes::GfxRenderPassRef& _rRenderPass, const zcRes::GfxMeshStripRef& _rMeshStrip, zU32 _uIndexFirst=0, zU32 _uIndexCount=0xFFFFFFFF, const zVec4U16& _vScreenScissor = zVec4U16(0,0,0xFFFF,0xFFFF));
+	static zEngineRef<Command>	Add(const zenGfx::zScopedDrawlist& _rContext, const zcRes::GfxRenderPassRef& _rRenderPass, const zcRes::GfxMeshStripRef& _rMeshStrip, zU32 _uIndexFirst=0, zU32 _uIndexCount=0xFFFFFFFF, const zVec4U16& _vScreenScissor = zVec4U16(0,0,0xFFFF,0xFFFF));
 
 // protected: //! @todo 1 clean remove public access (needed for gfxmgr::updatestate
 	zcRes::GfxMeshStripRef		mrMeshStrip;
@@ -98,7 +93,7 @@ class CommandClearColor : public Command
 {
 zenClassDeclare(CommandClearColor, Command)
 public:
-	static zEngineRef<Command>	Create( const zcRes::GfxRenderPassRef& _rRenderPass, const zcRes::GfxTarget2DRef& _rRTColor, const zVec4F& _vRGBA,  const zColorMask& _ColorMask=zenConst::kColorMaskRGBA, const zVec2S16& _vOrigin=zVec2S16(0,0), const zVec2U16& _vDim=zVec2U16(0,0) );
+	static zEngineRef<Command>	Add(const zenGfx::zScopedDrawlist& _rContext, const zcRes::GfxRenderPassRef& _rRenderPass, const zcRes::GfxTarget2DRef& _rRTColor, const zVec4F& _vRGBA,  const zColorMask& _ColorMask=zenConst::kColorMaskRGBA, const zVec2S16& _vOrigin=zVec2S16(0,0), const zVec2U16& _vDim=zVec2U16(0,0) );
 
 protected:
 	zcRes::GfxTarget2DRef		mrRTColor;
@@ -112,7 +107,7 @@ class CommandClearDepthStencil : public Command
 {
 zenClassDeclare(CommandClearDepthStencil, Command)
 public:
-	static zEngineRef<Command>	Create( const zcRes::GfxRenderPassRef& _rRenderPass, const zcRes::GfxTarget2DRef& _rRTDepth, bool _bClearDepth, float _fDepthValue=1.f, bool _bClearStencil=false, zU8 _uStencilValue=128);
+	static zEngineRef<Command>	Add(const zenGfx::zScopedDrawlist& _rContext, const zcRes::GfxRenderPassRef& _rRenderPass, const zcRes::GfxTarget2DRef& _rRTDepth, bool _bClearDepth, float _fDepthValue=1.f, bool _bClearStencil=false, zU8 _uStencilValue=128);
 
 protected:
 	zcRes::GfxTarget2DRef		mrRTDepthStencil;

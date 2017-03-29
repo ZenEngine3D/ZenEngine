@@ -21,14 +21,14 @@ public:
 
 	virtual void							FrameBegin( zcRes::GfxWindowRef _FrameWindow );
 	virtual void							FrameEnd();	
-	const zenGfx::zContext&					GetFrameContext(){ return mrFrameContext; };
+	const zenGfx::zScopedDrawlist&			GetFrameContext(){ return mrFrameContext; };
 
 	//! @todo Clean: move to more generic ZENFormat testing functions file?
 	bool									IsDepth( zenConst::eTextureFormat _eTexFormat ) const { return _eTexFormat>=zenConst::keTexFormat__DepthFirst && _eTexFormat<=zenConst::keTexFormat__DepthLast; }
 	zenInline zUInt							GetFrameRendered()const;
 protected:
 	zUInt									muFrameRendered = 0;
-	zenGfx::zContext						mrFrameContext;		//!<< Used to push command without having a particular context. Executed both at start/end of current frame
+	zenGfx::zScopedDrawlist				mrFrameContext;		//!<< Used to push command without having a particular context. Executed both at start/end of current frame
 };
 
 zUInt ManagerRender_Base::GetFrameRendered()const

@@ -2,7 +2,7 @@
 #ifndef __zenApi_Core_Res_h__
 #define __zenApi_Core_Res_h__
 
-namespace zen { namespace zenGfx {	class zContext; } } //Forward declare //! @todo Clean try to not have forward declare, after moving context class
+namespace zen { namespace zenGfx {	class zScopedDrawlist; } } //Forward declare //! @todo Clean try to not have forward declare, after moving context class
 
 #include "zenCoreResResource.h"
 #include "zenCoreResGfxBuffer.h"

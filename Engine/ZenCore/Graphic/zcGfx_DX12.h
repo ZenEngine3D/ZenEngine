@@ -53,5 +53,8 @@ zenInline void zSetGfxResourceName( const DirectXComRef<ID3D12Resource>& _rResou
 #endif
 }
 
+// Graphcis files specific to DirectX12
 #include <ZenCore/Graphic/DX12/zcGfxRootSignature_DX12.h>
 #include <ZenCore/Graphic/DX12/zcGfxPso_DX12.h>
+#include <zenCore/Graphic/DX12/zcGfxResourceDescriptor_DX12.h>
+#include <ZenCore/Graphic/DX12/zcGfxGpuBuffer_DX12.h>

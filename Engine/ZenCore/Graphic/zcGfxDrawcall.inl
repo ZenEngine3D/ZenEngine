@@ -7,7 +7,7 @@ void Command::SetSortKeyDraw(const zcRes::GfxRenderPassRef& _rRenderPass, float 
 	mSortId.mSortKeyHi				= 0;
 	mSortId.mSortKeyLo				= 0;
 	
-	mSortId.Draw.muGPUPipelineMode	= Command::keGpuPipe_VertexPixel;
+	mSortId.Draw.muGPUPipelineMode	= keGpuPipe_VertexPixel;
 	mSortId.Draw.muShaderBindingID	= 0;//! @todo finish this
 	mSortId.Draw.mbCullingFrontface	= false;
 	mSortId.Draw.mbCullingBackface	= true;

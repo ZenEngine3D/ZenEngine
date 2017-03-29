@@ -25,7 +25,7 @@ namespace zcRes
 	public:
 		virtual										~GfxCBuffer_DX12();
 		bool										Initialize();
-		void										Update( ID3D11DeviceContext& DirectXContext );
+		void										Update( const DirectXComRef<ID3D12GraphicsCommandList>& _rCommandList );
 		void										SetValue(const zenRes::zShaderParameter& _Value);	
 		void										SetValue(const zcExp::ParameterBase& _Value);	
 		template<class TParamType> void				SetValue(zHash32 _hParamName, const TParamType& _Value, zU16 _uIndex=0);

@@ -51,7 +51,7 @@ void* GfxBuffer_DX11::Lock()
 	return mpLockData;
 }
 
-void GfxBuffer_DX11::Unlock(const zenGfx::zContext& _rContext)
+void GfxBuffer_DX11::Unlock(const zenGfx::zScopedDrawlist& _rContext)
 {
 	//! @todo 2 Update Cpu copy at frame end
 	zenAssertMsg(mpLockData!=nullptr, "Need to lock buffer before unlocking it");

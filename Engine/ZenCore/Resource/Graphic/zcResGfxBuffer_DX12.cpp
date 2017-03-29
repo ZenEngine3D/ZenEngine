@@ -4,6 +4,52 @@
 
 namespace zcRes
 {
+//! @todo 0
+void GfxShaderResourceDescRef::UpdateGPUBuffer()
+{	
+	eResType ResType	= mpResource ? mpResource->mResID.GetType() : keResType__Invalid;
+	mpGPUBuffer			= nullptr;
+	
+	if( ResType == keResType_GfxBuffer)
+	{
+		zcRes::GfxBufferRef rBuffer = *this;
+		mpGPUBuffer = &rBuffer.HAL()->mResource;
+	}
+	else if( ResType == keResType_GfxCBuffer )
+	{
+		zcRes::GfxCBufferRef rCBuffer = *this;
+//		mpGPUBuffer = &rCBuffer.HAL()->mResource;
+	}
+	else if( ResType == keResType_GfxTexture2D ) 
+	{
+		zcRes::GfxTexture2DRef rTexture = *this;
+		mpGPUBuffer = &rTexture.HAL()->mResource;
+	}
+}
+
+const GfxShaderResourceDescRef&	GfxShaderResourceDescRef::operator=(const GfxShaderResourceRef& _rResource)
+{
+	Super::operator=(_rResource);
+	UpdateGPUBuffer();
+	return *this;
+}
+
+const GfxShaderResourceDescRef&	GfxShaderResourceDescRef::operator=(const GfxShaderResourceDescRef& _rResource)
+{
+	Super::operator=(_rResource);
+	UpdateGPUBuffer();
+	return *this;
+}
+
+const GfxShaderResourceDescRef&	GfxShaderResourceDescRef::operator=(zenRes::zExportData* _pResource)
+{
+	Super::operator=(_pResource);
+	UpdateGPUBuffer();
+	return *this;
+}
+
+
+//##################################################################################################
 
 GfxBuffer_DX12::~GfxBuffer_DX12()
 {
@@ -12,18 +58,18 @@ GfxBuffer_DX12::~GfxBuffer_DX12()
 bool GfxBuffer_DX12::Initialize()
 {
 	bool bUploadData	= maData.SizeMem() > 0;
-	meResourceState		= bUploadData ? D3D12_RESOURCE_STATE_COPY_DEST : D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
+	mResource.meState	= bUploadData ? D3D12_RESOURCE_STATE_COPY_DEST : D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
 	HRESULT hr			= zcMgr::GfxRender.GetDevice()->CreateCommittedResource(
 									&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT),
 									D3D12_HEAP_FLAG_NONE,
 									&CD3DX12_RESOURCE_DESC::Buffer((UINT)muElementCount*muElementStride),
-									meResourceState,
+									mResource.meState,
 									nullptr,
-									IID_PPV_ARGS(&mrResource));
+									IID_PPV_ARGS(&mResource.mrResource));
 	if(FAILED(hr))
 		return false;
 	
-	zSetGfxResourceName(mrResource, mResID, nullptr);
+	zSetGfxResourceName(mResource.mrResource, mResID, nullptr);
 
 	// Create view on Buffer resource
 	D3D12_SHADER_RESOURCE_VIEW_DESC SrvDesc = {};
@@ -34,8 +80,8 @@ bool GfxBuffer_DX12::Initialize()
 	SrvDesc.Buffer.NumElements			= muElementCount;
 	SrvDesc.Buffer.StructureByteStride	= muElementStride;
 	SrvDesc.Buffer.Flags				= D3D12_BUFFER_SRV_FLAG_NONE;	    
-	mBufferView							= zcGfx::DescriptorSRV_UAV_CBV::Allocate();
-	zcMgr::GfxRender.GetDevice()->CreateShaderResourceView(mrResource.Get(), &SrvDesc, mBufferView.GetCpuHandle());
+	mResource.mView						= zcGfx::DescriptorSRV_UAV_CBV::Allocate();
+	zcMgr::GfxRender.GetDevice()->CreateShaderResourceView(mResource.mrResource.Get(), &SrvDesc, mResource.mView.GetCpuHandle());
 
 	// Send Resource update command
 	if( bUploadData )
@@ -45,18 +91,18 @@ bool GfxBuffer_DX12::Initialize()
 			return false;
 
 		zenMem::Copy( reinterpret_cast<zU8*>(pUploadData), maData.First(), maData.SizeMem() );
-		Unlock(zenGfx::zContext::GetFrameContext());
+		Unlock(zenGfx::zScopedDrawlist::GetFrameContext());
 	}
 	return true;
 }
 
 void* GfxBuffer_DX12::Lock()
 {
-	zenAssert(mrResourceUpload.Get() == nullptr);
+	zenAssert(mResource.mrUpload.Get() == nullptr);
 
 	// Allocate temp memory to upload data to buffer
 	UINT64 uUploadBufferSize		= 0;
-	D3D12_RESOURCE_DESC BufferDesc	= mrResource->GetDesc();
+	D3D12_RESOURCE_DESC BufferDesc	= mResource.mrResource->GetDesc();
 	zcMgr::GfxRender.GetDevice()->GetCopyableFootprints(&BufferDesc, 0, 1, 0, nullptr, nullptr, nullptr, &uUploadBufferSize);
 	
 	HRESULT hr = zcMgr::GfxRender.GetDevice()->CreateCommittedResource(
@@ -65,31 +111,29 @@ void* GfxBuffer_DX12::Lock()
 					&CD3DX12_RESOURCE_DESC::Buffer(uUploadBufferSize),
 					D3D12_RESOURCE_STATE_GENERIC_READ,
 					nullptr,
-					IID_PPV_ARGS(&mrResourceUpload));
+					IID_PPV_ARGS(&mResource.mrUpload));
 	if (FAILED(hr) )
 		return nullptr;
 	
-	zSetGfxResourceName(mrResourceUpload, mResID, L"Buffer UploadData");
+	zSetGfxResourceName(mResource.mrUpload, mResID, L"Buffer UploadData");
 
 	// Get cpu memory pointer
 	void* pData;
-    hr = mrResourceUpload->Map(0, NULL, &pData);
+    hr = mResource.mrUpload->Map(0, NULL, &pData);
     if (FAILED(hr) )
 		return nullptr;
 
 	return pData;
 }
 
-void GfxBuffer_DX12::Unlock(const zenGfx::zContext& _rContext)
+void GfxBuffer_DX12::Unlock(const zenGfx::zScopedDrawlist& _rContext)
 {
-	zenAssert(mrResourceUpload.Get() != nullptr);
-	mrResourceUpload->Unmap(0, NULL);
+	zenAssert(mResource.mrUpload.Get() != nullptr);
+	mResource.mrUpload->Unmap(0, NULL);
 
-	zcRes::GfxBufferRef rBuffer					= reinterpret_cast<zcRes::GfxBuffer*>(this);
-	zEngineRef<zcGfx::Command> rCommand			= zcGfx::CommandUpdateBuffer_DX12::Create(rBuffer, 0, maData.SizeMem());
-	mrResourceUpload							= nullptr;
-
-	_rContext->AddCommand(rCommand.Get());
+	zcRes::GfxBufferRef rBuffer	= reinterpret_cast<zcRes::GfxBuffer*>(this);
+	zcGfx::CommandUpdateBuffer_DX12::Add(_rContext, rBuffer, 0, maData.SizeMem());
+	mResource.mrUpload = nullptr;	
 }
 
 }

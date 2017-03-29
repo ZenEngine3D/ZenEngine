@@ -12,7 +12,7 @@ void CommandDraw_DX11::Invoke(zcGfx::GPUContext& _Context)
 	{
 		zcPerf::EventGPUCounter::Create(zcPerf::EventGPUCounter::keType_DrawIndexed);		//! @todo 1 optim find cheaper method to count # drawcall, large memory/time overhead with large drawcount
 		_Context.UpdateState(*this);
-		_Context.GetDeviceContext()->DrawIndexed(muIndexCount, muIndexFirst, mrMeshStrip.HAL()->muVertexFirst);
+		_Context.GetDeviceContext()->DrawIndexed(muIndexCount, muIndexFirst, 0);
 	}
 }
 

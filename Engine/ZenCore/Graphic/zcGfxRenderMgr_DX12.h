@@ -4,13 +4,6 @@
 
 #include "zcGfxRenderMgrTmp_DX12.h"
 
-//! @todo 0 clean remove this, needed until we support vertex buffer properly
-struct Vertex
-{
-	zVec3F position;
-	zVec2F uv;
-};
-
 namespace zcGfx
 {
 //=================================================================================================
@@ -64,90 +57,6 @@ protected:
 };
 
 
-//=================================================================================================
-//! @brief		Keep track of resource descriptor heap
-//! @details	
-//! @todo 1 Cleanup this once figure out how it work. Should use ref count?
-//=================================================================================================	
-template<int TType, int THeapCount>
-class ResourceDescriptor
-{
-public:
-	enum constant { kuInvalid=0xFFFFFFFF, kuType=TType, kuHeapCount=THeapCount };
-	bool IsValid()const
-	{
-		return muIndex != kuInvalid;
-	}
-
-	void Free()
-	{
-		if( IsValid() )
-			saDescriptorUsed.Set(muIndex, false);
-		muIndex = kuInvalid;
-	}
-
-	const D3D12_CPU_DESCRIPTOR_HANDLE& GetCpuHandle() const 
-	{
-		return mhDescriptor;
-	}
-
-	const D3D12_GPU_DESCRIPTOR_HANDLE& GetGpuHandle() const
-	{
-		return mhDescriptorGPU;
-	}
-	static ResourceDescriptor Allocate()
-	{
-		//! @todo 1 support bounds check
-		ResourceDescriptor NewDesc;
-		NewDesc.muIndex				= saDescriptorUsed.AddIndexTrue();
-		NewDesc.mhDescriptor.ptr	= srDXCPUHandle.ptr + NewDesc.muIndex*suDescriptorSize;
-		NewDesc.mhDescriptorGPU.ptr	= srDXGPUHandle.ptr + NewDesc.muIndex*suDescriptorSize;
-		return NewDesc;
-	}
-	
-	static const DirectXComRef<ID3D12DescriptorHeap>& GetDescHeap() {return srDXDescriptorHeap;}
-
-	static bool Initialize( D3D12_DESCRIPTOR_HEAP_TYPE _eHeapType, D3D12_DESCRIPTOR_HEAP_FLAGS _eFlags=D3D12_DESCRIPTOR_HEAP_FLAG_NONE )
-	{
-		zenAssertMsg(suDescriptorSize == 0, "Resource Descriptor Heap already initialized");
-		D3D12_DESCRIPTOR_HEAP_DESC HeapDesc={};
-		HeapDesc.Type			= _eHeapType;
-		HeapDesc.NumDescriptors = kuHeapCount;
-		HeapDesc.Flags			= _eFlags;
-		HeapDesc.NodeMask		= 0;
-		HRESULT hr = zcMgr::GfxRender.GetDevice()->CreateDescriptorHeap(&HeapDesc, IID_PPV_ARGS(&srDXDescriptorHeap));
-		if( FAILED( hr ) )
-			return false;
-		
-		srDXCPUHandle			= srDXDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
-		srDXGPUHandle			= srDXDescriptorHeap->GetGPUDescriptorHandleForHeapStart();
-		suDescriptorSize		= zcMgr::GfxRender.GetDevice()->GetDescriptorHandleIncrementSize(_eHeapType);
-		saDescriptorUsed.SetRange(0, ResourceDescriptor::kuHeapCount, false);
-		return true;
-	}
-protected:
-	zUInt										muIndex	= kuInvalid;
-	D3D12_CPU_DESCRIPTOR_HANDLE					mhDescriptor;
-	D3D12_GPU_DESCRIPTOR_HANDLE					mhDescriptorGPU;
-
-	static DirectXComRef<ID3D12DescriptorHeap>	srDXDescriptorHeap;
-	static D3D12_CPU_DESCRIPTOR_HANDLE			srDXCPUHandle;
-	static D3D12_GPU_DESCRIPTOR_HANDLE			srDXGPUHandle;
-	static zUInt								suDescriptorSize;
-	static zArrayBits							saDescriptorUsed;
-	static 
-	friend class ManagerRender;
-};
-
-template<int TType, int THeapCount>	DirectXComRef<ID3D12DescriptorHeap> ResourceDescriptor<TType,THeapCount>::srDXDescriptorHeap;
-template<int TType, int THeapCount>	D3D12_CPU_DESCRIPTOR_HANDLE			ResourceDescriptor<TType,THeapCount>::srDXCPUHandle;
-template<int TType, int THeapCount>	D3D12_GPU_DESCRIPTOR_HANDLE			ResourceDescriptor<TType,THeapCount>::srDXGPUHandle;
-template<int TType, int THeapCount>	zUInt								ResourceDescriptor<TType,THeapCount>::suDescriptorSize = 0;
-template<int TType, int THeapCount>	zArrayBits							ResourceDescriptor<TType,THeapCount>::saDescriptorUsed;
-
-using DescriptorRTV			= ResourceDescriptor<0, 128>;
-using DescriptorDSV			= ResourceDescriptor<1, 64>;
-using DescriptorSRV_UAV_CBV = ResourceDescriptor<2, 1024>;
 
 
 //=================================================================================================
@@ -157,18 +66,18 @@ using DescriptorSRV_UAV_CBV = ResourceDescriptor<2, 1024>;
 class ManagerRender_DX12 : public ManagerRender_Base
 {
 zenClassDeclare(ManagerRender_DX12, ManagerRender_Base)
-enum kuConstant{ kuContextCount = 1 };
+enum kuConstant{ kuContextCount = 1, kuFrameBufferCount = 2 };
 //---------------------------------------------------------
 // Common to all ManagerRender
 //---------------------------------------------------------
 public:
 	
-	virtual void								FrameBegin(zcRes::GfxWindowRef _FrameWindow);
-	virtual void								FrameEnd();
-	void										Render(zArrayDynamic<zEngineRef<zcGfx::Command>>& _aDrawcalls);
-	void										NamedEventBegin(const zStringHash32& zName);
-	void										NamedEventEnd();
-	const zEngineRef<DX12QueryDisjoint>&		GetQueryDisjoint()const;
+	virtual void									FrameBegin(zcRes::GfxWindowRef _FrameWindow);
+	virtual void									FrameEnd();
+	void											Render(ScopedDrawlist& _Drawlist);
+	void											NamedEventBegin(const zStringHash32& zName);
+	void											NamedEventEnd();
+	const zEngineRef<DX12QueryDisjoint>&			GetQueryDisjoint()const;
 
 //---------------------------------------------------------
 // DirectX device infos
@@ -176,7 +85,7 @@ public:
 public:		
 	const DirectXComRef<IDXGIFactory4>&				GetFactory()const			{return mrDXFactory;}
 	const DirectXComRef<ID3D12Device>&				GetDevice()const			{return mrDXDevice;}
-
+	
 	DXGI_FORMAT										ZenFormatToNative( zenConst::eTextureFormat _eTexFormat )const		{ return meFormatConv[_eTexFormat]; }
 	DXGI_FORMAT										ZenFormatToTypeless( zenConst::eTextureFormat _eTexFormat )const	{ return meFormatConvTypeless[_eTexFormat]; }
 	DXGI_FORMAT										ZenFormatToDepthDSV( zenConst::eTextureFormat _eTexFormat )const	{ return meFormatConvDepthDSV[_eTexFormat]; }
@@ -186,10 +95,12 @@ public:
 //! @todo urgent clean this up
 	void											UnbindTextures(){};
 	void											UnbindResources(){};
-	
+	ResourceDescriptor2								GetResViewRingDescriptor(zUInt _uCount);
+
 	DirectXComRef<ID3D12Resource>&					GetTempResourceHandle();
 
 protected:
+	zenInline void									DispatchBarrier( ScopedDrawlist& _Drawlist, bool _bPreDataUpdate );
 	DXGI_FORMAT										meFormatConv[zenConst::keTexFormat__Count];
 	DXGI_FORMAT										meFormatConvTypeless[zenConst::keTexFormat__Count];
 	DXGI_FORMAT										meFormatConvDepthDSV[zenConst::keTexFormat__Count];
@@ -200,28 +111,23 @@ protected:
 	DirectXComRef<IDXGIAdapter3>					mrDXAdapter;
 	DirectXComRef<ID3D12Device>						mrDXDevice;
 	DirectXComRef<ID3D12Debug1>						mrDXDebugController;	
-	zArrayDynamic<DirectXComRef<ID3D12Resource>>	marTempResource[2];		//!< Temp allocated resources freed after 2 frames
-
+	DirectXComRef<ID3D12DescriptorHeap>				mrResViewDescriptorHeap[kuFrameBufferCount];
+	ResourceDescriptor2								muResViewDescriptor[kuFrameBufferCount];
+	zUInt											muResViewCount			= 32*1024;		//! @todo 2 Allow specifying the size of ring buffer
+	atomic<zUInt>									muResViewIndexCur		= 0;			//! @todo 2 see about MT strategy
+	zArrayDynamic<DirectXComRef<ID3D12Resource>>	marTempResource[kuFrameBufferCount];	//!< Temp allocated resources freed after 2 frames
+	
 public:
 	zcGfx::RootSignature							mRootSignatureDefault;
 	DirectXComRef<ID3D12CommandAllocator>			mrCommandAllocator;
 	DirectXComRef<ID3D12CommandQueue>				mrCommandQueue;
-	DirectXComRef<ID3D12GraphicsCommandList>		marCommandList[kuContextCount][2];
+	DirectXComRef<ID3D12GraphicsCommandList>		marCommandList[kuFrameBufferCount][kuContextCount];
 	
-	DirectXComRef<ID3D12PipelineState>				mTmpPipelineState;
-	DirectXComRef<ID3D12Resource>					mTmpVertexBuffer;
-	D3D12_VERTEX_BUFFER_VIEW						mTmpVertexBufferView;
-	zcGfx::DescriptorSRV_UAV_CBV					mTmpTextureView;
-	zenRes::zGfxTexture2D							mrTmpTexture;
-	zenRes::zGfxShaderVertex						mrTmpShaderVS;	
-	zenRes::zGfxShaderPixel							mrTmpShaderPS;	
 	// Synchronization objects.
 	HANDLE											m_fenceEvent;
 	DirectXComRef<ID3D12Fence>						m_fence;
 	UINT64											m_fenceValue;
 	void											WaitForPreviousFrame();
-
-	
 
 protected:
 	GPUContext										mGpuContext[kuContextCount];	//!< @note Only 1 context for the moment, increase when multihreading is supported		

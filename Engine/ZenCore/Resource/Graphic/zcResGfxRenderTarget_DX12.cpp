@@ -46,7 +46,7 @@ bool GfxTarget2D_DX12::Initialize()
 	const DirectXComRef<ID3D12Resource> rSurface;
 	GfxTarget2DRef	rRenderTarget	= (GfxTarget2D*)this;
 	GfxTexture2DRef	rTexture		= rRenderTarget->GetTexture2D();
-	return InitializeCommon(rTexture.HAL()->mrResource);
+	return InitializeCommon(rTexture.HAL()->mResource.mrResource);
 
 #else
 	HRESULT hr(S_FALSE);

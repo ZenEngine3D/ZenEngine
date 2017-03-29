@@ -2,25 +2,25 @@
 
 namespace zen { namespace zenGfx {
 
-zContext zContext::Create(const zStringHash32& _zContextName, const zContext& _rParent, const zenRes::zGfxRenderPass& _rRenderState)
+zScopedDrawlist zScopedDrawlist::Create(const zStringHash32& _zContextName, const zScopedDrawlist& _rParent, const zenRes::zGfxRenderPass& _rRenderState)
 {
-	static zenMem::zAllocatorPool sPoolContext("zcGfx::DrawContext", sizeof(zcGfx::DrawContext), 512, 128);	
-	zContext rContext;
-	rContext = zenNew(&sPoolContext) zcGfx::DrawContext(_zContextName, _rParent.Get(), _rRenderState);
+	static zenMem::zAllocatorPool sPoolContext("zcGfx::DrawlistContext", sizeof(zcGfx::ScopedDrawlist), 512, 128);	
+	zScopedDrawlist rContext;
+	rContext = zenNew(&sPoolContext) zcGfx::ScopedDrawlist(_zContextName, _rParent.Get(), _rRenderState);
 	return rContext;
 }
 
-zContext zContext::Create(const zStringHash32& _zContextName, const zenRes::zGfxRenderPass& _rRenderState)
+zScopedDrawlist zScopedDrawlist::Create(const zStringHash32& _zContextName, const zenRes::zGfxRenderPass& _rRenderState)
 {
-	return Create(_zContextName, zContext(), _rRenderState);
+	return Create(_zContextName, zScopedDrawlist(), _rRenderState);
 }
 
-const zContext& zContext::GetFrameContext()
+const zScopedDrawlist& zScopedDrawlist::GetFrameContext()
 {
 	return zcMgr::GfxRender.GetFrameContext();
 }
 
-void zContext::Submit()
+void zScopedDrawlist::Submit()
 {
 	GetSafe()->Submit();
 }
@@ -40,17 +40,15 @@ zCommand::zCommand(zcGfx::Command* _pDrawcall)
 	*this = _pDrawcall;
 }
 
-void zCommand::DrawMesh(const zContext& _rContext, float _fPriority, const zenRes::zGfxMeshStrip& _rMeshStrip, zU32 _uIndexFirst, zU32 _uIndexCount, const zVec4U16& _vScreenScissor )
+void zCommand::DrawMesh(const zScopedDrawlist& _rContext, float _fPriority, const zenRes::zGfxMeshStrip& _rMeshStrip, zU32 _uIndexFirst, zU32 _uIndexCount, const zVec4U16& _vScreenScissor )
 {
 	const zcRes::GfxRenderPassRef& rRenderpass	= _rContext->GetRenderpass();
 	zenAssert(rRenderpass.IsValid());
 	zenAssert(_rMeshStrip.IsValid());
-
-	zEngineRef<zcGfx::Command> rCommand			= zcGfx::CommandDraw_HAL::Create(rRenderpass, _rMeshStrip, _uIndexFirst, _uIndexCount, _vScreenScissor).GetSafe();	
-	_rContext->AddCommand(rCommand.Get());
+	zcGfx::CommandDraw_HAL::Add(_rContext, rRenderpass, _rMeshStrip, _uIndexFirst, _uIndexCount, _vScreenScissor);	
 }
 
-void zCommand::DrawMesh(const zContext& _rContext, float _fPriority, const zenRes::zGfxMesh& _rMesh, zU32 _uIndexFirst, zU32 _uIndexCount, const zVec4U16& _vScreenScissor )
+void zCommand::DrawMesh(const zScopedDrawlist& _rContext, float _fPriority, const zenRes::zGfxMesh& _rMesh, zU32 _uIndexFirst, zU32 _uIndexCount, const zVec4U16& _vScreenScissor )
 {
 	const zcRes::GfxRenderPassRef& rRenderpass	= _rContext->GetRenderpass();
 	zenAssert(rRenderpass.IsValid());
@@ -59,30 +57,25 @@ void zCommand::DrawMesh(const zContext& _rContext, float _fPriority, const zenRe
 	auto aMeshStrips = _rMesh->GetMeshStrips();
 	for(zUInt idx(0), count(aMeshStrips.Count()); idx<count; ++idx)
 	{		
-		zcRes::GfxMeshStripRef rMeshStrip			= aMeshStrips[idx];
-		zEngineRef<zcGfx::Command> rCommand			= zcGfx::CommandDraw_HAL::Create(rRenderpass, rMeshStrip, _uIndexFirst, _uIndexCount, _vScreenScissor).GetSafe();	
-		_rContext->AddCommand(rCommand.Get());
+		zcRes::GfxMeshStripRef rMeshStrip = aMeshStrips[idx];
+		zcGfx::CommandDraw_HAL::Add(_rContext, rRenderpass, rMeshStrip, _uIndexFirst, _uIndexCount, _vScreenScissor);			
 	}
 }
 
-void zCommand::ClearColor(const zContext& _rContext, const zenRes::zGfxTarget2D& _rRTColor, const zVec4F& _vRGBA, const zColorMask& _ColorMask, const zVec2S16& _vOrigin, const zVec2U16& _vDim )
+void zCommand::ClearColor(const zScopedDrawlist& _rContext, const zenRes::zGfxTarget2D& _rRTColor, const zVec4F& _vRGBA, const zColorMask& _ColorMask, const zVec2S16& _vOrigin, const zVec2U16& _vDim )
 {
 	const zcRes::GfxRenderPassRef& rRenderpass	= _rContext->GetRenderpass();
 	zenAssert(rRenderpass.IsValid());
-	zenAssert(!_rRTColor->IsDepth());
-		
-	zEngineRef<zcGfx::Command> rCommand			= zcGfx::CommandClearColor_HAL::Create(rRenderpass, _rRTColor, _vRGBA, _ColorMask, _vOrigin, _vDim);
-	_rContext->AddCommand(rCommand);
+	zenAssert(!_rRTColor->IsDepth());		
+	zcGfx::CommandClearColor_HAL::Add(_rContext, rRenderpass, _rRTColor, _vRGBA, _ColorMask, _vOrigin, _vDim);
 }
 
-void zCommand::ClearDepthStencil(const zContext& _rContext, const zenRes::zGfxTarget2D& _rRTDepthStencil, bool _bClearDepth, float _fDepthValue, bool _bClearStencil, zU8 _uStencilValue)
+void zCommand::ClearDepthStencil(const zScopedDrawlist& _rContext, const zenRes::zGfxTarget2D& _rRTDepthStencil, bool _bClearDepth, float _fDepthValue, bool _bClearStencil, zU8 _uStencilValue)
 {
 	const zcRes::GfxRenderPassRef& rRenderpass	= _rContext->GetRenderpass();
 	zenAssert(rRenderpass.IsValid() && _rRTDepthStencil.IsValid());
 	zenAssert(_rRTDepthStencil->IsDepth());
-
-	zEngineRef<zcGfx::Command> rCommand			= zcGfx::CommandClearDepthStencil_HAL::Create(rRenderpass, _rRTDepthStencil, _bClearDepth, _fDepthValue, _bClearStencil, _uStencilValue).GetSafe();	
-	_rContext->AddCommand(rCommand);
+	zcGfx::CommandClearDepthStencil_HAL::Add(_rContext, rRenderpass, _rRTDepthStencil, _bClearDepth, _fDepthValue, _bClearStencil, _uStencilValue).GetSafe();		
 }
 
 zCommand& zCommand::operator=(const zCommand& _Copy)

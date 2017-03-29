@@ -367,7 +367,7 @@ void zxNuklearHelper::Render(const zEngineRef<zxRenderData>& _rNuklearData, Wind
 
 		if( _rNuklearData->muIndexCount && _rNuklearData->muVertexCount )
 		{
-			zenGfx::zContext rUIContext	= zenGfx::zContext::Create("UINuklear", _rNuklearData->mrRenderpass);
+			zenGfx::zScopedDrawlist rUIContext	= zenGfx::zScopedDrawlist::Create("UINuklear", _rNuklearData->mrRenderpass);
 
 			//----------------------------------------------------------------------------
 			// Update content of vertex/index

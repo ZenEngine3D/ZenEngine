@@ -3,9 +3,14 @@
 namespace zcGfx
 {
 
-zMap<zU16>::Key32 DrawContext::sdDrawcallCount[2]; 
+zMap<zU16>::Key32 ScopedDrawlist_Base::sdDrawcallCount[2]; 
 
-DrawContext::DrawContext(const zStringHash32& _zContextName, DrawContext* _pParent, const zcRes::GfxRenderPassRef& _rRenderpass)
+ScopedDrawlist::ScopedDrawlist(const zStringHash32& _zContextName, ScopedDrawlist* _pParent, const zcRes::GfxRenderPassRef& _rRenderpass)
+: Super(_zContextName, _pParent, _rRenderpass)
+{
+}
+
+ScopedDrawlist_Base::ScopedDrawlist_Base(const zStringHash32& _zContextName, ScopedDrawlist* _pParent, const zcRes::GfxRenderPassRef& _rRenderpass)
 : mzName(_zContextName)
 , mbRootContext( _pParent == nullptr )
 , mrRenderpass(_rRenderpass)
@@ -25,21 +30,21 @@ DrawContext::DrawContext(const zStringHash32& _zContextName, DrawContext* _pPare
 	marDrawcalls.Reserve( (uPreviousCount*4)/3 ); // Reserve a bit more than previous frame, to reduce array resizing
 }
 
-DrawContext::~DrawContext()
+ScopedDrawlist_Base::~ScopedDrawlist_Base()
 {
 	//! @todo Clean Have list manage ref count
-	DrawContext* pChild = mlstChilds.GetHead();	
+	ScopedDrawlist_Base* pChild = mlstChilds.GetHead();	
 	while( pChild )
 	{
-		DrawContext* pDelChild	= pChild;
-		pChild					= mlstChilds.GetNext(*pChild);
+		ScopedDrawlist_Base* pDelChild	= pChild;
+		pChild							= mlstChilds.GetNext(*pChild);
 		pDelChild->ReferenceRem();
 	}
 }
 
-void DrawContext::Clear()
+void ScopedDrawlist_Base::Clear()
 {	
-	DrawContext* pChildContext = mlstChilds.PopHead();
+	ScopedDrawlist_Base* pChildContext = mlstChilds.PopHead();
 	while( pChildContext )
 	{
 		pChildContext->Clear();
@@ -48,13 +53,13 @@ void DrawContext::Clear()
 	marDrawcalls.Clear();
 }
 
-void DrawContext::Submit()
+void ScopedDrawlist::Submit()
 {
 	zenAssertMsg( mbRootContext, "Can only submit a root context");
 	SubmitInternal();	
 }
 
-void DrawContext::SubmitInternal()
+void ScopedDrawlist::SubmitInternal()
 {
 	zenAssertMsg( mbSubmitted == false, "Can only submit a context once");
 	if( !marDrawcalls.IsEmpty() || !mlstChilds.IsEmpty() )
@@ -63,15 +68,15 @@ void DrawContext::SubmitInternal()
 		mbSubmitted = true;
 		if( !marDrawcalls.IsEmpty() )
 		{
-			//marDrawcalls.Sort(); //! @todo 1 urgent re-add sorting
-			zcMgr::GfxRender.Render(marDrawcalls);
+			marDrawcalls.Sort();
+			zcMgr::GfxRender.Render(*this);
 		}
 
-		DrawContext* pChildCur = mlstChilds.GetHead();
+		ScopedDrawlist* pChildCur = static_cast<ScopedDrawlist*>(mlstChilds.GetHead());
 		while( pChildCur )
 		{
 			pChildCur->SubmitInternal();
-			pChildCur = mlstChilds.GetNext(*pChildCur);
+			pChildCur = static_cast<ScopedDrawlist*>(mlstChilds.GetNext(*pChildCur));
 		}	
 	}
 }

@@ -6,6 +6,7 @@ namespace zcRes
 
 namespace zcGfx
 {
+	ForwardDeclareRendererHAL(ScopedDrawlist);
 	ForwardDeclareRendererHAL(GPUContext);
 	ForwardDeclareRendererHAL(ManagerRender);
 

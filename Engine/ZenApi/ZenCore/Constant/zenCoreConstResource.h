@@ -166,7 +166,7 @@ namespace zen {
 	namespace zenType
 	{
 		typedef zFlag<eResType,		keResType__Count, zU64>	zFlagResType;
-		typedef zFlag<ePlatform,	(int)kePlatform__Count>		zFlagResPlatform;
+		typedef zFlag<ePlatform,	kePlatform__Count>		zFlagResPlatform;
 		typedef zFlag<eResourceUse,	keResUse__Count>		zFlagResUse;
 		typedef zFlag<eTextureUse,	keTexCreate__Count>		zFlagResTexUse;		
 	}

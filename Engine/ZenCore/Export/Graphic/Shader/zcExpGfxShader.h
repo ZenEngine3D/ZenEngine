@@ -22,7 +22,7 @@ namespace zcExp
 			zStringHash32	mzName;												//!< Name given to resource with hash
 			zU32			muMemSize;											//!< Size taken by one entry of StructBuffer or entire ConstantBuffer (if applicable)
 			eShaderResource	meType;												//!< Resource type
-			zU8				muSlotIndex;										//!< Resource bind point
+			zU8				muSlotIndex;										//!< Resource bind point //! @todo 3 change this to u16
 			zU8				muSlotCount;										//!< Resource array entries count
 		};
 																				//!< @todo feature support buffer slots

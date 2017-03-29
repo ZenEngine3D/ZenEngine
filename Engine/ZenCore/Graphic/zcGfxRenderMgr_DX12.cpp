@@ -3,56 +3,17 @@
 #include <DXGI1_4.h>
 
 //SF DX12
-
-//==============================================================================================
-//! Temp texture creation
-//! @todo 0 remove this once texture support added
-//==============================================================================================
-// Generate a simple black and white checkerboard texture.
-static const UINT TextureWidth = 256;
-static const UINT TextureHeight = 256;
-static const UINT TexturePixelSize = 4;	// The number of bytes used to represent a pixel in the texture.
-std::vector<UINT8> GenerateTextureData()
-{
-	const UINT rowPitch = TextureWidth * TexturePixelSize;
-	const UINT cellPitch = rowPitch >> 3;		// The width of a cell in the checkboard texture.
-	const UINT cellHeight = TextureWidth >> 3;	// The height of a cell in the checkerboard texture.
-	const UINT textureSize = rowPitch * TextureHeight;
-
-	std::vector<UINT8> data(textureSize);
-	UINT8* pData = &data[0];
-
-	for (UINT n = 0; n < textureSize; n += TexturePixelSize)
-	{
-		UINT x = n % rowPitch;
-		UINT y = n / rowPitch;
-		UINT i = x / cellPitch;
-		UINT j = y / cellHeight;
-
-		if (i % 2 == j % 2)
-		{
-			pData[n] = 0x00;		// R
-			pData[n + 1] = 0x00;	// G
-			pData[n + 2] = 0x00;	// B
-			pData[n + 3] = 0xff;	// A
-		}
-		else
-		{
-			pData[n] = 0xff;		// R
-			pData[n + 1] = 0xff;	// G
-			pData[n + 2] = 0xff;	// B
-			pData[n + 3] = 0xff;	// A
-		}
-	}
-
-	return data;
-}
-
 namespace zcGfx
 {
 
+//! @todo 2 temp until final location found
+zcGfx::DescriptorSRV_UAV_CBV	gNullSRVView;
+zcGfx::DescriptorSRV_UAV_CBV	gNullUAVView;
+zcGfx::DescriptorSRV_UAV_CBV	gNullCBVView;
+
 DX12QueryDisjoint::List		DX12QueryDisjoint::slstQueryCreated;
 DX12QueryTimestamp::List	DX12QueryTimestamp::slstQueryCreated;
+
 
 DX12QueryDisjoint::DX12QueryDisjoint()
 {
@@ -306,12 +267,45 @@ bool ManagerRender_DX12::Load()
 	//----------------------------------------------------------------------------------------------
 	// Create Descriptors heap		
 	//----------------------------------------------------------------------------------------------
-	if( !DescriptorSRV_UAV_CBV::Initialize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE) )
+	if( !DescriptorSRV_UAV_CBV::Initialize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV/*, D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE*/) )
 		return false;
 	if( !DescriptorRTV::Initialize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV) )
 		return false;
 	if( !DescriptorDSV::Initialize(D3D12_DESCRIPTOR_HEAP_TYPE_DSV) )
 		return false;
+	
+	D3D12_DESCRIPTOR_HEAP_DESC HeapDesc={};
+	HeapDesc.Type			= D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;	
+	HeapDesc.Flags			= D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
+	HeapDesc.NodeMask		= 0;
+	HeapDesc.NumDescriptors = (UINT)muResViewCount;		
+	for(zUInt idx(0); idx<kuFrameBufferCount; ++idx)
+	{
+		hr									= zcMgr::GfxRender.GetDevice()->CreateDescriptorHeap(&HeapDesc, IID_PPV_ARGS(&mrResViewDescriptorHeap[idx]));
+		if( FAILED( hr ) )
+			return false;	
+		muResViewDescriptor[idx].HandleCpu	= mrResViewDescriptorHeap[idx]->GetCPUDescriptorHandleForHeapStart();
+		muResViewDescriptor[idx].HandleGpu	= mrResViewDescriptorHeap[idx]->GetGPUDescriptorHandleForHeapStart();
+	}	
+	
+	D3D12_SHADER_RESOURCE_VIEW_DESC NullSRVDesc = {};
+	NullSRVDesc.Format							= zcMgr::GfxRender.ZenFormatToNative(keTexFormat_R8);
+	NullSRVDesc.ViewDimension					= D3D12_SRV_DIMENSION_TEXTURE2D;
+	NullSRVDesc.Shader4ComponentMapping			= D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+	NullSRVDesc.Texture2D.MipLevels				= 1;
+	gNullSRVView								= zcGfx::DescriptorSRV_UAV_CBV::Allocate();
+	zcMgr::GfxRender.GetDevice()->CreateShaderResourceView(nullptr, &NullSRVDesc, gNullSRVView.GetCpuHandle());
+
+	D3D12_UNORDERED_ACCESS_VIEW_DESC NullUAVDesc = {};
+	NullUAVDesc.Format							= zcMgr::GfxRender.ZenFormatToNative(keTexFormat_R8);
+	NullUAVDesc.ViewDimension					= D3D12_UAV_DIMENSION_TEXTURE2D;
+	NullUAVDesc.Texture2D.MipSlice				= 0;
+	NullUAVDesc.Texture2D.PlaneSlice			= 0;
+	gNullUAVView								= zcGfx::DescriptorSRV_UAV_CBV::Allocate();
+	zcMgr::GfxRender.GetDevice()->CreateUnorderedAccessView(nullptr, nullptr, &NullUAVDesc, gNullUAVView.GetCpuHandle());
+
+	gNullCBVView								= zcGfx::DescriptorSRV_UAV_CBV::Allocate();						
+	zcMgr::GfxRender.GetDevice()->CreateConstantBufferView(nullptr, gNullCBVView.GetCpuHandle());
 	
 	//----------------------------------------------------------------------------------------------
 	// Create Commandlist/Queue
@@ -323,7 +317,6 @@ bool ManagerRender_DX12::Load()
 	
 	// Create the command list.
 	DirectXComRef<ID3D12GraphicsCommandList>* pCmdList = &marCommandList[0][0];
-
 	
 	for( zUInt idxCmdList(0); idxCmdList< sizeof(marCommandList) / sizeof(DirectXComRef<ID3D12GraphicsCommandList>); ++idxCmdList )
 	{
@@ -347,16 +340,25 @@ bool ManagerRender_DX12::Load()
 	//----------------------------------------------------------------------------------------------
 	{
 		RootSignature::StaticInitialize();
-
-		CD3DX12_DESCRIPTOR_RANGE1 SRVTable;
-		SRVTable.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0, 0, D3D12_DESCRIPTOR_RANGE_FLAG_DATA_STATIC);
-		mRootSignatureDefault = RootSignature({RootSignature::SlotTable(1,	&SRVTable,	D3D12_SHADER_VISIBILITY_PIXEL)}, D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
+		CD3DX12_DESCRIPTOR_RANGE1 aRanges[3];
+        //D3D12_DESCRIPTOR_RANGE_TYPE_SAMPLER	= ( D3D12_DESCRIPTOR_RANGE_TYPE_CBV + 1 ) 
+		aRanges[D3D12_DESCRIPTOR_RANGE_TYPE_CBV].Init(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, (UINT)14, 0, 0, D3D12_DESCRIPTOR_RANGE_FLAG_NONE);
+		aRanges[D3D12_DESCRIPTOR_RANGE_TYPE_UAV].Init(D3D12_DESCRIPTOR_RANGE_TYPE_UAV, (UINT) 8, 0, 0, D3D12_DESCRIPTOR_RANGE_FLAG_NONE);
+		aRanges[D3D12_DESCRIPTOR_RANGE_TYPE_SRV].Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, (UINT)-1, 0, 0, D3D12_DESCRIPTOR_RANGE_FLAG_DESCRIPTORS_VOLATILE/* D3D12_DESCRIPTOR_RANGE_FLAG_DATA_STATIC*/);		
+		mRootSignatureDefault = RootSignature( 
+			{
+				RootSignature::SlotTable(1, &aRanges[0], D3D12_SHADER_VISIBILITY_VERTEX),
+				RootSignature::SlotTable(1, &aRanges[1], D3D12_SHADER_VISIBILITY_VERTEX),
+				RootSignature::SlotTable(1, &aRanges[2], D3D12_SHADER_VISIBILITY_VERTEX),
+				RootSignature::SlotTable(1, &aRanges[0], D3D12_SHADER_VISIBILITY_PIXEL),
+				RootSignature::SlotTable(1, &aRanges[1], D3D12_SHADER_VISIBILITY_PIXEL),
+				RootSignature::SlotTable(1, &aRanges[2], D3D12_SHADER_VISIBILITY_PIXEL),
+				//RootSignature::SlotTable(3, aRanges, D3D12_SHADER_VISIBILITY_VERTEX),
+				//RootSignature::SlotTable(3,	aRanges, D3D12_SHADER_VISIBILITY_PIXEL),				
+			}, 
+			D3D12_ROOT_SIGNATURE_FLAG_NONE);
 	}
 
-	//==============================================================================================
-	//! Temp PSO creation
-	//! @todo 0 replace this with proper PSO support 
-	//==============================================================================================
 	// Command list allocators can only be reset when the associated 
 	// command lists have finished execution on the GPU; apps should use 
 	// fences to determine GPU execution progress.
@@ -365,109 +367,6 @@ bool ManagerRender_DX12::Load()
 	// However, when ExecuteCommandList() is called on a particular command 
 	// list, that command list can then be reset at any time and must be before re-recording.
 	marCommandList[0][0]->Reset(mrCommandAllocator.Get(), nullptr);
-
-	mrTmpShaderVS	= zenRes::zGfxShaderVertex::Create( "Shader/DX12Sample.sl", "VSMain");
-	mrTmpShaderPS	= zenRes::zGfxShaderPixel::Create( "Shader/DX12Sample.sl", "PSMain" );
-
-	// Define the vertex input layout.
-	D3D12_INPUT_ELEMENT_DESC inputElementDescs[] =
-	{
-		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
-		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 }
-	};
-
-	// Describe and create the graphics pipeline state object (PSO).
-	D3D12_GRAPHICS_PIPELINE_STATE_DESC psoDesc = {};
-	psoDesc.InputLayout = { inputElementDescs, _countof(inputElementDescs) };
-	psoDesc.pRootSignature = mRootSignatureDefault.Get();
-	psoDesc.VS = mrTmpShaderVS.HAL()->mDXShaderCode;
-	psoDesc.PS = mrTmpShaderPS.HAL()->mDXShaderCode;
-	psoDesc.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
-	psoDesc.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
-	psoDesc.DepthStencilState.DepthEnable = FALSE;
-	psoDesc.DepthStencilState.StencilEnable = FALSE;
-	psoDesc.SampleMask = UINT_MAX;
-	psoDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
-	psoDesc.NumRenderTargets = 1;
-	psoDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;
-	psoDesc.SampleDesc.Count = 1;
-	hr = mrDXDevice->CreateGraphicsPipelineState(&psoDesc, IID_PPV_ARGS(&mTmpPipelineState));
-	if( FAILED(hr) )
-		return false;
-
-	//==============================================================================================
-	//! Temp VertexBuffer creation
-	//! @todo 0 replace this with proper Buffer support 
-	//==============================================================================================
-	// Create the vertex buffer.
-	{
-		float m_aspectRatio = 1280.f / 800.f;
-		// Define the geometry for a triangle.
-		Vertex triangleVertices[] =
-		{
-			{ { 0.0f, 0.25f * m_aspectRatio, 0.0f }, { 0.5f, 0.0f } },
-			{ { 0.25f, -0.25f * m_aspectRatio, 0.0f }, { 1.0f, 1.0f } },
-			{ { -0.25f, -0.25f * m_aspectRatio, 0.0f }, { 0.0f, 1.0f } }
-		};
-
-		const UINT vertexBufferSize = sizeof(triangleVertices);
-
-		// Note: using upload heaps to transfer static data like vert buffers is not 
-		// recommended. Every time the GPU needs it, the upload heap will be marshalled 
-		// over. Please read up on Default Heap usage. An upload heap is used here for 
-		// code simplicity and because there are very few verts to actually transfer.
-		hr = mrDXDevice->CreateCommittedResource(
-			&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),
-			D3D12_HEAP_FLAG_NONE,
-			&CD3DX12_RESOURCE_DESC::Buffer(vertexBufferSize),
-			D3D12_RESOURCE_STATE_GENERIC_READ,
-			nullptr,
-			IID_PPV_ARGS(&mTmpVertexBuffer));
-		
-		if( FAILED(hr) )
-			return false;
-		zSetGfxResourceName(mTmpVertexBuffer, L"TempVertexBuffer");
-
-		// Copy the triangle data to the vertex buffer.
-		UINT8* pVertexDataBegin;
-		CD3DX12_RANGE readRange(0, 0);		// We do not intend to read from this resource on the CPU.
-		hr = mTmpVertexBuffer->Map(0, &readRange, reinterpret_cast<void**>(&pVertexDataBegin));
-		if( FAILED(hr) )
-			return false;
-
-		memcpy(pVertexDataBegin, triangleVertices, sizeof(triangleVertices));
-		mTmpVertexBuffer->Unmap(0, nullptr);
-
-		// Initialize the vertex buffer view.
-		mTmpVertexBufferView.BufferLocation = mTmpVertexBuffer->GetGPUVirtualAddress();
-		mTmpVertexBufferView.StrideInBytes = sizeof(Vertex);
-		mTmpVertexBufferView.SizeInBytes = vertexBufferSize;
-	}
-
-	//==============================================================================================
-	//! Temp Texture creation
-	//! @todo 0 replace this with proper texture support 
-	//==============================================================================================
-
-	//-----------------------------------------------------------
-	// Prepare some data for asset creation
-	zArrayStatic<zU8>			aTexRGBA;
-	zVec2U16					vTexSize(256,256);
-	zenConst::eTextureFormat	eTexFormat = zenConst::keTexFormat_RGBA8;
-	aTexRGBA.SetCount( vTexSize.x*vTexSize.y*4 );
-	zU8*						pTexCur = aTexRGBA.First();
-	for(zUInt line=0; line<vTexSize.y; ++line)
-	{
-		for(zUInt col=0; col<vTexSize.x; ++col)
-		{
-			*pTexCur++ = (line/16+col/16) % 2 == 0 ? 0xFF : 0x10;
-			*pTexCur++ = (line/16+col/16) % 2 == 0 ? 0xFF : 0x10;
-			*pTexCur++ = (line/16+col/16) % 2 == 0 ? 0xFF : 0xFF;
-			*pTexCur++ = 1;
-		}
-	};
-
-	mrTmpTexture	= zenRes::zGfxTexture2D::Create(zenConst::keTexFormat_RGBA8, vTexSize, aTexRGBA );
 	
 	// Close the command list and execute it to begin the initial GPU setup.
 	hr = marCommandList[0][0]->Close();
@@ -524,6 +423,13 @@ bool ManagerRender_DX12::Unload()
 	return true;
 }
 
+ResourceDescriptor2 ManagerRender_DX12::GetResViewRingDescriptor(zUInt _uCount)
+{
+	zUInt uIndex = muResViewIndexCur.fetch_add(_uCount);
+	zenAssertMsg( uIndex+_uCount <= muResViewCount, "Ran out of resource descriptors for this frame");
+	return muResViewDescriptor[muFrameRendered%kuFrameBufferCount].Offset(uIndex);
+}
+
  void ManagerRender_DX12::WaitForPreviousFrame()
 {
 	// WAITING FOR THE FRAME TO COMPLETE BEFORE CONTINUING IS NOT BEST PRACTICE.
@@ -556,14 +462,14 @@ void ManagerRender_DX12::FrameBegin(zcRes::GfxWindowRef _FrameWindow)
 	// fences to determine GPU execution progress.
 	mrCommandAllocator->Reset();
 
-	//! @todo 1 support mutiple context/cmdlist
+	//! @todo 1 support multiple context/cmdlist
 	// However, when ExecuteCommandList() is called on a particular command 
 	// list, that command list can then be reset at any time and must be before re-recording.
-	marCommandList[0][muFrameRendered%2]->Reset(mrCommandAllocator.Get(), nullptr);
-
-	mGpuContext[0].Reset( mrDXDevice, marCommandList[0][muFrameRendered%2] );
+	muResViewIndexCur = 0;
+	marCommandList[muFrameRendered%kuFrameBufferCount][0]->Reset(mrCommandAllocator.Get(), nullptr);	
+	mGpuContext[0].Reset( mrDXDevice, marCommandList[muFrameRendered%kuFrameBufferCount][0], mrResViewDescriptorHeap[muFrameRendered%kuFrameBufferCount] );
 	Super::FrameBegin(_FrameWindow);
-
+	
 	// Indicate that the back buffer will be used as a render target.
 	const zcRes::GfxTarget2DRef& rBackbuffer = grWindowRender->GetBackbuffer();
 	mGpuContext[0].GetCommandList()->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(rBackbuffer.HAL()->mrResource.Get(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET) );
@@ -588,7 +494,7 @@ void ManagerRender_DX12::FrameEnd()
 	HRESULT hr = mGpuContext[0].GetCommandList()->Close();
 	if (FAILED(hr))
 		return;
-	ID3D12CommandList* ppCommandLists[] = { marCommandList[0][muFrameRendered%2].Get() };
+	ID3D12CommandList* ppCommandLists[] = { marCommandList[muFrameRendered%kuFrameBufferCount][0].Get() };
 	mrCommandQueue->ExecuteCommandLists(zenArrayCount(ppCommandLists), ppCommandLists);
 	grWindowRender.HAL()->mrDXSwapChain->Present( 0, 0 );	
 	
@@ -635,9 +541,82 @@ const zEngineRef<DX12QueryDisjoint>& ManagerRender_DX12::GetQueryDisjoint()const
 	return mrQueryDisjoint;
 }
 
-void ManagerRender_DX12::Render(zArrayDynamic<zEngineRef<zcGfx::Command>>& _aDrawcalls)
-{		
-	mGpuContext[0].Submit(_aDrawcalls);
+void ManagerRender_DX12::DispatchBarrier(ScopedDrawlist& _Drawlist, bool _bPreDataUpdate)
+{
+	static zArrayDynamic<D3D12_RESOURCE_BARRIER> aBarriers;
+	aBarriers.Reserve(128);
+	
+	auto aWantedState = _Drawlist.GetBarrierCheck(_bPreDataUpdate);
+	if( aWantedState.Count() > 0 )
+	{					
+		auto pWantedStateCur	= aWantedState.First();
+		auto pWantedStateLast	= aWantedState.Last();
+		while( pWantedStateCur <= pWantedStateLast )
+		{
+			if( pWantedStateCur->mpResource->meState != pWantedStateCur->meWantedState )
+			{	
+				aBarriers.IncCount( 1 );
+				D3D12_RESOURCE_BARRIER& BarrierDesc = *aBarriers.Last();
+				BarrierDesc.Type					= D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+				BarrierDesc.Flags					= D3D12_RESOURCE_BARRIER_FLAG_NONE;
+				BarrierDesc.Transition.pResource	= pWantedStateCur->mpResource->mrResource.Get();
+				BarrierDesc.Transition.StateBefore	= pWantedStateCur->mpResource->meState;
+				BarrierDesc.Transition.StateAfter	= pWantedStateCur->meWantedState;
+				BarrierDesc.Transition.Subresource	= D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
+				pWantedStateCur->mpResource->meState= pWantedStateCur->meWantedState;						
+			}
+			++pWantedStateCur;
+		}
+	}
+				
+	if( aBarriers.Count() )
+	{
+		mGpuContext[0].GetCommandList()->ResourceBarrier((UINT)aBarriers.Count(), aBarriers.First());
+		aBarriers.SetCount(0);
+		aBarriers.Reserve(128);
+	}
+}
+
+void ManagerRender_DX12::Render(ScopedDrawlist& _Drawlist)
+{			
+	bool bBarrierPostUpdate 						= false;
+	zcRes::GfxView_HAL* pView						= _Drawlist.GetRenderpass().IsValid() && _Drawlist.GetRenderpass().HAL()->mrStateView.IsValid() ? _Drawlist.GetRenderpass().HAL()->mrStateView.HAL() : nullptr;
+	
+	if( pView )
+	{		
+		zcRes::GfxTexture2DRef rRTTexture;		
+		for( zUInt idx(0), count(pView->maRTColorConfig.Count()); idx<count; ++idx)
+		{
+			rRTTexture = pView->maRTColorConfig[idx].mrTargetSurface.IsValid() && pView->maRTColorConfig[idx].mrTargetSurface->GetTexture2D().IsValid() ? pView->maRTColorConfig[idx].mrTargetSurface->GetTexture2D() : nullptr;
+			if( rRTTexture.IsValid() )
+				_Drawlist.AddBarrierCheck(true, ScopedDrawlist_DX12::BarrierCheck(&rRTTexture.HAL()->mResource, D3D12_RESOURCE_STATE_RENDER_TARGET));
+		}
+		
+		rRTTexture = pView->mRTDepthConfig.mrTargetSurface.IsValid() ? pView->mRTDepthConfig.mrTargetSurface->GetTexture2D() : nullptr;
+		if( rRTTexture.IsValid() )
+			_Drawlist.AddBarrierCheck(true, ScopedDrawlist_DX12::BarrierCheck(&rRTTexture.HAL()->mResource, D3D12_RESOURCE_STATE_DEPTH_WRITE));
+	}
+	DispatchBarrier(_Drawlist, true);
+
+	const zEngineRef<zcGfx::Command>* prDrawcall	= _Drawlist.GetCommands().First();
+	const zEngineRef<zcGfx::Command>* prDrawcallEnd	= _Drawlist.GetCommands().Last();		
+	while( prDrawcall <= prDrawcallEnd )
+	{		
+		//! @todo 2 optim Find better way of barrier before/after DataUpdate
+		if( !bBarrierPostUpdate && (*prDrawcall)->mSortId.Draw.muGPUPipelineMode > keGpuPipe_DataUpdate )
+		{			
+			DispatchBarrier(_Drawlist, false);
+			bBarrierPostUpdate = true;
+		}
+		(*prDrawcall)->Invoke(mGpuContext[0]);
+		++prDrawcall;		
+	}
+
+	if( !bBarrierPostUpdate )
+	{			
+		DispatchBarrier(_Drawlist, false);
+		bBarrierPostUpdate = true;
+	}
 }
 
 DirectXComRef<ID3D12Resource>& ManagerRender_DX12::GetTempResourceHandle()
@@ -646,29 +625,4 @@ DirectXComRef<ID3D12Resource>& ManagerRender_DX12::GetTempResourceHandle()
 	return *marTempResource[muFrameRendered%zenArrayCount(marTempResource)].Last();
 }
 
-#if 0 //SHADERCONST
-//! @todo urgent clean this up
-void ManagerRender::UnbindTextures()
-{
-	if( mbTextureUnbind == false )
-	{
-		ID3D11ShaderResourceView* StageTextureViews[zcExp::kuDX12_TexturePerStageMax];
-		zenMem::Set(StageTextureViews, 0, sizeof(StageTextureViews) );	
-		DX12GetDeviceContext()->VSSetShaderResources( 0, zcExp::kuDX12_TexturePerStageMax, StageTextureViews );
-		DX12GetDeviceContext()->PSSetShaderResources( 0, zcExp::kuDX12_TexturePerStageMax, StageTextureViews );
-		mbTextureUnbind = true;
-	}
-}
-
-void ManagerRender::UnbindResources()
-{
-	if( mbResourceUnbind == false )
-	{
-		UnbindTextures();
-		//mDX12pContextImmediate->OMSetRenderTargets(0, nullptr, nullptr );
-		//mbResourceUnbind = true;
-	}
-
-}
-#endif
 }

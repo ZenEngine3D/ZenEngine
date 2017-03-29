@@ -17,13 +17,13 @@ void GPUContext_Base::Reset()
 	mrStateRaster		= nullptr;
 }
 
-void GPUContext::Submit(zArrayDynamic<zEngineRef<zcGfx::Command>>& _aDrawcalls)
+void GPUContext::Submit(const zArrayDynamic<zEngineRef<zcGfx::Command>>& _aDrawcalls)
 {
-	zEngineRef<zcGfx::Command>*	prDrawcall			= _aDrawcalls.First();
+	const zEngineRef<zcGfx::Command>* prDrawcall	= _aDrawcalls.First();
 	const zEngineRef<zcGfx::Command>* prDrawcallEnd	= _aDrawcalls.Last();
 	while( prDrawcall <= prDrawcallEnd )
 	{
-		(*prDrawcall)->Invoke(*this);					
+		(*prDrawcall)->Invoke(*this);
 		++prDrawcall;		
 	}
 }

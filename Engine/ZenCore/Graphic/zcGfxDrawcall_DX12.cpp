@@ -6,11 +6,15 @@ namespace zcGfx
 //=================================================================================================
 // DRAW COMMAND 
 //=================================================================================================
-zEngineRef<Command> CommandDraw_DX12::Create(const zcRes::GfxRenderPassRef& _rRenderPass, const zcRes::GfxMeshStripRef& _rMeshStrip, zU32 _uIndexFirst, zU32 _uIndexCount, const zVec4U16& _vScreenScissor)
+zEngineRef<Command> CommandDraw_DX12::Add(const zenGfx::zScopedDrawlist& _rContext, const zcRes::GfxRenderPassRef& _rRenderPass, const zcRes::GfxMeshStripRef& _rMeshStrip, zU32 _uIndexFirst, zU32 _uIndexCount, const zVec4U16& _vScreenScissor)
 {
-	zEngineRef<Command> rCommand	= CommandDraw::Create( _rRenderPass, _rMeshStrip, _uIndexFirst, _uIndexCount, _vScreenScissor );
+	zEngineRef<Command> rCommand	= CommandDraw::Add(_rContext, _rRenderPass, _rMeshStrip, _uIndexFirst, _uIndexCount, _vScreenScissor );
 	CommandDraw_DX12* pCommandDraw	= reinterpret_cast<CommandDraw_DX12*>( rCommand.GetSafe() );
 	pCommandDraw->mrPSO				= PSO_DX12::GetAdd( _rRenderPass, _rMeshStrip );
+	const zArrayDynamic<zcRes::GfxShaderResourceDescRef>& aTrackedResource = _rMeshStrip.HAL()->maTrackedResources;
+	for( zUInt idx(0), count(aTrackedResource.Count()); idx<count; ++idx)
+		_rContext->AddBarrierCheck(true, ScopedDrawlist_DX12::BarrierCheck(aTrackedResource[idx].GetGpuBuffer(), D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE));
+
 	return rCommand;
 }
 
@@ -20,22 +24,19 @@ void CommandDraw_DX12::Invoke(GPUContext& _Context)
 	{
 		zcPerf::EventGPUCounter::Create(zcPerf::EventGPUCounter::keType_DrawIndexed);		//! @todo 1 optim find cheaper method to count # drawcall, large memory/time overhead with large drawcount		
 		_Context.UpdateState( *this );
-
-		//! @todo 0 remove all of this hacked code
-		ID3D12DescriptorHeap* ppHeaps[] = { zcGfx::DescriptorSRV_UAV_CBV::GetDescHeap().Get() };
-		zcMgr::GfxRender.mGpuContext[0].GetCommandList()->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
-		zcMgr::GfxRender.mGpuContext[0].GetCommandList()->SetGraphicsRootDescriptorTable(0, zcMgr::GfxRender.mrTmpTexture.HAL()->mTextureView.GetGpuHandle());
-		// Record commands.
-// 		zcMgr::GfxRender.mGpuContext[0].GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-// 		zcMgr::GfxRender.mGpuContext[0].GetCommandList()->IASetVertexBuffers(0, 1, &zcMgr::GfxRender.mTmpVertexBufferView);
-
-		_Context.GetCommandList()->DrawInstanced(3, 1, 0, 0);
+		_Context.GetCommandList()->DrawIndexedInstanced(muIndexCount, 1, muIndexFirst, 0, 0);
 	}
 }
 
 //=================================================================================================
 // DRAW COMMAND UPDATE INDEX BUFFER
 //=================================================================================================
+zEngineRef<Command> CommandClearColor_DX12::Add(const zenGfx::zScopedDrawlist& _rContext, const zcRes::GfxRenderPassRef& _rRenderPass, const zcRes::GfxTarget2DRef& _rRTColor, const zVec4F& _vRGBA,  const zColorMask& _ColorMask, const zVec2S16& _vOrigin, const zVec2U16& _vDim)
+{
+	if( _rRTColor->GetTexture2D().IsValid() ) // Backbuffer doesn't have associated Texture2D
+		_rContext->AddBarrierCheck(true, ScopedDrawlist_DX12::BarrierCheck(&_rRTColor->GetTexture2D().HAL()->mResource, D3D12_RESOURCE_STATE_RENDER_TARGET));
+	return CommandClearColor::Add(_rContext, _rRenderPass, _rRTColor, _vRGBA, _ColorMask, _vOrigin, _vDim);
+}
 void CommandClearColor_DX12::Invoke(GPUContext& _Context)
 {	
 	zcPerf::EventGPUCounter::Create(zcPerf::EventGPUCounter::keType_ClearColor);
@@ -46,6 +47,11 @@ void CommandClearColor_DX12::Invoke(GPUContext& _Context)
 //=================================================================================================
 // DRAW COMMAND UPDATE INDEX BUFFER
 //=================================================================================================
+zEngineRef<Command> CommandClearDepthStencil_DX12::Add(const zenGfx::zScopedDrawlist& _rContext, const zcRes::GfxRenderPassRef& _rRenderPass, const zcRes::GfxTarget2DRef& _rRTDepth, bool _bClearDepth, float _fDepthValue, bool _bClearStencil, zU8 _uStencilValue)
+{
+	_rContext->AddBarrierCheck(true, ScopedDrawlist_DX12::BarrierCheck(&_rRTDepth->GetTexture2D().HAL()->mResource, D3D12_RESOURCE_STATE_DEPTH_WRITE));
+	return CommandClearDepthStencil::Add(_rContext, _rRenderPass, _rRTDepth, _bClearDepth, _fDepthValue, _bClearStencil, _uStencilValue);
+}
 void CommandClearDepthStencil_DX12::Invoke(GPUContext& _Context)
 {
 	zcPerf::EventGPUCounter::Create(zcPerf::EventGPUCounter::keType_ClearDepth);
@@ -59,154 +65,96 @@ void CommandClearDepthStencil_DX12::Invoke(GPUContext& _Context)
 //=================================================================================================
 // DRAW COMMAND UPDATE INDEX BUFFER
 //=================================================================================================
-zEngineRef<Command> CommandUpdateIndex_DX12::Create(const zcRes::GfxIndexRef& _rIndex, zUInt _uOffset, zUInt _uSize)
+zEngineRef<Command> CommandUpdateIndex_DX12::Add(const zenGfx::zScopedDrawlist& _rContext, const zcRes::GfxIndexRef& _rIndex, zUInt _uOffset, zUInt _uSize)
 {
-	zenAssert(_rIndex.HAL()->mrResourceUpload.Get() != nullptr);
+	zenAssert(_rIndex.HAL()->mResource.mrUpload.Get() != nullptr);
 	static zenMem::zAllocatorPool sMemPool("Pool CommandUpdateIndex", sizeof(CommandUpdateIndex_DX12), 128, 128);
-	auto pCmdUpdateIndex				= zenNew(&sMemPool) CommandUpdateIndex_DX12;	
-	pCmdUpdateIndex->mrIndex			= _rIndex;
-	pCmdUpdateIndex->mrResourceUpload	= _rIndex.HAL()->mrResourceUpload;
-	pCmdUpdateIndex->muOffset			= _uOffset;
-	pCmdUpdateIndex->muSize				= _uSize;
-	pCmdUpdateIndex->SetSortKeyDataUpdate(_rIndex.GetResID().GetHashID());
-	return pCmdUpdateIndex;
+	auto pCommand					= zenNew(&sMemPool) CommandUpdateIndex_DX12;	
+	pCommand->mrIndex				= _rIndex;
+	pCommand->mrResourceUpload		= _rIndex.HAL()->mResource.mrUpload;
+	pCommand->muOffset				= _uOffset;
+	pCommand->muSize				= _uSize;
+	pCommand->SetSortKeyDataUpdate(_rIndex.GetResID().GetHashID());
+	
+	_rContext->AddCommand(pCommand);
+	_rContext->AddBarrierCheck(true,	ScopedDrawlist_DX12::BarrierCheck(&_rIndex.HAL()->mResource, D3D12_RESOURCE_STATE_COPY_DEST));
+	_rContext->AddBarrierCheck(false,	ScopedDrawlist_DX12::BarrierCheck(&_rIndex.HAL()->mResource, D3D12_RESOURCE_STATE_INDEX_BUFFER));	
+	return pCommand;
 }
 
 void CommandUpdateIndex_DX12::Invoke(GPUContext& _Context)
 {
 	zcPerf::EventGPUCounter::Create(zcPerf::EventGPUCounter::keType_UpdateIndex);	
 	zcRes::GfxIndex_DX12* pIndexDX12 = mrIndex.HAL();
-	
-	//! @todo 3 clean use context, to append to a provided commandlist instead of using default device. 
-	//! @todo 3 clean better management of barriers
-
-	// Switch buffer Mode to copy destination
-	if( (pIndexDX12->meResourceState & D3D12_RESOURCE_STATE_COPY_DEST) == 0 )
-	{
-		D3D12_RESOURCE_BARRIER BarrierDesc = {};
-        BarrierDesc.Type					= D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
-        BarrierDesc.Flags					= D3D12_RESOURCE_BARRIER_FLAG_NONE;
-        BarrierDesc.Transition.pResource	= pIndexDX12->mrResource.Get();
-        BarrierDesc.Transition.StateBefore	= pIndexDX12->meResourceState;
-        BarrierDesc.Transition.StateAfter	= D3D12_RESOURCE_STATE_COPY_DEST;
-        BarrierDesc.Transition.Subresource	= D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
-		pIndexDX12->meResourceState			= BarrierDesc.Transition.StateAfter;
-		_Context.GetCommandList()->ResourceBarrier(1, &BarrierDesc);
-	}
-
-	//Send to transfer command
-	_Context.GetCommandList()->CopyBufferRegion(pIndexDX12->mrResource.Get(), muOffset, mrResourceUpload.Get(), muOffset, muSize);
-#if 0
-	//commandList->CopyBufferRegion(m_sceneVertexBuffer.Get(), 0, sceneVertexBufferUpload.Get(), 0, vertexBufferSize);
-	//commandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(m_sceneVertexBuffer.Get(), D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER));
-#endif
+	zenAssert( pIndexDX12->mResource.meState & D3D12_RESOURCE_STATE_COPY_DEST );	// Should have been changed to proper stage by WantedBarrierState check
+	_Context.GetCommandList()->CopyBufferRegion(pIndexDX12->mResource.mrResource.Get(), muOffset, mrResourceUpload.Get(), muOffset, muSize);
 }
 
 
 //=================================================================================================
 // DRAW COMMAND UPDATE BUFFER
 //=================================================================================================
-zEngineRef<Command>	CommandUpdateBuffer_DX12::Create(const zcRes::GfxBufferRef& _rBuffer, zUInt _uOffset, zUInt _uSize)
+zEngineRef<Command> CommandUpdateBuffer_DX12::Add(const zenGfx::zScopedDrawlist& _rContext, const zcRes::GfxBufferRef& _rBuffer, zUInt _uOffset, zUInt _uSize)
 {
-	zenAssert(_rBuffer.HAL()->mrResourceUpload.Get() != nullptr);
+	zenAssert(_rBuffer.HAL()->mResource.mrUpload.Get() != nullptr);
 	static zenMem::zAllocatorPool sMemPool("Pool CommandUpdateBuffer", sizeof(CommandUpdateBuffer_DX12), 128, 128);
 	
-	_uOffset								= 0; //! @todo 2 support partial updates
-	_uSize									= zenMath::Min(_uSize, (zUInt)_rBuffer.HAL()->muElementCount*_rBuffer.HAL()->muElementStride - _uOffset);
-	auto pCmdUpdateBuffer					= zenNew(&sMemPool) CommandUpdateBuffer_DX12;
-	pCmdUpdateBuffer->mrBuffer				= _rBuffer;
-	pCmdUpdateBuffer->mrResourceUpload		= _rBuffer.HAL()->mrResourceUpload;
-	pCmdUpdateBuffer->muOffset				= _uOffset;
-	pCmdUpdateBuffer->muSize				= _uSize;
-	pCmdUpdateBuffer->SetSortKeyDataUpdate(_rBuffer.GetResID().GetHashID());
-	return pCmdUpdateBuffer;
+	_uOffset						= 0; //! @todo 2 support partial updates
+	_uSize							= zenMath::Min(_uSize, (zUInt)_rBuffer.HAL()->muElementCount*_rBuffer.HAL()->muElementStride - _uOffset);
+	auto pCommand					= zenNew(&sMemPool) CommandUpdateBuffer_DX12;
+	pCommand->mrBuffer				= _rBuffer;
+	pCommand->mrResourceUpload		= _rBuffer.HAL()->mResource.mrUpload;
+	pCommand->muOffset				= _uOffset;
+	pCommand->muSize				= _uSize;
+	pCommand->SetSortKeyDataUpdate(_rBuffer.GetResID().GetHashID());
+	
+	_rContext->AddCommand(pCommand);
+	_rContext->AddBarrierCheck(true,	ScopedDrawlist_DX12::BarrierCheck(&_rBuffer.HAL()->mResource, D3D12_RESOURCE_STATE_COPY_DEST));
+	_rContext->AddBarrierCheck(false,	ScopedDrawlist_DX12::BarrierCheck(&_rBuffer.HAL()->mResource, D3D12_RESOURCE_STATE_GENERIC_READ));
+	return pCommand;
 }
 
 void CommandUpdateBuffer_DX12::Invoke(GPUContext& _Context)
 {
 	zcPerf::EventGPUCounter::Create(zcPerf::EventGPUCounter::keType_UpdateBuffer);	
 	zcRes::GfxBuffer_DX12* pBufferDX12 = mrBuffer.HAL();
-
-	//! @todo 3 clean use context, to append to a provided commandlist instead of using default device. 
-	//! @todo 3 clean better management of barriers
-
-	// Switch buffer Mode to copy destination
-	if( (pBufferDX12->meResourceState & D3D12_RESOURCE_STATE_COPY_DEST) == 0 )
-	{
-		D3D12_RESOURCE_BARRIER BarrierDesc = {};
-        BarrierDesc.Type					= D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
-        BarrierDesc.Flags					= D3D12_RESOURCE_BARRIER_FLAG_NONE;
-        BarrierDesc.Transition.pResource	= pBufferDX12->mrResource.Get();
-        BarrierDesc.Transition.StateBefore	= pBufferDX12->meResourceState;
-        BarrierDesc.Transition.StateAfter	= D3D12_RESOURCE_STATE_COPY_DEST;
-        BarrierDesc.Transition.Subresource	= D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;        
-		pBufferDX12->meResourceState		= BarrierDesc.Transition.StateAfter;
-		_Context.GetCommandList()->ResourceBarrier(1, &BarrierDesc);
-	}
-
-	//Send to transfer command
-	_Context.GetCommandList()->CopyBufferRegion(pBufferDX12->mrResource.Get(), muOffset, mrResourceUpload.Get(), muOffset, muSize);
+	zenAssert( pBufferDX12->mResource.meState & D3D12_RESOURCE_STATE_COPY_DEST );	// Should have been changed to proper stage by WantedBarrierState check
+	_Context.GetCommandList()->CopyBufferRegion(pBufferDX12->mResource.mrResource.Get(), muOffset, mrResourceUpload.Get(), muOffset, muSize);
 }
 
 //=================================================================================================
 // DRAW COMMAND UPDATE BUFFER
 //=================================================================================================
-zEngineRef<Command>	CommandUpdateTexture_DX12::Create(const zcRes::GfxTexture2DRef& _rTexture, zUInt _uSize )
+zEngineRef<Command> CommandUpdateTexture_DX12::Add(const zenGfx::zScopedDrawlist& _rContext, const zcRes::GfxTexture2DRef& _rTexture, zUInt _uSize )
 {
-	zenAssert(_rTexture.HAL()->mrResourceUpload.Get() != nullptr);
+	zenAssert(_rTexture.HAL()->mResource.mrUpload.Get() != nullptr);
 	static zenMem::zAllocatorPool sMemPool("Pool CommandUpdateTexture", sizeof(CommandUpdateTexture_DX12), 128, 128);
-	auto pCmdUpdateTexture					= zenNew(&sMemPool) CommandUpdateTexture_DX12;
-	pCmdUpdateTexture->mrTexture			= _rTexture;
-	pCmdUpdateTexture->mrResourceUpload		= _rTexture.HAL()->mrResourceUpload;
-	pCmdUpdateTexture->muSize				= _uSize;
-	pCmdUpdateTexture->SetSortKeyDataUpdate(_rTexture.GetResID().GetHashID());
-	return pCmdUpdateTexture;
+	auto pCommand					= zenNew(&sMemPool) CommandUpdateTexture_DX12;
+	pCommand->mrTexture				= _rTexture;
+	pCommand->mrResourceUpload		= _rTexture.HAL()->mResource.mrUpload;
+	pCommand->muSize				= _uSize;
+	pCommand->SetSortKeyDataUpdate(_rTexture.GetResID().GetHashID());
+	_rContext->AddCommand(pCommand);
+	_rContext->AddBarrierCheck(true,	ScopedDrawlist_DX12::BarrierCheck(&_rTexture.HAL()->mResource, D3D12_RESOURCE_STATE_COPY_DEST));
+	_rContext->AddBarrierCheck(false,	ScopedDrawlist_DX12::BarrierCheck(&_rTexture.HAL()->mResource, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE));
+	return pCommand;
 }
 
 void CommandUpdateTexture_DX12::Invoke(GPUContext& _Context)
 {
 	zcPerf::EventGPUCounter::Create(zcPerf::EventGPUCounter::keType_UpdateTexture);	
 	zcRes::GfxTexture2D_DX12* pTextureDX12 = mrTexture.HAL();
+	zenAssert( pTextureDX12->mResource.meState & D3D12_RESOURCE_STATE_COPY_DEST );	// Should have been changed to proper stage by WantedBarrierState check
 
-	// Switch buffer Mode to copy destination
-	if( (pTextureDX12->meResourceState & D3D12_RESOURCE_STATE_COPY_DEST) == 0 )
-	{
-		D3D12_RESOURCE_BARRIER BarrierDesc = {};
-        BarrierDesc.Type					= D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
-        BarrierDesc.Flags					= D3D12_RESOURCE_BARRIER_FLAG_NONE;
-        BarrierDesc.Transition.pResource	= pTextureDX12->mrResource.Get();
-        BarrierDesc.Transition.StateBefore	= pTextureDX12->meResourceState;
-        BarrierDesc.Transition.StateAfter	= D3D12_RESOURCE_STATE_COPY_DEST;
-        BarrierDesc.Transition.Subresource	= D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES; 		
-		_Context.GetCommandList()->ResourceBarrier(1, &BarrierDesc);
-		pTextureDX12->meResourceState		= BarrierDesc.Transition.StateAfter;
-	}
-	
 	//Send to transfer command
-	//zcMgr::GfxRender.m_commandList->CopyBufferRegion(pTextureDX12->mrResource.Get(), 0, mrResourceUpload.Get(), 0, muSize);
 	D3D12_PLACED_SUBRESOURCE_FOOTPRINT Layout;
     UINT64 RowSizesInBytes; UINT64 RequiredSize; UINT NumRows;	
-    zcMgr::GfxRender.GetDevice()->GetCopyableFootprints(&pTextureDX12->mrResource->GetDesc(), 
+    zcMgr::GfxRender.GetDevice()->GetCopyableFootprints(&pTextureDX12->mResource.mrResource->GetDesc(), 
 		0, 1, 0, &Layout, &NumRows, &RowSizesInBytes, &RequiredSize);
 
-	CD3DX12_TEXTURE_COPY_LOCATION Dst(pTextureDX12->mrResource.Get(), 0);
+	CD3DX12_TEXTURE_COPY_LOCATION Dst(pTextureDX12->mResource.mrResource.Get(), 0);
     CD3DX12_TEXTURE_COPY_LOCATION Src(mrResourceUpload.Get(), Layout);
     _Context.GetCommandList()->CopyTextureRegion(&Dst, 0, 0, 0, &Src, nullptr);
-	//UpdateSubresources( zcMgr::GfxRender.m_commandList.Get(), mrResource.Get(), rTextureUploadHeap.Get(), 0, 0, 1, &textureData);
-
-	//! @todo 1 better management of barrier (look at cmdlist to know if we're last and should switch back)
-	//Temp reset resource barrier to read
-	{
-		D3D12_RESOURCE_BARRIER BarrierDesc = {};
-        BarrierDesc.Type					= D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
-        BarrierDesc.Flags					= D3D12_RESOURCE_BARRIER_FLAG_NONE;
-        BarrierDesc.Transition.pResource	= pTextureDX12->mrResource.Get();
-        BarrierDesc.Transition.StateBefore	= pTextureDX12->meResourceState;
-        BarrierDesc.Transition.StateAfter	= D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
-        BarrierDesc.Transition.Subresource	= D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;        
-		_Context.GetCommandList()->ResourceBarrier(1, &BarrierDesc);
-		pTextureDX12->meResourceState		= BarrierDesc.Transition.StateAfter;
-	}
 }
 
 }

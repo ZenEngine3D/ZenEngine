@@ -17,9 +17,6 @@ namespace zen { namespace zenRes {
 			
 	//----------------------------------------------
 	template< class TResourceClass, class TResourceHAL, zU64 TTypeMask >
-	class zResourceRef;
-
-	template< class TResourceClass, class TResourceHAL, zU64 TTypeMask >
 	class zResourceConstRef
 	{	
 	zenClassDeclareNoParent(zResourceConstRef)
@@ -41,7 +38,7 @@ namespace zen { namespace zenRes {
 		const zResourceConstRef&	operator=(const zResourceConstRef<TCopyClass, TCopyHAL, TCopyMask>& _rResource);
 		const zResourceConstRef&	operator=(const zResourceConstRef& _rResource);
 		const zResourceConstRef&	operator=(const zResID& _ResourceID);
-		const zResourceConstRef&	operator=(TResourceClass* _pResource);		
+		const zResourceConstRef&	operator=(TResourceClass* _pResource);
 
 		bool						operator==( const zResourceConstRef& _rCmpResource )const;
 		bool						operator!=( const zResourceConstRef& _rCmpResource )const;
@@ -80,8 +77,8 @@ namespace zcExp
 namespace zcRes
 {	
 	//==============================================================================================
-	//! @detail	Add support for a resource, creating an alias for the HAL class and adding 
-	//!			ResourceRef object associated.
+	//! @detail	Add support for a resource, creating an alias for the HAL class  
+	//!			and adding ResourceRef object associated.
 	//!			Exemple :	AddResourceSupport(GfxBuffer) 
 	//!						-Adds alias 'GfxBuffer_HAL' for class GfxBuffer_(RENDERER)
 	//!						-Adds alias 'GfxBufferRef' for RefClass supporting GfxBuffer object 
@@ -119,7 +116,6 @@ namespace zcRes
 	
 	using GfxShaderResourceRef	= zenRes::zResourceRef<	class zenRes::zExportData,		class zenRes::zExportData,
 									zEnumMask<zU64>(keResType_GfxStateSampler, keResType_GfxTexture2D, keResType_GfxBuffer, keResType_GfxCBuffer) >;
-
 };
 
 #endif

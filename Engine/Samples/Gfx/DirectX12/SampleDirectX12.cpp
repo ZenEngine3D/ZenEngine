@@ -15,53 +15,12 @@ int main (int argc, char * const argv[])
 namespace sample
 {
 
-const zArrayStatic<zVec3F> aCubeVerticesPos =
+static float AspectRatio = 1280.f / 800.f;
+const zArrayStatic<zVec2F> aTestVerticesUV ={ { 0.5f, 0.0f }, { 1.0f, 1.0f }, { 0.0f, 1.0f } };
+const zArrayStatic<zU16> aCubeIndices = { 0,1,2 };
+const zArrayStatic<zVec3F> aTestVerticesPos =
 {
-	zVec3F( -1.0f, 1.0f, -1.0f ),	zVec3F( 1.0f, 1.0f, -1.0f ),	zVec3F( 1.0f, 1.0f, 1.0f ),		zVec3F( -1.0f, 1.0f, 1.0f ),
-	zVec3F( -1.0f, -1.0f, -1.0f ),	zVec3F( 1.0f, -1.0f, -1.0f ),	zVec3F( 1.0f, -1.0f, 1.0f ),	zVec3F( -1.0f, -1.0f, 1.0f ),
-	zVec3F( -1.0f, -1.0f, 1.0f ),	zVec3F( -1.0f, -1.0f, -1.0f ),	zVec3F( -1.0f, 1.0f, -1.0f ),	zVec3F( -1.0f, 1.0f, 1.0f ),
-	zVec3F( 1.0f, -1.0f, 1.0f ),	zVec3F( 1.0f, -1.0f, -1.0f ),	zVec3F( 1.0f, 1.0f, -1.0f ),	zVec3F( 1.0f, 1.0f, 1.0f ),
-	zVec3F( -1.0f, -1.0f, -1.0f ),	zVec3F( 1.0f, -1.0f, -1.0f ),	zVec3F( 1.0f, 1.0f, -1.0f ),	zVec3F( -1.0f, 1.0f, -1.0f ),
-	zVec3F( -1.0f, -1.0f, 1.0f ),	zVec3F( 1.0f, -1.0f, 1.0f ),	zVec3F( 1.0f, 1.0f, 1.0f ),		zVec3F( -1.0f, 1.0f, 1.0f ),
-};
-
-const zArrayStatic<BufferColorUV> aCubeVerticesColorUV =
-{
-	{ zVec4U8( 0xFF, 0xFF, 0xFF, 0xFF ), zVec2F( 0.0f, 1.0f ) }, //Face 0
-	{ zVec4U8( 0xFF, 0xFF, 0xFF, 0xFF ), zVec2F( 1.0f, 1.0f ) },
-	{ zVec4U8( 0xFF, 0xFF, 0xFF, 0xFF ), zVec2F( 1.0f, 0.0f ) },
-	{ zVec4U8( 0xFF, 0xFF, 0xFF, 0xFF ), zVec2F( 0.0f, 0.0f ) },
-	{ zVec4U8( 0xFF, 0xFF, 0xFF, 0xFF ), zVec2F( 0.0f, 1.0f ) }, //Face 1
-	{ zVec4U8( 0xFF, 0xFF, 0xFF, 0xFF ), zVec2F( 1.0f, 1.0f ) },
-	{ zVec4U8( 0xFF, 0xFF, 0xFF, 0xFF ), zVec2F( 1.0f, 0.0f ) },
-	{ zVec4U8( 0xFF, 0xFF, 0xFF, 0xFF ), zVec2F( 0.0f, 0.0f ) },
-	{ zVec4U8( 0xFF, 0xFF, 0xFF, 0xFF ), zVec2F( 0.0f, 1.0f ) }, //Face 2
-	{ zVec4U8( 0xFF, 0xFF, 0xFF, 0xFF ), zVec2F( 1.0f, 1.0f ) },
-	{ zVec4U8( 0xFF, 0xFF, 0xFF, 0xFF ), zVec2F( 1.0f, 0.0f ) },
-	{ zVec4U8( 0xFF, 0xFF, 0xFF, 0xFF ), zVec2F( 0.0f, 0.0f ) },
-	{ zVec4U8( 0xFF, 0xFF, 0xFF, 0xFF ), zVec2F( 0.0f, 1.0f ) }, //Face 3
-	{ zVec4U8( 0xFF, 0xFF, 0xFF, 0xFF ), zVec2F( 1.0f, 1.0f ) },
-	{ zVec4U8( 0xFF, 0xFF, 0xFF, 0xFF ), zVec2F( 1.0f, 0.0f ) },
-	{ zVec4U8( 0xFF, 0xFF, 0xFF, 0xFF ), zVec2F( 0.0f, 0.0f ) },
-	{ zVec4U8( 0xFF, 0xFF, 0xFF, 0xFF ), zVec2F( 0.0f, 1.0f ) }, //Face 4
-	{ zVec4U8( 0xFF, 0xFF, 0xFF, 0xFF ), zVec2F( 1.0f, 1.0f ) },
-	{ zVec4U8( 0xFF, 0xFF, 0xFF, 0xFF ), zVec2F( 1.0f, 0.0f ) },
-	{ zVec4U8( 0xFF, 0xFF, 0xFF, 0xFF ), zVec2F( 0.0f, 0.0f ) },
-	{ zVec4U8( 0xFF, 0xFF, 0xFF, 0xFF ), zVec2F( 0.0f, 1.0f ) }, //Face 5
-	{ zVec4U8( 0xFF, 0xFF, 0xFF, 0xFF ), zVec2F( 1.0f, 1.0f ) },
-	{ zVec4U8( 0xFF, 0xFF, 0xFF, 0xFF ), zVec2F( 1.0f, 0.0f ) },
-	{ zVec4U8( 0xFF, 0xFF, 0xFF, 0xFF ), zVec2F( 0.0f, 0.0f ) },
-};
-
-
-const zArrayStatic<zU16> aCubeIndices =
-{
-	3,1,0,		2,1,3,
-	6,4,5,		7,4,6,
-	11,9,8,		10,9,11,
-	14,12,13,	15,12,14,
-	19,17,16,	18,17,19,
-	22,20,21,	23,20,22
+	{ 0.0f, 0.25f * AspectRatio, 0.0f },	{ 0.25f, -0.25f * AspectRatio, 0.0f },	{ -0.25f, -0.25f * AspectRatio, 0.0f }
 };
 
 bool SampleDirextX12Instance::IsDone()
@@ -101,13 +60,13 @@ bool SampleDirextX12Instance::Init()
 	// Create rendering resources		
 	//---------------------------------------------------------------------	
 	mrCubeIndex										= zenRes::zGfxIndex::Create( aCubeIndices, zenConst::kePrimType_TriangleList );
-	mrVertexBufferPos								= zenRes::zGfxStructBuffer<zVec3F>::Create(aCubeVerticesPos, (zU32)aCubeVerticesPos.Count() /*, zFlagResUse()*/ ); 
-	mrVertexBufferColorUv							= zenRes::zGfxStructBuffer<BufferColorUV>::Create(aCubeVerticesColorUV, (zU32)aCubeVerticesColorUV.Count() /*, zFlagResUse()*/ );
+	mrVBufferTestPos								= zenRes::zGfxStructBuffer<zVec3F>::Create(aTestVerticesPos, (zU32)aTestVerticesPos.Count() /*, zFlagResUse()*/ ); 
+	mrVBufferTestUv									= zenRes::zGfxStructBuffer<zVec2F>::Create(aTestVerticesUV, (zU32)aTestVerticesUV.Count() /*, zFlagResUse()*/ );
 
 	mrShaderVS										= zenRes::zGfxShaderVertex::Create( "Shader/DX12Sample.sl", "VSMain");
 	mrShaderPS										= zenRes::zGfxShaderPixel::Create( "Shader/DX12Sample.sl", "PSMain" );
-	//mrTexture										= zenRes::zGfxTexture2D::Create(zenConst::keTexFormat_RGBA8, vTexSize, aTexRGBA );
-	//mrSampler										= zenRes::zGfxStateSampler::Create(zenConst::keTexFilter_Trilinear, zenConst::keTexFilter_Trilinear, zenConst::keTexWrap_Clamp, zenConst::keTexWrap_Clamp, 0);
+	mrTexture										= zenRes::zGfxTexture2D::Create(zenConst::keTexFormat_RGBA8, vTexSize, aTexRGBA );
+	mrSampler										= zenRes::zGfxStateSampler::Create(zenConst::keTexFilter_Trilinear, zenConst::keTexFilter_Trilinear, zenConst::keTexWrap_Clamp, zenConst::keTexWrap_Clamp, 0);
 	
 	// Some bindings of render resource together
 	mrShaderBind									= zenRes::zGfxShaderBinding::Create(mrShaderVS, mrShaderPS);
@@ -117,8 +76,11 @@ bool SampleDirextX12Instance::Init()
 	//-------------------------------------------------
 	// Init some shader values
 	//---------------------------------------------------------------------
-	//mrCubeMeshStrip.SetResource(	zHash32("g_texture"),	mrTexture);
-	//mrCubeMeshStrip.SetResource(	zHash32("g_sampler"),	mrSampler);	
+	mrCubeMeshStrip.SetResource( zHash32("VInputPosition"),	mrVBufferTestPos);
+	mrCubeMeshStrip.SetResource( zHash32("VInputUV"),		mrVBufferTestUv);
+	mrCubeMeshStrip.SetResource( zHash32("g_texture"),		mrTexture);
+	mrCubeMeshStrip.SetResource( zHash32("g_sampler"),		mrSampler);
+	mrCubeMeshStrip.SetValue( zHash32("vColor"),			zVec4F(1,0,1,1));	
 	
 	return true;
 }
@@ -162,7 +124,7 @@ void SampleDirextX12Instance::Update()
 		UpdateBackbuffers();
 		{			
 			zenPerf::zScopedEventCpu EmitEvent("Draw");
-			zenGfx::zContext rCxtRender	= zenGfx::zContext::Create("RenderLoop", mrRndPassFinal);
+			zenGfx::zScopedDrawlist rCxtRender	= zenGfx::zScopedDrawlist::Create("RenderLoop", mrRndPassFinal);
 			
 			float t				= static_cast<float>(zenSys::GetElapsedSec() / 3.0);	// Update our time animation
 			zVec4F vClearColor	= zenMath::TriLerp( zVec4F(0.05f,0.05f,0.05f,1), zVec4F(0.1f,0.1f,0.20f,1), zVec4F(0.05f,0.05f,0.05f,1), zenMath::Fract(t) );

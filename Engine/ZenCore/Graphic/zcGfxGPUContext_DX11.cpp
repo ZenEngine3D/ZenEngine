@@ -80,12 +80,12 @@ void GPUContext_DX11::UpdateShaderState_ConstantBuffers( const zcGfx::CommandDra
 	for( zU16 slotIdx(0); slotIdx<uAssignCount; ++slotIdx )
 	{
 		marCBuffer[_eShaderStage][slotIdx]	= slotIdx < uSlotCount ? arResource[slotIdx] : nullptr;
-		zcRes::GfxCBufferRef& rResource				= marCBuffer[_eShaderStage][slotIdx];
-		ID3D11Buffer* pDXView						= rResource.IsValid() ? rResource.HAL()->mpBufferBinding : nullptr;		
-		uChangedFirst								= pDXView != aResourceView[slotIdx]	? zenMath::Min(uChangedFirst, slotIdx)	: uChangedFirst;
-		uChangedLast								= pDXView != aResourceView[slotIdx]	? slotIdx								: uChangedLast;
-		uValidCount									= pDXView							? slotIdx+1								: uValidCount;
-		aResourceView[slotIdx]						= pDXView;
+		zcRes::GfxCBufferRef& rResource		= marCBuffer[_eShaderStage][slotIdx];
+		ID3D11Buffer* pDXView				= rResource.IsValid() ? rResource.HAL()->mpBufferBinding : nullptr;		
+		uChangedFirst						= pDXView != aResourceView[slotIdx]	? zenMath::Min(uChangedFirst, slotIdx)	: uChangedFirst;
+		uChangedLast						= pDXView != aResourceView[slotIdx]	? slotIdx								: uChangedLast;
+		uValidCount							= pDXView							? slotIdx+1								: uValidCount;
+		aResourceView[slotIdx]				= pDXView;
 		
 		//Must update CBuffer constant value if updated
 		if( rResource.IsValid() )

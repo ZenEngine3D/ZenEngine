@@ -177,7 +177,7 @@ void SampleDebugUIInstance::Update()
 		UpdateBackbuffers();
 		{			
 			zenPerf::zScopedEventCpu EmitEvent("Draw");
-			zenGfx::zContext rCxtRender	= zenGfx::zContext::Create("RenderLoop", mrRndPassFinal);
+			zenGfx::zScopedDrawlist rCxtRender	= zenGfx::zScopedDrawlist::Create("RenderLoop", mrRndPassFinal);
 			
 			float t				= static_cast<float>(zenSys::GetElapsedSec() / 3.0);	// Update our time animation
 			zVec4F vClearColor	= zenMath::TriLerp( zVec4F(0.05f,0.05f,0.05f,1), zVec4F(0.1f,0.1f,0.20f,1), zVec4F(0.05f,0.05f,0.05f,1), zenMath::Fract(t) );

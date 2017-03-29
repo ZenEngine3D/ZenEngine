@@ -17,7 +17,23 @@
 //=================================================================================================
 
 #include zenHeaderRenderer( zcGfx )
-#include "zcGfxContext.h"
+
+//! @todo 1 Find proper location
+namespace zcGfx
+{
+enum eGPUPipelineMode
+{
+	keGpuPipe_DataUpdate,											keGpuPipe_DataUpdateAfter,
+	keGpuPipe_PreDrawCompute	= keGpuPipe_DataUpdateAfter,		keGpuPipe_PreDrawComputeAfter,
+	keGpuPipe_Vertex			= keGpuPipe_PreDrawComputeAfter,	keGpuPipe_VertexAfter,		 
+	keGpuPipe_VertexPixel		= keGpuPipe_VertexAfter,			keGpuPipe_VertexPixelAfter, 
+	keGpuPipe_PostDrawCompute	= keGpuPipe_VertexPixelAfter,		keGpuPipe_PostDrawComputeAfter,
+	keGpuPipe__Count			= keGpuPipe_PostDrawComputeAfter,
+	keGpuPipe__Invalid			= keGpuPipe__Count
+};
+}
+
+#include "zcGfxScopedDrawlist.h"
 #include "zcGfxDrawcall.h"
 #include "zcGfxGPUContext.h"
 #include "zcGfxRenderMgr.h"

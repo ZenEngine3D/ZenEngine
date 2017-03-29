@@ -141,7 +141,7 @@ bool SampleRendererInstance::Init()
 	RenderToTextureDepthRTConfig.mrTargetSurface		= mrRenderToTextureDepth;
 	RenderToTextureDepthRTConfig.mbDepthEnable			= true;
 	RenderToTextureDepthRTConfig.mbDepthWrite			= true;
-	mrRndPassTexture									= zenRes::zGfxRenderPass::Create("RenderToTexture",0,aRenderToTextureColorRTConfig,RenderToTextureDepthRTConfig,mrStateRaster, zVec2U16(256, 256), zVec2S16(256,0) );
+	mrRndPassTexture									= zenRes::zGfxRenderPass::Create("RenderToTexture",0,aRenderToTextureColorRTConfig,RenderToTextureDepthRTConfig,mrStateRaster, zVec2U16(256, 256), zVec2S16(0,0) );
 
 	//-------------------------------------------------
 	// Init some shader values
@@ -242,9 +242,9 @@ void SampleRendererInstance::Update()
 	mrMainWindowGfx.FrameBegin();
 	UpdateBackbuffers();
 
-	zenGfx::zContext rContextRoot				= zenGfx::zContext::Create("RenderLoop");
-	zenGfx::zContext rContextRenderToTexture	= zenGfx::zContext::Create("RenderToTexture",	rContextRoot, mrRndPassTexture);
-	zenGfx::zContext rContextFinal				= zenGfx::zContext::Create("Final",				rContextRoot, mrRndPassFinal);
+	zenGfx::zScopedDrawlist rContextRoot			= zenGfx::zScopedDrawlist::Create("RenderLoop");
+	zenGfx::zScopedDrawlist rContextRenderToTexture	= zenGfx::zScopedDrawlist::Create("RenderToTexture",	rContextRoot, mrRndPassTexture);
+	zenGfx::zScopedDrawlist rContextFinal			= zenGfx::zScopedDrawlist::Create("Final",				rContextRoot, mrRndPassFinal);
 			
 	float t = static_cast<float>(zenSys::GetElapsedSec() / 3.0);	// Update our time animation
 
@@ -252,7 +252,7 @@ void SampleRendererInstance::Update()
 	// Render cube in RenderTarget
 	//-----------------------------------------------------------------
 	{
-		zenGfx::zCommand::ClearColor(rContextRenderToTexture, mrRenderToTextureRT1, zVec4F(0, 0, 0, 1));
+		zenGfx::zCommand::ClearColor(rContextRenderToTexture, mrRenderToTextureRT1, zVec4F(0, 0, 0.5, 1));
 		zenGfx::zCommand::ClearColor(rContextRenderToTexture, mrRenderToTextureRT2, zVec4F(0, 0, 0, 1));
 		zenGfx::zCommand::ClearDepthStencil(rContextRenderToTexture, mrRenderToTextureDepth);
 
@@ -279,14 +279,14 @@ void SampleRendererInstance::Update()
 	matWorld[2].SetRotationY( t );						// Rotate cube around the origin 				
 	mrCube3MeshStrip.SetValue( zHash32("World"),		matWorld[2] );
 	mrCube3MeshStrip.SetValue( zHash32("Projection"),	matProjection );
-	zenGfx::zCommand::DrawMesh(rContextFinal, 0, mrCube3MeshStrip);
+	zenGfx::zCommand::DrawMesh(rContextFinal, 0,		mrCube3MeshStrip);
 
 	matWorld[3].SetRotationX( t );						// Rotate cube around the origin 				
 	mrCube4Mesh.SetValue( zHash32("World"),				matWorld[3] );
 	mrCube4Mesh.SetValue( zHash32("Projection"),		matProjection );
 	mrCube4Mesh.SetValue( zHash32("World"),				matWorld[3] );
 	mrCube4Mesh.SetValue( zHash32("Projection"),		matProjection );
-	zenGfx::zCommand::DrawMesh(rContextFinal, 0, mrCube4Mesh);
+	zenGfx::zCommand::DrawMesh(rContextFinal, 0,		mrCube4Mesh);
 
 	rContextRoot.Submit();
 

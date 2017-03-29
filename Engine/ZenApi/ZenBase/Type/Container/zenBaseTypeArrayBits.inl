@@ -3,7 +3,7 @@ namespace zen { namespace zenType {
 void zArrayBits::Resize(zUInt _uIndexCount)
 {
 	zenAssertMsg(_uIndexCount != kuInvalid, "Invalid count, are you trying to set a invalid index (-1)?");
-	zUInt uNeededArrayCount = zenMath::RoundUp<zUInt>(_uIndexCount, sizeof(zUInt))/sizeof(zUInt);	
+	zUInt uNeededArrayCount = zenMath::RoundUp<zUInt>(_uIndexCount/8, sizeof(zUInt))/sizeof(zUInt);	
 	if( uNeededArrayCount != muDataArrayCount )
 	{
 		zUInt* pNewData		= zenNewDefault zUInt[uNeededArrayCount];
@@ -41,8 +41,8 @@ zArrayBits::zArrayBits(std::initializer_list<bool> _Entries)
 	const bool* pValues = _Entries.begin();
 	for( zUInt idx(0); idx < _Entries.size(); ++idx)
 	{
-		zUInt uArrayIndex			= idx / sizeof(zUInt);
-		zUInt uBitIndex				= idx % sizeof(zUInt);
+		zUInt uArrayIndex			= idx / (sizeof(zUInt)*8);
+		zUInt uBitIndex				= idx % (sizeof(zUInt)*8);
 		mpDataArray[uArrayIndex]	|= pValues[idx] ? 1<<uBitIndex : 0;;
 	}
 }
@@ -128,8 +128,8 @@ zUInt zArrayBits::AddIndexFalse()
 bool zArrayBits::Toggle(zUInt _uIndex)
 {
 	GrowIfNeeded( _uIndex );
-	zUInt uArrayIndex			= _uIndex / sizeof(zUInt);
-	zUInt uBitIndex				= _uIndex % sizeof(zUInt);
+	zUInt uArrayIndex			= _uIndex / (sizeof(zUInt)*8);
+	zUInt uBitIndex				= _uIndex % (sizeof(zUInt)*8);
 	mpDataArray[uArrayIndex]	^= (zUInt(1)<<uBitIndex);
 	return (mpDataArray[uArrayIndex] & (zUInt(1)<<uBitIndex)) != 0;
 }
@@ -137,8 +137,8 @@ bool zArrayBits::Toggle(zUInt _uIndex)
 void zArrayBits::Set(zUInt _uIndex, bool _bValue)
 {	
 	GrowIfNeeded( _uIndex );
-	zUInt uArrayIndex			= _uIndex / sizeof(zUInt);
-	zUInt uBitIndex				= _uIndex % sizeof(zUInt);
+	zUInt uArrayIndex			= _uIndex / (sizeof(zUInt)*8);
+	zUInt uBitIndex				= _uIndex % (sizeof(zUInt)*8);
 	mpDataArray[uArrayIndex]	&= ~(1<<uBitIndex);
 	mpDataArray[uArrayIndex]	|= (_bValue<<uBitIndex);
 }
@@ -148,8 +148,8 @@ void zArrayBits::SetRange(zUInt _uFirst, zUInt _uLast, bool _bValue)
 	GrowIfNeeded(_uLast);
 	for(zUInt idx=_uFirst; idx<=_uLast; ++idx)
 	{
-		zUInt uArrayIndex			= idx / sizeof(zUInt);
-		zUInt uBitIndex				= idx % sizeof(zUInt);
+		zUInt uArrayIndex			= idx / (sizeof(zUInt)*8);
+		zUInt uBitIndex				= idx % (sizeof(zUInt)*8);
 		mpDataArray[uArrayIndex]	&= ~(1<<uBitIndex);
 		mpDataArray[uArrayIndex]	|= (_bValue<<uBitIndex);
 	}

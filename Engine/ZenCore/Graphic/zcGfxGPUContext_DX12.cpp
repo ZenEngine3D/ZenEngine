@@ -3,17 +3,45 @@
 namespace zcGfx 
 {
 
-void GPUContext_DX12::Reset(const DirectXComRef<ID3D12Device>& _rDevice, const DirectXComRef<ID3D12GraphicsCommandList>& _rCommandList )
+//! @todo 1 Improve this
+zenInline zcGfx::DescriptorSRV_UAV_CBV* GetResourceDescriptor( const zcRes::GfxShaderResourceRef& _rResource )
+{
+	if( _rResource.IsValid() )
+	{
+		if( _rResource.GetResID().GetType() == keResType_GfxBuffer )
+		{
+			zcRes::GfxBufferRef rBuffer = _rResource;
+			return &rBuffer.HAL()->mResource.mView;
+		}
+		if( _rResource.GetResID().GetType() == keResType_GfxCBuffer )
+		{
+			zcRes::GfxCBufferRef rCBuffer = _rResource;
+			return &rCBuffer.HAL()->mCBufferView;
+		}
+		if( _rResource.GetResID().GetType() == keResType_GfxTexture2D )
+		{
+			zcRes::GfxTexture2DRef rTexture = _rResource;
+			return &rTexture.HAL()->mResource.mView;
+		}
+	}
+	return nullptr;
+}
+
+void GPUContext_DX12::Reset(const DirectXComRef<ID3D12Device>& _rDevice, const DirectXComRef<ID3D12GraphicsCommandList>& _rCommandList, const DirectXComRef<ID3D12DescriptorHeap>& _rResViewDescHeap )
 {	
 	Super::Reset();
 		
 	zenAssert(_rDevice.Get());
 	zenAssert(_rCommandList.Get());
-	mrDevice		= _rDevice;
-	mrCommandList	= _rCommandList;
-	mRootSignature	= RootSignature();
-	mrPSO			= nullptr;
-	mePrimitive		= D3D_PRIMITIVE_TOPOLOGY_UNDEFINED;
+	mrDevice				= _rDevice;
+	mrCommandList			= _rCommandList;
+	mrResViewDescHeap		= _rResViewDescHeap;
+	mRootSignature			= RootSignature();
+	mrPSO					= nullptr;
+	mePrimitive				= D3D_PRIMITIVE_TOPOLOGY_UNDEFINED;
+
+	ID3D12DescriptorHeap* ppHeaps[] = { mrResViewDescHeap.Get() };
+	mrCommandList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
 
 #if !ZEN_RENDERER_DX12
 	zenMem::Zero(mahShaderInputStamp);	
@@ -200,16 +228,15 @@ void GPUContext_DX12::UpdateStateRenderpass(const zcGfx::CommandDraw_HAL& _Drawc
 					aCpuHandles[idxTarget]		= rTarget.HAL()->mTargetColorView.GetCpuHandle();
 			}
 
-			D3D12_CPU_DESCRIPTOR_HANDLE* pDepthHandle(nullptr);
 			D3D12_CPU_DESCRIPTOR_HANDLE DepthHandle;
+			D3D12_CPU_DESCRIPTOR_HANDLE* pDepthHandle(nullptr);			
 			zcRes::GfxTarget2DRef rDepthTarget	= ViewHAL->mRTDepthConfig.mrTargetSurface;
 			if( rDepthTarget.IsValid() )
 			{
 				pDepthHandle	= &DepthHandle;
 				DepthHandle		= rDepthTarget.HAL()->mTargetDepthView.GetCpuHandle();
 				mrCommandList->OMSetStencilRef( mrRenderpass.HAL()->mrStateDepthStencil.HAL()->muStencilValue );
-			}
-			
+			}			
 			mrCommandList->OMSetRenderTargets((UINT)uTargetCount, aCpuHandles, false, pDepthHandle);			
 			mrCommandList->RSSetViewports(1, &ViewHAL->mViewport);
 		}		
@@ -221,11 +248,11 @@ void GPUContext_DX12::UpdateStateRenderpass(const zcGfx::CommandDraw_HAL& _Drawc
 //==================================================================================================
 void GPUContext_DX12::UpdateState(const CommandDraw_HAL& _Drawcall)
 {
-	const zcRes::GfxMeshStripRef& rMeshStrip		= _Drawcall.mrMeshStrip;
-	const zcRes::GfxIndexRef& rIndex				= rMeshStrip.HAL()->mrIndexBuffer;
-	const zcRes::GfxShaderBindingRef& rShaderBind	= rMeshStrip.HAL()->mrShaderBinding;			
+	auto const pMeshStripHAL						= _Drawcall.mrMeshStrip.HAL();
+	const zcRes::GfxIndexRef& rIndex				= pMeshStripHAL->mrIndexBuffer;
+	const zcRes::GfxShaderBindingRef& rShaderBind	= pMeshStripHAL->mrShaderBinding;			
 	const zcRes::GfxViewRef& rView					= mrStateView;
-	
+
 	//SF @todo 0 support this
 	//----------------------------------------------------------------------------------------------
 	// Root Signature
@@ -258,9 +285,8 @@ void GPUContext_DX12::UpdateState(const CommandDraw_HAL& _Drawcall)
 	{
 		mePrimitive = rIndex.HAL()->mePrimitive;
 		mrCommandList->IASetPrimitiveTopology( mePrimitive );
+		mrCommandList->IASetIndexBuffer( &rIndex.HAL()->mResource.mView );
 	}
-	
-	mrCommandList->IASetVertexBuffers(0, 1, &zcMgr::GfxRender.mTmpVertexBufferView); //! @todo 0 
 
 	//----------------------------------------------------------------------------------------------
 	// Per drawcall scissor setting
@@ -274,6 +300,52 @@ void GPUContext_DX12::UpdateState(const CommandDraw_HAL& _Drawcall)
 		mrCommandList->RSSetScissorRects(1, &ScissorRect);
 	}
 
+	//----------------------------------------------------------------------------------------------
+	// Assign Shader input resources for each stage
+	//----------------------------------------------------------------------------------------------
+	//! @todo 0 remove all of this hacked code
+	for( zUInt idxShader(0); idxShader < keShaderStage__Count; ++idxShader )
+	{
+		// Assign Textures/Buffer
+		zUInt uDescCount(pMeshStripHAL->marDescriptorResources[idxShader].Count());
+		if( uDescCount )
+		{
+			ResourceDescriptor2 SRVDesc	= zcMgr::GfxRender.GetResViewRingDescriptor( uDescCount );
+			for( zUInt idxRes(0); idxRes < uDescCount; ++idxRes )
+			{
+				const zcRes::GfxShaderResourceRef& rResource	= pMeshStripHAL->marDescriptorResources[idxShader][idxRes];
+				const zcGfx::DescriptorSRV_UAV_CBV* const pDesc	= GetResourceDescriptor( rResource );
+				mrDevice->CopyDescriptorsSimple(1, SRVDesc.Offset(idxRes).HandleCpu, pDesc ? pDesc->GetCpuHandle() : gNullSRVView.GetCpuHandle(), D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+			}
+			mrCommandList->SetGraphicsRootDescriptorTable(static_cast<UINT>(idxShader)*3+D3D12_DESCRIPTOR_RANGE_TYPE_SRV, SRVDesc.HandleGpu );
+		}
+
+		// Assign Constant Buffers
+		ResourceDescriptor2 CBVDesc	= zcMgr::GfxRender.GetResViewRingDescriptor( 14 ); //! @todo 0 use constants
+		const zArrayStatic<zcRes::GfxShaderResourceDescRef>& arCBufferRes	= pMeshStripHAL->marShaderResources[idxShader][keShaderRes_CBuffer];
+		const zUInt countCBuffer											= arCBufferRes.Count();
+ 		for( zUInt idxCBuffer(0); idxCBuffer < 14; ++idxCBuffer )
+		{
+			zcGfx::DescriptorSRV_UAV_CBV* pCBufferDesc(nullptr);
+			//zcRes::GfxCBufferRef rCBufferRes = if(idxCBuffer < countCBuffer) ? arCBufferRes[idxCBuffer] : nullptr;
+			zcRes::GfxCBufferRef rCBufferRes;
+			if(idxCBuffer < countCBuffer) 
+				rCBufferRes = arCBufferRes[idxCBuffer];
+			if( rCBufferRes.IsValid() )
+			{
+				rCBufferRes.HAL()->Update( mrCommandList ); //! @todo 2 safety (not multithread safe)
+				pCBufferDesc = GetResourceDescriptor( arCBufferRes[idxCBuffer] );
+			}
+ 			mrDevice->CopyDescriptorsSimple(1, CBVDesc.Offset(idxCBuffer).HandleCpu, pCBufferDesc ? pCBufferDesc->GetCpuHandle() : gNullCBVView.GetCpuHandle(), D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+		}
+		mrCommandList->SetGraphicsRootDescriptorTable(static_cast<UINT>(idxShader)*3+D3D12_DESCRIPTOR_RANGE_TYPE_CBV, CBVDesc.HandleGpu );
+		
+		// Assign UAV
+		ResourceDescriptor2 UAVDesc	= zcMgr::GfxRender.GetResViewRingDescriptor( 8 );
+ 		for( zUInt idxRes(0); idxRes < 8; ++idxRes )
+ 			mrDevice->CopyDescriptorsSimple(1, UAVDesc.Offset(idxRes).HandleCpu, gNullUAVView.GetCpuHandle(), D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+		mrCommandList->SetGraphicsRootDescriptorTable(static_cast<UINT>(idxShader)*3+D3D12_DESCRIPTOR_RANGE_TYPE_UAV, UAVDesc.HandleGpu );		
+	}
 
 #if !ZEN_RENDERER_DX12
 	UINT UnusedOffset = 0;
@@ -283,37 +355,6 @@ void GPUContext_DX12::UpdateState(const CommandDraw_HAL& _Drawcall)
 	const zcRes::GfxViewRef&			rView		= mrStateView;
 	
 	UpdateStateRenderpass(_Drawcall);
-	if( mePrimitiveType != rIndex.HAL()->mePrimitiveType )
-	{
-		mePrimitiveType = rIndex.HAL()->mePrimitiveType;
-		mpDeviceContext->IASetPrimitiveTopology( rIndex.HAL()->mePrimitiveType );
-	}
-	
-	if( marShader[zenConst::keShaderStage_Vertex] != rShaderBind.HAL()->marShader[zenConst::keShaderStage_Vertex] )
-	{
-		marShader[zenConst::keShaderStage_Vertex]	= rShaderBind.HAL()->marShader[zenConst::keShaderStage_Vertex];
-		zcRes::GfxShaderVertexRef rShaderVertex				= marShader[zenConst::keShaderStage_Vertex];
-		mpDeviceContext->VSSetShader( rShaderVertex.HAL()->mpVertexShader, nullptr, 0 );
-	}
-	
-	if( marShader[zenConst::keShaderStage_Pixel]!= rShaderBind.HAL()->marShader[zenConst::keShaderStage_Pixel] )
-	{
-		marShader[zenConst::keShaderStage_Pixel]	= rShaderBind.HAL()->marShader[zenConst::keShaderStage_Pixel];
-		zcRes::GfxShaderPixelRef rShaderPixel				= marShader[zenConst::keShaderStage_Pixel];
-		mpDeviceContext->PSSetShader( rShaderPixel.HAL()->mpPixelShader, nullptr, 0 );
-	}
-	
-	if(mbScreenScissorOn || mvScreenScissor != _Drawcall.mvScreenScissor )
-	{
-		D3D11_RECT ScissorRect;
-		mvScreenScissor				= _Drawcall.mvScreenScissor;		
-		ScissorRect.left			= _Drawcall.mvScreenScissor.x;
-		ScissorRect.top				= _Drawcall.mvScreenScissor.y;
-		ScissorRect.right			= zenMath::Min<zU16>(_Drawcall.mvScreenScissor.z, (zU16)rView.HAL()->mViewport.Width);
-		ScissorRect.bottom			= zenMath::Min<zU16>(_Drawcall.mvScreenScissor.w, (zU16)rView.HAL()->mViewport.Height);
-		mpDeviceContext->RSSetScissorRects(1, &ScissorRect);
-	}
-	
 	mpDeviceContext->IASetIndexBuffer	( rIndex.HAL()->mpIndiceBuffer, rIndex.HAL()->meIndiceFormat, 0 );	
 
 	//----------------------------------------------------------------------------------------------
@@ -337,7 +378,7 @@ void GPUContext_DX12::UpdateState(const CommandDraw_HAL& _Drawcall)
 				rMeshStrip.HAL()->mhShaderResourceStamp[stageIdx][resTypeIdx] = zMeshStripResStamp;
 			}
 
-			bUpdated[resTypeIdx]								= mahShaderInputStamp[stageIdx][resTypeIdx] != zMeshStripResStamp;
+			bUpdated[resTypeIdx]						= mahShaderInputStamp[stageIdx][resTypeIdx] != zMeshStripResStamp;
 			mahShaderInputStamp[stageIdx][resTypeIdx]	= zMeshStripResStamp;
 		}
 		

@@ -101,18 +101,18 @@ namespace zen { namespace zenRes {
 }} // namespace zen, zenRes
 
 //! @todo Urgent, this is not a resource, should be moved elsewhere
-namespace zcGfx  { class DrawContext; }	//Forward declare
+namespace zcGfx  { class ScopedDrawlist; }	//Forward declare
 namespace zen { namespace zenGfx 
 {	
-	class zContext : public zEngineRef<zcGfx::DrawContext>
+	class zScopedDrawlist : public zEngineRef<zcGfx::ScopedDrawlist>
 	{
-	zenClassDeclare(zContext, zEngineRef<zcGfx::DrawContext>);
+	zenClassDeclare(zScopedDrawlist, zEngineRef<zcGfx::ScopedDrawlist>);
 	public:
-		void					Submit();
-		static zContext			Create(const zStringHash32& _zContextName, const zContext& _rParent=zContext(), const zenRes::zGfxRenderPass& _rRenderState=zenRes::zGfxRenderPass());
-		static zContext			Create(const zStringHash32& _zContextName, const zenRes::zGfxRenderPass& _rRenderState);
-		static const zContext&	GetFrameContext();
-		using zEngineRef<zcGfx::DrawContext>::operator=;
+		void							Submit();
+		static zScopedDrawlist			Create(const zStringHash32& _zContextName, const zScopedDrawlist& _rParent=zScopedDrawlist(), const zenRes::zGfxRenderPass& _rRenderState=zenRes::zGfxRenderPass());
+		static zScopedDrawlist			Create(const zStringHash32& _zContextName, const zenRes::zGfxRenderPass& _rRenderState);
+		static const zScopedDrawlist&	GetFrameContext();
+		using zEngineRef<zcGfx::ScopedDrawlist>::operator=;
 	};
 }}
 

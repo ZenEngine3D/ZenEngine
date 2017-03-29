@@ -59,7 +59,7 @@ bool GfxCBuffer_DX12::Initialize()
 	return false;
 }
 
-void GfxCBuffer_DX12::Update( ID3D11DeviceContext& DirectXContext )
+void GfxCBuffer_DX12::Update( const DirectXComRef<ID3D12GraphicsCommandList>& _rCommandList )
 {
 	if( mbUpdated && mpCBufferMapped )
 	{

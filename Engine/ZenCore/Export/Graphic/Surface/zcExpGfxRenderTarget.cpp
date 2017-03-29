@@ -16,7 +16,7 @@ bool ExporterGfxTarget2D::ExportStart()
 	if( Super::ExportStart() )
 	{
 		ExportInfoGfxRendertarget* pExportInfo	= static_cast<ExportInfoGfxRendertarget*>(mpExportInfo);
-		mrExport->mTextureID					= zcExp::CreateGfxTexture2D(pExportInfo->meFormat, zFlagResTexUse(zenConst::keTexCreate_RenderTarget), pExportInfo->mvDim );
+		mrExport->mTextureID					= zcExp::CreateGfxTexture2D(pExportInfo->meFormat, zFlagResTexUse(keTexCreate_RenderTarget), pExportInfo->mvDim );
 		mrExport->meFormat						= pExportInfo->meFormat;
 		mrExport->mvDim							= pExportInfo->mvDim;
 		mrExport->mbSRGB						= pExportInfo->mbSRGB;
@@ -36,11 +36,11 @@ bool ExporterGfxTarget2D::ExportStart()
 //=================================================================================================
 zResID CreateGfxRenderTarget(zenConst::eTextureFormat _eFormat, zVec2U16 _vDim, bool _bSrgb)
 {		
-	static zenMem::zAllocatorPool sMemPool("Pool RenderTarget", sizeof(ExportInfoGfxRendertarget), 1, 5 );
+	static zenMem::zAllocatorPool sMemPool("Pool RenderTarget", sizeof(ExportInfoGfxRendertarget), 32, 32 );
 	ExportInfoGfxRendertarget* pExportInfo	= zenNew(&sMemPool) ExportInfoGfxRendertarget;		
-	pExportInfo->meFormat						= _eFormat;
-	pExportInfo->mvDim							= _vDim;
-	pExportInfo->mbSRGB							= _bSrgb;
+	pExportInfo->meFormat					= _eFormat;
+	pExportInfo->mvDim						= _vDim;
+	pExportInfo->mbSRGB						= _bSrgb;
 	return zcMgr::Export.CreateItem( zResID::kePlatformType_GFX, zenConst::keResType_GfxTarget2D, pExportInfo );
 }
 

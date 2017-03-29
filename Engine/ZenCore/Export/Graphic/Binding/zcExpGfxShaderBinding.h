@@ -17,7 +17,7 @@ namespace zcExp
 	public:
 		union ShaderBindInfoIndex
 		{
-			zU8	 muShaderResIndex[keShaderStage__Count];	// Index in each shader stage maResourceBinding
+			zU8	 muShaderResIndex[keShaderStage__Count];				//!< Index in each shader stage maResourceBinding
 			zU64 muResourceCollapsed=0xFFFFFFFFFFFFFFFF;
 		};
 
