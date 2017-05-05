@@ -33,7 +33,7 @@ bool GfxCBuffer_DX12::Initialize()
 								D3D12_HEAP_FLAG_NONE,
 								&CD3DX12_RESOURCE_DESC::Buffer(uAlignedSize),
 								D3D12_RESOURCE_STATE_GENERIC_READ,
-								nullptr, IID_PPV_ARGS(&mrResource));	
+								nullptr, IID_PPV_ARGS(&mrResource));
 		if( SUCCEEDED(hr) )
 		{
 			zSetGfxResourceName(mrResource, mResID, nullptr);
@@ -56,6 +56,7 @@ bool GfxCBuffer_DX12::Initialize()
 			}
 		}
 	}
+	
 	return false;
 }
 

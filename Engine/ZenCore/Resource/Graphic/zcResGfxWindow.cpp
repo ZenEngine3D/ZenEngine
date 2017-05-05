@@ -57,7 +57,6 @@ void GfxWindow::FrameEnd()
 	
 	//! @todo 2 cleanup this messy access
 	// Editor doesn't have OS windows associated...
-#if !ZEN_RENDERER_DX12
 	if( mpMainWindowOS )
 	{
 		WindowInputState InputData;
@@ -68,7 +67,7 @@ void GfxWindow::FrameEnd()
 		mrNuklearData->mrRendertarget = GetBackbuffer();
 		zxNuklear::zxNuklearHelper::Get().Render(mrNuklearData, &InputData);
 	}
-#endif
+
 	const zUInt uHistoryIndex = muFrameCount%keEventHistoryCount;
 	maEventHistory[keEvtTyp_CPU][uHistoryIndex]->Stop();
 	maEventHistory[keEvtTyp_GPU][uHistoryIndex]->Stop();

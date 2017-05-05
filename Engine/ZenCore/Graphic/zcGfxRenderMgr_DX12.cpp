@@ -241,14 +241,14 @@ bool ManagerRender_DX12::Load()
 	
 	//SF Temp Find first valid GPU
 	{
-		Microsoft::WRL::ComPtr<IDXGIAdapter1> hardwareAdapter;
+		Microsoft::WRL::ComPtr<IDXGIAdapter1> DrawAdapter;
 	#if 1
-		GetHardwareAdapter(mrDXFactory.Get(), &hardwareAdapter);
+		GetHardwareAdapter(mrDXFactory.Get(), &DrawAdapter);
 	#else
-		hr = mrDXFactory->EnumWarpAdapter(IID_PPV_ARGS(&hardwareAdapter));
+		hr = mrDXFactory->EnumWarpAdapter(IID_PPV_ARGS(&DrawAdapter));
 		if( FAILED(hr) )
 			return false;
-		hr = hardwareAdapter.As(&mrDXAdapter);
+		hr = DrawAdapter.As(&mrDXAdapter);
 		if( FAILED(hr) )
 			return false;
 	//	if(FAILED(mrDXFactory->EnumAdapters1(0, &hardwareAdapter)))
@@ -281,7 +281,7 @@ bool ManagerRender_DX12::Load()
 	HeapDesc.NumDescriptors = (UINT)muResViewCount;		
 	for(zUInt idx(0); idx<kuFrameBufferCount; ++idx)
 	{
-		hr									= zcMgr::GfxRender.GetDevice()->CreateDescriptorHeap(&HeapDesc, IID_PPV_ARGS(&mrResViewDescriptorHeap[idx]));
+		hr = zcMgr::GfxRender.GetDevice()->CreateDescriptorHeap(&HeapDesc, IID_PPV_ARGS(&mrResViewDescriptorHeap[idx]));
 		if( FAILED( hr ) )
 			return false;	
 		muResViewDescriptor[idx].HandleCpu	= mrResViewDescriptorHeap[idx]->GetCPUDescriptorHandleForHeapStart();
@@ -289,12 +289,14 @@ bool ManagerRender_DX12::Load()
 	}	
 	
 	D3D12_SHADER_RESOURCE_VIEW_DESC NullSRVDesc = {};
-	NullSRVDesc.Format							= zcMgr::GfxRender.ZenFormatToNative(keTexFormat_R8);
+	NullSRVDesc.Format							= DXGI_FORMAT_R8G8B8A8_UNORM;
 	NullSRVDesc.ViewDimension					= D3D12_SRV_DIMENSION_TEXTURE2D;
 	NullSRVDesc.Shader4ComponentMapping			= D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
 	NullSRVDesc.Texture2D.MipLevels				= 1;
+	NullSRVDesc.Texture2D.MostDetailedMip		= 0;
+	NullSRVDesc.Texture2D.ResourceMinLODClamp	= 0.0f;
 	gNullSRVView								= zcGfx::DescriptorSRV_UAV_CBV::Allocate();
-	zcMgr::GfxRender.GetDevice()->CreateShaderResourceView(nullptr, &NullSRVDesc, gNullSRVView.GetCpuHandle());
+	zcMgr::GfxRender.GetDevice()->CreateShaderResourceView(nullptr, &NullSRVDesc, gNullSRVView.GetCpuHandle());	
 
 	D3D12_UNORDERED_ACCESS_VIEW_DESC NullUAVDesc = {};
 	NullUAVDesc.Format							= zcMgr::GfxRender.ZenFormatToNative(keTexFormat_R8);
@@ -304,9 +306,23 @@ bool ManagerRender_DX12::Load()
 	gNullUAVView								= zcGfx::DescriptorSRV_UAV_CBV::Allocate();
 	zcMgr::GfxRender.GetDevice()->CreateUnorderedAccessView(nullptr, nullptr, &NullUAVDesc, gNullUAVView.GetCpuHandle());
 
-	gNullCBVView								= zcGfx::DescriptorSRV_UAV_CBV::Allocate();						
-	zcMgr::GfxRender.GetDevice()->CreateConstantBufferView(nullptr, gNullCBVView.GetCpuHandle());
+//-----------------------------------------------------------------------
+//! @todo 0 quick test hack	
+	static DirectXComRef<ID3D12Resource> mrResource;	
+	zcMgr::GfxRender.GetDevice()->CreateCommittedResource(	
+								&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),
+								D3D12_HEAP_FLAG_NONE,
+								&CD3DX12_RESOURCE_DESC::Buffer(256),
+								D3D12_RESOURCE_STATE_GENERIC_READ,
+								nullptr, IID_PPV_ARGS(&mrResource));	
 	
+	D3D12_CONSTANT_BUFFER_VIEW_DESC NullCbvDesc;
+	NullCbvDesc.BufferLocation	= mrResource->GetGPUVirtualAddress();
+	NullCbvDesc.SizeInBytes		= 256;
+	gNullCBVView				= zcGfx::DescriptorSRV_UAV_CBV::Allocate();						
+	zcMgr::GfxRender.GetDevice()->CreateConstantBufferView(&NullCbvDesc, gNullCBVView.GetCpuHandle());
+//-----------------------------------------------------------------------
+
 	//----------------------------------------------------------------------------------------------
 	// Create Commandlist/Queue
 	//----------------------------------------------------------------------------------------------
@@ -342,11 +358,13 @@ bool ManagerRender_DX12::Load()
 		RootSignature::StaticInitialize();
 		CD3DX12_DESCRIPTOR_RANGE1 aRanges[3];
         //D3D12_DESCRIPTOR_RANGE_TYPE_SAMPLER	= ( D3D12_DESCRIPTOR_RANGE_TYPE_CBV + 1 ) 
-		aRanges[D3D12_DESCRIPTOR_RANGE_TYPE_CBV].Init(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, (UINT)14, 0, 0, D3D12_DESCRIPTOR_RANGE_FLAG_NONE);
+		aRanges[D3D12_DESCRIPTOR_RANGE_TYPE_CBV].Init(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, (UINT)10, 0, 0, D3D12_DESCRIPTOR_RANGE_FLAG_NONE);
 		aRanges[D3D12_DESCRIPTOR_RANGE_TYPE_UAV].Init(D3D12_DESCRIPTOR_RANGE_TYPE_UAV, (UINT) 8, 0, 0, D3D12_DESCRIPTOR_RANGE_FLAG_NONE);
-		aRanges[D3D12_DESCRIPTOR_RANGE_TYPE_SRV].Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, (UINT)-1, 0, 0, D3D12_DESCRIPTOR_RANGE_FLAG_DESCRIPTORS_VOLATILE/* D3D12_DESCRIPTOR_RANGE_FLAG_DATA_STATIC*/);		
+		aRanges[D3D12_DESCRIPTOR_RANGE_TYPE_SRV].Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, (UINT)10, 0, 0, D3D12_DESCRIPTOR_RANGE_FLAG_DESCRIPTORS_VOLATILE/* D3D12_DESCRIPTOR_RANGE_FLAG_DATA_STATIC*/);		
+
 		mRootSignatureDefault = RootSignature( 
 			{
+				RootSignature::SlotConstant(1,10,0,D3D12_SHADER_VISIBILITY_VERTEX),	//Vertex offset constant
 				RootSignature::SlotTable(1, &aRanges[0], D3D12_SHADER_VISIBILITY_VERTEX),
 				RootSignature::SlotTable(1, &aRanges[1], D3D12_SHADER_VISIBILITY_VERTEX),
 				RootSignature::SlotTable(1, &aRanges[2], D3D12_SHADER_VISIBILITY_VERTEX),
@@ -422,9 +440,10 @@ bool ManagerRender_DX12::Unload()
 	
 	return true;
 }
-
+//! @todo 0 delete this?
 ResourceDescriptor2 ManagerRender_DX12::GetResViewRingDescriptor(zUInt _uCount)
 {
+	zenAssert( _uCount > 0 );
 	zUInt uIndex = muResViewIndexCur.fetch_add(_uCount);
 	zenAssertMsg( uIndex+_uCount <= muResViewCount, "Ran out of resource descriptors for this frame");
 	return muResViewDescriptor[muFrameRendered%kuFrameBufferCount].Offset(uIndex);
@@ -484,36 +503,41 @@ void ManagerRender_DX12::FrameBegin(zcRes::GfxWindowRef _FrameWindow)
 
 void ManagerRender_DX12::FrameEnd()
 {	
-	const zcRes::GfxTarget2DRef& rBackbuffer = grWindowRender->GetBackbuffer();
-
-	//mrQueryDisjoint->Stop();		
-
 	// Indicate that the back buffer will now be used to present.
+	if( mrFrameContext.IsValid() )
+	{
+		mrFrameContext.Submit();
+		mrFrameContext = nullptr;
+	}
+
+	const zcRes::GfxTarget2DRef& rBackbuffer = grWindowRender->GetBackbuffer();
 	mGpuContext[0].GetCommandList()->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(rBackbuffer.HAL()->mrResource.Get(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT));
+	//mrQueryDisjoint->Stop();
 
 	HRESULT hr = mGpuContext[0].GetCommandList()->Close();
-	if (FAILED(hr))
-		return;
-	ID3D12CommandList* ppCommandLists[] = { marCommandList[muFrameRendered%kuFrameBufferCount][0].Get() };
-	mrCommandQueue->ExecuteCommandLists(zenArrayCount(ppCommandLists), ppCommandLists);
-	grWindowRender.HAL()->mrDXSwapChain->Present( 0, 0 );	
-	
-	/*
-	DXGI_FRAME_STATISTICS FrameStatistics;
-	hr = m_pDXGISwapChain->GetFrameStatistics(&FrameStatistics);
-
-	if (FrameStatistics.PresentCount > m_PreviousPresentCount)
+	if( SUCCEEDED(hr) )
 	{
-		if (m_PreviousRefreshCount > 0 &&
-			(FrameStatistics.PresentRefreshCount - m_PreviousRefreshCount) > (FrameStatistics.PresentCount - m_PreviousPresentCount))
+		ID3D12CommandList* ppCommandLists[] = { marCommandList[muFrameRendered%kuFrameBufferCount][0].Get() };
+		mrCommandQueue->ExecuteCommandLists(zenArrayCount(ppCommandLists), ppCommandLists);
+		grWindowRender.HAL()->mrDXSwapChain->Present( 0, 0 );	
+	
+		/*
+		DXGI_FRAME_STATISTICS FrameStatistics;
+		hr = m_pDXGISwapChain->GetFrameStatistics(&FrameStatistics);
+
+		if (FrameStatistics.PresentCount > m_PreviousPresentCount)
 		{
-			++m_GlitchCount;
+			if (m_PreviousRefreshCount > 0 &&
+				(FrameStatistics.PresentRefreshCount - m_PreviousRefreshCount) > (FrameStatistics.PresentCount - m_PreviousPresentCount))
+			{
+				++m_GlitchCount;
+			}
 		}
+		m_PreviousPresentCount = FrameStatistics.PresentCount;
+		m_PreviousRefreshCount = FrameStatistics.SyncRefreshCount;
+		*/
 	}
-	m_PreviousPresentCount = FrameStatistics.PresentCount;
-	m_PreviousRefreshCount = FrameStatistics.SyncRefreshCount;
-	*/
-	Super::FrameEnd();	
+	Super::FrameEnd();
 }
 
 void ManagerRender_DX12::NamedEventBegin(const zStringHash32& zName)
@@ -579,8 +603,8 @@ void ManagerRender_DX12::DispatchBarrier(ScopedDrawlist& _Drawlist, bool _bPreDa
 
 void ManagerRender_DX12::Render(ScopedDrawlist& _Drawlist)
 {			
-	bool bBarrierPostUpdate 						= false;
-	zcRes::GfxView_HAL* pView						= _Drawlist.GetRenderpass().IsValid() && _Drawlist.GetRenderpass().HAL()->mrStateView.IsValid() ? _Drawlist.GetRenderpass().HAL()->mrStateView.HAL() : nullptr;
+	bool bBarrierPostUpdate 	= false;
+	zcRes::GfxView_HAL* pView	= _Drawlist.GetRenderpass().IsValid() && _Drawlist.GetRenderpass().HAL()->mrStateView.IsValid() ? _Drawlist.GetRenderpass().HAL()->mrStateView.HAL() : nullptr;
 	
 	if( pView )
 	{		

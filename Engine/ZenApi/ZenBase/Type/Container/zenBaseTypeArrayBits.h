@@ -11,12 +11,13 @@ zenClassDeclareNoParent(zArrayBits)
 public:
 	enum eConstant{kuInvalid=0xFFFFFFFF};
 	zenInline					zArrayBits();
-	zenInline					zArrayBits(zU32 _uCount);
+	zenInline					zArrayBits(zU32 _uBitCount);
 	zenInline					zArrayBits(std::initializer_list<bool> _Entries);
 	zenInline					zArrayBits(const zArrayBits& _Copy);
 	zenInline					~zArrayBits();
 
-	zenInline bool				Get(zUInt _uIndex);
+	zenInline bool				Get(zUInt _uBitIndex);
+	zenInline zUInt				GetNext(bool bValue, zUInt _uStartBitIndex=0); //! @todo 2 implement this, and use it in other GetXXX method
 	zenInline zUInt				GetFirstTrue();
 	zenInline zUInt				GetFirstFalse();
 	zenInline zUInt				GetLastTrue();
@@ -26,15 +27,15 @@ public:
 
 	zenInline bool				operator[](zUInt _uBitIndex)const;
 	
-	zenInline bool				Toggle(zUInt _uIndex);
-	zenInline void				Set(zUInt _uIndex, bool _bValue);	
-	zenInline void				SetRange(zUInt _uFirst, zUInt _uLast, bool _bValue);
+	zenInline bool				Toggle(zUInt _uBitIndex);
+	zenInline void				Set(zUInt _uBitIndex, bool _bValue);	
+	zenInline void				SetRange(zUInt _uBitIndexFirst, zUInt _uBitIndexLast, bool _bValue);
 	
 	zenInline void				Reset();
 
 protected:
-	zenInline void				Resize(zUInt _uIndexCount);
-	zenInline void				GrowIfNeeded(zUInt _uIndexCount);
+	zenInline void				Resize(zUInt _uBitCount);
+	zenInline void				GrowIfNeeded(zUInt _uBitCount);
 	zUInt*						mpDataArray=nullptr;
 	zUInt						muDataArrayCount=0;
 };

@@ -98,12 +98,12 @@ void zxImGUIHelper::Render(const zEngineRef<zxRenderData>& _rImGuiData, WindowIn
 	}
 		
 	//----------------------------------------------------------------------------
-	// Adjust the rendering size to window size
-	if( !_rImGuiData->mrRenderpass.IsValid() || _rImGuiData->mvScreenSize != _rImGuiData->mrRendertarget.GetDim())
+	// Adjust the rendering size to window size	
+	//if( !_rImGuiData->mrRenderpass.IsValid() || _rImGuiData->mvScreenSize != _rImGuiData->mrRendertarget.GetDim())
+	// Recreate Renderpass everyframe, since backbuffer gets ping-ponged
 	{
 		zenRes::zGfxRenderPass::ConfigColorRT	UIColorRTConfig;
-		zenRes::zGfxRenderPass::ConfigDepthRT	UIDepthRTConfig;
-		_rImGuiData->mvScreenSize			= _rImGuiData->mrRendertarget.GetDim();
+		zenRes::zGfxRenderPass::ConfigDepthRT	UIDepthRTConfig;		
 		UIColorRTConfig.mrTargetSurface		= _rImGuiData->mrRendertarget;
 		UIColorRTConfig.mbBlendEnable		= true;
 		UIColorRTConfig.meBlendColorSrc		= zenRes::zGfxRenderPass::ConfigColorRT::keBlendVal_SrcAlpha;
@@ -113,13 +113,17 @@ void zxImGUIHelper::Render(const zEngineRef<zxRenderData>& _rImGuiData, WindowIn
 		UIColorRTConfig.meBlendAlphaDest	= zenRes::zGfxRenderPass::ConfigColorRT::keBlendVal_One;
 		UIColorRTConfig.meBlendAlphaOp		= zenRes::zGfxRenderPass::ConfigColorRT::keBlendOp_Add;		
 		_rImGuiData->mrRenderpass			= zenRes::zGfxRenderPass::Create("RenderUI", 0, UIColorRTConfig, UIDepthRTConfig, mrStateRaster); //! @todo feature expose name
+	}
+	
+	if( _rImGuiData->mvScreenSize != _rImGuiData->mrRendertarget.GetDim())
+	{
+		_rImGuiData->mvScreenSize = _rImGuiData->mrRendertarget.GetDim();
 		zenMath::MatrixProjectionOrthoLH(_rImGuiData->matOrthographic, _rImGuiData->mvScreenSize.x, _rImGuiData->mvScreenSize.y, 0, 1);
 
 		// Not sure which CBuffer has this parameter, assign it to all
 		for(zUInt idx(0), count(_rImGuiData->marShaderCBuffers.Count()); idx<count; ++idx)
 			_rImGuiData->marShaderCBuffers[idx].SetValue(zHash32("ProjectionMatrix"), _rImGuiData->matOrthographic);
 	}
-
 	
 	//----------------------------------------------------------------------------
 	// Ask all client subscriber to display their UI
@@ -134,7 +138,7 @@ void zxImGUIHelper::Render(const zEngineRef<zxRenderData>& _rImGuiData, WindowIn
 		ImGui::Render();		
 	}
 
-	ImDrawData* pImGuiData		= ImGui::GetDrawData();
+	ImDrawData* pImGuiData				= ImGui::GetDrawData();
 	zenGfx::zScopedDrawlist rUIContext	= zenGfx::zScopedDrawlist::Create("ImGui", _rImGuiData->mrRenderpass);
 	//----------------------------------------------------------------------------
 	// Generates Vertex and Index buffer	
@@ -191,7 +195,6 @@ void zxImGUIHelper::Render(const zEngineRef<zxRenderData>& _rImGuiData, WindowIn
 		zenPerf::zScopedEventCpu EmitEvent("Emit Drawcalls");		
 		int vtx_offset				= 0;
 		int idx_offset				= 0;
-		bool bFirst					= true;
 		for (int n = 0; n < pImGuiData->CmdListsCount; n++)
 		{
 			const ImDrawList* cmd_list			= pImGuiData->CmdLists[n];
@@ -205,8 +208,8 @@ void zxImGUIHelper::Render(const zEngineRef<zxRenderData>& _rImGuiData, WindowIn
 					pcmd->UserCallback(cmd_list, pcmd);
 				}
 				else
-				{
-					zenGfx::zCommand::DrawMesh(rUIContext, 0.f, rMeshStrip, idx_offset, pcmd->ElemCount, zVec4U16(zU16(pcmd->ClipRect.x), zU16(pcmd->ClipRect.y), zU16(pcmd->ClipRect.z), zU16(pcmd->ClipRect.w)));
+				{	
+					zenGfx::zCommand::DrawMesh(rUIContext, 0.f, rMeshStrip, idx_offset, pcmd->ElemCount, zVec4U16(zU16(pcmd->ClipRect.x), zU16(pcmd->ClipRect.y), zU16(pcmd->ClipRect.z), zU16(pcmd->ClipRect.w)));				
 				}
 
 				idx_offset += pcmd->ElemCount;

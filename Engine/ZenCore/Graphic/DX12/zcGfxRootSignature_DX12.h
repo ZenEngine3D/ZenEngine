@@ -171,7 +171,7 @@ protected:
 //{	InitAsDescriptorTable(1, Visibility); SetTableRange(0, Type, Register, Count); }
 
 
-// Maximum 64 DWORDS divied up amongst all root parameters.
+// Maximum 64 DWORDS divided up amongst all root parameters.
 // Root constants = 1 DWORD * NumConstants
 // Root descriptor (CBV, SRV, or UAV) = 2 DWORDs each
 // Descriptor table pointer = 1 DWORD

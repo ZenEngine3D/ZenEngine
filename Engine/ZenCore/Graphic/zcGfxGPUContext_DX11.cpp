@@ -231,7 +231,6 @@ void GPUContext_DX11::UpdateState(const zcGfx::CommandDraw& _Drawcall)
 		mpDeviceContext->PSSetShader( rShaderPixel.HAL()->mpPixelShader, nullptr, 0 );
 	}
 	
-
 	if( mbScreenScissorOn )
 	{
 		zVec4U16 vScreenScissor = _Drawcall.mvScreenScissor;

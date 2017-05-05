@@ -74,9 +74,10 @@ namespace zen { namespace zenRes
 		{
 			return zGfxBuffer::Create( sizeof(TStructData), _uElemCount);
 		}
-		static zGfxStructBuffer Create(const zArrayBase<TStructData>& _aData, zU32 _uElemCount/*, zFlagResTexUse _UseFlags*/)
+		static zGfxStructBuffer Create(const zArrayBase<TStructData>& _aData, zU32 _uElemCount=0/*, zFlagResTexUse _UseFlags*/)
 		{
-			return zGfxBuffer::Create( reinterpret_cast<const zU8*>(_aData.First()), _aData.SizeMem(), sizeof(TStructData), _uElemCount);
+			_uElemCount = zenMath::Max(static_cast<zU32>(_aData.Count()), _uElemCount);
+			return zGfxBuffer::Create(reinterpret_cast<const zU8*>(_aData.First()), _aData.SizeMem(), sizeof(TStructData), _uElemCount);
 		}
 	};
 }} // namespace zen, zenRes

@@ -28,9 +28,13 @@ public:
 	
 protected:
 	void									UpdateBackbuffers();
-	zenRes::zGfxIndex						mrCubeIndex;	
-	zenRes::zGfxStructBuffer<zVec3F>		mrVBufferTestPos;
-	zenRes::zGfxStructBuffer<zVec2F>		mrVBufferTestUv;
+	zenRes::zGfxIndex						mrCubeIndex;
+	zenRes::zGfxStructBuffer<zVec3F>		mrCubeVtxPos;
+	zenRes::zGfxStructBuffer<zVec2F>		mrCubeVtxUv;
+
+	zenRes::zGfxIndex						mrTriangleIndex;
+	zenRes::zGfxStructBuffer<zVec3F>		mrVBufferTrianglePos;
+	zenRes::zGfxStructBuffer<zVec2F>		mrVBufferTriangleUv;
 
 	zenRes::zGfxShaderVertex				mrShaderVS;	
 	zenRes::zGfxShaderPixel					mrShaderPS;	

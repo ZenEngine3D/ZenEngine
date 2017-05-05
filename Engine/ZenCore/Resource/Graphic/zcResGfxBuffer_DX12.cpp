@@ -101,14 +101,13 @@ void* GfxBuffer_DX12::Lock()
 	zenAssert(mResource.mrUpload.Get() == nullptr);
 
 	// Allocate temp memory to upload data to buffer
-	UINT64 uUploadBufferSize		= 0;
-	D3D12_RESOURCE_DESC BufferDesc	= mResource.mrResource->GetDesc();
-	zcMgr::GfxRender.GetDevice()->GetCopyableFootprints(&BufferDesc, 0, 1, 0, nullptr, nullptr, nullptr, &uUploadBufferSize);
+	D3D12_RESOURCE_DESC BufferDesc = mResource.mrResource->GetDesc();
+	zcMgr::GfxRender.GetDevice()->GetCopyableFootprints(&BufferDesc, 0, 1, 0, nullptr, nullptr, nullptr, &mResource.muUploadSize);
 	
 	HRESULT hr = zcMgr::GfxRender.GetDevice()->CreateCommittedResource(
 					&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),
 					D3D12_HEAP_FLAG_NONE,
-					&CD3DX12_RESOURCE_DESC::Buffer(uUploadBufferSize),
+					&CD3DX12_RESOURCE_DESC::Buffer(mResource.muUploadSize),
 					D3D12_RESOURCE_STATE_GENERIC_READ,
 					nullptr,
 					IID_PPV_ARGS(&mResource.mrUpload));
@@ -116,6 +115,7 @@ void* GfxBuffer_DX12::Lock()
 		return nullptr;
 	
 	zSetGfxResourceName(mResource.mrUpload, mResID, L"Buffer UploadData");
+	mResource.muUploadOffset = 0;
 
 	// Get cpu memory pointer
 	void* pData;
@@ -132,8 +132,10 @@ void GfxBuffer_DX12::Unlock(const zenGfx::zScopedDrawlist& _rContext)
 	mResource.mrUpload->Unmap(0, NULL);
 
 	zcRes::GfxBufferRef rBuffer	= reinterpret_cast<zcRes::GfxBuffer*>(this);
-	zcGfx::CommandUpdateBuffer_DX12::Add(_rContext, rBuffer, 0, maData.SizeMem());
-	mResource.mrUpload = nullptr;	
+	zcGfx::CommandUpdateBuffer_DX12::Add(_rContext, rBuffer, mResource.muUploadOffset, mResource.muUploadSize );
+	mResource.mrUpload			= nullptr;
+	mResource.muUploadSize		= 0;
+	mResource.muUploadOffset	= 0;
 }
 
 }

@@ -36,32 +36,13 @@ void GPUContext_DX12::Reset(const DirectXComRef<ID3D12Device>& _rDevice, const D
 	mrDevice				= _rDevice;
 	mrCommandList			= _rCommandList;
 	mrResViewDescHeap		= _rResViewDescHeap;
+//	muResViewDescIndex		= 0;
 	mRootSignature			= RootSignature();
 	mrPSO					= nullptr;
 	mePrimitive				= D3D_PRIMITIVE_TOPOLOGY_UNDEFINED;
 
 	ID3D12DescriptorHeap* ppHeaps[] = { mrResViewDescHeap.Get() };
 	mrCommandList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
-
-#if !ZEN_RENDERER_DX12
-	zenMem::Zero(mahShaderInputStamp);	
-	zenMem::Zero(maShaderInputSlotCount);
-	zenMem::Zero(maResourceView);
-	zenMem::Zero(maResourceType);
-
-	// Useful for debugging/tracking but not needed
-	for( zUInt stageIdx(0); stageIdx<keShaderStage__Count; ++stageIdx)
-	{
-		marShader[stageIdx] = nullptr;
-		for(zUInt samplerIdx(0); samplerIdx<zcExp::kuDX11_SamplerPerStageMax; ++samplerIdx)
-			marSampler[stageIdx][samplerIdx] = nullptr;
-		for(zUInt cbufferIdx(0); cbufferIdx<zcExp::kuDX11_CBufferPerStageMax; ++cbufferIdx)
-			marCBuffer[stageIdx][cbufferIdx] = nullptr;
-		for(zUInt resIdx(0); resIdx<zcExp::kuDX11_ResourcesPerStageMax; ++resIdx)
-			marResource[stageIdx][resIdx];		
-	}
-#endif
-	
 }
 
 //==================================================================================================
@@ -80,7 +61,7 @@ void GPUContext_DX12::UpdateShaderState_Samplers( const zcGfx::CommandDraw_HAL& 
 	for( zU16 slotIdx(0); slotIdx<uAssignCount; ++slotIdx )
 	{
 		marSampler[_eShaderStage][slotIdx]	= slotIdx < uResCount ? arResource[slotIdx] : nullptr;
-		zcRes::GfxStateSamplerRef& rResource				= marSampler[_eShaderStage][slotIdx];
+		zcRes::GfxStateSamplerRef& rResource		= marSampler[_eShaderStage][slotIdx];
 		ID3D11SamplerState* pDXView					= rResource.IsValid() ? rResource.HAL()->mpSamplerState	: nullptr;		
 		uChangedFirst								= pDXView != aResourceView[slotIdx]	? zenMath::Min(uChangedFirst, slotIdx)	: uChangedFirst;
 		uChangedLast								= pDXView != aResourceView[slotIdx]	? slotIdx								: uChangedLast;
@@ -259,7 +240,7 @@ void GPUContext_DX12::UpdateState(const CommandDraw_HAL& _Drawcall)
 	//----------------------------------------------------------------------------------------------
 	if( mRootSignature != zcMgr::GfxRender.mRootSignatureDefault )
 	{
-		mRootSignature = zcMgr::GfxRender.mRootSignatureDefault;
+		mRootSignature	= zcMgr::GfxRender.mRootSignatureDefault;
 		mrPSO			= nullptr;
 		mrCommandList->SetGraphicsRootSignature( mRootSignature.Get() );
 	}
@@ -281,19 +262,22 @@ void GPUContext_DX12::UpdateState(const CommandDraw_HAL& _Drawcall)
 	//----------------------------------------------------------------------------------------------
 	// Primitive Topology (point, triangle strip, line list, ...)
 	//----------------------------------------------------------------------------------------------
+	mrCommandList->IASetIndexBuffer( &rIndex.HAL()->mResource.mView );	//! @todo 3 Perf : Add check if it changed?
 	if( mePrimitive != rIndex.HAL()->mePrimitive )
 	{
 		mePrimitive = rIndex.HAL()->mePrimitive;
-		mrCommandList->IASetPrimitiveTopology( mePrimitive );
-		mrCommandList->IASetIndexBuffer( &rIndex.HAL()->mResource.mView );
+		mrCommandList->IASetPrimitiveTopology( mePrimitive );		
 	}
-
+	
 	//----------------------------------------------------------------------------------------------
 	// Per drawcall scissor setting
 	//----------------------------------------------------------------------------------------------
-	zVec4U16 vScreenScissor = _Drawcall.mvScreenScissor;
-	vScreenScissor.z		= zenMath::Min<zU16>(vScreenScissor.z, (zU16)rView.HAL()->mViewport.Width + vScreenScissor.x);
-	vScreenScissor.w		= zenMath::Min<zU16>(vScreenScissor.w, (zU16)rView.HAL()->mViewport.Height + vScreenScissor.y);
+	zVec4U16 vScreenScissor				= _Drawcall.mvScreenScissor;
+	const CD3DX12_VIEWPORT& Viewport	= rView.HAL()->mViewport;
+	vScreenScissor.x					= zenMath::Max<zU16>(vScreenScissor.x, (zU16)Viewport.TopLeftX );
+	vScreenScissor.y					= zenMath::Max<zU16>(vScreenScissor.y, (zU16)Viewport.TopLeftY );
+	vScreenScissor.z					= zenMath::Min<zU16>(vScreenScissor.z, (zU16)(Viewport.Width + Viewport.TopLeftX));
+	vScreenScissor.w					= zenMath::Min<zU16>(vScreenScissor.w, (zU16)(Viewport.Height + Viewport.TopLeftY));
 	if( mvScreenScissor != vScreenScissor )
 	{
 		D3D12_RECT ScissorRect	= {vScreenScissor.x, vScreenScissor.y, vScreenScissor.z, vScreenScissor.w};
@@ -304,6 +288,8 @@ void GPUContext_DX12::UpdateState(const CommandDraw_HAL& _Drawcall)
 	// Assign Shader input resources for each stage
 	//----------------------------------------------------------------------------------------------
 	//! @todo 0 remove all of this hacked code
+	mrCommandList->SetGraphicsRoot32BitConstant(0, pMeshStripHAL->muVertexFirst, 0);
+
 	for( zUInt idxShader(0); idxShader < keShaderStage__Count; ++idxShader )
 	{
 		// Assign Textures/Buffer
@@ -316,97 +302,42 @@ void GPUContext_DX12::UpdateState(const CommandDraw_HAL& _Drawcall)
 				const zcRes::GfxShaderResourceRef& rResource	= pMeshStripHAL->marDescriptorResources[idxShader][idxRes];
 				const zcGfx::DescriptorSRV_UAV_CBV* const pDesc	= GetResourceDescriptor( rResource );
 				mrDevice->CopyDescriptorsSimple(1, SRVDesc.Offset(idxRes).HandleCpu, pDesc ? pDesc->GetCpuHandle() : gNullSRVView.GetCpuHandle(), D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
-			}
-			mrCommandList->SetGraphicsRootDescriptorTable(static_cast<UINT>(idxShader)*3+D3D12_DESCRIPTOR_RANGE_TYPE_SRV, SRVDesc.HandleGpu );
+			}			
+			mrCommandList->SetGraphicsRootDescriptorTable(1+static_cast<UINT>(idxShader)*3+D3D12_DESCRIPTOR_RANGE_TYPE_SRV, SRVDesc.HandleGpu );
 		}
+		else
+		{
+			ResourceDescriptor2 SRVDesc	= zcMgr::GfxRender.GetResViewRingDescriptor( 1 );
+			mrDevice->CopyDescriptorsSimple(1, SRVDesc.HandleCpu, gNullSRVView.GetCpuHandle(), D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+			mrCommandList->SetGraphicsRootDescriptorTable(1+static_cast<UINT>(idxShader)*3+D3D12_DESCRIPTOR_RANGE_TYPE_SRV, SRVDesc.HandleGpu );
+		}
+		
+		// Assign UAV
+		ResourceDescriptor2 UAVDesc	= zcMgr::GfxRender.GetResViewRingDescriptor( 8 ); //! @todo 0 use constants
+ 		for( zUInt idxRes(0); idxRes < 8; ++idxRes )
+ 			mrDevice->CopyDescriptorsSimple(1, UAVDesc.Offset(idxRes).HandleCpu, gNullUAVView.GetCpuHandle(), D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+		mrCommandList->SetGraphicsRootDescriptorTable(1+static_cast<UINT>(idxShader)*3+D3D12_DESCRIPTOR_RANGE_TYPE_UAV, UAVDesc.HandleGpu );		
 
 		// Assign Constant Buffers
-		ResourceDescriptor2 CBVDesc	= zcMgr::GfxRender.GetResViewRingDescriptor( 14 ); //! @todo 0 use constants
+		ResourceDescriptor2 CBVDesc	= zcMgr::GfxRender.GetResViewRingDescriptor( 10 ); //! @todo 0 use constants
 		const zArrayStatic<zcRes::GfxShaderResourceDescRef>& arCBufferRes	= pMeshStripHAL->marShaderResources[idxShader][keShaderRes_CBuffer];
 		const zUInt countCBuffer											= arCBufferRes.Count();
- 		for( zUInt idxCBuffer(0); idxCBuffer < 14; ++idxCBuffer )
+ 		for( zUInt idxCBuffer(0); idxCBuffer < 10; ++idxCBuffer )
 		{
-			zcGfx::DescriptorSRV_UAV_CBV* pCBufferDesc(nullptr);
-			//zcRes::GfxCBufferRef rCBufferRes = if(idxCBuffer < countCBuffer) ? arCBufferRes[idxCBuffer] : nullptr;
-			zcRes::GfxCBufferRef rCBufferRes;
+			zcGfx::DescriptorSRV_UAV_CBV* pCBufferDesc(nullptr);			
 			if(idxCBuffer < countCBuffer) 
-				rCBufferRes = arCBufferRes[idxCBuffer];
-			if( rCBufferRes.IsValid() )
 			{
-				rCBufferRes.HAL()->Update( mrCommandList ); //! @todo 2 safety (not multithread safe)
-				pCBufferDesc = GetResourceDescriptor( arCBufferRes[idxCBuffer] );
+				zcRes::GfxCBufferRef rCBufferRes = arCBufferRes[idxCBuffer];
+				if( rCBufferRes.IsValid() )
+				{
+					rCBufferRes.HAL()->Update( mrCommandList ); //! @todo 2 safety (not multithread safe)
+					pCBufferDesc = GetResourceDescriptor( arCBufferRes[idxCBuffer] );
+				}
 			}
  			mrDevice->CopyDescriptorsSimple(1, CBVDesc.Offset(idxCBuffer).HandleCpu, pCBufferDesc ? pCBufferDesc->GetCpuHandle() : gNullCBVView.GetCpuHandle(), D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 		}
-		mrCommandList->SetGraphicsRootDescriptorTable(static_cast<UINT>(idxShader)*3+D3D12_DESCRIPTOR_RANGE_TYPE_CBV, CBVDesc.HandleGpu );
-		
-		// Assign UAV
-		ResourceDescriptor2 UAVDesc	= zcMgr::GfxRender.GetResViewRingDescriptor( 8 );
- 		for( zUInt idxRes(0); idxRes < 8; ++idxRes )
- 			mrDevice->CopyDescriptorsSimple(1, UAVDesc.Offset(idxRes).HandleCpu, gNullUAVView.GetCpuHandle(), D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
-		mrCommandList->SetGraphicsRootDescriptorTable(static_cast<UINT>(idxShader)*3+D3D12_DESCRIPTOR_RANGE_TYPE_UAV, UAVDesc.HandleGpu );		
+		mrCommandList->SetGraphicsRootDescriptorTable(1+static_cast<UINT>(idxShader)*3+D3D12_DESCRIPTOR_RANGE_TYPE_CBV, CBVDesc.HandleGpu );
 	}
-
-#if !ZEN_RENDERER_DX12
-	UINT UnusedOffset = 0;
-	const zcRes::GfxMeshStripRef&		rMeshStrip	= _Drawcall.mrMeshStrip;
-	const zcRes::GfxIndexRef&			rIndex		= rMeshStrip.HAL()->mrIndexBuffer;
-	const zcRes::GfxShaderBindingRef&	rShaderBind	= rMeshStrip.HAL()->mrShaderBinding;			
-	const zcRes::GfxViewRef&			rView		= mrStateView;
-	
-	UpdateStateRenderpass(_Drawcall);
-	mpDeviceContext->IASetIndexBuffer	( rIndex.HAL()->mpIndiceBuffer, rIndex.HAL()->meIndiceFormat, 0 );	
-
-	//----------------------------------------------------------------------------------------------
-	// Assign Shader input resources for each stage
-	//----------------------------------------------------------------------------------------------
-	for(zUInt stageIdx(0); stageIdx<keShaderStage__Count; ++stageIdx)
-	{						
-		// Check resource setup stamp to detect if there was a change
-		const eShaderStage eStageIdx = (eShaderStage)stageIdx;
-		bool bUpdated[keShaderRes__Count];
-		for(zUInt resTypeIdx(0);resTypeIdx<keShaderRes__Count; ++resTypeIdx)
-		{
-			const zArrayStatic<zcRes::GfxShaderResourceRef>& arResources	= rMeshStrip.HAL()->marShaderResources[stageIdx][resTypeIdx];
-			zHash32 zMeshStripResStamp										= rMeshStrip.HAL()->mhShaderResourceStamp[stageIdx][resTypeIdx];
-
-			if( (zU32)zMeshStripResStamp == 0 )
-			{
-				zMeshStripResStamp = zHash32();
-				for(zUInt resIdx(0), resCount(arResources.Count()); resIdx<resCount; ++resIdx)
-					zMeshStripResStamp.Append( arResources[resIdx].IsValid() ? (void*)&arResources[resIdx]->mResID : (void*)&zResID(), sizeof(zResID) );
-				rMeshStrip.HAL()->mhShaderResourceStamp[stageIdx][resTypeIdx] = zMeshStripResStamp;
-			}
-
-			bUpdated[resTypeIdx]						= mahShaderInputStamp[stageIdx][resTypeIdx] != zMeshStripResStamp;
-			mahShaderInputStamp[stageIdx][resTypeIdx]	= zMeshStripResStamp;
-		}
-		
-		// Special case shader resources update
-		if( bUpdated[keShaderRes_Sampler] )
-			UpdateShaderState_Samplers(_Drawcall, eStageIdx);
-		if( bUpdated[keShaderRes_CBuffer] )
-			UpdateShaderState_ConstantBuffers(_Drawcall, eStageIdx);
-		
-		// Generic shader resources update
-		zU16 uResChangeStart(0xFFFF), uResChangeEnd(0);
-		if( bUpdated[keShaderRes_Buffer] )
-			UpdateShaderState_StructBuffers(uResChangeStart, uResChangeEnd, _Drawcall, eStageIdx);
-		
-		if( bUpdated[keShaderRes_Texture] )
-			UpdateShaderState_Textures(uResChangeStart, uResChangeEnd, _Drawcall, eStageIdx);
-		
-		if( uResChangeEnd >= uResChangeStart )
-		{
-			switch( eStageIdx )
-			{
-			case keShaderStage_Vertex:	mpDeviceContext->VSSetShaderResources( uResChangeStart, uResChangeEnd-uResChangeStart+1, &maResourceView[stageIdx][uResChangeStart] );	break;
-			case keShaderStage_Pixel:	mpDeviceContext->PSSetShaderResources( uResChangeStart, uResChangeEnd-uResChangeStart+1, &maResourceView[stageIdx][uResChangeStart] );	break;
-			default: break;
-			}
-		}
-	}
-#endif
 }
 
 } 

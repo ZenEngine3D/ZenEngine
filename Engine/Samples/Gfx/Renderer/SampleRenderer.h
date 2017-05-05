@@ -32,21 +32,28 @@ protected:
 	zenMath::Matrix							matView;
 	zenMath::Matrix							matProjection;
 	zenMath::Matrix							matProjectionRT;
-	zenRes::zGfxStructBuffer<zVec3F>		mrVertexBufferPos;
-	zenRes::zGfxStructBuffer<BufferColorUV>	mrVertexBufferColorUv;
+	
 	zenRes::zGfxIndex						mrCubeIndex;	
+	zenRes::zGfxStructBuffer<zVec3F>		mrCubeVtxPos;
+	zenRes::zGfxStructBuffer<BufferColorUV>	mrCubeVtxColorUv;		
+	zenRes::zGfxIndex						mrTriangleIndex;	
+	zenRes::zGfxStructBuffer<zVec3F>		mrTriangleVtxPos;
+	zenRes::zGfxStructBuffer<BufferColorUV>	mrTriangleVtxColorUv;
+
 	zenRes::zGfxShaderVertex				mrShaderVS;	
 	zenRes::zGfxShaderPixel					mrShaderPS;	
 	zenRes::zGfxShaderPixel					mrShaderPS2Output;		
 	zenRes::zGfxTexture2D					mrTexture;	
-	zenRes::zGfxStateSampler						mrSampler;	
-	zenRes::zGfxStateSampler						mrSampler2;		
+	zenRes::zGfxStateSampler				mrSampler;	
+	zenRes::zGfxStateSampler				mrSamplerPoint;		
 	zenRes::zGfxShaderBinding				mrShaderBind;
 	zenRes::zGfxShaderBinding				mrShader2OutputBind;
+	
 	zenRes::zGfxMeshStrip					mrCube1MeshStrip;
 	zenRes::zGfxMeshStrip					mrCube2MeshStrip;
-	zenRes::zGfxMeshStrip					mrCube3MeshStrip;
-	zenRes::zGfxMesh						mrCube4Mesh;
+	zenRes::zGfxMesh						mrCube3Mesh;
+	zenRes::zGfxMeshStrip					mrTriangleMeshStrip;
+
 	zenRes::zGfxTarget2D					mrRenderToTextureRT1;
 	zenRes::zGfxTarget2D					mrRenderToTextureRT2;
 	zenRes::zGfxTarget2D					mrRenderToTextureDepth;

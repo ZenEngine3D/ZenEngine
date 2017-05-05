@@ -16,7 +16,7 @@ namespace sample
 {
 
 static float AspectRatio = 1280.f / 800.f;
-const zArrayStatic<zVec2F> aTestVerticesUV ={ { 0.5f, 0.0f }, { 1.0f, 1.0f }, { 0.0f, 1.0f } };
+const zArrayStatic<zVec2F> aCubeVerticesUV ={ { 0.5f, 0.0f }, { 1.0f, 1.0f }, { 0.0f, 1.0f } };
 const zArrayStatic<zU16> aCubeIndices = { 0,1,2 };
 const zArrayStatic<zVec3F> aTestVerticesPos =
 {
@@ -59,25 +59,25 @@ bool SampleDirextX12Instance::Init()
 	//---------------------------------------------------------------------
 	// Create rendering resources		
 	//---------------------------------------------------------------------	
-	mrCubeIndex										= zenRes::zGfxIndex::Create( aCubeIndices, zenConst::kePrimType_TriangleList );
-	mrVBufferTestPos								= zenRes::zGfxStructBuffer<zVec3F>::Create(aTestVerticesPos, (zU32)aTestVerticesPos.Count() /*, zFlagResUse()*/ ); 
-	mrVBufferTestUv									= zenRes::zGfxStructBuffer<zVec2F>::Create(aTestVerticesUV, (zU32)aTestVerticesUV.Count() /*, zFlagResUse()*/ );
+	mrCubeIndex				= zenRes::zGfxIndex::Create( aCubeIndices, zenConst::kePrimType_TriangleList );
+	mrCubeVtxPos			= zenRes::zGfxStructBuffer<zVec3F>::Create(aTestVerticesPos, (zU32)aTestVerticesPos.Count() /*, zFlagResUse()*/ ); 
+	mrCubeVtxUv				= zenRes::zGfxStructBuffer<zVec2F>::Create(aCubeVerticesUV, (zU32)aCubeVerticesUV.Count() /*, zFlagResUse()*/ );
 
-	mrShaderVS										= zenRes::zGfxShaderVertex::Create( "Shader/DX12Sample.sl", "VSMain");
-	mrShaderPS										= zenRes::zGfxShaderPixel::Create( "Shader/DX12Sample.sl", "PSMain" );
-	mrTexture										= zenRes::zGfxTexture2D::Create(zenConst::keTexFormat_RGBA8, vTexSize, aTexRGBA );
-	mrSampler										= zenRes::zGfxStateSampler::Create(zenConst::keTexFilter_Trilinear, zenConst::keTexFilter_Trilinear, zenConst::keTexWrap_Clamp, zenConst::keTexWrap_Clamp, 0);
+	mrShaderVS				= zenRes::zGfxShaderVertex::Create( "Shader/DX12Sample.sl", "VSMain");
+	mrShaderPS				= zenRes::zGfxShaderPixel::Create( "Shader/DX12Sample.sl", "PSMain" );
+	mrTexture				= zenRes::zGfxTexture2D::Create(zenConst::keTexFormat_RGBA8, vTexSize, aTexRGBA );
+	mrSampler				= zenRes::zGfxStateSampler::Create(zenConst::keTexFilter_Trilinear, zenConst::keTexFilter_Trilinear, zenConst::keTexWrap_Clamp, zenConst::keTexWrap_Clamp, 0);
 	
 	// Some bindings of render resource together
-	mrShaderBind									= zenRes::zGfxShaderBinding::Create(mrShaderVS, mrShaderPS);
-	mrCubeMeshStrip									= zenRes::zGfxMeshStrip::Create( mrCubeIndex, mrShaderBind );
-	mrStateRaster									= zenRes::zGfxStateRaster::Create(zenRes::zGfxStateRaster::Config());
+	mrShaderBind			= zenRes::zGfxShaderBinding::Create(mrShaderVS, mrShaderPS);
+	mrCubeMeshStrip			= zenRes::zGfxMeshStrip::Create( mrCubeIndex, mrShaderBind );
+	mrStateRaster			= zenRes::zGfxStateRaster::Create(zenRes::zGfxStateRaster::Config());
 		
 	//-------------------------------------------------
 	// Init some shader values
 	//---------------------------------------------------------------------
-	mrCubeMeshStrip.SetResource( zHash32("VInputPosition"),	mrVBufferTestPos);
-	mrCubeMeshStrip.SetResource( zHash32("VInputUV"),		mrVBufferTestUv);
+	mrCubeMeshStrip.SetResource( zHash32("VInputPosition"),	mrCubeVtxPos);
+	mrCubeMeshStrip.SetResource( zHash32("VInputUV"),		mrCubeVtxUv);
 	mrCubeMeshStrip.SetResource( zHash32("g_texture"),		mrTexture);
 	mrCubeMeshStrip.SetResource( zHash32("g_sampler"),		mrSampler);
 	mrCubeMeshStrip.SetValue( zHash32("vColor"),			zVec4F(1,0,1,1));	

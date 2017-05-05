@@ -7,6 +7,7 @@ zArrayStatic<D3D12_STATIC_SAMPLER_DESC>	RootSignature::saSamplerDescTemp;
 
 bool RootSignature::StaticInitialize( )
 {
+	//! @todo 0 support sampler properly
 	saSamplerDescTemp.SetCount(1);
 	saSamplerDescTemp[0] = {};
 	saSamplerDescTemp[0].Filter				= D3D12_FILTER_MIN_MAG_MIP_POINT;

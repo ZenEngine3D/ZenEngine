@@ -3,11 +3,15 @@
 	
 #if SHADER_DX11 || SHADER_DX12
 	#pragma pack_matrix( row_major )	
-	
+
+#if SHADER_DX11	
 	cbuffer cbVertexInput : register( b2 )
 	{    
 		uint  VtxInput_Offset;
 	};
+#elif SHADER_DX12
+	uint VtxInput_Offset : register(b10);
+#endif
 	
 	struct STexture2D
 	{
