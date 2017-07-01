@@ -5,7 +5,6 @@
 
 namespace zcRes
 {
-
 	class GfxTarget2D_DX12 : public zcExp::ExportGfxTarget2D
 	{
 	zenClassDeclare(GfxTarget2D_DX12, zcExp::ExportGfxTarget2D)
@@ -22,8 +21,8 @@ namespace zcRes
 	//protected: // @todo 1 make private
 		bool								InitializeCommon(const DirectXComRef<ID3D12Resource>& _rSurface);
 		DirectXComRef<ID3D12Resource>		mrResource;			//!< DirectX memory mapping for this resource
-		zcGfx::DescriptorRTV				mTargetColorView;
-		zcGfx::DescriptorDSV				mTargetDepthView;
+		zcGfx::DescriptorRangeRTV			mTargetColorView;
+		zcGfx::DescriptorRangeDSV			mTargetDepthView;
 	};
 }
 #endif

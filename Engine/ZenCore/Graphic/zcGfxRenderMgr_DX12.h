@@ -72,80 +72,87 @@ enum kuConstant{ kuContextCount = 1, kuFrameBufferCount = 2 };
 //---------------------------------------------------------
 public:
 	
-	virtual void									FrameBegin(zcRes::GfxWindowRef _FrameWindow);
-	virtual void									FrameEnd();
-	void											Render(ScopedDrawlist& _Drawlist);
-	void											NamedEventBegin(const zStringHash32& zName);
-	void											NamedEventEnd();
-	const zEngineRef<DX12QueryDisjoint>&			GetQueryDisjoint()const;
+	virtual void								FrameBegin(zcRes::GfxWindowRef _FrameWindow);
+	virtual void								FrameEnd();
+	void										Render(ScopedDrawlist& _Drawlist);
+	void										NamedEventBegin(const zStringHash32& zName);
+	void										NamedEventEnd();
+	const zEngineRef<DX12QueryDisjoint>&		GetQueryDisjoint()const;
 
 //---------------------------------------------------------
 // DirectX device infos
 //---------------------------------------------------------
 public:		
-	const DirectXComRef<IDXGIFactory4>&				GetFactory()const			{return mrDXFactory;}
-	const DirectXComRef<ID3D12Device>&				GetDevice()const			{return mrDXDevice;}
+	const DirectXComRef<IDXGIFactory4>&			GetFactory()const			{return mrDXFactory;}
+	const DirectXComRef<ID3D12Device>&			GetDevice()const			{return mrDXDevice;}
 	
-	DXGI_FORMAT										ZenFormatToNative( zenConst::eTextureFormat _eTexFormat )const		{ return meFormatConv[_eTexFormat]; }
-	DXGI_FORMAT										ZenFormatToTypeless( zenConst::eTextureFormat _eTexFormat )const	{ return meFormatConvTypeless[_eTexFormat]; }
-	DXGI_FORMAT										ZenFormatToDepthDSV( zenConst::eTextureFormat _eTexFormat )const	{ return meFormatConvDepthDSV[_eTexFormat]; }
-	DXGI_FORMAT										ZenFormatToDepthSRV( zenConst::eTextureFormat _eTexFormat )const	{ return meFormatConvDepthSRV[_eTexFormat]; }
-	DXGI_FORMAT										ZenFormatToStencilSRV( zenConst::eTextureFormat _eTexFormat )const	{ return meFormatConvStencilSRV[_eTexFormat]; }
+	DXGI_FORMAT									ZenFormatToNative( zenConst::eTextureFormat _eTexFormat )const		{ return meFormatConv[_eTexFormat]; }
+	DXGI_FORMAT									ZenFormatToTypeless( zenConst::eTextureFormat _eTexFormat )const	{ return meFormatConvTypeless[_eTexFormat]; }
+	DXGI_FORMAT									ZenFormatToDepthDSV( zenConst::eTextureFormat _eTexFormat )const	{ return meFormatConvDepthDSV[_eTexFormat]; }
+	DXGI_FORMAT									ZenFormatToDepthSRV( zenConst::eTextureFormat _eTexFormat )const	{ return meFormatConvDepthSRV[_eTexFormat]; }
+	DXGI_FORMAT									ZenFormatToStencilSRV( zenConst::eTextureFormat _eTexFormat )const	{ return meFormatConvStencilSRV[_eTexFormat]; }
 	
 //! @todo urgent clean this up
-	void											UnbindTextures(){};
-	void											UnbindResources(){};
-	ResourceDescriptor2								GetResViewRingDescriptor(zUInt _uCount);
+	void										UnbindTextures(){};
+	void										UnbindResources(){};
 
-	DirectXComRef<ID3D12Resource>&					GetTempResourceHandle();
+	zenInline DescriptorRangeSRV				GetFrameDescriptorSRV(zUInt _uCount); //! @todo move this to gpu context directly
+	zenInline DescriptorRangeSRV				GetDescriptorSRV(zUInt _uCount);
+	zenInline DescriptorRangeRTV				GetDescriptorRTV(zUInt _uCount);
+	zenInline DescriptorRangeDSV				GetDescriptorDSV(zUInt _uCount);
+	zenInline DescriptorRangeSampler			GetDescriptorSampler(zUInt _uCount);
 
 protected:
-	zenInline void									DispatchBarrier( ScopedDrawlist& _Drawlist, bool _bPreDataUpdate );
-	DXGI_FORMAT										meFormatConv[zenConst::keTexFormat__Count];
-	DXGI_FORMAT										meFormatConvTypeless[zenConst::keTexFormat__Count];
-	DXGI_FORMAT										meFormatConvDepthDSV[zenConst::keTexFormat__Count];
-	DXGI_FORMAT										meFormatConvDepthSRV[zenConst::keTexFormat__Count];
-	DXGI_FORMAT										meFormatConvStencilSRV[zenConst::keTexFormat__Count];
-
-	DirectXComRef<IDXGIFactory4>					mrDXFactory;
-	DirectXComRef<IDXGIAdapter3>					mrDXAdapter;
-	DirectXComRef<ID3D12Device>						mrDXDevice;
-	DirectXComRef<ID3D12Debug1>						mrDXDebugController;	
-	DirectXComRef<ID3D12DescriptorHeap>				mrResViewDescriptorHeap[kuFrameBufferCount];
-	ResourceDescriptor2								muResViewDescriptor[kuFrameBufferCount];
-	zUInt											muResViewCount			= 32*1024;		//! @todo 2 Allow specifying the size of ring buffer
-	atomic<zUInt>									muResViewIndexCur		= 0;			//! @todo 2 see about MT strategy
-	zArrayDynamic<DirectXComRef<ID3D12Resource>>	marTempResource[kuFrameBufferCount];	//!< Temp allocated resources freed after 2 frames
+	zenInline void								DispatchBarrier( ScopedDrawlist& _Drawlist, bool _bPreDataUpdate );
+	DXGI_FORMAT									meFormatConv[zenConst::keTexFormat__Count];
+	DXGI_FORMAT									meFormatConvTypeless[zenConst::keTexFormat__Count];
+	DXGI_FORMAT									meFormatConvDepthDSV[zenConst::keTexFormat__Count];
+	DXGI_FORMAT									meFormatConvDepthSRV[zenConst::keTexFormat__Count];
+	DXGI_FORMAT									meFormatConvStencilSRV[zenConst::keTexFormat__Count];
 	
-public:
-	zcGfx::RootSignature							mRootSignatureDefault;
-	DirectXComRef<ID3D12CommandAllocator>			mrCommandAllocator;
-	DirectXComRef<ID3D12CommandQueue>				mrCommandQueue;
-	DirectXComRef<ID3D12GraphicsCommandList>		marCommandList[kuFrameBufferCount][kuContextCount];
+	DirectXComRef<IDXGIFactory4>				mrDXFactory;
+	DirectXComRef<IDXGIAdapter3>				mrDXAdapter;
+	DirectXComRef<ID3D12Device>					mrDXDevice;
+	DirectXComRef<ID3D12Debug1>					mrDXDebugController;	
+
+	DescriptorHeapSRV							mDescriptorHeapSRV;								//!< SRV/UAV/CBV descriptor heap used by resources object but not mapped to GPU (binding to GPU done with heap ring buffer)	
+	DescriptorHeapRTV							mDescriptorHeapRTV;								//!< Render target descriptor heap used by resources object but not mapped to GPU (binding to GPU done with heap ring buffer)
+	DescriptorHeapDSV							mDescriptorHeapDSV;								//!< Depth render target descriptor heap used by resources object but not mapped to GPU (binding to GPU done with heap ring buffer)
+	DescriptorHeapSampler						mDescriptorHeapSampler;							//!< Sampler descriptor heap used by resources object but not mapped to GPU (binding to GPU done with heap ring buffer)
+	DescriptorHeapSRV							maFrameDescriptorHeapSRV[kuFrameBufferCount];	//!< Descriptor heap for temporary SRV mapped to gpu everyframe and released (unlike permanent descriptor, this one gives access to resources in shader)
+	DescriptorRangeSRV							maFrameDescriptorSRV[kuFrameBufferCount];		//!< Descriptor Range encompassing entire frame descriptor heap (don't use manual tracking of allocated descriptors for this, just keep incrementing used index in this descriptor range for better performances)
+	zUInt										muFrameDescriptorCount	= 32*1024;				//!< Maximum number of resources that can be binded to GPU per frame @todo 2 Allow specifying the size of ring buffer
+	atomic<zUInt>								muFrameDescriptorIndex	= 0;					//!< Position withing current frame 'maFrameDescriptorSRV' @todo 2 see about MT strategy
+
+	DirectXComRef<ID3D12CommandAllocator>		mrCommandAllocator;	
+	DirectXComRef<ID3D12GraphicsCommandList>	marCommandList[kuFrameBufferCount][kuContextCount];
 	
 	// Synchronization objects.
-	HANDLE											m_fenceEvent;
-	DirectXComRef<ID3D12Fence>						m_fence;
-	UINT64											m_fenceValue;
-	void											WaitForPreviousFrame();
+	HANDLE										m_fenceEvent;
+	DirectXComRef<ID3D12Fence>					m_fence;
+	UINT64										m_fenceValue;
+	void										WaitForPreviousFrame();
+
+//! @todo 1 stop having this public
+public:
+	zcGfx::RootSignature						mRootSignatureDefault;
+	DirectXComRef<ID3D12CommandQueue>			mrCommandQueue;
 
 protected:
-	GPUContext										mGpuContext[kuContextCount];	//!< @note Only 1 context for the moment, increase when multihreading is supported		
-	bool											mbTextureUnbind		= false;
-	bool											mbResourceUnbind	= false;
-	bool											mbProfilerDetected	= false;		
-	zEngineRef<DX12QueryDisjoint>					mrQueryDisjoint;
+	GPUContext									mGpuContext[kuContextCount];	//!< @note Only 1 context for the moment, increase when multithreading is supported		
+	bool										mbTextureUnbind		= false;
+	bool										mbResourceUnbind	= false;
+	bool										mbProfilerDetected	= false;		
+	zEngineRef<DX12QueryDisjoint>				mrQueryDisjoint;
 
 //---------------------------------------------------------
 // ManagerBase Section
 //---------------------------------------------------------
 public:
-	virtual	bool									Load();
-	virtual	bool									Unload();
-
-
-	friend class CommandDraw_DX12; //! @todo 0 remove this
+	virtual	bool								Load();
+	virtual	bool								Unload();
 };
 
 }
 
+#include "zcGfxRenderMgr_DX12.inl"

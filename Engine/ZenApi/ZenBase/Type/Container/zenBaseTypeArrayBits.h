@@ -16,17 +16,17 @@ public:
 	zenInline					zArrayBits(const zArrayBits& _Copy);
 	zenInline					~zArrayBits();
 
-	zenInline bool				Get(zUInt _uBitIndex);
-	zenInline zUInt				GetNext(bool bValue, zUInt _uStartBitIndex=0); //! @todo 2 implement this, and use it in other GetXXX method
-	zenInline zUInt				GetFirstTrue();
-	zenInline zUInt				GetFirstFalse();
-	zenInline zUInt				GetLastTrue();
-	zenInline zUInt				GetLastFalse();
-	zenInline zUInt				AddIndexTrue();
-	zenInline zUInt				AddIndexFalse();
-
+	zenInline bool				Get(zUInt _uBitIndex);	
 	zenInline bool				operator[](zUInt _uBitIndex)const;
-	
+
+	zenInline zUInt				GetNextTrue(zUInt _uStartBitIndex=kuInvalid); 
+	zenInline zUInt				GetNextFalse(zUInt _uStartBitIndex=kuInvalid);
+
+	zenInline zUInt				AddTrue();
+	zenInline zUInt				AddFalse();
+	zenInline zUInt				AddRangeTrue(zUInt _uCount);
+	zenInline zUInt				AddRangeFalse(zUInt _uCount);
+		
 	zenInline bool				Toggle(zUInt _uBitIndex);
 	zenInline void				Set(zUInt _uBitIndex, bool _bValue);	
 	zenInline void				SetRange(zUInt _uBitIndexFirst, zUInt _uBitIndexLast, bool _bValue);

@@ -10,7 +10,10 @@
 		uint  VtxInput_Offset;
 	};
 #elif SHADER_DX12
-	uint VtxInput_Offset : register(b10);
+	cbuffer cbVertexInput : register( b10 )
+	{
+		uint VtxInput_Offset;
+	}
 #endif
 	
 	struct STexture2D

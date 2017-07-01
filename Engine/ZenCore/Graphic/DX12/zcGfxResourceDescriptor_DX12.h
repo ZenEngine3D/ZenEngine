@@ -3,111 +3,76 @@
 namespace zcGfx
 {
 
+template<D3D12_DESCRIPTOR_HEAP_TYPE TDescriptorType>
+class DescriptorHeap;
+
+//=================================================================================================
+//! @details	Resource Descriptors binds a resource to the GPU. Similar concept to 
+//!				shader resource view(SRV) in DX11. This object encapsulate a range of descriptors 
+//=================================================================================================	
+template<D3D12_DESCRIPTOR_HEAP_TYPE TDescriptorType>
+struct TDescriptorRange
+{
+	zenInline										TDescriptorRange();
+	zenInline										TDescriptorRange(TDescriptorRange&& _MoveCopy);
+	
+	zenInline										TDescriptorRange(const TDescriptorRange& _Source, zUInt _uOffset=0, zUInt _uCount=0);
+	zenInline										~TDescriptorRange();
+	zenInline TDescriptorRange&						operator=(TDescriptorRange&& _MoveCopy);
+
+ 	zenInline const D3D12_CPU_DESCRIPTOR_HANDLE&	GetCpu()const{return mHandleCpu;}
+ 	zenInline const D3D12_GPU_DESCRIPTOR_HANDLE&	GetGpu()const{return mHandleGpu;}
+	zenInline D3D12_CPU_DESCRIPTOR_HANDLE			GetCpu(zUInt _uIndex)const;
+	zenInline D3D12_GPU_DESCRIPTOR_HANDLE			GetGpu(zUInt _uIndex)const;
+	zenInline void									Release();
+	zenInline bool									IsValid()const;
+	
+	zenInline static void 							StaticInit();
+protected:
+	zenInline										TDescriptorRange(const D3D12_CPU_DESCRIPTOR_HANDLE _HandleCpu, D3D12_GPU_DESCRIPTOR_HANDLE _HandleGpu, zUInt _uCount);
+	D3D12_CPU_DESCRIPTOR_HANDLE						mHandleCpu;
+	D3D12_GPU_DESCRIPTOR_HANDLE						mHandleGpu;
+	DescriptorHeap<TDescriptorType>*				mpOwnerHeap=nullptr;
+	zenDbgCode(zUInt								muCount);			//!< Number of valid descriptors from this one. Only used for validation
+	static zUInt									suDescriptorSize;	//!< Size of this Descriptor type
+	friend class DescriptorHeap<TDescriptorType>;
+};
+using DescriptorRangeSRV		= TDescriptorRange<D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV>;
+using DescriptorRangeRTV		= TDescriptorRange<D3D12_DESCRIPTOR_HEAP_TYPE_RTV>;
+using DescriptorRangeDSV		= TDescriptorRange<D3D12_DESCRIPTOR_HEAP_TYPE_DSV>;
+using DescriptorRangeSampler	= TDescriptorRange<D3D12_DESCRIPTOR_HEAP_TYPE_SAMPLER>;
+
+extern DescriptorRangeSRV		gNullSRVView;
+extern DescriptorRangeSRV		gNullUAVView;
+extern DescriptorRangeSRV		gNullCBVView;
+
 //=================================================================================================
 //! @brief		Keep track of resource descriptor heap
 //! @details	
 //! @todo 1 Cleanup this once figure out how it work. Should use ref count?
 //=================================================================================================	
-template<int TType, int THeapCount>
-class ResourceDescriptor
+template<D3D12_DESCRIPTOR_HEAP_TYPE TDescriptorType>
+class DescriptorHeap
 {
-public:
-	enum constant { kuInvalid=0xFFFFFFFF, kuType=TType, kuHeapCount=THeapCount };
-	bool IsValid()const
-	{
-		return muIndex != kuInvalid;
-	}
-
-	void Free()
-	{
-		if( IsValid() )
-			saDescriptorUsed.Set(muIndex, false);
-		muIndex = kuInvalid;
-	}
-
-	const D3D12_CPU_DESCRIPTOR_HANDLE& GetCpuHandle() const 
-	{
-		return mhDescriptor;
-	}
-
-	const D3D12_GPU_DESCRIPTOR_HANDLE& GetGpuHandle() const
-	{
-		return mhDescriptorGPU;
-	}
-	static ResourceDescriptor Allocate()
-	{
-		//! @todo 1 support bounds check
-		ResourceDescriptor NewDesc;
-		NewDesc.muIndex				= saDescriptorUsed.AddIndexTrue();
-		NewDesc.mhDescriptor.ptr	= srDXCPUHandle.ptr + NewDesc.muIndex*suDescriptorSize;
-		NewDesc.mhDescriptorGPU.ptr	= srDXGPUHandle.ptr + NewDesc.muIndex*suDescriptorSize;
-		return NewDesc;
-	}
-	
-	static const DirectXComRef<ID3D12DescriptorHeap>& GetDescHeap() {return srDXDescriptorHeap;}
-
-	static bool Initialize( D3D12_DESCRIPTOR_HEAP_TYPE _eHeapType, D3D12_DESCRIPTOR_HEAP_FLAGS _eFlags=D3D12_DESCRIPTOR_HEAP_FLAG_NONE )
-	{
-		zenAssertMsg(suDescriptorSize == 0, "Resource Descriptor Heap already initialized");
-		D3D12_DESCRIPTOR_HEAP_DESC HeapDesc={};
-		HeapDesc.Type			= _eHeapType;
-		HeapDesc.NumDescriptors = kuHeapCount;
-		HeapDesc.Flags			= _eFlags;
-		HeapDesc.NodeMask		= 0;
-		HRESULT hr = zcMgr::GfxRender.GetDevice()->CreateDescriptorHeap(&HeapDesc, IID_PPV_ARGS(&srDXDescriptorHeap));
-		if( FAILED( hr ) )
-			return false;
-		
-		srDXCPUHandle			= srDXDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
-		srDXGPUHandle			= srDXDescriptorHeap->GetGPUDescriptorHandleForHeapStart();
-		suDescriptorSize		= zcMgr::GfxRender.GetDevice()->GetDescriptorHandleIncrementSize(_eHeapType);
-		saDescriptorUsed.SetRange(0, ResourceDescriptor::kuHeapCount, false);
-		return true;
-	}
+public:	
+	using DescRange =	TDescriptorRange<TDescriptorType>;
+															~DescriptorHeap();
+	DescRange												Allocate(zUInt _uCount);
+	void													Release(DescRange& _Descriptor);
+	bool													Load( zUInt _uDescriptorCount, D3D12_DESCRIPTOR_HEAP_FLAGS _eFlags=D3D12_DESCRIPTOR_HEAP_FLAG_NONE );
+	void													Unload();
+	zenInline const DirectXComRef<ID3D12DescriptorHeap>&	GetHeap();
 protected:
-	zUInt										muIndex	= kuInvalid;
-	D3D12_CPU_DESCRIPTOR_HANDLE					mhDescriptor;
-	D3D12_GPU_DESCRIPTOR_HANDLE					mhDescriptorGPU;
-
-	static DirectXComRef<ID3D12DescriptorHeap>	srDXDescriptorHeap;
-	static D3D12_CPU_DESCRIPTOR_HANDLE			srDXCPUHandle;
-	static D3D12_GPU_DESCRIPTOR_HANDLE			srDXGPUHandle;
-	static zUInt								suDescriptorSize;
-	static zArrayBits							saDescriptorUsed;
-	static 
-	friend class ManagerRender;
-	friend struct ResourceDescriptor2;
+	DirectXComRef<ID3D12DescriptorHeap>	mrDXDescriptorHeap;
+	DescRange							mDescriptorHead;
+	zArrayBits							maDescriptorUsed;
+	zUInt								muDescriptorCount = 0;	
 };
-
-template<int TType, int THeapCount>	DirectXComRef<ID3D12DescriptorHeap> ResourceDescriptor<TType,THeapCount>::srDXDescriptorHeap;
-template<int TType, int THeapCount>	D3D12_CPU_DESCRIPTOR_HANDLE			ResourceDescriptor<TType,THeapCount>::srDXCPUHandle;
-template<int TType, int THeapCount>	D3D12_GPU_DESCRIPTOR_HANDLE			ResourceDescriptor<TType,THeapCount>::srDXGPUHandle;
-template<int TType, int THeapCount>	zUInt								ResourceDescriptor<TType,THeapCount>::suDescriptorSize = 0;
-template<int TType, int THeapCount>	zArrayBits							ResourceDescriptor<TType,THeapCount>::saDescriptorUsed;
-
-using DescriptorRTV			= ResourceDescriptor<0, 128>;
-using DescriptorDSV			= ResourceDescriptor<1, 64>;
-using DescriptorSRV_UAV_CBV	= ResourceDescriptor<2, 1024>;
-
-extern zcGfx::DescriptorSRV_UAV_CBV	gNullSRVView;
-extern zcGfx::DescriptorSRV_UAV_CBV	gNullUAVView;
-extern zcGfx::DescriptorSRV_UAV_CBV	gNullCBVView;
-
-//! @todo 0 clean up naming
-struct ResourceDescriptor2
-{
-	D3D12_CPU_DESCRIPTOR_HANDLE HandleCpu;
-	D3D12_GPU_DESCRIPTOR_HANDLE HandleGpu;
-	zenInline ResourceDescriptor2 Offset(zUInt _uIndex)const
-	{
-		ResourceDescriptor2 NewDesc;
-		NewDesc.HandleCpu.ptr	= HandleCpu.ptr + _uIndex*DescriptorSRV_UAV_CBV::suDescriptorSize;
-		NewDesc.HandleGpu.ptr	= HandleGpu.ptr + _uIndex*DescriptorSRV_UAV_CBV::suDescriptorSize;
-		return NewDesc;
-	};
-};
+using DescriptorHeapSRV		= DescriptorHeap<D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV>;
+using DescriptorHeapRTV		= DescriptorHeap<D3D12_DESCRIPTOR_HEAP_TYPE_RTV>;
+using DescriptorHeapDSV		= DescriptorHeap<D3D12_DESCRIPTOR_HEAP_TYPE_DSV>;
+using DescriptorHeapSampler	= DescriptorHeap<D3D12_DESCRIPTOR_HEAP_TYPE_SAMPLER>;
 
 }
 
 #include "zcGfxResourceDescriptor_DX12.inl"
-

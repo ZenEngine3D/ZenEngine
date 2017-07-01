@@ -6,8 +6,6 @@ namespace zcRes
 
 GfxTarget2D_DX12::~GfxTarget2D_DX12()
 {
-	mTargetColorView.Free();
-	mTargetDepthView.Free();
 }
 
 //==================================================================================================
@@ -70,8 +68,8 @@ bool GfxTarget2D_DX12::InitializeCommon(const DirectXComRef<ID3D12Resource>& _rT
 		DSVDesc.ViewDimension		= D3D12_DSV_DIMENSION_TEXTURE2D; //D3D12_DSV_DIMENSION_TEXTURE2DMS for multisample
 		DSVDesc.Texture2D.MipSlice	= 0;
 		DSVDesc.Flags				= D3D12_DSV_FLAG_NONE;//D3D12_DSV_FLAG_READ_ONLY_STENCIL; //D3D12_DSV_FLAG_READ_ONLY_DEPTH, ... @todo 2 features supports multiple depth config
-		mTargetDepthView			= zcGfx::DescriptorDSV::Allocate();
-		zcMgr::GfxRender.GetDevice()->CreateDepthStencilView(_rTexture.Get(), &DSVDesc, mTargetDepthView.GetCpuHandle() );				
+		mTargetDepthView			= zcMgr::GfxRender.GetDescriptorDSV(1);
+		zcMgr::GfxRender.GetDevice()->CreateDepthStencilView(_rTexture.Get(), &DSVDesc, mTargetDepthView.GetCpu() );				
 		return true;
 	}
 	else
@@ -80,8 +78,8 @@ bool GfxTarget2D_DX12::InitializeCommon(const DirectXComRef<ID3D12Resource>& _rT
 		RTVDesc.Format				= zcMgr::GfxRender.ZenFormatToNative(meFormat);
 		RTVDesc.ViewDimension		= D3D12_RTV_DIMENSION_TEXTURE2D;
 		RTVDesc.Texture2D			= {0, 0};
-		mTargetColorView			= zcGfx::DescriptorRTV::Allocate();
-		zcMgr::GfxRender.GetDevice()->CreateRenderTargetView(_rTexture.Get(), &RTVDesc, mTargetColorView.GetCpuHandle() );				
+		mTargetColorView			= zcMgr::GfxRender.GetDescriptorRTV(1);
+		zcMgr::GfxRender.GetDevice()->CreateRenderTargetView(_rTexture.Get(), &RTVDesc, mTargetColorView.GetCpu() );				
 
 		HRESULT hr = zcMgr::GfxRender.GetDevice()->GetDeviceRemovedReason();
 		return true;

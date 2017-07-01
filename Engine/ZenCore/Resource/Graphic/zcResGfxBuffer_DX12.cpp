@@ -80,8 +80,7 @@ bool GfxBuffer_DX12::Initialize()
 	SrvDesc.Buffer.NumElements			= muElementCount;
 	SrvDesc.Buffer.StructureByteStride	= muElementStride;
 	SrvDesc.Buffer.Flags				= D3D12_BUFFER_SRV_FLAG_NONE;	    
-	mResource.mView						= zcGfx::DescriptorSRV_UAV_CBV::Allocate();
-	zcMgr::GfxRender.GetDevice()->CreateShaderResourceView(mResource.mrResource.Get(), &SrvDesc, mResource.mView.GetCpuHandle());
+	zcMgr::GfxRender.GetDevice()->CreateShaderResourceView(mResource.mrResource.Get(), &SrvDesc, mResource.mView.GetCpu());
 
 	// Send Resource update command
 	if( bUploadData )

@@ -23,9 +23,8 @@ zxImGUIHelper::zxImGUIHelper()
 	io.Fonts->GetTexDataAsRGBA32(&pixels, &width, &height);
 	zArrayStatic<zU8> aFontRGBA;
 	aFontRGBA.Copy(pixels, width*height * 4);
-#if !ZEN_RENDERER_DX12
 	mrFontTextureDefault			= zenRes::zGfxTexture2D::Create(zenConst::keTexFormat_RGBA8, zVec2U16(width, height), aFontRGBA);
-#endif
+
 	// imGUI config	
 	io.Fonts->TexID					= 0;	// Store our identifier (Always same texture at the moment)
 	io.Fonts->ClearInputData();				// Cleanup (don't clear the input data if you want to append new fonts later)
@@ -97,10 +96,9 @@ void zxImGUIHelper::Render(const zEngineRef<zxRenderData>& _rImGuiData, WindowIn
 				io.AddInputCharacter(_pInputData->maCharacterPressed[idx]);
 	}
 		
-	//----------------------------------------------------------------------------
-	// Adjust the rendering size to window size	
-	//if( !_rImGuiData->mrRenderpass.IsValid() || _rImGuiData->mvScreenSize != _rImGuiData->mrRendertarget.GetDim())
+	//----------------------------------------------------------------------------	
 	// Recreate Renderpass everyframe, since backbuffer gets ping-ponged
+	if( !_rImGuiData->mrRenderpass.IsValid() || _rImGuiData->mrRenderpass.GetColorTarget(0).GetResID() != _rImGuiData->mrRendertarget.GetResID() )
 	{
 		zenRes::zGfxRenderPass::ConfigColorRT	UIColorRTConfig;
 		zenRes::zGfxRenderPass::ConfigDepthRT	UIDepthRTConfig;		
@@ -112,10 +110,11 @@ void zxImGUIHelper::Render(const zEngineRef<zxRenderData>& _rImGuiData, WindowIn
 		UIColorRTConfig.meBlendAlphaSrc		= zenRes::zGfxRenderPass::ConfigColorRT::keBlendVal_Zero;
 		UIColorRTConfig.meBlendAlphaDest	= zenRes::zGfxRenderPass::ConfigColorRT::keBlendVal_One;
 		UIColorRTConfig.meBlendAlphaOp		= zenRes::zGfxRenderPass::ConfigColorRT::keBlendOp_Add;		
-		_rImGuiData->mrRenderpass			= zenRes::zGfxRenderPass::Create("RenderUI", 0, UIColorRTConfig, UIDepthRTConfig, mrStateRaster); //! @todo feature expose name
+		_rImGuiData->mrRenderpass			= zenRes::zGfxRenderPass::Create("RenderUI", 0, UIColorRTConfig, UIDepthRTConfig, mrStateRaster); //! @todo 1 feature expose name
 	}
-	
-	if( _rImGuiData->mvScreenSize != _rImGuiData->mrRendertarget.GetDim())
+
+	// Adjust the rendering size to window size	
+	if( _rImGuiData->mvScreenSize != _rImGuiData->mrRendertarget.GetDim() )
 	{
 		_rImGuiData->mvScreenSize = _rImGuiData->mrRendertarget.GetDim();
 		zenMath::MatrixProjectionOrthoLH(_rImGuiData->matOrthographic, _rImGuiData->mvScreenSize.x, _rImGuiData->mvScreenSize.y, 0, 1);
@@ -134,7 +133,7 @@ void zxImGUIHelper::Render(const zEngineRef<zxRenderData>& _rImGuiData, WindowIn
 		_rImGuiData->msigRenderUI.Emit();
 	}
 	{
-		zenPerf::zScopedEventCpu EmitEvent("Internal Render");
+		//zenPerf::zScopedEventCpu EmitEvent("Internal Render");
 		ImGui::Render();		
 	}
 
@@ -192,16 +191,15 @@ void zxImGUIHelper::Render(const zEngineRef<zxRenderData>& _rImGuiData, WindowIn
 	//----------------------------------------------------------------------------
 	// Emit drawcalls
 	{		
-		zenPerf::zScopedEventCpu EmitEvent("Emit Drawcalls");		
-		int vtx_offset				= 0;
-		int idx_offset				= 0;
+		zenPerf::zScopedEventCpu EmitEvent("ImGUI Draw");
+		int vtx_offset	= 0;
+		int idx_offset	= 0;
 		for (int n = 0; n < pImGuiData->CmdListsCount; n++)
 		{
 			const ImDrawList* cmd_list			= pImGuiData->CmdLists[n];
 			zenRes::zGfxMeshStrip rMeshStrip	= zenRes::zGfxMeshStrip::Create(_rImGuiData->mrIndexBuffer, mrShaderBinding, _rImGuiData->marShaderResources, 0, pImGuiData->TotalIdxCount, vtx_offset);
 			for (int cmd_i = 0; cmd_i < cmd_list->CmdBuffer.size(); cmd_i++)
-			{
-				zenPerf::zScopedEventCpu EmitEvent("ImGUI Draw test");
+			{				
 				const ImDrawCmd* pcmd = &cmd_list->CmdBuffer[cmd_i];
 				if (pcmd->UserCallback)
 				{

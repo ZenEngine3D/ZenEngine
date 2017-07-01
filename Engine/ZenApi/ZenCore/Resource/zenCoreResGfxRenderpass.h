@@ -8,6 +8,9 @@ namespace zen { namespace zenRes {
 	{
 	zenClassDeclare(zGfxRenderPass, zcRes::GfxRenderPassRef);
 	public:
+		const zGfxTarget2D&		GetColorTarget(zUInt _uIndex=0)const;
+		const zGfxTarget2D&		GetDepthTarget()const;
+
 		using Super::Super;
 		using Super::operator=;
 

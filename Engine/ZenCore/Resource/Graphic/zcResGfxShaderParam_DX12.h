@@ -33,7 +33,7 @@ namespace zcRes
 		DirectXComRef<ID3D12Resource>				mrResource;			//!< DirectX memory mapping for this resource
 		DirectXComRef<ID3D12Resource>				mrResourceUpload;	//!< DirectX memory used to update GPU data from CPU
 		D3D12_RESOURCE_STATES						meResourceState;	//!< Current GPU access to this resource (used for barrier updates)	
-		zcGfx::DescriptorSRV_UAV_CBV				mCBufferView;
+		zcGfx::DescriptorRangeSRV					mCBufferView;
 		zU8*										mpCBufferMapped			= nullptr;	//!< CPU address of constant buffer we can write to
 		GfxCBufferDefinitionRef						mrCBufferParent;					//!< Parent Definition of this CBuffer		
 		mutable bool								mbUpdated				= false;	//!< True when parameter value was changed and must update GPU buffer		

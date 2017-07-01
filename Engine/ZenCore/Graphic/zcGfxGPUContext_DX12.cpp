@@ -4,7 +4,7 @@ namespace zcGfx
 {
 
 //! @todo 1 Improve this
-zenInline zcGfx::DescriptorSRV_UAV_CBV* GetResourceDescriptor( const zcRes::GfxShaderResourceRef& _rResource )
+zenInline zcGfx::DescriptorRangeSRV* GetResourceDescriptor( const zcRes::GfxShaderResourceRef& _rResource )
 {
 	if( _rResource.IsValid() )
 	{
@@ -33,15 +33,12 @@ void GPUContext_DX12::Reset(const DirectXComRef<ID3D12Device>& _rDevice, const D
 		
 	zenAssert(_rDevice.Get());
 	zenAssert(_rCommandList.Get());
-	mrDevice				= _rDevice;
-	mrCommandList			= _rCommandList;
-	mrResViewDescHeap		= _rResViewDescHeap;
-//	muResViewDescIndex		= 0;
-	mRootSignature			= RootSignature();
-	mrPSO					= nullptr;
-	mePrimitive				= D3D_PRIMITIVE_TOPOLOGY_UNDEFINED;
-
-	ID3D12DescriptorHeap* ppHeaps[] = { mrResViewDescHeap.Get() };
+	mrDevice						= _rDevice;
+	mrCommandList					= _rCommandList;
+	mRootSignature					= RootSignature();
+	mrPSO							= nullptr;
+	mePrimitive						= D3D_PRIMITIVE_TOPOLOGY_UNDEFINED;
+	ID3D12DescriptorHeap* ppHeaps[] = { _rResViewDescHeap.Get() };
 	mrCommandList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
 }
 
@@ -195,30 +192,23 @@ void GPUContext_DX12::UpdateStateRenderpass(const zcGfx::CommandDraw_HAL& _Drawc
 		auto rRenderpassHAL	= _Drawcall.mrRenderPass.HAL();
 		
 		if( mrStateView != mrRenderpass.HAL()->mrStateView )
-		{	
+		{				
 			mrStateView								= mrRenderpass.HAL()->mrStateView;
 			const zcRes::GfxView_HAL* const ViewHAL	= mrStateView.HAL();
-			
-			//! @todo 0 supports descriptor heap properly						
-			zUInt						uTargetCount(ViewHAL->maRTColorConfig.Count());
-			D3D12_CPU_DESCRIPTOR_HANDLE aCpuHandles[D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT];			
+			zUInt uTargetCount(ViewHAL->maRTColorConfig.Count());
+			D3D12_CPU_DESCRIPTOR_HANDLE aCpuHandles[D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT];
 			for(zUInt idxTarget(0); idxTarget<uTargetCount; ++idxTarget )
 			{
 				zcRes::GfxTarget2DRef rTarget	= ViewHAL->maRTColorConfig[idxTarget].mrTargetSurface;
 				if( rTarget.IsValid() )
-					aCpuHandles[idxTarget]		= rTarget.HAL()->mTargetColorView.GetCpuHandle();
+					aCpuHandles[idxTarget]		= rTarget.HAL()->mTargetColorView.GetCpu();
 			}
 
-			D3D12_CPU_DESCRIPTOR_HANDLE DepthHandle;
-			D3D12_CPU_DESCRIPTOR_HANDLE* pDepthHandle(nullptr);			
-			zcRes::GfxTarget2DRef rDepthTarget	= ViewHAL->mRTDepthConfig.mrTargetSurface;
+			zcRes::GfxTarget2DRef rDepthTarget = ViewHAL->mRTDepthConfig.mrTargetSurface;
 			if( rDepthTarget.IsValid() )
-			{
-				pDepthHandle	= &DepthHandle;
-				DepthHandle		= rDepthTarget.HAL()->mTargetDepthView.GetCpuHandle();
 				mrCommandList->OMSetStencilRef( mrRenderpass.HAL()->mrStateDepthStencil.HAL()->muStencilValue );
-			}			
-			mrCommandList->OMSetRenderTargets((UINT)uTargetCount, aCpuHandles, false, pDepthHandle);			
+
+			mrCommandList->OMSetRenderTargets((UINT)uTargetCount, aCpuHandles, false, rDepthTarget.IsValid() ? &rDepthTarget.HAL()->mTargetDepthView.GetCpu() : nullptr);
 			mrCommandList->RSSetViewports(1, &ViewHAL->mViewport);
 		}		
 	}
@@ -234,7 +224,7 @@ void GPUContext_DX12::UpdateState(const CommandDraw_HAL& _Drawcall)
 	const zcRes::GfxShaderBindingRef& rShaderBind	= pMeshStripHAL->mrShaderBinding;			
 	const zcRes::GfxViewRef& rView					= mrStateView;
 
-	//SF @todo 0 support this
+	//SF @todo 1 support multiple root signature
 	//----------------------------------------------------------------------------------------------
 	// Root Signature
 	//----------------------------------------------------------------------------------------------
@@ -286,45 +276,46 @@ void GPUContext_DX12::UpdateState(const CommandDraw_HAL& _Drawcall)
 
 	//----------------------------------------------------------------------------------------------
 	// Assign Shader input resources for each stage
-	//----------------------------------------------------------------------------------------------
-	//! @todo 0 remove all of this hacked code
-	mrCommandList->SetGraphicsRoot32BitConstant(0, pMeshStripHAL->muVertexFirst, 0);
+	//----------------------------------------------------------------------------------------------	
+	mrCommandList->SetGraphicsRoot32BitConstant(0, pMeshStripHAL->muVertexFirst, 0);	// First entry in signature root is VertexId offset to read data
 
+	//! @todo 0 remove all of this hacked code for resource descriptors
+	// Make this setup to be done by RootSignature object, that would be aware of slot assignments
 	for( zUInt idxShader(0); idxShader < keShaderStage__Count; ++idxShader )
 	{
 		// Assign Textures/Buffer
 		zUInt uDescCount(pMeshStripHAL->marDescriptorResources[idxShader].Count());
 		if( uDescCount )
 		{
-			ResourceDescriptor2 SRVDesc	= zcMgr::GfxRender.GetResViewRingDescriptor( uDescCount );
+			DescriptorRangeSRV SRVDesc	= zcMgr::GfxRender.GetFrameDescriptorSRV( uDescCount );
 			for( zUInt idxRes(0); idxRes < uDescCount; ++idxRes )
 			{
 				const zcRes::GfxShaderResourceRef& rResource	= pMeshStripHAL->marDescriptorResources[idxShader][idxRes];
-				const zcGfx::DescriptorSRV_UAV_CBV* const pDesc	= GetResourceDescriptor( rResource );
-				mrDevice->CopyDescriptorsSimple(1, SRVDesc.Offset(idxRes).HandleCpu, pDesc ? pDesc->GetCpuHandle() : gNullSRVView.GetCpuHandle(), D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+				const zcGfx::DescriptorRangeSRV* const pDesc	= GetResourceDescriptor( rResource );
+				mrDevice->CopyDescriptorsSimple(1, SRVDesc.GetCpu(idxRes), pDesc ? pDesc->GetCpu() : gNullSRVView.GetCpu(), D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 			}			
-			mrCommandList->SetGraphicsRootDescriptorTable(1+static_cast<UINT>(idxShader)*3+D3D12_DESCRIPTOR_RANGE_TYPE_SRV, SRVDesc.HandleGpu );
+			mrCommandList->SetGraphicsRootDescriptorTable(1+static_cast<UINT>(idxShader)*3+D3D12_DESCRIPTOR_RANGE_TYPE_SRV, SRVDesc.GetGpu() );
 		}
 		else
 		{
-			ResourceDescriptor2 SRVDesc	= zcMgr::GfxRender.GetResViewRingDescriptor( 1 );
-			mrDevice->CopyDescriptorsSimple(1, SRVDesc.HandleCpu, gNullSRVView.GetCpuHandle(), D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
-			mrCommandList->SetGraphicsRootDescriptorTable(1+static_cast<UINT>(idxShader)*3+D3D12_DESCRIPTOR_RANGE_TYPE_SRV, SRVDesc.HandleGpu );
+			DescriptorRangeSRV SRVDesc	= zcMgr::GfxRender.GetFrameDescriptorSRV( 1 );
+			mrDevice->CopyDescriptorsSimple(1, SRVDesc.GetCpu(), gNullSRVView.GetCpu(), D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+			mrCommandList->SetGraphicsRootDescriptorTable(1+static_cast<UINT>(idxShader)*3+D3D12_DESCRIPTOR_RANGE_TYPE_SRV, SRVDesc.GetGpu() );
 		}
 		
 		// Assign UAV
-		ResourceDescriptor2 UAVDesc	= zcMgr::GfxRender.GetResViewRingDescriptor( 8 ); //! @todo 0 use constants
+		DescriptorRangeSRV UAVDesc	= zcMgr::GfxRender.GetFrameDescriptorSRV( 8 ); //! @todo 0 use constants
  		for( zUInt idxRes(0); idxRes < 8; ++idxRes )
- 			mrDevice->CopyDescriptorsSimple(1, UAVDesc.Offset(idxRes).HandleCpu, gNullUAVView.GetCpuHandle(), D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
-		mrCommandList->SetGraphicsRootDescriptorTable(1+static_cast<UINT>(idxShader)*3+D3D12_DESCRIPTOR_RANGE_TYPE_UAV, UAVDesc.HandleGpu );		
+ 			mrDevice->CopyDescriptorsSimple(1, UAVDesc.GetCpu(idxRes), gNullUAVView.GetCpu(), D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+		mrCommandList->SetGraphicsRootDescriptorTable(1+static_cast<UINT>(idxShader)*3+D3D12_DESCRIPTOR_RANGE_TYPE_UAV, UAVDesc.GetGpu() );		
 
 		// Assign Constant Buffers
-		ResourceDescriptor2 CBVDesc	= zcMgr::GfxRender.GetResViewRingDescriptor( 10 ); //! @todo 0 use constants
+		DescriptorRangeSRV CBVDesc	= zcMgr::GfxRender.GetFrameDescriptorSRV( 10 ); //! @todo 0 use constants
 		const zArrayStatic<zcRes::GfxShaderResourceDescRef>& arCBufferRes	= pMeshStripHAL->marShaderResources[idxShader][keShaderRes_CBuffer];
 		const zUInt countCBuffer											= arCBufferRes.Count();
  		for( zUInt idxCBuffer(0); idxCBuffer < 10; ++idxCBuffer )
 		{
-			zcGfx::DescriptorSRV_UAV_CBV* pCBufferDesc(nullptr);			
+			zcGfx::DescriptorRangeSRV* pCBufferDesc(nullptr);			
 			if(idxCBuffer < countCBuffer) 
 			{
 				zcRes::GfxCBufferRef rCBufferRes = arCBufferRes[idxCBuffer];
@@ -334,9 +325,9 @@ void GPUContext_DX12::UpdateState(const CommandDraw_HAL& _Drawcall)
 					pCBufferDesc = GetResourceDescriptor( arCBufferRes[idxCBuffer] );
 				}
 			}
- 			mrDevice->CopyDescriptorsSimple(1, CBVDesc.Offset(idxCBuffer).HandleCpu, pCBufferDesc ? pCBufferDesc->GetCpuHandle() : gNullCBVView.GetCpuHandle(), D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+ 			mrDevice->CopyDescriptorsSimple(1, CBVDesc.GetCpu(idxCBuffer), pCBufferDesc ? pCBufferDesc->GetCpu() : gNullCBVView.GetCpu(), D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 		}
-		mrCommandList->SetGraphicsRootDescriptorTable(1+static_cast<UINT>(idxShader)*3+D3D12_DESCRIPTOR_RANGE_TYPE_CBV, CBVDesc.HandleGpu );
+		mrCommandList->SetGraphicsRootDescriptorTable(1+static_cast<UINT>(idxShader)*3+D3D12_DESCRIPTOR_RANGE_TYPE_CBV, CBVDesc.GetGpu() );
 	}
 }
 

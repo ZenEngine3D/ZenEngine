@@ -41,7 +41,7 @@ void CommandClearColor_DX12::Invoke(GPUContext& _Context)
 {	
 	zcPerf::EventGPUCounter::Create(zcPerf::EventGPUCounter::keType_ClearColor);
 	if( mrRTColor.IsValid() && mrRTColor.HAL()->mTargetColorView.IsValid() )
-		_Context.GetCommandList()->ClearRenderTargetView(mrRTColor.HAL()->mTargetColorView.GetCpuHandle(), mvColor.xyzw, 0, nullptr);
+		_Context.GetCommandList()->ClearRenderTargetView(mrRTColor.HAL()->mTargetColorView.GetCpu(), mvColor.xyzw, 0, nullptr);
 }
 
 //=================================================================================================
@@ -58,7 +58,7 @@ void CommandClearDepthStencil_DX12::Invoke(GPUContext& _Context)
 	UINT ClearFlags  = mbClearDepth		? D3D12_CLEAR_FLAG_DEPTH	: 0;
 	ClearFlags		|= mbClearStencil	? D3D12_CLEAR_FLAG_STENCIL	: 0; 
 	if( mrRTDepthStencil.IsValid() && mrRTDepthStencil.HAL()->mTargetDepthView.IsValid() )
-		_Context.GetCommandList()->ClearDepthStencilView( mrRTDepthStencil.HAL()->mTargetDepthView.GetCpuHandle(), (D3D12_CLEAR_FLAGS)ClearFlags, mfDepthValue, muStencilValue, 0, nullptr);
+		_Context.GetCommandList()->ClearDepthStencilView( mrRTDepthStencil.HAL()->mTargetDepthView.GetCpu(), (D3D12_CLEAR_FLAGS)ClearFlags, mfDepthValue, muStencilValue, 0, nullptr);
 }
 
 

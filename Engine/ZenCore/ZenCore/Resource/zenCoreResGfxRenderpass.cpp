@@ -109,6 +109,15 @@ namespace zen { namespace zenRes {
 //=================================================================================================
 // GFX RenderPass
 //=================================================================================================
+const zGfxTarget2D& zGfxRenderPass::GetColorTarget(zUInt _uIndex)const
+{
+	return Get()->mrStateView->GetColorTarget(_uIndex);
+}
+const zGfxTarget2D&	zGfxRenderPass::GetDepthTarget()const
+{
+	return Get()->mrStateView->GetDepthTarget();
+}
+
 zGfxRenderPass zGfxRenderPass::Create(const zString& _zStageName, zU8 _uPassPriority, const ConfigColorRT& _RTColor, const ConfigDepthRT& _RTDepth, const zGfxStateRaster& _rStateRaster, const zVec2U16& _vDim, const zVec2S16& _vOrigin)
 {
 	return zcExp::CreateGfxRenderpass(_zStageName, _uPassPriority, _RTColor, _RTDepth, _rStateRaster, _vDim, _vOrigin);

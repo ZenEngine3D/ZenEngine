@@ -69,21 +69,22 @@ bool zArrayBits::operator[](zUInt _uBitIndex)const
 	return false;
 }
 
-zUInt zArrayBits::GetFirstTrue()
+//! @todo 3 Optim : Use value mip to quickly skip range of values
+zUInt zArrayBits::GetNextTrue(zUInt _uStartBitIndex)
 {
-	zUInt idx(0);
+	zUInt idx(_uStartBitIndex+1);
 	while( idx < muDataArrayCount )
 	{
 		if( mpDataArray[idx] != 0 )
 			return (idx*sizeof(zUInt)*8) + zenMath::BitsScan(mpDataArray[idx]);
 		++idx;
 	}
-	return kuInvalid;	
+	return kuInvalid;
 }
 
-zUInt zArrayBits::GetFirstFalse()
+zUInt zArrayBits::GetNextFalse(zUInt _uStartBitIndex)
 {
-	zUInt idx(0);
+	zUInt idx(_uStartBitIndex+1);
 	while( idx < muDataArrayCount )
 	{
 		if( mpDataArray[idx] != ~0 )
@@ -93,19 +94,9 @@ zUInt zArrayBits::GetFirstFalse()
 	return kuInvalid;
 }
 
-zUInt zArrayBits::GetLastTrue()
+zUInt zArrayBits::AddTrue()
 {
-	zenAssertMsg(0, "Implement me");
-}
-
-zUInt zArrayBits::GetLastFalse()
-{
-	zenAssertMsg(0, "Implement me");
-}
-
-zUInt zArrayBits::AddIndexTrue()
-{
-	zUInt uBitIndex = GetFirstFalse();
+	zUInt uBitIndex = GetNextFalse();
 	if( uBitIndex == (zUInt)kuInvalid )
 	{
 		uBitIndex = muDataArrayCount*sizeof(zUInt)*8;
@@ -116,9 +107,9 @@ zUInt zArrayBits::AddIndexTrue()
 	return uBitIndex;
 }
 
-zUInt zArrayBits::AddIndexFalse()
+zUInt zArrayBits::AddFalse()
 {
-	zUInt uBitIndex = GetFirstTrue();
+	zUInt uBitIndex = GetNextTrue();
 	if( uBitIndex == kuInvalid )
 	{
 		uBitIndex = muDataArrayCount*sizeof(zUInt)*8;
@@ -126,6 +117,44 @@ zUInt zArrayBits::AddIndexFalse()
 	}
 	Set(uBitIndex, false);
 	return uBitIndex;
+}
+
+zUInt zArrayBits::AddRangeTrue(zUInt _uCount)
+{
+	zUInt uIndexFalse(kuInvalid), uIndexTrue(kuInvalid);	
+	do	
+	{
+		uIndexFalse = GetNextFalse(uIndexTrue);
+		uIndexTrue	= GetNextTrue(uIndexFalse);		
+	}
+	while( uIndexTrue-uIndexFalse < _uCount && uIndexTrue != kuInvalid );
+
+	if( uIndexTrue == kuInvalid && uIndexFalse+_uCount > muDataArrayCount*sizeof(zUInt)*8 )
+	{
+		uIndexFalse = muDataArrayCount*sizeof(zUInt)*8;
+		Resize(uIndexFalse+_uCount);
+	}
+	SetRange(uIndexFalse, uIndexFalse+_uCount-1, true);
+	return uIndexFalse;
+}
+
+zUInt zArrayBits::AddRangeFalse(zUInt _uCount)
+{
+	zUInt uIndexFalse(kuInvalid), uIndexTrue(kuInvalid);
+	do
+	{
+		uIndexTrue	= GetNextTrue(uIndexFalse);
+		uIndexFalse = GetNextFalse(uIndexTrue);		
+	}
+	while( uIndexTrue-uIndexFalse < _uCount && uIndexFalse != kuInvalid);
+
+	if( uIndexFalse == kuInvalid && uIndexTrue+_uCount > muDataArrayCount*sizeof(zUInt)*8 )
+	{
+		uIndexTrue = muDataArrayCount*sizeof(zUInt)*8;
+		Resize(uIndexTrue+_uCount);
+	}
+	SetRange(uIndexTrue, uIndexTrue+_uCount-1, false);
+	return uIndexTrue;
 }
 
 bool zArrayBits::Toggle(zUInt _uBitIndex)

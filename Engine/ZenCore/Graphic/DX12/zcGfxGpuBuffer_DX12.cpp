@@ -7,12 +7,11 @@ namespace zcGfx
 
 GpuMemoryResStandard::GpuMemoryResStandard()
 {
-	mView = zcGfx::DescriptorSRV_UAV_CBV::Allocate();
+	mView = zcMgr::GfxRender.GetDescriptorSRV(1);
 }
 
 GpuMemoryResStandard::~GpuMemoryResStandard()
 {
-	mView.Free();
 }
 
 /*
@@ -48,7 +47,7 @@ void* GpuBuffer::Lock(zUInt _uMipCount)
 
 	if( SUCCEEDED(hr) )
 	{		
-		//zSetGfxResourceName(mrUpload, mResID, L"UploadData");		//! @todo 0 figure out name
+		//zSetGfxResourceName(mrUpload, mResID, L"UploadData");	
 		hr = mrUpload->Map(0, NULL, &pData);
 		if (FAILED(hr) )
 			pData = nullptr;

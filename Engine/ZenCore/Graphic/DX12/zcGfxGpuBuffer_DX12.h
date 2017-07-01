@@ -24,7 +24,7 @@ zenClassDeclare(GpuMemoryResStandard, GpuMemoryResource);
 public:
 									GpuMemoryResStandard();
 									~GpuMemoryResStandard();
-	DescriptorSRV_UAV_CBV			mView;	
+	DescriptorRangeSRV				mView;	
 };
 
 class GpuMemoryResIndex : public GpuMemoryResource

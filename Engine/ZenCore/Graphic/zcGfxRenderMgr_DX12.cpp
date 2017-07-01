@@ -7,18 +7,16 @@ namespace zcGfx
 {
 
 //! @todo 2 temp until final location found
-zcGfx::DescriptorSRV_UAV_CBV	gNullSRVView;
-zcGfx::DescriptorSRV_UAV_CBV	gNullUAVView;
-zcGfx::DescriptorSRV_UAV_CBV	gNullCBVView;
-
+DescriptorRangeSRV			gNullSRVView;
+DescriptorRangeSRV			gNullUAVView;
+DescriptorRangeSRV			gNullCBVView;
 DX12QueryDisjoint::List		DX12QueryDisjoint::slstQueryCreated;
 DX12QueryTimestamp::List	DX12QueryTimestamp::slstQueryCreated;
-
 
 DX12QueryDisjoint::DX12QueryDisjoint()
 {
 #if !ZEN_RENDERER_DX12
-	D3D11_QUERY_DESC QueryDesc;
+	D3D12_QUERY_DESC QueryDesc;
 	QueryDesc.Query		= D3D11_QUERY_TIMESTAMP_DISJOINT;
 	QueryDesc.MiscFlags	= 0;
 	HRESULT result		= zcMgr::GfxRender.DX12GetDevice()->CreateQuery(&QueryDesc, &mpDX12Query);
@@ -265,29 +263,29 @@ bool ManagerRender_DX12::Load()
 	mrDXDevice->SetStablePowerState(TRUE); // Prevent the GPU from overclocking or underclocking to get consistent timings
 #endif
 	//----------------------------------------------------------------------------------------------
-	// Create Descriptors heap		
+	// Create and initialize Descriptors heap support
 	//----------------------------------------------------------------------------------------------
-	if( !DescriptorSRV_UAV_CBV::Initialize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV/*, D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE*/) )
+	DescriptorRangeSRV::StaticInit();
+	DescriptorRangeRTV::StaticInit();
+	DescriptorRangeDSV::StaticInit();
+	DescriptorRangeSampler::StaticInit();
+
+	if( !mDescriptorHeapSRV.Load(4096) )
 		return false;
-	if( !DescriptorRTV::Initialize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV) )
+	if( !mDescriptorHeapRTV.Load(256) )
 		return false;
-	if( !DescriptorDSV::Initialize(D3D12_DESCRIPTOR_HEAP_TYPE_DSV) )
+	if( !mDescriptorHeapDSV.Load(64) )
 		return false;
-	
-	D3D12_DESCRIPTOR_HEAP_DESC HeapDesc={};
-	HeapDesc.Type			= D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;	
-	HeapDesc.Flags			= D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
-	HeapDesc.NodeMask		= 0;
-	HeapDesc.NumDescriptors = (UINT)muResViewCount;		
-	for(zUInt idx(0); idx<kuFrameBufferCount; ++idx)
+	if( !mDescriptorHeapSampler.Load(1024) )
+		return false;
+
+	for(zUInt idx(0); idx<zenArrayCount(maFrameDescriptorHeapSRV); ++idx)
 	{
-		hr = zcMgr::GfxRender.GetDevice()->CreateDescriptorHeap(&HeapDesc, IID_PPV_ARGS(&mrResViewDescriptorHeap[idx]));
-		if( FAILED( hr ) )
-			return false;	
-		muResViewDescriptor[idx].HandleCpu	= mrResViewDescriptorHeap[idx]->GetCPUDescriptorHandleForHeapStart();
-		muResViewDescriptor[idx].HandleGpu	= mrResViewDescriptorHeap[idx]->GetGPUDescriptorHandleForHeapStart();
-	}	
-	
+		if( !maFrameDescriptorHeapSRV[idx].Load(muFrameDescriptorCount, D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE) )
+			return false;
+		maFrameDescriptorSRV[idx] = maFrameDescriptorHeapSRV[idx].Allocate(muFrameDescriptorCount);
+	}
+
 	D3D12_SHADER_RESOURCE_VIEW_DESC NullSRVDesc = {};
 	NullSRVDesc.Format							= DXGI_FORMAT_R8G8B8A8_UNORM;
 	NullSRVDesc.ViewDimension					= D3D12_SRV_DIMENSION_TEXTURE2D;
@@ -295,38 +293,26 @@ bool ManagerRender_DX12::Load()
 	NullSRVDesc.Texture2D.MipLevels				= 1;
 	NullSRVDesc.Texture2D.MostDetailedMip		= 0;
 	NullSRVDesc.Texture2D.ResourceMinLODClamp	= 0.0f;
-	gNullSRVView								= zcGfx::DescriptorSRV_UAV_CBV::Allocate();
-	zcMgr::GfxRender.GetDevice()->CreateShaderResourceView(nullptr, &NullSRVDesc, gNullSRVView.GetCpuHandle());	
+	gNullSRVView								= mDescriptorHeapSRV.Allocate(1);
+	zcMgr::GfxRender.GetDevice()->CreateShaderResourceView(nullptr, &NullSRVDesc, gNullSRVView.GetCpu());	
 
-	D3D12_UNORDERED_ACCESS_VIEW_DESC NullUAVDesc = {};
+	D3D12_UNORDERED_ACCESS_VIEW_DESC NullUAVDesc= {};
 	NullUAVDesc.Format							= zcMgr::GfxRender.ZenFormatToNative(keTexFormat_R8);
 	NullUAVDesc.ViewDimension					= D3D12_UAV_DIMENSION_TEXTURE2D;
 	NullUAVDesc.Texture2D.MipSlice				= 0;
 	NullUAVDesc.Texture2D.PlaneSlice			= 0;
-	gNullUAVView								= zcGfx::DescriptorSRV_UAV_CBV::Allocate();
-	zcMgr::GfxRender.GetDevice()->CreateUnorderedAccessView(nullptr, nullptr, &NullUAVDesc, gNullUAVView.GetCpuHandle());
+	gNullUAVView								= mDescriptorHeapSRV.Allocate(1);
+	zcMgr::GfxRender.GetDevice()->CreateUnorderedAccessView(nullptr, nullptr, &NullUAVDesc, gNullUAVView.GetCpu());
 
-//-----------------------------------------------------------------------
-//! @todo 0 quick test hack	
-	static DirectXComRef<ID3D12Resource> mrResource;	
-	zcMgr::GfxRender.GetDevice()->CreateCommittedResource(	
-								&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),
-								D3D12_HEAP_FLAG_NONE,
-								&CD3DX12_RESOURCE_DESC::Buffer(256),
-								D3D12_RESOURCE_STATE_GENERIC_READ,
-								nullptr, IID_PPV_ARGS(&mrResource));	
-	
-	D3D12_CONSTANT_BUFFER_VIEW_DESC NullCbvDesc;
-	NullCbvDesc.BufferLocation	= mrResource->GetGPUVirtualAddress();
-	NullCbvDesc.SizeInBytes		= 256;
-	gNullCBVView				= zcGfx::DescriptorSRV_UAV_CBV::Allocate();						
-	zcMgr::GfxRender.GetDevice()->CreateConstantBufferView(&NullCbvDesc, gNullCBVView.GetCpuHandle());
-//-----------------------------------------------------------------------
+ 	D3D12_CONSTANT_BUFFER_VIEW_DESC NullCbvDesc = {};
+	NullCbvDesc.BufferLocation					= (D3D12_GPU_VIRTUAL_ADDRESS)0;
+ 	NullCbvDesc.SizeInBytes						= 0;
+ 	gNullCBVView								= mDescriptorHeapSRV.Allocate(1);						
+	zcMgr::GfxRender.GetDevice()->CreateConstantBufferView(&NullCbvDesc, gNullCBVView.GetCpu());
 
 	//----------------------------------------------------------------------------------------------
 	// Create Commandlist/Queue
 	//----------------------------------------------------------------------------------------------
-	//mCommandManager.Create(mrDXDevice.Get());
 	hr = mrDXDevice->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&mrCommandAllocator));
 	if( FAILED( hr ) )
 		return FALSE;	
@@ -440,16 +426,8 @@ bool ManagerRender_DX12::Unload()
 	
 	return true;
 }
-//! @todo 0 delete this?
-ResourceDescriptor2 ManagerRender_DX12::GetResViewRingDescriptor(zUInt _uCount)
-{
-	zenAssert( _uCount > 0 );
-	zUInt uIndex = muResViewIndexCur.fetch_add(_uCount);
-	zenAssertMsg( uIndex+_uCount <= muResViewCount, "Ran out of resource descriptors for this frame");
-	return muResViewDescriptor[muFrameRendered%kuFrameBufferCount].Offset(uIndex);
-}
 
- void ManagerRender_DX12::WaitForPreviousFrame()
+void ManagerRender_DX12::WaitForPreviousFrame()
 {
 	// WAITING FOR THE FRAME TO COMPLETE BEFORE CONTINUING IS NOT BEST PRACTICE.
 	// This is code implemented as such for simplicity. The D3D12HelloFrameBuffering
@@ -474,7 +452,6 @@ ResourceDescriptor2 ManagerRender_DX12::GetResViewRingDescriptor(zUInt _uCount)
 void ManagerRender_DX12::FrameBegin(zcRes::GfxWindowRef _FrameWindow)
 {	
 	WaitForPreviousFrame();
-	marTempResource[muFrameRendered%zenArrayCount(marTempResource)].Clear();
 
 	// Command list allocators can only be reset when the associated 
 	// command lists have finished execution on the GPU; apps should use 
@@ -484,9 +461,9 @@ void ManagerRender_DX12::FrameBegin(zcRes::GfxWindowRef _FrameWindow)
 	//! @todo 1 support multiple context/cmdlist
 	// However, when ExecuteCommandList() is called on a particular command 
 	// list, that command list can then be reset at any time and must be before re-recording.
-	muResViewIndexCur = 0;
+	muFrameDescriptorIndex = 0;
 	marCommandList[muFrameRendered%kuFrameBufferCount][0]->Reset(mrCommandAllocator.Get(), nullptr);	
-	mGpuContext[0].Reset( mrDXDevice, marCommandList[muFrameRendered%kuFrameBufferCount][0], mrResViewDescriptorHeap[muFrameRendered%kuFrameBufferCount] );
+	mGpuContext[0].Reset( mrDXDevice, marCommandList[muFrameRendered%kuFrameBufferCount][0], maFrameDescriptorHeapSRV[muFrameRendered%kuFrameBufferCount].GetHeap() );
 	Super::FrameBegin(_FrameWindow);
 	
 	// Indicate that the back buffer will be used as a render target.
@@ -641,12 +618,6 @@ void ManagerRender_DX12::Render(ScopedDrawlist& _Drawlist)
 		DispatchBarrier(_Drawlist, false);
 		bBarrierPostUpdate = true;
 	}
-}
-
-DirectXComRef<ID3D12Resource>& ManagerRender_DX12::GetTempResourceHandle()
-{
-	marTempResource[muFrameRendered%zenArrayCount(marTempResource)].Push(nullptr);
-	return *marTempResource[muFrameRendered%zenArrayCount(marTempResource)].Last();
 }
 
 }

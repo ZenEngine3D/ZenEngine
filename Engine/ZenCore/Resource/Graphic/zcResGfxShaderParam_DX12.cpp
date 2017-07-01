@@ -40,10 +40,10 @@ bool GfxCBuffer_DX12::Initialize()
 
 			// Create constant buffer views to access the upload buffer.
 			D3D12_CONSTANT_BUFFER_VIEW_DESC desc;
-			mCBufferView		= zcGfx::DescriptorSRV_UAV_CBV::Allocate();						
+			mCBufferView		= zcMgr::GfxRender.GetDescriptorSRV(1);		 //! @todo 2 clean, use something like GpuMemoryResStandard? Auto release?
 			desc.BufferLocation = mrResource->GetGPUVirtualAddress();
 			desc.SizeInBytes	= uAlignedSize;
-			zcMgr::GfxRender.GetDevice()->CreateConstantBufferView(&desc, mCBufferView.GetCpuHandle());
+			zcMgr::GfxRender.GetDevice()->CreateConstantBufferView(&desc, mCBufferView.GetCpu());
 
 			// Map the constant buffers.
 			CD3DX12_RANGE readRange(0, 0);		// We do not intend to read from this resource on the CPU.

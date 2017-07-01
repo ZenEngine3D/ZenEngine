@@ -104,7 +104,7 @@ bool GfxTexture2D_DX12::Initialize()
     SrvDesc.Texture2D.MipLevels				= static_cast<UINT>(maMipData.Count());
     SrvDesc.Texture2D.PlaneSlice			= 0;
     SrvDesc.Texture2D.ResourceMinLODClamp	= 0;	
-	zcMgr::GfxRender.GetDevice()->CreateShaderResourceView(mResource.mrResource.Get(), &SrvDesc, mResource.mView.GetCpuHandle());
+	zcMgr::GfxRender.GetDevice()->CreateShaderResourceView(mResource.mrResource.Get(), &SrvDesc, mResource.mView.GetCpu());
 
 	return true;
 }
