@@ -1,6 +1,4 @@
 #pragma once
-#ifndef __zenApi_Base_Math_Bits_h__
-#define __zenApi_Base_Math_Bits_h__
 
 namespace zen { namespace zenMath 
 {
@@ -24,5 +22,3 @@ namespace zen { namespace zenMath
 }  } // namespace zen, zenMath
 
 //#include zenInlinePlatform( CMathBits )
-
-#endif

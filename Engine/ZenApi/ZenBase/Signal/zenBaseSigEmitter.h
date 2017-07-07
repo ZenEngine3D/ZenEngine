@@ -1,6 +1,4 @@
 #pragma once
-#ifndef __zenApi_Base_Signal_Emitter_h__
-#define __zenApi_Base_Signal_Emitter_h__
 
 namespace zen { namespace zenSig
 {
@@ -67,4 +65,3 @@ public:
 
 } } //namespace zen { namespace zenSig
 
-#endif

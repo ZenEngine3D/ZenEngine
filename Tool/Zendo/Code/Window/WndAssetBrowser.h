@@ -1,6 +1,4 @@
 #pragma once
-#ifndef __BetlWndResourceBrowser_h__
-#define __BetlWndResourceBrowser_h__ 
 
 class WndAssetBrowser : public wxPanel
 {
@@ -81,5 +79,3 @@ protected:
 };
 
 wxTreeListItem GetTreeItemFromDataview( wxTreeListCtrl& _TreeControl, wxDataViewItem _DataViewItem );
-
-#endif

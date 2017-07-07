@@ -1,7 +1,5 @@
 #pragma once
-#ifndef __Sample_Subfolder_Base_h__
-#define __Sample_Subfolder_Base_h__ 
-
+ 
 class ISubfolder
 {
 public:   
@@ -12,6 +10,4 @@ protected:
     int miVal;
 };
 
-#include AWHeaderPlatform(Subfolder)
-
-#endif
+#include zenHeaderPlatform(Subfolder)

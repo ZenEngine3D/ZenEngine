@@ -1,6 +1,4 @@
 #pragma once
-#ifndef __BetlTabAssetProperty_h__
-#define __BetlTabAssetProperty_h__ 
 
 namespace BCtrl
 {
@@ -41,4 +39,3 @@ protected:
 
 
 }
-#endif

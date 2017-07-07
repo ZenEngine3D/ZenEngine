@@ -1,6 +1,4 @@
 #pragma once
-#ifndef __zenBase_Memory_Pool_inl__
-#define __zenBase_Memory_Pool_inl__
 
 namespace zen { namespace zenMem
 {
@@ -98,7 +96,3 @@ TObject* zAllocatorFastPool<TObject, TCallConstructor, TCallDestructor>::Allocat
 
 
 } } //namespace zen { namespace zenMem
-
-
-
-#endif

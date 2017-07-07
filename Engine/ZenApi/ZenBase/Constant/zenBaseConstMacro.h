@@ -1,6 +1,4 @@
 #pragma once
-#ifndef __zenApi_Base_Type_Defines_h__
-#define __zenApi_Base_Type_Defines_h__
 
 //=================================================================================================
 //! @file		CTypDefines.h
@@ -35,6 +33,3 @@
 #define zenClassDeclare(_Class_, _ClassParent_)		zenClassDeclareNoParent(_Class_)			\
 													public: typedef _ClassParent_ Super;
 #include zenHeaderPlatform(zenBaseConstMacro)
-
-#endif
-

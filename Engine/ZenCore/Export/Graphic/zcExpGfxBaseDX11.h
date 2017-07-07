@@ -1,6 +1,4 @@
 #pragma once
-#ifndef __zCore_Exp_GfxBaseDX11_h__
-#define __zCore_Exp_GfxBaseDX11_h__ 
 
 #define	ZEN_EXPORT_DX11				(ZEN_RENDERER_DX11)			//Platforms that can export DX11 resources
 #define	ZEN_EXPORT_OR_RESOURCE_DX11	(ZEN_EXPORT_DX11)			//Platforms that can use or export DX11 resources
@@ -27,5 +25,3 @@
 	#include "Graphic/Surface/zcExpGfxWindowDX11.h"
 
 #endif //ZEN_EXPORT_OR_RESOURCE_DX11
-
-#endif

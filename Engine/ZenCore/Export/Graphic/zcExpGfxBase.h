@@ -1,6 +1,4 @@
 #pragma once
-#ifndef __zCore_Exp_Gfx_Base_h__
-#define __zCore_Exp_Gfx_Base_h__ 
 
 #include "Graphic/State/zcExpGfxState.h"
 #include "Graphic/Surface/zcExpGfxTexture.h"
@@ -21,5 +19,3 @@
 #include "Graphic/zcExpGfxBaseDX12.h"
 
 #include zenHeaderRenderer(zcExpGfxExporter)
-
-#endif

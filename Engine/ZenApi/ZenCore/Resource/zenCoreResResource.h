@@ -1,6 +1,4 @@
 #pragma once
-#ifndef __zenApi_Core_ResRef_h__
-#define __zenApi_Core_ResRef_h__
 
 namespace zen { namespace zenRes {	
 
@@ -117,5 +115,3 @@ namespace zcRes
 	using GfxShaderResourceRef	= zenRes::zResourceRef<	class zenRes::zExportData,		class zenRes::zExportData,
 									zEnumMask<zU64>(keResType_GfxStateSampler, keResType_GfxTexture2D, keResType_GfxBuffer, keResType_GfxCBuffer) >;
 };
-
-#endif

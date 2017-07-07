@@ -1,6 +1,4 @@
 #pragma once
-#ifndef __zCore_Exp_Gfx_Shader_h__
-#define __zCore_Exp_Gfx_Shader_h__
 
 namespace zcExp
 {
@@ -39,5 +37,3 @@ namespace zcExp
 	zResID CreateGfxShaderVertex( const char* _zFilename, const char* _zEntryname, const zArrayBase<zenRes::zShaderDefine>& _aDefines );
 	zResID CreateGfxShaderPixel	( const char* _zFilename, const char* _zEntryname, const zArrayBase<zenRes::zShaderDefine>& _aDefines );
 }
-
-#endif

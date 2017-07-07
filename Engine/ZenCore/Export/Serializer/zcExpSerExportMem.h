@@ -1,6 +1,4 @@
 #pragma once
-#ifndef __zCore_Exp_Ser_ExportMemory_h__
-#define __zCore_Exp_Ser_ExportMemory_h__
 
 namespace zcExp
 {		
@@ -57,5 +55,3 @@ protected:
 	//virtual bool	ItemSkip(ExportItem& aItem);
 };
 }
-
-#endif

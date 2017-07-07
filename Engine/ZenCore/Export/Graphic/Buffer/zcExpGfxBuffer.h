@@ -1,6 +1,4 @@
 #pragma once
-#ifndef __zCore_Exp_Gfx_Buffer_h__
-#define __zCore_Exp_Gfx_Buffer_h__
 
 namespace zcExp
 {	
@@ -25,5 +23,3 @@ namespace zcExp
 
 	zResID CreateGfxBuffer(const zU8* _pData, size_t _uDataSize, size_t _uElemSize, zU32 _uElemCount/*, zFlagResTexUse _UseFlags*/);	//! @brief Create a new StructBuffer Resource
 }
-
-#endif

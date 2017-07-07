@@ -1,6 +1,4 @@
 #pragma once
-#ifndef __zenApi_Base_Type_String_h__
-#define __zenApi_Base_Type_String_h__
 
 namespace zen { namespace zenType 
 {
@@ -61,5 +59,3 @@ typedef zStringHash<zHash64> zStringHash64;
 }}  //namespace zen, Type 
 
 #include "zenBaseTypeString.inl"
-
-#endif

@@ -1,6 +1,4 @@
 #pragma once
-#ifndef __zCore_ExpGfxState_h__
-#define __zCore_ExpGfxState_h__
 
 namespace zcExp
 {
@@ -34,5 +32,3 @@ namespace zcExp
 	zResID CreateGfxDepthStencil( const zenRes::zGfxRenderPass::ConfigDepthRT& _DepthStencilConfig );
 	zResID CreateGfxBlend( const zArrayBase<zenRes::zGfxRenderPass::ConfigColorRT>& _aTargetColorConfig);
 }
-
-#endif

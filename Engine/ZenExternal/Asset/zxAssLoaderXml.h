@@ -1,6 +1,4 @@
 #pragma once
-#ifndef __LibZenExternal_Asset_LoaderXml_h__
-#define __LibZenExternal_Asset_LoaderXml_h__
 
 #if ZEN_ENGINETOOL
 
@@ -30,5 +28,4 @@ protected:
 }} //namespace zen { namespace zxAss
 
 
-#endif
 #endif

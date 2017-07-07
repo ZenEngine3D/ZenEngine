@@ -1,11 +1,8 @@
 #pragma once
-#ifndef __zenApi_Base_Type_Base_h__
-#define __zenApi_Base_Type_Base_h__
 
 #include <stdint.h>
 #include <array>
 #include <bitset>
-
 
 namespace zen { namespace zenType {
 
@@ -48,5 +45,3 @@ template<typename T> void zenSwap(T& _Val1, T& _Val2)
 }
 
 }} //namespace zen, zenType
-
-#endif

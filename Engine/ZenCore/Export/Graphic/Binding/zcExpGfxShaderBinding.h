@@ -1,6 +1,4 @@
 #pragma once
-#ifndef __zCore_Exp_Gfx_ShaderBinding_Base_h__
-#define __zCore_Exp_Gfx_ShaderBinding_Base_h__
 
 namespace zcExp
 {
@@ -48,5 +46,3 @@ namespace zcExp
 
 	zResID CreateGfxShaderBinding(const zArrayBase<zResID>& _aShaderID);	
 }
-
-#endif

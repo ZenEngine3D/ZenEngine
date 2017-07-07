@@ -1,6 +1,4 @@
 #pragma once
-#ifndef __Sample_SampleLib_h__
-#define __Sample_SampleLib_h__
 
 class SampleLib
 {
@@ -13,6 +11,3 @@ public:
 protected:
 	int	mi_Value;
 };
-
-
-#endif

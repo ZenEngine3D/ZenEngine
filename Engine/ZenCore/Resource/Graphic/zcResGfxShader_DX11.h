@@ -1,7 +1,4 @@
 #pragma once
-#ifndef __zCore_Res_Gfx_Shaders_DX11_h__
-#define __zCore_Res_Gfx_Shaders_DX11_h__
-
 
 namespace zcRes
 {
@@ -27,5 +24,3 @@ namespace zcRes
 		typedef zcExp::ExporterGfxShaderDX11_DX11	RuntimeExporter;
 	};
 }
-
-#endif

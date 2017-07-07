@@ -1,6 +1,4 @@
 #pragma once
-#ifndef __zCore_Res_All_h__
-#define __zCore_Res_All_h__
 
 //=================================================================================================
 //! @file		EngineResourceAll.h
@@ -19,5 +17,3 @@
 
 #include "Resource/zcResResource.h"
 #include "Graphic/zcResGfxAll.h"
-
-#endif

@@ -1,6 +1,4 @@
 #pragma once
-#ifndef __zenApi_Base_Type_WString_h__
-#define __zenApi_Base_Type_WString_h__
 
 #include <string>
 
@@ -35,5 +33,3 @@ public:
 }}  //namespace zen, Type 
 
 #include "zenBaseTypeWString.inl"
-
-#endif

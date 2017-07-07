@@ -1,6 +1,4 @@
 #pragma once
-#ifndef __zCore_Exp_GfxBaseDX12_h__
-#define __zCore_Exp_GfxBaseDX12_h__ 
 
 #define	ZEN_EXPORT_DX12				(ZEN_RENDERER_DX12)			//Platforms that can export DX11 resources
 #define	ZEN_EXPORT_OR_RESOURCE_DX12	(ZEN_EXPORT_DX12)			//Platforms that can use or export DX11 resources
@@ -24,6 +22,4 @@ namespace zcExp
 #include "Graphic/Shader/zcExpGfxShaderDX12.h"
 #include "Graphic/Surface/zcExpGfxTextureDX12.h"
 #include "Graphic/Surface/zcExpGfxWindowDX12.h"
-#endif
-
 #endif

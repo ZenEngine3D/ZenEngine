@@ -1,6 +1,4 @@
 #pragma once
-#ifndef __zenApi_Base_Memory_FastPool_h__
-#define __zenApi_Base_Memory_FastPool_h__
 
 namespace zen { namespace zenMem
 {
@@ -79,6 +77,3 @@ public:
 };
 
 } } //namespace zen { namespace zenMem
-
-
-#endif

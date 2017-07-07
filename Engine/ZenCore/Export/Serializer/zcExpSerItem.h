@@ -1,6 +1,4 @@
 #pragma once
-#ifndef __zCore_Exp_Ser_ResourceData_h__
-#define __zCore_Exp_Ser_ResourceData_h__
 
 namespace zcExp
 {		
@@ -29,5 +27,3 @@ namespace zcExp
 	};
 
 }
-
-#endif

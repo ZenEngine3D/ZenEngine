@@ -1,6 +1,4 @@
 #pragma once
-#ifndef __zenApi_Base_Type_Time_h__
-#define __zenApi_Base_Type_Time_h__
 
 namespace zen { namespace zenType 
 {
@@ -23,5 +21,3 @@ struct zDateTime
 typedef time_t zTimeStamp;
 
 }}  //namespace zen, Type 
-
-#endif

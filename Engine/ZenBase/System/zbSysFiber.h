@@ -1,6 +1,4 @@
 #pragma once
-#ifndef __zBase_System_Fiber_h__
-#define __zBase_System_Fiber_h__
 
 #include "zbSysFiber_base.h"
 #include zenHeaderPlatform( zbSysFiber )
@@ -40,7 +38,3 @@ void StartTaskProcessing();
 void FiberUpdateLoop(zUInt _uThreadId);
 
 }
-
-
-
-#endif

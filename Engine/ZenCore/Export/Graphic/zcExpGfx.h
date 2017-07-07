@@ -1,6 +1,4 @@
 #pragma once
-#ifndef __zCore_Exp_Gfx_All_h__
-#define __zCore_Exp_Gfx_All_h__
 
 //=================================================================================================
 //! @file		EExpAll.h
@@ -13,5 +11,3 @@
 //!				This is a component of the @ref LibExp Library.
 //=================================================================================================
 #include "zcExpGfxBase.h"
-
-#endif

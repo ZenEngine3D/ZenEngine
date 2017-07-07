@@ -1,6 +1,4 @@
 #pragma once
-#ifndef __zenApi_Base_Type_ListIntrusive_h__
-#define __zenApi_Base_Type_ListIntrusive_h__
 
 namespace zen { namespace zenType 
 {
@@ -173,5 +171,3 @@ public:
 		return rItem;
 	}
 };
-
-#endif	

@@ -1,6 +1,4 @@
 #pragma once
-#ifndef __zCore_ExpGfxStateDX12_h__
-#define __zCore_ExpGfxStateDX12_h__
 
 namespace zcExp
 {	
@@ -32,5 +30,3 @@ namespace zcExp
 		D3D12_RASTERIZER_DESC		mRasterizerDesc;
 	};
 }
-
-#endif

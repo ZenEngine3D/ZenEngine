@@ -32,9 +32,7 @@ zxRenderData::zxRenderData()
 		pGeneratedTexture = reinterpret_cast<const zU8*>(nk_font_atlas_bake (&moFontAtlas, &width, &height, NK_FONT_ATLAS_RGBA32));
 		zArrayStatic<zU8> aFontRGBA;
 		aFontRGBA.Copy(pGeneratedTexture, width*height * 4);
-//#if !ZEN_RENDERER_DX12
 		mrFontTextureAtlas = zenRes::zGfxTexture2D::Create(zenConst::keTexFormat_RGBA8, zVec2U16(width, height), aFontRGBA);
-//#endif
 	}    
 	zcRes::GfxTexture2DRef rTexture = mrFontTextureAtlas; 
 	nk_font_atlas_end(&moFontAtlas, nk_handle_ptr(rTexture.Get()), &moDrawNullTexture);

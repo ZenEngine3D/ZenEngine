@@ -1,6 +1,4 @@
 #pragma once
-#ifndef __zCore_Exp_Gfx_Texture2d_DX12_DX12_h__
-#define __zCore_Exp_Gfx_Texture2d_DX12_DX12_h__
 
 namespace zcExp
 {	
@@ -18,5 +16,3 @@ protected:
 };
 
 }
-
-#endif

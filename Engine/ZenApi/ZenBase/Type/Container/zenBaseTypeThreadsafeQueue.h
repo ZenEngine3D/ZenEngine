@@ -1,6 +1,4 @@
 #pragma once
-#ifndef __zenApi_Base_Type_ThreadsafeQueue_h__
-#define __zenApi_Base_Type_ThreadsafeQueue_h__
 
 #include <atomic>
 
@@ -25,5 +23,3 @@ namespace zen { namespace zenType
 } } //namespace zen, Type
 
 #include "zenBaseTypeThreadsafeQueue.inl"
-
-#endif

@@ -1,6 +1,4 @@
 #pragma once
-#ifndef __zCore_Exp_Manager_h__
-#define __zCore_Exp_Manager_h__
 
 namespace zcExp
 {	
@@ -50,5 +48,3 @@ public:
 }
 
 namespace zcMgr { extern zcExp::ManagerExport Export; }
-
-#endif

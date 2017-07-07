@@ -1,8 +1,5 @@
 #pragma once
-#ifndef __zCore_Res_Gfx_GfxWindow_DX12_h__
-#define __zCore_Res_Gfx_GfxWindow_DX12_h__
 
-//SF DX12
 namespace zcRes
 {
 	class GfxWindow_DX12 : public zcExp::ExportGfxWindowDX12
@@ -25,5 +22,3 @@ namespace zcRes
 		static GfxWindowRef						RuntimeCreate(HWND _WindowHandle);
 	};
 }
-
-#endif

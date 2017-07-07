@@ -1,6 +1,4 @@
 #pragma once
-#ifndef __LibFramework_Window_Viewport_PC_h__
-#define __LibFramework_Window_Viewport_PC_h__
 
 #include <mutex>
 
@@ -47,4 +45,3 @@ namespace zen { namespace zenWnd
 		zenRes::zGfxWindow				mGfxWindow;
 	};
 }}
-#endif

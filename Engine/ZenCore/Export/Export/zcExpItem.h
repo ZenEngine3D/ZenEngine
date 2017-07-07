@@ -1,6 +1,4 @@
 #pragma once
-#ifndef __zCore_Exp_ExportItem_h__
-#define __zCore_Exp_ExportItem_h__
 
 namespace zcExp
 {
@@ -61,5 +59,3 @@ zenInline zResID ValidateItemID(ePlatform _ePlatform, zenConst::eResType _eType,
 }
 
 }
-
-#endif

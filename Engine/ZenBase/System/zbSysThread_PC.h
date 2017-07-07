@@ -1,6 +1,4 @@
 #pragma once
-#ifndef __zBase_System_Thread_PC_h__
-#define __zBase_System_Thread_PC_h__
 
 namespace zbSys
 {
@@ -114,5 +112,3 @@ private:
 };
 */
 }
-
-#endif

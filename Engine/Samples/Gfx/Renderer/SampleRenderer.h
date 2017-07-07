@@ -1,6 +1,4 @@
 #pragma once
-#ifndef __Sample_Renderer_h__
-#define __Sample_Renderer_h__
 
 //=================================================================================================
 //! @example SampleGfxRenderer.cpp
@@ -64,5 +62,3 @@ protected:
 };
 
 }
-
-#endif

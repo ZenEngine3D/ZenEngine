@@ -1,6 +1,4 @@
 #pragma once
-#ifndef __zCore_Exp_Gfx_Surface_RenderTarget_h__
-#define __zCore_Exp_Gfx_Surface_RenderTarget_h__
 
 namespace zcExp
 {
@@ -35,5 +33,3 @@ namespace zcExp
 
 	zResID CreateGfxRenderTarget(zenConst::eTextureFormat _eFormat, zVec2U16 _vDim, bool _bSrgb=true);
 }
-
-#endif

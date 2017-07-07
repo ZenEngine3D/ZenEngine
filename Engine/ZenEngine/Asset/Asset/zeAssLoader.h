@@ -1,6 +1,4 @@
 #pragma once
-#ifndef __LibZenEngine_Asset_Serializer_h__
-#define __LibZenEngine_Asset_Serializer_h__
 
 #if ZEN_ENGINETOOL
 namespace zeAss
@@ -23,6 +21,4 @@ protected:
 
 } //namespace zeAss
 
-
-#endif
 #endif

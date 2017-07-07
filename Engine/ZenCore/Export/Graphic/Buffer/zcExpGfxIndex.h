@@ -1,6 +1,4 @@
 #pragma once
-#ifndef __zCore_Exp_Gfx_Indice_h__
-#define __zCore_Exp_Gfx_Indice_h__
 
 namespace zcExp
 {
@@ -24,5 +22,3 @@ namespace zcExp
 	zResID CreateGfxIndexBuffer(const zArrayBase<zU16>& _Indices, zenConst::ePrimitiveType _ePrimitiveType);
 	zResID CreateGfxIndexBuffer(const zArrayBase<zU32>& _Indices, zenConst::ePrimitiveType _ePrimitiveType);
 }
-
-#endif

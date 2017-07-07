@@ -1,6 +1,4 @@
 #pragma once
-#ifndef __zBase_Memory_Allocator_h__
-#define __zBase_Memory_Allocator_h__
 
 namespace zbMem
 {
@@ -32,5 +30,3 @@ namespace zbMem
 
 	AllocHeader*				GetHeader(void* _pAlloc, bool _bIsArray);					
 }  
-
-#endif

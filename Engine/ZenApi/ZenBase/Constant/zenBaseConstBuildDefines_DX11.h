@@ -1,5 +1,1 @@
 #pragma once
-#ifndef __zenApi_Base_Constant_BuildDefines_DX11_h__
-#define __zenApi_Base_Constant_BuildDefines_DX11_h__
-
-#endif

@@ -1,6 +1,4 @@
 #pragma once
-#ifndef __zenBase_Type_All_h__
-#define __zenBase_Type_All_h__ 
 
 //=================================================================================================
 //! @file		libZenBaseAll.h
@@ -13,6 +11,3 @@
 //!				This is a component of the @ref LibCore Library.
 //=================================================================================================
 #include "zbTypeManager.h"
-
-
-#endif

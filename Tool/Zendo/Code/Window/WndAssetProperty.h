@@ -1,7 +1,5 @@
 #pragma once
-#ifndef __BetlWndAssetProperty_h__
-#define __BetlWndAssetProperty_h__ 
-
+#pragma once
 #include "../Control/CtrlAssetPropertyTab.h"
 
 class WndAssetProperty : public wxPanel
@@ -16,5 +14,3 @@ protected:
 	wxAuiNotebook*									mpNotebook;
 	zArraySparse<BCtrl::TabAssetProperty*>::Key64	mdTabPerAsset;
 };
-
-#endif

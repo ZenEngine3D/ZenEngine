@@ -2,8 +2,6 @@
 // Integration of wxWidget 3.0.2 in Zen Engine
 //#################################################################################################
 #pragma once
-#ifndef __WX_WIDGETS_H__
-#define __WX_WIDGETS_H__
 
 #if ZEN_ENGINETOOL
 
@@ -55,7 +53,5 @@
 #include <wx/filefn.h>
 #include <wx/file.h>
 #include <wx/dir.h>
-
-#endif
 
 #endif

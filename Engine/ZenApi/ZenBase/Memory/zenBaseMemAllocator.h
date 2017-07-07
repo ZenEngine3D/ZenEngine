@@ -1,6 +1,4 @@
 #pragma once
-#ifndef __zenApi_Base_Memory_Allocator_h__
-#define __zenApi_Base_Memory_Allocator_h__
 
 #define		zenDel(_Pointer_)					{ delete	_Pointer_; }
 #define		zenDelArray(_Pointer_)				{ delete[]	_Pointer_; }
@@ -99,5 +97,3 @@ void* zMalloc(zenMem::zAllocator* _pAllocator, size_t _uSize_, zU32 uAlign=zenDe
 //#define		malloc			zenStaticAssert(0, "Use zMalloc")
 //#define		new				zenAssertMsg(0, "Use zenNew")
 //#define		delete			zenAssertMsg(0, "User zenDel")
-
-#endif

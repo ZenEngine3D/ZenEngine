@@ -1,6 +1,4 @@
 #pragma once
-#ifndef __zBase_Log_Manager_h__
-#define __zBase_Log_Manager_h__
 
 #include <stdio.h>
 #include <stdarg.h>
@@ -57,6 +55,3 @@ protected:
 namespace zbMgr { extern zbLog::ManagerLog Log; }
 
 #include "zbLogMgr.inl"
-
-
-#endif

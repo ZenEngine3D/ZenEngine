@@ -1,6 +1,4 @@
 #pragma once
-#ifndef __zenApi_Base_Type_ArrayBits_h__
-#define __zenApi_Base_Type_ArrayBits_h__
 
 namespace zen { namespace zenType {
 
@@ -43,5 +41,3 @@ protected:
 } } //namespace zen, Type
 
 #include "zenBaseTypeArrayBits.inl"
-
-#endif

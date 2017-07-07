@@ -1,6 +1,4 @@
 #pragma once
-#ifndef __zenEngine_Asset_PropertyFile_h__
-#define __zenEngine_Asset_PropertyFile_h__
 
 #if ZEN_ENGINETOOL
 
@@ -18,5 +16,4 @@ class PropertyFile : public TPropertyDefinition<zenConst::keAssProp_File, Proper
 	
 }} //namespace zen { namespace zenAss
 
-#endif
 #endif

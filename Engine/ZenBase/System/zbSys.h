@@ -1,6 +1,4 @@
 #pragma once
-#ifndef __zBase_System_All_h__
-#define __zBase_System_All_h__ 
 
 //=================================================================================================
 //! @file		CSysAll.h
@@ -15,5 +13,3 @@
 #include "zbSysInit.h"
 #include "zbSysFiber.h"
 #include "zbSysThread.h"
-
-#endif

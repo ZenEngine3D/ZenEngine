@@ -1,6 +1,4 @@
 #pragma once
-#ifndef __LibZenEngine_Perf_CounterCPU_h__
-#define __LibZenEngine_Perf_CounterCPU_h__
 
 namespace zcPerf 
 {
@@ -31,5 +29,3 @@ namespace zcPerf
 										EventCPU(const zStringHash32& _EventName) : Super(_EventName) {}
 	};
 }
-
-#endif

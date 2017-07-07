@@ -1,6 +1,4 @@
 #pragma once
-#ifndef __zenEngine_Asset_PropertyNumerical_h__
-#define __zenEngine_Asset_PropertyNumerical_h__
 
 #if ZEN_ENGINETOOL
 
@@ -38,5 +36,4 @@ typedef PropertyNumerical<zenConst::keAssProp_Float4, zVec4F>	PropertyFloat4;
 
 }} //namespace zen { namespace zenAss
 
-#endif
 #endif

@@ -1,6 +1,4 @@
 #pragma once
-#ifndef __zenApi_Base_Type_Vector_h__
-#define __zenApi_Base_Type_Vector_h__
 
 namespace zen { namespace zenType 
 {
@@ -112,5 +110,3 @@ namespace zen { namespace zenType
 }} // namespace zen, zenType
 
 #include "zenBaseTypeVector.inl"
-
-#endif

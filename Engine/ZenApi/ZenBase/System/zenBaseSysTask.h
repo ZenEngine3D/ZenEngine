@@ -1,7 +1,4 @@
 #pragma once
-#ifndef __zenApi_Base_System_Task_h__
-#define __zenApi_Base_System_Task_h__
-
 
 namespace zbSys { class zbFiber; } 
 
@@ -42,4 +39,3 @@ void StartTaskProcessing(); //! @todo clean do not export this, make part of eng
 
 #include "zenBaseSysTask.inl"
 
-#endif

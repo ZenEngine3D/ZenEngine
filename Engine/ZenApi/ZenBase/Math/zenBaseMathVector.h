@@ -1,6 +1,4 @@
 #pragma once
-#ifndef __zenApi_Base_Math_Vector4_h__
-#define __zenApi_Base_Math_Vector4_h__
 
 #include <xmmintrin.h>
 
@@ -75,5 +73,3 @@ namespace zen { namespace zenMath
 }  } // namespace zen, zenMath
 
 #include zenInlinePlatform( zenBaseMathVector )
-
-#endif

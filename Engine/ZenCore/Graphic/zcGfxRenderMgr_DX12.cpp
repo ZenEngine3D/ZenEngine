@@ -2,7 +2,6 @@
 #include <DXGI.h>
 #include <DXGI1_4.h>
 
-//SF DX12
 namespace zcGfx
 {
 
@@ -28,7 +27,7 @@ DX12QueryDisjoint::DX12QueryDisjoint()
 void DX12QueryDisjoint::ReferenceDeleteCB()
 {
 	slstQueryCreated.PushHead(*this);
-}
+} 
 
 void DX12QueryDisjoint::Start()
 {

@@ -1,7 +1,6 @@
 #include "zcCore.h"
 
 #if ZEN_EXPORT_DX12
-//SF DX12 
 
 namespace zcExp
 {

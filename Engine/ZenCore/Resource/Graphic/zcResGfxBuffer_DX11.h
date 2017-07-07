@@ -1,6 +1,4 @@
 #pragma once
-#ifndef __zCore_Res_Gfx_GfxBuffer_DX11_h__
-#define __zCore_Res_Gfx_GfxBuffer_DX11_h__
 
 namespace zcRes
 {
@@ -21,5 +19,3 @@ public:
 };
 
 }
-
-#endif

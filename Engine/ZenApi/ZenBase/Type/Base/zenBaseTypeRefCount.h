@@ -1,6 +1,4 @@
 #pragma once
-#ifndef __zenApi_Base_Type_RefCount_h__
-#define __zenApi_Base_Type_RefCount_h__
 
 #include <atomic>
 
@@ -132,4 +130,3 @@ namespace zen { namespace zenType {
 
 #include "zenBaseTypeRefCount.inl"
 
-#endif

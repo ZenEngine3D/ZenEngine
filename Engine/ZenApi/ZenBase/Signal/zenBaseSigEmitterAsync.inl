@@ -1,6 +1,4 @@
 #pragma once
-#ifndef __zenBase_Signal_EmitterAsync_inl__
-#define __zenBase_Signal_EmitterAsync_inl__
 
 namespace zen {	namespace zenSig
 {
@@ -135,6 +133,3 @@ void zSignalEmitterAsync3<TParam1, TParam2, TParam3>::SignalInfo::Send()
 }
 
 }} //namespace zen { namespace zenSig
-
-
-#endif

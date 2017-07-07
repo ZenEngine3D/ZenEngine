@@ -1,6 +1,4 @@
 #pragma once
-#ifndef __zCore_Res_Gfx_GfxView_DX11_h__
-#define __zCore_Res_Gfx_GfxView_DX11_h__
 
 namespace zcRes
 {
@@ -16,5 +14,3 @@ namespace zcRes
 		typedef zcExp::ExporterGfxView				RuntimeExporter;
 	};
 }
-
-#endif

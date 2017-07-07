@@ -1,6 +1,4 @@
 #pragma once
-#ifndef __zCore_Res_Gfx_Texture_h__
-#define __zCore_Res_Gfx_Texture_h__
 
 #include zenHeaderRenderer( zcResGfxTexture )
 
@@ -19,5 +17,3 @@ public:
 };
 
 }
-
-#endif

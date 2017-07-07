@@ -1,6 +1,4 @@
 #pragma once
-#ifndef __zenEngine_Const_Asset_h__
-#define __zenEngine_Const_Asset_h__
 
 #if ZEN_ENGINETOOL
 
@@ -53,5 +51,4 @@ namespace zenType
 
 } //namespace zen
 
-#endif
 #endif

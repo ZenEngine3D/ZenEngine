@@ -1,6 +1,4 @@
 #pragma once
-#ifndef __zCore_Res_Gfx_Texture_DX11_h__
-#define __zCore_Res_Gfx_Texture_DX11_h__
 
 namespace zcRes
 {
@@ -15,5 +13,3 @@ namespace zcRes
 		typedef zcExp::ExporterGfxTexture2DDX11_DX11	RuntimeExporter;
 	};
 }
-
-#endif

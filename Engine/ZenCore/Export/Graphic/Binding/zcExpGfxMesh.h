@@ -1,6 +1,4 @@
 #pragma once
-#ifndef __zCore_Exp_Gfx_Mesh_Base_h__
-#define __zCore_Exp_Gfx_Mesh_Base_h__
 
 namespace zcExp
 {	
@@ -31,5 +29,3 @@ namespace zcExp
 
 	zResID CreateGfxMesh(const zArrayBase<zResID>& _aMeshStripID);
 }
-
-#endif

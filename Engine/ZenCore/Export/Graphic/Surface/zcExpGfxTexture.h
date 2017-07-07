@@ -1,6 +1,4 @@
 #pragma once
-#ifndef __zCore_Exp_Gfx_Texture_h__
-#define __zCore_Exp_Gfx_Texture_h__
 
 namespace zcExp
 {
@@ -46,5 +44,3 @@ namespace zcExp
 	zResID CreateGfxTexture2D( zenConst::eTextureFormat _eFormat, zFlagResTexUse _CreationFlags, zVec2U16 _vDim, const zArrayBase<zU8>& _aRawData=zArrayStatic<zU8>(zUInt(0)) );
 
 }
-
-#endif

@@ -1,6 +1,4 @@
 #pragma once
-#ifndef __zBase_System_Thread_h__
-#define __zBase_System_Thread_h__
 
 //=================================================================================================
 // Main Class / functions
@@ -57,5 +55,3 @@ private:
 }
 
 #include zenHeaderPlatform( zbSysThread )
-
-#endif

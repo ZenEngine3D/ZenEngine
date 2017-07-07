@@ -1,6 +1,4 @@
 #pragma once
-#ifndef __zenApi_Core_Const_Resource_h__
-#define __zenApi_Core_Const_Resource_h__
 
 namespace zen { 
 	namespace zenConst 
@@ -182,5 +180,3 @@ namespace zen {
 
 #include zenHeaderPlatform(zenCoreConstResource)
 #include zenHeaderRenderer(zenCoreConstResource)
-
-#endif

@@ -1,8 +1,6 @@
 #pragma once
-#ifndef __LibZenEngine_Perf_CounterGPU_h__
-#define __LibZenEngine_Perf_CounterGPU_h__
 
-//! @todo clean redefine all platform classes to use Class_Base, Class_HAL, Class hierarchy
+//! @todo 2 clean redefine all platform classes to use Class_Base, Class_HAL, Class hierarchy
 
 namespace zcPerf 
 {
@@ -49,5 +47,3 @@ namespace zcPerf
 		eType							meCounterType;
 	};
 }
-
-#endif

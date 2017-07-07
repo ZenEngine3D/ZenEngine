@@ -1,6 +1,4 @@
 #pragma once
-#ifndef __zenApi_Core_ResGfxBinding_h__	//! @todo 2 clean remove all header ifndef and rely on pragma once
-#define __zenApi_Core_ResGfxBinding_h__
 
 //! @todo 2 Urgent, this is not a resource, should be moved elsewhere
 //Forward declare
@@ -116,6 +114,3 @@ namespace zen { namespace zenRes {
 }} // namespace zen, zenRes
 
 #include "zenCoreResGfxBinding.inl"
-
-#endif
-

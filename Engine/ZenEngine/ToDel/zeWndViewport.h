@@ -1,6 +1,4 @@
 #pragma once
-#ifndef __LibFramework_Window_Viewport_h__
-#define __LibFramework_Window_Viewport_h__
 
 //=================================================================================================
 //! @class		WindowInputState
@@ -34,5 +32,3 @@ enum eMouseButton
 };
 
 #include zenHeaderPlatform( zeWndViewport )
-
-#endif

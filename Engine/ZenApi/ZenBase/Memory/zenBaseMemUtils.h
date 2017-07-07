@@ -1,6 +1,4 @@
 #pragma once
-#ifndef __zenApi_Base_Memory_Utils_h__
-#define __zenApi_Base_Memory_Utils_h__
 
 namespace zen { namespace zenMem
 {
@@ -18,6 +16,3 @@ namespace zen { namespace zenMem
 
 //#define memcpy // Making sure program uses our version of memcpy
 //#define memset // Making sure program uses our version of memset
-
-
-#endif

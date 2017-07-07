@@ -1,6 +1,4 @@
 #pragma once
-#ifndef __zenApi_Base_Type_DebugString_h__
-#define __zenApi_Base_Type_DebugString_h__
 
 namespace zen { namespace zenType {
 
@@ -25,4 +23,3 @@ protected:
 
 #include "zenBaseTypeDebugString.inl"
 
-#endif

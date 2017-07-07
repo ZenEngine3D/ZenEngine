@@ -1,6 +1,4 @@
 #pragma once
-#ifndef __zCore_Misc_Update_h__
-#define __zCore_Misc_Update_h__
 
 namespace zcMisc {
 
@@ -21,5 +19,3 @@ namespace zcMgr
 {
 	extern zcMisc::ManagerUpdate Updater; //! @todo clean See about not having a 'manager' object
 }
-
-#endif

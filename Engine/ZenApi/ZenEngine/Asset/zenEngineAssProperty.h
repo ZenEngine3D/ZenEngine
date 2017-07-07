@@ -1,6 +1,4 @@
 #pragma once
-#ifndef __zenEngine_Asset_Property_h__
-#define __zenEngine_Asset_Property_h__
 
 #if ZEN_ENGINETOOL
 
@@ -125,5 +123,3 @@ namespace zen { namespace zenAss
 #endif
 
 #include "zenEngineAssProperty.inl"
-
-#endif

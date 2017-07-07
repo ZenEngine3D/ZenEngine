@@ -1,6 +1,4 @@
 #pragma once
-#ifndef __zenApi_Base_Type_ArrayStatic_h__
-#define __zenApi_Base_Type_ArrayStatic_h__
 
 namespace zen { namespace zenType {
 
@@ -30,5 +28,3 @@ public:
 } } //namespace zen, Type
 
 #include "zenBaseTypeArrayStatic.inl"
-
-#endif	

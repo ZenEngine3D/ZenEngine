@@ -1,6 +1,4 @@
 #pragma once
-#ifndef __LibZenEngine_Asset_Manager_h__
-#define __LibZenEngine_Asset_Manager_h__
 
 #if ZEN_ENGINETOOL
 namespace zeAss
@@ -59,5 +57,4 @@ void ResetAssetReference( zenAss::zArrayAsset& _dAssets, zenAss::zAssetItemRef& 
 
 namespace zeMgr{ extern zeAss::ManagerAsset Asset; }
 
-#endif
 #endif

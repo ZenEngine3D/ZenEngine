@@ -1,6 +1,4 @@
 #pragma once
-#ifndef __zenApi_Base_Type_Singleton_h__
-#define __zenApi_Base_Type_Singleton_h__
 
 namespace zen { namespace zenType {
 
@@ -20,4 +18,3 @@ protected:
 
 } } //namespace zen, Type
 
-#endif

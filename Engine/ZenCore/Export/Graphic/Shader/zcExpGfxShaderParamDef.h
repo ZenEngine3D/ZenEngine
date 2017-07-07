@@ -1,6 +1,5 @@
 #pragma once
-#ifndef __zCore_Exp_Gfx_ShaderParamDef_h__
-#define __zCore_Exp_Gfx_ShaderParamDef_h__
+
 //! @todo clean rename this file
 namespace zcExp
 {
@@ -48,5 +47,3 @@ namespace zcExp
 
 	zResID CreateGfxCBufferDefinition( const zStringHash32& _zBufferName, const zArrayBase<zHash32>& _aParamName, const zArrayBase<GfxCBufferParamInfo>& _aParamInfo, const zArrayBase<zU8>& _uDefaultValues );
 }
-
-#endif

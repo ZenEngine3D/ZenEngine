@@ -1,6 +1,4 @@
 #pragma once
-#ifndef __zCore_Exp_Gfx_GfxShader_DX12_DX12_h__
-#define __zCore_Exp_Gfx_GfxShader_DX12_DX12_h__
 
 namespace zcExp
 {	
@@ -23,5 +21,3 @@ namespace zcExp
 		zArrayStatic< zArrayStatic<zU8> >					maCBufferDefaultValues;
 	};
 }
-
-#endif

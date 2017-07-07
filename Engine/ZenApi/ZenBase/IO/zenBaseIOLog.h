@@ -1,6 +1,4 @@
 #pragma once
-#ifndef __zenApi_Base_IO_Log_h__
-#define __zenApi_Base_IO_Log_h__
 
 namespace zen 
 { 
@@ -40,5 +38,3 @@ void Printf	( zenConst::eLogType _eLogType, const char* _zFormat, const va_list 
 }
 
 } // namespace zen { namespace zenIO
-
-#endif

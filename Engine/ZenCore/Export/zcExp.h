@@ -1,6 +1,4 @@
 #pragma once
-#ifndef __zCore_Exp_All_h__
-#define __zCore_Exp_All_h__
 
 //=================================================================================================
 //! @file		LibExpAll.h
@@ -30,5 +28,3 @@
 #include "Graphic/zcExpGfxBase.h"
 #include "Graphic/zcExpGfx.h"
 #include "Export/zcExpManager.h"
-
-#endif

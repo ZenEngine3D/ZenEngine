@@ -1,6 +1,4 @@
 #pragma once
-#ifndef __zenEngine_Asset_ItemID_h__
-#define __zenEngine_Asset_ItemID_h__
 
 #if ZEN_ENGINETOOL
 
@@ -22,6 +20,4 @@ namespace zen { namespace zenAss
 }} //namespace zen { namespace zenAss
 
 #include "zenEngineAssItemID.inl"
-
-#endif
 #endif

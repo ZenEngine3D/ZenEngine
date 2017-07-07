@@ -1,6 +1,4 @@
 #pragma once
-#ifndef __zenApi_Base_Constant_Assert_h__
-#define __zenApi_Base_Constant_Assert_h__
 
 namespace zbLog 
 {
@@ -61,5 +59,3 @@ namespace zbLog
 #define	zenAssertOnce(_Cond_)			zenAssertMsgOnce(_Cond_, "")
 #define	zenWarning(_Cond_)				zenWarningMsg(_Cond_, "")
 #define	zenWarningOnce(_Cond_)			zenWarningMsgOnce(_Cond_, "")
-
-#endif

@@ -1,6 +1,4 @@
 #pragma once
-#ifndef __ZenEngine_Asset_h__
-#define __ZenEngine_Asset_h__
 
 #include "zenEngineAssItemID.h"
 #include "zenEngineAssItem.h"
@@ -14,5 +12,3 @@
 #include "zenEngineAssPropertyArray.h"
 #include "zenEngineAssPackage.h"
 #include "zenEngineAssPackageGroup.h"
-
-#endif

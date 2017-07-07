@@ -1,6 +1,4 @@
 #pragma once
-#ifndef __LibZenEngine_Asset_Package_h__
-#define __LibZenEngine_Asset_Package_h__
 
 #if ZEN_ENGINETOOL
 namespace zeAss
@@ -51,5 +49,3 @@ namespace zeAss
 #endif
 
 #include "zeAssPackage.inl"
-
-#endif

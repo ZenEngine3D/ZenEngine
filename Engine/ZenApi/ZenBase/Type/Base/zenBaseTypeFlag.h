@@ -1,6 +1,4 @@
 #pragma once
-#ifndef __zenApi_Base_Type_Flag_h__
-#define __zenApi_Base_Type_Flag_h__
 
 namespace zen { namespace zenType {
 
@@ -66,5 +64,3 @@ constexpr TOut zEnumMask(TEnumType _eEnumVal, Ts... _eRemainVals)
 } } //namespace zen, Type
 
 #include "zenBaseTypeFlag.inl"
-
-#endif

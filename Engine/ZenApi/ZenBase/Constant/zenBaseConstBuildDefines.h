@@ -1,6 +1,4 @@
 #pragma once
-#ifndef __zenApi_Base_Constant_BuildDefines_h__
-#define __zenApi_Base_Constant_BuildDefines_h__
 
 //=================================================================================================
 //! @file		APIConstBuildDefines.h
@@ -90,5 +88,3 @@
 
 #include zenHeaderPlatform(zenBaseConstBuildDefines)
 #include zenHeaderRenderer(zenBaseConstBuildDefines)
-
-#endif

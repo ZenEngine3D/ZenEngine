@@ -1,6 +1,4 @@
 #pragma once
-#ifndef __zenApi_Base_Type_Array_h__
-#define __zenApi_Base_Type_Array_h__
 
 // Forward declare
 namespace zbMem { class zAllocator; }
@@ -57,5 +55,3 @@ protected:
 } } //namespace zen, Type
 
 #include "zenBaseTypeArray.inl"
-
-#endif

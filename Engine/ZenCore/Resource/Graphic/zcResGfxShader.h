@@ -1,6 +1,4 @@
 #pragma once
-#ifndef __zCore_Res_Gfx_Shaders_h__
-#define __zCore_Res_Gfx_Shaders_h__
 
 #include zenHeaderRenderer(zcResGfxShader)
 
@@ -18,5 +16,3 @@ zenClassDeclare(GfxShaderPixel, GfxShaderPixel_HAL)
 };
 
 }
-
-#endif

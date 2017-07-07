@@ -1,7 +1,6 @@
 #pragma once
 #if !defined(__zCore_ExpGfxStateDX12_DX12_h__)
 #define __zCore_ExpGfxStateDX12_DX12_h__
-//SF DX12
 
 namespace zcExp
 {	

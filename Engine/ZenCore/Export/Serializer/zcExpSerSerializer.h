@@ -1,6 +1,4 @@
 #pragma once
-#ifndef __zCore_Exp_Ser_h__
-#define __zCore_Exp_Ser_h__
 
 namespace zcExp
 {			
@@ -84,5 +82,3 @@ namespace zcExp
 		virtual void	SkipToNextItem()=0;
 	};
 }
-
-#endif

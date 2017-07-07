@@ -1,6 +1,4 @@
 #pragma once
-#ifndef __zenApi_Base_Math_Base_h__
-#define __zenApi_Base_Math_Base_h__ 
 
 #include <math.h> //Used for modf
 
@@ -79,5 +77,3 @@ namespace zen { namespace zenMath
 	const double kdPIOn2Inv	= 1.0/1.570796326794896;
 
 }  } // namespace zen, zenMath
-
-#endif

@@ -1,6 +1,4 @@
 #pragma once
-#ifndef __LibZenEngine_Perf_h__
-#define __LibZenEngine_Perf_h__
 
 namespace zcPerf{ class EventBase; }
 
@@ -46,4 +44,3 @@ protected:
 };
 
 }}
-#endif

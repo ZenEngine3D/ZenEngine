@@ -1,6 +1,4 @@
 #pragma once
-#ifndef __LibZenExternal_IMGUI_h__
-#define __LibZenExternal_IMGUI_h__
 
 #include <Engine/ThirdParty/imgui/imgui.h>
 struct WindowInputState; //Forward declare
@@ -61,5 +59,3 @@ protected:
 };
 
 }
-
-#endif

@@ -1,6 +1,4 @@
 #pragma once
-#ifndef __zCore_Exp_Gfx_ShaderParam_h__
-#define __zCore_Exp_Gfx_ShaderParam_h__
 
 namespace zcExp
 {
@@ -173,5 +171,3 @@ typedef ParameterVector4< float, zenConst::keShaderElemType_Float > ParameterFlo
 
 
 }
-
-#endif

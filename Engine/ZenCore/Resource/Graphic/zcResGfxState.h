@@ -1,6 +1,4 @@
 #pragma once
-#ifndef __zCore_Res_Gfx_State_h__
-#define __zCore_Res_Gfx_State_h__
 
 #include zenHeaderRenderer(zcResGfxState)
 
@@ -26,5 +24,3 @@ namespace zcRes
 	zenClassDeclare(GfxStateRaster, GfxStateRaster_HAL)		
 	};
 }
-
-#endif

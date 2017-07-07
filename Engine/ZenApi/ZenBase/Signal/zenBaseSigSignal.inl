@@ -1,6 +1,4 @@
 #pragma once
-#ifndef __zenBase_Signal_Signal_inl__
-#define __zenBase_Signal_Signal_inl__
 
 namespace zen {	namespace zenSig
 {
@@ -92,6 +90,3 @@ void zSignal3<TParam1, TParam2, TParam3>::Connect(TSlotObject& _Object, typename
 }
 
 }	} //namespace zen { namespace zenSig
-
-
-#endif

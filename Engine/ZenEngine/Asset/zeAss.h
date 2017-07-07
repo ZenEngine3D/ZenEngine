@@ -1,6 +1,4 @@
 #pragma once
-#ifndef __LibZenEngine_Asset_All_h__
-#define __LibZenEngine_Asset_All_h__
 
 //=================================================================================================
 //! @file		FrameworkAssetAll.h
@@ -23,5 +21,3 @@
 #include "Asset/zeAssLoader.h"
 #include "Graphic/zeAssGfxMesh.h"
 #include "Graphic/zeAssGfxTexture2D.h"
-
-#endif

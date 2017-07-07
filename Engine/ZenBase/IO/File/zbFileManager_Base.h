@@ -1,6 +1,4 @@
 #pragma once
-#ifndef __zBase_File_FileManager_h__
-#define __zBase_File_FileManager_h__
 
 namespace zbFile
 {
@@ -202,5 +200,3 @@ namespace zbFile
 }
 
 #include "zbFileManager_Base.inl"
-
-#endif

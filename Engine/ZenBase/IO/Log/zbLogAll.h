@@ -1,6 +1,4 @@
 #pragma once
-#ifndef __zBase_Log_All_h__
-#define __zBase_Log_All_h__ 
 
 //=================================================================================================
 //! @file		zbLogAll.h
@@ -13,5 +11,3 @@
 //!				This is a component of the @ref LibCore Library.
 //=================================================================================================
 #include "zbLogMgr.h"
-
-#endif

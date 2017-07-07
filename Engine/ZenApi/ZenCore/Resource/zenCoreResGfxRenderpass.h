@@ -1,6 +1,4 @@
 #pragma once
-#ifndef __zenApi_Core_ResGfxRenderpass_h__
-#define __zenApi_Core_ResGfxRenderpass_h__
 
 namespace zen { namespace zenRes {	
 
@@ -120,6 +118,3 @@ namespace zen { namespace zenGfx
 }}
 
 #include "zenCoreResGfxBinding.inl"
-
-#endif
-

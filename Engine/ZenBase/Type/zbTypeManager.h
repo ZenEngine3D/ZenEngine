@@ -1,6 +1,4 @@
 #pragma once
-#ifndef __zenBase_Type_Manager_h__
-#define __zenBase_Type_Manager_h__
 
 namespace zbType
 {
@@ -90,4 +88,3 @@ private:
 
 }  
 
-#endif

@@ -1,6 +1,4 @@
 #pragma once
-#ifndef __LibZenExternal_UI_Nuklear_h__
-#define __LibZenExternal_UI_Nuklear_h__
 
 struct WindowInputState; //Forward declare
 
@@ -67,9 +65,7 @@ protected:
 	zenRes::zGfxShaderPixel				mrShaderPixel;
 	zenRes::zGfxShaderBinding			mrShaderBinding;
 	zArrayStatic<zenRes::zGfxCBuffer>	marShaderParams;	
-	zenRes::zGfxStateSampler					mrFontSampler;	
+	zenRes::zGfxStateSampler			mrFontSampler;	
 };
 
 }
-
-#endif //__LibZenExternal_UI_Nuklear_h__

@@ -1,6 +1,4 @@
 #pragma once
-#ifndef __BetlWndMain_h__
-#define __BetlWndMain_h__ 
 
 #include "WndAssetBrowser.h"
 #include "WndAssetProperty.h"
@@ -26,5 +24,3 @@ private:
 	class WndAssetBrowser*		mpWndAssetBrowser;
 	class WndAssetProperty*		mpWndAssetProperty;
 };
-
-#endif

@@ -1,6 +1,4 @@
 #pragma once
-#ifndef __zenApi_Base_Signal_Slot_h__
-#define __zenApi_Base_Signal_Slot_h__
 
 namespace zen {	namespace zenSig	
 {
@@ -25,4 +23,3 @@ protected:
 	
 }	} //namespace zen { namespace zenSig
 
-#endif

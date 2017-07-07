@@ -1,6 +1,4 @@
 #pragma once
-#ifndef __zenApi_Base_Type1_h__
-#define __zenApi_Base_Type1_h__
 
 #include "Base/zenBaseTypeBase.h"
 #include "Container/zenBaseTypeListIntrusive.h"
@@ -13,5 +11,3 @@
 #include "Base/zenBaseTypeVector.h"
 #include "Base/zenBaseTypeRegion.h"
 #include "Container/zenBaseTypeThreadsafeQueue.h"
-
-#endif

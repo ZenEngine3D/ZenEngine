@@ -1,6 +1,4 @@
 #pragma once
-#ifndef __zenEngine_System_Launch_h__
-#define __zenEngine_System_Launch_h__
 
 namespace zen { namespace zenWnd {class Window;} } 
 
@@ -54,5 +52,3 @@ void						LaunchEngine(zEngineInstance* _pEngineInstance, int argc, const char* 
 zEngineInstance*			GetEngineInstance();
 
 }} // namespace zen, zenRes
-
-#endif

@@ -1,6 +1,4 @@
 #pragma once
-#ifndef __zenApi_Base_System_Task_inl__
-#define __zenApi_Base_System_Task_inl__
 
 namespace zen { namespace zenSys 
 {
@@ -22,6 +20,3 @@ zUInt zTask::GetElapsedUSec()
 
 }}
 
-
-
-#endif

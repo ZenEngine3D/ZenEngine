@@ -1,6 +1,4 @@
 #pragma once
-#ifndef __zCore_Gfx_Renderer_Drawcall_h__
-#define __zCore_Gfx_Renderer_Drawcall_h__
 
 //! @todo 5 Clean : rename these files GfxDrawCommand
 
@@ -121,5 +119,3 @@ protected:
 
 #include zenHeaderRenderer(zcGfxDrawcall)
 #include "zcGfxDrawcall.inl"
-
-#endif

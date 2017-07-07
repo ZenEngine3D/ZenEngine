@@ -45,16 +45,15 @@ bool ManagerExport::Load()
 	}
 	//! @todo 2 cleanup move this to console specific code
 #if ZEN_RENDERER_DX11		
-	mpCallbackGetItemID[kePlatform_DX11][keResType_GfxStateSampler]		= zcExp::ExporterGfxStateSamplerDX11_DX11::CallbackGetItemID;
-	mpCallbackGetItemID[kePlatform_DX11][keResType_GfxStateBlend]		= zcExp::ExporterGfxStateBlendDX11_DX11::CallbackGetItemID;
+	mpCallbackGetItemID[kePlatform_DX11][keResType_GfxStateSampler]			= zcExp::ExporterGfxStateSamplerDX11_DX11::CallbackGetItemID;
+	mpCallbackGetItemID[kePlatform_DX11][keResType_GfxStateBlend]			= zcExp::ExporterGfxStateBlendDX11_DX11::CallbackGetItemID;
 	mpCallbackGetItemID[kePlatform_DX11][keResType_GfxStateDepthStencil]	= zcExp::ExporterGfxStateDepthStencilDX11_DX11::CallbackGetItemID;
-	mpCallbackGetItemID[kePlatform_DX11][keResType_GfxStateRaster]		= zcExp::ExporterGfxStateRasterDX11_DX11::CallbackGetItemID;
+	mpCallbackGetItemID[kePlatform_DX11][keResType_GfxStateRaster]			= zcExp::ExporterGfxStateRasterDX11_DX11::CallbackGetItemID;
 #elif ZEN_RENDERER_DX12
-	//SF DX12
-	mpCallbackGetItemID[kePlatform_DX12][keResType_GfxStateSampler]		= zcExp::ExporterGfxStateSamplerDX12_DX12::CallbackGetItemID;
-	mpCallbackGetItemID[kePlatform_DX12][keResType_GfxStateBlend]		= zcExp::ExporterGfxStateBlendDX12_DX12::CallbackGetItemID;
+	mpCallbackGetItemID[kePlatform_DX12][keResType_GfxStateSampler]			= zcExp::ExporterGfxStateSamplerDX12_DX12::CallbackGetItemID;
+	mpCallbackGetItemID[kePlatform_DX12][keResType_GfxStateBlend]			= zcExp::ExporterGfxStateBlendDX12_DX12::CallbackGetItemID;
 	mpCallbackGetItemID[kePlatform_DX12][keResType_GfxStateDepthStencil]	= zcExp::ExporterGfxStateDepthStencilDX12_DX12::CallbackGetItemID;
-	mpCallbackGetItemID[kePlatform_DX12][keResType_GfxStateRaster]		= zcExp::ExporterGfxStateRasterDX12_DX12::CallbackGetItemID;
+	mpCallbackGetItemID[kePlatform_DX12][keResType_GfxStateRaster]			= zcExp::ExporterGfxStateRasterDX12_DX12::CallbackGetItemID;
 #endif
 
 	return true;

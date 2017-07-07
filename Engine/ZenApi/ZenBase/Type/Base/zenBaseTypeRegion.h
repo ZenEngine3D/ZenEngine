@@ -1,6 +1,4 @@
 #pragma once
-#ifndef __zenApi_Base_Region_h__
-#define __zenApi_Base_Region_h__
 
 namespace zen { namespace zenType 
 {
@@ -50,4 +48,3 @@ typedef zRegion<double>	zRegionF64;
 
 #include "zenBaseTypeRegion.inl"
 
-#endif

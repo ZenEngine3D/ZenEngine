@@ -1,6 +1,4 @@
 #pragma once
-#ifndef __zenApiCore_Misc_Update_h__
-#define __zenApiCore_Misc_Update_h__
 
 namespace zen { 
 
@@ -42,5 +40,3 @@ public:
 
 
 }} //namespace zen { namespace zenMisc {
-
-#endif

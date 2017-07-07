@@ -1,6 +1,4 @@
 #pragma once
-#ifndef __zenApi_Base_Memory_Pool_h__
-#define __zenApi_Base_Memory_Pool_h__
 
 namespace zen { namespace zenMem
 {
@@ -56,5 +54,3 @@ protected:
 };
 
 } } //namespace zen { namespace zenMem
-
-#endif

@@ -1,7 +1,4 @@
-#ifndef __Zendo_Precompiled__
-#define __Zendo_Precompiled__
+#pragma once
 
 #include <zenEngine/zenEngine.h>
 #include <Engine/ZenExternal/UI/zxUIwxWidgets.h>
-
-#endif

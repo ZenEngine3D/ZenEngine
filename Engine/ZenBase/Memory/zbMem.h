@@ -1,6 +1,4 @@
 #pragma once
-#ifndef __zBase_Memory_All_h__
-#define __zBase_Memory_All_h__ 
 
 //=================================================================================================
 //! @file		libZenBaseMemory.h
@@ -13,5 +11,3 @@
 //!				This is a component of the @link LibCore Core @endlink library.
 //=================================================================================================
 #include "zbMemAllocator.h"
-
-#endif

@@ -1,6 +1,4 @@
 #pragma once
-#ifndef __zenEngine_Asset_Package_h__
-#define __zenEngine_Asset_Package_h__
 
 #if ZEN_ENGINETOOL
 
@@ -42,5 +40,4 @@ namespace zen { namespace zenAss
 	
 }} //namespace zen { namespace zenAss
 
-#endif
 #endif

@@ -1,6 +1,4 @@
 #pragma once
-#ifndef __zCore_Gfx_Renderer_Manager_h__
-#define __zCore_Gfx_Renderer_Manager_h__
 
 namespace zcGfx
 {
@@ -43,5 +41,3 @@ zUInt ManagerRender_Base::GetFrameRendered()const
 namespace zcMgr { 
 	extern zcGfx::ManagerRender_HAL GfxRender; 	
 }
-
-#endif

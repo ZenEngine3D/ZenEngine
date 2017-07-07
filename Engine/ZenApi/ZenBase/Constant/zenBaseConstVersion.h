@@ -1,6 +1,4 @@
 #pragma once
-#ifndef __zenApi_Base_Type_Constant_Version_h__
-#define __zenApi_Base_Type_Constant_Version_h__
 
 namespace zen { namespace zenConst {
 
@@ -15,5 +13,3 @@ enum eEngineVersion
   
 
 }} // namespace zen, Const
-
-#endif

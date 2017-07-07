@@ -1,11 +1,6 @@
 #pragma once
-#ifndef __zenApi_Base_Const_Constants_h__
-#define __zenApi_Base_Const_Constants_h__
 
 namespace zen { namespace zenConst {
-
-	#define				TRUE	1
-	#define				FALSE	0
 
 	extern const char	kzLineA10[11];	// zString of '=' (Use for debug printing)
 	extern const char	kzLineA20[21];	// zString of '=' (Use for debug printing)
@@ -39,5 +34,3 @@ namespace zen { namespace zenConst {
 	extern const double	kdPI2xInv;
 	extern const double	kdPIOn2Inv;
 }} //namespace zen, Const
-
-#endif

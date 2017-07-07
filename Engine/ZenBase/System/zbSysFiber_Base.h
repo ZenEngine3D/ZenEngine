@@ -1,6 +1,4 @@
 #pragma once
-#ifndef __zBase_System_Fiber_Base_h__
-#define __zBase_System_Fiber_Base_h__
 
 //=================================================================================================
 // Main Class / functions
@@ -20,5 +18,3 @@ protected:
 };
 
 }
-
-#endif

@@ -1,6 +1,4 @@
 #pragma once
-#ifndef __zenBase_Signal_Emitter_inl__
-#define __zenBase_Signal_Emitter_inl__
 
 namespace zen {	namespace zenSig
 {
@@ -76,6 +74,3 @@ void zSignalEmitter3<TParam1,TParam2,TParam3>::DisconnectAll()
 }
 
 }	} //namespace zen { namespace zenSig
-
-
-#endif

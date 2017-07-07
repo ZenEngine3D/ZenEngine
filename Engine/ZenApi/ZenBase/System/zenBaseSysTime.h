@@ -1,6 +1,4 @@
 #pragma once
-#ifndef __zenApi_Base_System_Time_h__
-#define __zenApi_Base_System_Time_h__
 
 namespace zen { namespace zenSys 
 {
@@ -12,4 +10,3 @@ namespace zen { namespace zenSys
 	double				GetElapsedSec();
 }} // namespace zen { namespace zenSys
 
-#endif

@@ -1,6 +1,4 @@
 #pragma once
-#ifndef __zBase_File_FileManager_PC_h__
-#define __zBase_File_FileManager_PC_h__
 
 namespace zbFile
 {
@@ -27,5 +25,3 @@ namespace zbFile
 	};
 
 }  
-
-#endif

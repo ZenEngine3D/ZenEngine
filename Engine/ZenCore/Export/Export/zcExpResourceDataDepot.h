@@ -1,6 +1,4 @@
 #pragma once
-#ifndef __zCore_Exp_ResourceData_Manager_h__
-#define __zCore_Exp_ResourceData_Manager_h__
 
 #include <map>
 
@@ -46,5 +44,3 @@ public:
 }
 
 namespace zcDepot{ extern zcExp::DepotResourceData ExportData; }
-
-#endif

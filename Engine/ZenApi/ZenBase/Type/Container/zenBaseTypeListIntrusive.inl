@@ -1,6 +1,4 @@
 #pragma once
-#ifndef __zenBase_Type_ListIntrusive_inl__
-#define __zenBase_Type_ListIntrusive_inl__
 
 namespace zen {	namespace zenType 
 {
@@ -342,4 +340,3 @@ void zList<TItem, TLinkOffset, TVirtual1stTime>::Empty()
 }
 
 } } //namespace zen, Type
-#endif	

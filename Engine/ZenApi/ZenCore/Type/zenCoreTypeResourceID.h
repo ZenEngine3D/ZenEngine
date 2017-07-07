@@ -1,6 +1,4 @@
 #pragma once
-#ifndef __zenCore_Type_ResourceID_h__
-#define __zenCore_Type_ResourceID_h__
 
 namespace zen { namespace zenType {
 
@@ -54,5 +52,3 @@ namespace zen { namespace zenType {
 		
 
 }}  //namespace zen, Type 
-
-#endif

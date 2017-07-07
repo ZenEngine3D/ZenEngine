@@ -1,6 +1,4 @@
 #pragma once
-#ifndef __LibZenEngine_Asset_Gfx_Texture_h__
-#define __LibZenEngine_Asset_Gfx_Texture_h__
 
 #if ZEN_ENGINETOOL
 
@@ -15,5 +13,4 @@ namespace zeAss
 
 } //namespace zeAss
 
-#endif
 #endif

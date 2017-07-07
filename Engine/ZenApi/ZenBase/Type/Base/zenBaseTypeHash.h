@@ -1,6 +1,4 @@
 #pragma once
-#ifndef __zenApi_Base_Type_Hash_h__
-#define __zenApi_Base_Type_Hash_h__
 
 namespace zen { namespace zenType 
 {
@@ -137,5 +135,3 @@ namespace zen { namespace zenType
 }} //namespace zen, Type 
 
 #include "zenBaseTypeHash.inl"
-
-#endif

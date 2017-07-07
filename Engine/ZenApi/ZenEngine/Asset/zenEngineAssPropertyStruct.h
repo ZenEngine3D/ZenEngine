@@ -1,6 +1,4 @@
 #pragma once
-#ifndef __zenEngine_Asset_PropertyStruct_h__
-#define __zenEngine_Asset_PropertyStruct_h__
 
 #if ZEN_ENGINETOOL
 
@@ -34,5 +32,4 @@ protected:
 
 }} //namespace zen { namespace zenAss
 
-#endif
 #endif

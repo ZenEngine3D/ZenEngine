@@ -1,6 +1,4 @@
 #pragma once
-#ifndef __zenApi_Base_Signal_h__
-#define __zenApi_Base_Signal_h__
 
 #include "zenBaseSigSignal.h"
 #include "zenBaseSigSlot.h"
@@ -10,5 +8,3 @@
 #include "zenBaseSigSignal.inl"
 #include "zenBaseSigEmitter.inl"
 #include "zenBaseSigEmitterAsync.inl"
-
-#endif

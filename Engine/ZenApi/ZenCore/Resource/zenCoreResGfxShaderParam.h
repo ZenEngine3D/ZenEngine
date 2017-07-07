@@ -1,6 +1,4 @@
 #pragma once
-#ifndef __zenApi_Core_ResGfxShaderParam_h__
-#define __zenApi_Core_ResGfxShaderParam_h__
 
 namespace zen { namespace zenRes {	
 
@@ -101,6 +99,3 @@ namespace zen { namespace zenRes {
 }} // namespace zen, zenRes
 
 #include "zenCoreResGfxShaderParam.inl"
-
-#endif
-

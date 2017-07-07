@@ -1,6 +1,4 @@
 #pragma once
-#ifndef __zCore_Res_Gfx_GfxRenderTarget_h__
-#define __zCore_Res_Gfx_GfxRenderTarget_h__
 
 #include zenHeaderRenderer(zcResGfxRenderTarget)
 
@@ -23,5 +21,3 @@ protected:
 };
 
 }
-
-#endif

@@ -1,6 +1,4 @@
 #pragma once
-#ifndef __ZendoApp_h__
-#define __ZendoApp_h__ 
 
 #include "Window/WndMain.h"
 
@@ -32,5 +30,3 @@ protected:
 };
 
 ZendoApp& wxGetApp();
-
-#endif

@@ -1,6 +1,4 @@
 #pragma once
-#ifndef __zenApi_Base_Memory_Malloc_h__
-#define __zenApi_Base_Memory_Malloc_h__
 
 namespace zen { namespace zenMem
 {
@@ -21,5 +19,3 @@ namespace zen { namespace zenMem
 		virtual zDebugString	GetDescription(){return "Malloc";};
 	};
 }} //namespace zen { namespace zenMem
-
-#endif

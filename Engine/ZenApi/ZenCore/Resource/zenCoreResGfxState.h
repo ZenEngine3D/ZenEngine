@@ -1,6 +1,4 @@
 #pragma once
-#ifndef __zenApi_Core_ResGfxState_h__
-#define __zenApi_Core_ResGfxState_h__
 
 namespace zen { namespace zenRes {	
 
@@ -70,6 +68,3 @@ namespace zen { namespace zenRes {
 	};
 
 }} // namespace zen, zenRes
-
-#endif
-

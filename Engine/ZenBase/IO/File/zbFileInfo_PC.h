@@ -1,12 +1,10 @@
 #pragma once
-#ifndef __zBase_File_FileInfo_PC_h__
-#define __zBase_File_FileInfo_PC_h__
 
 namespace zbFile
 {
 	class FileInfo_PC
 	{
-		zenClassDeclareNoParent(FileInfo_PC);
+	zenClassDeclareNoParent(FileInfo_PC);
 	public:
 							FileInfo_PC();
 
@@ -21,5 +19,3 @@ namespace zbFile
 		HANDLE				mhFileHandle;
 	};
 }  
-
-#endif

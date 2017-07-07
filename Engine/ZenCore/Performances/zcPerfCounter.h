@@ -1,6 +1,4 @@
 #pragma once
-#ifndef __LibZenEngine_Perf_Counter_h__
-#define __LibZenEngine_Perf_Counter_h__
 
 namespace zcPerf 
 {
@@ -44,5 +42,3 @@ zEngineRef<EventBase> EventBase::GetFirstChild()const
 }
 
 }
-
-#endif

@@ -1,6 +1,4 @@
 #pragma once
-#ifndef __zenApi_Core_ResGfxShader_h__
-#define __zenApi_Core_ResGfxShader_h__
 
 namespace zen { namespace zenRes {	
 	//! @todo Clean: Expose shader compiling to runtime?
@@ -48,6 +46,3 @@ namespace zen { namespace zenRes {
 		static zGfxCBuffer		Create(const zGfxShaderVertex& _rShader, zHash32 _uCBufferName);
 	};
 }} // namespace zen, zenRes
-
-#endif
-

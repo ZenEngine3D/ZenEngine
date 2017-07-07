@@ -1,6 +1,4 @@
 #pragma once
-#ifndef __zCore_Gfx_All_h__
-#define __zCore_Gfx_All_h__
 
 //=================================================================================================
 //! @file		LibGraphicAll.h
@@ -37,5 +35,3 @@ enum eGPUPipelineMode
 #include "zcGfxDrawcall.h"
 #include "zcGfxGPUContext.h"
 #include "zcGfxRenderMgr.h"
-
-#endif

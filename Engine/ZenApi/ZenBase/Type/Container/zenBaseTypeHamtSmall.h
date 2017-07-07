@@ -1,6 +1,4 @@
 #pragma once
-#ifndef __zenApi_Base_Type_HamtSmall_h__
-#define __zenApi_Base_Type_HamtSmall_h__
 
 namespace zen { namespace zenType 
 {
@@ -192,5 +190,3 @@ namespace zen { namespace zenType
 } } //namespace zen, Type
 
 #include "zenBaseTypeHamtSmall.inl"
-
-#endif	

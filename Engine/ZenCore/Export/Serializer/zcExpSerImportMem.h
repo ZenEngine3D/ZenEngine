@@ -1,6 +1,4 @@
 #pragma once
-#ifndef __zCore_Exp_Ser_ImportMemory_h__
-#define __zCore_Exp_Ser_ImportMemory_h__
 
 namespace zcExp
 {		
@@ -43,5 +41,3 @@ protected:
 	virtual bool	ItemSkip(zcExp::ResourceData&			aItem);
 };
 }
-
-#endif

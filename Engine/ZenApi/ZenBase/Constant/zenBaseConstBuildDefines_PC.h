@@ -1,6 +1,4 @@
 #pragma once
-#ifndef __zenApi_Base_Constant_BuildDefines_PC_h__
-#define __zenApi_Base_Constant_BuildDefines_PC_h__
 
 #ifdef _WINDOWS
 //#define WIN32_LEAN_AND_MEAN
@@ -22,5 +20,3 @@
 #endif
 
 #define zenPreventEmptyFileWarning	namespace { char sbPreventsWarning4221; };	//Prevent warning 4221(no public symbols) that can't be ignored.
-
-#endif

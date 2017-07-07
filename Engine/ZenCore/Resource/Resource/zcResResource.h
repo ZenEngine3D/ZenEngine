@@ -1,6 +1,4 @@
 #pragma once
-#ifndef __zCore_Res_Resource_h__
-#define __zCore_Res_Resource_h__
 
 //! @todo Clean : move this to proper location and implement it
 zenInline bool zenIsResourceCreationThread()
@@ -37,5 +35,3 @@ namespace zcRes
 		zcDepot::ExportData.Set(&_NewResource);
 	}
 }
-
-#endif

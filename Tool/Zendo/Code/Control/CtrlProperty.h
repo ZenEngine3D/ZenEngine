@@ -1,6 +1,4 @@
 #pragma once
-#ifndef __BetlCtrlAssetProperty_h__
-#define __BetlCtrlAssetProperty_h__ 
 
 template<class TType>
 class wxVector2
@@ -269,5 +267,3 @@ public:
 };
 
 }
-
-#endif
