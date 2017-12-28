@@ -34,7 +34,7 @@ public:
 	{		
 		float t = static_cast<float>(zenSys::GetElapsedSec() / 3.0);	// Update our time animation
 		mrGfxWindow.FrameBegin();
-		zenGfx::zScopedDrawlist rContextRoot = zenGfx::zScopedDrawlist::Create("RenderLoop", mrRndPassGeneric);		
+		zenGfx::zCommandContext rContextRoot = zenGfx::zCommandContext::Create("RenderLoop", mrRndPassGeneric);		
 		zVec4F vClearColor = zenMath::TriLerp<zVec4F>( zVec4F(0.5f,0.5f,0.5f,1), zVec4F(0.1f,0.1f,0.20f,1), zVec4F(0.5f,0.5f,0.5f,1), zenMath::Fract(t) );
 		zenGfx::zCommand::ClearColor(rContextRoot, mrGfxWindow.GetBackbuffer(), vClearColor);
 		rContextRoot.Submit();

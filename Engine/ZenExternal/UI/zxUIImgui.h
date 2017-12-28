@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Engine/ThirdParty/imgui/imgui.h>
+#include <ThirdParty/imgui/imgui.h>
 struct WindowInputState; //Forward declare
 
 namespace zxImGui

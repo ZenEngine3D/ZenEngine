@@ -1,5 +1,6 @@
 #include "zeEngine.h"
-#include <Engine/ThirdParty/imgui/imgui.h> //! @todo Urgent remove this
+#include "ZenExternal/UI/zxUIImgui.h"
+
 namespace zen { namespace zenSys {	
 
 static zEngineInstance*	gpActiveEngine(nullptr);
@@ -51,7 +52,7 @@ void zEngineInstance::MainLoop()
 	}
 	
 	{
-		zenPerf::zScopedEventCpu EmitEvent("Update");
+		zenPerf::zScopedEventCpu EmitEventUpdate("Update");
 		{
 			zenPerf::zScopedEventCpu EmitEvent("Update Start");
 			zcMgr::Updater.Update(zenConst::keUpdt_FrameStart);

@@ -102,18 +102,21 @@ namespace zen { namespace zenRes {
 }} // namespace zen, zenRes
 
 //! @todo Urgent, this is not a resource, should be moved elsewhere
-namespace zcGfx  { class ScopedDrawlist; }	//Forward declare
+namespace zcGfx  { class CommandList; }	//Forward declare
 namespace zen { namespace zenGfx 
 {	
-	class zScopedDrawlist : public zEngineRef<zcGfx::ScopedDrawlist>
+	class zCommandList : public zEngineRef<zcGfx::CommandList>
 	{
-	zenClassDeclare(zScopedDrawlist, zEngineRef<zcGfx::ScopedDrawlist>);
+	zenClassDeclare(zCommandList, zEngineRef<zcGfx::CommandList>);
 	public:
-		void							Submit();
-		static zScopedDrawlist			Create(const zStringHash32& _zContextName, const zScopedDrawlist& _rParent=zScopedDrawlist(), const zenRes::zGfxRenderPass& _rRenderState=zenRes::zGfxRenderPass());
-		static zScopedDrawlist			Create(const zStringHash32& _zContextName, const zenRes::zGfxRenderPass& _rRenderState);
-		static const zScopedDrawlist&	GetFrameContext();
-		using zEngineRef<zcGfx::ScopedDrawlist>::operator=;
+		void						Submit();
+		void						SetBeforeChildren(bool _bBeforeChild=true); //!< @brief Tell commandlist where to insert new commands from now on
+		bool						GetBeforeChildren()const;
+		static zCommandList			Create(const zStringHash32& _zContextName, const zCommandList& _rParent=zCommandList(), const zenRes::zGfxRenderPass& _rRenderState=zenRes::zGfxRenderPass());
+		static zCommandList			Create(const zStringHash32& _zContextName, const zenRes::zGfxRenderPass& _rRenderState);
+		static const zCommandList&	GetFrameContext();
+		using zEngineRef<zcGfx::CommandList>::operator=;
+		using zEngineRef<zcGfx::CommandList>::zEngineRef;
 	};
 }}
 

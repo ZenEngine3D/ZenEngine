@@ -23,10 +23,10 @@ bool SerializerExportMem::ItemStarted(zcExp::ResourceData& aItem)
 	if( ISerializerExporter::ItemStarted( aItem ) )
 	{
 		Alloc* pAlloc = mlstAllocs.GetHead();
-		if( pAlloc || pAlloc->mpMemoryCur+aItem.muSize >= pAlloc->mpMemoryEnd )
+		if( !pAlloc || pAlloc->mpMemoryCur+aItem.muSize >= pAlloc->mpMemoryEnd )
 		{
 			size_t uAllocSize		= zenMath::Max<size_t>(muAllocSize, aItem.muSize);
-			Alloc* pAlloc			= (Alloc*) zenNewDefault zU8[uAllocSize + sizeof(Alloc)] ;
+			pAlloc					= (Alloc*) zenNewDefault zU8[uAllocSize + sizeof(Alloc)] ;
 			pAlloc->mpMemoryStart	= (zU8*)pAlloc + sizeof(Alloc);
 			pAlloc->mpMemoryCur		= pAlloc->mpMemoryStart;
 			pAlloc->mpMemoryEnd		= pAlloc->mpMemoryStart + uAllocSize;
@@ -42,7 +42,7 @@ bool SerializerExportMem::ItemStarted(zcExp::ResourceData& aItem)
 bool SerializerExportMem::Save(const char* azFilename)
 {
 //! todo clean Have platform independant file system abstraction
-#if WIN32
+#if ZEN_PLATFORM_PC
 	FILE* pFile(nullptr);
 	if( fopen_s(&pFile, azFilename, "wb") != 0 )
 		pFile = nullptr;

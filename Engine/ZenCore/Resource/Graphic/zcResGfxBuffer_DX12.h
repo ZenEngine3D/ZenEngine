@@ -24,7 +24,7 @@ public:
 	virtual										~GfxBuffer_DX12();
 	bool										Initialize();
 	void*										Lock();
-	void										Unlock(const zenGfx::zScopedDrawlist& _rContext);
+	void										Unlock(const zenGfx::zCommandList& _rContext);
 
 	zcGfx::GpuMemoryResStandard					mResource;
 	typedef zcExp::ExporterGfxBuffer_DX12		RuntimeExporter;

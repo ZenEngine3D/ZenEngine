@@ -40,7 +40,7 @@ bool GfxIndex_DX12::Initialize()
 		if( pUploadData )
 		{
 			zenMem::Copy( reinterpret_cast<zU8*>(pUploadData), maIndices.First(), maIndices.SizeMem() );
-			Unlock(zenGfx::zScopedDrawlist::GetFrameContext());
+			Unlock(zenGfx::zCommandList::GetFrameContext());
 			return true;
 		}
 	}
@@ -74,7 +74,7 @@ zU8* GfxIndex_DX12::Lock()
 	return pLockData;
 }
 
-void GfxIndex_DX12::Unlock(const zenGfx::zScopedDrawlist& _rContext)
+void GfxIndex_DX12::Unlock(const zenGfx::zCommandList& _rContext)
 {
 	zenAssert(mResource.mrUpload.Get() != nullptr);
 	mResource.mrUpload->Unmap(0, NULL);

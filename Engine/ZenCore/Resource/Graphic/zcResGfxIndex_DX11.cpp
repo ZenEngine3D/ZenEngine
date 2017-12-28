@@ -49,7 +49,7 @@ zU8* GfxIndex_DX11::Lock()
 	return mpLockData;
 }
 
-void GfxIndex_DX11::Unlock(const zenGfx::zScopedDrawlist& _rContext)
+void GfxIndex_DX11::Unlock(const zenGfx::zCommandList& _rContext)
 {
 	//! @todo Urgent Update Cpu copy at frame end
 	zenAssertMsg(mpLockData != nullptr, "Need to lock buffer before unlocking it");

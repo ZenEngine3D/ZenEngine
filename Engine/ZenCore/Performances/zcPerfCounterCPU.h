@@ -7,8 +7,8 @@ namespace zcPerf
 	{
 	zenClassDeclare(EventCPU_Base, EventBase)
 	public:									
-		virtual void	Start();
-		virtual void	Stop();
+		virtual void	CPUStart();
+		virtual void	CPUStop();
 
 	protected:
 						EventCPU_Base(const zStringHash32& _EventName);
@@ -23,9 +23,9 @@ namespace zcPerf
 	{
 	zenClassDeclare(EventCPU, EventCPU_HAL)
 	public:						
-		static zEngineRef<EventBase>	Create(const zStringHash32& _EventName);
+		static EventBaseRef	Create(const zStringHash32& _EventName);
 
 	protected:
-										EventCPU(const zStringHash32& _EventName) : Super(_EventName) {}
+							EventCPU(const zStringHash32& _EventName) : Super(_EventName) {}
 	};
 }

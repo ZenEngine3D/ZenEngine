@@ -80,9 +80,9 @@ public:
 	// Static methods
 	//---------------------------------------------------------------------------------------------
 public:	
-	static bool				IsInAList(TItem& _Item);
-	static TItem*			GetNext(TItem& _Item);								//!< @brief Get the next item (from current item) in the list
-	static TItem*			GetPrev(TItem& _Item);								//!< @brief Get the previous item (from current item) in the list
+	static bool				IsInAList(const TItem& _Item);
+	static TItem*			GetNext(const TItem& _Item);						//!< @brief Get the next item (from current item) in the list
+	static TItem*			GetPrev(const TItem& _Item);						//!< @brief Get the previous item (from current item) in the list
 	static void				Remove(TItem& _Item);								//!< @brief Remove the element from the list it's in
 	static void				AddBefore(TItem& _Item, TItem& _NewItem);			//!< @brief Insert a new item before an item
 	static void				AddAfter(TItem& _Item, TItem& _NewItem);			//!< @brief Insert a new item after an item

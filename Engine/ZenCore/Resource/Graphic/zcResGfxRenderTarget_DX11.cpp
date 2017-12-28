@@ -33,7 +33,7 @@ GfxTarget2DRef GfxTarget2D_DX11::RuntimeCreate(IDXGISwapChain& _Swapchain, zenCo
 		D3D11_TEXTURE2D_DESC TextureDesc;
 		pTexture->GetDesc(&TextureDesc);						
 		rResource.HAL()->meFormat	= _eTexFormat;
-		rResource.HAL()->mvDim		= zVec2U16(TextureDesc.Width, TextureDesc.Height);			
+		rResource.HAL()->mvDim		= zVec2U16((zU16)TextureDesc.Width, (zU16)TextureDesc.Height);			
 		bool bSuccess				= rResource.HAL()->InitializeCommon(*pTexture);
 		pTexture->Release();
 		if( !bSuccess )
@@ -49,8 +49,6 @@ GfxTarget2DRef GfxTarget2D_DX11::RuntimeCreate(IDXGISwapChain& _Swapchain, zenCo
 //==================================================================================================
 bool GfxTarget2D_DX11::Initialize()
 {
-	HRESULT hr(S_FALSE);
-	ID3D11Texture2D*	pTexture(nullptr);	
 	GfxTarget2DRef		rRenderTarget		= (GfxTarget2D*)this;
 	GfxTexture2DRef		rTexture			= rRenderTarget->GetTexture2D();
 	return InitializeCommon(*rTexture.HAL()->mpTextureBuffer);

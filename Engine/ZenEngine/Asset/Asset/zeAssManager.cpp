@@ -1,5 +1,5 @@
 #include "zeEngine.h"
-#include <Engine/ZenExternal/zxExternal.h>
+#include <ZenExternal/zxExternal.h>
 
 #if ZEN_ENGINETOOL
 namespace zeMgr{ zeAss::ManagerAsset Asset; }

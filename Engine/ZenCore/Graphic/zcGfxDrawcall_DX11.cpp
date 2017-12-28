@@ -1,4 +1,7 @@
 #include "zcCore.h"
+#if THIRDPARTY_PIXEVENT && defined(USE_PIX)
+#include <pix3.h>
+#endif
 
 namespace zcGfx
 {
@@ -51,7 +54,7 @@ zEngineRef<zcGfx::Command> CommandUpdateIndex_DX11::Create(const zcRes::GfxIndex
 	pCmdUpdateIndex->mpData		= _pData;
 	pCmdUpdateIndex->muOffset	= _uOffset;
 	pCmdUpdateIndex->muSize		= _uSize;
-	pCmdUpdateIndex->SetSortKeyDataUpdate(_rIndex.GetResID().GetHashID());
+	pCmdUpdateIndex->SetSortKeyGeneric(keGpuPipe_DataUpdate, _rIndex.GetResID().GetHashID());
 	return pCmdUpdateIndex;
 }
 
@@ -63,10 +66,12 @@ void CommandUpdateIndex_DX11::Invoke(zcGfx::GPUContext& _Context)
 	zenAssert(pIndexDX11->mpIndiceBuffer);	
 	D3D11_MAPPED_SUBRESOURCE mapRes;
 	
-	HRESULT result	= _Context.GetDeviceContext()->Map(pIndexDX11->mpIndiceBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mapRes);
-	memcpy((zU8*)mapRes.pData, mpData, muSize); 
-	_Context.GetDeviceContext()->Unmap(pIndexDX11->mpIndiceBuffer, 0);
-
+	HRESULT result = _Context.GetDeviceContext()->Map(pIndexDX11->mpIndiceBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mapRes);
+	if( result == S_OK )
+	{
+		memcpy((zU8*)mapRes.pData, mpData, muSize); 
+		_Context.GetDeviceContext()->Unmap(pIndexDX11->mpIndiceBuffer, 0);
+	}
 	zenDelnullptrArray( mpData );
 }
 
@@ -84,7 +89,7 @@ zEngineRef<zcGfx::Command> CommandUpdateBuffer_DX11::Create(const zcRes::GfxBuff
 	pCmdUpdateIndex->mpUpdateData	= _pUpdateData;
 	pCmdUpdateIndex->muOffset		= _uOffset;
 	pCmdUpdateIndex->muSize			= _uSize;
-	pCmdUpdateIndex->SetSortKeyDataUpdate(_rBuffer.GetResID().GetHashID());
+	pCmdUpdateIndex->SetSortKeyGeneric(keGpuPipe_DataUpdate, _rBuffer.GetResID().GetHashID());
 	return pCmdUpdateIndex;
 }
 
@@ -94,10 +99,58 @@ void CommandUpdateBuffer_DX11::Invoke(zcGfx::GPUContext& _Context)
 	//! @todo optim select proper write type
 	D3D11_MAPPED_SUBRESOURCE mapRes;	
 	HRESULT result = _Context.GetDeviceContext()->Map(mrBuffer.HAL()->mpBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mapRes);
-	memcpy((zU8*)mapRes.pData, mpUpdateData, muSize); 
-	_Context.GetDeviceContext()->Unmap(mrBuffer.HAL()->mpBuffer, 0);
+	if( result == S_OK )
+	{
+		memcpy((zU8*)mapRes.pData, mpUpdateData, muSize); 
+		_Context.GetDeviceContext()->Unmap(mrBuffer.HAL()->mpBuffer, 0);
+	}
 	zenDelnullptrArray(mpUpdateData);
 	
 }
 
+//=================================================================================================
+// DRAW COMMAND GPU SCOPED EVENT
+//=================================================================================================
+void CommandGPUScopedEvent_DX11::Invoke(GPUContext& _Context)
+{
+	if( meEventInfo == keEventStart )
+		zcMgr::GfxRender.NamedEventBegin(mzEventName);
+	else
+		zcMgr::GfxRender.NamedEventEnd();
+/*
+ 	if( mbDX11ProfilerDetected )
+ 	{
+ 		WCHAR zEventName[64];
+ 		mbstowcs_s(nullptr, zEventName, zName.mzName, zenArrayCount(zEventName));
+ 		mDX11pPerf->BeginEvent(zEventName);
+ 	}*/ 
+#if 0 && THIRDPARTY_PIXEVENT && defined(USE_PIX)
+ 	if( meEventInfo == keEventStart )
+ 	{
+ 		UINT64 uColor = UINT64(0xFF*mvColor.r) | UINT64(0xFF*mvColor.g)<<8 | UINT64(0xFF*mvColor.b)<<16 | UINT64(0xFF*mvColor.a)<<24;
+ 		PIXBeginEvent(_Context.GetDeviceContext(), uColor, mzEventName);
+ 	}
+ 	else
+ 		PIXEndEvent(_Context.GetDeviceContext());
+#endif
+}
+
+//=================================================================================================
+// DRAW COMMAND UPDATE INDEX BUFFER
+//=================================================================================================
+zEngineRef<Command> CommandQueryEnd_DX11::Add(const CommandListRef& _rContext, ID3D11Query* _pQuery, bool _bStartOfCmdList)
+{
+	static zenMem::zAllocatorPool sMemPool("Pool CommandQueryEnd", sizeof(CommandQueryEnd_DX11), 128, 128);
+	auto pCommand			= zenNew(&sMemPool) CommandQueryEnd_DX11;	
+	pCommand->mpQuery		= _pQuery;
+	pCommand->SetSortKeyGeneric(_bStartOfCmdList ? keGpuPipe_First : keGpuPipe_Last, (zU64)_pQuery);
+	_rContext->AddCommand(pCommand);
+	return pCommand;
+}
+
+void CommandQueryEnd_DX11::Invoke(GPUContext& _Context)
+{
+	zcPerf::EventGPUCounter::Create(zcPerf::EventGPUCounter::keType_Query);	
+	_Context.GetDeviceContext()->End(mpQuery);
+}
 }

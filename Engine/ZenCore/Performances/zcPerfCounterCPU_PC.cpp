@@ -10,13 +10,13 @@ EventCPU_PC::EventCPU_PC(const zStringHash32& _EventName)
 
 void EventCPU_PC::Start() 
 {
-	Super::Start();
+	Super::CPUStart();
 	muTimeStart = zenSys::GetTimeUSec();
 }
 
 void EventCPU_PC::Stop() 
 {
-	Super::Stop();
+	Super::CPUStop();
 	muTimeElapsed = zenSys::GetTimeUSec() - muTimeStart;
 }
 

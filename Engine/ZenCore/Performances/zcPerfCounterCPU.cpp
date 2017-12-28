@@ -3,14 +3,14 @@
 namespace zcPerf
 {
 
-zArrayDynamic< zEngineRef<EventBase> > garStackEventCPU;
+zArrayDynamic< EventBaseRef > garStackEventCPU;
 
 EventCPU_Base::EventCPU_Base(const zStringHash32& _EventName)
 : Super(_EventName)
 {
 }
 
-void EventCPU_Base::Start()
+void EventCPU_Base::CPUStart()
 {
 	zenAssertMsg( muTimeStart==0, "Event can only be used once");
 	mbActive = true;
@@ -21,7 +21,7 @@ void EventCPU_Base::Start()
 	garStackEventCPU.Push(this);	
 }
 
-void EventCPU_Base::Stop()
+void EventCPU_Base::CPUStop()
 {
 	zenAssertMsg( IsActive(), "Start Event before ending it");
 	zenAssertMsg((*garStackEventCPU.Last()).GetSafe() == this, "Stop events in the reverse order they were started");
@@ -30,7 +30,7 @@ void EventCPU_Base::Stop()
 	mbActive = false;
 }
 
-zEngineRef<EventBase> EventCPU::Create(const zStringHash32& _EventName)
+EventBaseRef EventCPU::Create(const zStringHash32& _EventName)
 {
 	static zenMem::zAllocatorPool sMemPool("Pool Event CPU", sizeof(EventCPU), 256, 256);
 	EventCPU* pEventCpu = zenNew(&sMemPool) EventCPU(_EventName);

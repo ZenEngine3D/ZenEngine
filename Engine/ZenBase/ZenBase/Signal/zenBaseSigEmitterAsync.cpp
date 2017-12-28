@@ -99,6 +99,7 @@ void zSignalEmitterAsync0::Emit()
 
 void zSignalEmitterAsync0::SignalInfo::Send()
 {
+	//! @todo 0 Fix This. No dynamic casting to fetch double inheritance
 	auto it = dynamic_cast<const zSignal*>(mpEmitter)->mlstListeners.GetHeadIt();
 	while(it)
 	{

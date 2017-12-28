@@ -4,136 +4,76 @@
 
 namespace zcGfx
 {
-
 //! @todo 2 temp until final location found
 DescriptorRangeSRV			gNullSRVView;
 DescriptorRangeSRV			gNullUAVView;
 DescriptorRangeSRV			gNullCBVView;
-DX12QueryDisjoint::List		DX12QueryDisjoint::slstQueryCreated;
-DX12QueryTimestamp::List	DX12QueryTimestamp::slstQueryCreated;
 
-DX12QueryDisjoint::DX12QueryDisjoint()
-{
-#if !ZEN_RENDERER_DX12
-	D3D12_QUERY_DESC QueryDesc;
-	QueryDesc.Query		= D3D11_QUERY_TIMESTAMP_DISJOINT;
-	QueryDesc.MiscFlags	= 0;
-	HRESULT result		= zcMgr::GfxRender.DX12GetDevice()->CreateQuery(&QueryDesc, &mpDX12Query);
-	zenAssert(result == S_OK);
-#endif
-	slstQueryCreated.PushHead(*this);
-}
 
-void DX12QueryDisjoint::ReferenceDeleteCB()
-{
-	slstQueryCreated.PushHead(*this);
-} 
-
-void DX12QueryDisjoint::Start()
-{
-#if !ZEN_RENDERER_DX12
-	muFrameStop				= zUInt(-1);
-	mbValidResult			= false;
-	mDisjointInfo.Disjoint	= true;
-	zcMgr::GfxRender.DX12GetDeviceContext()->Begin(mpDX12Query);	
-#endif
-}
-
-void DX12QueryDisjoint::Stop()
-{
-#if !ZEN_RENDERER_DX12
-	if( muFrameStop )
-	{
-		muFrameStop	= zcMgr::GfxRender.GetFrameRendered();
-		zcMgr::GfxRender.DX12GetDeviceContext()->End(mpDX12Query);
-	}
-#endif
-}
-
-zU64 DX12QueryDisjoint::GetClockRate()
-{
-#if !ZEN_RENDERER_DX12
-	zenAssertMsg(muFrameStop != zUInt(-1), "Query need to be started and stopped before we get results back");
-	zenAssertMsg(muFrameStop < zcMgr::GfxRender.GetFrameRendered(), "Must wait a complete frame before getting results");
-	if( !mbValidResult ) 
-	{		
-		HRESULT result	= zcMgr::GfxRender.DX12GetDeviceContext()->GetData(mpDX12Query, &mDisjointInfo, sizeof(mDisjointInfo), 0);
-		mbValidResult	= (result == S_OK);
-	}
-#endif
-	return mDisjointInfo.Disjoint ? 0 : mDisjointInfo.Frequency;
-}
-
-zEngineRef<DX12QueryDisjoint> DX12QueryDisjoint::Create()
+//! @todo 2 temp until final location found
+void QueryHeapRingbuffer_DX12::Initialize(D3D12_QUERY_HEAP_TYPE _eQueryType, zU64 _uCount)
 {	
-	const zUInt uGrowSize = 8;
-	if( slstQueryCreated.IsEmpty() )
+	D3D12_QUERY_HEAP_DESC		QueryHeapDesc = {};
+	muQueryCount				= _uCount;
+	muIndexStart				= 0;
+	QueryHeapDesc.Count			= (UINT)_uCount;
+	QueryHeapDesc.Type			= _eQueryType;
+
+	switch( _eQueryType )
 	{
-		for(zUInt idx(0); idx<uGrowSize; ++idx)
-			zenNewDefault DX12QueryDisjoint();
-	}
-	return slstQueryCreated.PopTail();
+	case D3D12_QUERY_HEAP_TYPE_OCCLUSION:			meQueryType = D3D12_QUERY_TYPE_OCCLUSION;				muQueryDataSize = sizeof(zU64);break;
+	case D3D12_QUERY_HEAP_TYPE_TIMESTAMP:			meQueryType = D3D12_QUERY_TYPE_TIMESTAMP;				muQueryDataSize = sizeof(zU64);break;
+	case D3D12_QUERY_HEAP_TYPE_PIPELINE_STATISTICS: meQueryType = D3D12_QUERY_TYPE_PIPELINE_STATISTICS;		muQueryDataSize = sizeof(D3D12_QUERY_DATA_PIPELINE_STATISTICS);break;
+	case D3D12_QUERY_HEAP_TYPE_SO_STATISTICS:		meQueryType = D3D12_QUERY_TYPE_SO_STATISTICS_STREAM0;	muQueryDataSize = sizeof(D3D12_QUERY_DATA_SO_STATISTICS);break;
+	};
+
+	maResultData.SetCount( _uCount*muQueryDataSize );
+	HRESULT hResult				= zcMgr::GfxRender.GetDevice()->CreateQueryHeap(&QueryHeapDesc, IID_PPV_ARGS(&mrDXQueryHeap));	
+	zcMgr::GfxRender.GetDevice()->CreateFence(0, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&mrDXFence));
+
+#if 0
+D3D12_HEAP_PROPERTIES HeapProps;
+	HeapProps.Type = D3D12_HEAP_TYPE_READBACK;
+	HeapProps.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_UNKNOWN;
+	HeapProps.MemoryPoolPreference = D3D12_MEMORY_POOL_UNKNOWN;
+	HeapProps.CreationNodeMask = 1;
+	HeapProps.VisibleNodeMask = 1;
+
+ASSERT_SUCCEEDED(Graphics::g_Device->CreateCommittedResource( &HeapProps, D3D12_HEAP_FLAG_NONE, &BufferDesc,
+		D3D12_RESOURCE_STATE_COPY_DEST, nullptr, MY_IID_PPV_ARGS(&sm_ReadBackBuffer) ));
+	sm_ReadBackBuffer->SetName(L"GpuTimeStamp Buffer");
+#endif
+
+	hResult						= zcMgr::GfxRender.GetDevice()->CreateCommittedResource(
+									&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_READBACK),
+									D3D12_HEAP_FLAG_NONE,
+									&CD3DX12_RESOURCE_DESC::Buffer((UINT)muQueryDataSize * muQueryCount),
+									D3D12_RESOURCE_STATE_COPY_DEST,
+									nullptr,
+									IID_PPV_ARGS(&mrDXQueryResources));
 }
 
-DX12QueryTimestamp::DX12QueryTimestamp()
+zUInt QueryHeapRingbuffer_DX12::GetNewQuery()
 {
-#if !ZEN_RENDERER_DX12
-	D3D11_QUERY_DESC QueryDesc;
-	QueryDesc.Query		= D3D11_QUERY_TIMESTAMP;
-	QueryDesc.MiscFlags	= 0;
-	HRESULT result		= zcMgr::GfxRender.DX12GetDevice()->CreateQuery(&QueryDesc, &mpDX12Query);
-	zenAssert(result == S_OK);
-#endif
-	slstQueryCreated.PushHead(*this);
+	zUInt uNewIndex = muIndexCurrent++;
+	zenAssertMsg( ( (uNewIndex+1)%muQueryCount) != (muIndexStart % muQueryCount), "Too many queries in 1 frame, busted ringbuffer capacity." );
+	return uNewIndex;	
 }
 
-void DX12QueryTimestamp::ReferenceDeleteCB()
+ void QueryHeapRingbuffer_DX12::Submit(GPUContext& _Context)
 {
-	if( mrQueryDisjoint.IsValid() )
-	{
-		zU64 uDiscard = GetTimestampUSec(); // This prevents DX warning about starting a new query(when query reused), without having retrieved the value first
-		mrQueryDisjoint	= nullptr;
-		mbValidResult	= false;
-	}
-	slstQueryCreated.PushHead(*this);
-}
-
-zU64 DX12QueryTimestamp::GetTimestampUSec()
-{	
-#if !ZEN_RENDERER_DX12
-	if( mbValidResult == false )
-	{
-		zU64 uClockRate = mrQueryDisjoint->GetClockRate();		
-		if( uClockRate != 0 )
-		{
-			zcMgr::GfxRender.DX12GetDeviceContext()->GetData(mpDX12Query, &muTimestamp, sizeof(muTimestamp), 0);
-			muTimestamp		= uClockRate ? (muTimestamp*1000*1000/uClockRate) : 0;
-			mbValidResult	= true;
-		}
-	}
-#endif
-	return muTimestamp;
-}
-
-zEngineRef<DX12QueryTimestamp> DX12QueryTimestamp::Create()
-{	
-#if !ZEN_RENDERER_DX12
-	const zUInt uGrowSize = 128;
-	if( slstQueryCreated.IsEmpty() )
-	{
-		for(zUInt idx(0); idx<uGrowSize; ++idx)
-			zenNewDefault DX12QueryTimestamp();
-	}
-
-	DX12QueryTimestamp* pQuery	= slstQueryCreated.PopTail();
-	pQuery->mrQueryDisjoint		= zcMgr::GfxRender.GetQueryDisjoint();
-	pQuery->mbValidResult		= false;
-	pQuery->muTimestamp			= 0;
-	zcMgr::GfxRender.DX12GetDeviceContext()->End(pQuery->mpDX12Query);
-	return pQuery;
-#else
-	return slstQueryCreated.PopTail();
-#endif
+	const UINT uStart		= (UINT)(muIndexStart % muQueryCount);
+	const UINT uQueryTotal	= (UINT)(muIndexCurrent-muIndexStart);
+	const UINT uSubmitCount = (UINT)zenMath::Min((zU64)uQueryTotal, muQueryCount-uStart);
+ 	_Context.GetCommandList()->ResolveQueryData(mrDXQueryHeap.Get(), meQueryType, uStart, uSubmitCount, mrDXQueryResources.Get(), uStart*muQueryDataSize);
+// 	// If wrap around occurs, finish the queries at the start of ringbuffer
+ 	if( uQueryTotal != uSubmitCount )
+ 		_Context.GetCommandList()->ResolveQueryData(mrDXQueryHeap.Get(), meQueryType, 0, uQueryTotal-uSubmitCount, mrDXQueryResources.Get(), 0);
+	
+	_Context.AddFence(mrDXFence, muIndexCurrent);
+	
+	//_Context.GetCommandList()->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(mrDXQueryResources.Get(), D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_PREDICATION));
+	muIndexStart = (zU64)muIndexCurrent;
 }
 
 // Helper function for acquiring the first available hardware adapter that supports Direct3D 12.
@@ -259,7 +199,7 @@ bool ManagerRender_DX12::Load()
 		return FALSE;
 
 #if !ZEN_BUILD_FINAL	
-	mrDXDevice->SetStablePowerState(TRUE); // Prevent the GPU from overclocking or underclocking to get consistent timings
+	mrDXDevice->SetStablePowerState(TRUE); // Prevent the GPU from overclocking or underclocking to get consistent timings //@todo remove this, apparentl not recommanded
 #endif
 	//----------------------------------------------------------------------------------------------
 	// Create and initialize Descriptors heap support
@@ -308,6 +248,8 @@ bool ManagerRender_DX12::Load()
  	NullCbvDesc.SizeInBytes						= 0;
  	gNullCBVView								= mDescriptorHeapSRV.Allocate(1);						
 	zcMgr::GfxRender.GetDevice()->CreateConstantBufferView(&NullCbvDesc, gNullCBVView.GetCpu());
+
+	mQueryTimestampHeap.Initialize(D3D12_QUERY_HEAP_TYPE_TIMESTAMP, 10*1024*2 );
 
 	//----------------------------------------------------------------------------------------------
 	// Create Commandlist/Queue
@@ -378,6 +320,7 @@ bool ManagerRender_DX12::Load()
 
 	ID3D12CommandList* ppCommandLists[] = { marCommandList[0][0].Get() };
 	mrCommandQueue->ExecuteCommandLists(_countof(ppCommandLists), ppCommandLists);
+	
 	
 	//----------------------------------------------------------------------------------------------
 	// Create synchronization objects and wait until assets have been uploaded to the GPU.
@@ -468,33 +411,28 @@ void ManagerRender_DX12::FrameBegin(zcRes::GfxWindowRef _FrameWindow)
 	// Indicate that the back buffer will be used as a render target.
 	const zcRes::GfxTarget2DRef& rBackbuffer = grWindowRender->GetBackbuffer();
 	mGpuContext[0].GetCommandList()->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(rBackbuffer.HAL()->mrResource.Get(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET) );
-	
-#if !ZEN_RENDERER_DX12
-	mrPreviousDrawcall		= nullptr;
-	mbProfilerDetected		= mDX12pPerf && mDX12pPerf->GetStatus();
-	mrQueryDisjoint			= DX12QueryDisjoint::Create();
-	mrQueryDisjoint->Start();
-#endif
 }
 
 void ManagerRender_DX12::FrameEnd()
-{	
-	// Indicate that the back buffer will now be used to present.
+{		
 	if( mrFrameContext.IsValid() )
 	{
 		mrFrameContext.Submit();
 		mrFrameContext = nullptr;
 	}
 
-	const zcRes::GfxTarget2DRef& rBackbuffer = grWindowRender->GetBackbuffer();
-	mGpuContext[0].GetCommandList()->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(rBackbuffer.HAL()->mrResource.Get(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT));
-	//mrQueryDisjoint->Stop();
+	mQueryTimestampHeap.Submit(mGpuContext[0]);
 
+	const zcRes::GfxTarget2DRef& rBackbuffer = grWindowRender->GetBackbuffer();
+	mGpuContext[0].GetCommandList()->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(rBackbuffer.HAL()->mrResource.Get(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT));	
+	
 	HRESULT hr = mGpuContext[0].GetCommandList()->Close();
 	if( SUCCEEDED(hr) )
 	{
 		ID3D12CommandList* ppCommandLists[] = { marCommandList[muFrameRendered%kuFrameBufferCount][0].Get() };
 		mrCommandQueue->ExecuteCommandLists(zenArrayCount(ppCommandLists), ppCommandLists);
+		mrCommandQueue->GetTimestampFrequency(&mQueryTimestampFreq);
+		mGpuContext[0].FlushPendingFences(mrCommandQueue);
 		grWindowRender.HAL()->mrDXSwapChain->Present( 0, 0 );	
 	
 		/*
@@ -513,40 +451,17 @@ void ManagerRender_DX12::FrameEnd()
 		m_PreviousRefreshCount = FrameStatistics.SyncRefreshCount;
 		*/
 	}
+	
+	
 	Super::FrameEnd();
 }
 
-void ManagerRender_DX12::NamedEventBegin(const zStringHash32& zName)
-{
-#if !ZEN_RENDERER_DX12
-	if( mbProfilerDetected )
-	{
-		WCHAR zEventName[64];
-		mbstowcs_s(nullptr, zEventName, zName.mzName, zenArrayCount(zEventName));
-		mDX12pPerf->BeginEvent(zEventName);
-	}
-#endif
-}
-
-void ManagerRender_DX12::NamedEventEnd()
-{
-#if !ZEN_RENDERER_DX12
-	if( mbProfilerDetected )
-		mDX12pPerf->EndEvent();
-#endif
-}
-
-const zEngineRef<DX12QueryDisjoint>& ManagerRender_DX12::GetQueryDisjoint()const
-{
-	return mrQueryDisjoint;
-}
-
-void ManagerRender_DX12::DispatchBarrier(ScopedDrawlist& _Drawlist, bool _bPreDataUpdate)
+void ManagerRender_DX12::DispatchBarrier(const CommandListRef& _rCommandlist, bool _bPreDataUpdate)
 {
 	static zArrayDynamic<D3D12_RESOURCE_BARRIER> aBarriers;
 	aBarriers.Reserve(128);
 	
-	auto aWantedState = _Drawlist.GetBarrierCheck(_bPreDataUpdate);
+	auto aWantedState = _rCommandlist->GetBarrierCheck(_bPreDataUpdate);
 	if( aWantedState.Count() > 0 )
 	{					
 		auto pWantedStateCur	= aWantedState.First();
@@ -577,11 +492,14 @@ void ManagerRender_DX12::DispatchBarrier(ScopedDrawlist& _Drawlist, bool _bPreDa
 	}
 }
 
-void ManagerRender_DX12::Render(ScopedDrawlist& _Drawlist)
-{			
+void ManagerRender_DX12::SubmitToGPU(const CommandListRef& _rCommandlist, const zArrayDynamic<CommandRef>& _rCommands)
+{
+	zenAssert(_rCommands.IsEmpty()==false);
+
+	//------------------------------------------------------------------------------------------
+	// Add Barriers for Render Targets
 	bool bBarrierPostUpdate 	= false;
-	zcRes::GfxView_HAL* pView	= _Drawlist.GetRenderpass().IsValid() && _Drawlist.GetRenderpass().HAL()->mrStateView.IsValid() ? _Drawlist.GetRenderpass().HAL()->mrStateView.HAL() : nullptr;
-	
+	zcRes::GfxView_HAL* pView	= _rCommandlist->GetRenderpass().IsValid() && _rCommandlist->GetRenderpass().HAL()->mrStateView.IsValid() ? _rCommandlist->GetRenderpass().HAL()->mrStateView.HAL() : nullptr;
 	if( pView )
 	{		
 		zcRes::GfxTexture2DRef rRTTexture;		
@@ -589,32 +507,34 @@ void ManagerRender_DX12::Render(ScopedDrawlist& _Drawlist)
 		{
 			rRTTexture = pView->maRTColorConfig[idx].mrTargetSurface.IsValid() && pView->maRTColorConfig[idx].mrTargetSurface->GetTexture2D().IsValid() ? pView->maRTColorConfig[idx].mrTargetSurface->GetTexture2D() : nullptr;
 			if( rRTTexture.IsValid() )
-				_Drawlist.AddBarrierCheck(true, ScopedDrawlist_DX12::BarrierCheck(&rRTTexture.HAL()->mResource, D3D12_RESOURCE_STATE_RENDER_TARGET));
+				_rCommandlist->AddBarrierCheck(true, CommandList_DX12::BarrierCheck(&rRTTexture.HAL()->mResource, D3D12_RESOURCE_STATE_RENDER_TARGET));
 		}
 		
 		rRTTexture = pView->mRTDepthConfig.mrTargetSurface.IsValid() ? pView->mRTDepthConfig.mrTargetSurface->GetTexture2D() : nullptr;
 		if( rRTTexture.IsValid() )
-			_Drawlist.AddBarrierCheck(true, ScopedDrawlist_DX12::BarrierCheck(&rRTTexture.HAL()->mResource, D3D12_RESOURCE_STATE_DEPTH_WRITE));
+			_rCommandlist->AddBarrierCheck(true, CommandList_DX12::BarrierCheck(&rRTTexture.HAL()->mResource, D3D12_RESOURCE_STATE_DEPTH_WRITE));
 	}
-	DispatchBarrier(_Drawlist, true);
+	DispatchBarrier(_rCommandlist, true);
 
-	const zEngineRef<zcGfx::Command>* prDrawcall	= _Drawlist.GetCommands().First();
-	const zEngineRef<zcGfx::Command>* prDrawcallEnd	= _Drawlist.GetCommands().Last();		
+	//------------------------------------------------------------------------------------------
+	// Invoke all draw commands
+	const zEngineRef<zcGfx::Command>* prDrawcall	= _rCommands.First();
+	const zEngineRef<zcGfx::Command>* prDrawcallEnd	= _rCommands.Last();	
 	while( prDrawcall <= prDrawcallEnd )
-	{		
+	{
 		//! @todo 2 optim Find better way of barrier before/after DataUpdate
 		if( !bBarrierPostUpdate && (*prDrawcall)->mSortId.Draw.muGPUPipelineMode > keGpuPipe_DataUpdate )
 		{			
-			DispatchBarrier(_Drawlist, false);
+			DispatchBarrier(_rCommandlist, false);
 			bBarrierPostUpdate = true;
 		}
 		(*prDrawcall)->Invoke(mGpuContext[0]);
 		++prDrawcall;		
 	}
-
+			
 	if( !bBarrierPostUpdate )
 	{			
-		DispatchBarrier(_Drawlist, false);
+		DispatchBarrier(_rCommandlist, false);
 		bBarrierPostUpdate = true;
 	}
 }

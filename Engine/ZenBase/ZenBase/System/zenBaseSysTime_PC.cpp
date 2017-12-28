@@ -49,14 +49,14 @@ const zDateTime& GetDateTime()
 	time( &rawtime );
 	localtime_s( &datetime, &rawtime );
 
-	DateTimeOut.muYear          = datetime.tm_year+1900;
-	DateTimeOut.muDayOfYear     = datetime.tm_yday;
-	DateTimeOut.muDayOfMonth    = datetime.tm_mday;
-	DateTimeOut.muDayOfWeek     = datetime.tm_wday;    
-	DateTimeOut.muMonth         = datetime.tm_mon;
-	DateTimeOut.muHour          = datetime.tm_hour;        
-	DateTimeOut.muMinute        = datetime.tm_min;
-	DateTimeOut.muSecond        = datetime.tm_sec;        
+	DateTimeOut.muYear          = (zU16)datetime.tm_year+1900;
+	DateTimeOut.muDayOfYear     = (zU16)datetime.tm_yday;
+	DateTimeOut.muDayOfMonth    = (zU8)datetime.tm_mday;
+	DateTimeOut.muDayOfWeek     = (zU8)datetime.tm_wday;    
+	DateTimeOut.muMonth         = (zU8)datetime.tm_mon;
+	DateTimeOut.muHour          = (zU8)datetime.tm_hour;        
+	DateTimeOut.muMinute        = (zU8)datetime.tm_min;
+	DateTimeOut.muSecond        = (zU8)datetime.tm_sec;        
 	return DateTimeOut;
 }
 

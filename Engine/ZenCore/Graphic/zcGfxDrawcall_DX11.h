@@ -27,6 +27,13 @@ public:
 	virtual void Invoke(zcGfx::GPUContext& _Context); 
 };
 
+class CommandGPUScopedEvent_DX11 : public CommandGPUScopedEvent
+{
+zenClassDeclare(CommandGPUScopedEvent_DX11, CommandGPUScopedEvent)
+public:
+	virtual void					Invoke(GPUContext& _Context);
+};
+
 //==================================================================================================
 // Platform specific Commands
 //==================================================================================================
@@ -55,6 +62,16 @@ protected:
 	zU8*						mpUpdateData;
 	zUInt						muOffset;
 	zUInt						muSize;
+};
+
+class CommandQueryEnd_DX11 : public Command
+{
+zenClassDeclare(CommandQueryEnd_DX11, Command)
+public:
+	static zEngineRef<Command>		Add(const CommandListRef& _rContext, ID3D11Query* _pQuery, bool _bStartOfCmdList=false);
+	virtual void					Invoke(GPUContext& _Context);
+protected:
+	ID3D11Query*					mpQuery;
 };
 
 }

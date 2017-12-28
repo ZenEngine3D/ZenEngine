@@ -40,7 +40,7 @@ zU8* zGfxIndex::Lock()
 	return mpResource->Lock();
 }
 
-void zGfxIndex::Unlock(const zenGfx::zScopedDrawlist& rContext)
+void zGfxIndex::Unlock(const zenGfx::zCommandList& rContext)
 {
 	zenAssertMsg(mpResource, "No valid resource assigned");
 	mpResource->Unlock(rContext);
@@ -86,7 +86,7 @@ void* zGfxBuffer::Lock()
 	return mpResource->Lock();
 }
 
-void zGfxBuffer::Unlock(const zenGfx::zScopedDrawlist& rContext)
+void zGfxBuffer::Unlock(const zenGfx::zCommandList& rContext)
 {
 	zenAssertMsg(mpResource, "No valid resource assigned");
 	mpResource->Unlock(rContext);

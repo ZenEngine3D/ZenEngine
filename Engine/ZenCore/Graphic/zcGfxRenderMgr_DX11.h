@@ -42,7 +42,7 @@ zenClassDeclare(QueryTimestamp_DX11, zRefCounted)
 public:
 	static zEngineRef<QueryTimestamp_DX11>	Create();				//!< @brief Get a new disjoint query and start the timestamp request
 	zU64									GetTimestampUSec();		//!< @brief Retrieve the timestamp result (0 if invalid)
-		
+	zenInline ID3D11Query*					GetQuery()const{return mpDX11Query;}
 protected:
 											QueryTimestamp_DX11();
 	virtual void							ReferenceDeleteCB();	//!< @brief Return object to free list instead of deleting it
@@ -71,8 +71,8 @@ zenClassDeclare(ManagerRender_DX11, ManagerRender_Base)
 public:
 	virtual void							FrameBegin(zcRes::GfxWindowRef _FrameWindow);
 	virtual void							FrameEnd();
-	void									Render(ScopedDrawlist& _Drawlist);
-	void									NamedEventBegin(const zStringHash32& zName);
+	void									SubmitToGPU(const CommandListRef& _rCommandlist, const zArrayDynamic<CommandRef>& _rCommands);
+	void									NamedEventBegin(const char* _zName);
 	void									NamedEventEnd();
 	const zEngineRef<QueryDisjoint_DX11>&	GetQueryDisjoint()const;
 
@@ -98,9 +98,9 @@ protected:
 	ID3D11InputLayout*						mDX11pEmptyInputLayout	= nullptr;
 	ID3DUserDefinedAnnotation*				mDX11pPerf				= nullptr;
 
-	bool									mbDX11ProfilerDetected	= true;
+	bool									mbDX11ProfilerDetected	= true; //@todo 0 remove this?
 	zEngineRef<QueryDisjoint_DX11>			mrQueryDisjoint;
-	zcGfx::GPUContext						mGpuContext[1];	//!< @note Only 1 context for the moment, increase when multihreading is supported
+	zcGfx::GPUContext						mGpuContext[1];	//!< @note Only 1 context for the moment, increase when multi threading is supported
 //---------------------------------------------------------
 // ManagerBase Section
 //---------------------------------------------------------

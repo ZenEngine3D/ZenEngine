@@ -37,6 +37,5 @@ namespace zcExp
 		ExportInfoGfxStateBlend* pExportInfo		= zenNew(&sMemPool) ExportInfoGfxStateBlend;
 		pExportInfo->mpaRenderTargetConfig			= &_aTargetColorConfig;
 		return zcMgr::Export.CreateItem( zResID::kePlatformType_GFX, zenConst::keResType_GfxStateBlend, pExportInfo );
-		return zResID();
 	}
 }

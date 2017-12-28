@@ -204,7 +204,6 @@ void GPUContext_DX11::UpdateStateRenderpass(const zcGfx::CommandDraw& _Drawcall)
 //==================================================================================================
 void GPUContext_DX11::UpdateState(const zcGfx::CommandDraw& _Drawcall)
 {
-	UINT UnusedOffset = 0;
 	const zcRes::GfxMeshStripRef&		rMeshStrip	= _Drawcall.mrMeshStrip;
 	const zcRes::GfxIndexRef&			rIndex		= rMeshStrip.HAL()->mrIndexBuffer;
 	const zcRes::GfxShaderBindingRef&	rShaderBind	= rMeshStrip.HAL()->mrShaderBinding;			
@@ -248,25 +247,28 @@ void GPUContext_DX11::UpdateState(const zcGfx::CommandDraw& _Drawcall)
 	//----------------------------------------------------------------------------------------------
 	// Assign Shader input resources for each stage
 	//----------------------------------------------------------------------------------------------
+	zResID NoResID;
 	for(zUInt stageIdx(0); stageIdx<keShaderStage__Count; ++stageIdx)
 	{						
 		// Check resource setup stamp to detect if there was a change
 		const eShaderStage eStageIdx = (eShaderStage)stageIdx;
-		bool bUpdated[keShaderRes__Count];
+		bool bUpdated[keShaderRes__Count];		
 		for(zUInt resTypeIdx(0);resTypeIdx<keShaderRes__Count; ++resTypeIdx)
 		{
 			const zArrayStatic<zcRes::GfxShaderResourceRef>& arResources	= rMeshStrip.HAL()->marShaderResources[stageIdx][resTypeIdx];
 			zHash32 zMeshStripResStamp										= rMeshStrip.HAL()->mhShaderResourceStamp[stageIdx][resTypeIdx];
-
 			if( (zU32)zMeshStripResStamp == 0 )
 			{
 				zMeshStripResStamp = zHash32();
 				for(zUInt resIdx(0), resCount(arResources.Count()); resIdx<resCount; ++resIdx)
-					zMeshStripResStamp.Append( arResources[resIdx].IsValid() ? (void*)&arResources[resIdx]->mResID : (void*)&zResID(), sizeof(zResID) );
+				{					
+					void* ResIdPtr = arResources[resIdx].IsValid() ? (void*)&(arResources[resIdx]->mResID) : (void*)&NoResID;
+					zMeshStripResStamp.Append(ResIdPtr, sizeof(zResID));
+				}
 				rMeshStrip.HAL()->mhShaderResourceStamp[stageIdx][resTypeIdx] = zMeshStripResStamp;
 			}
 
-			bUpdated[resTypeIdx]								= mahShaderInputStamp[stageIdx][resTypeIdx] != zMeshStripResStamp;
+			bUpdated[resTypeIdx]						= mahShaderInputStamp[stageIdx][resTypeIdx] != zMeshStripResStamp;
 			mahShaderInputStamp[stageIdx][resTypeIdx]	= zMeshStripResStamp;
 		}
 		

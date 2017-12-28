@@ -135,8 +135,6 @@ bool GfxMeshStrip_DX12::Initialize()
 			}
 		}
 	}
-
-	SetValue(zHash32("VtxInput_Offset"), muVertexFirst ); //! @todo 1 clean remove this, store in root signature constant instead	
 	return true;
 }
 

@@ -56,8 +56,8 @@ function Orion_ConfigureBuild()
 	filter 'platforms:*64*'							
 		architecture 	'x64'	
 		
-	filter 'platforms:PCTool*'						defines			{'ZEN_ENGINETOOL=1'}
-	filter 'platforms:not PCTool*'					defines			{'ZEN_ENGINEGAME=1'}
+	filter 'platforms:PCTool*'						defines		{'ZEN_ENGINETOOL=1'}
+	filter 'platforms:not PCTool*'					defines		{'ZEN_ENGINEGAME=1'}
 	filter {}
 	
 	--[[ Output Dir ]]--
@@ -133,12 +133,49 @@ function Orion_ConfigurePCH(aPathList, aPchFile)
 end
 
 -- ============================================================================
+-- 	Add support for WinPixEvent for DirectX12, to a particular project
+-- ============================================================================
+function Orion_AddProjectWinPixEvent()
+	filter {'platforms:*DX12'}
+		defines				{"THIRDPARTY_PIXEVENT=1", "USE_PIX"}
+		includedirs			{vSourceRoot .. "/Engine/ThirdParty/WinPixEventRuntime/Include/WinPixEventRuntime"}
+		libdirs 			{vSourceRoot .. "/Engine/ThirdParty/WinPixEventRuntime/bin"}		
+		links				{"WinPixEventRuntime"}		
+		postbuildcommands 	{ "xcopy \"" .. vSourceRoot .. "/Engine/ThirdParty/WinPixEventRuntime/bin/WinPixEventRuntime.dll\" \"$(TargetDir)\" /Y /D" } 
+	filter {}
+end
+
+-- ============================================================================
+-- 	Add support for WxWidget, to a particular project
+--  Needs to get those file from "https://github.com/wxWidgets/wxWidgets/releases/tag/v3.1.0" : 
+--		wxMSW-3.1.0_vc140_x64_Dev.7z
+--		wxWidgets-3.1.0-headers.7z
+--		wxMSW-3.1.0_vc140_x64_ReleaseDLL.7z
+--		wxMSW-3.1.0_vc140_x64_ReleasePDB.7z
+-- ============================================================================
+function Orion_AddProjectWxWidget()
+	vLibsDebug = {"wxmsw31ud_core", "wxbase31ud", "wxmsw31ud_aui", "wxmsw31ud_propgrid", "wxmsw31ud_adv", "wxjpegd", "wxpngd", "wxzlibd", "wxregexud", "wxexpatd", "wxtiffd"}
+	vLibsRelease = {"wxmsw31u_core", "wxbase31u", "wxmsw31u_aui", "wxmsw31u_propgrid", "wxmsw31u_adv", "wxjpeg", "wxpng", "wxzlib", "wxregexu", "wxexpat", "wxtiff"}
+	
+	defines			{"THIRDPARTY_WXWIDGET=1", "WXUSINGDLL=1", "wxMSVC_VERSION=140"}
+	includedirs		{vSourceRoot .. "/Engine/ThirdParty/[wxWidgets]/include"}
+	includedirs		{vSourceRoot .. "/Engine/ThirdParty/[wxWidgets]/include/msvc"}
+	
+	links			{vLibsRelease}
+	filter 'platforms:PC*64'
+		libdirs 		{vSourceRoot .. "/Engine/ThirdParty/[wxWidgets]/lib/vc140_x64_dll"}
+	filter 'platforms:PC*'
+		postbuildcommands { "xcopy \"" .. vSourceRoot .. "/Engine/ThirdParty/[wxWidgets]/lib/vc140_x64_dll\\*.dll\" \"$(TargetDir)\" /Y /D" } --xcopy doesn't support '/' with wirldcard, so last one is a '\'
+	filter {}
+end
+
+-- ============================================================================
 -- 	Common project creation code
 -- 		aPathList		: List of root path of library
 -- 		aPchFile		: Name of PCH header filename ("" if none is used)
 -- 		aFilesExt		: List of supported files extensions to add
 -- ============================================================================
-function Orion_AddProjectCommon(aFilesExt, aPathList, aPchFile )				
+function Orion_AddProjectCommon(aFilesExt, aPathList, aPchFile)				
 	os.mkdir		( vOutputRoot .. "/" .. project().name ) -- Needed for pch file creation
 	location 		( vOutputRoot .. "/" .. project().name )	
 	includedirs 	( {vSourceRoot, vSourceRoot .. "/Engine", vSourceRoot .. "/Engine/ZenApi"} )
@@ -160,27 +197,5 @@ function Orion_AddProjectCommon(aFilesExt, aPathList, aPchFile )
 		end 
 	end
 	Orion_ConfigureBuild()
-end
-
--- ============================================================================
--- 	Add support for WxWidget, to a particular project
---  Needs to get those file from "https://github.com/wxWidgets/wxWidgets/releases/tag/v3.1.0" : 
---		wxMSW-3.1.0_vc140_x64_Dev.7z
---		wxWidgets-3.1.0-headers.7z
---		wxMSW-3.1.0_vc140_x64_ReleaseDLL.7z
---		wxMSW-3.1.0_vc140_x64_ReleasePDB.7z
--- ============================================================================
-function Orion_AddProjectWxWidget()
-	vLibsDebug = {"wxmsw31ud_core", "wxbase31ud", "wxmsw31ud_aui", "wxmsw31ud_propgrid", "wxmsw31ud_adv", "wxjpegd", "wxpngd", "wxzlibd", "wxregexud", "wxexpatd", "wxtiffd"}
-	vLibsRelease = {"wxmsw31u_core", "wxbase31u", "wxmsw31u_aui", "wxmsw31u_propgrid", "wxmsw31u_adv", "wxjpeg", "wxpng", "wxzlib", "wxregexu", "wxexpat", "wxtiff"}
-	
-	includedirs		{vSourceRoot .. "/Engine/ThirdParty/[wxWidgets]/include"}
-	includedirs		{vSourceRoot .. "/Engine/ThirdParty/[wxWidgets]/include/msvc"}
-	defines			{"WXUSINGDLL=1", "wxMSVC_VERSION=140"}
-	links			{vLibsRelease}
-	filter 'platforms:PC*64'
-		libdirs 		{vSourceRoot .. "/Engine/ThirdParty/[wxWidgets]/lib/vc140_x64_dll"}
-	filter 'platforms:PC*'
-		postbuildcommands { "xcopy \"" .. vSourceRoot .. "/Engine/ThirdParty/[wxWidgets]/lib/vc140_x64_dll\\*.dll\" \"$(TargetDir)\" /Y /D" } --xcopy doesn't support '/' with wirldcard, so last one is a '\'
-	filter {}
+	Orion_AddProjectWinPixEvent()
 end

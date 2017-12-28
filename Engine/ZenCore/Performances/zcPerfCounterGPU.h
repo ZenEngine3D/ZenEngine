@@ -9,9 +9,8 @@ namespace zcPerf
 	{
 	zenClassDeclare(EventGPU_Base, EventBase)
 	public:									
-		virtual void	Start();
-		virtual void	Stop();
-
+		virtual void	GPUStart(const zcGfx::CommandListRef& _rDrawlist);
+		virtual void	GPUStop(const zcGfx::CommandListRef& _rDrawlist);
 	protected:
 						EventGPU_Base(const zStringHash32& _EventName);
 	};
@@ -26,24 +25,26 @@ namespace zcPerf
 	{
 	zenClassDeclare(EventGPU, EventGPU_HAL)
 	public:									
-		static zEngineRef<EventBase>	Create(const zStringHash32& _EventName);
-	
+		static EventBaseRef		Create(const zStringHash32& _EventName);
+		virtual void			GPUStart(const zcGfx::CommandListRef& _rDrawlist);
+		virtual void			GPUStop(const zcGfx::CommandListRef& _rDrawlist);
 	protected:
-										EventGPU(const zStringHash32& _EventName);
+								EventGPU(const zStringHash32& _EventName);
 	};
 
 	//! @brief Used to retrieve number of drawcall send to GPU, per type
-	class EventGPUCounter : public EventGPU_Base
+	class EventGPUCounter : public EventCPU_Base
 	{
-	zenClassDeclare(EventGPUCounter, EventGPU_Base)
+	zenClassDeclare(EventGPUCounter, EventCPU_Base)
 	public:
 		enum eType{ keType_DrawIndexed, keType_Compute, keType_ClearColor, keType_ClearDepth, keType_UpdateIndex, keType_UpdateVertex, 
-					keType_UpdateBuffer, keType_UpdateTexture, keType__Count, keType__Invalid=keType__Count};
-		static zEngineRef<EventBase>	Create(eType _eCounterType);
-		virtual void					Start();
-
+					keType_UpdateBuffer, keType_UpdateTexture, keType_Query, keType__Count, keType__Invalid=keType__Count};
+		
+		static EventBaseRef		Create(eType _eCounterType);
+		virtual void			CPUStart();
+		
 	protected:
-										EventGPUCounter(eType _eCounterType);
-		eType							meCounterType;
+								EventGPUCounter(eType _eCounterType);
+		eType					meCounterType;
 	};
 }

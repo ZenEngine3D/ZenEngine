@@ -492,13 +492,13 @@ void zHamt< TKey, TValue, TIndex, TIndexBits>::GetFirst(Iterator& _It) const
 	}
 	Node* pNode(mpRootNode);	
 	_It.mpNodeTree[0]	= pNode;
-	_It.mpSlotID[0]		= pNode->GetFirstUsedSlotID();	
+	_It.mpSlotID[0]		= (zI8)pNode->GetFirstUsedSlotID();	
 	_It.msDepth			= 0;
 	while( !pNode->IsLeafSlot(0) )
 	{
 		pNode							= pNode->mpSlots[0].pChildNode;		
 		_It.mpNodeTree[++_It.msDepth]	= pNode;
-		_It.mpSlotID[_It.msDepth]		= pNode->GetFirstUsedSlotID();
+		_It.mpSlotID[_It.msDepth]		= (zI8)pNode->GetFirstUsedSlotID();
 	}
 }
 

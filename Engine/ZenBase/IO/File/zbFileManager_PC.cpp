@@ -55,7 +55,6 @@ bool ManagerFile_PC::Search(zArrayDynamic<FileInfo>& _ResultOut, zUInt _uWantedF
 	zArrayDynamic<wchar_t> zPath;
 	zPath.Reserve(1024);
 	zPath.Copy(_zDirName, len + 1);
-	wchar_t test =  zPath[-2];
 	if( zPath[-2] != L'/' && zPath[-2] != L'\\'  )
 	{
 		zPath.SetCount(static_cast<zUInt>(zPath.Count() + 1));
@@ -131,7 +130,6 @@ void ManagerFile_PC::LoadDirectory(zArrayDynamic<FileInfo>& _ResultOut, zUInt _u
 			if( bValid )
 			{
 				SYSTEMTIME	Time;
-				zUInt		len(static_cast<zUInt>(wcslen(sysFileInfo.cFileName)));
 				zUInt		idx(_ResultOut.Count());
 				
 				_ResultOut.SetCount(idx+1);

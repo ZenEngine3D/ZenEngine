@@ -9,7 +9,7 @@ class GpuMemoryResource
 zenClassDeclareNoParent(GpuMemoryResource);	
 public:
 	//void*							Lock(zUInt _uMipCount);
-	//void							Unlock(const zcRes::ResourceAnyRef& _rParentResource, const zenGfx::zScopedDrawlist& _rContext);												
+	//void							Unlock(const zcRes::ResourceAnyRef& _rParentResource, const zenGfx::zCommandContext& _rContext);												
 	DirectXComRef<ID3D12Resource>	mrResource;				//!< DirectX memory mapping for this resource
 	D3D12_RESOURCE_STATES			meState;				//!< Current GPU access to this resource (used for barrier updates)
 	DirectXComRef<ID3D12Resource>	mrUpload;				//!< Upload memory allocated to stream-in a texture

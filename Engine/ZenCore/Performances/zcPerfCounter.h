@@ -1,44 +1,68 @@
 #pragma once
 
+namespace zcGfx
+{ 
+	class CommandList;
+	using CommandListRef = zEngineRef<CommandList>; 
+}
+
 namespace zcPerf 
 {
+
+using EventBaseRef = zEngineRef<class EventBase>;
 
 class EventBase : public zRefCounted
 {
 zenClassDeclare(EventBase, zRefCounted)
-protected:	
-	zListLink				mlnkChild;
-public:		
-	typedef zList<EventBase, &EventBase::mlnkChild, false> TypeListChild;
-	
+protected:	zListLink				mlnkChild;
+public:		using					TypeListChild = zList<EventBase, &EventBase::mlnkChild, false>;
+public:
 									EventBase(const zStringHash32& _zEventName);
 	virtual							~EventBase();
-	virtual void 					Start() = 0;
-	virtual void 					Stop() = 0;
+	virtual void 					CPUStart(){};
+	virtual void 					CPUStop(){};
+
+	virtual void 					GPUStart(const zcGfx::CommandListRef& _rDrawlist){};
+	virtual void 					GPUStop(const zcGfx::CommandListRef& _rDrawlist){};
+
 	virtual double					GetElapsedMs();
 
 	bool							IsActive()const;
 	void							AddChild(EventBase& _Child);	
-	void							ShowStats( const zEngineRef<EventBase>& _rParent, double _fTotalTime, zUInt& _uItemCount, zUInt _uDepth );
 	zenInline const zStringHash32&	GetName()const;
-	zenInline zEngineRef<EventBase>	GetFirstChild()const;
+	
+	zenInline EventBaseRef			GetFirstChild()const;
+	zenInline EventBaseRef			GetNext()const;
+	zenInline EventBaseRef			GetPrev()const;
 
 protected:	
 	zStringHash32					mzEventName		= zStringHash32("Unassigned");
-	zU64							muTimeStart		= 0;
-	zU64							muTimeElapsed	= 0;
+	zU64							muTimeStart		= 0;	// In microseconds (us)
+	zU64							muTimeElapsed	= 0;	// In microseconds (us)
 	bool							mbActive		= false;
 	TypeListChild					mlstChilds;
 };
+
 
 const zStringHash32& EventBase::GetName()const
 {
 	return mzEventName;
 }
 
-zEngineRef<EventBase> EventBase::GetFirstChild()const
+EventBaseRef EventBase::GetFirstChild()const
 {
 	return mlstChilds.GetHead();
 }
+
+EventBaseRef EventBase::GetNext() const
+{
+	return zcPerf::EventBase::TypeListChild::GetNext(*this);
+}
+
+EventBaseRef EventBase::GetPrev() const
+{
+	return zcPerf::EventBase::TypeListChild::GetPrev(*this);
+}
+
 
 }

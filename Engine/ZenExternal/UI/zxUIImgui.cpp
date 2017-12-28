@@ -23,7 +23,7 @@ zxImGUIHelper::zxImGUIHelper()
 	io.Fonts->GetTexDataAsRGBA32(&pixels, &width, &height);
 	zArrayStatic<zU8> aFontRGBA;
 	aFontRGBA.Copy(pixels, width*height * 4);
-	mrFontTextureDefault			= zenRes::zGfxTexture2D::Create(zenConst::keTexFormat_RGBA8, zVec2U16(width, height), aFontRGBA);
+	mrFontTextureDefault			= zenRes::zGfxTexture2D::Create(zenConst::keTexFormat_RGBA8, zVec2U16((zU16)width, (zU16)height), aFontRGBA);
 
 	// imGUI config	
 	io.Fonts->TexID					= 0;	// Store our identifier (Always same texture at the moment)
@@ -71,7 +71,7 @@ zxRenderData::zxRenderData()
 //=================================================================================================
 void zxImGUIHelper::Render(const zEngineRef<zxRenderData>& _rImGuiData, WindowInputState* _pInputData)
 {	
-	zenPerf::zScopedEventCpu EmitEvent("ImGUI");
+	zenPerf::zScopedEventCpu EmitEventImGui("ImGUI");
 
 	//----------------------------------------------------------------------------
 	// Update UI input if provided
@@ -137,8 +137,8 @@ void zxImGUIHelper::Render(const zEngineRef<zxRenderData>& _rImGuiData, WindowIn
 		ImGui::Render();		
 	}
 
-	ImDrawData* pImGuiData				= ImGui::GetDrawData();
-	zenGfx::zScopedDrawlist rUIContext	= zenGfx::zScopedDrawlist::Create("ImGui", _rImGuiData->mrRenderpass);
+	ImDrawData* pImGuiData			= ImGui::GetDrawData();
+	zenGfx::zCommandList rUIContext	= zenGfx::zCommandList::Create("ImGui", _rImGuiData->mrRenderpass);
 	//----------------------------------------------------------------------------
 	// Generates Vertex and Index buffer	
 	{	

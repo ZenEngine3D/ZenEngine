@@ -1,6 +1,6 @@
 #pragma once
 
-namespace zen { namespace zenGfx {	class zScopedDrawlist; } } //Forward declare //! @todo Clean try to not have forward declare, after moving context class
+namespace zen { namespace zenGfx {	class zCommandList; } } //Forward declare //! @todo Clean try to not have forward declare, after moving context class
 
 #include "zenCoreResResource.h"
 #include "zenCoreResGfxBuffer.h"

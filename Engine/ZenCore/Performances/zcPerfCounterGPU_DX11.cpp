@@ -7,18 +7,22 @@ namespace zcPerf
 	{
 	}
 
-	void EventGPU_DX11::Start(  )
-	{
-		Super::Start();
-		zcMgr::GfxRender.NamedEventBegin(mzEventName);
+	void EventGPU_DX11::GPUStart(const zcGfx::CommandListRef& _rDrawlist)
+	{		
+		zcGfx::CommandList::ScopedInsertPoint InsertPoint(*_rDrawlist.Get(), true);
+		Super::GPUStart(_rDrawlist);
 		mrQueryTimestampStart = zcGfx::QueryTimestamp_DX11::Create();
+		zcGfx::CommandGPUScopedEvent::Add(_rDrawlist, mzEventName.mzName, zcGfx::CommandGPUScopedEvent::keEventStart);		
+		zcGfx::CommandQueryEnd_DX11::Add(_rDrawlist, mrQueryTimestampStart->GetQuery(), true);
 	}
 
-	void EventGPU_DX11::Stop(  )
+	void EventGPU_DX11::GPUStop(const zcGfx::CommandListRef& _rDrawlist)
 	{
+		zcGfx::CommandList::ScopedInsertPoint InsertPoint(*_rDrawlist.Get(), false);
 		mrQueryTimestampStop = zcGfx::QueryTimestamp_DX11::Create();
-		zcMgr::GfxRender.NamedEventEnd();
-		Super::Stop();		
+		zcGfx::CommandGPUScopedEvent::Add(_rDrawlist, mzEventName.mzName, zcGfx::CommandGPUScopedEvent::keEventEnd);
+		zcGfx::CommandQueryEnd_DX11::Add(_rDrawlist, mrQueryTimestampStop->GetQuery(), false);
+		Super::GPUStop(_rDrawlist);		
 	}
 
 	double EventGPU_DX11::GetElapsedMs()

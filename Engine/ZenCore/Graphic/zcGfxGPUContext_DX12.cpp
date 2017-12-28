@@ -42,6 +42,17 @@ void GPUContext_DX12::Reset(const DirectXComRef<ID3D12Device>& _rDevice, const D
 	mrCommandList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
 }
 
+void GPUContext_DX12::FlushPendingFences(const DirectXComRef<ID3D12CommandQueue>& _rCmdQueue)
+{
+	zUInt uCount(maPendingFences.Count());
+	for(zUInt idx(0); idx<uCount; ++idx)
+	{
+		_rCmdQueue->Signal( maPendingFences[idx].mrFence.Get(), maPendingFences[idx].mValue );
+	}
+	maPendingFences.Clear();
+	maPendingFences.Reserve(uCount);
+}
+
 //==================================================================================================
 //! @details Compare current bound samplers with wanted one and update their binding if different
 //==================================================================================================
@@ -189,7 +200,7 @@ void GPUContext_DX12::UpdateStateRenderpass(const zcGfx::CommandDraw_HAL& _Drawc
 	if( mrRenderpass != _Drawcall.mrRenderPass )
 	{
 		mrRenderpass		= _Drawcall.mrRenderPass;
-		auto rRenderpassHAL	= _Drawcall.mrRenderPass.HAL();
+//		auto rRenderpassHAL	= _Drawcall.mrRenderPass.HAL();
 		
 		if( mrStateView != mrRenderpass.HAL()->mrStateView )
 		{				
@@ -221,7 +232,7 @@ void GPUContext_DX12::UpdateState(const CommandDraw_HAL& _Drawcall)
 {
 	auto const pMeshStripHAL						= _Drawcall.mrMeshStrip.HAL();
 	const zcRes::GfxIndexRef& rIndex				= pMeshStripHAL->mrIndexBuffer;
-	const zcRes::GfxShaderBindingRef& rShaderBind	= pMeshStripHAL->mrShaderBinding;			
+//	const zcRes::GfxShaderBindingRef& rShaderBind	= pMeshStripHAL->mrShaderBinding;			
 	const zcRes::GfxViewRef& rView					= mrStateView;
 
 	//SF @todo 1 support multiple root signature

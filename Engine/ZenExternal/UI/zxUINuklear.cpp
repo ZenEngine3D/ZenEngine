@@ -7,7 +7,7 @@
 #define NK_INCLUDE_VERTEX_BUFFER_OUTPUT
 #define NK_INCLUDE_FONT_BAKING
 #define NK_INCLUDE_DEFAULT_FONT*/
-#include <Engine/ThirdParty/nuklear/nuklear.h>
+#include <ThirdParty/nuklear/nuklear.h>
 
 namespace zxNuklear
 {
@@ -32,7 +32,7 @@ zxRenderData::zxRenderData()
 		pGeneratedTexture = reinterpret_cast<const zU8*>(nk_font_atlas_bake (&moFontAtlas, &width, &height, NK_FONT_ATLAS_RGBA32));
 		zArrayStatic<zU8> aFontRGBA;
 		aFontRGBA.Copy(pGeneratedTexture, width*height * 4);
-		mrFontTextureAtlas = zenRes::zGfxTexture2D::Create(zenConst::keTexFormat_RGBA8, zVec2U16(width, height), aFontRGBA);
+		mrFontTextureAtlas = zenRes::zGfxTexture2D::Create(zenConst::keTexFormat_RGBA8, zVec2U16((zU16)width, (zU16)height), aFontRGBA);
 	}    
 	zcRes::GfxTexture2DRef rTexture = mrFontTextureAtlas; 
 	nk_font_atlas_end(&moFontAtlas, nk_handle_ptr(rTexture.Get()), &moDrawNullTexture);
@@ -77,8 +77,9 @@ zxNuklearHelper::zxNuklearHelper()
 //=================================================================================================
 void zxNuklearHelper::Render(const zEngineRef<zxRenderData>& _rNuklearData, WindowInputState* _pInputData)
 {	
+#if 0 //Disabled nuklear fo the moment, using dear imgui
 	zenPerf::zScopedEventCpu EmitEvent("UINuklear");
-	return;
+	
 	//-------------------------------------------------------------------------
 	// Input
 	//-------------------------------------------------------------------------
@@ -183,7 +184,7 @@ void zxNuklearHelper::Render(const zEngineRef<zxRenderData>& _rNuklearData, Wind
 			//_rNuklearData->moContext.current->layout->bounds.h = 400;
 			nk_menubar_begin(&_rNuklearData->moContext);
 
-			float fRatio1(0.1f);
+//			float fRatio1(0.1f);
 			nk_layout_row_begin(&_rNuklearData->moContext, NK_STATIC, 20, 1);
 			//nk_layout_row(&_rNuklearData->moContext, NK_STATIC, 20, 1, &fRatio1);
 			//nk_layout_row_push(&_rNuklearData->moContext, 45);
@@ -202,7 +203,7 @@ void zxNuklearHelper::Render(const zEngineRef<zxRenderData>& _rNuklearData, Wind
 			}
 			//nk_layout_row_end(&_rNuklearData->moContext);
 
-			float fRatio2(0.1f);
+//			float fRatio2(0.1f);
 		//	nk_layout_row_begin(&_rNuklearData->moContext, NK_STATIC, 20, 2);
 
 			//nk_layout_row(&_rNuklearData->moContext, NK_STATIC, 20, 2, &fRatio2);
@@ -233,21 +234,21 @@ void zxNuklearHelper::Render(const zEngineRef<zxRenderData>& _rNuklearData, Wind
 		if( nk_begin(&_rNuklearData->moContext, &layout, "Demo", nk_rect(0.f, 250.f, vDim.x/2.f, 400.f),
 							NK_WINDOW_BORDER|NK_WINDOW_MOVABLE|NK_WINDOW_SCALABLE|NK_WINDOW_MINIMIZABLE|NK_WINDOW_TITLE)	)
 		{
-
-			nk_panel combo;
-			const char* weapons[4] = { "Un","Deux","Trois","Quatre" };
-			static int check_values[4] = { false, false, false, false };
-			//nk_layout_row_static(&_rNuklearData->moContext, 30, 1, 1);
-			nk_layout_row_dynamic(&_rNuklearData->moContext, 22, 2);
-			if (nk_combo_begin_label(&_rNuklearData->moContext, &combo, "text", 400)) {
-				nk_layout_row_dynamic(&_rNuklearData->moContext, 20, 1);
-				nk_checkbox_label(&_rNuklearData->moContext, weapons[0], &check_values[0]);
-				nk_checkbox_label(&_rNuklearData->moContext, weapons[1], &check_values[1]);
-				nk_checkbox_label(&_rNuklearData->moContext, weapons[2], &check_values[2]);
-				nk_checkbox_label(&_rNuklearData->moContext, weapons[3], &check_values[3]);
-				nk_combo_end(&_rNuklearData->moContext);
+			{
+				nk_panel combo;
+				const char* weapons[4] = { "Un","Deux","Trois","Quatre" };
+				static int check_values[4] = { false, false, false, false };
+				//nk_layout_row_static(&_rNuklearData->moContext, 30, 1, 1);
+				nk_layout_row_dynamic(&_rNuklearData->moContext, 22, 2);
+				if (nk_combo_begin_label(&_rNuklearData->moContext, &combo, "text", 400)) {
+					nk_layout_row_dynamic(&_rNuklearData->moContext, 20, 1);
+					nk_checkbox_label(&_rNuklearData->moContext, weapons[0], &check_values[0]);
+					nk_checkbox_label(&_rNuklearData->moContext, weapons[1], &check_values[1]);
+					nk_checkbox_label(&_rNuklearData->moContext, weapons[2], &check_values[2]);
+					nk_checkbox_label(&_rNuklearData->moContext, weapons[3], &check_values[3]);
+					nk_combo_end(&_rNuklearData->moContext);
+				}
 			}
-
 			enum {EASY, HARD};
 			static int op = EASY;
 			static int property = 20;
@@ -365,7 +366,7 @@ void zxNuklearHelper::Render(const zEngineRef<zxRenderData>& _rNuklearData, Wind
 
 		if( _rNuklearData->muIndexCount && _rNuklearData->muVertexCount )
 		{
-			zenGfx::zScopedDrawlist rUIContext	= zenGfx::zScopedDrawlist::Create("UINuklear", _rNuklearData->mrRenderpass);
+			zenGfx::zCommandContext rUIContext	= zenGfx::zCommandContext::Create("UINuklear", _rNuklearData->mrRenderpass);
 
 			//----------------------------------------------------------------------------
 			// Update content of vertex/index
@@ -430,6 +431,7 @@ void zxNuklearHelper::Render(const zEngineRef<zxRenderData>& _rNuklearData, Wind
         nk_clear(&_rNuklearData->moContext);
 
     }
+#endif
 #endif
 }
 

@@ -76,14 +76,14 @@ void zList<TItem, TLinkOffset, TVirtual1stTime>::Remove(TItem& _Item)
 }
 
 template<class TItem, zListLink TItem::* TLinkOffset, bool TVirtual1stTime>
-bool zList<TItem, TLinkOffset, TVirtual1stTime>::IsInAList(TItem& _Item)
+bool zList<TItem, TLinkOffset, TVirtual1stTime>::IsInAList(const TItem& _Item)
 {
 	zListLink& ItemLink		= GetLinkFromItem(_Item);
 	return ItemLink.IsInList();
 }
 
 template<class TItem, zListLink TItem::* TLinkOffset, bool TVirtual1stTime>
-TItem* zList<TItem, TLinkOffset, TVirtual1stTime>::GetNext(TItem& _Item)
+TItem* zList<TItem, TLinkOffset, TVirtual1stTime>::GetNext(const TItem& _Item)
 {
 	zListLink& ItemLink		= GetLinkFromItem(_Item);
 	zListLink* pLinkNext	= ItemLink.GetNext();
@@ -91,7 +91,7 @@ TItem* zList<TItem, TLinkOffset, TVirtual1stTime>::GetNext(TItem& _Item)
 }
 
 template<class TItem, zListLink TItem::* TLinkOffset, bool TVirtual1stTime>
-TItem* zList<TItem, TLinkOffset, TVirtual1stTime>::GetPrev(TItem& _Item)
+TItem* zList<TItem, TLinkOffset, TVirtual1stTime>::GetPrev(const TItem& _Item)
 {
 	zListLink& ItemLink		= GetLinkFromItem(_Item);
 	zListLink* pLinkPrev	= ItemLink.GetPrev();

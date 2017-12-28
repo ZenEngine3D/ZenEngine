@@ -1,8 +1,7 @@
 #include "zcCore.h"
-#include "Engine/ZenExternal/UI/zxUIImgui.h"
-#include "Engine/ZenExternal/UI/zxUINuklear.h"
-#include "Engine/ZenEngine/ToDel/zeWndViewport.h"
-#include <Engine/ThirdParty/imgui/imgui.h> //! @todo Urgent remove this
+#include "ZenExternal/UI/zxUIImgui.h"
+#include "ZenExternal/UI/zxUINuklear.h"
+#include "ZenEngine/ToDel/zeWndViewport.h"
 
 namespace zcRes
 {
@@ -40,15 +39,18 @@ void GfxWindow::FrameBegin()
 {
 	Super::FrameBegin();
 	char zFrameNameTemp[256];
-	sprintf(zFrameNameTemp, "Frame %06i", static_cast<int>(muFrameCount++));
+	sprintf(zFrameNameTemp, "Frame %i", static_cast<int>(++muFrameCount));
 	zStringHash32 zFrameName(zFrameNameTemp);
 	zcMgr::GfxRender.FrameBegin(this);
 	
 	const zUInt uHistoryIndex = muFrameCount%keEventHistoryCount;
 	maEventHistory[keEvtTyp_CPU][uHistoryIndex] = zcPerf::EventCPU::Create(zFrameName);
-	maEventHistory[keEvtTyp_CPU][uHistoryIndex]->Start();	
+	maEventHistory[keEvtTyp_CPU][uHistoryIndex]->CPUStart();
+
+	zenGfx::zCommandList rFrameContext = zenGfx::zCommandList::Create("Start Frame");
 	maEventHistory[keEvtTyp_GPU][uHistoryIndex] = zcPerf::EventGPU::Create(zFrameName);
-	maEventHistory[keEvtTyp_GPU][uHistoryIndex]->Start();
+	maEventHistory[keEvtTyp_GPU][uHistoryIndex]->GPUStart(rFrameContext);
+	rFrameContext.Submit();
 }
 
 void GfxWindow::FrameEnd()
@@ -69,8 +71,12 @@ void GfxWindow::FrameEnd()
 	}
 
 	const zUInt uHistoryIndex = muFrameCount%keEventHistoryCount;
-	maEventHistory[keEvtTyp_CPU][uHistoryIndex]->Stop();
-	maEventHistory[keEvtTyp_GPU][uHistoryIndex]->Stop();
+	maEventHistory[keEvtTyp_CPU][uHistoryIndex]->CPUStop();
+
+	zenGfx::zCommandList rFrameContext = zenGfx::zCommandList::Create("End Frame");
+	maEventHistory[keEvtTyp_GPU][uHistoryIndex]->GPUStop(rFrameContext);
+	rFrameContext.Submit();
+
 	zcMgr::GfxRender.FrameEnd();
 	Super::FrameEnd();
 
@@ -82,8 +88,8 @@ void GfxWindow::FrameEnd()
 	{
 		--muEventValidIndex;
 		--muEventValidCount;
-		const zenPerf::zEventRef& rEventGPU = maEventHistory[keEvtTyp_GPU][ muEventValidIndex%keEventHistoryCount ];
-		bFoundValid							= rEventGPU.IsValid() && rEventGPU->GetElapsedMs() > 0.f; 
+		const zcPerf::EventBaseRef& rEventGPU	= maEventHistory[keEvtTyp_GPU][ muEventValidIndex%keEventHistoryCount ];
+		bFoundValid								= rEventGPU.IsValid() && rEventGPU->GetElapsedMs() > 0.f; 
 	}
 	muEventValidIndex = muEventValidIndex % keEventHistoryCount;
 	
@@ -98,7 +104,7 @@ void GfxWindow::FrameEnd()
 				for (zU32 idx(1); idx < muEventValidCount; ++idx)
 					fTimeTotal += GetHistoryEvent((eEventType)idxEventType, idx)->GetElapsedMs();
 			
-				zenPerf::zEventRef rEvent	= GetHistoryEvent((eEventType)idxEventType, 0);
+				zcPerf::EventBaseRef rEvent	= GetHistoryEvent((eEventType)idxEventType, 0);
 				double fAvgTime				= fTimeTotal/(muEventValidCount-1);
 				double fSpikeTime			= fAvgTime * zenMath::Lerp(3.0, 1.25, static_cast<float>(fAvgTime/5.0) ); //Increase amount of time needed for spike, when running fast and small time change can easily be detected as one
 				if( rEvent->GetElapsedMs() > fSpikeTime )
@@ -139,8 +145,8 @@ void GfxWindow::UIRenderCB()
 
 void GfxWindow::UIRenderFps( )
 {
-	const zenPerf::zEventRef& rEventCPU = GetHistoryEvent(keEvtTyp_CPU, 0);
-	const zenPerf::zEventRef& rEventGPU = GetHistoryEvent(keEvtTyp_GPU, 0);
+	const zcPerf::EventBaseRef& rEventCPU = GetHistoryEvent(keEvtTyp_CPU, 0);
+	const zcPerf::EventBaseRef& rEventGPU = GetHistoryEvent(keEvtTyp_GPU, 0);
 	if( rEventCPU.IsValid() && rEventGPU.IsValid() )
 	{
 		if (ImGui::BeginMainMenuBar())
@@ -192,11 +198,11 @@ void GfxWindow::UIRenderStatsHistogram(eEventType _eEventType, const char* _zHis
 {
 	zenAssert( _eEventType < keEvtTyp__Count );
 	zArrayStatic<float>	aFrameMs;
-	zcRes::GfxWindowRef rWindow						= this;
-	const zUInt uFrameIndex							= rWindow->GetFrameCount();
-	int uStatCount									= 0;
-	float fMinFrameMs								= 9999.f;
-	const zArrayStatic<zenPerf::zEventRef>& aEvents	= maEventHistory[_eEventType];
+	zcRes::GfxWindowRef rWindow							= this;
+	const zUInt uFrameIndex								= rWindow->GetFrameCount();
+	int uStatCount										= 0;
+	float fMinFrameMs									= 9999.f;
+	const zArrayStatic<zcPerf::EventBaseRef>& aEvents	= maEventHistory[_eEventType];
 	aFrameMs.SetCount(muEventValidCount);
 	for (zUInt idx(0); idx < muEventValidCount; ++idx)
 	{
@@ -253,13 +259,12 @@ void GfxWindow::UIRenderEvents( )
 	{
 		if( mbUIEventShow[idxEvent] )
 		{
-			zenPerf::zEventRef rEvent	= mrEventProfiling[idxEvent];
+			zcPerf::EventBaseRef rEvent	= mrEventProfiling[idxEvent];
 			rEvent						= !rEvent.IsValid() && mbUIEventShowCurrent[idxEvent] ? GetHistoryEvent((eEventType)idxEvent, 0) : rEvent;
 			if (rEvent.IsValid())
 			{
 				if (ImGui::Begin(azWindowTile[idxEvent], &mbUIEventShow[idxEvent], ImVec2(ImGui::GetIO().DisplaySize.x / 2.f, 0), 0.8f, ImGuiWindowFlags_NoCollapse))
 				{
-					zInt sDepth(0);
 					zUInt uItemCount(0);
 					ImGui::Text("");
 					for (zUInt idx(0); idx < keCpuEventHdr__Count; ++idx)
@@ -283,7 +288,7 @@ void GfxWindow::UIRenderEvents( )
 
 
 
-void GfxWindow::UIRenderEventTree(const zenPerf::zEventRef& _rProfilEvent, double _fTotalTime, double _fParentTime, zUInt& _uItemCount, zUInt _uDepth )
+void GfxWindow::UIRenderEventTree(const zcPerf::EventBaseRef& _rProfilEvent, double _fTotalTime, double _fParentTime, zUInt& _uItemCount, zUInt _uDepth )
 {
 	zUInt uSibblingCount		= 0;
 	zUInt uChildCount			= 0;
@@ -291,13 +296,13 @@ void GfxWindow::UIRenderEventTree(const zenPerf::zEventRef& _rProfilEvent, doubl
 	double fSibblingTime		= 0;
 
 	// Event with children
-	if( _rProfilEvent.GetFirstChild().IsValid() )
+	if( _rProfilEvent->GetFirstChild().IsValid() )
 	{
-		zenPerf::zEventRef rEvent = _rProfilEvent.GetFirstChild();
+		zcPerf::EventBaseRef rEvent = _rProfilEvent->GetFirstChild();
 		while (rEvent.IsValid())
 		{
 			fTimeChilds += rEvent->GetElapsedMs();
-			rEvent		= rEvent.GetNext();
+			rEvent		= rEvent->GetNext();
 			++uChildCount;
 		}
 	}	
@@ -307,24 +312,24 @@ void GfxWindow::UIRenderEventTree(const zenPerf::zEventRef& _rProfilEvent, doubl
 		// See if we're first event of many with same name and parent (to group them)		
 		uSibblingCount				= 1;
 		fSibblingTime				= _rProfilEvent->GetElapsedMs();
-		zenPerf::zEventRef rEvent	= _rProfilEvent.GetNext();
+		zcPerf::EventBaseRef rEvent	= _rProfilEvent->GetNext();
 		while (rEvent.IsValid())
 		{
-			if (rEvent->GetName() == _rProfilEvent->GetName() && !rEvent.GetFirstChild().IsValid())
+			if (rEvent->GetName() == _rProfilEvent->GetName() && !rEvent->GetFirstChild().IsValid())
 			{
 				fSibblingTime += rEvent->GetElapsedMs();
 				++uSibblingCount;
 			}
-			rEvent = rEvent.GetNext();
+			rEvent = rEvent->GetNext();
 		}
 
 		// Discard event sharing name, since displayed by 1st item
-		rEvent = _rProfilEvent.GetPrev();
+		rEvent = _rProfilEvent->GetPrev();
 		while (rEvent.IsValid())
 		{
-			if (rEvent->GetName() == _rProfilEvent->GetName() && !rEvent.GetFirstChild().IsValid())
+			if (rEvent->GetName() == _rProfilEvent->GetName() && !rEvent->GetFirstChild().IsValid())
 				return;
-			rEvent = rEvent.GetPrev();
+			rEvent = rEvent->GetPrev();
 		}
 	}
 
@@ -342,22 +347,22 @@ void GfxWindow::UIRenderEventTree(const zenPerf::zEventRef& _rProfilEvent, doubl
 	{
 		if( uSibblingCount > 1 )
 		{
-			zenPerf::zEventRef rEventSibbling = _rProfilEvent;
+			zcPerf::EventBaseRef rEventSibbling = _rProfilEvent;
 			while( rEventSibbling.IsValid() )
 			{		
 				if( rEventSibbling->GetName() == _rProfilEvent->GetName() )
 					UIRenderEventTreeItem(rEventSibbling->GetName().mzName, _rProfilEvent->GetElapsedMs(), _fTotalTime, fSibblingTime, _uItemCount, 0, _uDepth+1, false);
 
-				rEventSibbling = rEventSibbling.GetNext();
+				rEventSibbling = rEventSibbling->GetNext();
 			}
 		}
 		else
 		{
-			zenPerf::zEventRef rEventChild = _rProfilEvent.GetFirstChild();			
+			zcPerf::EventBaseRef rEventChild = _rProfilEvent->GetFirstChild();			
 			while( rEventChild.IsValid()  )
 			{				
 				UIRenderEventTree(rEventChild, _fTotalTime, _rProfilEvent->GetElapsedMs(), _uItemCount, _uDepth+1  );
-				rEventChild = rEventChild.GetNext();
+				rEventChild = rEventChild->GetNext();
 			}
 		}
 	}

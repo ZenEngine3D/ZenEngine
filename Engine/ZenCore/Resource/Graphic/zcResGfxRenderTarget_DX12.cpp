@@ -82,9 +82,8 @@ bool GfxTarget2D_DX12::InitializeCommon(const DirectXComRef<ID3D12Resource>& _rT
 		zcMgr::GfxRender.GetDevice()->CreateRenderTargetView(_rTexture.Get(), &RTVDesc, mTargetColorView.GetCpu() );				
 
 		HRESULT hr = zcMgr::GfxRender.GetDevice()->GetDeviceRemovedReason();
-		return true;
+		return hr == S_OK;
 	}
-	return false;
 }
 
 //==================================================================================================

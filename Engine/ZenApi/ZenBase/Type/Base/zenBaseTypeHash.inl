@@ -67,7 +67,7 @@ zHash32::operator const zU32&()const
 }
 
 zHash32::zHash32()						
-: muHash(keFNV32_Seed)
+: muHash((zU32)keFNV32_Seed)
 {
 }
 
@@ -88,25 +88,25 @@ zHash32::zHash32(const char(&_zString)[TLen])
 }
 
 zHash32::zHash32(ConstCharWrapper _zStr)		
-: muHash(keFNV32_Seed)
+: muHash((zU32)keFNV32_Seed)
 { 
 	Append(_zStr.mzStr); 
 }
 
 zHash32::zHash32(char* _zString)
-: muHash(keFNV32_Seed)
+: muHash((zU32)keFNV32_Seed)
 {
 	Append(_zString);
 }
 
 zHash32::zHash32(const wchar_t* _zStr)			
-: muHash(keFNV32_Seed)
+: muHash((zU32)keFNV32_Seed)
 { 
 	Append(_zStr); 
 }
 
 zHash32::zHash32(const void* _pData, zUInt _uSize)
-: muHash(keFNV32_Seed)
+: muHash((zU32)keFNV32_Seed)
 { 
 	Append(_pData, _uSize); 
 }
@@ -195,25 +195,25 @@ zHash64::zHash64(const char(&_zString)[TLen])
 {}
 
 zHash64::zHash64(ConstCharWrapper _zStr)		
-: muHash(keFNV64_Seed)
+: muHash((zU64)keFNV64_Seed)
 { 
 	Append(_zStr.mzStr);	
 }
 
 zHash64::zHash64(char* _zString)
-: muHash(keFNV64_Seed)
+: muHash((zU64)keFNV64_Seed)
 {
 	Append(_zString);
 }
 
 zHash64::zHash64(const wchar_t* _zStr)				
-: muHash(keFNV64_Seed)
+: muHash((zU64)keFNV64_Seed)
 { 
 	Append(_zStr);			
 }
 
 zHash64::zHash64(const void* _pData, zUInt _uSize)	
-: muHash(keFNV64_Seed)
+: muHash((zU64)keFNV64_Seed)
 { 
 	Append(_pData, _uSize); 
 }

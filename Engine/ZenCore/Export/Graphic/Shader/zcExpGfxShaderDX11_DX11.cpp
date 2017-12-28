@@ -110,7 +110,7 @@ bool ExporterGfxShaderDX11_DX11::ExportWorkCompile()
 	pDefineCur->Name = "SHADER_DX11";								pDefineCur->Definition	= "1";		pDefineCur++;
 	pDefineCur->Name = pzShaderDefine[pExportInfo->meShaderStage];	pDefineCur->Definition	= "1";		pDefineCur++;
 	pDefineCur->Name = 0;											pDefineCur->Definition	= nullptr;	pDefineCur++;
-	zenAssertMsg(pDefineCur-pDefines == uUserDefineCount+uSystemDefineCount, "System define count doesn't match what was expected");
+	zenAssertMsg( (zUInt)(pDefineCur-pDefines) == uUserDefineCount+uSystemDefineCount, "System define count doesn't match what was expected");
 
 	//-------------------------------------------------------------------------
 	wchar_t zFilename[256]; size_t convertSize;
@@ -202,8 +202,8 @@ bool ExporterGfxShaderDX11_DX11::ExportWorkExtractResources()
 			if( SUCCEEDED( pGfxShaderReflection->GetResourceBindingDesc(uResIdx, &resourceDesc ) ) )
 			{								
 				ResInfo.mzName			= resourceDesc.Name;
-				ResInfo.muSlotIndex		= resourceDesc.BindPoint;
-				ResInfo.muSlotCount		= resourceDesc.BindCount;
+				ResInfo.muSlotIndex		= (zU8)resourceDesc.BindPoint;
+				ResInfo.muSlotCount		= (zU8)resourceDesc.BindCount;
 				if ( resourceDesc.Type ==  D3D_SIT_TEXTURE )
 				{
 					ResInfo.meType = keShaderRes_Texture;

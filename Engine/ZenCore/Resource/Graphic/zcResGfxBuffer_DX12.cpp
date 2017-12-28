@@ -90,7 +90,7 @@ bool GfxBuffer_DX12::Initialize()
 			return false;
 
 		zenMem::Copy( reinterpret_cast<zU8*>(pUploadData), maData.First(), maData.SizeMem() );
-		Unlock(zenGfx::zScopedDrawlist::GetFrameContext());
+		Unlock(zenGfx::zCommandList::GetFrameContext());
 	}
 	return true;
 }
@@ -125,7 +125,7 @@ void* GfxBuffer_DX12::Lock()
 	return pData;
 }
 
-void GfxBuffer_DX12::Unlock(const zenGfx::zScopedDrawlist& _rContext)
+void GfxBuffer_DX12::Unlock(const zenGfx::zCommandList& _rContext)
 {
 	zenAssert(mResource.mrUpload.Get() != nullptr);
 	mResource.mrUpload->Unmap(0, NULL);

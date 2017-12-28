@@ -55,7 +55,7 @@ template<D3D12_DESCRIPTOR_HEAP_TYPE TDescriptorType>
 class DescriptorHeap
 {
 public:	
-	using DescRange =	TDescriptorRange<TDescriptorType>;
+	using DescRange = TDescriptorRange<TDescriptorType>;
 															~DescriptorHeap();
 	DescRange												Allocate(zUInt _uCount);
 	void													Release(DescRange& _Descriptor);

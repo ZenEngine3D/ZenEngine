@@ -2,7 +2,7 @@
 
 #if ZEN_ENGINETOOL
 
-#include <Engine/ThirdParty/pugixml/src/pugixml.hpp>
+#include <ThirdParty/pugixml/src/pugixml.hpp>
 
 namespace zen { namespace zxAss
 {	

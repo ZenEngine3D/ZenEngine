@@ -17,21 +17,26 @@
 #include zenHeaderRenderer( zcGfx )
 
 //! @todo 1 Find proper location
+//! @todo 1 rename this to phase, and use enum class
 namespace zcGfx
 {
-enum eGPUPipelineMode
+enum eSubmitPhase
 {
-	keGpuPipe_DataUpdate,											keGpuPipe_DataUpdateAfter,
-	keGpuPipe_PreDrawCompute	= keGpuPipe_DataUpdateAfter,		keGpuPipe_PreDrawComputeAfter,
-	keGpuPipe_Vertex			= keGpuPipe_PreDrawComputeAfter,	keGpuPipe_VertexAfter,		 
-	keGpuPipe_VertexPixel		= keGpuPipe_VertexAfter,			keGpuPipe_VertexPixelAfter, 
-	keGpuPipe_PostDrawCompute	= keGpuPipe_VertexPixelAfter,		keGpuPipe_PostDrawComputeAfter,
-	keGpuPipe__Count			= keGpuPipe_PostDrawComputeAfter,
+	keGpuPipe_First,
+	keGpuPipe_DataUpdate,
+	keGpuPipe_ComputePreDraw,
+	keGpuPipe_Vertex,
+	keGpuPipe_VertexPixel,
+	keGpuPipe_ComputePostDraw,
+	keGpuPipe_DataResolve,
+	keGpuPipe_Last,
+
+	keGpuPipe__Count,
 	keGpuPipe__Invalid			= keGpuPipe__Count
 };
 }
 
-#include "zcGfxScopedDrawlist.h"
+#include "zcGfxCommandList.h"
 #include "zcGfxDrawcall.h"
 #include "zcGfxGPUContext.h"
 #include "zcGfxRenderMgr.h"

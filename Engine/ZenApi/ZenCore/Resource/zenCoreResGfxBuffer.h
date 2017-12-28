@@ -10,7 +10,7 @@ namespace zen { namespace zenRes
 		using Super::operator=;	
 
 		zU8*					Lock();
-		void					Unlock(const zenGfx::zScopedDrawlist& rContext);
+		void					Unlock(const zenGfx::zCommandList& rContext);
 
 		static zGfxIndex		Create(const zArrayBase<zU16>& _Indices, zenConst::ePrimitiveType _ePrimitiveType);
 		static zGfxIndex		Create(const zArrayBase<zU32>& _Indices, zenConst::ePrimitiveType _ePrimitiveType);
@@ -49,7 +49,7 @@ namespace zen { namespace zenRes
 		using Super::Super;
 		using Super::operator=;
 		void*					Lock();
-		void					Unlock(const zenGfx::zScopedDrawlist& rContext);
+		void					Unlock(const zenGfx::zCommandList& rContext);
 	protected:
 		static zGfxBuffer		Create(size_t _uElemSize, zU32 _uElemCount/*, zFlagResTexUse _UseFlags*/);
 		static zGfxBuffer		Create(const zU8* _pData, size_t _uDataSize, size_t _uElemSize, zU32 _uElemCount/*, zFlagResTexUse _UseFlags*/);

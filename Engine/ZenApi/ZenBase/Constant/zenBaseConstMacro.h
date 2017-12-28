@@ -33,3 +33,5 @@
 #define zenClassDeclare(_Class_, _ClassParent_)		zenClassDeclareNoParent(_Class_)			\
 													public: typedef _ClassParent_ Super;
 #include zenHeaderPlatform(zenBaseConstMacro)
+
+#define zenPreventEmptyFileWarning	namespace { char sbPreventsWarning4221; };	//Prevent Warning C4221 (no public symbols) that can't be ignored.

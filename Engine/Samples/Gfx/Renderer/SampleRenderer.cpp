@@ -107,7 +107,7 @@ bool SampleRendererInstance::Init()
 	// Prepare some data for asset creation
 	zArrayStatic<zU8>			aTexRGBA;
 	zVec2U16					vTexSize(256,256);
-	zenConst::eTextureFormat	eTexFormat = zenConst::keTexFormat_RGBA8;
+	//zenConst::eTextureFormat	eTexFormat = zenConst::keTexFormat_RGBA8;
 	aTexRGBA.SetCount( vTexSize.x*vTexSize.y*4 );
 	zU8*						pTexCur = aTexRGBA.First();
 	for(zUInt line=0; line<vTexSize.y; ++line)
@@ -265,9 +265,9 @@ void SampleRendererInstance::Update()
 	mrMainWindowGfx.FrameBegin();
 	UpdateBackbuffers();
 
-	zenGfx::zScopedDrawlist rContextRoot			= zenGfx::zScopedDrawlist::Create("RenderLoop");
-	zenGfx::zScopedDrawlist rContextRenderToTexture	= zenGfx::zScopedDrawlist::Create("RenderToTexture",	rContextRoot, mrRndPassTexture);
-	zenGfx::zScopedDrawlist rContextFinal			= zenGfx::zScopedDrawlist::Create("Final",				rContextRoot, mrRndPassFinal);
+	zenGfx::zCommandList rContextRoot				= zenGfx::zCommandList::Create("RenderLoop");
+	zenGfx::zCommandList rContextRenderToTexture	= zenGfx::zCommandList::Create("RenderToTexture",	rContextRoot, mrRndPassTexture);
+	zenGfx::zCommandList rContextFinal				= zenGfx::zCommandList::Create("Final",				rContextRoot, mrRndPassFinal);
 			
 	float t = static_cast<float>(zenSys::GetElapsedSec() / 3.0);	// Update our time animation
 
@@ -276,7 +276,7 @@ void SampleRendererInstance::Update()
 	//-----------------------------------------------------------------
 	{
 		zenGfx::zCommand::ClearColor(rContextRenderToTexture, mrRenderToTextureRT1, zVec4F(0, 0, 0.5, 1));
-		zenGfx::zCommand::ClearColor(rContextRenderToTexture, mrRenderToTextureRT2, zVec4F(0, 0, 0, 1));
+		zenGfx::zCommand::ClearColor(rContextRenderToTexture,  mrRenderToTextureRT2, zVec4F(0, 0, 0, 1));
 		zenGfx::zCommand::ClearDepthStencil(rContextRenderToTexture, mrRenderToTextureDepth);
 
 		zVec4F vShaderColor = zenMath::TriLerp<zVec4F>(zVec4F(1.f), zVec4F(0.15f, 0.15f, 1.0f, 1), zVec4F(1.f), zenMath::Fract(t * 2));
@@ -296,13 +296,13 @@ void SampleRendererInstance::Update()
 	// Render the cube with rendertarget as texture
 	mrCube2MeshStrip.SetValue( zHash32("World"),		matWorld[1] );
 	mrCube2MeshStrip.SetValue( zHash32("Projection"),	matProjection );	
-	zenGfx::zCommand::DrawMesh(rContextFinal, 0, mrCube2MeshStrip);	
+	zenGfx::zCommand::DrawMesh(rContextFinal, 0,		mrCube2MeshStrip);	
 
 	// Render the cube with point sampling
  	matWorld[2].SetRotationY( t );						// Rotate cube around the origin 				
  	mrTriangleMeshStrip.SetValue( zHash32("World"),		matWorld[2] );
  	mrTriangleMeshStrip.SetValue( zHash32("Projection"),matProjection );
-	zenGfx::zCommand::DrawMesh(rContextFinal, 0, mrTriangleMeshStrip);
+	zenGfx::zCommand::DrawMesh(rContextFinal, 0,		mrTriangleMeshStrip);
 
 	matWorld[3].SetRotationX( t );						// Rotate cube around the origin 				
 	mrCube3Mesh.SetValue( zHash32("World"),				matWorld[3] );

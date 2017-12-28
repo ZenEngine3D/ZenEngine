@@ -217,5 +217,5 @@ void DeleteArrayCatchException(void* _pAlloc, zenMem::zAllocator* _pAllocator )
 
 void operator delete	(void* _pAlloc,	zenMem::zAllocator* _pAllocator )					{DeleteCatchException(_pAlloc, _pAllocator);}
 void operator delete[]	(void* _pAlloc,	zenMem::zAllocator* _pAllocator )					{DeleteArrayCatchException(_pAlloc, _pAllocator);}
-void operator delete	(void* _pAlloc,	zenMem::zAllocator* _pAllocator, zU32 _uAlign )		{DeleteCatchException(_pAlloc, _pAllocator);}
-void operator delete[]	(void* _pAlloc,	zenMem::zAllocator* _pAllocator, zU32 _uAlign)		{DeleteArrayCatchException(_pAlloc, _pAllocator);}
+void operator delete	(void* _pAlloc,	zenMem::zAllocator* _pAllocator, zU32 _uAlign )		{DeleteCatchException(_pAlloc, _pAllocator); }
+void operator delete[]	(void* _pAlloc,	zenMem::zAllocator* _pAllocator, zU32 _uAlign)		{DeleteArrayCatchException(_pAlloc, _pAllocator); }

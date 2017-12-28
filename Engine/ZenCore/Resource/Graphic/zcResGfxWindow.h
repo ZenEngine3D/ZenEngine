@@ -3,7 +3,7 @@
 namespace zxImGui	{ class zxRenderData; } //Forward declare
 namespace zxNuklear { class zxRenderData; } //Forward declare
 namespace zen { namespace zenWnd { class Window; } }
-
+//namespace zcPerf { class}
 
 #include zenHeaderRenderer(zcResGfxWindow)
 
@@ -23,7 +23,7 @@ namespace zcRes
 		void									FrameBegin();
 		void									FrameEnd();
 		zenSig::zSignalEmitter0&				GetSignalUIRender();
-		zenInline const zenPerf::zEventRef&		GetHistoryEvent(eEventType _eEventType, zU32 _uIndex)const;
+		zenInline const zcPerf::EventBaseRef&	GetHistoryEvent(eEventType _eEventType, zU32 _uIndex)const;
 		zenInline zUInt							GetFrameCount()const;		
 		zenWnd::Window*							mpMainWindowOS = nullptr; //! @todo urgent : temp hack until merged gfx + OS window
 			
@@ -33,7 +33,7 @@ namespace zcRes
 		void									UIRenderFpsDetail();
 		void									UIRenderEvents();
 		void									UIRenderStatsHistogram(eEventType _eEventType, const char* _zHistoID, const char* _zTitle, const zVec3F& _vColor, float _fWidthRatio);	
-		void									UIRenderEventTree(const zenPerf::zEventRef& _rProfilEvent, double _fTotalTime, double _fParentTime, zUInt& _uItemCount, zUInt _uDepth=0 );
+		void									UIRenderEventTree(const zcPerf::EventBaseRef& _rProfilEvent, double _fTotalTime, double _fParentTime, zUInt& _uItemCount, zUInt _uDepth=0 );
 		bool									UIRenderEventTreeItem(const zString& _zEventName, double _fEventTime, double _fTotalTime, double _fParentTime, zUInt _uItemCount, zUInt _uChildCount, zUInt _uDepth, bool _bHeaderStartOpen);
 		
 		zUInt									muFrameCount			= 0;
@@ -46,26 +46,23 @@ namespace zcRes
 
 		bool									mbUIEventShow[keEvtTyp__Count];			//!< True if window for a stats should be open
 		bool									mbUIEventShowCurrent[keEvtTyp__Count];	//!< If we should display a window with latest stats each frame
-		zenPerf::zEventRef						mrEventProfiling[keEvtTyp__Count];		//!< Which Event hierarchy to display for profiling
-		zArrayStatic<zenPerf::zEventRef>		maEventHistory[keEvtTyp__Count];		//!< Hierarchical history of last X frame of events (with timing)
+		zcPerf::EventBaseRef					mrEventProfiling[keEvtTyp__Count];		//!< Which Event hierarchy to display for profiling
+		zArrayStatic<zcPerf::EventBaseRef>		maEventHistory[keEvtTyp__Count];		//!< Hierarchical history of last X frame of events (with timing)
 
 		zUInt									muEventValidIndex = 0;					//!< First valid root event index
 		zU32									muEventValidCount = 0;					//!< Number of valid root events
-		zenPerf::zEventRef						mrInvalidEvent;		
-		//zUInt									muCurrentBackbuffer		= 0; // @todo 1 temp workaround dx12
+		zcPerf::EventBaseRef					mrInvalidEvent;		
+
 	public:
 		using									Super::PerformResize;
 		using									Super::RuntimeCreate;
 		friend 									GfxWindow_HAL;
 	};
 
-	const zenPerf::zEventRef& GfxWindow::GetHistoryEvent(GfxWindow::eEventType _eEventType, zU32 _uIndex)const
+	const zcPerf::EventBaseRef& GfxWindow::GetHistoryEvent(GfxWindow::eEventType _eEventType, zU32 _uIndex)const
 	{
 		zenAssert(_eEventType < keEvtTyp__Count);
-		if( _uIndex < muEventValidCount )
-			return maEventHistory[_eEventType][(muEventValidIndex+_uIndex)%keEventHistoryCount];
-		
-		return mrInvalidEvent;
+		return  (_uIndex < muEventValidCount) ? maEventHistory[_eEventType][(muEventValidIndex+_uIndex)%keEventHistoryCount] : mrInvalidEvent;
 	}
 
 	zUInt GfxWindow::GetFrameCount()const

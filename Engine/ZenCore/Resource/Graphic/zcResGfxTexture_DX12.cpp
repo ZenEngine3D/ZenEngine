@@ -25,7 +25,7 @@ bool GfxTexture2D_DX12::Initialize()
 	TextureDesc.Width				= maMipData[0].mvDim.x;
 	TextureDesc.Height				= maMipData[0].mvDim.y;	
 	TextureDesc.DepthOrArraySize	= 1;
-	TextureDesc.MipLevels			= static_cast<UINT>(maMipData.Count());
+	TextureDesc.MipLevels			= static_cast<UINT16>(maMipData.Count());
 	TextureDesc.Format				= zcMgr::GfxRender.ZenFormatToTypeless(meFormat);
 	TextureDesc.SampleDesc.Count	= 1;
 	TextureDesc.SampleDesc.Quality	= 0;
@@ -86,7 +86,7 @@ bool GfxTexture2D_DX12::Initialize()
 				if( pUploadData )
 				{
 					zenMem::Copy(pUploadData, maMipData[mipIdx].maData.First(), maMipData[mipIdx].maData.SizeMem() );
-					Unlock(zenGfx::zScopedDrawlist::GetFrameContext());					
+					Unlock(zenGfx::zCommandList::GetFrameContext());					
 				}
 			}
 		}
@@ -152,7 +152,7 @@ void* GfxTexture2D_DX12::Lock()
 	return nullptr;
 }
 
-void GfxTexture2D_DX12::Unlock(const zenGfx::zScopedDrawlist& _rContext)
+void GfxTexture2D_DX12::Unlock(const zenGfx::zCommandList& _rContext)
 {
 	zenAssert(mResource.mrUpload.Get() != nullptr);
 	mResource.mrUpload->Unmap(0, NULL);

@@ -148,9 +148,8 @@ namespace zen { namespace zenMath
 		zU8				bFoundLow(0), bFoundHigh(0);
 		bFoundLow	= _BitScanForward( &uValLow, static_cast<zU32>(_uValue));
 		bFoundHigh	= _BitScanForward( &uValHigh, static_cast<zU32>(_uValue>>32));		
-		uResult		= bFoundLow ? uValLow : (bFoundHigh ? uValHigh+32: -1);
-#endif
-		return  uResult;
+		return bFoundLow ? uValLow : (bFoundHigh ? uValHigh+32: -1);
+#endif		
 	}
 
 	int BitsScanReverse( zU8 _uValue )
@@ -182,8 +181,7 @@ namespace zen { namespace zenMath
 		zU8				bFoundLow(0), bFoundHigh(0);
 		bFoundLow	= _BitScanReverse( &uValLow, static_cast<zU32>(_uValue));
 		bFoundHigh	= _BitScanReverse( &uValHigh, static_cast<zU32>(_uValue>>32));
-		uResult		= bFoundLow ? uValLow : (bFoundHigh ? uValHigh+32: -1);
+		return bFoundLow ? uValLow : (bFoundHigh ? uValHigh+32: -1);
 	#endif
-		return  uResult;
 	}	
 }  } // namespace zen, zenMath

@@ -9,7 +9,7 @@ public:
 	virtual										~GfxBuffer_DX11();
 	bool										Initialize();
 	void*										Lock();
-	void										Unlock(const zenGfx::zScopedDrawlist& _rContext);
+	void										Unlock(const zenGfx::zCommandList& _rContext);
 	
 	zU8*										mpLockData = nullptr; //! @todo safe support multi threading (lock return context?)
 	ID3D11Buffer*								mpBuffer;

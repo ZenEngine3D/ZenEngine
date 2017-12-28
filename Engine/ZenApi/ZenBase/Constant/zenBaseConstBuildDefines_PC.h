@@ -18,5 +18,3 @@
 #else
 	#define zenForceInline			zenInline
 #endif
-
-#define zenPreventEmptyFileWarning	namespace { char sbPreventsWarning4221; };	//Prevent warning 4221(no public symbols) that can't be ignored.

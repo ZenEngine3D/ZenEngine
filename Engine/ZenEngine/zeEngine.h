@@ -1,7 +1,7 @@
 #pragma once
 
-#include <Engine/ZenCore/zcCore.h>
-#include <Engine/ZenApi/ZenEngine/zenEngine.h>
+#include <ZenCore/zcCore.h>
+#include <ZenApi/ZenEngine/zenEngine.h>
 
 #include "Asset/ZeAss.h"
 #include "System/zeSys.h"

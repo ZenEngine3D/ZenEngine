@@ -2,6 +2,7 @@
 
 namespace zen { namespace zenSig
 {
+//! @todo 1 redo this with functor
 
 //=================================================================================================
 //! @class		

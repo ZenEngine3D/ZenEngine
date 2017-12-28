@@ -2,7 +2,7 @@ namespace zcGfx
 {
 
 void Command::SetSortKeyDraw(const zcRes::GfxRenderPassRef& _rRenderPass, float _fPriority, const zcRes::GfxMeshStripRef& _rMeshStrip)
-{
+{	
 	mrRenderPass					= _rRenderPass;
 	mSortId.mSortKeyHi				= 0;
 	mSortId.mSortKeyLo				= 0;
@@ -23,19 +23,19 @@ void Command::SetSortKeyCompute(const zcRes::GfxRenderPassRef& _rRenderPass, flo
 	mSortId.mSortKeyHi						= 0;
 	mSortId.mSortKeyLo						= 0;
 
-	mSortId.Compute.muGPUPipelineMode		= _bBeforeDraw ? keGpuPipe_PreDrawCompute : keGpuPipe_PostDrawCompute;
+	mSortId.Compute.muGPUPipelineMode		= _bBeforeDraw ? keGpuPipe_ComputePreDraw : keGpuPipe_ComputePostDraw;
 	mSortId.Compute.muShaderBindingID		= _uShaderBindingID; //! @todo urgent assign proper ShaderBindingID	
 	mSortId.Compute.mfPriority				= _fPriority;
 }
 
-void Command::SetSortKeyDataUpdate(zU64 _uResID)
+void Command::SetSortKeyGeneric	( eSubmitPhase _eSubmitPhase, zU64 _uSortID )
 {
 	mrRenderPass							= nullptr;
 	mSortId.mSortKeyHi						= 0;
 	mSortId.mSortKeyLo						= 0;
 	
-	mSortId.DataUpdate.muGPUPipelineMode	= keGpuPipe_DataUpdate;
-	mSortId.DataUpdate.muResID				= _uResID;
+	mSortId.Generic.muGPUPipelineMode		= _eSubmitPhase;
+	mSortId.Generic.muSortID				= _uSortID;
 }
 
 }

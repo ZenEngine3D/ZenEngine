@@ -80,7 +80,7 @@ void QueryTimestamp_DX11::ReferenceDeleteCB()
 {
 	if( mrQueryDisjoint.IsValid() )
 	{
-		zU64 uDiscard = GetTimestampUSec(); // This prevents DX warning about starting a new query(when query reused), without having retrieved the value first
+		GetTimestampUSec(); // This prevents DX warning about starting a new query(when query reused), without having retrieved the value first
 		mrQueryDisjoint	= nullptr;
 		mbValidResult	= false;
 	}
@@ -114,8 +114,7 @@ zEngineRef<QueryTimestamp_DX11> QueryTimestamp_DX11::Create()
 	QueryTimestamp_DX11* pQuery	= slstQueryCreated.PopTail();
 	pQuery->mrQueryDisjoint		= zcMgr::GfxRender.GetQueryDisjoint();
 	pQuery->mbValidResult		= false;
-	pQuery->muTimestamp			= 0;
-	zcMgr::GfxRender.GetDeviceContext()->End(pQuery->mpDX11Query);
+	pQuery->muTimestamp			= 0;	
 	return pQuery;
 }
 
@@ -218,9 +217,9 @@ bool ManagerRender_DX11::Unload()
 
 void ManagerRender_DX11::FrameBegin(zcRes::GfxWindowRef _FrameWindow)
 {
-	Super::FrameBegin(_FrameWindow);
 	mDX11pContextImmediate->IASetInputLayout( mDX11pEmptyInputLayout );
 	mGpuContext[0].Reset(mDX11pDevice, mDX11pContextImmediate);
+	Super::FrameBegin(_FrameWindow);	
 
 	mbDX11ProfilerDetected	= mDX11pPerf && mDX11pPerf->GetStatus();
 	mrQueryDisjoint			= QueryDisjoint_DX11::Create();
@@ -228,19 +227,25 @@ void ManagerRender_DX11::FrameBegin(zcRes::GfxWindowRef _FrameWindow)
 }
 
 void ManagerRender_DX11::FrameEnd()
-{	
+{			
+	if( mrFrameContext.IsValid() )
+	{
+		mrFrameContext.Submit();
+		mrFrameContext = nullptr;
+	}
+	
 	mrQueryDisjoint->Stop(mDX11pContextImmediate);		
 	grWindowRender.HAL()->mpDX11SwapChain->Present( 0, 0 );	
 	UnbindResources();
 	Super::FrameEnd();
 }
 
-void ManagerRender_DX11::NamedEventBegin(const zStringHash32& zName)
+void ManagerRender_DX11::NamedEventBegin(const char* _zName)
 {
 	if( mbDX11ProfilerDetected )
 	{
 		WCHAR zEventName[64];
-		mbstowcs_s(nullptr, zEventName, zName.mzName, zenArrayCount(zEventName));
+		mbstowcs_s(nullptr, zEventName, _zName, zenArrayCount(zEventName));
 		mDX11pPerf->BeginEvent(zEventName);
 	}
 }
@@ -256,9 +261,17 @@ const zEngineRef<QueryDisjoint_DX11>& ManagerRender_DX11::GetQueryDisjoint()cons
 	return mrQueryDisjoint;
 }
 
-void ManagerRender_DX11::Render(ScopedDrawlist& _Drawlist)
-{	
-	mGpuContext[0].Submit(_Drawlist.GetCommands());
+void ManagerRender_DX11::SubmitToGPU(const CommandListRef& _rCommandlist, const zArrayDynamic<CommandRef>& _rCommands)
+{
+	zenAssert(_rCommands.IsEmpty()==false);
+	// Potential Resolve RT -> Texture should be here...
+	const zEngineRef<zcGfx::Command>* prDrawcall	= _rCommands.First();
+	const zEngineRef<zcGfx::Command>* prDrawcallEnd	= _rCommands.Last();	
+	while( prDrawcall <= prDrawcallEnd )
+	{
+		(*prDrawcall)->Invoke(mGpuContext[0]);
+		++prDrawcall;		
+	}
 }
 
 }

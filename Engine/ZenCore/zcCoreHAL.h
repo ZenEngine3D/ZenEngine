@@ -6,13 +6,14 @@ namespace zcRes
 
 namespace zcGfx
 {
-	ForwardDeclareRendererHAL(ScopedDrawlist);
+	ForwardDeclareRendererHAL(CommandList);
 	ForwardDeclareRendererHAL(GPUContext);
 	ForwardDeclareRendererHAL(ManagerRender);
 
 	ForwardDeclareRendererHAL(CommandDraw);
 	ForwardDeclareRendererHAL(CommandClearColor);
-	ForwardDeclareRendererHAL(CommandClearDepthStencil);	
+	ForwardDeclareRendererHAL(CommandClearDepthStencil);
+	ForwardDeclareRendererHAL(CommandGPUScopedEvent);
 }
 
 namespace zcPerf

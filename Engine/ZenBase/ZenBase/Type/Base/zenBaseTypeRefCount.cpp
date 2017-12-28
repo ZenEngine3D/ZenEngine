@@ -8,11 +8,12 @@ zUInt zRefCounted::suLstPendingDelIndex = 0;
 void zRefCounted::ReferenceRelease()
 {
 	suLstPendingDelIndex		= (suLstPendingDelIndex + 1) % zenArrayCount(sLstPendingDel);
-	zRefCounted* pCurrentItem	= nullptr;	
-	while( pCurrentItem	= sLstPendingDel[suLstPendingDelIndex].PopHead() )
+	zRefCounted* pCurrentItem	= sLstPendingDel[suLstPendingDelIndex].PopHead();
+	while( pCurrentItem )
 	{
 		if( pCurrentItem->miRefCount <= 0)
 			pCurrentItem->ReferenceDeleteCB();
+		pCurrentItem = sLstPendingDel[suLstPendingDelIndex].PopHead();
 	}
 }
 

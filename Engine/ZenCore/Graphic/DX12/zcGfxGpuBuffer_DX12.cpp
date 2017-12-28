@@ -56,7 +56,7 @@ void* GpuBuffer::Lock(zUInt _uMipCount)
 	return pData;
 }
 
-void GpuBuffer::Unlock(const zcRes::ResourceAnyRef& _rParentResource, const zenGfx::zScopedDrawlist& _rContext)
+void GpuBuffer::Unlock(const zcRes::ResourceAnyRef& _rParentResource, const zenGfx::zCommandContext& _rContext)
 {
 	zenAssert(mrUpload.Get() != nullptr);
 	mrUpload->Unmap(0, NULL);

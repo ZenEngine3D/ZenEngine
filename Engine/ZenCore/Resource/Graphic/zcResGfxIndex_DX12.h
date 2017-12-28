@@ -10,7 +10,7 @@ public:
 	virtual										~GfxIndex_DX12();
 	bool										Initialize();
 	zU8*										Lock();
-	void										Unlock(const zenGfx::zScopedDrawlist& _rContext);
+	void										Unlock(const zenGfx::zCommandList& _rContext);
 
 	zcGfx::GpuMemoryResIndex					mResource;
 	typedef zcExp::ExporterGfxIndexDX12_DX12	RuntimeExporter;

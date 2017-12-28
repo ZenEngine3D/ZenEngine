@@ -165,7 +165,7 @@ namespace zen { namespace zenWnd
 		}
 
 		//Step 1: Registering the Window Class
-		const TCHAR zClassName[] = L"ZenWindowClass";
+		LPWSTR zClassName = L"ZenWindowClass";
 		wc.cbSize        = sizeof(WNDCLASSEX);
 		wc.style         = CS_HREDRAW | CS_VREDRAW;
 		wc.lpfnWndProc   = WndEventCallback;

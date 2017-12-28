@@ -61,13 +61,13 @@ void zArrayBase<TType>::Clear()
 template<class TType>
 TType* zArrayBase<TType>::First()
 {
-	return mpData;
+	return muCount ? mpData : nullptr;
 }
 
 template<class TType>
 const TType* zArrayBase<TType>::First()const
 {
-	return mpData;
+	return muCount ? mpData : nullptr;
 }
 
 template<class TType>
