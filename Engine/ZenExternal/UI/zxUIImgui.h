@@ -26,7 +26,7 @@ public:
 	zenRes::zGfxStructBuffer<ImDrawVert>	mrVertexBuffer;
 	zArrayStatic<zenRes::zShaderResource>	marShaderResources;
 	zArrayStatic<zenRes::zGfxCBuffer>		marShaderCBuffers;
-	zenSig::zSignalEmitter0					msigRenderUI;
+	zenSig::zSignal<>						msigRenderUI;
 	zVec2U16								mvScreenSize	= zVec2U16(0,0);
 	zU32									muVertexCount	= 0; //! @todo Urgent have buffer accessors available 
 	zU32									muIndexCount	= 0;
@@ -54,7 +54,7 @@ protected:
 	zenRes::zGfxShaderPixel					mrShaderPixel;
 	zenRes::zGfxShaderBinding				mrShaderBinding;
 	zenRes::zGfxTexture2D					mrFontTextureDefault;
-	zenRes::zGfxStateSampler						mrFontSampler;	
+	zenRes::zGfxStateSampler				mrFontSampler;	
 	friend class zxRenderData;
 };
 

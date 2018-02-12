@@ -7,7 +7,7 @@ class zArrayBits
 {
 zenClassDeclareNoParent(zArrayBits)
 public:
-	enum eConstant : zUInt { kuInvalid=-1 };
+	enum eConstant : zUInt { kuInvalid=(eConstant)-1 };
 	zenInline					zArrayBits();
 	zenInline					zArrayBits(zU32 _uBitCount);
 	zenInline					zArrayBits(std::initializer_list<bool> _Entries);

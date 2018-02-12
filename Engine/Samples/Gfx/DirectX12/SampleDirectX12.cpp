@@ -114,7 +114,7 @@ void SampleDirextX12Instance::Destroy()
 void SampleDirextX12Instance::Update()
 {	
 	Super::Update();
-	zenPerf::zScopedEventCpu EmitEvent("SampleDirextX12Instance::Update");
+	zenPerf::zScopedEventCpu EmitEventUpdate("SampleDirextX12Instance::Update");
 
 	//---------------------------------------------------------------------
 	// Render loop
@@ -123,7 +123,7 @@ void SampleDirextX12Instance::Update()
 		mrMainWindowGfx.FrameBegin();
 		UpdateBackbuffers();
 		{			
-			zenPerf::zScopedEventCpu EmitEvent("Draw");
+			zenPerf::zScopedEventCpu EmitEventDraw("Draw");
 			zenGfx::zCommandList rCxtRender	= zenGfx::zCommandList::Create("RenderLoop", mrRndPassFinal);
 			
 			float t				= static_cast<float>(zenSys::GetElapsedSec() / 3.0);	// Update our time animation

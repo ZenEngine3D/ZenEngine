@@ -264,6 +264,9 @@ template<class TItem, zListLink TItem::* TLinkOffset, bool TVirtual1stTime>
 zList<TItem, TLinkOffset, TVirtual1stTime>::zList()
 : mpRootInvalid(reinterpret_cast<zListLink*>((size_t)&mRoot | 1))
 {	
+TestOffset = zenOffsetOf(TLinkOffset);
+TestRealSizeObj = sizeof(TItem);
+//TestPredictSizeObj = TestSizeObj;
 	mRoot.mpPrevLink = mRoot.mpNextLink = mpRootInvalid;
 	Empty();
 }

@@ -9,7 +9,7 @@ namespace zen { namespace zenWnd { class Window; } }
 
 namespace zcRes
 {
-	class GfxWindow : protected GfxWindow_HAL, public zenSig::zSlot
+	class GfxWindow : protected GfxWindow_HAL
 	{
 	zenClassDeclare(GfxWindow, GfxWindow_HAL)
 	public:
@@ -22,13 +22,13 @@ namespace zcRes
 		const GfxTarget2DRef&					GetBackbuffer();			
 		void									FrameBegin();
 		void									FrameEnd();
-		zenSig::zSignalEmitter0&				GetSignalUIRender();
+		zenSig::zSignal<>&						GetSignalUIRender();
 		zenInline const zcPerf::EventBaseRef&	GetHistoryEvent(eEventType _eEventType, zU32 _uIndex)const;
 		zenInline zUInt							GetFrameCount()const;		
-		zenWnd::Window*							mpMainWindowOS = nullptr; //! @todo urgent : temp hack until merged gfx + OS window
-			
+		zenWnd::Window*							mpMainWindowOS = nullptr; //! @todo 1 urgent : temp hack until merged gfx + OS window
+		void									ConnectSignal_UIRender(zenSig::zSignal<>& _Signal);	
 	protected:
-		void									UIRenderCB();
+		
 		void									UIRenderFps();
 		void									UIRenderFpsDetail();
 		void									UIRenderEvents();
@@ -52,7 +52,7 @@ namespace zcRes
 		zUInt									muEventValidIndex = 0;					//!< First valid root event index
 		zU32									muEventValidCount = 0;					//!< Number of valid root events
 		zcPerf::EventBaseRef					mrInvalidEvent;		
-
+		zenSig::zSignal<>::Slot					mSlotUIRender;
 	public:
 		using									Super::PerformResize;
 		using									Super::RuntimeCreate;

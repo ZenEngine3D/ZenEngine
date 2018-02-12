@@ -114,6 +114,11 @@ public:
 protected:
 	zListLink				mRoot;												//!< Keep Head and Tail of list inside a regular zListLink
 	zListLink* const		mpRootInvalid;										//!< Pointer to root link have 0x01 added to their address, to know when it is the root, and thus invalid
+
+	size_t TestOffset;//! @todo 0 Temp Remove, SF TEST
+	size_t TestRealSizeObj;
+	//size_t TestPredictSizeObj;
+	//enum constant { TestSizeObj = sizeof(TItem) };
 };
 
 

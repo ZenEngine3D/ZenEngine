@@ -23,24 +23,24 @@ class zxRenderData : public zRefCounted
 {
 zenClassDeclare(zxRenderData, zRefCounted)
 public:
-											zxRenderData();
-											~zxRenderData();
-	alignas(16) zenMath::Matrix				matOrthographic;
-	zenRes::zGfxTarget2D					mrRendertarget		= nullptr;	
-	zenRes::zGfxRenderPass					mrRenderpass		= nullptr;		
-	zenRes::zGfxIndex						mrIndexBuffer		= nullptr;	
-	zenRes::zGfxTexture2D					mrFontTextureAtlas	= nullptr;
-	zenSig::zSignalEmitter0					msigRenderUI;	
-	zVec2U16								mvScreenSize		= zVec2U16(0,0);
-	zUInt									muVertexCount		= 0; //! @todo Urgent have buffer accessors available 
-	zUInt									muIndexCount		= 0;
+										zxRenderData();
+										~zxRenderData();
+	alignas(16) zenMath::Matrix			matOrthographic;
+	zenRes::zGfxTarget2D				mrRendertarget		= nullptr;	
+	zenRes::zGfxRenderPass				mrRenderpass		= nullptr;		
+	zenRes::zGfxIndex					mrIndexBuffer		= nullptr;	
+	zenRes::zGfxTexture2D				mrFontTextureAtlas	= nullptr;
+	zenSig::zSignal<>					msigRenderUI;	
+	zVec2U16							mvScreenSize		= zVec2U16(0,0);
+	zUInt								muVertexCount		= 0; //! @todo Urgent have buffer accessors available 
+	zUInt								muIndexCount		= 0;
 	
-	nk_convert_config						moConfig;
-	nk_context								moContext;
-    nk_font_atlas							moAtlas;
-    nk_buffer								moCommands;
-	nk_font_atlas							moFontAtlas;
-	nk_draw_null_texture					moDrawNullTexture;	
+	nk_convert_config					moConfig;
+	nk_context							moContext;
+    nk_font_atlas						moAtlas;
+    nk_buffer							moCommands;
+	nk_font_atlas						moFontAtlas;
+	nk_draw_null_texture				moDrawNullTexture;	
 };
 
 //=================================================================================================
@@ -56,8 +56,8 @@ class zxNuklearHelper : public zSingleton<zxNuklearHelper>
 {
 zenClassDeclare(zxNuklearHelper, zSingleton<zxNuklearHelper>)
 public:
-											zxNuklearHelper();
-	void									Render(const zEngineRef<zxRenderData>& _rNuklearData, WindowInputState* _pInputData=nullptr);
+										zxNuklearHelper();
+	void								Render(const zEngineRef<zxRenderData>& _rNuklearData, WindowInputState* _pInputData=nullptr);
 
 protected:									
 	zenRes::zGfxStateRaster				mrStateRaster;	

@@ -8,29 +8,30 @@ namespace zen { namespace zenSys {
 //! @class	Game should derive from this class, to start the engine
 //! @todo cleanup Rely on update callback instead of virtual function?
 //=============================================================================
-class zEngineInstance : public zenSig::zSlot
+class zEngineInstance
 {
-zenClassDeclare(zEngineInstance, zenSig::zSlot)
+zenClassDeclareNoParent(zEngineInstance)
 public:
-	virtual bool										Init();
-	virtual void										Destroy();
-	virtual void										Update();
-	virtual bool										IsDone()=0;	
-	virtual const char*									GetAppName()const=0;
-	void												CreateGfxWindow(const zVec2U16& _vDim, const zVec2U16& _vPos);
-	zenSig::zSignalEmitter1<zenConst::eUpdatePriority>&	GetSignalUpdate();	
+	virtual bool									Init();
+	virtual void									Destroy();
+	virtual void									Update();
+	virtual bool									IsDone()=0;	
+	virtual const char*								GetAppName()const=0;
+	void											CreateGfxWindow(const zVec2U16& _vDim, const zVec2U16& _vPos);
+	zenSig::zSignal<zenConst::eUpdatePriority>&		GetSignalUpdate();	
 
 protected:	
-	virtual void										UIRender();
-	zenRes::zGfxWindow									mrMainWindowGfx;
-	zenWnd::Window*										mpMainWindowOS		= nullptr;
-	zVec2U16											muWindowSize;
-	zenSig::zSignalEmitter1<zenConst::eUpdatePriority>	msigUpdate;	
+	virtual void									UIRender();
+	zenRes::zGfxWindow								mrMainWindowGfx;
+	zenWnd::Window*									mpMainWindowOS		= nullptr;
+	zVec2U16										muWindowSize;
+	zenSig::zSignal<>::Slot							mSlotUIRender;
+	zenSig::zSignal<zenConst::eUpdatePriority>		msigUpdate;
 	
 private:
-	void												UIRenderCB();
-	void												MainLoop();
-	friend void											LaunchEngine(zEngineInstance* _pEngineInstance, int argc, const char* const * argv);
+	void											ConnectSignal_UIRender(zenSig::zSignal<>& _Signal);
+	void											MainLoop();
+	friend void										LaunchEngine(zEngineInstance* _pEngineInstance, int argc, const char* const * argv);
 	
 };
 

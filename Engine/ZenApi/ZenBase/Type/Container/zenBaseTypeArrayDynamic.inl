@@ -59,6 +59,17 @@ zArrayDynamic<TType, TGrowthPolicy, TAlign>::~zArrayDynamic()
 {
 	zenDelnullptrArray(mpData);
 }
+
+template<class TType, GrowthPolicyFunction TGrowthPolicy, size_t TAlign>
+void zArrayDynamic<TType, TGrowthPolicy, TAlign>::Reset( zUInt _uReserveCount )
+{	
+	_uReserveCount	= _uReserveCount == (zUInt)(-1) ? muCountReserved : _uReserveCount;
+	bool bShrink	= _uReserveCount < muCountReserved;
+	muCountReserved = _uReserveCount;
+	muCount			= 0;
+	if( bShrink )
+		Shrink();
+}
 		
 template<class TType, GrowthPolicyFunction TGrowthPolicy, size_t TAlign>
 zUInt zArrayDynamic<TType, TGrowthPolicy, TAlign>::SetCount(zUInt _uCount)

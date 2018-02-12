@@ -51,11 +51,39 @@ class ItemWithVirtual
 public:
 	virtual ~ItemWithVirtual(){};
 	size_t mValueBefore;
+//protected:
 	zListLink mlnkList;
+public:
 	size_t mValueAfter;
-	typedef zList<ItemWithVirtual, &ItemWithVirtual::mlnkList, true> TypeList;
+	using TypeList = zList<ItemWithVirtual, &ItemWithVirtual::mlnkList, false>;	
+	//template<class TItem, zListLink TItem::*, bool> friend class zList;
+};
+//typedef zList<ItemWithVirtual, &ItemWithVirtual::mlnkList, false> ItemWithVirtualList;
+
+template <int ListSupportCount>
+class ListNode
+{
+protected:
+	ListNode* mpPrev[ListSupportCount]={nullptr};
+	ListNode* mpNext[ListSupportCount]={nullptr};
+	template <class, int>
+	friend class ListTest;
 };
 
+template<class TObjectClass, int TListIndex=0>
+class ListTest
+{
+public:
+	static TObjectClass& GetNext(const TObjectClass& _ObjCurrent)
+	{
+		return *reinterpret_cast<TObjectClass*>(_ObjCurrent.mpNext[TListIndex]);
+	}
+};
+
+class TestListClass : public ListNode<1>
+{
+	int mValue = 1;
+};
 
 class TestReferenceValue : public zRefCounted
 {
@@ -69,6 +97,12 @@ void SampleListIntrusive()
 	zenIO::Log(zenConst::keLog_Game, " zListIntrusive");
 	zenIO::Log(zenConst::keLog_Game, zenConst::kzLineA40);
 
+#if 0
+	zList<ItemWithVirtual, &ItemWithVirtual::mlnkList, false> List2;
+
+	ListTest<TestListClass> myList;
+	TestListClass myObj;	
+	TestListClass* myObj2 = &myList.GetNext( myObj );
 	//============================================================================
 	// Making sure compiler supports intrusive list vtable padding
 	//============================================================================
@@ -194,6 +228,7 @@ void SampleListIntrusive()
 	zenIO::Log(zenConst::keLog_Game, "");
 	zenDelArray(aItemNode);
 //	zenDelArray(aItemChild);
+#endif
 }
 
 }

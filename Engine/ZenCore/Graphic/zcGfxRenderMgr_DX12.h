@@ -24,8 +24,8 @@ protected:
 	D3D12_QUERY_TYPE				meQueryType;
 	zArrayStatic<zU8>				maResultData;
 	UINT64							muDXFrequency	= 0;	//!< For timestamp query, the clock frequency of cmdlist
-	atomic<zU64>					muIndexCurrent	= 0;	//!< Next available Query Index
-	atomic<zU64>					muIndexStart	= 0;	//!< First un-submitted Query Index
+	std::atomic<zU64>				muIndexCurrent	= 0;	//!< Next available Query Index
+	std::atomic<zU64>				muIndexStart	= 0;	//!< First un-submitted Query Index
 	zU64							muIndexFence	= 0;	//!< Last resolved Query Index saved from fence)
 	zU64							muIndexResolved	= 0;	//!< Last resolved Query Index saved from fence)
 	zU64							muQueryCount	= 0;	//!< Number of Queries in the RingBuffer
@@ -95,7 +95,7 @@ protected:
 	DescriptorHeapSRV							maFrameDescriptorHeapSRV[kuFrameBufferCount];	//!< Descriptor heap for temporary SRV mapped to gpu everyframe and released (unlike permanent descriptor, this one gives access to resources in shader)
 	DescriptorRangeSRV							maFrameDescriptorSRV[kuFrameBufferCount];		//!< Descriptor Range encompassing entire frame descriptor heap (don't use manual tracking of allocated descriptors for this, just keep incrementing used index in this descriptor range for better performances)
 	zUInt										muFrameDescriptorCount	= 32*1024;				//!< Maximum number of resources that can be binded to GPU per frame @todo 2 Allow specifying the size of ring buffer
-	atomic<zUInt>								muFrameDescriptorIndex	= 0;					//!< Position withing current frame 'maFrameDescriptorSRV' @todo 2 see about MT strategy
+	std::atomic<zUInt>							muFrameDescriptorIndex	= 0;					//!< Position withing current frame 'maFrameDescriptorSRV' @todo 2 see about MT strategy
 
 	QueryHeapRingbuffer_DX12					mQueryTimestampHeap;							//!< Heap of queries for Timestamps
 	zU64										mQueryTimestampFreq;							//!< Last read GPU Frequency (ticks/sec), needed for Timestamp)

@@ -5,7 +5,7 @@
 #include <map>
 #include <set>
 #include <unordered_map>
-
+#include <eastl/map.h>
 
 namespace tracking_allocator
 {
@@ -218,6 +218,7 @@ namespace sample
 		//---------------------------------------------------------------------------
 		// std::map test
 		//---------------------------------------------------------------------------
+		{
 		typedef std::map<zU32, zU32, std::less<zU32>, tracking_allocator::allocator<zU32> > hashmap; 
 		hashmap hashmaptest;
 		srand(1);
@@ -244,10 +245,43 @@ namespace sample
 
 		//dArraySpeed.Clear();
 		zenIO::Log(zenConst::keLog_Game, ".... Cleared", uTemp);		
+		}
+		//---------------------------------------------------------------------------
+		// eastl:map test
+		//---------------------------------------------------------------------------		
+		{
+		typedef eastl::map< zU32, zU32, std::less<zU32>/*, tracking_allocator::allocator<zU32>*/ > eahashmap; 
+		eahashmap hashmaptest;
+		srand(1);
+		size_t AllocSizeStart = tracking_allocator::g_bytesAllocated;
+		uTimeStartSet = zenSys::GetTimeUSec();
+		for(zU32 i=0; i<kuTestCount; ++i)
+		{			
+			uValKey = uValKey<<16 | rand();
+			hashmaptest[uValKey] = i;
+		}
+		uTimeStopSet = zenSys::GetTimeUSec();
+		uTimeStartGet = zenSys::GetTimeUSec();
+		for(zU32 i=0; i<kuTestCount; ++i)
+		{			
+			uValKey = uValKey<<16 | rand();
+			uTemp += hashmaptest[uValKey];
+		}
+		uTimeStopGet = zenSys::GetTimeUSec();
+		zenIO::Log(zenConst::keLog_Game, "eastl::map          Set(%7ius) Get(%7ius) Mem(%6iKb) Overhead(%6iKb)", 
+			zU32(uTimeStopSet-uTimeStartSet), 
+			zU32(uTimeStopGet-uTimeStartGet),
+			zU32(tracking_allocator::g_bytesAllocated-AllocSizeStart)/1024, 
+			zU32(tracking_allocator::g_bytesAllocated-AllocSizeStart-kuTestCount*sizeof(zU32))/1024 );
 
+		//dArraySpeed.Clear();
+		zenIO::Log(zenConst::keLog_Game, ".... Cleared", uTemp);		
+		}
 		//---------------------------------------------------------------------------
 		// Find First Unused
 		//---------------------------------------------------------------------------
+//! @todo 0 assert here
+/*
 		zMap<char>::Key32 hashIndex(32);
 		hashIndex.Set(0, 'a');
 		hashIndex.Set(1, 'b');
@@ -256,6 +290,7 @@ namespace sample
 		hashIndex.Set(5, 'f');
 		zHash32 firstUnused = hashIndex.GetFirstUnusedKey();
 		zenIO::Log(zenConst::keLog_Game, "Hashmap Find first Unused value OK? : %s", zenConst::kzFalseTrue[(zUInt)firstUnused==3] );
+*/
 	}
 
 }

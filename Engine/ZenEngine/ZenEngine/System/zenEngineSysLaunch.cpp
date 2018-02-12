@@ -89,7 +89,7 @@ void zEngineInstance::CreateGfxWindow(const zVec2U16& _vDim, const zVec2U16& _vP
 	mrMainWindowGfx					= mpMainWindowOS->GetGfxWindow();
 	mrMainWindowGfx->mpMainWindowOS	= mpMainWindowOS;
 	muWindowSize					= _vDim;
-	mrMainWindowGfx->GetSignalUIRender().Connect(*this, &zEngineInstance::UIRenderCB);
+	ConnectSignal_UIRender(mrMainWindowGfx->GetSignalUIRender());
 }
 
 bool zSampleEngineInstance::IsDone()
@@ -121,9 +121,9 @@ void zSampleEngineInstance::UIRender()
 		ImGui::ShowTestWindow();
 }
 
-void zEngineInstance::UIRenderCB()
+void zEngineInstance::ConnectSignal_UIRender(zenSig::zSignal<>& _Signal)
 {
-	UIRender();	
+	mSlotUIRender.Connect(_Signal, [&](){ UIRender(); });//Calling virtual method that child class can override
 }
 
 void zEngineInstance::UIRender()

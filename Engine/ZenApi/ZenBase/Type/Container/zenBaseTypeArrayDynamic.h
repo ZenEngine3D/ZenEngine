@@ -30,7 +30,7 @@ namespace zen { namespace zenType
 		void						RemoveSwap( zUInt _uIndex );
 		void						RemoveSwap( const TType& _Item );
 
-		//void						Reset( zUInt _uReserveCount ) //! @todo Implement optimized setcount=0 + reserve
+		void						Reset( zUInt _uReserveCount=(zUInt)-1 );
 		void						Reserve(zUInt _uCount);		
 		zUInt						ReservedCount()const;
 		zUInt						ReservedSize()const;

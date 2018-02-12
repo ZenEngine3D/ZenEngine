@@ -167,7 +167,7 @@ void SampleDebugUIInstance::Destroy()
 void SampleDebugUIInstance::Update()
 {	
 	Super::Update();
-	zenPerf::zScopedEventCpu EmitEvent("SampleDebugUIInstance::Update");
+	zenPerf::zScopedEventCpu EmitEventUpdate("SampleDebugUIInstance::Update");
 
 	//---------------------------------------------------------------------
 	// Render loop
@@ -176,7 +176,7 @@ void SampleDebugUIInstance::Update()
 		mrMainWindowGfx.FrameBegin();
 		UpdateBackbuffers();
 		{			
-			zenPerf::zScopedEventCpu EmitEvent("Draw");
+			zenPerf::zScopedEventCpu EmitEventDraw("Draw");
 			zenGfx::zCommandList rCxtRender	= zenGfx::zCommandList::Create("RenderLoop", mrRndPassFinal);
 			
 			float t				= static_cast<float>(zenSys::GetElapsedSec() / 3.0);	// Update our time animation

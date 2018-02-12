@@ -18,10 +18,10 @@ GfxWindow::GfxWindow()
 		mbUIEventShowCurrent[idx] = false;
 	}
 
-	mrImGuiData		= new(static_cast<zenMem::zAllocator*>(nullptr), 16) zxImGui::zxRenderData; //! @todo Urgent auto find alignment needs...
-	mrImGuiData->msigRenderUI.Connect(*this, &GfxWindow::UIRenderCB);
+	mrImGuiData		= new(static_cast<zenMem::zAllocator*>(nullptr), 16) zxImGui::zxRenderData; //! @todo Urgent auto find alignment needs...	
 	mrNuklearData	= new(static_cast<zenMem::zAllocator*>(nullptr), 16) zxNuklear::zxRenderData; //! @todo Urgent auto find alignment needs...
 	//mrNuklearData->msigRenderUI.Connect(*this, &GfxWindow::UIRenderCB);
+	ConnectSignal_UIRender(mrImGuiData->msigRenderUI);
 }
 
 const GfxTarget2DRef& GfxWindow::GetBackbuffer() 
@@ -29,7 +29,7 @@ const GfxTarget2DRef& GfxWindow::GetBackbuffer()
 	return mrBackbufferCurrent;
 }
 
-zenSig::zSignalEmitter0& GfxWindow::GetSignalUIRender()
+zenSig::zSignal<>& GfxWindow::GetSignalUIRender()
 {
 	zenAssert(mrImGuiData.IsValid());
 	return mrImGuiData->msigRenderUI;
@@ -118,29 +118,32 @@ void GfxWindow::FrameEnd()
 	
 }
 
-void GfxWindow::UIRenderCB()
+void GfxWindow::ConnectSignal_UIRender(zenSig::zSignal<>& _Signal)
 {
-	if (ImGui::BeginMainMenuBar())
+	mSlotUIRender.Connect(_Signal, [&]()
 	{
-		if( ImGui::BeginMenu("ZenEngine") )
-		{					
-			ImGui::MenuItem("Performances",				nullptr, &mbUIShowFps);
-			ImGui::MenuItem("Performances (details)",	nullptr, &mbUIShowDetailFps);
-			ImGui::MenuItem("Profiling CPU",			nullptr, &mbUIEventShowCurrent[keEvtTyp_CPU]);
-			ImGui::MenuItem("Profiling GPU",			nullptr, &mbUIEventShowCurrent[keEvtTyp_GPU]);
-			ImGui::MenuItem("Profiling display spike",	nullptr, &mbUIAutoDisplaySpike);			
-			ImGui::EndMenu();			
+		if (ImGui::BeginMainMenuBar())
+		{
+			if( ImGui::BeginMenu("ZenEngine") )
+			{					
+				ImGui::MenuItem("Performances",				nullptr, &mbUIShowFps);
+				ImGui::MenuItem("Performances (details)",	nullptr, &mbUIShowDetailFps);
+				ImGui::MenuItem("Profiling CPU",			nullptr, &mbUIEventShowCurrent[keEvtTyp_CPU]);
+				ImGui::MenuItem("Profiling GPU",			nullptr, &mbUIEventShowCurrent[keEvtTyp_GPU]);
+				ImGui::MenuItem("Profiling display spike",	nullptr, &mbUIAutoDisplaySpike);			
+				ImGui::EndMenu();			
+			}
+			ImGui::EndMainMenuBar();
 		}
-		ImGui::EndMainMenuBar();
-	}
 		
-	if( mbUIShowFps )
-		UIRenderFps();
+		if( mbUIShowFps )
+			UIRenderFps();
 
-	if( mbUIShowDetailFps )
-		UIRenderFpsDetail();
+		if( mbUIShowDetailFps )
+			UIRenderFpsDetail();
 
-	UIRenderEvents();
+		UIRenderEvents();
+	});
 }
 
 void GfxWindow::UIRenderFps( )
