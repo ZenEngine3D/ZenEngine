@@ -14,10 +14,9 @@ class zListLink
 {
 public:
     zenInline				~zListLink();		
-	zenInline void			SetNull();							//!< Use to set pointer to null. Doing so will break the list if element was in one
 	zenInline bool			IsInList()const;					//!< @brief True if this link has been added to a list
 
-protected:
+protected:    
 	zenInline void			Remove();							//!< @brief Remove item from the list this zListLink belongs to	
 	zenInline zListLink*	GetNext()const;						//!< @brief Get the next item zListLink object
 	zenInline zListLink*	GetPrev()const;						//!< @brief Get the previous item zListLink object	

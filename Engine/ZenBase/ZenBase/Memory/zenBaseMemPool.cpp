@@ -85,7 +85,7 @@ void zAllocatorPool::Free(void* _pAlloc, void* _pInfoAlloc)
 	RemAlloc(pInfoAlloc);
 
 	PoolItem* pPoolItemFree				= reinterpret_cast<PoolItem*>(_pInfoAlloc);
-	pPoolItemFree->mlnkList.SetNull();
+	new(pPoolItemFree) PoolItem();
 	mlstFreeItems.PushHead(*pPoolItemFree);	
 }
 
@@ -96,17 +96,17 @@ void zAllocatorPool::MemoryIncrease(zU32 _uItemCount)
 	PoolAlloc*		pNewAlloc		= reinterpret_cast<PoolAlloc*>(zMalloc(uTotalSize));	
 	size_t			pMemCur			= reinterpret_cast<size_t>(pNewAlloc+1);
 	size_t			pMemEnd			= reinterpret_cast<size_t>(pNewAlloc) + uTotalSize;
-
+	
 	while(pMemCur < pMemEnd)
 	{
 		PoolItem* pPoolItem = reinterpret_cast<PoolItem*>(pMemCur);
-		pPoolItem->mlnkList.SetNull();
+		new(pPoolItem) PoolItem();
 		mlstFreeItems.PushHead(*pPoolItem);
 		pMemCur += uPoolItemSize;
 	}
 
 	mPoolReservedCount += _uItemCount;
-	pNewAlloc->mlnkList.SetNull();
+	new(pNewAlloc) PoolAlloc();
 	mlstAlloc.PushHead(*pNewAlloc);
 }
 

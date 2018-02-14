@@ -50,7 +50,7 @@ void zAllocatorFastPoolBase::Deallocate(void* _pAlloc)
 {
 	//! @todo safety Add debug check for integrity
 	PoolItem* pAllocFree = reinterpret_cast<PoolItem*>(_pAlloc);
-	pAllocFree->mlnkList.SetNull();
+	new(pAllocFree) PoolItem();
 	mlstFreeItems.PushHead(*pAllocFree);
 }
 
@@ -64,8 +64,8 @@ void zAllocatorFastPoolBase::MemoryIncrease(zU32 _uItemCount)
 
 	while (pMemCur < pMemEnd)
 	{
-		PoolItem* pPoolItem = reinterpret_cast<PoolItem*>(pMemCur);
-		pPoolItem->mlnkList.SetNull();
+		PoolItem* pPoolItem = reinterpret_cast<PoolItem*>(pMemCur);		
+		new(pPoolItem) PoolItem();
 		mlstFreeItems.PushHead(*pPoolItem);
 		pMemCur += muItemSize;
 	}

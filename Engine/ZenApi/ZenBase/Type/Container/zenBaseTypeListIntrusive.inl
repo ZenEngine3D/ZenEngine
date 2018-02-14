@@ -29,11 +29,6 @@ zListLink* zListLink::GetPrev()const
 	return ((size_t)mpPrevLink & 0x1) ? nullptr : mpPrevLink; //If link pointer contains 0x01, we know it points to list root, and is invalid
 }
 
-void zListLink::SetNull()
-{
-	mpNextLink = mpPrevLink = nullptr;
-}
-
 void zListLink::Remove()
 {
 	if (IsInList())
