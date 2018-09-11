@@ -23,7 +23,7 @@ namespace sample
 			SampleHamt();
 			SampleArray();
 			SampleTypeMisc();
-			SampleListIntrusive();
+			SampleListIntrusive();			
 			SetDone();
 		}
 	};

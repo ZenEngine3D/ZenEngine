@@ -4,7 +4,7 @@
 
 namespace zen { namespace zenType 
 {
-	//! @todo performance Create better lockless queue that doesn't involve 'locking' with atomic :P
+	//! @todo 2 performance Create better lockless queue that doesn't involve 'locking' with atomic :P
 	template<class TObject, zUInt TItemCount>
 	class zThreadsafeQueueFifo
 	{

@@ -21,8 +21,8 @@ GfxTarget2DRef GfxTarget2D_DX12::RuntimeCreate(const DirectXComRef<IDXGISwapChai
 		D3D12_RESOURCE_DESC RenderTargetDesc = rDXRendertarget->GetDesc();
 		if( RenderTargetDesc.Dimension == D3D12_RESOURCE_DIMENSION_TEXTURE2D && RenderTargetDesc.Flags & D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET )
 		{
-			static zenMem::zAllocatorPool sMemPool("Pool GfxTarget2D", sizeof(GfxTarget2D), 128, 128);		
-			rRendertarget						= zenNew(&sMemPool) GfxTarget2D();		
+			//static zenMem::zAllocatorPool sMemPool("Pool GfxTarget2D", sizeof(GfxTarget2D), 128, 128);		
+			rRendertarget						= zenNewPool GfxTarget2D();		
 			rRendertarget.HAL()->meFormat		= _eTexFormat;
 			rRendertarget.HAL()->mvDim			= zVec2U16((zU16)RenderTargetDesc.Width, (zU16)RenderTargetDesc.Height);
 			rRendertarget.HAL()->mrResource		= rDXRendertarget;

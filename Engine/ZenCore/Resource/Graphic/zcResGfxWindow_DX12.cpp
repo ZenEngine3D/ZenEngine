@@ -40,8 +40,8 @@ namespace zcRes
 		if( FAILED(hr) )
 			return FALSE;
 													
-		static zenMem::zAllocatorPool sMemPool("Pool GfxWindow", sizeof(GfxWindow), 32, 32);
-		GfxWindowRef rResource						= zenNew(&sMemPool) GfxWindow();		
+		//static zenMem::zAllocatorPool sMemPool("Pool GfxWindow", sizeof(GfxWindow), 32, 32);
+		GfxWindowRef rResource						= zenNewPool GfxWindow();		
 		bool bValid									= true;
 		rSwapChain.As( &rResource.HAL()->mrDXSwapChain );
 		rResource.HAL()->mhWindow					= _WindowHandle;				

@@ -66,6 +66,7 @@ bool EngineStart()
 //==================================================================================================
 void EngineStop()
 {	
+	zRefCounted::ReleasePendingAtProgramEnd();
 	zbSys::ShutdownSystem();
 }
 

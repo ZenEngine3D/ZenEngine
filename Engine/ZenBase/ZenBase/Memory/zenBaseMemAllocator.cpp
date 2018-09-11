@@ -1,221 +1,71 @@
 #include "zbBase.h"
 
-#define kh32AllocatorStamp	zHash32("AllocatorValid")	//Note Using define and not constant, since we must be sure value is valid before main() is reached (for global heap allocs)
-#define kh64AllocationStamp zHash64("AllocationEnd")
-
 namespace zen { namespace zenMem
 {
 
-zenInline ScopedAllocator::TypeList& GetAllocatorScopeList()
+zbMem::Allocator& GetMemoryAllocator()
 {
-	static ScopedAllocator::TypeList sOverideList;
-	return sOverideList;
+	static zbMem::Allocator MemoryAllocator;
+	return MemoryAllocator;
 }
 
-ScopedAllocator::ScopedAllocator(zAllocator* _pAllocator)
-: mpAllocator(_pAllocator)
-{
-	zenAssert(mpAllocator);
-	GetAllocatorScopeList().PushTail(*this);
-}
-ScopedAllocator::~ScopedAllocator()
-{
-	ScopedAllocator::TypeList::Remove(*this);
-	zenAssert(!zbSys::IsSystemActive() || !GetAllocatorScopeList().IsEmpty());	//! Should be impossible with global 'GAllocatorOveride'
-}		
-
-zAllocator& ScopedAllocator::GetActive()
-{
-	return *static_cast<ScopedAllocator*>(GetAllocatorScopeList().GetTail())->mpAllocator;
-}
-
-zAllocator& zAllocator::GetDefault()
-{
-	static zAllocatorMalloc sAllocatorMalloc("DefaultMalloc");
-	static ScopedAllocator sAllocatorOveride(&sAllocatorMalloc);
-	return ScopedAllocator::GetActive();
-}
-
-zAllocator::zAllocator(zDebugString _zName)
-: mh32ValidStamp( kh32AllocatorStamp )
-, mzAllocatorName(_zName)	
-, muTotalAllocSize(0)
-, muTotalAllocCount(0)
-{
-}
-
-zAllocator::~zAllocator()
-{
-	zenAssertMsg(muTotalAllocCount==0, "Trying to delete a memory manager that still has elements allocated");
-}
-/*
-void zAllocator::DebugPrint()
-{
-#if ZEN_MEMORYDEBUG_ON
-	zbLog::Log( zbLog::keLog_DebugInfo, zenConst::kzLineA60 );
-	zbLog::Log( zbLog::keLog_DebugInfo, "Memory" );
-	zbLog::Log( zbLog::keLog_DebugInfo, zenConst::kzLineA60 );
-	zList2xNode* pAlloc = mlstAllocations.GetHead();
-	while( pAlloc != mlstAllocations.GetInvalid() )
-	{
-		pAlloc = pAlloc->LstNext();
-	}
-	
-	//! @todo Print informations about allocations
-		char		zSpaces[kuTreeMaxDepth*kuSpacePerLevel+1];
-		zI8			sSlotIndexPrev[ sizeof(((Iterator*)nullptr)->mpSlotIndex) ];	//Get size of non-instantiated member _rray
-		memset(zSpaces, ' ', sizeof(zSpaces));
-		memset(sSlotIndexPrev, 0xFF, sizeof(sSlotIndexPrev) );
-		for(Iterator it=GetFirst(); it.IsValid(); ++it)
-		{
-			zI8 sSharedParentDepth(0);
-			zI8 sCurrentDepth(0);
-			while( sSlotIndexPrev[sSharedParentDepth] == it.mpSlotIndex[sSharedParentDepth] )
-				++sSharedParentDepth;
-			zenMem::Copy(sSlotIndexPrev, it.mpSlotIndex, sizeof(sSlotIndexPrev) );
-	
-		 zHash32 h32Key = it.GetKey();
-			zSpaces[kuSpacePerLevel*sSharedParentDepth] = 0; 
-			zbLog::Printf(zbLog::keLog_Game, "\n%s", zSpaces);
-			zSpaces[kuSpacePerLevel*sSharedParentDepth] = ' '; 
-			sCurrentDepth = sSharedParentDepth;
-			while( sCurrentDepth != it.msDepth )
-				zbLog::Printf(zbLog::keLog_Game, "<%02i>----------", (h32Key>>(kuIndexSize*sCurrentDepth++))&kuIndexMask);
-			zbLog::Printf(zbLog::keLog_Game, "<%02i> %08X", (h32Key>>(kuIndexSize*sCurrentDepth))&kuIndexMask, h32Key);
-		}
-#endif
-
-}
-*/
-size_t zAllocator::GetAllocSize(size_t _uWantedSize, size_t _uExtraSize, zU32 _uAlign )
-{
-	zenAssertMsg( zenMath::IsPower2(_uAlign) && _uAlign>=sizeof(void*), "Alignement must be a power of 2 and greater equal than pointer data size" );	
-	return _uWantedSize + _uExtraSize + _uAlign + sizeof(zbMem::AllocHeader) + sizeof(kh64AllocationStamp);
-}
-
-void* zAllocator::AddAlloc( size_t _uWantedSize, size_t _uExtraSize, zU32 _uAlign, void* _pAllocation, const bool _bIsArray )
-{
-	size_t uAlignMask						= size_t(_uAlign)-1;
-	zU8* pAllocAligned						= static_cast<zU8*>(_pAllocation) + sizeof(zbMem::AllocHeader) + _uExtraSize;
-	size_t uAlignPadding					= (static_cast<size_t>(_uAlign) - ((size_t)pAllocAligned & uAlignMask)) & uAlignMask; 
-	pAllocAligned							+= uAlignPadding;
-	zbMem::AllocHeader* pHeader				= ((zbMem::AllocHeader*)( pAllocAligned ))-1;	
-	*(zHash64*)(pAllocAligned+_uWantedSize)	= kh64AllocationStamp;
-	pHeader->Set(this, (zU32)((zU8*)pAllocAligned-(zU8*)_pAllocation), _uWantedSize, _bIsArray);
-	muTotalAllocSize						+= _uWantedSize;
-	muTotalAllocCount						+= 1;
-
-#if ZEN_MEMORYDEBUG_ON
-	pHeader->LstReset();
-	mlstAllocations.AddHead( pHeader );
-#endif
-	return pAllocAligned;
-}
-
-void zAllocator::RemAlloc(void* _pAlloc)
+// Note:	Classes with virtual table add some data at the beginning of memory(with most compilers) and object receive an offsetted address from new.
+//			We ignore any part of the address that's not aligned to find the original memory address. 
+//			Delete operator doesn't needs this since compiler remove the offset in generated code.
+zenInline void* GetOriginalAddress(void* _pMemory)
 {	
-	zbMem::AllocHeader* pAlloc	= static_cast<zbMem::AllocHeader*>(_pAlloc);
-	muTotalAllocSize			-= pAlloc->muWantedSize;
-	muTotalAllocCount			-= 1;
-#if ZEN_MEMORYDEBUG_ON
-	pAlloc->LstRemove();
-#endif
+	_pMemory = reinterpret_cast<void*>(reinterpret_cast<zUInt>(_pMemory) & ~zUInt(zbMem::kAlign-1));
+	return _pMemory;
 }
 
-}} //namespace zen { namespace mem  
-
-void* zMalloc(size_t _uSize_, zU32 uAlign)
+size_t GetRequestedSize(void* _pMemory)
 {
-	return zenMem::zAllocator::GetDefault().Malloc(_uSize_, false, uAlign);
+	return _pMemory ? GetMemoryAllocator().GetRequestedSize(GetOriginalAddress(_pMemory)) : 0;
 }
 
-void* zMalloc(zenMem::zAllocator* _pAllocator, size_t _uSize_, zU32 uAlign)
+void* ResizeMemory(void* _pMemory, size_t _NewSize)
 {
-	_pAllocator = _pAllocator ? _pAllocator : &zenMem::zAllocator::GetDefault();
-	return _pAllocator->Malloc(_uSize_, false, uAlign);
+	zenAssert(_pMemory);
+	return GetMemoryAllocator().Resize(GetOriginalAddress(_pMemory), _NewSize);
 }
 
-void* operator new(size_t _uSize, zenMem::zAllocator* _pAllocator)
+}}
+
+void* operator new(size_t _Size, const char* _Filename, int _LineNumber, size_t _MaxSize, bool _IsPoolItem, bool _IsCheckAccess)
 {
-	_pAllocator = _pAllocator ? _pAllocator : &zenMem::zAllocator::GetDefault();
-	return _pAllocator->Malloc(_uSize, false, zenDefaultAlign);
+	zenAssertMsg(_MaxSize == 0, "Resize not supported on single allocation, needs to be on array of objects");
+	void* pMemory = zenMem::GetMemoryAllocator().Malloc(_Size, _Size, _Filename, _LineNumber, false, _IsPoolItem, _IsCheckAccess);
+	return pMemory;
 }
 
-void* operator new[](size_t _uSize, zenMem::zAllocator* _pAllocator )
+void* operator new[](size_t _Size, const char* _Filename, int _LineNumber, size_t _MaxSize, bool _IsPoolItem, bool _IsCheckAccess)
 {
-	_pAllocator = _pAllocator ? _pAllocator : &zenMem::zAllocator::GetDefault();
-	return _pAllocator->Malloc(_uSize, true, zenDefaultAlign);
+	zenAssertMsg(_MaxSize == 0 || !_IsPoolItem, "Cannot have pool allocation with resize support");
+	_MaxSize = zenMath::Max(_Size, _MaxSize);
+	void* pMemory = zenMem::GetMemoryAllocator().Malloc(_Size, _MaxSize, _Filename, _LineNumber, true, _IsPoolItem, _IsCheckAccess);
+	return pMemory;
 }
 
-void* operator new(size_t _uSize, zenMem::zAllocator* _pAllocator, zU32 _uAlign )
+void operator delete(void* _pMemory)
 {
-	_pAllocator = _pAllocator ? _pAllocator : &zenMem::zAllocator::GetDefault();
-	return _pAllocator->Malloc(_uSize, false, _uAlign);
+	if( _pMemory )
+		zenMem::GetMemoryAllocator().Free(_pMemory, false);
 }
 
-void* operator new[](size_t _uSize, zenMem::zAllocator* _pAllocator, zU32 _uAlign )
+void operator delete[](void* _pMemory)
+{ 
+	if( _pMemory )
+		zenMem::GetMemoryAllocator().Free(_pMemory, true);
+}
+
+void* operator new(size_t _Size)
 {
-	_pAllocator = _pAllocator ? _pAllocator : &zenMem::zAllocator::GetDefault();
-	return _pAllocator->Malloc(_uSize, true, _uAlign);
+	void* pMemory = zenMem::GetMemoryAllocator().Malloc(_Size, _Size, "", 0, false, false, false);
+	return pMemory;
 }
 
-void operator delete(void* _pAlloc)
+void* operator new[](size_t _Size)
 {
-	if( _pAlloc )
-	{
-		zbMem::AllocHeader* pHeaderInfo = zbMem::GetHeader(_pAlloc, false);
-		if( pHeaderInfo)
-			pHeaderInfo->mpAllocator->Free(_pAlloc, pHeaderInfo);	
-		else 
-			free(_pAlloc);
-	}	
+	void* pMemory = zenMem::GetMemoryAllocator().Malloc(_Size, _Size, "", 0, true, false, false);
+	return pMemory;
 }
-
-void operator delete[](void* _pAlloc)
-{
-	if( _pAlloc )
-	{
-		zbMem::AllocHeader* pHeaderInfo = zbMem::GetHeader(_pAlloc, true);
-		if( pHeaderInfo)
-			pHeaderInfo->mpAllocator->Free(_pAlloc, pHeaderInfo);	
-		else 
-			free(_pAlloc);
-	}	
-}
-
-//=================================================================================================
-//! @brief		If exception occurs in constructor, this function is called for new
-//! @details	A function matching the 'new' signature is called when there's an exception in the 
-//!				constructor of an object, instead of calling the regular delete overload.
-//!				This function contains all the common code for 'non array new' matching 'delete'
-//=================================================================================================
-void DeleteCatchException(void* _pAlloc, zenMem::zAllocator* _pAllocator )
-{
-	if( _pAlloc )
-	{
-		zbMem::AllocHeader* pHeaderInfo = zbMem::GetHeader(_pAlloc, false);
-		if( pHeaderInfo)
-			pHeaderInfo->mpAllocator->Free(_pAlloc, pHeaderInfo);	
-	}
-}
-
-//=================================================================================================
-//! @brief		If exception occurs in constructor, this function is called for new
-//! @details	A function matching the 'new' signature is called when there's an exception in the 
-//!				constructor of an object, instead of calling the regular delete overload.
-//!				This function contains all the common code for 'array new' matching 'delete'
-//=================================================================================================
-void DeleteArrayCatchException(void* _pAlloc, zenMem::zAllocator* _pAllocator )
-{
-	if( _pAlloc )
-	{
-		zbMem::AllocHeader* pHeaderInfo = zbMem::GetHeader(_pAlloc, true);
-		if( pHeaderInfo)
-			pHeaderInfo->mpAllocator->Free(_pAlloc, pHeaderInfo);	
-	}
-}
-
-void operator delete	(void* _pAlloc,	zenMem::zAllocator* _pAllocator )					{DeleteCatchException(_pAlloc, _pAllocator);}
-void operator delete[]	(void* _pAlloc,	zenMem::zAllocator* _pAllocator )					{DeleteArrayCatchException(_pAlloc, _pAllocator);}
-void operator delete	(void* _pAlloc,	zenMem::zAllocator* _pAllocator, zU32 _uAlign )		{DeleteCatchException(_pAlloc, _pAllocator); }
-void operator delete[]	(void* _pAlloc,	zenMem::zAllocator* _pAllocator, zU32 _uAlign)		{DeleteArrayCatchException(_pAlloc, _pAllocator); }

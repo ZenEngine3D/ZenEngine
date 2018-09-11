@@ -6,7 +6,7 @@ void zArrayBits::Resize(zUInt _uBitCount)
 	zUInt uNeededArrayCount = zenMath::RoundUp<zUInt>(_uBitCount/8, sizeof(zUInt));	
 	if( uNeededArrayCount != muDataArrayCount )
 	{
-		zUInt* pNewData		= zenNewDefault zUInt[uNeededArrayCount];
+		zUInt* pNewData		= zenNew zUInt[uNeededArrayCount];
 		zenMem::CopyRaw(pNewData, mpDataArray, zenMath::Min(muDataArrayCount, uNeededArrayCount)*sizeof(zUInt));
 		if( uNeededArrayCount > muDataArrayCount)
 			zenMem::Zero(&pNewData[muDataArrayCount], (uNeededArrayCount-muDataArrayCount)*sizeof(zUInt) );
@@ -50,7 +50,7 @@ zArrayBits::zArrayBits(std::initializer_list<bool> _Entries)
 zArrayBits::zArrayBits(const zArrayBits& _Copy)
 {
 	muDataArrayCount	= _Copy.muDataArrayCount;
-	mpDataArray			= zenNewDefault zUInt[muDataArrayCount];
+	mpDataArray			= zenNew zUInt[muDataArrayCount];
 	zenMem::CopyRaw( mpDataArray, _Copy.mpDataArray, muDataArrayCount);
 }
 

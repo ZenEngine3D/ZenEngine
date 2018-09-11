@@ -87,8 +87,8 @@ void CommandGPUScopedEvent_DX12::Invoke(GPUContext& _Context)
 zEngineRef<Command> CommandUpdateIndex_DX12::Add(const CommandListRef& _rContext, const zcRes::GfxIndexRef& _rIndex, zUInt _uOffset, zUInt _uSize)
 {
 	zenAssert(_rIndex.HAL()->mResource.mrUpload.Get() != nullptr);
-	static zenMem::zAllocatorPool sMemPool("Pool CommandUpdateIndex", sizeof(CommandUpdateIndex_DX12), 128, 128);
-	auto pCommand					= zenNew(&sMemPool) CommandUpdateIndex_DX12;	
+	//static zenMem::zAllocatorPool sMemPool("Pool CommandUpdateIndex", sizeof(CommandUpdateIndex_DX12), 128, 128);
+	auto pCommand					= zenNewPool CommandUpdateIndex_DX12;	
 	pCommand->mrIndex				= _rIndex;
 	pCommand->mrResourceUpload		= _rIndex.HAL()->mResource.mrUpload;
 	pCommand->muOffset				= _uOffset;
@@ -116,11 +116,11 @@ void CommandUpdateIndex_DX12::Invoke(GPUContext& _Context)
 zEngineRef<Command> CommandUpdateBuffer_DX12::Add(const CommandListRef& _rContext, const zcRes::GfxBufferRef& _rBuffer, zUInt _uOffset, zUInt _uSize)
 {
 	zenAssert(_rBuffer.HAL()->mResource.mrUpload.Get() != nullptr);
-	static zenMem::zAllocatorPool sMemPool("Pool CommandUpdateBuffer", sizeof(CommandUpdateBuffer_DX12), 128, 128);
+	//static zenMem::zAllocatorPool sMemPool("Pool CommandUpdateBuffer", sizeof(CommandUpdateBuffer_DX12), 128, 128);
 	
 	_uOffset						= 0; //! @todo 2 support partial updates
 	_uSize							= zenMath::Min(_uSize, (zUInt)_rBuffer.HAL()->muElementCount*_rBuffer.HAL()->muElementStride - _uOffset);
-	auto pCommand					= zenNew(&sMemPool) CommandUpdateBuffer_DX12;
+	auto pCommand					= zenNewPool CommandUpdateBuffer_DX12;
 	pCommand->mrBuffer				= _rBuffer;
 	pCommand->mrResourceUpload		= _rBuffer.HAL()->mResource.mrUpload;
 	pCommand->muOffset				= _uOffset;
@@ -147,8 +147,8 @@ void CommandUpdateBuffer_DX12::Invoke(GPUContext& _Context)
 zEngineRef<Command> CommandUpdateTexture_DX12::Add(const CommandListRef& _rContext, const zcRes::GfxTexture2DRef& _rTexture, zUInt _uSize )
 {
 	zenAssert(_rTexture.HAL()->mResource.mrUpload.Get() != nullptr);
-	static zenMem::zAllocatorPool sMemPool("Pool CommandUpdateTexture", sizeof(CommandUpdateTexture_DX12), 128, 128);
-	auto pCommand					= zenNew(&sMemPool) CommandUpdateTexture_DX12;
+	//static zenMem::zAllocatorPool sMemPool("Pool CommandUpdateTexture", sizeof(CommandUpdateTexture_DX12), 128, 128);
+	auto pCommand					= zenNewPool CommandUpdateTexture_DX12;
 	pCommand->mrTexture				= _rTexture;
 	pCommand->mrResourceUpload		= _rTexture.HAL()->mResource.mrUpload;
 	pCommand->muSize				= _uSize;
@@ -182,8 +182,8 @@ void CommandUpdateTexture_DX12::Invoke(GPUContext& _Context)
 zEngineRef<Command> CommandQueryEnd_DX12::Add(const CommandListRef& _rContext, QueryHeapRingbuffer_DX12* _pQueryHeap, zUInt _uQueryIndex, bool _bStartOfCmdList)
 {
 	zenAssert(_pQueryHeap != nullptr);
-	static zenMem::zAllocatorPool sMemPool("Pool CommandQueryEnd", sizeof(CommandQueryEnd_DX12), 128, 128);
-	auto pCommand			= zenNew(&sMemPool) CommandQueryEnd_DX12;	
+	//static zenMem::zAllocatorPool sMemPool("Pool CommandQueryEnd", sizeof(CommandQueryEnd_DX12), 128, 128);
+	auto pCommand			= zenNewPool CommandQueryEnd_DX12;	
 	pCommand->mpQueryHeap	= _pQueryHeap;
 	pCommand->muQueryIndex	= _uQueryIndex;
 	pCommand->SetSortKeyGeneric(_bStartOfCmdList ? keGpuPipe_First : keGpuPipe_Last, _uQueryIndex);

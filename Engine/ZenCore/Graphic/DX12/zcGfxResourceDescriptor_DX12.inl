@@ -209,7 +209,7 @@ template<D3D12_DESCRIPTOR_HEAP_TYPE TDescriptorType>
 void DescriptorHeap<TDescriptorType>::Release(typename DescriptorHeap<TDescriptorType>::DescRange& _Descriptor)
 {
 	zUInt uIndex = (_Descriptor.GetCpu().ptr - mDescriptorHead.GetCpu().ptr) / _Descriptor.suDescriptorSize;
-	zenAssert(uIndex+_Descriptor.muCount<muDescriptorCount);
+	zenAssert(uIndex+_Descriptor.muCount<=muDescriptorCount);
 	zenAssert(_Descriptor.mpOwnerHeap == this);
 	maDescriptorUsed.SetRange(uIndex, uIndex+_Descriptor.muCount-1, false);
 	_Descriptor.mpOwnerHeap = nullptr;

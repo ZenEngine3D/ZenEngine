@@ -51,7 +51,7 @@ ManagerAsset::ManagerAsset()
 //=================================================================================================
 bool ManagerAsset::Load()
 {		
-	mrGroupRoot	= zenNewDefault zeAss::PackageGroup(zenT("Root"), nullptr );
+	mrGroupRoot	= zenNew zeAss::PackageGroup(zenT("Root"), nullptr );
 	PackageLoad();
 	return true;
 }
@@ -79,7 +79,7 @@ bool ManagerAsset::Unload()
 zenAss::zPackageGroupRef ManagerAsset::GroupCreate( const zWString& _zName, const zenAss::zPackageGroupRef& _rParent )
 {
 	zenAss::zPackageGroupRef rParent = _rParent.IsValid() ? _rParent : mrGroupRoot;
-	return zenNewDefault zeAss::PackageGroup(_zName, _rParent);
+	return zenNew zeAss::PackageGroup(_zName, _rParent);
 }
 
 void ManagerAsset::GroupDelete( const zenAss::zPackageGroupRef& _rGroup )

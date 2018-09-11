@@ -68,8 +68,8 @@ bool ExporterGfxShaderParamDef::ExportStart()
 //=================================================================================================
 zResID CreateGfxCBufferDefinition( const zStringHash32& _zBufferName, const zArrayBase<zHash32>& _aParamName, const zArrayBase<GfxCBufferParamInfo>& _aParamInfo, const zArrayBase<zU8>& _uDefaultValues )
 {
-	static zenMem::zAllocatorPool sMemPool("Pool CreateShaderParamDef", sizeof(ExportInfoGfxCBufferDefinition), 1, 5 );
-	ExportInfoGfxCBufferDefinition* pExportInfo	= zenNew(&sMemPool) ExportInfoGfxCBufferDefinition;	
+	//static zenMem::zAllocatorPool sMemPool("Pool CreateShaderParamDef", sizeof(ExportInfoGfxCBufferDefinition), 1, 5 );
+	ExportInfoGfxCBufferDefinition* pExportInfo	= zenNewPool ExportInfoGfxCBufferDefinition;	
 	pExportInfo->mzBufferName					= _zBufferName;
 	pExportInfo->maParamName					= _aParamName;
 	pExportInfo->maParamInfo					= _aParamInfo;

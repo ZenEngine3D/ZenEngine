@@ -26,8 +26,8 @@ GfxTarget2DRef GfxTarget2D_DX11::RuntimeCreate(IDXGISwapChain& _Swapchain, zenCo
 	_Swapchain.GetBuffer( 0, __uuidof(ID3D11Texture2D), (LPVOID*)&pTexture );
 	if( pTexture )
 	{
-		static zenMem::zAllocatorPool sMemPool("Pool GfxTarget2D", sizeof(GfxTarget2D), 128, 128);
-		rResource					= zenNew(&sMemPool) GfxTarget2D();		
+		//static zenMem::zAllocatorPool sMemPool("Pool GfxTarget2D", sizeof(GfxTarget2D), 128, 128);
+		rResource					= zenNewPool GfxTarget2D();		
 
 		//todo clean create texture from swapchain
 		D3D11_TEXTURE2D_DESC TextureDesc;

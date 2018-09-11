@@ -138,7 +138,7 @@ void SampleListIntrusive()
 	// Intrusive list usage
 	//============================================================================
 	const zUInt						kuTestCount = 1024 * 512;
-	IntrusiveListItem*				aItemNode = zenNewDefault IntrusiveListItem[kuTestCount];
+	IntrusiveListItem*				aItemNode = zenNew IntrusiveListItem[kuTestCount];
 	IntrusiveListItem::TypeList1	lstIntrusive;
 
 	for (int i = 0; i<kuTestCount; ++i)

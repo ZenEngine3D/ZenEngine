@@ -52,8 +52,8 @@ namespace zcExp
 	//=================================================================================================
 	zResID CreateGfxMesh(const zArrayBase<zResID>& _aMeshStripID)
 	{
-		static zenMem::zAllocatorPool sMemPool("Pool CreateMesh", sizeof(ExportInfoGfxMesh), 1, 5 );
-		ExportInfoGfxMesh* pExportInfo	= zenNew(&sMemPool) ExportInfoGfxMesh;
+		//static zenMem::zAllocatorPool sMemPool("Pool CreateMesh", sizeof(ExportInfoGfxMesh), 1, 5 );
+		ExportInfoGfxMesh* pExportInfo	= zenNewPool ExportInfoGfxMesh;
 		pExportInfo->maMeshStripID		= _aMeshStripID;	
 		return zcMgr::Export.CreateItem( zResID::kePlatformType_GFX, zenConst::keResType_GfxMesh, pExportInfo );
 	}

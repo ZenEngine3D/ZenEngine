@@ -9,7 +9,10 @@
 //-------------------------------------------------------------------------------------------------
 //! @brief Some build defines config
 //-------------------------------------------------------------------------------------------------
-#define ZEN_MEMORYDEBUG_ON				0
+#define ZEN_MEMORY_TRACKING				(1 && !ZEN_BUILD_FINAL)		//!< Keeps track of each allocation and write overflow
+#define ZEN_MEMORY_TRACKING_DETAILED	(1 && ZEN_MEMORY_TRACKING)	//!< Also keeps track of entire callstack on each allocation (slowdown allocations)
+#define ZEN_MEMORY_SUPPORT_CHECKACCESS	(1 && !ZEN_BUILD_FINAL)		//!< Detect out-of-bound memory access or to memory that has been freed already. Requires a lot more memory, so should be used selectively
+
 
 //-------------------------------------------------------------------------------------------------
 //! @brief Define configurations not currently built
@@ -41,7 +44,7 @@
 #endif
 
 //-------------------------------------------------------------------------------------------------
-//! @brief Debuging settings
+//! @brief Debugging settings
 //-------------------------------------------------------------------------------------------------
 #if defined( ZEN_BUILD_DEBUG )
 	#define ZEN_DEBUGINFO_ON		1

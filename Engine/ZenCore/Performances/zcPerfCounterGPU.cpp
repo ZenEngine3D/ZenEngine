@@ -51,8 +51,8 @@ void EventGPU_Base::GPUStop(const zcGfx::CommandListRef& _rDrawlist)
 //=================================================================================================
 EventBaseRef EventGPU::Create(const zStringHash32& _EventName)
 {
-	static zenMem::zAllocatorPool sMemPool("Pool Event GPU", sizeof(EventGPU), 256, 256);
-	EventGPU* pEventGpu = zenNew(&sMemPool) EventGPU(_EventName);
+	//static zenMem::zAllocatorPool sMemPool("Pool Event GPU", sizeof(EventGPU), 256, 256);
+	EventGPU* pEventGpu = zenNewPool EventGPU(_EventName);
 	return pEventGpu;
 }
 
@@ -77,8 +77,8 @@ void EventGPU::GPUStop(const zcGfx::CommandListRef& _rDrawlist)
 EventBaseRef EventGPUCounter::Create(eType _eCounterType)
 {
 	zenStaticAssert( zenArrayCount(gaGPUCounterName)==EventGPUCounter::keType__Count+1 ); //Make sure Counter description array match enum
-	static zenMem::zAllocatorPool sMemPool("Pool Event GPU Counter", sizeof(EventGPUCounter), 256, 256);
-	EventGPUCounter* pEventGpuCounter = zenNew(&sMemPool) EventGPUCounter(_eCounterType);
+	//static zenMem::zAllocatorPool sMemPool("Pool Event GPU Counter", sizeof(EventGPUCounter), 256, 256);
+	EventGPUCounter* pEventGpuCounter = zenNewPool EventGPUCounter(_eCounterType);
 	pEventGpuCounter->CPUStart();
 	return pEventGpuCounter;
 }

@@ -37,8 +37,8 @@ namespace zcRes
 				{
 					if( SUCCEEDED(pDXGIFactory->CreateSwapChain( DX11pDevice, &SwapDesc, &pDXSwapChain)) )
 					{						
-						static zenMem::zAllocatorPool sMemPool("Pool GfxWindow", sizeof(GfxWindow), 32, 32);
-						GfxWindowRef rResource						= zenNew(&sMemPool) GfxWindow();		
+						//static zenMem::zAllocatorPool sMemPool("Pool GfxWindow", sizeof(GfxWindow), 32, 32);
+						GfxWindowRef rResource						= zenNewPool GfxWindow();		
 						bool bValid									= true;						
 						rResource.HAL()->mhWindow					= _WindowHandle;
 						rResource.HAL()->mpDX11SwapChain			= pDXSwapChain;

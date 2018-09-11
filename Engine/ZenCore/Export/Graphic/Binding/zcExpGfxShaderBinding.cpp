@@ -139,8 +139,8 @@ namespace zcExp
 	//=================================================================================================
 	zResID CreateGfxShaderBinding(const zArrayBase<zResID>& _aShaderID)
 	{	
-		static zenMem::zAllocatorPool sMemPool("Pool CreateShaderBinding", sizeof(ExportInfoGfxShaderBinding), 1, 5 );
-		ExportInfoGfxShaderBinding* pExportInfo	= zenNew(&sMemPool) ExportInfoGfxShaderBinding;
+		//static zenMem::zAllocatorPool sMemPool("Pool CreateShaderBinding", sizeof(ExportInfoGfxShaderBinding), 1, 5 );
+		ExportInfoGfxShaderBinding* pExportInfo	= zenNewPool ExportInfoGfxShaderBinding;
 		pExportInfo->maShaderID					= _aShaderID;
 		return zcMgr::Export.CreateItem( zResID::kePlatformType_GFX, zenConst::keResType_GfxShaderBinding, pExportInfo );
 	}

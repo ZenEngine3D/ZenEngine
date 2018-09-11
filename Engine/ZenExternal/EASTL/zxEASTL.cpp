@@ -14,10 +14,8 @@ void* operator new[](size_t inSize, const char* inName, int inFlags, unsigned in
 {
 	(void)inName;	// Ignore debugging informations
 	(void)inFlags;
-	(void)inDebugFlags;
-	(void)inFile;
-	(void)inLine;
-	return malloc(inSize);
+	(void)inDebugFlags;	
+	return new(inFile, inLine, 0, false, false) char[inSize];
 }
 
 void* operator new[](size_t inSize, size_t inAlign, size_t inAlignOffset, const char* inName, int inFlags, unsigned inDebugFlags, const char* inFile, int inLine)
@@ -25,12 +23,11 @@ void* operator new[](size_t inSize, size_t inAlign, size_t inAlignOffset, const 
 	(void)inName;		// Ignore debugging informations
 	(void)inFlags;
 	(void)inDebugFlags;
-	(void)inFile;
-	(void)inLine;
-	const size_t AlignMask	= inAlign-1;
-	assert( (inAlign & AlignMask) == 0 );	//Makes sure alignment is a power of 2
-	size_t MemAdr			= (size_t)malloc(inSize+inAlign);
-	return (void*)(MemAdr + ((MemAdr+inAlignOffset) & AlignMask)-inAlignOffset);
+	//! @todo 0 Manage align
+	return new(inFile, inLine, 0, false, false) char[inSize];
+	//const size_t AlignMask	= inAlign-1;
+	//assert( (inAlign & AlignMask) == 0 );	//Makes sure alignment is a power of 2	
+	//return (void*)(MemAdr + ((MemAdr+inAlignOffset) & AlignMask)-inAlignOffset);
 }
 
 #endif

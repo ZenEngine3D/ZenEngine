@@ -57,12 +57,12 @@ namespace zen { namespace zenType
 			zU32				GetSlotID(zU32 _uNodeIndex) const;		//! @brief Get in which slot a Node Index is stored
 			int					GetFirstUsedSlotID()const;					//! @brief Return first used slotID (-1 if none)			
 			int					GetLastUsedSlotID()const;					//! @brief Return last used slotID (-1 if none)
-
+								Node() : mpSlots(reinterpret_cast<Slot*>(this+1)){}
 			Slot*				mpSlots;									//!< Array of slots
-			TIndex				mIndexUsed;									//!< Keep track of Node Index with a valid slot allocated
-			TIndex				mSlotLeaf;									//!< Keep track of Slot that are a leaf (otherwise is link to child node)			
+			TIndex				mIndexUsed  = 0;							//!< Keep track of Node Index with a valid slot allocated
+			TIndex				mSlotLeaf	= 0;							//!< Keep track of Slot that are a leaf (otherwise is link to child node)			
 		};	  
-		
+				
 	public:	
 		typedef void (*DeleteItemCB)(zHamt& Hamt, TValue& ItemDel);
 
@@ -148,10 +148,9 @@ namespace zen { namespace zenType
 		bool					GetNode(TKey _Key, const Node**& _pParentSlot, zU32& _uNodeIndex, zU32& _uSlotID, zU32& _uDepth) const;	//!< @brief Find the Node(and relevant infos) associated to a Key entry
 		bool					GetNode(TKey _Key, Node**& _pParentSlot, zU32& _uNodeIndex, zU32& _uSlotID, zU32& _uDepth);	//!< @brief	Find the Node(and relevant infos) associated to a Key entry		
 				
-		Node*					mpRootNode;				//!< First accessible node
-		zU32					muCount;				//!< Keep track of element count in the table, for debug purposes
-		TValue					mDefault;				//!< Default value to assign when accessing a non-existing entry
-		zenMem::zAllocatorPool	mPools[kuPoolCount];	//!< PreAllocated memory pools, to contain our nodes	
+		Node*					mpRootNode;					//!< First accessible node
+		zU32					muCount;					//!< Keep track of element count in the table, for debug purposes
+		TValue					mDefault;					//!< Default value to assign when accessing a non-existing entry
 		DeleteItemCB			mpDeleteItemCB;
 		friend class Iterator;
 	};

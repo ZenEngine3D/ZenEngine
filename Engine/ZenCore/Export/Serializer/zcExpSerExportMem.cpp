@@ -14,7 +14,7 @@ SerializerExportMem::~SerializerExportMem()
 	while( !mlstAllocs.IsEmpty() )
 	{
 		void* pAdr = mlstAllocs.PopHead();
-		zenDelnullptrArray(pAdr);
+		zenDelArrayNullptr(pAdr);
 	}
 }
 
@@ -26,7 +26,7 @@ bool SerializerExportMem::ItemStarted(zcExp::ResourceData& aItem)
 		if( !pAlloc || pAlloc->mpMemoryCur+aItem.muSize >= pAlloc->mpMemoryEnd )
 		{
 			size_t uAllocSize		= zenMath::Max<size_t>(muAllocSize, aItem.muSize);
-			pAlloc					= (Alloc*) zenNewDefault zU8[uAllocSize + sizeof(Alloc)] ;
+			pAlloc					= (Alloc*) zenNew zU8[uAllocSize + sizeof(Alloc)] ;
 			pAlloc->mpMemoryStart	= (zU8*)pAlloc + sizeof(Alloc);
 			pAlloc->mpMemoryCur		= pAlloc->mpMemoryStart;
 			pAlloc->mpMemoryEnd		= pAlloc->mpMemoryStart + uAllocSize;

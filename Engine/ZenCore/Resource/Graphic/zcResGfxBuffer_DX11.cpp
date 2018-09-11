@@ -47,7 +47,7 @@ bool GfxBuffer_DX11::Initialize()
 void* GfxBuffer_DX11::Lock()
 {
 	zenAssertMsg(mpLockData==nullptr, "Need to unlock buffer before locking it again");
-	mpLockData = zenNewDefault zU8[ muElementCount*muElementStride ]; //!todo 2 perf Use ring buffer instead
+	mpLockData = zenNew zU8[ muElementCount*muElementStride ]; //!todo 2 perf Use ring buffer instead
 	return mpLockData;
 }
 

@@ -7,8 +7,8 @@ zMap<zU16>::Key32 CommandList_Base::sdDrawcallCount[2];
 
 CommandListRef CommandList::Create(const zStringHash32& _zScopeName, const CommandListRef& _rParent, const zcRes::GfxRenderPassRef& _rRenderState)
 {
-	static zenMem::zAllocatorPool sPoolContext("zcGfx::DrawlistContext", sizeof(CommandList), 512, 128);	
-	CommandListRef rContext = zenNew(&sPoolContext) CommandList(_zScopeName, _rParent, _rRenderState);
+	//static zenMem::zAllocatorPool sPoolContext("zcGfx::DrawlistContext", sizeof(CommandList), 512, 128);	
+	CommandListRef rContext = zenNewPool CommandList(_zScopeName, _rParent, _rRenderState);
 	return rContext;
 }
 
@@ -45,7 +45,7 @@ CommandList_Base::~CommandList_Base()
 	while( pChild )
 	{
 		CommandList_Base* pDelChild	= pChild;
-		pChild							= mlstChilds.GetNext(*pChild);
+		pChild						= mlstChilds.GetNext(*pChild);
 		pDelChild->ReferenceRem();
 	}
 }

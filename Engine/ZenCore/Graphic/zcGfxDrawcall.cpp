@@ -24,8 +24,8 @@ void Command::ResetCommandCount()
 zEngineRef<Command> CommandDraw::Add(const CommandListRef& _rContext, const zcRes::GfxRenderPassRef& _rRenderPass, const zcRes::GfxMeshStripRef& _rMeshStrip, zU32 _uIndexFirst, zU32 _uIndexCount, const zVec4U16& _vScreenScissor)
 {
 	//! @todo perf switch this to 3x ring buffer with frame lifespan
-	static zenMem::zAllocatorPool sMemPool("Pool CommandDraw", sizeof(CommandDraw_HAL), 1024, 1024 );
-	auto pCommand				= zenNew(&sMemPool) CommandDraw_HAL;		
+	//static zenMem::zAllocatorPool sMemPool("Pool CommandDraw", sizeof(CommandDraw_HAL), 1024, 1024 );
+	auto pCommand				= zenNewPool CommandDraw_HAL;		
 	pCommand->mrRenderPass		= _rRenderPass;
 	pCommand->mrMeshStrip		= _rMeshStrip;
 	pCommand->mvScreenScissor	= _vScreenScissor;
@@ -42,8 +42,8 @@ zEngineRef<Command> CommandDraw::Add(const CommandListRef& _rContext, const zcRe
 zEngineRef<Command> CommandClearColor::Add(const CommandListRef& _rContext, const zcRes::GfxRenderPassRef& _rRenderPass, const zcRes::GfxTarget2DRef& _rRTColor, const zVec4F& _vRGBA, const zColorMask& _ColorMask, const zVec2S16& _vOrigin, const zVec2U16& _vDim )
 {
 	zenAssertMsg( !_rRTColor->IsDepth(), "Trying to clear a depth rendertarget as color.");
-	static zenMem::zAllocatorPool sMemPool("Pool CommandClearColor", sizeof(CommandClearColor_HAL), 128, 128 );
-	auto pCommand				= zenNew(&sMemPool) CommandClearColor_HAL;		
+	//static zenMem::zAllocatorPool sMemPool("Pool CommandClearColor", sizeof(CommandClearColor_HAL), 128, 128 );
+	auto pCommand				= zenNewPool CommandClearColor_HAL;		
 	pCommand->mrRTColor			= _rRTColor;
 	pCommand->mvOrigin			= _vOrigin;
 	pCommand->mvDim				= _vDim;
@@ -60,8 +60,8 @@ zEngineRef<Command> CommandClearColor::Add(const CommandListRef& _rContext, cons
 zEngineRef<Command> CommandClearDepthStencil::Add(const CommandListRef& _rContext, const zcRes::GfxRenderPassRef& _rRenderPass, const zcRes::GfxTarget2DRef& _rRTDepth, bool _bClearDepth, float _fDepthValue, bool _bClearStencil, zU8 _uStencilValue)
 {
 	zenAssertMsg( _rRTDepth->IsDepth(), "Trying to clear a color rendertarget as depth.");
-	static zenMem::zAllocatorPool sMemPool("Pool CommandClearDepth", sizeof(CommandClearDepthStencil_HAL), 128, 128 );
-	auto pCommand				= zenNew(&sMemPool) CommandClearDepthStencil_HAL;		
+	//static zenMem::zAllocatorPool sMemPool("Pool CommandClearDepth", sizeof(CommandClearDepthStencil_HAL), 128, 128 );
+	auto pCommand				= zenNewPool CommandClearDepthStencil_HAL;		
 	pCommand->mrRTDepthStencil	= _rRTDepth;
 	pCommand->mbClearDepth		= _bClearDepth;
 	pCommand->mfDepthValue		= _fDepthValue;
@@ -77,8 +77,8 @@ zEngineRef<Command> CommandClearDepthStencil::Add(const CommandListRef& _rContex
 //=================================================================================================
 zEngineRef<Command> CommandGPUScopedEvent::Add(const CommandListRef& _rContext, const char* _zEventName, EnumEventInfo _eEventInfo, const zVec4F& _vColor, bool _bCopyEventName)
 {	
-	static zenMem::zAllocatorPool sMemPool("Pool CommandGPUScopedEvent", sizeof(CommandGPUScopedEvent_HAL), 128, 128 );
-	auto pCommand			= zenNew(&sMemPool) CommandGPUScopedEvent_HAL;		
+	//static zenMem::zAllocatorPool sMemPool("Pool CommandGPUScopedEvent", sizeof(CommandGPUScopedEvent_HAL), 128, 128 );
+	auto pCommand			= zenNewPool CommandGPUScopedEvent_HAL;		
 	pCommand->mzEventName	= _zEventName;
 	pCommand->meEventInfo	= _eEventInfo;
 	pCommand->mvColor		= _vColor;

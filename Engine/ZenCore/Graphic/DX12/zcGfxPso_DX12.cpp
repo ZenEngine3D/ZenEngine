@@ -59,7 +59,7 @@ const zEngineRef<PSO_DX12>& PSO_DX12::GetAdd(const zcRes::GfxRenderPassRef& _rRe
 	{
 		// Describe and create the graphics pipeline state object (PSO).	
 		D3D12_GRAPHICS_PIPELINE_STATE_DESC PsoDesc = {};
-		PSO_DX12* pNewPSO						= zenNewDefault PSO_DX12();
+		PSO_DX12* pNewPSO						= zenNew PSO_DX12();
 		PsoDesc.InputLayout						= { nullptr, 0 };
 		PsoDesc.pRootSignature					= zcMgr::GfxRender.mRootSignatureDefault.Get();		
 		PsoDesc.RasterizerState					= pRenderpassHAL->mrStateRaster.HAL()->mRasterizerDesc;

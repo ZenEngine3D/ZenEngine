@@ -45,8 +45,8 @@ namespace zcExp
 	
 	zResID CreateGfxRenderpass(const zString& _zStageName, zUInt _uPassPriority, const zArrayBase<zenRes::zGfxRenderPass::ConfigColorRT>& _aConfigRTColor, const zenRes::zGfxRenderPass::ConfigDepthRT& _ConfigRTDepth, zenRes::zGfxStateRaster _rStateRaster, const zVec2U16& _vDim, const zVec2S16& _vOrigin)
 	{
-		static zenMem::zAllocatorPool sMemPool("Pool RenderPass", sizeof(ExportInfoGfxRenderpass), 1, 5 );
-		ExportInfoGfxRenderpass* pExportInfo	= zenNew(&sMemPool) ExportInfoGfxRenderpass;		
+		//static zenMem::zAllocatorPool sMemPool("Pool RenderPass", sizeof(ExportInfoGfxRenderpass), 1, 5 );
+		ExportInfoGfxRenderpass* pExportInfo	= zenNewPool ExportInfoGfxRenderpass;		
 		pExportInfo->mzStageName				= _zStageName;
 		pExportInfo->muPassPriority				= _uPassPriority;		
 		pExportInfo->mpConfigRTDepth			= &_ConfigRTDepth;		

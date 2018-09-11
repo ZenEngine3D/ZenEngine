@@ -200,7 +200,7 @@ zHamt< TKey, TValue, TIndex, TIndexBits>::~zHamt()
 	if( mpRootNode )
 	{
 		Clear();
-		zenDelnullptr(mpRootNode);
+		zenDelArrayNullptr(reinterpret_cast<zU8*&>(mpRootNode));
 	}			
 }
 
@@ -222,8 +222,6 @@ template<class TKey, class TValue, class TIndex, int TIndexBits>
 void zHamt< TKey, TValue, TIndex, TIndexBits>::Clear()
 {
 	ClearNode(mpRootNode);
-	for(zU32 uPoolIndex=0; uPoolIndex<kuPoolCount; ++uPoolIndex)
-		mPools[uPoolIndex].Clear();
 	mpRootNode	= CreateEmptyNode(0);
 	muCount		= 0;
 }
@@ -237,7 +235,8 @@ void zHamt< TKey, TValue, TIndex, TIndexBits>::Clear()
 template<class TKey, class TValue, class TIndex, int TIndexBits>
 void zHamt< TKey, TValue, TIndex, TIndexBits>::Init( zU32 _uReservePool )
 {	
-	zenAssertMsg(!IsInit(),"zHamt already initialized");			
+	zenAssertMsg(!IsInit(),"zHamt already initialized");
+#if 0
 	zI32 iPoolItemLeft(static_cast<zI32>(_uReservePool)-1);
 	zI32 iPoolItemMin	= zenMath::Max<zI32>((iPoolItemLeft / 3) / kuSlotCount, 1);	//< @Note: A 1/3 of PoolItemCount get split evenly between each Pool. Remaining assigned with 1/2 less every time. Need metric to adjust for optimal value
 	iPoolItemLeft		= zenMath::Max<zI32>(iPoolItemLeft-iPoolItemMin*kuSlotCount, 0);
@@ -247,6 +246,7 @@ void zHamt< TKey, TValue, TIndex, TIndexBits>::Init( zU32 _uReservePool )
 		iPoolItemLeft = iPoolItemLeft / 2;
 		mPools[uPoolIndex].Init("HamtSmallPool", sizeof(Node) + sizeof(Node::Slot)*uPoolIndex, iPoolItemLeft+iPoolItemMin, iPoolItemMin );
 	}
+#endif
 	mpRootNode = CreateEmptyNode(0);
 }
 
@@ -454,7 +454,7 @@ bool zHamt< TKey, TValue, TIndex, TIndexBits>::Unset(const TKey _Key)
 		// No slot left in child node, after we remove the entry, update parent to refer to it
 		if( uNewSlotCount == 0 && uDepth>0 )
 		{
-			zenDelnullptr(pNode);
+			zenDelArrayNullptr(reinterpret_cast<zU8*&>(pNode));
 			pNode = *ppNodeTree[--uDepth];
 		}
 		// Child node with 1 less slot, 
@@ -470,7 +470,7 @@ bool zHamt< TKey, TValue, TIndex, TIndexBits>::Unset(const TKey _Key)
 				pNewNode->mSlotLeaf		|= TIndex(pNode->IsLeafSlot(uOldSlotID)) << i;
 			}
 			*ppNodeTree[uDepth] = pNewNode;
-			zenDelnullptr(pNode);
+			zenDelArrayNullptr(reinterpret_cast<zU8*&>(pNode));
 			pNode = nullptr; //Parent doesn't need updating
 		}
 	}
@@ -593,8 +593,11 @@ template<class TKey, class TValue, class TIndex, int TIndexBits>
 size_t zHamt< TKey, TValue, TIndex, TIndexBits>::GetMemoryFootprint()
 {
 	size_t uSizeTotal(0);
+//! @todo 2 redo
+/*
 	for(int i=0; i<kuPoolCount; ++i)
 		uSizeTotal += mPools[i].GetTotalAllocSize();
+*/
 	return uSizeTotal;
 }
 
@@ -605,7 +608,9 @@ size_t zHamt< TKey, TValue, TIndex, TIndexBits>::GetMemoryFootprint()
 //==================================================================================================
 template<class TKey, class TValue, class TIndex, int TIndexBits>
 const zHamt< TKey, TValue, TIndex, TIndexBits>& zHamt< TKey, TValue, TIndex, TIndexBits>::operator=(const zHamt& _Copy)
-{				
+{		
+//! @todo 0 Test this
+#if 0		
 	if( IsInit() )
 	{
 		// Clear previous content
@@ -621,7 +626,7 @@ const zHamt< TKey, TValue, TIndex, TIndexBits>& zHamt< TKey, TValue, TIndex, TIn
 		for(zU32 poolIdx=0; poolIdx<=kuSlotCount; ++poolIdx)
 			mPools[poolIdx].Init("HamtSmallPool", _Copy.mPools[poolIdx].GetItemSize(), _Copy.mPools[poolIdx].GetTotalAllocCount(), _Copy.mPools[poolIdx].GetIncreaseCount() );
 	}
-			
+#endif		
 	// Copy each nodes 			
 	mpRootNode	= CreateNodeCopy( _Copy.mpRootNode );
 	muCount		= _Copy.muCount;
@@ -727,10 +732,8 @@ zU32 zHamt< TKey, TValue, TIndex, TIndexBits>::GetNodeIndex( const TKey _uKey, z
 template<class TKey, class TValue, class TIndex, int TIndexBits>
 typename zHamt<TKey, TValue, TIndex, TIndexBits>::Node* zHamt< TKey, TValue, TIndex, TIndexBits>::CreateEmptyNode(zU32 _uSlotCount)
 {
-	Node* pNewNode			= zenNew(&mPools[_uSlotCount])Node;
-	pNewNode->mIndexUsed	= 0;
-	pNewNode->mSlotLeaf		= 0;
-	pNewNode->mpSlots		= (Node::Slot*)(((zU8*)pNewNode)+sizeof(Node));				
+	const size_t SizeNeeded	= sizeof(Node) + sizeof(Node::Slot)*_uSlotCount;
+	Node* pNewNode			= new(zenNewPool zU8[SizeNeeded])Node();	
 	zenMem::Set(pNewNode->mpSlots, 0, _uSlotCount*sizeof(Node::Slot));
 	return pNewNode;
 }
@@ -809,7 +812,7 @@ void zHamt< TKey, TValue, TIndex, TIndexBits>::ClearNode( Node* _pNode )
 		else if(mpDeleteItemCB)
 			mpDeleteItemCB(*this, _pNode->mpSlots[slot].Value());
 	}
-	zenDelnullptr( _pNode );
+	zenDelArrayNullptr( reinterpret_cast<zU8*&>(_pNode) );
 }
 
 //==================================================================================================
@@ -843,7 +846,7 @@ TValue* zHamt< TKey, TValue, TIndex, TIndexBits>::SetSlotValue(TKey _Key, const 
 			pNewNode->mpSlots[uNewSlotID]	= pNode->mpSlots[i];
 			pNewNode->mSlotLeaf				|= TIndex(pNode->IsLeafSlot(i)) << uNewSlotID;
 		}
-		zenDelnullptr(pNode);
+		zenDelArrayNullptr(reinterpret_cast<zU8*&>(pNode));
 		*_ppParentNode	= pNewNode;				
 	}
 	//------------------------------------------------------------------

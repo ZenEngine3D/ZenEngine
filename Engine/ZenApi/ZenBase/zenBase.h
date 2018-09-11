@@ -1,5 +1,7 @@
 #pragma once
 
+#include <array>
+
 namespace zen{ namespace zenType{}; namespace zenConst{} };
 using namespace zen;
 using namespace zen::zenType;

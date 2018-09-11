@@ -140,8 +140,8 @@ namespace zcExp
 	//=================================================================================================
 	zResID CreateGfxMeshStrip(zResID _IndexBufferID, zResID _ShaderBindingID, zU32 _uIndexFirst, zU32 _uIndexCount, zU32 _uVertexFirst, const zArrayBase<zenRes::zShaderResource>& _aResources)
 	{
-		static zenMem::zAllocatorPool sMemPool("Pool CreateMeshStrip", sizeof(ExportInfoGfxMeshStrip), 1, 5 );
-		ExportInfoGfxMeshStrip* pExportInfo	= zenNew(&sMemPool) ExportInfoGfxMeshStrip;
+		//static zenMem::zAllocatorPool sMemPool("Pool CreateMeshStrip", sizeof(ExportInfoGfxMeshStrip), 1, 5 );
+		ExportInfoGfxMeshStrip* pExportInfo	= zenNewPool ExportInfoGfxMeshStrip;
 		pExportInfo->mIndexBufferID				= _IndexBufferID;
 		pExportInfo->mShaderBindingID			= _ShaderBindingID;
 		pExportInfo->maResources				= _aResources;				

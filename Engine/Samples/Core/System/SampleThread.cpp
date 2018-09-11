@@ -89,9 +89,9 @@ namespace sample
 	void SampleThread()
 	{	
 		const zI32 iEntryCount	= 1024*1024*2;
-		gpSortOriginal			= zenNewDefault zUInt[iEntryCount];
-		gpSortDataSingle		= zenNewDefault zUInt[iEntryCount];
-		gpSortDataTask			= zenNewDefault zUInt[iEntryCount];
+		gpSortOriginal			= zenNew zUInt[iEntryCount];
+		gpSortDataSingle		= zenNew zUInt[iEntryCount];
+		gpSortDataTask			= zenNew zUInt[iEntryCount];
 		for(zUInt idx(0); idx<iEntryCount; ++idx)
 		{
 			gpSortOriginal[idx]		= rand();

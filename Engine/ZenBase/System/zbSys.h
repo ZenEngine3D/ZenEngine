@@ -11,5 +11,6 @@
 //!				This is a component of the @ref LibCore Library.
 //=================================================================================================
 #include "zbSysInit.h"
+#include "zbSysDebugCallstack.h"
 #include "zbSysFiber.h"
 #include "zbSysThread.h"

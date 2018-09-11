@@ -75,8 +75,8 @@ namespace zcExp
 	//=================================================================================================
 	zResID CreateGfxView( const zArrayBase<zenRes::zGfxRenderPass::ConfigColorRT>& _aRTColorConfig, const zenRes::zGfxRenderPass::ConfigDepthRT& _RTDepthConfig, const zVec2U16& _vDim, const zVec2S16& _vOrigin )
 	{
-		static zenMem::zAllocatorPool sMemPool("Pool Views", sizeof(ExportInfoGfxView), 1, 5 );
-		ExportInfoGfxView* pExportInfo	= zenNew(&sMemPool) ExportInfoGfxView;
+		//static zenMem::zAllocatorPool sMemPool("Pool Views", sizeof(ExportInfoGfxView), 1, 5 );
+		ExportInfoGfxView* pExportInfo	= zenNewPool ExportInfoGfxView;
 		pExportInfo->mpaRTColorConfig		= &_aRTColorConfig;
 		pExportInfo->mpRTDepthConfig		= &_RTDepthConfig;
 		pExportInfo->mvDim					= _vDim;

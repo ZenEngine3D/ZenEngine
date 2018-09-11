@@ -3,7 +3,6 @@
 namespace sample
 {
 	extern void SampleMalloc();
-	extern void SampleFastPool();
 
 	class SampleBaseMem : public zenSys::zSampleEngineInstance
 	{
@@ -15,7 +14,6 @@ namespace sample
 		virtual void Update()
 		{
 			SampleMalloc();
-			SampleFastPool();
 			SetDone();
 		}
 	};

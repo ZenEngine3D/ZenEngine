@@ -18,8 +18,8 @@ GfxWindow::GfxWindow()
 		mbUIEventShowCurrent[idx] = false;
 	}
 
-	mrImGuiData		= new(static_cast<zenMem::zAllocator*>(nullptr), 16) zxImGui::zxRenderData; //! @todo Urgent auto find alignment needs...	
-	mrNuklearData	= new(static_cast<zenMem::zAllocator*>(nullptr), 16) zxNuklear::zxRenderData; //! @todo Urgent auto find alignment needs...
+	mrImGuiData		= zenNew zxImGui::zxRenderData;
+	mrNuklearData	= zenNew zxNuklear::zxRenderData;
 	//mrNuklearData->msigRenderUI.Connect(*this, &GfxWindow::UIRenderCB);
 	ConnectSignal_UIRender(mrImGuiData->msigRenderUI);
 }

@@ -315,6 +315,16 @@ namespace ZenSharpmake
 				conf.LibraryFiles.Add("dxgi");
 				conf.LibraryFiles.Add("dxguid");				
 			}
+			
+			//------------------------------------------------------
+			if( target.Platform == Platform.win32 || target.Platform == Platform.win64 )
+			//------------------------------------------------------
+			{
+				if( target.Optimization != Optimization.Retail )
+				{
+					conf.LibraryFiles.Add("Dbghelp"); //For stack trace informations					
+				}
+			}
 		}
 	}
 

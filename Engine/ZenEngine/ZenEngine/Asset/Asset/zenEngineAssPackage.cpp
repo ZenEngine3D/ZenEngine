@@ -19,7 +19,7 @@ zPackageRef zPackageRef::sCreate(const zWString& _zName, const zPackageGroupRef&
 {
 	if( _rParent.IsValid() )
 	{
-		zenAss::zPackageRef rNewPackage = zenNewDefault zeAss::Package;
+		zenAss::zPackageRef rNewPackage = zenNew zeAss::Package;
 		if( rNewPackage->Init(zeMgr::Asset.GetPackageNextID(), _zName, _rParent, zenConst::keEngineVersion__Current) )
 		{
 			zeMgr::Asset.PackageAdd(rNewPackage);

@@ -17,9 +17,9 @@ Asset* Asset::CreateItem( zenConst::eAssetType _eAssetType )
 {
 	switch( _eAssetType )
 	{
-	case zenConst::keAssType_TestProperty:	return zenNewDefault TestProperty();
-	case zenConst::keAssType_Texture2D:		return zenNewDefault GfxTexture2D();
-	case zenConst::keAssType_Mesh:			return zenNewDefault GfxMesh();
+	case zenConst::keAssType_TestProperty:	return zenNew TestProperty();
+	case zenConst::keAssType_Texture2D:		return zenNew GfxTexture2D();
+	case zenConst::keAssType_Mesh:			return zenNew GfxMesh();
 	default:								zenAssertMsg(0, "Unsupported Asset Type");
 	}
 	return nullptr;

@@ -41,8 +41,8 @@ namespace zcExp
 	//=================================================================================================
 	zResID CreateGfxShaderVertex( const char* _zFilename, const char* _zEntryname, const zArrayBase<zenRes::zShaderDefine>& _aDefines  )
 	{
-		static zenMem::zAllocatorPool sMemPool("Pool CreateShaderVertex", sizeof(ExportInfoGfxShader), 1, 5 );
-		ExportInfoGfxShader* pExportInfo	= zenNew(&sMemPool) ExportInfoGfxShader;
+		//static zenMem::zAllocatorPool sMemPool("Pool CreateShaderVertex", sizeof(ExportInfoGfxShader), 1, 5 );
+		ExportInfoGfxShader* pExportInfo	= zenNewPool ExportInfoGfxShader;
 		pExportInfo->mzFilename				= _zFilename;
 		pExportInfo->mzEntryname			= _zEntryname;
 		pExportInfo->maDefines				= _aDefines;
@@ -60,8 +60,8 @@ namespace zcExp
 	//=================================================================================================
 	zResID CreateGfxShaderPixel( const char* _zFilename, const char* _zEntryname, const zArrayBase<zenRes::zShaderDefine>& _aDefines )
 	{
-		static zenMem::zAllocatorPool sMemPool("Pool CreateShaderPixel", sizeof(ExportInfoGfxShader), 1, 5 );
-		ExportInfoGfxShader* pExportInfo	= zenNew(&sMemPool) ExportInfoGfxShader;
+		//static zenMem::zAllocatorPool sMemPool("Pool CreateShaderPixel", sizeof(ExportInfoGfxShader), 1, 5 );
+		ExportInfoGfxShader* pExportInfo	= zenNewPool ExportInfoGfxShader;
 		pExportInfo->mzFilename				= _zFilename;
 		pExportInfo->mzEntryname			= _zEntryname;
 		pExportInfo->maDefines				= _aDefines;

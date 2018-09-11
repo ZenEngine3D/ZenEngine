@@ -8,7 +8,7 @@ namespace zen { namespace zenType
 	typedef zUInt(*GrowthPolicyFunction)(zUInt _uCurrentCount, zUInt _uNeededCount, zUInt _uItemSize); 
 	zUInt GrowthPolicyOneandHalf( zUInt _uCurrentCount, zUInt _uNeededCount, zUInt _uItemSize);
 
-	template<class TType, GrowthPolicyFunction TGrowthPolicy=GrowthPolicyOneandHalf, size_t TAlign=zenDefaultAlign>
+	template<class TType, GrowthPolicyFunction TGrowthPolicy=GrowthPolicyOneandHalf>
 	class zArrayDynamic : public zArrayBase<TType>
 	{
 	zenClassDeclare(zArrayDynamic, zArrayBase<TType>)

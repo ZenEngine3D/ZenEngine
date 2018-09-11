@@ -151,6 +151,7 @@ namespace ZenSharpmake
 		{
 			Name = "ThirdPartyEASTLLib";
 			SourceRootPath = RootDir + @"\Engine\ThirdParty\EASTL\Source";
+			AdditionalSourceRootPaths.Add(RootDir + @"\Engine\ThirdParty\EASTL\Include");
 			AddTarget(CreateTargetAll());
 		}
 

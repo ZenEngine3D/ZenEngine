@@ -266,7 +266,7 @@ bool AssetLoaderXml::LoadPackage(const zenAss::zPackageGroupRef& _rParent, const
 		pugi::xml_node nodePackage	= Doc.child(kzXmlName_Node_Package);
 		if( nodePackage )
 		{
-			zenAss::zPackageRef rNewPackage	= zenNewDefault zeAss::Package;
+			zenAss::zPackageRef rNewPackage	= zenNew zeAss::Package;
 			zU32 uPkgID						= nodePackage.attribute(kzXmlName_PkgAtr_ID).as_uint();
 			zU32 uEngineVer					= nodePackage.attribute(kzXmlName_PkgAtr_Version).as_uint();
 			if( uEngineVer<=zenConst::keEngineVersion__Current		&& 

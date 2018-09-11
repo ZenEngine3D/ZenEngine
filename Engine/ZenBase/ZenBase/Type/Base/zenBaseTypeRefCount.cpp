@@ -5,7 +5,7 @@ namespace zen { namespace zenType {
 zRefCounted::TypeList zRefCounted::sLstPendingDel[3];
 zUInt zRefCounted::suLstPendingDelIndex = 0;
 
-void zRefCounted::ReferenceRelease()
+void zRefCounted::ReleasePendingDelete()
 {
 	suLstPendingDelIndex		= (suLstPendingDelIndex + 1) % zenArrayCount(sLstPendingDel);
 	zRefCounted* pCurrentItem	= sLstPendingDel[suLstPendingDelIndex].PopHead();
@@ -15,6 +15,12 @@ void zRefCounted::ReferenceRelease()
 			pCurrentItem->ReferenceDeleteCB();
 		pCurrentItem = sLstPendingDel[suLstPendingDelIndex].PopHead();
 	}
+}
+
+void zRefCounted::ReleasePendingAtProgramEnd()
+{
+	for(int i(0); i<zenArrayCount(sLstPendingDel); ++i)
+		ReleasePendingDelete();
 }
 
 void zRefCounted::ReferenceDeleteCB()

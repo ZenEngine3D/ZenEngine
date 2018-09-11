@@ -32,8 +32,8 @@ void EventCPU_Base::CPUStop()
 
 EventBaseRef EventCPU::Create(const zStringHash32& _EventName)
 {
-	static zenMem::zAllocatorPool sMemPool("Pool Event CPU", sizeof(EventCPU), 256, 256);
-	EventCPU* pEventCpu = zenNew(&sMemPool) EventCPU(_EventName);
+	//static zenMem::zAllocatorPool sMemPool("Pool Event CPU", sizeof(EventCPU), 256, 256);
+	EventCPU* pEventCpu = zenNewPool EventCPU(_EventName);
 	return pEventCpu;
 }
 

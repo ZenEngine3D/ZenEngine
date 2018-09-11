@@ -12,8 +12,8 @@ namespace zcRes
 	ResourceAnyRef RuntimeExport(zcExp::ExportInfoBase& _ExportInfo)
 	{
 		typedef TResourceRef::Class::Super::RuntimeExporter ExporterClass;
-		static zenMem::zAllocatorPool sMemPool("Pool TResource SeriaData", sizeof(TResourceRef::Class), 128, 128);
-		TResourceRef rResource		= zenNew(&sMemPool) TResourceRef::Class();		
+		//static zenMem::zAllocatorPool sMemPool("Pool TResource SeriaData", sizeof(TResourceRef::Class), 128, 128);
+		TResourceRef rResource		= zenNewPool TResourceRef::Class();		
 
 		ExporterClass Exporter(rResource.HAL());
 		Exporter.Export(_ExportInfo);

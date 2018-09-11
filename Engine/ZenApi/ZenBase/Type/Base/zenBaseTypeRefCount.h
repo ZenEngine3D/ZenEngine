@@ -12,7 +12,8 @@ namespace zen { namespace zenType {
 		zenInline void					ReferenceAdd();
 		zenInline void					ReferenceRem();
 		zenInline zInt					ReferenceCount();		
-		static void						ReferenceRelease();		//!< @brief Clear item flagged as deleted (reference reached 0)
+		static void						ReleasePendingDelete();
+		static void						ReleasePendingAtProgramEnd();
 		virtual							~zRefCounted(){};
 	protected:
 		virtual	void					ReferenceDeleteCB();	//!< Called when no reference are left on object

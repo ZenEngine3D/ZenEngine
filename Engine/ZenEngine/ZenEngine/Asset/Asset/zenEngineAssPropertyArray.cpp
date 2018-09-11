@@ -7,10 +7,10 @@ namespace zen { namespace zenAss
 
 PropertyDefRef PropertyArray::Create( const char* _zName, const char* _zDisplayName, const char* _zDescription, bool _bShowInAssetDesc, bool _bIsEditable, const PropertyDefRef& _rPropertyDef, zUInt _uEntryCountMin, zUInt _uEntryCountMax )
 {		
-	static zenMem::zAllocatorPool sAllocPool( "PropertyDefinition::Create", sizeof(PropertyArray), 256, 256 );
+	//static zenMem::zAllocatorPool sAllocPool( "PropertyDefinition::Create", sizeof(PropertyArray), 256, 256 );
 	zenAssert( _rPropertyDef.IsValid() );
 	zenAssert( _uEntryCountMin <= _uEntryCountMax);
-	PropertyArray* pNewDefinition		= zenNew(&sAllocPool) zenAss::PropertyArray(_zName, _zDisplayName, _zDescription, _bShowInAssetDesc, _bIsEditable);
+	PropertyArray* pNewDefinition		= zenNewPool zenAss::PropertyArray(_zName, _zDisplayName, _zDescription, _bShowInAssetDesc, _bIsEditable);
 	pNewDefinition->mrArrayPropertyDef	= _rPropertyDef;	
 	pNewDefinition->muEntryCountMin		= _uEntryCountMin;
 	pNewDefinition->muEntryCountMax		= _uEntryCountMax;
@@ -24,10 +24,10 @@ PropertyDefRef PropertyArray::Create( const char* _zName, const char* _zDisplayN
 //!			differently since the array contains ValueRef.
 PropertyValueRef PropertyArray::Allocate(const zAssetItemRef& _rOwnerAsset)const
 {	
-	static zenMem::zAllocatorPool sAllocPool( "PropertyArray::Allocate", sizeof(ValueProperty), 256, 256 );
+	//static zenMem::zAllocatorPool sAllocPool( "PropertyArray::Allocate", sizeof(ValueProperty), 256, 256 );
 	//! @todo Clean : Removing const qualifier, since 'zGameConstRef' doesn't take a const reference at the moment...
 	//					We know that all accessors won't modify the object, except for ReferenceAdd/Rem with mRerCount needing to be mutable.
-	ValueRef rArrayVal = zenNew(&sAllocPool) ValueProperty(_rOwnerAsset, this);
+	ValueRef rArrayVal = zenNewPool ValueProperty(_rOwnerAsset, this);
 	ValueStorage aArrayVal( (zU32)mDefault.Count() );
 	for(zUInt idx(0), count(mDefault.Count()); idx<count; ++idx)
 		aArrayVal[idx] = mDefault[idx].Clone(_rOwnerAsset);
@@ -39,9 +39,9 @@ PropertyValueRef PropertyArray::Allocate(const zAssetItemRef& _rOwnerAsset)const
 PropertyValueRef PropertyArray::Clone(const zAssetItemRef& _rOwnerAsset, const PropertyValueRef& _rValue)const
 {
 	zenAssert( _rValue.GetType() == kPropertyType );
-	static zenMem::zAllocatorPool sAllocPool( "PropertyArray::Clone", sizeof(ValueProperty), 256, 256 );	
+	//static zenMem::zAllocatorPool sAllocPool( "PropertyArray::Clone", sizeof(ValueProperty), 256, 256 );	
 	ValueRef rValueToClone				= _rValue;	
-	ValueRef rValueCloned 				= zenNew(&sAllocPool) ValueProperty(rValueToClone->mrOwnerAsset, this);	
+	ValueRef rValueCloned 				= zenNewPool ValueProperty(rValueToClone->mrOwnerAsset, this);	
 	const ValueStorage& aArrayToClone	= rValueToClone.GetValue();	
 	ValueStorage aArrayCloned((zU32)aArrayToClone.Count());	
 	for(zUInt idx(0), count(aArrayToClone.Count()); idx<count; ++idx)

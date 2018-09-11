@@ -27,7 +27,7 @@ void StartTaskProcessing()
 {
 	zUInt maxStackSize(1024*16);	
 	for(zUInt idx(0); idx<zbFiber::keFiberCount; ++idx)
-		zenNewDefault zbFiber(maxStackSize);
+		zenNew zbFiber(maxStackSize);
 			
 	gaThreadHandle[0]	= GetCurrentThread();
 	gaThreadID[0]		= GetCurrentThreadId();

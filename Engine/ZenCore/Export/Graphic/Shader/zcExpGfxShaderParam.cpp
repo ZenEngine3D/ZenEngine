@@ -12,8 +12,8 @@ namespace zcExp
 zResID CreateGfxCBuffer(zResID _ParentParamDefID)
 {
 	zenAssert( _ParentParamDefID.GetType() == zenConst::keResType_GfxCBufferDefinition );	
-	static zenMem::zAllocatorPool sMemPool("Pool CreateShaderParam", sizeof(ExportInfoGfxShaderParam), 1, 5 );
-	ExportInfoGfxShaderParam* pExportInfo		= zenNew(&sMemPool) ExportInfoGfxShaderParam;
+	//static zenMem::zAllocatorPool sMemPool("Pool CreateShaderParam", sizeof(ExportInfoGfxShaderParam), 1, 5 );
+	ExportInfoGfxShaderParam* pExportInfo		= zenNewPool ExportInfoGfxShaderParam;
 	pExportInfo->mParentParamDefID				= _ParentParamDefID;
 	return zcMgr::Export.CreateItem( zResID::kePlatformType_GFX, zenConst::keResType_GfxCBuffer, pExportInfo );
 }

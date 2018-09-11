@@ -61,7 +61,7 @@ zEngineRef<QueryDisjoint_DX11> QueryDisjoint_DX11::Create()
 	if( slstQueryCreated.IsEmpty() )
 	{
 		for(zUInt idx(0); idx<uGrowSize; ++idx)
-			zenNewDefault QueryDisjoint_DX11();
+			zenNewPool QueryDisjoint_DX11();
 	}
 	return slstQueryCreated.PopTail();
 }
@@ -108,7 +108,7 @@ zEngineRef<QueryTimestamp_DX11> QueryTimestamp_DX11::Create()
 	if( slstQueryCreated.IsEmpty() )
 	{
 		for(zUInt idx(0); idx<uGrowSize; ++idx)
-			zenNewDefault QueryTimestamp_DX11();
+			zenNewPool QueryTimestamp_DX11();
 	}
 
 	QueryTimestamp_DX11* pQuery	= slstQueryCreated.PopTail();

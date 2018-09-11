@@ -45,7 +45,7 @@ zU8* GfxIndex_DX11::Lock()
 	//! @todo 3 Clean Design MemBuffer class to handle data copy between cpu/gpu
 	//! @todo 3 Optim return directx11 map pointer directly
 	//					Ref: https://developer.nvidia.com/sites/default/files/akamai/gamedev/files/gdc12/Efficient_Buffer_Management_McDonald.pdf
-	mpLockData = zenNewDefault zU8[ maIndices.SizeMem() ];		
+	mpLockData = zenNew zU8[ maIndices.SizeMem() ];		
 	return mpLockData;
 }
 
