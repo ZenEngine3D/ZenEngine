@@ -10,7 +10,7 @@
 //! @brief Some build defines config
 //-------------------------------------------------------------------------------------------------
 #define ZEN_MEMORY_TRACKING				(1 && !ZEN_BUILD_FINAL)		//!< Keeps track of each allocation and write overflow
-#define ZEN_MEMORY_TRACKING_DETAILED	(1 && ZEN_MEMORY_TRACKING)	//!< Also keeps track of entire callstack on each allocation (slowdown allocations)
+#define ZEN_MEMORY_TRACKING_DETAILED	(0 && ZEN_MEMORY_TRACKING)	//!< Also keeps track of entire callstack on each allocation (slowdown allocations)
 #define ZEN_MEMORY_SUPPORT_CHECKACCESS	(1 && !ZEN_BUILD_FINAL)		//!< Detect out-of-bound memory access or to memory that has been freed already. Requires a lot more memory, so should be used selectively
 
 
@@ -71,7 +71,6 @@
 //! Support for multi-platform file include
 //=================================================================================================
 //! @todo 2 This should be only on engine side, no api
-//! @todo 2 Rename defines without caplock, in a difference changelist
 #define zenComma								,															//Useful to insert a comma, inside a macro call, without interpreting it as a new macro parameter
 #define zenStringDefineB(_S_)					#_S_														//Convert parameter into a string
 #define zenStringDefine(_S_)					zenStringDefineB(_S_)										//Convert content of a define into a string

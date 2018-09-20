@@ -121,10 +121,10 @@ bool SampleRendererInstance::Init()
 		}
 	}
 
-	zArrayStatic<zenRes::zShaderDefine> aShaderDefines			= {	zenRes::zShaderDefine("DEFINETEST", "1"), zenRes::zShaderDefine("DEFINETEST1", "0")};
-	zArrayStatic<const zenRes::zShaderParameter*> aParamAll		= {	&zenRes::zShaderFloat4(zHash32("vMeshColor"),	zVec4F(.7f,.7f,.7f,1)),
-																	&zenRes::zShaderFloat4(zHash32("vColor"),		zVec4F(1,1,1,1)) };
-
+	zArrayStatic<zenRes::zShaderDefine> aShaderDefines		= {	zenRes::zShaderDefine("DEFINETEST", "1"), zenRes::zShaderDefine("DEFINETEST1", "0")};
+	zenRes::zShaderFloat4 ShadParamMeshColor(zHash32("vMeshColor"),	zVec4F(.7f,.7f,.7f,1));
+	zenRes::zShaderFloat4 ShadParamColor(zHash32("vColor"),			zVec4F(1,1,1,1));
+	zArrayStatic<const zenRes::zShaderParameter*> aParamAll	= {	&ShadParamMeshColor, &ShadParamColor };
 	//---------------------------------------------------------------------
 	// Create rendering resources		
 	//---------------------------------------------------------------------	
@@ -147,15 +147,13 @@ bool SampleRendererInstance::Init()
 	mrCube2MeshStrip									= zenRes::zGfxMeshStrip::Create( mrCubeIndex, mrShaderBind );
 	zenRes::zGfxMeshStrip rCube4MeshStripA				= zenRes::zGfxMeshStrip::Create( mrCubeIndex, mrShaderBind, 0, 12 );
 	zenRes::zGfxMeshStrip rCube4MeshStripB				= zenRes::zGfxMeshStrip::Create( mrCubeIndex, mrShaderBind, 12, 0xFFFFFFFF );
-	zArrayStatic<zenRes::zGfxMeshStrip> aMesh4Strip		= {rCube4MeshStripA, rCube4MeshStripB};
-	mrCube3Mesh											= zenRes::zGfxMesh::Create( aMesh4Strip );
+	mrCube3Mesh											= zenRes::zGfxMesh::Create( {rCube4MeshStripA, rCube4MeshStripB} );
 
- 	mrTriangleIndex										= zenRes::zGfxIndex::Create(aTriangleIndices, zenConst::kePrimType_TriangleList );
+	mrTriangleIndex										= zenRes::zGfxIndex::Create(aTriangleIndices, zenConst::kePrimType_TriangleList );
  	mrTriangleVtxPos									= zenRes::zGfxStructBuffer<zVec3F>::Create(aTriangleVtxPos /*, zFlagResUse()*/ ); 
  	mrTriangleVtxColorUv								= zenRes::zGfxStructBuffer<BufferColorUV>::Create(aTriangleVtxColorUV /*, zFlagResUse()*/ ); 	
- 	mrTriangleMeshStrip									= zenRes::zGfxMeshStrip::Create( mrTriangleIndex, mrShaderBind );
-	
-		
+ 	mrTriangleMeshStrip									= zenRes::zGfxMeshStrip::Create( mrTriangleIndex, mrShaderBind);
+
 	zArrayStatic<zenRes::zGfxRenderPass::ConfigColorRT>	aRenderToTextureColorRTConfig;
 	zenRes::zGfxRenderPass::ConfigDepthRT				RenderToTextureDepthRTConfig;
 	mrRenderToTextureRT1								= zenRes::zGfxTarget2D::Create(zenConst::keTexFormat_RGBA8, zVec2U16(512,512) );
@@ -190,7 +188,7 @@ bool SampleRendererInstance::Init()
 	mrCube1MeshStrip.SetResource( zHash32("txColor.mSampler"),	mrSampler);
 	mrCube1MeshStrip.SetResource( zHash32("VInputPosition"),	mrCubeVtxPos);
 	mrCube1MeshStrip.SetResource( zHash32("VInputColorUV"),		mrCubeVtxColorUv);
-	
+
 	vEye = zenMath::simdXYZW( 0.0f, 0.0f, -5.0f, 0.0f );
 	zenMath::MatrixLookAtLH(matView, vEye, vAt, vUp );		
 	matWorld[1].SetPos(zenMath::simdXYZW(-3.0f, 0.0f, 0.0f, 1.0f));
@@ -238,7 +236,7 @@ void SampleRendererInstance::UpdateBackbuffers()
 		zenMath::MatrixProjectionLH( matProjection, 60, float(vBackbufferDim.y)/float(vBackbufferDim.x), 0.01f, 100.f );
 	}
 	
-	// Recreates final RenderPass each frame, since backbuffer Target2d gets pingpong-ed
+	// Recreates final RenderPass each frame, since back buffer Target2d gets pingpong-ed
 	zenRes::zGfxRenderPass::ConfigColorRT	FinalColorRTConfig;
 	zenRes::zGfxRenderPass::ConfigDepthRT	FinalDepthRTConfig;								
 	FinalColorRTConfig.mrTargetSurface		= mrMainWindowGfx.GetBackbuffer();
@@ -299,11 +297,11 @@ void SampleRendererInstance::Update()
 	zenGfx::zCommand::DrawMesh(rContextFinal, 0,		mrCube2MeshStrip);	
 
 	// Render the cube with point sampling
- 	matWorld[2].SetRotationY( t );						// Rotate cube around the origin 				
+ 	matWorld[2].SetRotationY( t );						// Rotate cube around the origin
  	mrTriangleMeshStrip.SetValue( zHash32("World"),		matWorld[2] );
  	mrTriangleMeshStrip.SetValue( zHash32("Projection"),matProjection );
 	zenGfx::zCommand::DrawMesh(rContextFinal, 0,		mrTriangleMeshStrip);
-
+	
 	matWorld[3].SetRotationX( t );						// Rotate cube around the origin 				
 	mrCube3Mesh.SetValue( zHash32("World"),				matWorld[3] );
 	mrCube3Mesh.SetValue( zHash32("Projection"),		matProjection );

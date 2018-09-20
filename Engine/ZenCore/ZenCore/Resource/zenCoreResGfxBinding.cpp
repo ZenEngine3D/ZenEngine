@@ -16,6 +16,16 @@ zGfxMesh zGfxMesh::Create(const zArrayBase<zGfxMeshStrip>& _aMeshStrip)
 	return zcExp::CreateGfxMesh( aMeshStripID );
 }
 
+zGfxMesh zGfxMesh::Create(std::initializer_list<zGfxMeshStrip> _aMeshStrip)
+{
+	zArrayStatic<zResID> aMeshStripID;
+	const zGfxMeshStrip* aStripArray = _aMeshStrip.begin();
+	aMeshStripID.SetCount( _aMeshStrip.size() );
+	for( zUInt idx(0), count(aMeshStripID.Count()); idx<count; ++idx)
+		aMeshStripID[idx] = aStripArray[idx].GetResID();
+	return zcExp::CreateGfxMesh( aMeshStripID );
+}
+
 zGfxMeshStrip zGfxMeshStrip::Create(const zGfxIndex& _IndexBuffer, const zGfxShaderBinding& _rShaderBinding, const zArrayBase<zShaderResource>& _aResources, zU32 _uIndexFirst, zU32 _uIndexCount, zU32 _uVertexFirst)
 {
 	return zcExp::CreateGfxMeshStrip( _IndexBuffer.GetResID(), _rShaderBinding.GetResID(), _uIndexFirst, _uIndexCount, _uVertexFirst, _aResources);

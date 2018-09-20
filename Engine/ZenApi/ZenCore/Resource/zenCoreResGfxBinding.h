@@ -108,6 +108,7 @@ namespace zen { namespace zenRes {
 		void							SetResource(zHash32 _hBufferName, const zGfxBuffer& _rBuffer, zU16 _uIndex=0 );
 
 		static zGfxMesh					Create(const zArrayBase<zGfxMeshStrip>& _aMeshStrip);
+		static zGfxMesh					Create(std::initializer_list<zGfxMeshStrip> _aMeshStrip);
 	};
 	
 }} // namespace zen, zenRes

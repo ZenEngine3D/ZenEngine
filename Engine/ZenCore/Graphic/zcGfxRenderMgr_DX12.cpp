@@ -166,7 +166,7 @@ bool ManagerRender_DX12::Load()
 	if (SUCCEEDED(D3D12GetDebugInterface(IID_PPV_ARGS(&mrDXDebugController))))
 	{
 		mrDXDebugController->EnableDebugLayer();
-		mrDXDebugController->SetEnableGPUBasedValidation(true);
+	//	mrDXDebugController->SetEnableGPUBasedValidation(true);
 		uDxgiFactoryFlags |= DXGI_CREATE_FACTORY_DEBUG;
 	}	
 #endif
