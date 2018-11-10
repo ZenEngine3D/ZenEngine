@@ -63,7 +63,7 @@ PS_INPUT VS( uint VertexId : SV_VertexID )
 	SVertex_ColorUV bufferEntry 	= VInputColorUV[VtxInput_Offset+VertexId];
 	
 	matrix LocalToView				= mul(mul(World,View),Projection);
-	output.Position					= mul(float4(bufferPos,1), LocalToView);	
+	output.Position					= mul(float4(bufferPos,1), LocalToView);
 	output.Color					= UNorm4ToFloat4(bufferEntry.Color);
     output.UV						= bufferEntry.UV;
     return output;
@@ -77,6 +77,7 @@ float4 PS( PS_INPUT VertexInput) : SV_Target
 	float4 texColor = TextureSample2D( txColor, VertexInput.UV );
 	//return float4(texColor.rgb*TestBufferUpdate[0].rgb, 1);	
 	return float4(vColor.rgb*VertexInput.Color.rgb*texColor.rgb, VertexInput.Color.a );
+	//return float4(VertexInput.Color.rgb*texColor.rgb, VertexInput.Color.a );
 }
 
 void PS2Output( PS_INPUT VertexInput, out float4 ColorOut1 : SV_Target0, out float4 ColorOut2 : SV_Target1) 

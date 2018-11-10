@@ -209,9 +209,7 @@ namespace ZenSharpmake
  			base.Configure(conf, target);
 			conf.AddPublicDependency<ZenLibExternal>(target);
 			//DisabledWarning.Add("4238"); // nonstandard extension used: class rvalue used as lvalue (Using & on constructor of class for array init)
-
-			conf.Options.Add(new Sharpmake.Options.Vc.Compiler.DisableSpecificWarnings("4189")); //local variable is initialized but not referenced
-			
+			conf.Options.Add(new Sharpmake.Options.Vc.Compiler.DisableSpecificWarnings("4189")); //local variable is initialized but not referenced			
 		}
 	}
 	
@@ -224,7 +222,8 @@ namespace ZenSharpmake
 	
 	[Sharpmake.Generate] public class ZenExeSampleGfxSimple		: ZenExeSample {public ZenExeSampleGfxSimple() 		: base("SampleGfxSimple", @"Gfx\Renderer" ) {} }
 	[Sharpmake.Generate] public class ZenExeSampleGfxDebugUI 	: ZenExeSample {public ZenExeSampleGfxDebugUI() 	: base("SampleGfxDebugUI", @"Gfx\DebugUI" ) {} }
-	[Sharpmake.Generate] public class ZenExeSampleGfxDirextX12 	: ZenExeSample {public ZenExeSampleGfxDirextX12() 	: base("SampleGfxDirextX12", @"Gfx\DirectX12" ) {} }
+	//[Sharpmake.Generate] public class ZenExeSampleGfxDirectX12 	: ZenExeSample {public ZenExeSampleGfxDirectX12()	: base("SampleGfxDirectX12", @"Gfx\DirectX12" ) {} }
+	[Sharpmake.Generate] public class ZenExeSampleGfxGLTF 		: ZenExeSample {public ZenExeSampleGfxGLTF() 		: base("SampleGfxGLTF", @"Gfx\GLTF" ) {} }
 
 
 	//==============================================================================================
@@ -257,7 +256,8 @@ namespace ZenSharpmake
 				conf.AddProject<ZenExeSampleBaseSystem>(target);
 				conf.AddProject<ZenExeSampleGfxSimple>(target);
 				conf.AddProject<ZenExeSampleGfxDebugUI>(target);
-				conf.AddProject<ZenExeSampleGfxDirextX12>(target);
+				//conf.AddProject<ZenExeSampleGfxDirextX12>(target);
+				conf.AddProject<ZenExeSampleGfxGLTF>(target);
 			}
 		}
 	}	

@@ -50,7 +50,7 @@ namespace zen { namespace zenRes
 		using Super::operator=;
 		void*					Lock();
 		void					Unlock(const zenGfx::zCommandList& rContext);
-	protected:
+	//protected:
 		static zGfxBuffer		Create(size_t _uElemSize, zU32 _uElemCount/*, zFlagResTexUse _UseFlags*/);
 		static zGfxBuffer		Create(const zU8* _pData, size_t _uDataSize, size_t _uElemSize, zU32 _uElemCount/*, zFlagResTexUse _UseFlags*/);
 	};

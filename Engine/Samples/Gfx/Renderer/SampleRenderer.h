@@ -55,7 +55,7 @@ protected:
 	zenRes::zGfxTarget2D					mrRenderToTextureRT1;
 	zenRes::zGfxTarget2D					mrRenderToTextureRT2;
 	zenRes::zGfxTarget2D					mrRenderToTextureDepth;
-	zenRes::zGfxTarget2D					mrBackbufferDepth;	
+	zenRes::zGfxTarget2D					mrBackbufferDepth;
 	zenRes::zGfxStateRaster					mrStateRaster;
 	zenRes::zGfxRenderPass					mrRndPassTexture;
 	zenRes::zGfxRenderPass					mrRndPassFinal;
