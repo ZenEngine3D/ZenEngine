@@ -8,135 +8,254 @@
 namespace sample
 {
 
-//==================================================================================================
-//! @brief		Test the zListIntrusive container
-//!	@details	Test sorted add, removal of items, etc...
-//==================================================================================================
-class IntrusiveListItem
+class ListItemObjTest: public zListItem<3>
 {
 public:
-	IntrusiveListItem(){}
-	IntrusiveListItem(int _uValue) : mValue(_uValue) {}
-	int mValue = 0;
-	zListLink mlnkList1;
-	zListLink mlnkList2;
-	typedef zList<IntrusiveListItem, &IntrusiveListItem::mlnkList1, false> TypeList1;
-	typedef zList<IntrusiveListItem, &IntrusiveListItem::mlnkList2, false> TypeList2;
+	using ListA = zList<ListItemObjTest,0>;
+	using ListB = zList<ListItemObjTest,1>;
+	using ListC = zList<ListItemObjTest,2>;
+	virtual ~ListItemObjTest()
+	{
+	}
+
+	__declspec(noinline) void Test()
+	{
+		++value;
+		printf("Value %i", value);
+	}
+	int value;
 };
 
-class ListItemRefCounted : public zRefCounted
+//=================================================================================================
+// Testing auto removal of item from list when destroyed 
+// and also testing class staying POD if auto-removal not supported
+//=================================================================================================
+struct ListItemTriv: zListItemTrivial<>
+{
+	ListItemTriv() = default;
+	void Init(zU32 inValue) { mLinks[0].Reset(); mValue = inValue; }
+	zU32 mValue;
+};
+using TypeListTriv = zList<ListItemTriv>;
+
+struct ListItemPOD
+{
+	ListItemPOD() = default;
+	void Init(zU32 inValue) { mLinks[0].Reset(); mValue = inValue; }
+	zU32 mValue;
+	zListLinkMember(1);	
+};
+using TypeListPOD = zList<ListItemPOD>;
+
+struct ListItemAutoRem: public zListItem<> { ListItemAutoRem() = default;  zU32 mValue = 0; };
+using TypeListAutoRem = zList<ListItemAutoRem>;
+
+void SampleListIntrusive_POD()
+{	
+	//------------------------------------------------------------------------------------------------
+	// Preserving 'trivialness' state of class
+	//------------------------------------------------------------------------------------------------
+	{
+		zenAssert( std::is_trivial<ListItemTriv>() );	// Confirm that object is still a 'trivial' type (can be memcopied)		
+		ListItemTriv Items[3];
+		for( zU32 i(0); i<zenArrayCount(Items); i++)
+			Items[i].Init(i);
+
+		{			
+			TypeListTriv ListTrivial;
+			for( auto& Item : Items)
+				ListTrivial.push_back(Item);
+
+			Items[0].ListItemTriv::~ListItemTriv(); //Explicitly call destructor, making sure object *isn't* automatically removed from list
+			zenAssert(ListTrivial.front().mValue == 0);
+		}
+		zenAssert( !TypeListTriv::IsInList(Items[0]) );	// Should have been removed because List has been destroyed
+	}
+
+	//------------------------------------------------------------------------------------------------
+	// Preserving 'POD' state of class (Trivial + Standard layout)
+	//------------------------------------------------------------------------------------------------
+	{
+		zenAssert(std::is_pod<ListItemPOD>());	// Confirm that object is still a 'trivial' type (can be memcopied)		
+		ListItemPOD Items[3];
+		for (zU32 i(0); i<zenArrayCount(Items); i++)
+			Items[i].Init(i);
+
+		{
+			TypeListPOD ListPod;
+			for (auto& Item : Items)
+				ListPod.push_back(Item);
+
+			Items[0].ListItemPOD::~ListItemPOD(); //Explicitly call destructor, making sure object *isn't* automatically removed from list
+			zenAssert(ListPod.front().mValue == 0);
+		}
+		zenAssert(!TypeListPOD::IsInList(Items[0]));	// Should have been removed because List has been destroyed
+	}
+
+	//------------------------------------------------------------------------------------------------
+	// Auto-removal support when item is destroyed
+	//------------------------------------------------------------------------------------------------
+	{		
+		ListItemAutoRem Items[3];
+		for (zU32 i(0); i<zenArrayCount(Items); i++)
+			Items[i].mValue = i;
+
+		{			
+			TypeListAutoRem ListAutoRem;			
+			zenAssert( std::is_trivial<TypeListAutoRem>::value == false);	// Confirm that object is not a POD anymore
+							
+			for (auto& Item : Items)
+				ListAutoRem.push_back(Item);
+
+			Items[0].ListItemAutoRem::~ListItemAutoRem(); //Explicitly call destructor, making sure object *is* automatically removed from list
+			zenAssert(ListAutoRem.front().mValue != 0);			
+		}
+		zenAssert( !TypeListAutoRem::IsInList(Items[1]) );	// Should have been removed because List has been destroyed
+	}
+}
+
+class ListItemRefCounted: public zRefCounted, public zListItem<1,1>
 {
 public:
-	ListItemRefCounted() {}
-	
-	ListItemRefCounted(int val) : mValue(val) {};
+	using List = zListRef<ListItemRefCounted, 0, zListItem<1,1> >;
 
+	ListItemRefCounted(zU32 inVal):mValue(inVal){}
 	virtual ~ListItemRefCounted()
 	{
 		printf("ListItemRefCounted::Destruct");
 	}
 
-	int mValue = 0;
-
 protected:
-	zListLink mlnkListRef;
-	zListLink mlnkList;
-public:
-	typedef zListRef<zGameRef, ListItemRefCounted, &ListItemRefCounted::mlnkListRef> TypeList2;
-	typedef zList<ListItemRefCounted, &ListItemRefCounted::mlnkList, false> TypeList3;
+	zU32 mValue;
 };
 
-class ItemWithVirtual
+void SampleListIntrusive_Ref()
 {
-public:
-	virtual ~ItemWithVirtual(){};
-	size_t mValueBefore;
-//protected:
-	zListLink mlnkList;
-public:
-	size_t mValueAfter;
-	using TypeList = zList<ItemWithVirtual, &ItemWithVirtual::mlnkList, false>;	
-	//template<class TItem, zListLink TItem::*, bool> friend class zList;
-};
-//typedef zList<ItemWithVirtual, &ItemWithVirtual::mlnkList, false> ItemWithVirtualList;
+	ListItemRefCounted::List ListItems;
+	for(int i(0); i<3; ++i)
+		ListItems.push_back( *(zenNew ListItemRefCounted(i)) );
 
-template <int ListSupportCount>
-class ListNode
+	while( ListItems.empty() == false )
+		ListItems.pop_back();
+}
+
+struct ParentListItem : public zListItem<1>
 {
-protected:
-	ListNode* mpPrev[ListSupportCount]={nullptr};
-	ListNode* mpNext[ListSupportCount]={nullptr};
-	template <class, int>
-	friend class ListTest;
+	zU32 mParentVal = 0;
+	using List = zList<ParentListItem, 0>;
 };
 
-template<class TObjectClass, int TListIndex=0>
-class ListTest
+//! @Note	Parent class also inherit from zListItem, use index 1
+//!			in zListItem<1,**1**> to prevent confusion.
+//!			First 1 is just the number of list this item can be in
+//!			(not counting the parent list support)
+struct ChildListItem : public ParentListItem, public zListItem<1,1>
 {
-public:
-	static TObjectClass& GetNext(const TObjectClass& _ObjCurrent)
-	{
-		return *reinterpret_cast<TObjectClass*>(_ObjCurrent.mpNext[TListIndex]);
-	}
+	zU32 mChildValue = 1;
+	using List = zList<ChildListItem, 0, zListItem<1,1> >;
 };
 
-class TestListClass : public ListNode<1>
+//! @Note	Parents classes also inherit from zListItem, use index 2
+//!			in zListItem<1, **2**> to prevent confusion
+//!			First 1 is just the number of list this item can be in
+//!			(not counting the parenta list support)
+struct ChildChildListItem: public ChildListItem,public zListItem<1,2>
 {
-	int mValue = 1;
+	zU32 mChildChildValue = 2;
+	using List = zList<ChildChildListItem,0,zListItem<1,2> >;
 };
 
-class TestReferenceValue : public zRefCounted
+//==================================================================================================
+//! @brief	Demonstrate how to fix issue when both parent and child class are zListItem
+//! @detail When multiple inherited parent class are of type zListItem, this can cause
+//!			issue, where compiler doesn't know which item to use to store list links. To get 
+//!			around this, we can specify a zListIndex in declaration, telling us specifically
+//!			which parent class to use.
+//! @note	Not to be confused with zListItem that can be declared with multiple list support
+//==================================================================================================
+void SampleListMultiInheritance()
 {
-public:
-	int mValue = 0;
+	ParentListItem::List		ListParent;
+	ChildListItem::List			ListChild;
+	ChildChildListItem::List	ListChildChild;
+	ParentListItem				ObjectSimple;
+	ChildListItem				ObjectMultiListItem;
+	ChildChildListItem			ObjectMultiListItem2x;
+
+	ListParent.push_front(ObjectSimple);
+	ListParent.push_front(ObjectMultiListItem);
+	ListParent.push_front(ObjectMultiListItem2x);
+	ListChild.push_front(ObjectMultiListItem);
+	ListChild.push_front(ObjectMultiListItem2x);
+	ListChildChild.push_front(ObjectMultiListItem2x);
+}
+
+struct StructWithSort: public zListItem<>
+{
+	StructWithSort(zU32 _SortId): mSortId(_SortId) {};
+	bool operator<(const StructWithSort& _Cmp) { return mSortId < _Cmp.mSortId; }
+	zU32 mSortId;
+	using List = zList<StructWithSort>;
 };
 
+void SampleListSort()
+{
+	StructWithSort Objects[] = {5, 4, 6, 5, 0, 3};
+	StructWithSort::List ListObjs;
+	for(auto& Item : Objects)
+		ListObjs.push_sort(Item);	
+}
+
+//==================================================================================================
+//! @brief		Test the zListIntrusive container
+//!	@details	Test sorted add, removal of items, etc...
+//==================================================================================================
 void SampleListIntrusive()
 {
 	zenIO::Log(zenConst::keLog_Game, zenConst::kzLineA40);
 	zenIO::Log(zenConst::keLog_Game, " zListIntrusive");
 	zenIO::Log(zenConst::keLog_Game, zenConst::kzLineA40);
 
-#if 0
-	zList<ItemWithVirtual, &ItemWithVirtual::mlnkList, false> List2;
-
-	ListTest<TestListClass> myList;
-	TestListClass myObj;	
-	TestListClass* myObj2 = &myList.GetNext( myObj );
-	//============================================================================
-	// Making sure compiler supports intrusive list vtable padding
-	//============================================================================
-	ItemWithVirtual				TestVirtualItem;
-	ItemWithVirtual::TypeList	TestVirtualList;
-	TestVirtualItem.mValueBefore	= 1;
-	TestVirtualItem.mValueAfter		= 2;
-	TestVirtualList.PushHead(TestVirtualItem);
-	zenAssertMsg(TestVirtualItem.mValueBefore == 1, "zList doesn't support this compiler properly, adjust the TVirtualPad handling");
-	zenAssertMsg(TestVirtualItem.mValueAfter == 2, "zList doesn't support this compiler properly, adjust the TVirtualPad handling");
-
-	//============================================================================
-	// Ref test Intrusive node
-	//============================================================================
-	ListItemRefCounted::TypeList2 listRef2Item;
-	ListItemRefCounted::TypeList3 list3Item;
-	ListItemRefCounted* pItem = new ListItemRefCounted;
 	{
-		zGameRef<ListItemRefCounted> rItemRef = pItem;
-		listRef2Item.PushHead(rItemRef);
+		ListItemObjTest Items[10];
+		ListItemObjTest::ListA ListA;
+		ListItemObjTest::ListB ListB;
+		ListItemObjTest::ListC ListC;
+		for(int i=0; i<zenArrayCount(Items); ++i)
+		{
+			Items[i].value = i;
+			ListA.push_front(Items[i]);
+			ListB.push_back(Items[i]);
+			ListC.push_front(Items[i]);
+		}
+	
+		int SumA(0);
+		auto ItA(ListA.begin());		
+		while( ItA )
+		{
+			SumA += (*ItA).value;
+			++ItA;
+		}
+
+		int SumB(0);
+		auto ItB(ListB.cbegin());		
+		while( ItB )
+		{
+			SumB += ItB->value;
+			++ItB;
+		}
+
+		int SumD(0);
+		for( auto& Item : ListA )
+			SumD += Item.value;	
 	}
-	listRef2Item.PopHead();
-	/*
-	int valueInt								= 0;
-	int* pValueInt								= &valueInt;
-	zGameRef<TestReferenceValue> rValueSmart	= new TestReferenceValue;
-	decltype(rValueSmart) rValue2				= rValueSmart;
-	decltype(*rValueSmart) Value3				= *rValueSmart;
-	decltype(*pValueInt) Value4					= *pValueInt;
-	decltype((*pValueInt)) Value5				= *pValueInt;
-	*/
-	//============================================================================
-	// Intrusive list usage
-	//============================================================================
+
+	SampleListIntrusive_POD();
+	SampleListIntrusive_Ref();
+	SampleListMultiInheritance();
+	SampleListSort();
+
+#if 0
 	const zUInt						kuTestCount = 1024 * 512;
 	IntrusiveListItem*				aItemNode = zenNew IntrusiveListItem[kuTestCount];
 	IntrusiveListItem::TypeList1	lstIntrusive;
@@ -172,7 +291,6 @@ void SampleListIntrusive()
 	zU64 uTraverseFwndTimeIntr = zenSys::GetTimeUSec();
 	auto intrIt = lstIntrusive.GetHeadIt();
 	int val = 0;
-	int i = 0;
 	while( intrIt )
 	{
 		val += intrIt->mValue;
@@ -230,5 +348,6 @@ void SampleListIntrusive()
 //	zenDelArray(aItemChild);
 #endif
 }
+
 
 }

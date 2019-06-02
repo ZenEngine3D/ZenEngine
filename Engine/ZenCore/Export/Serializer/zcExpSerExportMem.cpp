@@ -11,9 +11,9 @@ SerializerExportMem::SerializerExportMem(zUInt auAllocSize)
 
 SerializerExportMem::~SerializerExportMem()
 {
-	while( !mlstAllocs.IsEmpty() )
+	while( !mlstAllocs.empty() )
 	{
-		void* pAdr = mlstAllocs.PopHead();
+		void* pAdr = mlstAllocs.pop_front();
 		zenDelArrayNullptr(pAdr);
 	}
 }
@@ -22,7 +22,7 @@ bool SerializerExportMem::ItemStarted(zcExp::ResourceData& aItem)
 {
 	if( ISerializerExporter::ItemStarted( aItem ) )
 	{
-		Alloc* pAlloc = mlstAllocs.GetHead();
+		Alloc* pAlloc = mlstAllocs.front_check();
 		if( !pAlloc || pAlloc->mpMemoryCur+aItem.muSize >= pAlloc->mpMemoryEnd )
 		{
 			size_t uAllocSize		= zenMath::Max<size_t>(muAllocSize, aItem.muSize);
@@ -30,7 +30,7 @@ bool SerializerExportMem::ItemStarted(zcExp::ResourceData& aItem)
 			pAlloc->mpMemoryStart	= (zU8*)pAlloc + sizeof(Alloc);
 			pAlloc->mpMemoryCur		= pAlloc->mpMemoryStart;
 			pAlloc->mpMemoryEnd		= pAlloc->mpMemoryStart + uAllocSize;
-			mlstAllocs.PushHead(*pAlloc);
+			mlstAllocs.push_front(*pAlloc);
 		}
 
 		return true;
@@ -52,7 +52,7 @@ bool SerializerExportMem::Save(const char* azFilename)
 	if(pFile==nullptr)
 		return false;
 
-	Alloc* pAlloc = mlstAllocs.GetHead();
+	Alloc* pAlloc = mlstAllocs.front_check();
 	while( pAlloc )
 	{
 		fwrite( ((Alloc*)pAlloc)->mpMemoryStart, ((Alloc*)pAlloc)->mpMemoryCur-((Alloc*)pAlloc)->mpMemoryStart, 1, pFile );
@@ -65,7 +65,7 @@ bool SerializerExportMem::Save(const char* azFilename)
 
 void* SerializerExportMem::GetMemory(zUInt _uSize)
 {
-	Alloc* pAlloc = (Alloc*)mlstAllocs.GetHead();
+	Alloc* pAlloc = (Alloc*)mlstAllocs.front_check();
 	zenAssertMsg(pAlloc->mpMemoryCur+_uSize <= pAlloc->mpMemoryEnd, "Not enought memory pre-allocated for this item. Item is not respecting SetItemSize() value.");
 	void* pMemory		= pAlloc->mpMemoryCur;
 	pAlloc->mpMemoryCur	+= _uSize;

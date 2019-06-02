@@ -275,7 +275,7 @@ zUInt zArrayBase<TType>::Copy( const zArrayBase<TTypeImport>& _ImportArray )
 //! @return			- 
 //==================================================================================================
 template<class TType>
-void zArrayBase<TType>::SetRange(const TType& _Value, zUInt _uFirst=0, zUInt _uLast=0xFFFFFFFF)
+void zArrayBase<TType>::SetRange(const TType& _Value, zUInt _uFirst, zUInt _uLast)
 {
 	TType*				pDataDest	= mpData;
 	TType*				pDataEnd	= &mpData[_uLast>muCount ? muCount : _uLast];

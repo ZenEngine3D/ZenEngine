@@ -111,7 +111,7 @@ namespace zen { namespace zenGfx
 	public:
 		void						Submit();
 		void						SetBeforeChildren(bool _bBeforeChild=true); //!< @brief Tell commandlist where to insert new commands from now on
-		bool						GetBeforeChildren()const;
+		bool						IsBeforeChildren()const;
 		static zCommandList			Create(const zStringHash32& _zContextName, const zCommandList& _rParent=zCommandList(), const zenRes::zGfxRenderPass& _rRenderState=zenRes::zGfxRenderPass());
 		static zCommandList			Create(const zStringHash32& _zContextName, const zenRes::zGfxRenderPass& _rRenderState);
 		static const zCommandList&	GetFrameContext();

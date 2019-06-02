@@ -4,18 +4,16 @@ namespace zcGfx
 {
 using CommandRef = zEngineRef<zcGfx::Command>;
 
-class CommandList_Base : public zRefCounted
+class CommandList_Base : public zRefCounted, public zListItem<1,1>
 {
 zenClassDeclare(CommandList_Base, zRefCounted)
-zListLink mlnkChild;
-using TypeListChild	= zList<CommandList_Base, &CommandList_Base::mlnkChild, false>;
-
+using TypeListChild	= zListRef<CommandList_Base, 0, zListItem<1,1> >;
 public:	
 	struct ScopedInsertPoint
 	{
 		ScopedInsertPoint(CommandList_Base& _CommandList, bool _bInsertBefore=true)
 		: mCommandList(_CommandList)
-		, mbOriginalValue(_CommandList.GetBeforeChildren())
+		, mbOriginalValue(_CommandList.IsBeforeChildren())
 		{
 			mCommandList.SetBeforeChildren(_bInsertBefore);		
 		}
@@ -30,7 +28,7 @@ public:
 	zenInline const zcRes::GfxRenderPassRef&	GetRenderpass();
 	zenInline void								AddCommand( const zEngineRef<zcGfx::Command>& _rCommand );
 	zenInline void								SetBeforeChildren(bool _bBeforeChild=true);
-	zenInline bool								GetBeforeChildren()const;
+	zenInline bool								IsBeforeChildren()const;
 	zenInline bool								IsEmpty()const;
 	void										Clear();
 	const zArrayDynamic<CommandRef>&			GetCommands(bool _bBeforeChild=true)const { return marDrawcalls[_bBeforeChild]; }

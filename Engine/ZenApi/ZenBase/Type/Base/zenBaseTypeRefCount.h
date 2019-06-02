@@ -5,7 +5,7 @@
 namespace zen { namespace zenType {
 	
 //! @todo clean make this all const so we can pass on read only resources
-	class zRefCounted
+	class zRefCounted : public zListItem<>
 	{
 	zenClassDeclareNoParent(zRefCounted)
 	public:
@@ -17,12 +17,12 @@ namespace zen { namespace zenType {
 		virtual							~zRefCounted(){};
 	protected:
 		virtual	void					ReferenceDeleteCB();	//!< Called when no reference are left on object
-		zListLink						mLstPendingDelLink;
 		mutable std::atomic<zI32>		miRefCount = 0;
 		
-		typedef zList<zRefCounted, &zRefCounted::mLstPendingDelLink, true> TypeList;		
+		using PendingDelList			= zList<zRefCounted>; 
 		static zUInt					suLstPendingDelIndex;
-		static TypeList					sLstPendingDel[3];		
+		static PendingDelList			sLstPendingDel[3];
+		
 	};
 	
 	class zReference

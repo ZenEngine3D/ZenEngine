@@ -15,7 +15,7 @@ zArrayStatic<TType>::zArrayStatic(zUInt _uCount)
 }
 
 template<class TType>
-zArrayStatic<TType>::zArrayStatic(const TType* _pCopy, zUInt _uCount, zUInt _uExtraCount=0)
+zArrayStatic<TType>::zArrayStatic(const TType* _pCopy, zUInt _uCount, zUInt _uExtraCount)
 : zArrayBase()
 {		
 	muCount			= _uCount+_uExtraCount;
@@ -24,7 +24,7 @@ zArrayStatic<TType>::zArrayStatic(const TType* _pCopy, zUInt _uCount, zUInt _uEx
 }	
 
 template<class TType>
-zArrayStatic<TType>::zArrayStatic(const zArrayStatic& _Copy, zUInt _uExtraCount=0)
+zArrayStatic<TType>::zArrayStatic(const zArrayStatic& _Copy, zUInt _uExtraCount)
 {					
 	muCount					= _Copy.Count()+_uExtraCount;
 	mpData					= zenNew TType[muCount];		

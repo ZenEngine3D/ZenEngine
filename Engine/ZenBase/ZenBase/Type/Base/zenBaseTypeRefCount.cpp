@@ -2,18 +2,18 @@
 
 namespace zen { namespace zenType {
 
-zRefCounted::TypeList zRefCounted::sLstPendingDel[3];
+zRefCounted::PendingDelList zRefCounted::sLstPendingDel[3];
 zUInt zRefCounted::suLstPendingDelIndex = 0;
 
 void zRefCounted::ReleasePendingDelete()
 {
 	suLstPendingDelIndex		= (suLstPendingDelIndex + 1) % zenArrayCount(sLstPendingDel);
-	zRefCounted* pCurrentItem	= sLstPendingDel[suLstPendingDelIndex].PopHead();
+	zRefCounted* pCurrentItem	= sLstPendingDel[suLstPendingDelIndex].pop_front();
 	while( pCurrentItem )
 	{
 		if( pCurrentItem->miRefCount <= 0)
 			pCurrentItem->ReferenceDeleteCB();
-		pCurrentItem = sLstPendingDel[suLstPendingDelIndex].PopHead();
+		pCurrentItem = sLstPendingDel[suLstPendingDelIndex].pop_front();
 	}
 }
 

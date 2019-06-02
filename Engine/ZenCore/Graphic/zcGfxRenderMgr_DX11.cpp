@@ -15,12 +15,12 @@ QueryDisjoint_DX11::QueryDisjoint_DX11()
 	QueryDesc.MiscFlags	= 0;
 	HRESULT result		= zcMgr::GfxRender.GetDevice()->CreateQuery(&QueryDesc, &mpDX11Query);
 	zenAssert(result == S_OK);
-	slstQueryCreated.PushHead(*this);
+	slstQueryCreated.push_front(*this);
 }
 
 void QueryDisjoint_DX11::ReferenceDeleteCB()
 {
-	slstQueryCreated.PushHead(*this);
+	slstQueryCreated.push_front(*this);
 }
 
 void QueryDisjoint_DX11::Start(ID3D11DeviceContext* _pContext)
@@ -58,12 +58,12 @@ zU64 QueryDisjoint_DX11::GetClockRate()
 zEngineRef<QueryDisjoint_DX11> QueryDisjoint_DX11::Create()
 {	
 	const zUInt uGrowSize = 8;
-	if( slstQueryCreated.IsEmpty() )
+	if( slstQueryCreated.empty() )
 	{
 		for(zUInt idx(0); idx<uGrowSize; ++idx)
 			zenNewPool QueryDisjoint_DX11();
 	}
-	return slstQueryCreated.PopTail();
+	return slstQueryCreated.pop_back();
 }
 
 QueryTimestamp_DX11::QueryTimestamp_DX11()
@@ -73,7 +73,7 @@ QueryTimestamp_DX11::QueryTimestamp_DX11()
 	QueryDesc.MiscFlags	= 0;
 	HRESULT result		= zcMgr::GfxRender.GetDevice()->CreateQuery(&QueryDesc, &mpDX11Query);
 	zenAssert(result == S_OK);
-	slstQueryCreated.PushHead(*this);
+	slstQueryCreated.push_front(*this);
 }
 
 void QueryTimestamp_DX11::ReferenceDeleteCB()
@@ -84,7 +84,7 @@ void QueryTimestamp_DX11::ReferenceDeleteCB()
 		mrQueryDisjoint	= nullptr;
 		mbValidResult	= false;
 	}
-	slstQueryCreated.PushHead(*this);
+	slstQueryCreated.push_front(*this);
 }
 
 zU64 QueryTimestamp_DX11::GetTimestampUSec()
@@ -105,13 +105,13 @@ zU64 QueryTimestamp_DX11::GetTimestampUSec()
 zEngineRef<QueryTimestamp_DX11> QueryTimestamp_DX11::Create()
 {	
 	const zUInt uGrowSize = 128;
-	if( slstQueryCreated.IsEmpty() )
+	if( slstQueryCreated.empty() )
 	{
 		for(zUInt idx(0); idx<uGrowSize; ++idx)
 			zenNewPool QueryTimestamp_DX11();
 	}
 
-	QueryTimestamp_DX11* pQuery	= slstQueryCreated.PopTail();
+	QueryTimestamp_DX11* pQuery	= slstQueryCreated.pop_back();
 	pQuery->mrQueryDisjoint		= zcMgr::GfxRender.GetQueryDisjoint();
 	pQuery->mbValidResult		= false;
 	pQuery->muTimestamp			= 0;	

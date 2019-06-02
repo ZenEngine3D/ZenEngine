@@ -39,6 +39,7 @@ protected:
 	zArrayDynamic<char>		maChar;
 };
 
+//! @todo 1 Improve string hash to prevent repetitive alloc on const char* (llook at zScopedEventCpu name for example)
 template<class THashType>
 struct zStringHash
 { 		

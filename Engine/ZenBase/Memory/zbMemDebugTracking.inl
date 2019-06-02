@@ -30,7 +30,7 @@ void DebugTracking::CheckValidity(const void* _pMemory)
 	{
 		const zU8* pMemory		= reinterpret_cast<const zU8*>(_pMemory);
 		const Header* pHeader	= reinterpret_cast<const Header*>(pMemory-sizeof(Header));
-		zenAssert(pHeader->mlnkAllocation.IsInList());
+		zenAssert(Header::List::IsInList(*pHeader));
 		if( !pHeader->mIsCheckAccess )
 		{
 			static Footer sReferenceFooter;
@@ -71,7 +71,7 @@ void* DebugTracking::Malloc(const SAllocInfo& _Allocation, size_t _SizeWanted, s
 		mStats.mSizeWanted		+= pHeader->mSizeWanted;
 		mStats.mSizeUsed		+= pHeader->mSizeUsed;
 		
-		mAllocatedItems.PushHead(*pHeader);
+		mAllocatedItems.push_front(*pHeader);
 	}
 	return pMemory;
 }
@@ -87,7 +87,7 @@ void* DebugTracking::Free(void* _pMemory, bool _IsArrayDel)
 	mStats.mAllocationCount		-= 1;
 	mStats.mSizeWanted			-= pHeader->mSizeWanted;
 	mStats.mSizeUsed			-= pHeader->mSizeUsed;
-	mAllocatedItems.Remove(*pHeader);
+	mAllocatedItems.remove(*pHeader);
 	return pHeader;
 }
 

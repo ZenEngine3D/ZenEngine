@@ -12,8 +12,8 @@ void zRefCounted::ReferenceAdd()
 void zRefCounted::ReferenceRem()
 {
 	//! @todo multihread not safe to have multiple add to list
-	if( miRefCount.fetch_sub(1) == 1 && !mLstPendingDelLink.IsInList() )
-		sLstPendingDel[suLstPendingDelIndex].PushHead( *this );
+	if( miRefCount.fetch_sub(1) == 1 && !PendingDelList::IsInList(*this) )
+		sLstPendingDel[suLstPendingDelIndex].push_front( *this );
 }
 
 zInt zRefCounted::ReferenceCount()

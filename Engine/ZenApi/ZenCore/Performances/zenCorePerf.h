@@ -23,7 +23,7 @@ public:
 
 class zScopedEventCpu
 {
-public:
+public:	
 	zScopedEventCpu(const zStringHash32& _EventName);
 	~zScopedEventCpu();
 protected:

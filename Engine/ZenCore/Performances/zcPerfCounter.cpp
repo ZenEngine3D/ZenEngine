@@ -10,12 +10,9 @@ EventBase::EventBase(const zStringHash32& _zEventName)
 
 EventBase::~EventBase()
 {
-	EventBase* pCounter = mlstChilds.PopHead();
+	EventBase* pCounter = mlstChilds.pop_front();
 	while( pCounter )
-	{
-		pCounter->ReferenceRem();
-		pCounter = mlstChilds.PopTail();
-	}
+		pCounter = mlstChilds.pop_back();
 }
 
 bool EventBase::IsActive() const
@@ -30,9 +27,7 @@ double EventBase::GetElapsedMs()
 
 void EventBase::AddChild(EventBase& _Child)
 {
-	_Child.ReferenceAdd();
-	mlstChilds.PushTail(_Child);
+	mlstChilds.push_back(_Child);
 }
-
 
 }

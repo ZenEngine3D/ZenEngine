@@ -2,177 +2,235 @@
 
 namespace zen { namespace zenType 
 {
+//=================================================================================================
+//! @brief	Macro used to add a ListLink to a class.
+//! @note	Unless wanting to preserve POD of a class, does not need to be used directly creating
+//!			a class with intrusive list support.
+//=================================================================================================
+#define zListLinkMember(ListCount)	zListLink	mLinks[ListCount];
 
 //=============================================================================================
 //! @class	zListLink
-//! @brief	Contain infos to reach previous and next item in a list
-//! @detail Add one zListLink member per list a class can be a member of. This allow
-//!			having intrusive list support (much faster and safer than external container list)
-//!			that support multiple lists instead of being limited to one through inheritance.
+//! @brief	Contain infos to reach previous and next item in a list.
+//! @detail The templated list object is able to find the object the link belongs too, 
+//!			by knowing the offset between base object address and link member address.
+//! @note	Bit 0 turned on prev/next pointer when this link object belongs to list root node.
 //=============================================================================================
 class zListLink
 {
-public:
-    zenInline				~zListLink();		
-	zenInline bool			IsInList()const;					//!< @brief True if this link has been added to a list
+public:	
+							zListLink() = default;
+	zenInline bool			IsInList()const;
+	zenInline bool			IsItem()const;
+	zenInline void			Reset();
+	zenInline zListLink*	Next()const;
+	zenInline zListLink*	Prev()const;
+	
+protected:
+	zenInline void			SetAsRoot();
+	zenInline void			SetNext(zListLink* inItem);
+	zenInline void			SetPrev(zListLink* inItem);
+	zenInline void			Remove();
+	zenInline void			InsertBefore(zListLink& zenRestrict _NewLink);
+	zenInline void			InsertAfter(zListLink& zenRestrict _NewLink);
+	zListLink*				mpPrev;		//!< Pointer to next link
+	zListLink*				mpNext;		//!< Pointer to previous link
+	friend class zListBase;
+	template<class, unsigned char, class> friend class zList;
+	template<unsigned char, unsigned char> friend class zListItem;
+};
 
-protected:    
-	zenInline void			Remove();							//!< @brief Remove item from the list this zListLink belongs to	
-	zenInline zListLink*	GetNext()const;						//!< @brief Get the next item zListLink object
-	zenInline zListLink*	GetPrev()const;						//!< @brief Get the previous item zListLink object	
-	zListLink*				mpPrevLink = nullptr;				//!< Pointer to next link (lower bit set to 1 if pointing to list root, invalid)
-	zListLink*				mpNextLink = nullptr;				//!< Pointer to previous link (lower bit set to 1 if pointing to list root, invalid)
-	template<class T, zListLink T::*, bool> friend class zList;
+//=================================================================================================
+//! @brief		Used to add IntrusiveList support in a class. 
+//! @detail		This class preserve the 'trivialness' of a class, meaning that objects using it can 
+//!				still be memcopied without issue.
+//!	@example	Creating a class that can live in 2 different list :
+//!				class MyClass : public zListItemTrivial<2> {}
+//!				zList<MyClass, 0> listA;
+//!				zList<MyClass, 1> listB;
+//! @note		In the case of a parent class and child class both wanting to be in different list
+//!				we can use TMultiIndex with a different value to avoid compiler confusion when 
+//!				knowing which mLink member to use. Look at SampleListMultiInheritance() example.
+//=================================================================================================
+template <unsigned char TListCount=1, unsigned char TMultiIndex=0>
+class zListItemTrivial
+{
+public: 
+	zListItemTrivial() = default;
+protected:
+	zListLinkMember(TListCount);
+	template<class,unsigned char,class> friend class zList;
+};
+
+//=================================================================================================
+//! @brief	Add IntrusiveList support in a child class through inheritance.
+//! @detail	Unlike zListItemTrivial, objects using this class are not trivial anymore, because
+//!			it use a constructor to initialize data to null, and destructor to auto remove items
+//!			from list it belongs to, when destroyed. 
+//! @note	Should be the main class used for adding list support to a class.
+//=================================================================================================
+template <unsigned char TListCount=1, unsigned char TMultiIndex=0>
+class zListItem : public zListItemTrivial<TListCount, TMultiIndex>
+{
+public:
+	zenInline zListItem();
+	zenInline ~zListItem();
+};
+
+//=================================================================================================
+//! @class	zListBase
+//! @brief	Double 'intrusive' linked list base class
+//! @detail	Intrusive list do not require using additional allocation, their list infos is 
+//!			directly included in the object, making it more cache friendly and less heap intensive.
+//!			Example : look at SampleListIntrusive() for more infos
+//=================================================================================================
+class zListBase
+{
+public:
+	zenInline				zListBase();
+	zenInline virtual		~zListBase();
+
+	// Using STL standard naming convention (http://www.cplusplus.com/reference/stl/)
+	zenInline bool			empty()const;
+	zenInline virtual void	clear();
+
+protected:
+	class Iterator
+	{
+	public:
+		zenInline			Iterator(zListLink* _pCurrent);
+		zenInline			Iterator(const Iterator& _Copy);
+		zenInline bool		IsValid()const;
+		zenInline bool		operator==(const Iterator& _Cmp)const;
+		zenInline bool		operator!=(const Iterator& _Cmp)const;
+		zenInline explicit	operator bool()const;
+	protected:
+		zListLink*			mpCurrent = nullptr;
+	};
+
+	class IteratorConst
+	{
+	public:
+		zenInline			IteratorConst(const zListLink* _pCurrent);
+		zenInline			IteratorConst(const IteratorConst& _Copy);
+		zenInline bool		IsValid()const;		
+		zenInline bool		operator==(const IteratorConst& _Cmp)const;	
+		zenInline bool		operator!=(const IteratorConst& _Cmp)const;
+		zenInline explicit	operator bool()const;
+	protected:
+		const zListLink*	mpCurrent = nullptr;
+	};
+
+	zListLink mRoot;
 };
 
 //=================================================================================================
 //! @class	zList
 //! @brief	Double 'intrusive' linked list
-//! @detail	Intrusive list do not require using additional allocation, their list infos is 
-//!			directly included in the object, making it more cache friendly and less heap intensive.
-//!			Example : look at SampleListIntrusive() for more infos
-//!			Exemple: zList<ExempleClass, &ExempleClass::myLink> myList;
-//! 
-//!			TItem			: The item class
-//!			TLinkOffset		: The class member pointer (used to find offset to data in object)
-//!			TVirtual1stTime : Needed to tell compiler there's a virtual table at object beginning
-//!
-//! @note	IMPORTANT: When declaring a zList<myClass, &myClass::listLink> directly in myClass, 
-//!			and myClass has a virtual method for the first time, set TVirtualPad to true. 
-//!			Without this, compiler give us the wrong offset to member listLink.
-//!			(Doesn't realize class has a vtable before data, until class declaration is finished)
+//! @detail	Made class compatible with STL containers, so std coding technique can be used with it
+//!	@param TItem -		Class of object stored in the list
+//! @param TListIdx -	Object support being stored in multiple list at the same time, 
+//!						specify which ListIndex this list should use. (Only needed when not 0)
+//! @param TLinkAccess -Through consecutive inheritance, it's possible for class to inherit from  
+//!						multiple zListItem, prevent problem by making which one to use explicit.
+//!						(Needed when ambiguous compile error from multiple zListItem child class)
+//!						Example here : SampleListMultiInheritance
 //=================================================================================================
-template<class TItem, zListLink TItem::* TLinkOffset, bool TVirtual1stTime>
-class zList
+template<class TItem, unsigned char TListIdx=0, class TLinkAccess=TItem>
+class zList : public zListBase
 {
 public:
-	//---------------------------------------------------------------------------------------------
-	//! @class	Iterator
-	//! @brief	Allow easy traversal of a list
-	//---------------------------------------------------------------------------------------------
-	class Iterator
+	class Iterator : public zListBase::Iterator
+	{
+	public:				
+									Iterator(){}
+									Iterator(const Iterator& _Copy);
+		TItem*						Get()const;
+		TItem&						operator*()const { return *Get(); }
+		TItem*						operator->()const {return Get(); }
+		zenInline Iterator&			operator=(const Iterator& _Copy);
+		zenInline Iterator&			operator++();
+		zenInline Iterator&			operator--();
+	protected:
+									Iterator(zListLink* _pCurrent);
+		friend class zList;
+	};
+	class IteratorConst: public zListBase::IteratorConst
 	{
 	public:
-							Iterator();
-							Iterator(const Iterator& _Copy);
-		bool				IsValid()const;						//!< @brief Return true if pointing to valid data
-		TItem*				Get()const;							//!< @brief Get current item (nullptr if none)
-		TItem&				operator*()const;					//!< @brief Get current item
-		TItem*				operator->()const;					//!< @brief Get current item (nullptr if none)
-		explicit 			operator bool()const;				//!< @brief Return true if iterator is still valid
-		void				operator++();						//!< @brief Go to next item
-		void				operator--();						//!< @brief Go to previous item
-		const Iterator&		operator=(const Iterator& _Copy);	//!< @brief Assign iterator current location
-		void				AddBefore(TItem& _NewItem);			//!< @brief Insert a new item before this zListLink
-		void				AddAfter(TItem& _NewItem);			//!< @brief Insert a new item after this zListLink
-		TItem*				Remove();							//!< @brief Unlink current item and return value (iterator invalid afterward)
-		TItem*				RemoveGoNext();						//!< @brief Unlink current item and go to next value
-		TItem*				RemoveGoPrev();						//!< @brief Unlink current item and go to previous value
-
+									IteratorConst() {}
+									IteratorConst(const IteratorConst& _Copy);
+		const TItem*				Get()const;
+		const TItem&				operator*()const { return *Get(); }
+		const TItem*				operator->()const { return Get(); }
+		zenInline IteratorConst&	operator=(const IteratorConst& _Copy);
+		zenInline IteratorConst&	operator++();
+		zenInline IteratorConst&	operator--();
 	protected:
-							Iterator(zListLink* _pLink);
-		zListLink*			mpLink = nullptr;					//!< Current link node pointed by iterator
-		template<class T, zListLink T::*, bool> friend class zList;
+									IteratorConst(const zListLink* _pCurrent);
+		friend class zList;
 	};
 
-	//---------------------------------------------------------------------------------------------
-	// Static methods
-	//---------------------------------------------------------------------------------------------
-public:	
-	static bool				IsInAList(const TItem& _Item);
-	static TItem*			GetNext(const TItem& _Item);						//!< @brief Get the next item (from current item) in the list
-	static TItem*			GetPrev(const TItem& _Item);						//!< @brief Get the previous item (from current item) in the list
-	static void				Remove(TItem& _Item);								//!< @brief Remove the element from the list it's in
-	static void				AddBefore(TItem& _Item, TItem& _NewItem);			//!< @brief Insert a new item before an item
-	static void				AddAfter(TItem& _Item, TItem& _NewItem);			//!< @brief Insert a new item after an item
+	//Using STL container naming convention	
+	zenInline zList&		push_front(TItem& _ItemAdd);
+	zenInline zList&		push_back(TItem& _ItemAdd);	
+	zenInline zList&		insert(Iterator& _Pos, TItem& _ItemAdd);
+	zenInline zList&		insert(TItem& _ItemPos, TItem& _ItemAdd);
+	zenInline TItem&		front()const;
+	zenInline TItem&		back()const;
+	zenInline TItem*		pop_front();
+	zenInline TItem*		pop_back();
+	zenInline static void	remove(TItem& _ItemRem);
 
-protected:	
-	static TItem&			GetItemFromLink(const zListLink&);					//!< @brief Retrieve the item associated with a link object
-	static zListLink&		GetLinkFromItem(const TItem& _Item);				//!< @brief Retrieve the link for this list type, from an object
-	static void				AddBefore(zListLink& _Link, zListLink& _NewLink);	//!< @brief Internal use only, making sure we have the right link data from an item object
-	static void				AddAfter(zListLink& _Link, zListLink& _NewLink);	//!< @brief Internal use only, making sure we have the right link data from an item object
+	zenInline Iterator		begin();
+	zenInline Iterator		end();
+	zenInline IteratorConst	cbegin()const;
+	zenInline IteratorConst	cend()const;
 	
-	//---------------------------------------------------------------------------------------------
-	// List method
-	//---------------------------------------------------------------------------------------------
-public:
-							zList();
-	void					PushHead(TItem& _Item);								//!< @brief Add an item to the beginning of this list
-	void					PushTail(TItem& _Item);								//!< @brief Add an item to the end of this list
-	TItem*					PopHead();											//!< @brief Get first item in the list and remove it (nullptr of none)
-	TItem*					PopTail();											//!< @brief Get last item in the list and remove it (nullptr of none)
+	//Non standard STL
+	zenInline zList&		insert_after(Iterator& _Pos,TItem& _ItemAdd);
+	zenInline zList&		insert_after(TItem& _ItemPos,TItem& _ItemAdd);
+	zenInline zList&		insert_before(Iterator& _Pos, TItem& _ItemAdd);
+	zenInline zList&		insert_before(TItem& _ItemPos, TItem& _ItemAdd);
+	zenInline zList&		push_sort(TItem& _ItemAdd);	
+	zenInline TItem*		front_check()const;
+	zenInline TItem*		back_check()const;
 
-	TItem*					GetHead()const;										//!< @brief Get first item in the list (nullptr of none)
-	TItem*					GetTail()const;										//!< @brief Get last item in the list (nullptr of none)
-
-	Iterator				GetHeadIt()const;									//!< @brief Get iterator to first item
-	Iterator				GetTailIt()const;									//!< @brief Get iterator to last item
-	void					Empty();											//!< @brief Unlink all element, one by one
-	bool					IsEmpty()const;										//!< @brief True if it contains no element
+	zenInline static bool	IsInList(const TItem& Item);
+	zenInline static TItem*	GetNext(const TItem& Item);
+	zenInline static TItem*	GetPrev(const TItem& Item);
 
 protected:
-	zListLink				mRoot;												//!< Keep Head and Tail of list inside a regular zListLink
-	zListLink* const		mpRootInvalid;										//!< Pointer to root link have 0x01 added to their address, to know when it is the root, and thus invalid
+	static TItem*			GetItemFromLink(const zListLink& _Link);
 };
 
-template< template<class> class TRefPtr, class TItem, zListLink TItem::* TLinkOffset>
-class zListRef : public zList<TItem, TLinkOffset, false>
+//=================================================================================================
+//! @class	zListRefTest
+//! @brief	Double 'intrusive' linked list with Reference Count awareness
+//! @detail	Similar to zList, but will increment refcount when item added in list, 
+//!			and decrement when removed
+//! @note	Only need to override methods than can add or remove an item
+//=================================================================================================
+template<class TItem,unsigned char TListIdx=0, class TLinkAccess=TItem>
+class zListRef: public zList<TItem, TListIdx, TLinkAccess>
 {
 zenClassDeclare(zListRef, zList)
 public:
-	//Missing iterator delete
-	static void	Remove(TRefPtr<TItem>& _rItem)
-	{
-		Super::Remove(*_rItem.GetSafe());
-		_rItem->ReferenceRem();
-	}
+	zenInline virtual		~zListRef();
+	zenInline virtual void	clear();
 
-	static void	AddBefore(TRefPtr<TItem>& _rItem, TRefPtr<TItem>& _rNewItem)
-	{
-		_rNewItem->ReferenceAdd();
-		Super::AddBefore(*_rNewItem.GetSafe());
-	}
+	//Standard STL
+	zenInline zListRef&		push_front(TItem& inItem);
+	zenInline zListRef&		push_back(TItem& inItem);
+	zenInline zListRef&		insert(Iterator& _Pos, TItem& _ItemAdd);
+	zenInline zListRef&		insert(TItem& _ItemPos, TItem& _ItemAdd);
+	zenInline TItem*		pop_front();
+	zenInline TItem*		pop_back();
+	zenInline static void	remove(TItem& _ItemRem);
 
-	static void	AddAfter(TRefPtr<TItem>& _Item, TRefPtr<TItem>& _rNewItem)
-	{
-		_rNewItem->ReferenceAdd();
-		Super::AddAfter(*_rNewItem.GetSafe());
-	}
+	//Non standard STL
+	zenInline zListRef&		insert_before(TItem& _Item);
 
-	void PushHead(TRefPtr<TItem>& _rNewItem)
-	{
-		_rNewItem->ReferenceAdd();
-		Super::PushHead(*_rNewItem.GetSafe());
-	}
-
-	void PushTail(TRefPtr<TItem>& _rNewItem)
-	{
-		_rNewItem->ReferenceAdd();
-		Super::PushHead(*_rNewItem.GetSafe());
-	}
-
-	TRefPtr<TItem> PopHead()
-	{
-		TRefPtr<TItem> rItem = Super::PopHead();
-		if (rItem.IsValid())
-			rItem->ReferenceRem();
-		return rItem;
-	}
-
-	TRefPtr<TItem> PopTail()
-	{
-		TRefPtr<TItem> rItem = Super::PopTail();
-		if (rItem.IsValid())
-			rItem->ReferenceRem();
-		return rItem;
-	}
 };
-
-struct zListElement
-{ 
-	zListLink mlnkList; 
-	using List = zList<zListElement, &zListElement::mlnkList, false>;
-};
-
 
 } } //namespace zen, Type

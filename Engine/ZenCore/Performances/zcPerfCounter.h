@@ -11,11 +11,10 @@ namespace zcPerf
 
 using EventBaseRef = zEngineRef<class EventBase>;
 
-class EventBase : public zRefCounted
+class EventBase : public zRefCounted, public zListItem<1,1>
 {
 zenClassDeclare(EventBase, zRefCounted)
-protected:	zListLink				mlnkChild;
-public:		using					TypeListChild = zList<EventBase, &EventBase::mlnkChild, false>;
+public:		using					TypeListChild = zList<EventBase, 0, zListItem<1,1> >;
 public:
 									EventBase(const zStringHash32& _zEventName);
 	virtual							~EventBase();
@@ -43,7 +42,6 @@ protected:
 	TypeListChild					mlstChilds;
 };
 
-
 const zStringHash32& EventBase::GetName()const
 {
 	return mzEventName;
@@ -51,17 +49,17 @@ const zStringHash32& EventBase::GetName()const
 
 EventBaseRef EventBase::GetFirstChild()const
 {
-	return mlstChilds.GetHead();
+	return &mlstChilds.front();
 }
 
 EventBaseRef EventBase::GetNext() const
 {
-	return zcPerf::EventBase::TypeListChild::GetNext(*this);
+	return TypeListChild::GetNext(*this);
 }
 
 EventBaseRef EventBase::GetPrev() const
 {
-	return zcPerf::EventBase::TypeListChild::GetPrev(*this);
+	return TypeListChild::GetPrev(*this);
 }
 
 

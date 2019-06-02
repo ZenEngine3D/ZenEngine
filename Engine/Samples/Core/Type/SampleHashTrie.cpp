@@ -190,7 +190,7 @@ namespace sample
 		//---------------------------------------------------------------------------
 		// std::unordered_map test
 		//---------------------------------------------------------------------------
-		typedef std::unordered_map<zU32, zU32, std::tr1::hash<zU32>, std::equal_to<zU32>, tracking_allocator::allocator<zU32> > hashsettype;
+		typedef std::unordered_map<zU32, zU32, std::hash<zU32>, std::equal_to<zU32>, tracking_allocator::allocator<zU32> > hashsettype;
 
 		hashsettype hashset;
 		srand(1);

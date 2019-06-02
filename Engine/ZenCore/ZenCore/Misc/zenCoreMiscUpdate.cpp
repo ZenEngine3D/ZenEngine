@@ -26,21 +26,14 @@ void IUpdate::Update()
 void IUpdate::Activate(zenConst::eUpdatePriority _ePriorityGroup, zU32 _uPriority)
 {
 	zenAssert(mePriorityGroup<zenConst::keUpdt__Count);
-	mePriorityGroup		= _ePriorityGroup;
-	muPriority			= _uPriority;
-	auto it				= zcMgr::Updater.mlstUpdateable[mePriorityGroup].GetHeadIt();
-	while( it->muPriority > _uPriority )
-		++it;
-
-	if( it.IsValid() )
-		it.AddBefore(*this);
-	else
-		zcMgr::Updater.mlstUpdateable[mePriorityGroup].PushTail(*this);
+	mePriorityGroup			= _ePriorityGroup;
+	muPriority				= _uPriority;
+	zcMgr::Updater.mlstUpdateable[mePriorityGroup].push_sort(*this);
 }
 
 void IUpdate::Deactivate()
 {
-	List::Remove( *this );
+	List::remove( *this );
 }
 
 void IUpdate::Reactivate()

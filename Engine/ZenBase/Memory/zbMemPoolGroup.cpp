@@ -35,18 +35,18 @@ bool PoolGroup::IsInitialized()const
 SAllocInfo PoolGroup::Malloc(size_t _Size)
 {
 	zenAssert(IsInitialized() && _Size <= mConfig.mItemSize);
-	if( mlstFree[GetThreadIndex()].IsEmpty() )
+	if( mlstFree[GetThreadIndex()].empty() )
 		GrowPool();
 	
-	zListElement* pNewItem = mlstFree[GetThreadIndex()].PopTail();
+	zListItem<>* pNewItem = mlstFree[GetThreadIndex()].pop_back();
 	return SAllocInfo(reinterpret_cast<void*>(pNewItem), mConfig.mItemSize);
 }
 void PoolGroup::Free(void* _pMemory)
 {
 	zenAssert(IsInitialized());
 	zenAssert(_pMemory != nullptr)
-	zListElement* pAvailableItem = new(_pMemory) zListElement;
-	mlstFree[GetThreadIndex()].PushHead(*pAvailableItem);
+	zListItem<>* pAvailableItem = new(_pMemory) zListItem<>();
+	mlstFree[GetThreadIndex()].push_front(*pAvailableItem);
 }
 
 void PoolGroup::GrowPool()
@@ -60,12 +60,12 @@ void PoolGroup::GrowPool()
 	
 	zU8* pAddressCurrent		= reinterpret_cast<zU8*>(pResult);
 	zU8* pAddressEnd			= pAddressCurrent + mConfig.mPageSize - mConfig.mItemSize;
-	zListElement::List& lstFree	= mlstFree[GetThreadIndex()];
+	auto& lstFree				= mlstFree[GetThreadIndex()];
 	while( pAddressCurrent <= pAddressEnd )
 	{
-		zListElement* pAvailableItem	= new(pAddressCurrent) zListElement;		
-		pAddressCurrent					+= mConfig.mItemSize;
-		lstFree.PushHead(*pAvailableItem);
+		auto* pAvailableItem	= new(pAddressCurrent) zListItem<>();		
+		pAddressCurrent			+= mConfig.mItemSize;
+		lstFree.push_front(*pAvailableItem);
 	}
 }
 

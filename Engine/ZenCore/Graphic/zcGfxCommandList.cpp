@@ -24,10 +24,7 @@ CommandList_Base::CommandList_Base(const zStringHash32& _zContextName, const Com
 , mrRenderpass(_rRenderpass)
 {		
 	if( _rParent.IsValid() )
-	{
-		_rParent->mlstChilds.PushTail(*this);
-		ReferenceAdd(); //! @todo Clean Have list manage ref count		
-	}
+		_rParent->mlstChilds.push_back(*this);
 
 	//! @todo 1 Perf Record previous drawcall count
 	zU16 uPreviousCount(0);
@@ -40,23 +37,15 @@ CommandList_Base::CommandList_Base(const zStringHash32& _zContextName, const Com
 
 CommandList_Base::~CommandList_Base()
 {
-	//! @todo Clean Have list manage ref count
-	CommandList_Base* pChild = mlstChilds.GetHead();	
-	while( pChild )
-	{
-		CommandList_Base* pDelChild	= pChild;
-		pChild						= mlstChilds.GetNext(*pChild);
-		pDelChild->ReferenceRem();
-	}
 }
 
 void CommandList_Base::Clear()
 {	
-	CommandList_Base* pChildContext = mlstChilds.PopHead();
+	CommandList_Base* pChildContext = mlstChilds.pop_front();
 	while( pChildContext )
 	{
 		pChildContext->Clear();
-		pChildContext = mlstChilds.PopHead();	
+		pChildContext = mlstChilds.pop_front();	
 	}	
 	marDrawcalls[0].Clear();
 	marDrawcalls[1].Clear();
@@ -83,12 +72,8 @@ void CommandList::SubmitInternal()
 		zcMgr::GfxRender.SubmitToGPU(this, marDrawcalls[0]);
 
 	// Ask children to Submit their commands
-	CommandList* pChildCur = static_cast<CommandList*>(mlstChilds.GetHead());
-	while( pChildCur )
-	{
-		pChildCur->SubmitInternal();
-		pChildCur = static_cast<CommandList*>(mlstChilds.GetNext(*pChildCur));
-	}
+	for(auto& Item : mlstChilds)
+		static_cast<CommandList*>(&Item)->SubmitInternal();
 
 	// Submit commands meant to be after children
 	if( marDrawcalls[1].IsEmpty() == false )

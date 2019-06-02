@@ -17,7 +17,7 @@ namespace zenConst
 
 namespace zenMisc {
 
-class IUpdate
+class IUpdate : public zListItem<>
 {
 public:
 								IUpdate();
@@ -27,16 +27,19 @@ public:
 	void						Activate(zenConst::eUpdatePriority _ePriorityGroup, zU32 _uPriority=0);
 	void						Deactivate();
 	void						Reactivate();
-	
+	zenInline bool				operator<(const IUpdate& _Cmp)const;	
 protected:
 	zU64						mTimeLastUpdate;
 	zenConst::eUpdatePriority	mePriorityGroup;
 	zU32						muPriority;
-	zListLink					mLink;
-
+	
 public:
-	typedef zList<IUpdate, &IUpdate::mLink, true> List;
+	using List = zList<IUpdate>;
 };
 
+bool IUpdate::operator<(const IUpdate& _Cmp)const
+{
+	return muPriority < _Cmp.muPriority;
+}
 
 }} //namespace zen { namespace zenMisc {

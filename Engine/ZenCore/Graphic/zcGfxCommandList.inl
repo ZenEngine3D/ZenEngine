@@ -16,14 +16,14 @@ void CommandList_Base::SetBeforeChildren(bool _bBeforeChild)
 	mbInsertBeforeChilds = _bBeforeChild;
 }
 
-bool CommandList_Base::GetBeforeChildren()const
+bool CommandList_Base::IsBeforeChildren()const
 {
 	return mbInsertBeforeChilds;
 }
 
 bool CommandList_Base::IsEmpty() const
 {
-	return marDrawcalls[0].IsEmpty() && marDrawcalls[1].IsEmpty() && mlstChilds.IsEmpty();
+	return marDrawcalls[0].IsEmpty() && marDrawcalls[1].IsEmpty() && mlstChilds.empty();
 }
 
 }

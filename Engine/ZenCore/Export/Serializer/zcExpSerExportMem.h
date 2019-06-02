@@ -10,22 +10,18 @@ public:
 	virtual			~SerializerExportMem();
 	bool			Save(const char* azFilename);
 protected:
-	struct Alloc
+	struct Alloc : public zListItem<>
 	{
-	protected:
-		zListLink	mlnkList;
-
 	public:
 		zU8*		mpMemoryStart;
 		zU8*		mpMemoryCur;
 		zU8*		mpMemoryEnd;
-		typedef zList<Alloc, &Alloc::mlnkList, false> TypeList;
 	};						
 
 	void*			GetMemory	(size_t auSize);
 	void			AddMemory	(size_t auSize);
 	
-	Alloc::TypeList	mlstAllocs;
+	zList<Alloc>	mlstAllocs; //! @todo 2 Remove this book-keeping of allocation, just use large re sizable array
 	size_t			muAllocSize;
 
 //-------------------------------------------------------------------

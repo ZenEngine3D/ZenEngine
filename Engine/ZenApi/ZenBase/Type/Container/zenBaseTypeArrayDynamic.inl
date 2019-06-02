@@ -32,7 +32,7 @@ zArrayDynamic<TType, TGrowthPolicy>::zArrayDynamic(std::initializer_list<TType> 
 }
 
 template<class TType, GrowthPolicyFunction TGrowthPolicy>
-zArrayDynamic<TType, TGrowthPolicy>::zArrayDynamic(const TType* _pCopy, zUInt _uCount, zUInt _uExtraCount=0)
+zArrayDynamic<TType, TGrowthPolicy>::zArrayDynamic(const TType* _pCopy, zUInt _uCount, zUInt _uExtraCount)
 : zArrayBase()
 , muCountReserved(0)
 , muCountReservedMin(0)
@@ -43,7 +43,7 @@ zArrayDynamic<TType, TGrowthPolicy>::zArrayDynamic(const TType* _pCopy, zUInt _u
 }
 
 template<class TType, GrowthPolicyFunction TGrowthPolicy>
-zArrayDynamic<TType, TGrowthPolicy>::zArrayDynamic(const zArrayDynamic& _Copy, zUInt _uExtraCount=0)
+zArrayDynamic<TType, TGrowthPolicy>::zArrayDynamic(const zArrayDynamic& _Copy, zUInt _uExtraCount)
 : zArrayBase()
 , muCountReserved(0)
 , muCountReservedMin(0)

@@ -462,6 +462,7 @@
 #endif
 
 // #include <initializer_list> 
+#define EA_HAVE_CPP11_INITIALIZER_LIST 1 // SF Edit
 #if !defined(EA_HAVE_CPP11_INITIALIZER_LIST) && !defined(EA_NO_HAVE_CPP11_INITIALIZER_LIST)
 	#if defined(EA_HAVE_DINKUMWARE_CPP_LIBRARY) && (_CPPLIB_VER >= 520) && !defined(EA_COMPILER_NO_INITIALIZER_LISTS) // Dinkumware. VS2010+
 		#define EA_HAVE_CPP11_INITIALIZER_LIST 1

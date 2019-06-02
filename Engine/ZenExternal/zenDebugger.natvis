@@ -105,5 +105,46 @@
       
     </Expand >
   </Type>
-  
+
+<!--################################################################################################
+      Intrusive Lists
+    ################################################################################################-->
+	<Type Name="zen::zenType::zList&lt;*,*,*&gt;">		
+		<AlternativeType Name="zen::zenType::zListRef&lt;*,*,*&gt;"/>
+		<DisplayString Condition="(((size_t)mRoot.mpPrev) &amp; ~0x01) == &amp;mRoot">{{Empty}}</DisplayString>
+		<DisplayString Condition="mRoot.mpNext == mRoot.mpPrev">{{Size = 1}}</DisplayString>
+		<DisplayString>{{Size = n}}</DisplayString>
+		<Expand>
+			<CustomListItems MaxItemsPerView="1024">
+				<Variable Name="Offset" InitialValue="(size_t)&amp;(($T1*)0)->$T3::mLinks[$T2]" />
+				<Variable Name="pLinkCur" InitialValue="(zen::zenType::zListLink*)((size_t)mRoot.mpNext &amp; ~0x01)" />
+				<Loop>
+					<If Condition="pLinkCur == &amp;mRoot">
+						<Break/>
+					</If>
+					<Item>($T1*)((size_t)pLinkCur - Offset)</Item>
+					<Exec>pLinkCur = pLinkCur->mpNext</Exec>
+				</Loop>
+			</CustomListItems>
+		</Expand>
+	</Type>
+
+	<Type Name="zen::zenType::zList&lt;*,*,*&gt;::Iterator">
+		<AlternativeType Name="zen::zenType::zList&lt;*,*,*&gt;::IteratorConst"/>
+		<DisplayString Condition="mpCurrent == nullptr || ((unsigned int)mpCurrent->mpNext &amp; 0x01) != 0">{{Invalid}}</DisplayString>
+		<DisplayString>{{Valid}}}</DisplayString>
+		<Expand>
+			<CustomListItems MaxItemsPerView="1" Condition="mpCurrent != nullptr &amp;&amp; ((unsigned int)mpCurrent->mpNext &amp; 0x01) == 0">
+				<Variable Name="Offset" InitialValue="(size_t)&amp;(($T1*)0)->$T3::mLinks[$T2]" />
+				<Item Name="Object">($T1*)((size_t)mpCurrent - Offset)</Item>
+			</CustomListItems>
+		</Expand>
+	</Type>
+
+	<Type Name="zen::zenType::zListLink">
+		<Expand>
+			<Item Name="mpPrev">(zen::zenType::zListLink*)((size_t)mpPrev &amp; ~0x01)</Item>
+			<Item Name="mpNext">(zen::zenType::zListLink*)((size_t)mpNext &amp; ~0x01)</Item>
+		</Expand>
+	</Type>
 </AutoVisualizer>

@@ -3,335 +3,533 @@
 namespace zen {	namespace zenType 
 {
 
-//#################################################################################################
-// LIST LINK
-//#################################################################################################
-zListLink::~zListLink()
-{
-	// If item wasn't removed from list prior to destruction, unlink it 
-	// (but unable to call the zList::Remove(), so child class of zList won't be able 
-	//  to do special destruction operations)
-	Remove();
+//=================================================================================================
+// zListLink
+//=================================================================================================
+bool zListLink::IsInList()const 
+{ 
+	return mpPrev != nullptr && mpNext != nullptr; 
 }
 
-bool zListLink::IsInList()const
-{
-	return mpNextLink != nullptr;
+bool zListLink::IsItem()const 
+{ 
+	return (reinterpret_cast<size_t>(mpNext) & 0x01) == 0; 
 }
 
-zListLink* zListLink::GetNext()const
-{
-	return ((size_t)mpNextLink & 0x1) ? nullptr : mpNextLink; //If link pointer contains 0x01, we know it points to list root, and is invalid
+void zListLink::Reset() 
+{ 
+	mpNext = nullptr; 
+	mpPrev = nullptr; 
 }
 
-zListLink* zListLink::GetPrev()const
-{
-	return ((size_t)mpPrevLink & 0x1) ? nullptr : mpPrevLink; //If link pointer contains 0x01, we know it points to list root, and is invalid
+zListLink* zListLink::Next()const 
+{ 
+	zenAssert(mpNext); 
+	return reinterpret_cast<zListLink*>(reinterpret_cast<size_t>(mpNext) & ~0x01); 
+}
+
+zListLink* zListLink::Prev()const 
+{ 
+	zenAssert(mpPrev);
+	return reinterpret_cast<zListLink*>(reinterpret_cast<size_t>(mpPrev) & ~0x01); 
+}
+
+void zListLink::SetAsRoot() 
+{ 
+	mpPrev = mpNext = reinterpret_cast<zListLink*>(reinterpret_cast<size_t>(this) | 0x01); 
+}
+
+void zListLink::SetNext(zListLink* inItem) 
+{ 	
+	mpNext = reinterpret_cast<zListLink*>((reinterpret_cast<size_t>(mpNext) & 0x01) | (reinterpret_cast<size_t>(inItem) & ~0x01)); 
+}
+
+void zListLink::SetPrev(zListLink* inItem) 
+{ 
+	mpPrev = reinterpret_cast<zListLink*>((reinterpret_cast<size_t>(mpPrev) & 0x01) | (reinterpret_cast<size_t>(inItem) & ~0x01)); 
 }
 
 void zListLink::Remove()
 {
 	if (IsInList())
 	{
-		zListLink* pValidNext = reinterpret_cast<zListLink*>((size_t)mpNextLink & ~0x1);
-		zListLink* pValidPrev = reinterpret_cast<zListLink*>((size_t)mpPrevLink & ~0x1);
-		pValidNext->mpPrevLink = mpPrevLink;
-		pValidPrev->mpNextLink = mpNextLink;
-		mpNextLink = nullptr;
-		mpPrevLink = nullptr;
+		zenAssert(IsItem());
+		Next()->SetPrev(mpPrev);
+		Prev()->SetNext(mpNext);
+		Reset();
 	}
 }
 
-//#################################################################################################
-// LIST (Static methods)
-//#################################################################################################
-template<class TItem, zListLink TItem::* TLinkOffset, bool TVirtual1stTime>
-TItem& zList<TItem, TLinkOffset, TVirtual1stTime>::GetItemFromLink(const zListLink& _ItemLink)
+void zListLink::InsertBefore(zListLink& zenRestrict _NewLink)
 {
-	const size_t uLinkAdr				= (size_t)&_ItemLink;
-	const size_t uMemberOffset			= zenOffsetOf(TLinkOffset);
-	const size_t uVirtualTableOffset	= TVirtual1stTime ? sizeof(size_t) : 0;
-	return *reinterpret_cast<TItem*>(uLinkAdr - (uMemberOffset+uVirtualTableOffset) );
-}
-
-template<class TItem, zListLink TItem::* TLinkOffset, bool TVirtual1stTime>
-zListLink& zList<TItem, TLinkOffset, TVirtual1stTime>::GetLinkFromItem(const TItem& _Item)
-{
-	const size_t uItemAdr				= (size_t)&_Item;
-	const size_t uMemberOffset			= zenOffsetOf(TLinkOffset);
-	const size_t uVirtualTableOffset	= TVirtual1stTime ? sizeof(size_t) : 0;
-	return *reinterpret_cast<zListLink*>(uItemAdr + (uMemberOffset + uVirtualTableOffset));
-}
-
-template<class TItem, zListLink TItem::* TLinkOffset, bool TVirtual1stTime>
-void zList<TItem, TLinkOffset, TVirtual1stTime>::Remove(TItem& _Item)
-{
-	zListLink& ItemLink		= GetLinkFromItem(_Item);
-	return ItemLink.Remove();
-}
-
-template<class TItem, zListLink TItem::* TLinkOffset, bool TVirtual1stTime>
-bool zList<TItem, TLinkOffset, TVirtual1stTime>::IsInAList(const TItem& _Item)
-{
-	zListLink& ItemLink		= GetLinkFromItem(_Item);
-	return ItemLink.IsInList();
-}
-
-template<class TItem, zListLink TItem::* TLinkOffset, bool TVirtual1stTime>
-TItem* zList<TItem, TLinkOffset, TVirtual1stTime>::GetNext(const TItem& _Item)
-{
-	zListLink& ItemLink		= GetLinkFromItem(_Item);
-	zListLink* pLinkNext	= ItemLink.GetNext();
-	return pLinkNext ? &GetItemFromLink(*pLinkNext) : nullptr;
-}
-
-template<class TItem, zListLink TItem::* TLinkOffset, bool TVirtual1stTime>
-TItem* zList<TItem, TLinkOffset, TVirtual1stTime>::GetPrev(const TItem& _Item)
-{
-	zListLink& ItemLink		= GetLinkFromItem(_Item);
-	zListLink* pLinkPrev	= ItemLink.GetPrev();
-	return pLinkPrev ? &GetItemFromLink(*pLinkPrev) : nullptr;
-}
-
-template<class TItem, zListLink TItem::* TLinkOffset, bool TVirtual1stTime>
-void zList<TItem, TLinkOffset, TVirtual1stTime>::AddBefore(zListLink& _Link, zListLink& _NewLink)
-{	
-	//Pointers to root link adds 0x01 address, mask it out when accessing memory in case link is root node
+	zenAssert(this != &_NewLink);
 	_NewLink.Remove();
-	 zListLink& LinkSafe		= *reinterpret_cast<zListLink*>((size_t)&_Link & ~0x1);
-	 zListLink& LinkSafePrev	= *reinterpret_cast<zListLink*>((size_t)LinkSafe.mpPrevLink & ~0x1);	
-	_NewLink.mpPrevLink			= LinkSafe.mpPrevLink;
-	_NewLink.mpNextLink			= &_Link;
-	LinkSafePrev.mpNextLink		= &_NewLink;
-	LinkSafe.mpPrevLink			= &_NewLink;
+	_NewLink.SetPrev(mpPrev);
+	_NewLink.SetNext(this);
+	Prev()->SetNext(&_NewLink);
+	SetPrev(&_NewLink);
 }
 
-template<class TItem, zListLink TItem::* TLinkOffset, bool TVirtual1stTime>
-void zList<TItem, TLinkOffset, TVirtual1stTime>::AddAfter(zListLink& _Link, zListLink& _NewLink)
+void zListLink::InsertAfter(zListLink& zenRestrict _NewLink)
 {
-	//Pointers to root link adds 0x01 address, mask it out when accessing memory in case link is root node
+	zenAssert(this != &_NewLink);
 	_NewLink.Remove();
-	 zListLink& LinkSafe		= *reinterpret_cast<zListLink*>((size_t)&_Link & ~0x1); 
-	 zListLink& LinkSafeNext	= *reinterpret_cast<zListLink*>((size_t)LinkSafe.mpNextLink & ~0x1);	
-	_NewLink.mpNextLink			= LinkSafe.mpNextLink;
-	_NewLink.mpPrevLink			= &_Link;
-	LinkSafeNext.mpPrevLink		= &_NewLink;
-	LinkSafe.mpNextLink			= &_NewLink;
+	_NewLink.SetNext(mpNext);
+	_NewLink.SetPrev(this);
+	Next()->SetPrev(&_NewLink);
+	SetNext(&_NewLink);
 }
 
-template<class TItem, zListLink TItem::* TLinkOffset, bool TVirtual1stTime>
-void zList<TItem, TLinkOffset, TVirtual1stTime>::AddBefore(TItem& _Item, TItem& _NewItem)
+//=================================================================================================
+// zListItem
+//=================================================================================================
+template <unsigned char TListCount,unsigned char TMultiIndex>
+zListItem<TListCount, TMultiIndex>::zListItem()
 {
-	zListLink& ItemLink			= GetLinkFromItem(_Item);
-	zListLink& NewItemLink		= GetLinkFromItem(_NewItem);
-	AddBefore(ItemLink, NewItemLink);
+	for (auto& Link : mLinks)
+		Link.Reset();
 }
 
-template<class TItem, zListLink TItem::* TLinkOffset, bool TVirtual1stTime>
-void zList<TItem, TLinkOffset, TVirtual1stTime>::AddAfter(TItem& _Item, TItem& _NewItem)
+template <unsigned char TListCount,unsigned char TMultiIndex>
+zListItem<TListCount, TMultiIndex>::~zListItem()
 {
-	zListLink& ItemLink			= GetLinkFromItem(_Item);
-	zListLink& NewItemLink		= GetLinkFromItem(_NewItem);
-	AddAfter(ItemLink, NewItemLink);
+	for (auto& Link : mLinks)
+		Link.Remove();
+}
+
+//=================================================================================================
+// zListBase
+//=================================================================================================
+
+zListBase::zListBase()
+{
+	mRoot.SetAsRoot();
+}
+
+zListBase::~zListBase()
+{
+	clear();
+}
+
+bool zListBase::empty()const
+{
+	return mRoot.Next()->IsItem() == false;
+}
+
+void zListBase::clear()
+{
+	while (!empty())
+		mRoot.Next()->Remove();
 }
 
 
-//#################################################################################################
-// LIST ITERATOR
-//#################################################################################################
-template<class TItem, zListLink TItem::* TLinkOffset, bool TVirtual1stTime>
-zList<TItem, TLinkOffset, TVirtual1stTime>::Iterator::Iterator()
+zListBase::IteratorConst::IteratorConst(const zListLink* _pCurrent)
+: mpCurrent(_pCurrent)
 {
 }
 
-template<class TItem, zListLink TItem::* TLinkOffset, bool TVirtual1stTime>
-zList<TItem, TLinkOffset, TVirtual1stTime>::Iterator::Iterator(const Iterator& _Copy)
-{
-	operator=(_Copy);
-}
-
-template<class TItem, zListLink TItem::* TLinkOffset, bool TVirtual1stTime>
-zList<TItem, TLinkOffset, TVirtual1stTime>::Iterator::Iterator(zListLink* _pLink)
-: mpLink(_pLink)
+zListBase::IteratorConst::IteratorConst(const IteratorConst& _Copy)
+: mpCurrent(_Copy.mpCurrent)
 {
 }
 
-template<class TItem, zListLink TItem::* TLinkOffset, bool TVirtual1stTime>
-bool zList<TItem, TLinkOffset, TVirtual1stTime>::Iterator::IsValid() const
+bool zListBase::IteratorConst::IsValid()const
 {
-	return mpLink != nullptr;
+	return (reinterpret_cast<zUInt>(mpCurrent) & 0x01) != 0;
 }
-
-template<class TItem, zListLink TItem::* TLinkOffset, bool TVirtual1stTime>
-zList<TItem, TLinkOffset, TVirtual1stTime>::Iterator::operator bool() const
+zListBase::IteratorConst::operator bool()const
 {
 	return IsValid();
 }
 
-template<class TItem, zListLink TItem::* TLinkOffset, bool TVirtual1stTime>
-TItem* zList<TItem, TLinkOffset, TVirtual1stTime>::Iterator::Get() const
+//=============================================================================
+
+zListBase::Iterator::Iterator(zListLink* _pCurrent)
+: mpCurrent(_pCurrent)
 {
-	return IsValid() ? &zList::GetItemFromLink(*mpLink) : nullptr;
 }
 
-template<class TItem, zListLink TItem::* TLinkOffset, bool TVirtual1stTime>
-TItem& zList<TItem, TLinkOffset, TVirtual1stTime>::Iterator::operator*()const
+zListBase::Iterator::Iterator(const Iterator& _Copy)
+: mpCurrent(_Copy.mpCurrent)
 {
-	zenAssert(mpLink);
-	return *Get();
 }
 
-template<class TItem, zListLink TItem::* TLinkOffset, bool TVirtual1stTime>
-TItem* zList<TItem, TLinkOffset, TVirtual1stTime>::Iterator::operator->()const
+bool zListBase::Iterator::IsValid()const
 {
-	return Get();
+	return mpCurrent != nullptr && mpCurrent->IsItem();
+}
+zListBase::Iterator::operator bool()const
+{
+	return IsValid();
 }
 
-template<class TItem, zListLink TItem::* TLinkOffset, bool TVirtual1stTime>
-void zList<TItem, TLinkOffset, TVirtual1stTime>::Iterator::operator++()
+bool zListBase::Iterator::operator==(const Iterator& _Cmp)const
 {
-	zenAssert(mpLink);
-	mpLink = mpLink->GetNext();
+	return mpCurrent == _Cmp.mpCurrent;
 }
 
-template<class TItem, zListLink TItem::* TLinkOffset, bool TVirtual1stTime>
-void zList<TItem, TLinkOffset, TVirtual1stTime>::Iterator::operator--()
+bool zListBase::Iterator::operator!=(const Iterator& _Cmp)const
 {
-	zenAssert(mpLink);
-	mpLink = mpLink->GetPrev();
+	return !(*this == _Cmp);
 }
 
-template<class TItem, zListLink TItem::* TLinkOffset, bool TVirtual1stTime>
-typename const zList<TItem, TLinkOffset, TVirtual1stTime>::Iterator& zList<TItem, TLinkOffset, TVirtual1stTime>::Iterator::operator=(const Iterator& _Copy)
+bool zListBase::IteratorConst::operator==(const IteratorConst& _Cmp)const
 {
-	mpLink = _Copy.mpLink;
+	return mpCurrent == _Cmp.mpCurrent;
+}
+
+bool zListBase::IteratorConst::operator!=(const IteratorConst& _Cmp)const
+{
+	return !(*this == _Cmp);
+}
+
+//=================================================================================================
+// zList
+//=================================================================================================
+template<class TItem, unsigned char TListIdx, class TLinkAccess>
+zList<TItem,TListIdx,TLinkAccess>& zList<TItem,TListIdx,TLinkAccess>::push_front(TItem& _ItemAdd) 
+{ 
+	mRoot.InsertAfter(_ItemAdd.TLinkAccess::mLinks[TListIdx]); 
+	return *this; 
+} 
+
+template<class TItem, unsigned char TListIdx, class TLinkAccess>
+zList<TItem,TListIdx,TLinkAccess>& zList<TItem,TListIdx,TLinkAccess>::push_back(TItem& _ItemAdd) 
+{ 
+	mRoot.InsertBefore(_ItemAdd.TLinkAccess::mLinks[TListIdx]); 
+	return *this; 
+}
+
+template<class TItem,unsigned char TListIdx,class TLinkAccess>
+zList<TItem,TListIdx,TLinkAccess>& zList<TItem,TListIdx,TLinkAccess>::push_sort(TItem& _ItemAdd)
+{
+	Iterator it	= (empty() || (back() < _ItemAdd)) ? end() : begin();	
+	while( it.IsValid() && *it < _ItemAdd)
+		++it;
+			
+	if( it.IsValid() )
+		insert_before(it, _ItemAdd);
+	else
+		push_back(_ItemAdd);
+
+	return *this;	
+}
+
+template<class TItem, unsigned char TListIdx, class TLinkAccess>
+zList<TItem,TListIdx,TLinkAccess>& zList<TItem,TListIdx,TLinkAccess>::insert(Iterator& _Pos,TItem& _ItemAdd) 
+{ 
+	zenAssert(_Pos.IsValid()); 
+	zListBase::InsertAfter(*_Pos.mpCurrent,_ItemAdd.TLinkAccess::mLinks[TListIdx]); 
+	return *this; 
+}
+
+template<class TItem, unsigned char TListIdx, class TLinkAccess>
+zList<TItem,TListIdx,TLinkAccess>& zList<TItem,TListIdx,TLinkAccess>::insert(TItem& _ItemPos,TItem& _ItemAdd) 
+{ 
+	zenAssert(_ItemPos.TLinkAccess::mLinks[TListIdx].IsValid()); 
+	zListBase::InsertAfter(_ItemPos.TLinkAccess::mLinks[TListIdx],_ItemAdd.TLinkAccess::mLinks[TListIdx]); 
+	return *this; 
+}
+
+template<class TItem, unsigned char TListIdx, class TLinkAccess>
+TItem& zList<TItem,TListIdx,TLinkAccess>::front()const 
+{ 
+	zenAssert(!empty()); 
+	return *GetItemFromLink(*mRoot.Next()); 
+}
+
+template<class TItem, unsigned char TListIdx, class TLinkAccess>
+TItem& zList<TItem,TListIdx,TLinkAccess>::back()const 
+{ 
+	zenAssert(!empty()); 
+	return *GetItemFromLink(*mRoot.Prev()); 
+}
+
+template<class TItem, unsigned char TListIdx, class TLinkAccess>
+void zList<TItem,TListIdx,TLinkAccess>::remove(TItem& _ItemRem)
+{ 
+	_ItemRem.TLinkAccess::mLinks[TListIdx].Remove(); 
+}
+
+template<class TItem, unsigned char TListIdx, class TLinkAccess>
+typename zList<TItem,TListIdx,TLinkAccess>::Iterator zList<TItem,TListIdx,TLinkAccess>::begin() 
+{ 
+	return Iterator(mRoot.Next()); 
+}
+
+template<class TItem, unsigned char TListIdx, class TLinkAccess>
+typename zList<TItem,TListIdx,TLinkAccess>::Iterator zList<TItem,TListIdx,TLinkAccess>::end() 
+{ 
+	return Iterator(&mRoot); 
+}
+
+template<class TItem, unsigned char TListIdx, class TLinkAccess>
+typename zList<TItem,TListIdx,TLinkAccess>::IteratorConst zList<TItem,TListIdx,TLinkAccess>::cbegin()const 
+{ 
+	return IteratorConst(mRoot.Next()); 
+}
+
+template<class TItem, unsigned char TListIdx, class TLinkAccess>
+typename zList<TItem,TListIdx,TLinkAccess>::IteratorConst zList<TItem,TListIdx,TLinkAccess>::cend()const 
+{ 
+	return IteratorConst(&mRoot); 
+}
+
+template<class TItem,unsigned char TListIdx,class TLinkAccess>
+zList<TItem,TListIdx,TLinkAccess>& zList<TItem,TListIdx,TLinkAccess>::insert_after(Iterator& _Pos,TItem& _ItemAdd)
+{
+	return insert(pos, _ItemAdd);
+}
+
+template<class TItem,unsigned char TListIdx,class TLinkAccess>
+zList<TItem,TListIdx,TLinkAccess>& zList<TItem,TListIdx,TLinkAccess>::insert_after(TItem& _ItemPos,TItem& _ItemAdd)
+{
+	return insert(_ItemPos, _ItemAdd);
+}
+
+template<class TItem, unsigned char TListIdx, class TLinkAccess>
+zList<TItem,TListIdx,TLinkAccess>& zList<TItem,TListIdx,TLinkAccess>::insert_before(Iterator& _Pos,TItem& _ItemAdd) 
+{ 
+	zenAssert(_Pos.IsValid()); 
+	_Pos.mpCurrent->InsertBefore(_ItemAdd.TLinkAccess::mLinks[TListIdx]); 
+	return *this; 
+}
+
+template<class TItem, unsigned char TListIdx, class TLinkAccess>
+zList<TItem,TListIdx,TLinkAccess>& zList<TItem,TListIdx,TLinkAccess>::insert_before(TItem& _ItemPos,TItem& _ItemAdd) 
+{ 
+	zenAssert(_ItemPos.TLinkAccess::mLinks[TListIdx].IsValid()); 
+	zListBase::InsertBefore(_ItemPos.TLinkAccess::mLinks[TListIdx],_ItemAdd.TLinkAccess::mLinks[TListIdx]); 
+	return *this; 
+}
+
+template<class TItem, unsigned char TListIdx, class TLinkAccess>
+TItem* zList<TItem,TListIdx,TLinkAccess>::front_check()const 
+{ 
+	return empty() ? nullptr : GetItemFromLink(*mRoot.Next()); 
+}
+
+template<class TItem, unsigned char TListIdx, class TLinkAccess>
+TItem* zList<TItem,TListIdx,TLinkAccess>::back_check()const 
+{ 
+	return empty() ? nullptr : GetItemFromLink(*mRoot.Prev()); 
+}
+
+template<class TItem, unsigned char TListIdx, class TLinkAccess>
+TItem* zList<TItem,TListIdx,TLinkAccess>::GetNext(const TItem& Item)
+{
+	return Item.TLinkAccess::mLinks[TListIdx].IsInList() && Item.TLinkAccess::mLinks[TListIdx].Next()->IsItem() ? GetItemFromLink(*Item.TLinkAccess::mLinks[TListIdx].Next()) : nullptr;
+}
+
+template<class TItem, unsigned char TListIdx, class TLinkAccess>
+TItem* zList<TItem,TListIdx,TLinkAccess>::GetPrev(const TItem& Item)
+{
+	return Item.TLinkAccess::mLinks[TListIdx].IsInList() && Item.TLinkAccess::mLinks[TListIdx].Prev()->IsItem() ? GetItemFromLink(*Item.TLinkAccess::mLinks[TListIdx].Prev()) : nullptr;
+}
+
+template<class TItem, unsigned char TListIdx, class TLinkAccess>
+TItem* zList<TItem,TListIdx,TLinkAccess>::GetItemFromLink(const zListLink& _Link)
+{
+	const size_t LinkOffset = reinterpret_cast<size_t>(&(((TItem*)nullptr)->TLinkAccess::mLinks[TListIdx])); //! @todo 2 fix OffsetOf
+	//const size_t LinkOffset	= zenOffsetOf(&TItem::mLinks) + sizeof(zListLinkTest)*TListIdx;
+	size_t ItemAdr			= _Link.IsInList() ? (reinterpret_cast<size_t>(&_Link) - LinkOffset) : 0;
+	return reinterpret_cast<TItem*>(ItemAdr);
+}
+
+template<class TItem, unsigned char TListIdx, class TLinkAccess>
+bool zList<TItem,TListIdx,TLinkAccess>::IsInList(const TItem& Item)
+{
+	return Item.TLinkAccess::mLinks[TListIdx].IsInList();
+}
+
+template<class TItem, unsigned char TListIdx, class TLinkAccess>
+TItem* zList<TItem,TListIdx,TLinkAccess>::pop_front() 
+{ 
+	TItem* pItem(nullptr);
+	if( empty() == false )
+	{
+		pItem = GetItemFromLink(*mRoot.Next());
+		mRoot.Next()->Remove();
+	}
+	return pItem;
+}
+
+template<class TItem, unsigned char TListIdx, class TLinkAccess>
+TItem* zList<TItem,TListIdx,TLinkAccess>::pop_back() 
+{ 
+	TItem* pItem(nullptr);
+	if (empty() == false)
+	{
+		pItem = GetItemFromLink(*mRoot.Prev());
+		mRoot.Prev()->Remove();
+	}
+	return pItem;
+}
+
+template<class TItem, unsigned char TListIdx, class TLinkAccess>
+zList<TItem,TListIdx,TLinkAccess>::Iterator::Iterator(const Iterator& _Copy)
+: zListBase::Iterator(_Copy)
+{
+}
+
+template<class TItem, unsigned char TListIdx, class TLinkAccess>
+zList<TItem,TListIdx,TLinkAccess>::Iterator::Iterator(zListLink* _pCurrent)
+: zListBase::Iterator(_pCurrent)
+{
+}
+
+template<class TItem, unsigned char TListIdx, class TLinkAccess>
+typename zList<TItem,TListIdx,TLinkAccess>::Iterator& zList<TItem,TListIdx,TLinkAccess>::Iterator::operator=(const Iterator& _Copy)
+{
+	mpCurrent	= _Copy.mpCurrent;
+}
+
+template<class TItem, unsigned char TListIdx, class TLinkAccess>
+TItem* zList<TItem,TListIdx,TLinkAccess>::Iterator::Get()const
+{
+	return zList::GetItemFromLink( *mpCurrent );
+}
+
+template<class TItem, unsigned char TListIdx, class TLinkAccess>
+typename zList<TItem,TListIdx,TLinkAccess>::Iterator& zList<TItem,TListIdx,TLinkAccess>::Iterator::operator++()
+{
+	mpCurrent = mpCurrent->Next();
 	return *this;
 }
 
-template<class TItem, zListLink TItem::* TLinkOffset, bool TVirtual1stTime>
-TItem* zList<TItem, TLinkOffset, TVirtual1stTime>::Iterator::Remove()
+template<class TItem, unsigned char TListIdx, class TLinkAccess>
+typename zList<TItem,TListIdx,TLinkAccess>::Iterator& zList<TItem,TListIdx,TLinkAccess>::Iterator::operator--()
 {
-	zenAssert(mpLink);
-	TItem* pItem	= mpLink->Get();
-	mpLink->Remove();
-	mpLink			= nullptr;
-	return pItem;
+	mpCurrent = mpCurrent->Prev();
+	return *this;
 }
 
-template<class TItem, zListLink TItem::* TLinkOffset, bool TVirtual1stTime>
-TItem* zList<TItem, TLinkOffset, TVirtual1stTime>::Iterator::RemoveGoNext()
+//=================================================================================================
+
+template<class TItem, unsigned char TListIdx, class TLinkAccess>
+zList<TItem,TListIdx,TLinkAccess>::IteratorConst::IteratorConst(const IteratorConst& _Copy)
+: Iterator(_Copy)
 {
-	zenAssert(mpLink);
-	zListLink* pUnlink	= mpLink;
-	TItem pItem			= GoNext();
-	pUnlink->Remove();
-	return pItem;
 }
 
-template<class TItem, zListLink TItem::* TLinkOffset, bool TVirtual1stTime>
-TItem* zList<TItem, TLinkOffset, TVirtual1stTime>::Iterator::RemoveGoPrev()
+template<class TItem, unsigned char TListIdx, class TLinkAccess>
+zList<TItem,TListIdx,TLinkAccess>::IteratorConst::IteratorConst(const zListLink* _pCurrent)
+: zListBase::IteratorConst(_pCurrent)
 {
-	zenAssert(mpLink);
-	zListLink* pUnlink	= mpLink;
-	TItem pItem			= GoPrevious();
-	pUnlink->Remove();
-	return pItem;
 }
 
-template<class TItem, zListLink TItem::* TLinkOffset, bool TVirtual1stTime>
-void zList<TItem, TLinkOffset, TVirtual1stTime>::Iterator::AddBefore(TItem& _NewItem)
+template<class TItem, unsigned char TListIdx, class TLinkAccess>
+typename zList<TItem,TListIdx,TLinkAccess>::IteratorConst&	zList<TItem,TListIdx,TLinkAccess>::IteratorConst::operator=(const IteratorConst& _Copy)
 {
-	zenAssert(IsValid());
-	zList::AddBefore(*mpLink, zList::GetLinkFromItem(_NewItem));
+	mpCurrent	= _Copy.mpCurrent;
 }
 
-template<class TItem, zListLink TItem::* TLinkOffset, bool TVirtual1stTime>
-void zList<TItem, TLinkOffset, TVirtual1stTime>::Iterator::AddAfter(TItem& _NewItem)
-{
-	zenAssert(IsValid());
-	zList::AddAfter(*mpLink, zList::GetLinkFromItem(_NewItem));
-}
-
-//#################################################################################################
-// LIST
-//#################################################################################################
-template<class TItem, zListLink TItem::* TLinkOffset, bool TVirtual1stTime>
-zList<TItem, TLinkOffset, TVirtual1stTime>::zList()
-: mpRootInvalid(reinterpret_cast<zListLink*>((size_t)&mRoot | 1))
+template<class TItem, unsigned char TListIdx, class TLinkAccess>
+const TItem* zList<TItem,TListIdx,TLinkAccess>::IteratorConst::Get()const
 {	
-	mRoot.mpPrevLink = mRoot.mpNextLink = mpRootInvalid;
-	Empty();
+	return zList::GetItemFromLink( *mpCurrent );
 }
 
-template<class TItem, zListLink TItem::* TLinkOffset, bool TVirtual1stTime>
-bool zList<TItem, TLinkOffset, TVirtual1stTime>::IsEmpty()const
-{
-	return mRoot.GetNext() == nullptr;
+template<class TItem, unsigned char TListIdx, class TLinkAccess>
+typename zList<TItem,TListIdx,TLinkAccess>::IteratorConst& zList<TItem,TListIdx,TLinkAccess>::IteratorConst::operator++()
+{	
+	mpCurrent = mpCurrent->Next();
+	return *this;
 }
 
-template<class TItem, zListLink TItem::* TLinkOffset, bool TVirtual1stTime>
-void zList<TItem, TLinkOffset, TVirtual1stTime>::PushHead(TItem& _Item)
+template<class TItem, unsigned char TListIdx, class TLinkAccess>
+typename zList<TItem,TListIdx,TLinkAccess>::IteratorConst& zList<TItem,TListIdx,TLinkAccess>::IteratorConst::operator--()
 {
-	AddAfter(*mpRootInvalid, GetLinkFromItem(_Item) );
+	mpCurrent = mpCurrent->Prev();
+	return *this;
 }
 
-template<class TItem, zListLink TItem::* TLinkOffset, bool TVirtual1stTime>
-void zList<TItem, TLinkOffset, TVirtual1stTime>::PushTail(TItem& _Item)
+//=================================================================================================
+template<class TItem, unsigned char TListIdx, class TLinkAccess>
+zListRef<TItem,TListIdx,TLinkAccess>::~zListRef()
 {
-	AddBefore(*mpRootInvalid, GetLinkFromItem(_Item));
+	clear();
 }
 
-template<class TItem, zListLink TItem::* TLinkOffset, bool TVirtual1stTime>
-TItem* zList<TItem, TLinkOffset, TVirtual1stTime>::PopHead()
-{
-	if (IsEmpty())
-		return nullptr;
-
-	zListLink* pHeadLink = mRoot.GetNext();
-	pHeadLink->Remove();
-	return &GetItemFromLink(*pHeadLink);
+template<class TItem, unsigned char TListIdx, class TLinkAccess>
+void zListRef<TItem,TListIdx,TLinkAccess>::clear()
+{	
+	while (!empty())
+	{
+		auto& Item = front();
+		Item.ReferenceRem();
+		Super::remove(Item);
+	}
 }
 
-template<class TItem, zListLink TItem::* TLinkOffset, bool TVirtual1stTime>
-TItem* zList<TItem, TLinkOffset, TVirtual1stTime>::PopTail()
-{
-	if (IsEmpty())
-		return nullptr;
-
-	zListLink* pTailLink = mRoot.GetPrev();
-	pTailLink->Remove();
-	return &GetItemFromLink(*pTailLink);
+template<class TItem, unsigned char TListIdx, class TLinkAccess>
+zListRef<TItem,TListIdx,TLinkAccess>& zListRef<TItem,TListIdx,TLinkAccess>::push_front(TItem& inItem) 
+{ 
+	if (!IsInList(inItem))	
+		inItem.ReferenceAdd(); 
+	return Super::push_front(inItem); 
 }
 
-template<class TItem, zListLink TItem::* TLinkOffset, bool TVirtual1stTime>
-TItem* zList<TItem, TLinkOffset, TVirtual1stTime>::GetHead()const
-{
-	return IsEmpty() ? nullptr : &GetItemFromLink(*mRoot.GetNext());
+template<class TItem, unsigned char TListIdx, class TLinkAccess>
+zListRef<TItem,TListIdx,TLinkAccess>& zListRef<TItem,TListIdx,TLinkAccess>::push_back(TItem& inItem) 
+{ 
+	if (!IsInList(inItem))	
+		inItem.ReferenceAdd(); 
+	Super::push_back(inItem); 
+	return *this;
 }
 
-template<class TItem, zListLink TItem::* TLinkOffset, bool TVirtual1stTime>
-TItem* zList<TItem, TLinkOffset, TVirtual1stTime>::GetTail()const
-{
-	return IsEmpty() ? nullptr : &GetItemFromLink(*mRoot.GetPrev());
+template<class TItem, unsigned char TListIdx, class TLinkAccess>
+zListRef<TItem,TListIdx,TLinkAccess>& zListRef<TItem,TListIdx,TLinkAccess>::insert(Iterator& _Pos,TItem& _ItemAdd) 
+{ 
+	if(!IsInList(_ItemAdd))	
+		inItem.ReferenceAdd(); 
+	Super::insert(_Pos, _ItemAdd); 
+	return *this;
 }
 
-template<class TItem, zListLink TItem::* TLinkOffset, bool TVirtual1stTime>
-typename zList<TItem, TLinkOffset, TVirtual1stTime>::Iterator zList<TItem, TLinkOffset, TVirtual1stTime>::GetHeadIt()const
+template<class TItem, unsigned char TListIdx, class TLinkAccess>
+zListRef<TItem,TListIdx,TLinkAccess>& zListRef<TItem,TListIdx,TLinkAccess>::insert(TItem& _ItemPos,TItem& _ItemAdd)
 {
-	return Iterator(mRoot.GetNext());
+	if (!IsInList(_ItemAdd))
+		inItem.ReferenceAdd();
+	Super::insert(_ItemPos,_ItemAdd);
+	return *this;
 }
 
-template<class TItem, zListLink TItem::* TLinkOffset, bool TVirtual1stTime>
-typename zList<TItem, TLinkOffset, TVirtual1stTime>::Iterator zList<TItem, TLinkOffset, TVirtual1stTime>::GetTailIt()const
+template<class TItem, unsigned char TListIdx, class TLinkAccess>
+void zListRef<TItem,TListIdx,TLinkAccess>::remove(TItem& _ItemRem) 
+{ 
+	if (IsInList(inItem))
+		inItem.ReferenceRem(); 
+	Super::remove(_ItemRem); 
+}
+							 
+template<class TItem, unsigned char TListIdx, class TLinkAccess>
+zListRef<TItem,TListIdx,TLinkAccess>& zListRef<TItem,TListIdx,TLinkAccess>::insert_before(TItem& _Item) 
 {
-	return Iterator(mRoot.GetPrev());
+	if (!IsInList(inItem)) 
+		inItem.ReferenceAdd(); 
+	Super::push_front(inItem); 
+	return *this;
 }
 
-template<class TItem, zListLink TItem::* TLinkOffset, bool TVirtual1stTime>
-void zList<TItem, TLinkOffset, TVirtual1stTime>::Empty()
-{
-	while( IsEmpty() == false )
-		mRoot.mpPrevLink->Remove();
+template<class TItem, unsigned char TListIdx, class TLinkAccess>
+TItem* zListRef<TItem,TListIdx,TLinkAccess>::pop_front() 
+{	
+	TItem* pItem=Super::pop_front(); 
+	if (pItem) 
+		pItem->ReferenceRem(); 
+	return pItem; 
+}
+
+ template<class TItem, unsigned char TListIdx, class TLinkAccess>
+TItem* zListRef<TItem,TListIdx,TLinkAccess>::pop_back() 
+{ 
+	TItem* pItem=Super::pop_back(); 
+	if (pItem)
+		pItem->ReferenceRem(); 
+	return pItem; 
 }
 
 } } //namespace zen, Type

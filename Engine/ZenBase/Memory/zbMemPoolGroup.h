@@ -39,7 +39,7 @@ protected:
 	VAddressPool				mVirtualAddressStart;
 	size_t						mVirtualMemorySize		= 0;
 	size_t						mPhysicalAllocatedSize	= 0;
-	zListElement::List			mlstFree[kThreadCount];
+	zList< zListItem<> >	mlstFree[kThreadCount];
 };
 
 }  

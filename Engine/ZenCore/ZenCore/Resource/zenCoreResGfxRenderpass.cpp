@@ -22,9 +22,9 @@ void zCommandList::SetBeforeChildren(bool _bBeforeChild)
 	GetSafe()->SetBeforeChildren(_bBeforeChild);
 }
 
-bool zCommandList::GetBeforeChildren()const
+bool zCommandList::IsBeforeChildren()const
 {
-	return GetSafe()->GetBeforeChildren();
+	return GetSafe()->IsBeforeChildren();
 }
 
 void zCommandList::Submit()

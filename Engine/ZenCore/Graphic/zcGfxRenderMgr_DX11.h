@@ -7,10 +7,11 @@ namespace zcGfx
 //! @details	
 //! @todo		Move to own file, with other queries
 //=================================================================================================	
-class QueryDisjoint_DX11 : public zRefCounted
+class QueryDisjoint_DX11 : public zRefCounted, public zListItem<1,1>
 {
 zenClassDeclare(QueryDisjoint_DX11, zRefCounted)
 public:
+	using List = zList<QueryDisjoint_DX11,0,zListItem<1,1>>;
 	static zEngineRef<QueryDisjoint_DX11>	Create();								//!< @brief Get a new disjoint query	
 	void									Start(ID3D11DeviceContext* _pContext);	//!< @brief Starts clock frequency query
 	void									Stop(ID3D11DeviceContext* _pContext);	//!< @brief Stops clock frequency query	
@@ -24,10 +25,8 @@ protected:
 	zenDbgCode(ID3D11DeviceContext*			mpDeviceContext	= nullptr);	//!< @brief Used for validation that Start/Stop used same context
 	zU64									muFrameStop		= 0;		//!< @brief When query was ended (to make sure 1 frame elapsed)
 	bool									mbValidResult	= false;	//!< @brief True if we got the result back from GPU
-
-	zListLink								mlstLink;
 public:
-	typedef zList<QueryDisjoint_DX11, &QueryDisjoint_DX11::mlstLink, false> List;
+	
 protected:
 	static List								slstQueryCreated;
 };
@@ -36,7 +35,7 @@ protected:
 //! @brief		Encapsulate DirectX object needed to query device context about current time
 //! @details	
 //=================================================================================================	
-class QueryTimestamp_DX11 : public zRefCounted
+class QueryTimestamp_DX11 : public zRefCounted, public zListItem<1,1>
 {
 zenClassDeclare(QueryTimestamp_DX11, zRefCounted)
 public:
@@ -50,9 +49,8 @@ protected:
 	zEngineRef<QueryDisjoint_DX11>			mrQueryDisjoint;		//!< @brief Reference to Disjoint query to use for getting gpu frequency
 	bool									mbValidResult;			//!< @brief True if we got the result back from GPU
 	zU64									muTimestamp;			//!< @brief Time on the GPU when query was processed (in microseconds)
-	zListLink								mlstLink;
 public:
-	typedef zList<QueryTimestamp_DX11, &QueryTimestamp_DX11::mlstLink, false> List;
+	using List = zList<QueryTimestamp_DX11,0,zListItem<1,1>>;
 protected:
 	static List								slstQueryCreated;
 };

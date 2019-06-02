@@ -23,7 +23,7 @@ namespace zbMem
 
 		struct Header
 		{	
-			zListLink				mlnkAllocation;		//16
+			zListLinkMember(1);							//16
 			const zbSys::Callstack*	mpCallstack;		//24
 			const char*				mFileName;			//32
 			zU32					mFileLine;			//36					
@@ -32,7 +32,7 @@ namespace zbMem
 			zU8						mIsArrayNew;		//45
 			zU8						mIsCheckAccess;		//46
 			zU8						_Padding[2];		//47,48
-			using List = zList<Header, &Header::mlnkAllocation, false>;
+			using List = zList<Header>;
 		};
 
 		struct Footer

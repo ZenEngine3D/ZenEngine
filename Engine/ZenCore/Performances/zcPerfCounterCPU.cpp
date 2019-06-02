@@ -14,7 +14,6 @@ void EventCPU_Base::CPUStart()
 {
 	zenAssertMsg( muTimeStart==0, "Event can only be used once");
 	mbActive = true;
-
 	if (garStackEventCPU.IsEmpty() == false)
 		(*garStackEventCPU.Last())->AddChild(*this);
 
