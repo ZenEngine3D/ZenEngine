@@ -24,7 +24,7 @@ public:
 	void Clear()
 	{
 		if (m_RootParam.ParameterType == D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE)
-			delete [] m_RootParam.DescriptorTable.pDescriptorRanges;
+			zenMem::Del(m_RootParam.DescriptorTable.pDescriptorRanges);
 
 		m_RootParam.ParameterType = (D3D12_ROOT_PARAMETER_TYPE)0xFFFFFFFF;
 	}
@@ -184,7 +184,7 @@ public:
 									RootSignature();
 									RootSignature(const RootSignature& _Copy);
 									RootSignature(const std::initializer_list<CD3DX12_ROOT_PARAMETER1>& _Entries, D3D12_ROOT_SIGNATURE_FLAGS _Flags=D3D12_ROOT_SIGNATURE_FLAG_NONE);
-									RootSignature(const zArrayBase<CD3DX12_ROOT_PARAMETER1>& _Entries, D3D12_ROOT_SIGNATURE_FLAGS _Flags=D3D12_ROOT_SIGNATURE_FLAG_NONE);
+									RootSignature(const zArray<CD3DX12_ROOT_PARAMETER1>& _Entries, D3D12_ROOT_SIGNATURE_FLAGS _Flags=D3D12_ROOT_SIGNATURE_FLAG_NONE);
 		
 	zenInline ID3D12RootSignature*	Get()const{ return mrRootSignature.Get();}
 	bool							operator==(const RootSignature& _Cmp)const;
@@ -230,7 +230,7 @@ public:
 protected:
 	DirectXComRef<ID3D12RootSignature>				mrRootSignature;
 	static D3D12_FEATURE_DATA_ROOT_SIGNATURE		sFeatureData;
-	static zArrayStatic<D3D12_STATIC_SAMPLER_DESC>	saSamplerDescTemp;	//! @todo 3 implement sampler properly
+	static zArrayDyn<D3D12_STATIC_SAMPLER_DESC>		saSamplerDescTemp;	//! @todo 3 implement sampler properly
 };
 
 }

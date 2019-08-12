@@ -16,13 +16,13 @@ namespace zcExp
 //=================================================================================================
 zResID CreateGfxBuffer(const zU8* _pData, size_t _uDataSize, size_t _uElemSize, zU32 _uElemCount/*, zFlagResTexUse _UseFlags*/)
 {
-	ExportInfoGfxBuffer* pExportInfo	= zenNewPool ExportInfoGfxBuffer;
+	auto* pExportInfo				= zenMem::NewPool<ExportInfoGfxBuffer>();
 	zenAssert(_uDataSize <= 0xFFFFFFFF);
 	zenAssert(_uElemSize*_uElemCount <= 0xFFFFFFFF);
 	pExportInfo->maData.Copy(_pData, _uDataSize);
-	pExportInfo->muElementSize			= static_cast<zU32>(_uElemSize);
-	pExportInfo->muElementCount			= _uElemCount;
-//	pExportInfo->mUseFlags				= _UseFlags;
+	pExportInfo->muElementSize		= static_cast<zU32>(_uElemSize);
+	pExportInfo->muElementCount		= _uElemCount;
+//	pExportInfo->mUseFlags			= _UseFlags;
 	return zcMgr::Export.CreateItem( zResID::kePlatformType_GFX, zenConst::keResType_GfxBuffer, pExportInfo );
 }
 

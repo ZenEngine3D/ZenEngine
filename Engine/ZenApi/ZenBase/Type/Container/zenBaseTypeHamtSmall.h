@@ -116,9 +116,9 @@ namespace zen { namespace zenType
 		void					SetAll( const TValue& _Value );												//!< @brief Set all value in table, to specified value
 		void					Set(const TKey _Key, const TValue& _Value);									//!< @brief Assign value at a certain key entry
 		bool					SetReplace(const TKey _Key, const TValue& _Value, TValue& _OldValueOut);	//!< @brief Assign value at a certain key entry		
-		void					Export( zArrayBase<TKey>& _aKey, zArrayBase<TValue>& _aValue ) const;		//!< @brief Copy the content key/value of this hamt to carrays
-		void					Import( const zArrayBase<TKey>& _aKey, const zArrayBase<TValue>& _aValue );	//!< @brief Copy the content key/value from arrays to this hamt
-		const zHamt&			operator=(const zHamt& _Copy);													//!< @brief Copy the content of another Hamt
+		void					Export( zArrayDyn<TKey>& _aKey, zArrayDyn<TValue>& _aValue ) const;			//!< @brief Copy the content key/value of this hamt to carrays
+		void					Import( const zArray<TKey>& _aKey, const zArray<TValue>& _aValue );			//!< @brief Copy the content key/value from arrays to this hamt
+		const zHamt&			operator=(const zHamt& _Copy);												//!< @brief Copy the content of another Hamt
 																														    																														    
 		void					GetFirst(Iterator& _It) const;												//!< @brief Initialize iterator to first element of the hamt
 		void					GetLast(Iterator& _It) const;												//!< @brief Initialize iterator to last element of the hamt

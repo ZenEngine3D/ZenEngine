@@ -16,7 +16,7 @@ public:
 	zEngineRef<zenRes::zExportData>	GetAnySource(const zResID& _ResID);
 	
 	bool							IsValid(const zResID& _ResID);
-	bool							IsValid(const zArrayBase<zResID>& _aResID);
+	bool							IsValid(const zArray<zResID>& _aResID);
 
 	zenConst::eEngineVersion		GetEngineVersion(zenConst::eResType _eResType)const;
 

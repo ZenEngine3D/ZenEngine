@@ -16,9 +16,9 @@ namespace sample
 {
 
 static float AspectRatio = 1280.f / 800.f;
-const zArrayStatic<zVec2F> aCubeVerticesUV ={ { 0.5f, 0.0f }, { 1.0f, 1.0f }, { 0.0f, 1.0f } };
-const zArrayStatic<zU16> aCubeIndices = { 0,1,2 };
-const zArrayStatic<zVec3F> aTestVerticesPos =
+const zArrayFixed<zVec2F,3> aCubeVerticesUV ={ { 0.5f, 0.0f }, { 1.0f, 1.0f }, { 0.0f, 1.0f } };
+const zArrayFixed<zU16,3> aCubeIndices = { 0,1,2 };
+const zArrayFixed<zVec3F,3> aTestVerticesPos =
 {
 	{ 0.0f, 0.25f * AspectRatio, 0.0f },	{ 0.25f, -0.25f * AspectRatio, 0.0f },	{ -0.25f, -0.25f * AspectRatio, 0.0f }
 };
@@ -40,11 +40,11 @@ bool SampleDirextX12Instance::Init()
 
 	//-----------------------------------------------------------
 	// Prepare some data for asset creation
-	zArrayStatic<zU8>			aTexRGBA;
+	zArrayDyn<zU8>				aTexRGBA;
 	zVec2U16					vTexSize(256,256);
 	zenConst::eTextureFormat	eTexFormat = zenConst::keTexFormat_RGBA8;
-	aTexRGBA.SetCount( vTexSize.x*vTexSize.y*4 );
-	zU8*						pTexCur = aTexRGBA.First();
+	aTexRGBA.resize( vTexSize.x*vTexSize.y*4 );
+	zU8*						pTexCur = aTexRGBA.front();
 	for(zUInt line=0; line<vTexSize.y; ++line)
 	{
 		for(zUInt col=0; col<vTexSize.x; ++col)
@@ -60,8 +60,8 @@ bool SampleDirextX12Instance::Init()
 	// Create rendering resources		
 	//---------------------------------------------------------------------	
 	mrCubeIndex				= zenRes::zGfxIndex::Create( aCubeIndices, zenConst::kePrimType_TriangleList );
-	mrCubeVtxPos			= zenRes::zGfxStructBuffer<zVec3F>::Create(aTestVerticesPos, (zU32)aTestVerticesPos.Count() /*, zFlagResUse()*/ ); 
-	mrCubeVtxUv				= zenRes::zGfxStructBuffer<zVec2F>::Create(aCubeVerticesUV, (zU32)aCubeVerticesUV.Count() /*, zFlagResUse()*/ );
+	mrCubeVtxPos			= zenRes::zGfxStructBuffer<zVec3F>::Create(aTestVerticesPos, (zU32)aTestVerticesPos.size() /*, zFlagResUse()*/ ); 
+	mrCubeVtxUv				= zenRes::zGfxStructBuffer<zVec2F>::Create(aCubeVerticesUV, (zU32)aCubeVerticesUV.size() /*, zFlagResUse()*/ );
 
 	mrShaderVS				= zenRes::zGfxShaderVertex::Create( "Shader/DX12Sample.sl", "VSMain");
 	mrShaderPS				= zenRes::zGfxShaderPixel::Create( "Shader/DX12Sample.sl", "PSMain" );

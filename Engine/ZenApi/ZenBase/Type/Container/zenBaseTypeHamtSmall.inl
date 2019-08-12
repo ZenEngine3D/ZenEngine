@@ -200,7 +200,7 @@ zHamt< TKey, TValue, TIndex, TIndexBits>::~zHamt()
 	if( mpRootNode )
 	{
 		Clear();
-		zenDelArrayNullptr(reinterpret_cast<zU8*&>(mpRootNode));
+		zenMem::DelSafe(reinterpret_cast<zU8*&>(mpRootNode));
 	}			
 }
 
@@ -454,7 +454,7 @@ bool zHamt< TKey, TValue, TIndex, TIndexBits>::Unset(const TKey _Key)
 		// No slot left in child node, after we remove the entry, update parent to refer to it
 		if( uNewSlotCount == 0 && uDepth>0 )
 		{
-			zenDelArrayNullptr(reinterpret_cast<zU8*&>(pNode));
+			zenMem::DelSafe(reinterpret_cast<zU8*&>(pNode));
 			pNode = *ppNodeTree[--uDepth];
 		}
 		// Child node with 1 less slot, 
@@ -470,7 +470,7 @@ bool zHamt< TKey, TValue, TIndex, TIndexBits>::Unset(const TKey _Key)
 				pNewNode->mSlotLeaf		|= TIndex(pNode->IsLeafSlot(uOldSlotID)) << i;
 			}
 			*ppNodeTree[uDepth] = pNewNode;
-			zenDelArrayNullptr(reinterpret_cast<zU8*&>(pNode));
+			zenMem::DelSafe(reinterpret_cast<zU8*&>(pNode));
 			pNode = nullptr; //Parent doesn't need updating
 		}
 	}
@@ -641,17 +641,15 @@ const zHamt< TKey, TValue, TIndex, TIndexBits>& zHamt< TKey, TValue, TIndex, TIn
 //! @param	_aValue	- Array to receive hashmap values 
 //==================================================================================================
 template<class TKey, class TValue, class TIndex, int TIndexBits>
-void zHamt< TKey, TValue, TIndex, TIndexBits>::Export( zArrayBase<TKey>& _aKey, zArrayBase<TValue>& _aValue ) const
-{
-	_aKey.SetCount(muCount);
-	_aValue.SetCount(muCount);
-	TKey* pKeyCur(_aKey.First());
-	TValue* pValCur(_aValue.First());
-	Iterator it;
-	for(GetFirst(it); it.IsValid(); ++it)
+void zHamt< TKey, TValue, TIndex, TIndexBits>::Export( zArrayDyn<TKey>& _aKey, zArrayDyn<TValue>& _aValue ) const
+{	
+	_aKey.resize(muCount);
+	_aValue.resize(muCount);
+	Iterator it=GetFirst();
+	for(zUInt i(0); it.IsValid(); ++it, ++i)
 	{
-		*pKeyCur++ = it.GetKey();
-		*pValCur++ = it.GetValue();
+		_aKey[i]	= it.GetKey();
+		_aValue[i] = it.GetValue();
 	}
 }
 		
@@ -662,9 +660,9 @@ void zHamt< TKey, TValue, TIndex, TIndexBits>::Export( zArrayBase<TKey>& _aKey, 
 //! @param	_aValue	- Array to retrieve hashmap values 
 //==================================================================================================
 template<class TKey, class TValue, class TIndex, int TIndexBits>
-void zHamt< TKey, TValue, TIndex, TIndexBits>::Import( const zArrayBase<TKey>& _aKey, const zArrayBase<TValue>& _aValue ) 
+void zHamt< TKey, TValue, TIndex, TIndexBits>::Import( const zArray<TKey>& _aKey, const zArray<TValue>& _aValue ) 
 {			
-	zenAssertMsg( _aKey.Count() == _aValue.Count(), "Importing mismatching keys/values pair");
+	zenAssertMsg( _aKey.size() == _aValue.size(), "Importing mismatching keys/values pair");
 	const TValue* pValCur(_aValue.First());			
 	const TKey* pKeyCur(_aKey.First());
 	const TKey* pKeyLast(_aKey.Last());
@@ -733,7 +731,7 @@ template<class TKey, class TValue, class TIndex, int TIndexBits>
 typename zHamt<TKey, TValue, TIndex, TIndexBits>::Node* zHamt< TKey, TValue, TIndex, TIndexBits>::CreateEmptyNode(zU32 _uSlotCount)
 {
 	const size_t SizeNeeded	= sizeof(Node) + sizeof(Node::Slot)*_uSlotCount;
-	Node* pNewNode			= new(zenNewPool zU8[SizeNeeded])Node();	
+	Node* pNewNode			= new(zenMem::NewArray<zU8>(SizeNeeded))Node();	
 	zenMem::Set(pNewNode->mpSlots, 0, _uSlotCount*sizeof(Node::Slot));
 	return pNewNode;
 }
@@ -812,7 +810,7 @@ void zHamt< TKey, TValue, TIndex, TIndexBits>::ClearNode( Node* _pNode )
 		else if(mpDeleteItemCB)
 			mpDeleteItemCB(*this, _pNode->mpSlots[slot].Value());
 	}
-	zenDelArrayNullptr( reinterpret_cast<zU8*&>(_pNode) );
+	zenMem::DelSafe( reinterpret_cast<zU8*&>(_pNode) );
 }
 
 //==================================================================================================
@@ -846,7 +844,7 @@ TValue* zHamt< TKey, TValue, TIndex, TIndexBits>::SetSlotValue(TKey _Key, const 
 			pNewNode->mpSlots[uNewSlotID]	= pNode->mpSlots[i];
 			pNewNode->mSlotLeaf				|= TIndex(pNode->IsLeafSlot(i)) << uNewSlotID;
 		}
-		zenDelArrayNullptr(reinterpret_cast<zU8*&>(pNode));
+		zenMem::DelSafe(reinterpret_cast<zU8*&>(pNode));
 		*_ppParentNode	= pNewNode;				
 	}
 	//------------------------------------------------------------------

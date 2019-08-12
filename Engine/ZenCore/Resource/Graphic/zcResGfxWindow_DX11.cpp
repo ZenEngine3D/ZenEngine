@@ -26,7 +26,7 @@ namespace zcRes
 		SwapDesc.SampleDesc.Count					= 1;
 		SwapDesc.SampleDesc.Quality					= 0;
 		SwapDesc.Windowed							= TRUE;
-		SwapDesc.SwapEffect							= DXGI_SWAP_EFFECT_DISCARD;
+		SwapDesc.SwapEffect							= DXGI_SWAP_EFFECT_FLIP_DISCARD;
 		ID3D11Device*   DX11pDevice					= zcMgr::GfxRender.GetDevice();		
 		
 		if( SUCCEEDED(DX11pDevice->QueryInterface(__uuidof(IDXGIDevice), (void **)&pDXGIDevice)) )
@@ -37,8 +37,7 @@ namespace zcRes
 				{
 					if( SUCCEEDED(pDXGIFactory->CreateSwapChain( DX11pDevice, &SwapDesc, &pDXSwapChain)) )
 					{						
-						//static zenMem::zAllocatorPool sMemPool("Pool GfxWindow", sizeof(GfxWindow), 32, 32);
-						GfxWindowRef rResource						= zenNewPool GfxWindow();		
+						GfxWindowRef rResource						= zenMem::New<GfxWindow>();
 						bool bValid									= true;						
 						rResource.HAL()->mhWindow					= _WindowHandle;
 						rResource.HAL()->mpDX11SwapChain			= pDXSwapChain;
@@ -107,7 +106,7 @@ namespace zcRes
 	void GfxWindow_DX11::FrameBegin()
 	{
 		GfxWindow* pWindow				= reinterpret_cast<GfxWindow*>(this);
-		pWindow->mrBackbufferCurrent	= mrBackbufferColor[pWindow->GetFrameCount()%zenArrayCount(mrBackbufferColor)];
+		pWindow->mrBackbufferCurrent	= mrBackbufferColor[pWindow->GetFramesize()%zenArrayCount(mrBackbufferColor)];
 	}
 
 	void GfxWindow_DX11::FrameEnd()

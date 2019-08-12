@@ -8,16 +8,16 @@ EventCPU_PC::EventCPU_PC(const zStringHash32& _EventName)
 {
 }
 
-void EventCPU_PC::Start() 
+void EventCPU_PC::CPUStart() 
 {
 	Super::CPUStart();
 	muTimeStart = zenSys::GetTimeUSec();
 }
 
-void EventCPU_PC::Stop() 
+void EventCPU_PC::CPUStop() 
 {
-	Super::CPUStop();
 	muTimeElapsed = zenSys::GetTimeUSec() - muTimeStart;
+	Super::CPUStop();	
 }
 
 }

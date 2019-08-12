@@ -3,7 +3,7 @@ namespace zen { namespace zenMem
 {
 
 template<class TType>
-void Copy(TType* _pDestination, const TType* _pSource, zUInt _uCount)
+void Copy(TType* zenRestrict _pDestination, const TType* zenRestrict _pSource, zUInt _uCount)
 {
 	if( _pDestination==nullptr || _pSource==nullptr )
 		return;

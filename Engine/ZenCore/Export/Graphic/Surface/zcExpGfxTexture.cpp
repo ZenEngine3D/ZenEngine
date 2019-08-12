@@ -39,12 +39,11 @@ const TextureBlockInfo& GetTextureBlockInfo( zenConst::eTextureFormat _eFormat )
 //! @param _aRawData		- Image data in r/rgb/rgba format
 //! @return 				- Unique zResID of created Resource
 //=================================================================================================
-zResID CreateGfxTexture2D(zenConst::eTextureFormat _eFormat, zFlagResTexUse _CreationFlags, zVec2U16 _vDim, const zArrayBase<zU8>& _aRawData)
+zResID CreateGfxTexture2D(zenConst::eTextureFormat _eFormat, zFlagResTexUse _CreationFlags, zVec2U16 _vDim, const zArray<zU8>& _aRawData)
 {
-	//static zenMem::zAllocatorPool sMemPool("Pool CreateTexture2D", sizeof(ExportInfoGfxTexture2D), 1, 5 );
-	ExportInfoGfxTexture2D* pExportInfo		= zenNewPool ExportInfoGfxTexture2D;
+	auto* pExportInfo							= zenMem::NewPool<ExportInfoGfxTexture2D>();
 	const zcExp::TextureBlockInfo& BlockInfo	= zcExp::GetTextureBlockInfo(_eFormat);
-	pExportInfo->maMipData.SetCount(1);
+	pExportInfo->maMipData.resize(1);
 	pExportInfo->maMipData[0].maData			= _aRawData;
 	pExportInfo->maMipData[0].mvDim				= _vDim;
 	pExportInfo->maMipData[0].muStride			= (_vDim.x / BlockInfo.muWidth) * BlockInfo.muSize;

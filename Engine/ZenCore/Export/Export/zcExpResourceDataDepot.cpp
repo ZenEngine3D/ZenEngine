@@ -147,15 +147,12 @@ bool DepotResourceData::IsValid(const zResID& _ResID)
 //! @param		_ResID				- zResID to look for
 //! @return 	true if valid
 //=================================================================================================
-bool DepotResourceData::IsValid(const zArrayBase<zResID>& _aResID)
+bool DepotResourceData::IsValid(const zArray<zResID>& _aResID)
 {
-	const zResID* pResIdCur	= _aResID.First();
-	const zResID* pResIDEnd	= _aResID.Last()+1;
-	while( pResIdCur < pResIDEnd )
+	for(const auto& resId : _aResID)
 	{
-		if( mdResourceData.find(pResIdCur->GetHashID()) == mdResourceData.end() )
+		if( mdResourceData.find(resId.GetHashID()) == mdResourceData.end() )
 			return false;
-		++pResIdCur;
 	}
 	return true;
 }

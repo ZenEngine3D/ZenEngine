@@ -7,8 +7,8 @@ const zcRes::GfxRenderPassRef& CommandList_Base::GetRenderpass()
 }
 
 void CommandList_Base::AddCommand( const zEngineRef<zcGfx::Command>& _rCommand )
-{
-	marDrawcalls[mbInsertBeforeChilds ? 0 : 1].Push(_rCommand);
+{	
+	marDrawcalls[mbInsertBeforeChilds ? 0 : 1].push_back(_rCommand);
 }
 
 void CommandList_Base::SetBeforeChildren(bool _bBeforeChild)
@@ -23,7 +23,7 @@ bool CommandList_Base::IsBeforeChildren()const
 
 bool CommandList_Base::IsEmpty() const
 {
-	return marDrawcalls[0].IsEmpty() && marDrawcalls[1].IsEmpty() && mlstChilds.empty();
+	return marDrawcalls[0].empty() && marDrawcalls[1].empty() && mlstChilds.empty();
 }
 
 }

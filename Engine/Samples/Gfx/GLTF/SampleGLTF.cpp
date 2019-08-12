@@ -41,9 +41,9 @@ bool SampleGLTLInstance::Init()
 	}
 
 	// Texture Loading
-	zArrayDynamic<zU8> aPixels;
-	maSceneTexture.SetCount( TLModels.images.size());
-	for(zUInt idxTexture(0), cntTexture(maSceneTexture.Count()); idxTexture<cntTexture; ++idxTexture)
+	zArrayDyn<zU8> aPixels;
+	maSceneTexture.resize( TLModels.images.size());
+	for(zUInt idxTexture(0), cntTexture(maSceneTexture.size()); idxTexture<cntTexture; ++idxTexture)
 	{
 		const auto& TFTexture	= TLModels.images[idxTexture];
 		auto& Texture			= maSceneTexture[idxTexture];
@@ -64,8 +64,8 @@ bool SampleGLTLInstance::Init()
 	}
 
 	// Buffer Loading
-	maSceneBuffer.SetCount( TLModels.accessors.size() );
-	for(zUInt idxBuffer(0), cntBuffer(maSceneBuffer.Count()); idxBuffer<cntBuffer; ++idxBuffer)
+	maSceneBuffer.resize( TLModels.accessors.size() );
+	for(zUInt idxBuffer(0), cntBuffer(maSceneBuffer.size()); idxBuffer<cntBuffer; ++idxBuffer)
 	{
 		const auto& TFView	= TLModels.accessors[idxBuffer];
 		const auto& TFBuffer= TLModels.bufferViews[TFView.bufferView];
@@ -82,14 +82,14 @@ bool SampleGLTLInstance::Init()
 	}
 	
 	// Mesh Loading
-	maSceneMesh.SetCount( TLModels.meshes.size());
-	for(zUInt idxMesh(0), cntMesh(maSceneMesh.Count()); idxMesh<cntMesh; ++idxMesh)
+	maSceneMesh.resize( TLModels.meshes.size());
+	for(zUInt idxMesh(0), cntMesh(maSceneMesh.size()); idxMesh<cntMesh; ++idxMesh)
 	{
 		const auto& TFMesh	= TLModels.meshes[idxMesh];
 		auto& Mesh			= maSceneMesh[idxMesh];
 		Mesh.mName			= TFMesh.name.c_str();
-		Mesh.marStrip.SetCount(TFMesh.primitives.size());
-		for(zUInt idxStrip(0), cntStrip(Mesh.marStrip.Count()); idxStrip<cntStrip; ++idxStrip)
+		Mesh.marStrip.resize(TFMesh.primitives.size());
+		for(zUInt idxStrip(0), cntStrip(Mesh.marStrip.size()); idxStrip<cntStrip; ++idxStrip)
 		{
 			const auto& TFStrip				= TFMesh.primitives[idxStrip];			
 			auto& rStrip					= Mesh.marStrip[idxStrip];
@@ -110,14 +110,14 @@ bool SampleGLTLInstance::Init()
 
 				if( tinygltf::GetComponentSizeInBytes(TFView.componentType) == 2 )
 				{
-					zArrayStatic<zU16> aIndexData;
+					zArrayDyn<zU16> aIndexData;
 					const zU16* pRawData	= reinterpret_cast<const zU16*>(&TLModels.buffers[TFBuffer.buffer].data[TFBuffer.byteOffset+TFView.byteOffset]);					
 					aIndexData.Copy(pRawData, TFView.count);
 					rBufferIndex			= zenRes::zGfxIndex::Create(aIndexData, TFtoZenPrimType[TFStrip.mode]);
 				}
 				else if( tinygltf::GetComponentSizeInBytes(TFView.componentType) == 4 )
 				{
-					zArrayStatic<zU32> aIndexData;
+					zArrayDyn<zU32> aIndexData;
 					const zU32* pRawData	= reinterpret_cast<const zU32*>(&TLModels.buffers[TFBuffer.buffer].data[TFBuffer.byteOffset+TFView.byteOffset]);					
 					aIndexData.Copy(pRawData, TFView.count);
 					rBufferIndex			= zenRes::zGfxIndex::Create(aIndexData, TFtoZenPrimType[TFStrip.mode]);
@@ -216,7 +216,7 @@ void SampleGLTLInstance::Update()
 		
 			zenGfx::zCommand::ClearColor(rCxtRender, mrMainWindowGfx.GetBackbuffer(), vClearColor);
 			zenGfx::zCommand::ClearDepthStencil(rCxtRender, mrBackbufferDepth);
-			for(zUInt i(0); i<maSceneMesh.Count(); ++i )
+			for(zUInt i(0); i<maSceneMesh.size(); ++i )
 			{
 				maSceneMesh[i].mrMesh.SetValue( zHash32("World"),		matWorld );
 				maSceneMesh[i].mrMesh.SetValue( zHash32("View"),		matView );

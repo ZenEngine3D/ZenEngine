@@ -5,8 +5,8 @@ namespace zbMem
 
 Allocator_PC::Allocator_PC()
 {	
-	// Basic policy creates power2 pool sizes. 
-	// Can be customized to fit specific needs and 'zenNewPool' creates new PoolGroup at runtime
+	// Basic policy creates pow2 pool sizes. 
+	// Can be customized to fit specific needs and 'zenMem::NewPool' creates new PoolGroup at runtime
 	size_t GroupItemSize(kAlign + mDebugTracking.GetSizeOverhead()), GroupCount(0);
 	while( GroupItemSize <= kPoolItemSizeMax )
 	{	
@@ -18,18 +18,25 @@ Allocator_PC::Allocator_PC()
 		mPolicyPool.AddPoolGroup(GroupConfig);
 	}
 	
-	maPolicyAll[kPolicy__Unused]	= nullptr;
-	maPolicyAll[kPolicy_Pool]		= &mPolicyPool;
-	maPolicyAll[kPolicy_Regular]	= &mPolicyRegular;
-	maPolicyAll[kPolicy_Large]		= &mPolicyLarge;
+	maPolicyAll[kPolicy_NativeMalloc]	= &mPolicyNative;
+	maPolicyAll[kPolicy_Pool]			= &mPolicyPool;
+	maPolicyAll[kPolicy_Regular]		= &mPolicyRegular;
+	maPolicyAll[kPolicy_Large]			= &mPolicyLarge;
 }
 
-SAllocInfo Allocator_PC::MallocInternal(size_t _Size, size_t _MaxSize, bool _PoolItem, bool _IsCheckAccess)
+SAllocInfo Allocator_PC::MallocInternal(size_t inSize, size_t inItemCount, zenMem::AllocFlags inAllocFlags)
 {	
-	if( _Size < kPoolItemSizeMax && _Size == _MaxSize && !_IsCheckAccess )
+	const zenMem::AllocFlags PoolUnsupportedFlags(zenMem::keFlag_Resize, zenMem::keFlag_ResizeLarge, zenMem::keFlag_Protected);
+	if(inAllocFlags.Any(zenMem::keFlag_NativeMalloc))
 	{
-		size_t AlignedSize = zenMath::RoundUp<size_t>(_Size, kAlign);
-		if( _PoolItem && mPolicyPool.ShouldAddGroup(AlignedSize) )
+		SAllocInfo Alloc = mPolicyNative.Malloc(inSize, inItemCount, inAllocFlags);
+		zenAssert( reinterpret_cast<VAddressCommonPC*>(&Alloc.pMemory)->AllocatorType == kPolicy_NativeMalloc ); //Don't have control on memory range returned by malloc but should be fine
+		return Alloc;
+	}
+	else if(inSize < kPoolItemSizeMax && inItemCount == 1 && inAllocFlags.Any(PoolUnsupportedFlags) == false)
+	{
+		size_t AlignedSize = zenMath::RoundUp<size_t>(inSize, kAlign);
+		if( inAllocFlags.Any(zenMem::keFlag_Pool) && mPolicyPool.ShouldAddGroup(AlignedSize) )
 		{
 			PoolGroup::Config GroupConfig;
 			GroupConfig.mItemSize				= AlignedSize;
@@ -37,21 +44,21 @@ SAllocInfo Allocator_PC::MallocInternal(size_t _Size, size_t _MaxSize, bool _Poo
 			GroupConfig.mPolicyType				= kPolicy_Pool;
 			mPolicyPool.AddPoolGroup(GroupConfig);
 		}		
-		return mPolicyPool.Malloc(_Size);
+		return mPolicyPool.Malloc(inSize, inItemCount, inAllocFlags);
 	}
-	else if( _MaxSize <= mPolicyRegular.GetSupportedSizeMax() )
+	else if( inSize > mPolicyRegular.GetSupportedSizeMax() || inAllocFlags.Any(zenMem::keFlag_ResizeLarge) )
 	{
-		return mPolicyRegular.Malloc(_Size);
-	}		
-	return mPolicyLarge.Malloc(_Size);
+		return mPolicyLarge.Malloc(inSize, inItemCount, inAllocFlags);
+	}	
+	return mPolicyRegular.Malloc(inSize, inItemCount, inAllocFlags);
 }
 
-SAllocInfo Allocator_PC::ResizeInternal(void* _pMemory, size_t _NewSize)
+SAllocInfo Allocator_PC::ResizeInternal(void* _pMemory, size_t _NewSize, size_t inItemCount)
 {
 	zenAssert(_pMemory != nullptr);
 	VAddressCommonPC* pVAddressInfo = reinterpret_cast<VAddressCommonPC*>(&_pMemory);
 	zenAssertMsg(maPolicyAll[pVAddressInfo->AllocatorType], "Unsupported MemoryPolicy, is the memory pointer valid?");
-	return maPolicyAll[pVAddressInfo->AllocatorType]->Resize(_pMemory, _NewSize);
+	return maPolicyAll[pVAddressInfo->AllocatorType]->Resize(_pMemory, _NewSize, inItemCount);
 }
 
 void Allocator_PC::FreeInternal(void* _pMemory)
@@ -62,15 +69,12 @@ void Allocator_PC::FreeInternal(void* _pMemory)
 	maPolicyAll[pVAddressInfo->AllocatorType]->Free(_pMemory);
 }
 
-
-
-size_t Allocator_PC::GetRequestedSizeInternal(void* _pMemory)const
+size_t Allocator_PC::GetItemCountInternal(void* _pMemory)const
 {
 	zenAssert(_pMemory != nullptr);
-	
 	VAddressCommonPC* pVAddressInfo = reinterpret_cast<VAddressCommonPC*>(&_pMemory);
 	zenAssertMsg(maPolicyAll[pVAddressInfo->AllocatorType], "Unsupported MemoryPolicy, is the memory pointer valid?");
-	return maPolicyAll[pVAddressInfo->AllocatorType]->GetRequestedSize(_pMemory);
+	return maPolicyAll[pVAddressInfo->AllocatorType]->GetRequestedCount(_pMemory);
 }
 
 }  

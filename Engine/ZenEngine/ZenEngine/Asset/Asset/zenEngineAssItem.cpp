@@ -89,9 +89,9 @@ const zString& zAssetItemRef::GetDescription()const
 	return GetSafe()->GetDescription(); 
 }
 
-zUInt zAssetItemRef::GetValueCount()const							
+zUInt zAssetItemRef::GetValuesize()const							
 { 
-	return GetSafe()->GetValueCount(); 
+	return GetSafe()->GetValuesize(); 
 }
 
 zenAss::PropertyValueRef zAssetItemRef::GetValue(zUInt _uValIndex)	

@@ -62,7 +62,7 @@ void zCommand::DrawMesh(const zCommandList& _rContext, float _fPriority, const z
 	zenAssert(_rMesh.IsValid());
 
 	auto aMeshStrips = _rMesh->GetMeshStrips();
-	for(zUInt idx(0), count(aMeshStrips.Count()); idx<count; ++idx)
+	for(zUInt idx(0), count(aMeshStrips.size()); idx<count; ++idx)
 	{		
 		zcRes::GfxMeshStripRef rMeshStrip = aMeshStrips[idx];
 		zcGfx::CommandDraw_HAL::Add(_rContext, rRenderpass, rMeshStrip, _uIndexFirst, _uIndexCount, _vScreenScissor);			
@@ -130,7 +130,7 @@ zGfxRenderPass zGfxRenderPass::Create(const zString& _zStageName, zU8 _uPassPrio
 	return zcExp::CreateGfxRenderpass(_zStageName, _uPassPriority, _RTColor, _RTDepth, _rStateRaster, _vDim, _vOrigin);
 }
 
-zGfxRenderPass zGfxRenderPass::Create(const zString& _zStageName, zU8 _uPassPriority, const zArrayBase<zenRes::zGfxRenderPass::ConfigColorRT>& _aRTColors, const ConfigDepthRT& _RTDepth, const zGfxStateRaster& _rStateRaster, const zVec2U16& _vDim, const zVec2S16& _vOrigin)
+zGfxRenderPass zGfxRenderPass::Create(const zString& _zStageName, zU8 _uPassPriority, const zArray<zenRes::zGfxRenderPass::ConfigColorRT>& _aRTColors, const ConfigDepthRT& _RTDepth, const zGfxStateRaster& _rStateRaster, const zVec2U16& _vDim, const zVec2S16& _vOrigin)
 {
 	return zcExp::CreateGfxRenderpass(_zStageName, _uPassPriority, _aRTColors, _RTDepth, _rStateRaster, _vDim, _vOrigin);
 }

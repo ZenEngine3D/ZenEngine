@@ -12,9 +12,18 @@
 #define	ZEN_EXPORT_PC				ZEN_BUILD_PC_GAMEORTOOL
 
 #define zenInline					__inline
-#define zenForceDebugInline			__forceinline
-#if !ZEN_BUILD_DEBUG
-	#define zenForceInline			__forceinline
+#define zenInlineNone				__declspec(noinline)
+
+#if ZEN_BUILD_DEBUG
+	#define zenInlineForce			__inline
+	#define zenInlineNotInDebug		__declspec(noinline)
 #else
-	#define zenForceInline			zenInline
+	#define zenInlineForce			__forceinline
+	#define zenInlineNotInDebug		zenInline
+#endif
+
+#define ZENAlign(_VAR_,_BYTESALIGN_)	__declspec(align(_BYTESALIGN_)) _VAR_
+
+#ifdef _MSC_VER 
+#define zenRestrict						__restrict
 #endif

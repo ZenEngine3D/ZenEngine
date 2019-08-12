@@ -21,8 +21,8 @@ bool ManagerFile_PC::Load()
 			bValid = (FileInfo.dwFileAttributes&FILE_ATTRIBUTE_DIRECTORY) != 0;
 			if( bValid )
 			{
-				//mzRoot.SetCount( static_cast<zUInt>(wcslen(zWorkingDir) + 1) );
-				//_snwprintf_s( mzRoot.First(), mzRoot.Count(), _TRUNCATE, zWorkingDir);
+				//mzRoot.resize( static_cast<zUInt>(wcslen(zWorkingDir) + 1) );
+				//_snwprintf_s( mzRoot.front(), mzRoot.size(), _TRUNCATE, zWorkingDir);
 				InitPath(zWorkingDir);
 				SetCurrentDirectory( mzRootPath.c_str() );				
 			}
@@ -42,33 +42,33 @@ bool ManagerFile_PC::Unload()
 	return true;
 }
 
-bool ManagerFile_PC::Search(zArrayDynamic<FileInfo>& _ResultOut, zUInt _uWantedFlag, const wchar_t* _zDirName, const wchar_t* _zFilePatern, bool bRecursive)
+bool ManagerFile_PC::Search(zArrayDyn<FileInfo>& _ResultOut, zUInt _uWantedFlag, const wchar_t* _zDirName, const wchar_t* _zFilePatern, bool bRecursive)
 {
 	zenAssert(_zDirName );
 	zenAssert(_zFilePatern );
 			
-	_ResultOut.Clear();
+	_ResultOut.clear();
 	_ResultOut.Reserve(32);
 	
 	_zDirName	= (_zDirName[0] == 0) ? L"." : _zDirName;
 	zUInt len	= static_cast<zUInt>(wcslen(_zDirName));
-	zArrayDynamic<wchar_t> zPath;
+	zArrayDyn<wchar_t> zPath;
 	zPath.Reserve(1024);
 	zPath.Copy(_zDirName, len + 1);
 	if( zPath[-2] != L'/' && zPath[-2] != L'\\'  )
 	{
-		zPath.SetCount(static_cast<zUInt>(zPath.Count() + 1));
+		zPath.resize(static_cast<zUInt>(zPath.size() + 1));
 		zPath[-2] = L'/';
 		zPath[-1] = 0;
 	}
 	LoadDirectory(_ResultOut, _uWantedFlag, zPath, _zFilePatern, static_cast<zUInt>(wcslen(_zFilePatern)), bRecursive);
-	return _ResultOut.Count() > 0;
+	return _ResultOut.size() > 0;
 }
 
-void ManagerFile_PC::LoadDirectory(zArrayDynamic<FileInfo>& _ResultOut, zUInt _uWantedFlag, zArrayDynamic<wchar_t>& _zDirName, const wchar_t* _zFilePatern, const zUInt _uFilePaternLen, bool bRecursive)
+void ManagerFile_PC::LoadDirectory(zArrayDyn<FileInfo>& _ResultOut, zUInt _uWantedFlag, zArrayDyn<wchar_t>& _zDirName, const wchar_t* _zFilePatern, const zUInt _uFilePaternLen, bool bRecursive)
 {
 	WIN32_FIND_DATA	sysFileInfo;
-	zUInt uPathSizeInitial(_zDirName.Count());	
+	zUInt uPathSizeInitial(_zDirName.size());	
 
 	//-------------------------------------------------------------------------
 	// Look inside each directory when recursive is enabled
@@ -76,10 +76,10 @@ void ManagerFile_PC::LoadDirectory(zArrayDynamic<FileInfo>& _ResultOut, zUInt _u
 	if( bRecursive )
 	{
 		// Append search pattern	
-		_zDirName.SetCount( uPathSizeInitial + 1 );	
+		_zDirName.resize( uPathSizeInitial + 1 );	
 		_zDirName[uPathSizeInitial-1]	= L'*';	
 		_zDirName[uPathSizeInitial]		= 0;
-		HANDLE hSearch					= FindFirstFile(_zDirName.First(), &sysFileInfo);
+		HANDLE hSearch					= FindFirstFile(_zDirName.Data(), &sysFileInfo);
 		// Parse all children directories
 		if(hSearch != INVALID_HANDLE_VALUE)
 		{
@@ -90,7 +90,7 @@ void ManagerFile_PC::LoadDirectory(zArrayDynamic<FileInfo>& _ResultOut, zUInt _u
 					!(sysFileInfo.cFileName[0] == L'.' && sysFileInfo.cFileName[1] == L'.' && sysFileInfo.cFileName[2] == 0) )
 				{				
 					zUInt len = static_cast<zUInt>(wcslen(sysFileInfo.cFileName));
-					_zDirName.SetCount( static_cast<zUInt>(uPathSizeInitial + len + 1));
+					_zDirName.resize( static_cast<zUInt>(uPathSizeInitial + len + 1));
 					wcsncpy_s( &_zDirName[uPathSizeInitial-1], len+1, sysFileInfo.cFileName, _TRUNCATE );
 					_zDirName[uPathSizeInitial+len-1]	= L'/';
 					_zDirName[uPathSizeInitial+len]		= 0;
@@ -106,9 +106,9 @@ void ManagerFile_PC::LoadDirectory(zArrayDynamic<FileInfo>& _ResultOut, zUInt _u
 	//-------------------------------------------------------------------------
 	// Look for all files/dir matching pattern in current directory
 	//-------------------------------------------------------------------------
-	_zDirName.SetCount( uPathSizeInitial + _uFilePaternLen );	//Append search pattern	
+	_zDirName.resize( uPathSizeInitial + _uFilePaternLen );	//Append search pattern	
 	wcsncpy_s( &_zDirName[uPathSizeInitial-1], _uFilePaternLen+1, _zFilePatern, _TRUNCATE );	
-	HANDLE hSearch = FindFirstFile(_zDirName.First(), &sysFileInfo);	
+	HANDLE hSearch = FindFirstFile(_zDirName.Data(), &sysFileInfo);	
 	_zDirName[uPathSizeInitial-1] = 0;
 	if(hSearch != INVALID_HANDLE_VALUE)
 	{		
@@ -130,11 +130,11 @@ void ManagerFile_PC::LoadDirectory(zArrayDynamic<FileInfo>& _ResultOut, zUInt _u
 			if( bValid )
 			{
 				SYSTEMTIME	Time;
-				zUInt		idx(_ResultOut.Count());
+				zUInt		idx(_ResultOut.size());
 				
-				_ResultOut.SetCount(idx+1);
+				_ResultOut.resize(idx+1);
 				FileInfo& fileInfo	= _ResultOut[idx];
-				fileInfo.mFilename.Set(_zDirName.First(), sysFileInfo.cFileName);
+				fileInfo.mFilename.Set(_zDirName.Data(), sysFileInfo.cFileName);
 				if( FileTimeToSystemTime( &sysFileInfo.ftCreationTime, &Time ) )
 				{
 					fileInfo.mTimeCreated.Year		= Time.wYear;	
@@ -172,13 +172,13 @@ bool ManagerFile_PC::CreateDir( const Filename& _Filename, bool _bLastItemIsFile
 {
 	bool bOk(true);
 	Filename nameDir;
-	zArrayDynamic<zArrayStatic<wchar_t>> aFolderNames;
+	zArrayDyn<zArrayDyn<wchar_t>> aFolderNames;
 	_Filename.SplitFolder(aFolderNames);
-	zUInt count(aFolderNames.Count());
+	zUInt count(aFolderNames.size());
 	count -= _bLastItemIsFile ? 1 : 0;
 	for(zUInt idx(0); idx<count && bOk; ++idx)
 	{
-		nameDir += aFolderNames[idx].First();
+		nameDir += aFolderNames[idx].Data();
 		if( !CreateDirectory( nameDir.GetNameFull(), nullptr ) )
 			bOk = (GetLastError() == ERROR_ALREADY_EXISTS);
 	}
@@ -248,9 +248,9 @@ bool ManagerFile_PC::Delete( const Filename& _Filename, bool _bRecursive )
 	{
 		if (DeleteFile(_Filename.GetNameFull()) == FALSE)
 		{
-			zArrayDynamic<FileInfo> fileAndDirList;
+			zArrayDyn<FileInfo> fileAndDirList;
 			Search(fileAndDirList, keFileFlag__Any, _Filename.GetNameFull(), L"*", true);
-			for (zUInt idx(0), count(fileAndDirList.Count()); idx < count; ++idx)
+			for (zUInt idx(0), count(fileAndDirList.size()); idx < count; ++idx)
 			{
 				if (fileAndDirList[idx].IsFile())
 					DeleteFile(fileAndDirList[idx].GetFilename().GetNameFull());

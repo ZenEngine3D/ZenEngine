@@ -6,49 +6,49 @@ namespace zen { namespace zenRes {
 //=================================================================================================
 // CREATES
 //=================================================================================================
-zGfxMesh zGfxMesh::Create(const zArrayBase<zGfxMeshStrip>& _aMeshStrip)
+zGfxMesh zGfxMesh::Create(const zArray<zGfxMeshStrip>& _aMeshStrip)
 {
 	//! @todo Optim: Use a heap allocator instead, for faster creation
-	zArrayStatic<zResID> aMeshStripID;
-	aMeshStripID.SetCount( _aMeshStrip.Count() );
-	for( zUInt idx(0), count(aMeshStripID.Count()); idx<count; ++idx)
+	zArrayDyn<zResID> aMeshStripID;
+	aMeshStripID.resize( _aMeshStrip.size() );
+	for( zUInt idx(0), count(aMeshStripID.size()); idx<count; ++idx)
 		aMeshStripID[idx] = _aMeshStrip[idx].GetResID();
 	return zcExp::CreateGfxMesh( aMeshStripID );
 }
 
 zGfxMesh zGfxMesh::Create(std::initializer_list<zGfxMeshStrip> _aMeshStrip)
 {
-	zArrayStatic<zResID> aMeshStripID;
+	zArrayDyn<zResID> aMeshStripID;
 	const zGfxMeshStrip* aStripArray = _aMeshStrip.begin();
-	aMeshStripID.SetCount( _aMeshStrip.size() );
-	for( zUInt idx(0), count(aMeshStripID.Count()); idx<count; ++idx)
+	aMeshStripID.resize( _aMeshStrip.size() );
+	for( zUInt idx(0), count(aMeshStripID.size()); idx<count; ++idx)
 		aMeshStripID[idx] = aStripArray[idx].GetResID();
 	return zcExp::CreateGfxMesh( aMeshStripID );
 }
 
-zGfxMeshStrip zGfxMeshStrip::Create(const zGfxIndex& _IndexBuffer, const zGfxShaderBinding& _rShaderBinding, const zArrayBase<zShaderResource>& _aResources, zU32 _uIndexFirst, zU32 _uIndexCount, zU32 _uVertexFirst)
+zGfxMeshStrip zGfxMeshStrip::Create(const zGfxIndex& _IndexBuffer, const zGfxShaderBinding& _rShaderBinding, const zArray<zShaderResource>& _aResources, zU32 _uIndexFirst, zU32 _uIndexCount, zU32 _uVertexFirst)
 {
 	return zcExp::CreateGfxMeshStrip( _IndexBuffer.GetResID(), _rShaderBinding.GetResID(), _uIndexFirst, _uIndexCount, _uVertexFirst, _aResources);
 }
 
 zGfxMeshStrip zGfxMeshStrip::Create(const zGfxIndex& _IndexBuffer, const zGfxShaderBinding& _rShaderBinding, zU32 _uIndexFirst, zU32 _uIndexCount, zU32 _uVertexFirst)
 {	
-	static const zArrayStatic<zShaderResource> saResourceNone(zUInt(0));
+	static const zArrayDyn<zShaderResource> saResourceNone;
 	return zcExp::CreateGfxMeshStrip( _IndexBuffer.GetResID(), _rShaderBinding.GetResID(), _uIndexFirst, _uIndexCount, _uVertexFirst, saResourceNone);
 }
 
 zGfxShaderBinding zGfxShaderBinding::Create(const zGfxShaderVertex& _VertexShader)
 {
-	zArrayStatic<zResID> aShaderID;
-	aShaderID.SetCount(1);
+	zArrayDyn<zResID> aShaderID;
+	aShaderID.resize(1);
 	aShaderID[0] = _VertexShader.GetResID();
 	return zcExp::CreateGfxShaderBinding(aShaderID);
 }
 
 zGfxShaderBinding zGfxShaderBinding::Create(const zGfxShaderVertex& _VertexShader, const zGfxShaderPixel& _PixelShader)
 {
-	zArrayStatic<zResID> aShaderID;
-	aShaderID.SetCount(2);
+	zArrayDyn<zResID> aShaderID;
+	aShaderID.resize(2);
 	aShaderID[0] = _VertexShader.GetResID();
 	aShaderID[1] = _PixelShader.GetResID();
 	return zcExp::CreateGfxShaderBinding(aShaderID);
@@ -101,7 +101,7 @@ zVec2U16 zGfxView::GetDim()const
 //=================================================================================================
 // GFX SHADER BINDING
 //=================================================================================================
-void zGfxShaderBinding::CreateShaderParam(zArrayStatic<zenRes::zGfxCBuffer>& _aShaderParamOut)const
+void zGfxShaderBinding::CreateShaderParam(zArrayDyn<zenRes::zGfxCBuffer>& _aShaderParamOut)const
 {
 	zenAssertMsg(mpResource, "No valid resource assigned");
 	mpResource->CreateShaderParam(_aShaderParamOut);
@@ -115,7 +115,7 @@ void zGfxMesh::SetValue(const zShaderParameter& _Value)
 	zenAssertMsg(mpResource, "No valid resource assigned");
 	mpResource->SetValue(_Value);
 }
-void zGfxMesh::SetValue(const zArrayBase<const zShaderParameter*>& _aValues)	
+void zGfxMesh::SetValue(const zArray<const zShaderParameter*>& _aValues)	
 {
 	zenAssertMsg(mpResource, "No valid resource assigned");
 	mpResource->SetValue(_aValues);
@@ -178,7 +178,7 @@ void zGfxMeshStrip::SetValue(const zShaderParameter& _Value)
 	zenAssertMsg(mpResource, "No valid resource assigned");
 	mpResource->SetValue(_Value);
 }
-void zGfxMeshStrip::SetValue(const zArrayBase<const zShaderParameter*>& _aValues)	
+void zGfxMeshStrip::SetValue(const zArray<const zShaderParameter*>& _aValues)	
 {
 	zenAssertMsg(mpResource, "No valid resource assigned");
 	mpResource->SetValue(_aValues);

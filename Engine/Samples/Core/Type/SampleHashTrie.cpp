@@ -193,16 +193,16 @@ namespace sample
 		typedef std::unordered_map<zU32, zU32, std::hash<zU32>, std::equal_to<zU32>, tracking_allocator::allocator<zU32> > hashsettype;
 
 		hashsettype hashset;
-		srand(1);
+		
 		uTimeStartSet = zenSys::GetTimeUSec();
+		srand(1);
 		for(zU32 i=0; i<kuTestCount; ++i)
 		{			
 			uValKey = rand()<<16 | rand();
 			hashset[uValKey] = i;
 		}
-		uTimeStopSet = zenSys::GetTimeUSec();
+		uTimeStartGet = uTimeStopSet = zenSys::GetTimeUSec();		
 		srand(1);
-		uTimeStartGet = zenSys::GetTimeUSec();
 		for(zU32 i=0; i<kuTestCount; ++i)
 		{			
 			uValKey = rand()<<16 | rand();
@@ -229,8 +229,8 @@ namespace sample
 			uValKey = uValKey<<16 | rand();
 			hashmaptest[uValKey] = i;
 		}
-		uTimeStopSet = zenSys::GetTimeUSec();
-		uTimeStartGet = zenSys::GetTimeUSec();
+		uTimeStartGet =	uTimeStopSet = zenSys::GetTimeUSec();
+		srand(1);
 		for(zU32 i=0; i<kuTestCount; ++i)
 		{			
 			uValKey = uValKey<<16 | rand();
@@ -244,24 +244,25 @@ namespace sample
 			zU32(tracking_allocator::g_bytesAllocated-AllocSizeStart-kuTestCount*sizeof(zU32))/1024 );
 
 		//dArraySpeed.Clear();
-		zenIO::Log(zenConst::keLog_Game, ".... Cleared", uTemp);		
+		//zenIO::Log(zenConst::keLog_Game, ".... Cleared", uTemp);		
 		}
 		//---------------------------------------------------------------------------
 		// eastl:map test
 		//---------------------------------------------------------------------------		
+#if 0 //! @todo 1 Find issue with EASTL assert on map deallocation
 		{
 		typedef eastl::map< zU32, zU32, std::less<zU32>/*, tracking_allocator::allocator<zU32>*/ > eahashmap; 
-		eahashmap hashmaptest;
-		srand(1);
-		size_t AllocSizeStart = tracking_allocator::g_bytesAllocated;
+		eahashmap hashmaptest;		
+		//size_t AllocSizeStart = tracking_allocator::g_bytesAllocated;
 		uTimeStartSet = zenSys::GetTimeUSec();
+		srand(1);
 		for(zU32 i=0; i<kuTestCount; ++i)
 		{			
 			uValKey = uValKey<<16 | rand();
 			hashmaptest[uValKey] = i;
 		}
-		uTimeStopSet = zenSys::GetTimeUSec();
-		uTimeStartGet = zenSys::GetTimeUSec();
+		uTimeStartGet = uTimeStopSet = zenSys::GetTimeUSec();
+		srand(1);
 		for(zU32 i=0; i<kuTestCount; ++i)
 		{			
 			uValKey = uValKey<<16 | rand();
@@ -270,27 +271,15 @@ namespace sample
 		uTimeStopGet = zenSys::GetTimeUSec();
 		zenIO::Log(zenConst::keLog_Game, "eastl::map          Set(%7ius) Get(%7ius) Mem(%6iKb) Overhead(%6iKb)", 
 			zU32(uTimeStopSet-uTimeStartSet), 
-			zU32(uTimeStopGet-uTimeStartGet),
-			zU32(tracking_allocator::g_bytesAllocated-AllocSizeStart)/1024, 
-			zU32(tracking_allocator::g_bytesAllocated-AllocSizeStart-kuTestCount*sizeof(zU32))/1024 );
+			zU32(uTimeStopGet-uTimeStartGet), 
+			//zU32(tracking_allocator::g_bytesAllocated-AllocSizeStart)/1024, 
+			//zU32(tracking_allocator::g_bytesAllocated-AllocSizeStart-kuTestCount*sizeof(zU32))/1024 
+			0,0);
 
 		//dArraySpeed.Clear();
-		zenIO::Log(zenConst::keLog_Game, ".... Cleared", uTemp);		
+		//zenIO::Log(zenConst::keLog_Game, ".... Cleared", uTemp);		
 		}
-		//---------------------------------------------------------------------------
-		// Find First Unused
-		//---------------------------------------------------------------------------
-//! @todo 0 assert here
-/*
-		zMap<char>::Key32 hashIndex(32);
-		hashIndex.Set(0, 'a');
-		hashIndex.Set(1, 'b');
-		hashIndex.Set(2, 'c');
-		hashIndex.Set(4, 'e');
-		hashIndex.Set(5, 'f');
-		zHash32 firstUnused = hashIndex.GetFirstUnusedKey();
-		zenIO::Log(zenConst::keLog_Game, "Hashmap Find first Unused value OK? : %s", zenConst::kzFalseTrue[(zUInt)firstUnused==3] );
-*/
+#endif
 	}
 
 }

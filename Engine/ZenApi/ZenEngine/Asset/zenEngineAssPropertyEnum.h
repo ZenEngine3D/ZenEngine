@@ -34,7 +34,7 @@ class PropertyEnum : public TPropertyDefinition<zenConst::keAssProp_Enum, Proper
 	static PropertyDefRef		Create( const char* _zName, const char* _zDisplayName, const char* _zDescription, bool _bShowInAssetDesc, bool _bIsEditable, 
 										ValueStorage _Default, const Entry* _pEntries, zUInt _uEntryCount );
 
-	zArrayStatic<Entry>			maEnumValues;
+	zArrayDyn<Entry>			maEnumValues;
 protected:
 	zMap<zUInt>::Key32			mdKeyToIndex;
 	zArraySparse<zUInt>::Key32	maValueToIndex;

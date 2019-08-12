@@ -5,7 +5,7 @@
 namespace zen { namespace zenAss 
 {
 	typedef zGameConstRef<class PropertyDefinition>		PropertyDefRef;
-	typedef const zArrayStatic<PropertyDefRef>			PropertyDefArray;
+	typedef const zArrayDyn<PropertyDefRef>				PropertyDefArray;
 
 	//=============================================================================
 	// PropertyValue 

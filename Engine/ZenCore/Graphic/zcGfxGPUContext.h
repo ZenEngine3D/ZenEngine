@@ -29,7 +29,7 @@ class GPUContext : public GPUContext_HAL
 {
 zenClassDeclare(GPUContext, GPUContext_HAL);
 public:
-	void Submit(const zArrayDynamic<zEngineRef<zcGfx::Command>>& _aDrawcalls); //! @todo 1 remove this, collapse in RenderManager::Render
+	void Submit(const zArrayDyn<zEngineRef<zcGfx::Command>>& _aDrawcalls); //! @todo 1 remove this, collapse in RenderManager::Render
 };
 
 }

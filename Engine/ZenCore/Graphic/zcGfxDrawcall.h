@@ -15,7 +15,7 @@ class Command : public zRefCounted
 zenClassDeclare(Command, zRefCounted)
 public:											
 	virtual void			Invoke(class GPUContext& _Context){};	//!< Used by non drawing drawcall, else skip virtual call and render directly
-	static void				ResetCommandCount();
+	static void				ResetCommandsize();
 
 //protected:			
 	union RenderStateSortID

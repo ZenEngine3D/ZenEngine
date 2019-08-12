@@ -1,7 +1,5 @@
 #include "zcCore.h"
 
-//SF DX12
-
 namespace zcRes
 {
 //! @todo 1 remove this?
@@ -15,34 +13,34 @@ bool IsSystemCBuffer( zResID _CBufferDefId, zHash32 _hName )
 
 bool GfxMesh_DX12::Initialize()
 {
-	marGfxMeshStrip.SetCount( maMeshStripID.Count() );
-	for(zUInt stripIdx(0), stripCount(marGfxMeshStrip.Count()); stripIdx<stripCount; ++stripIdx)
+	marGfxMeshStrip.resize( maMeshStripID.size() );
+	for(zUInt stripIdx(0), stripCount(marGfxMeshStrip.size()); stripIdx<stripCount; ++stripIdx)
 		marGfxMeshStrip[stripIdx] = maMeshStripID[stripIdx];
 
 	return true;
 }
 
-void GfxMesh_DX12::SetValue(const zArrayBase<const zenRes::zShaderParameter*>& _aValues)
+void GfxMesh_DX12::SetValue(const zArray<const zenRes::zShaderParameter*>& _aValues)
 {
-	for(zUInt stripIdx(0), stripCount(marGfxMeshStrip.Count()); stripIdx<stripCount; ++stripIdx)
+	for(zUInt stripIdx(0), stripCount(marGfxMeshStrip.size()); stripIdx<stripCount; ++stripIdx)
 		marGfxMeshStrip[stripIdx]->SetValue(_aValues);
 }
 
 void GfxMesh_DX12::SetValue(const zenRes::zShaderParameter& _Value)
 {
-	for(zUInt stripIdx(0), stripCount(marGfxMeshStrip.Count()); stripIdx<stripCount; ++stripIdx)
+	for(zUInt stripIdx(0), stripCount(marGfxMeshStrip.size()); stripIdx<stripCount; ++stripIdx)
 		marGfxMeshStrip[stripIdx]->SetValue(_Value);
 }
 
 void GfxMesh_DX12::SetResource(zHash32 _hResourceName, const GfxShaderResourceRef& _rResource, zU16 _uIndex)
 {
-	for(zUInt stripIdx(0), stripCount(marGfxMeshStrip.Count()); stripIdx<stripCount; ++stripIdx)
+	for(zUInt stripIdx(0), stripCount(marGfxMeshStrip.size()); stripIdx<stripCount; ++stripIdx)
 		marGfxMeshStrip[stripIdx]->SetResource(_hResourceName, _rResource, _uIndex);
 }
 
-void GfxMesh_DX12::SetResource(zHash32 _hResourceName, const zArrayBase<GfxShaderResourceRef>& _arResources)
+void GfxMesh_DX12::SetResource(zHash32 _hResourceName, const zArray<GfxShaderResourceRef>& _arResources)
 {
-	for(zUInt stripIdx(0), stripCount(marGfxMeshStrip.Count()); stripIdx<stripCount; ++stripIdx)
+	for(zUInt stripIdx(0), stripCount(marGfxMeshStrip.size()); stripIdx<stripCount; ++stripIdx)
 		marGfxMeshStrip[stripIdx]->SetResource(_hResourceName, _arResources);
 }
 //=================================================================================================
@@ -65,11 +63,11 @@ void GfxMeshStrip_DX12::TrackedResourceRem(const GfxShaderResourceDescRef& _rRes
 {
 	if( _rResource.IsValid() )
 	{
-		for( zUInt idx(0), count(maTrackedResources.Count()); idx<count; ++idx)
+		for( zUInt idx(0), count(maTrackedResources.size()); idx<count; ++idx)
 		{
 			if( maTrackedResources[idx] == _rResource )
 			{
-				maTrackedResources.RemoveSwap(idx);
+				maTrackedResources.erase_swap(idx);
 				return;
 			}
 		}
@@ -82,8 +80,8 @@ bool GfxMeshStrip_DX12::Initialize()
 	mrIndexBuffer		= mIndexBufferID;
 	mrShaderBinding		= mShaderBindingID;
 
- 	marConstantBuffer.SetCount(maConstanBufferID.Count());
- 	for(zUInt idx(0), count(marConstantBuffer.Count()); idx<count; ++idx)
+ 	marConstantBuffer.resize(maConstanBufferID.size());
+ 	for(zUInt idx(0), count(marConstantBuffer.size()); idx<count; ++idx)
  		marConstantBuffer[idx] = maConstanBufferID[idx];
 
 	//! @todo Missing: assign default resource for the one not assigned
@@ -99,19 +97,19 @@ bool GfxMeshStrip_DX12::Initialize()
 			// Init array size that will hold reference to each t# shader slot
 			zUInt uSlotMax				= 0;
 			const auto& aResourceBind	= rShader.HAL()->maResourceBinding;			
-			for( zUInt idxRes(0), countRes(aResourceBind.Count()); idxRes < countRes; ++idxRes)
+			for( zUInt idxRes(0), countRes(aResourceBind.size()); idxRes < countRes; ++idxRes)
 			{
 				if( HasResourceDescriptor(aResourceBind[idxRes].meType) )
 					uSlotMax = zenMath::Max<zUInt>(uSlotMax, aResourceBind[idxRes].muSlotIndex+aResourceBind[idxRes].muSlotCount );
 			}
-			marDescriptorResources[stageIdx].SetCount( uSlotMax );
+			marDescriptorResources[stageIdx].resize( uSlotMax );
 		}
 	}
 	
 	// Set all provided T# resources
 	//! @todo 3 Remove array per resource type and just use a global resource ref array with mrShaderBinding?
 	const auto& aResourceShaderBind = mrShaderBinding.HAL()->maResourceBind;
-	for( zUInt idxBindRes(0), countBindRes(aResourceShaderBind.Count()); idxBindRes < countBindRes; ++idxBindRes)
+	for( zUInt idxBindRes(0), countBindRes(aResourceShaderBind.size()); idxBindRes < countBindRes; ++idxBindRes)
 	{
 		for(zUInt stageIdx(0); stageIdx<keShaderStage__Count; ++stageIdx )
 		{
@@ -120,7 +118,7 @@ bool GfxMeshStrip_DX12::Initialize()
 			{
 				auto ShaderBindIndex		= aResourceShaderBind[idxBindRes].muShaderResIndex[stageIdx];
 				const auto& aResourceBind	= rShader.HAL()->maResourceBinding;
-				if( ShaderBindIndex < aResourceBind.Count() )
+				if( ShaderBindIndex < aResourceBind.size() )
 				{
 					const auto& ResBind = aResourceBind[ShaderBindIndex];					
 					if( HasResourceDescriptor(ResBind.meType) )
@@ -138,9 +136,9 @@ bool GfxMeshStrip_DX12::Initialize()
 	return true;
 }
 
-void GfxMeshStrip_DX12::SetValue(const zArrayBase<const zenRes::zShaderParameter*>& _aValues)
+void GfxMeshStrip_DX12::SetValue(const zArray<const zenRes::zShaderParameter*>& _aValues)
 {
-	for(zUInt valIdx(0), valCount(_aValues.Count()); valIdx<valCount; ++valIdx)
+	for(zUInt valIdx(0), valCount(_aValues.size()); valIdx<valCount; ++valIdx)
 	{
 		const zenRes::zShaderParameter* pValue	= _aValues[valIdx];
 		auto paramMask							= mrShaderBinding.HAL()->mdCBufferParamMask[pValue->mhName];
@@ -173,7 +171,7 @@ void GfxMeshStrip_DX12::SetResource(zHash32 _hResourceName, const GfxShaderResou
 		{
 			auto resIndex					= PerStageBindInfo.muShaderResIndex[stageIdx];
 			const GfxShaderAnyRef&  rShader	= mrShaderBinding.HAL()->marShader[stageIdx];
-			if( rShader.IsValid() && resIndex < rShader.HAL()->maResourceBinding.Count() )
+			if( rShader.IsValid() && resIndex < rShader.HAL()->maResourceBinding.size() )
 			{
 				const zcExp::ExportGfxShader::ShaderBindInfo& BindInfo		= rShader->maResourceBinding[ resIndex ];
 				zU8 uSlotOffset												= static_cast<zU8>(zenMath::Min<zU16>(_uIndex, BindInfo.muSlotCount));
@@ -195,7 +193,7 @@ void GfxMeshStrip_DX12::SetResource(zHash32 _hResourceName, const GfxShaderResou
  	}
 }
 
-void GfxMeshStrip_DX12::SetResource(zHash32 _hResourceName, const zArrayBase<GfxShaderResourceRef>& _arResources )
+void GfxMeshStrip_DX12::SetResource(zHash32 _hResourceName, const zArray<GfxShaderResourceRef>& _arResources )
 {
 	zcExp::ExportGfxShaderBinding::ShaderBindInfoIndex PerStageBindInfo;
 	if( mrShaderBinding.HAL()->mdResourceBind.Get(_hResourceName, PerStageBindInfo) )
@@ -204,10 +202,10 @@ void GfxMeshStrip_DX12::SetResource(zHash32 _hResourceName, const zArrayBase<Gfx
 		{
 			auto resIndex					= PerStageBindInfo.muShaderResIndex[stageIdx];
 			const GfxShaderAnyRef&  rShader	= mrShaderBinding.HAL()->marShader[stageIdx];
-			if( rShader.IsValid() && resIndex < rShader.HAL()->maResourceBinding.Count() )
+			if( rShader.IsValid() && resIndex < rShader.HAL()->maResourceBinding.size() )
 			{
 				const zcExp::ExportGfxShader::ShaderBindInfo& BindInfo				= rShader->maResourceBinding[ resIndex ];				
-				for( zU8 slotIdx(0), slotCount(zenMath::Min((zU8)_arResources.Count(), BindInfo.muSlotCount)); slotIdx<slotCount; ++slotIdx )
+				for( zU8 slotIdx(0), slotCount(zenMath::Min((zU8)_arResources.size(), BindInfo.muSlotCount)); slotIdx<slotCount; ++slotIdx )
 				{
 					if( marShaderResources[stageIdx][BindInfo.meType][BindInfo.muSlotIndex+slotIdx] != _arResources[slotIdx] )
 					{						
@@ -235,11 +233,11 @@ bool GfxShaderBinding_DX12::Initialize()
 	return true;
 }
 
-void GfxShaderBinding_DX12::CreateShaderParam(zArrayStatic<zenRes::zGfxCBuffer>& Out_aShaderParam)const
+void GfxShaderBinding_DX12::CreateShaderParam(zArrayDyn<zenRes::zGfxCBuffer>& Out_aShaderParam)const
 {
 	zUInt uValidShaderCount(0);
 	zenRes::zGfxCBuffer arValidCBuffer[zcExp::kuDX12_CBufferPerStageMax];		
-	for(zUInt idx(0), count(maCBufferParentID.Count()); idx<count; ++idx)
+	for(zUInt idx(0), count(maCBufferParentID.size()); idx<count; ++idx)
 	{
 		if( IsSystemCBuffer(maCBufferParentID[idx], maResourceName[maCBufferParentBindIndex[idx]] ) == false )
 			arValidCBuffer[uValidShaderCount++] = zcExp::CreateGfxCBuffer( maCBufferParentID[idx] );

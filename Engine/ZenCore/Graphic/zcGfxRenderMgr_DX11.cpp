@@ -20,6 +20,10 @@ QueryDisjoint_DX11::QueryDisjoint_DX11()
 
 void QueryDisjoint_DX11::ReferenceDeleteCB()
 {
+	// This prevents DX warning about starting a new query(when query reused), without having retrieved the value first
+	if( !mbValidResult )
+		zcMgr::GfxRender.GetDeviceContext()->GetData(mpDX11Query, &mDisjointInfo, sizeof(mDisjointInfo), 0);
+
 	slstQueryCreated.push_front(*this);
 }
 
@@ -61,7 +65,7 @@ zEngineRef<QueryDisjoint_DX11> QueryDisjoint_DX11::Create()
 	if( slstQueryCreated.empty() )
 	{
 		for(zUInt idx(0); idx<uGrowSize; ++idx)
-			zenNewPool QueryDisjoint_DX11();
+			zenMem::NewPool<QueryDisjoint_DX11>();
 	}
 	return slstQueryCreated.pop_back();
 }
@@ -78,12 +82,11 @@ QueryTimestamp_DX11::QueryTimestamp_DX11()
 
 void QueryTimestamp_DX11::ReferenceDeleteCB()
 {
-	if( mrQueryDisjoint.IsValid() )
-	{
-		GetTimestampUSec(); // This prevents DX warning about starting a new query(when query reused), without having retrieved the value first
-		mrQueryDisjoint	= nullptr;
-		mbValidResult	= false;
-	}
+	// This prevents DX warning about starting a new query(when query reused), without having retrieved the value first
+	if( !mbValidResult )
+		zcMgr::GfxRender.GetDeviceContext()->GetData(mpDX11Query, &muTimestamp, sizeof(muTimestamp), 0);
+	
+	mrQueryDisjoint	= nullptr;
 	slstQueryCreated.push_front(*this);
 }
 
@@ -91,12 +94,16 @@ zU64 QueryTimestamp_DX11::GetTimestampUSec()
 {	
 	if( mbValidResult == false )
 	{
-		zU64 uClockRate = mrQueryDisjoint->GetClockRate();		
-		if( uClockRate != 0 )
+		auto result = zcMgr::GfxRender.GetDeviceContext()->GetData(mpDX11Query, &muTimestamp, sizeof(muTimestamp), 0);
+		if( result == S_OK && mrQueryDisjoint.IsValid() )
 		{
-			zcMgr::GfxRender.GetDeviceContext()->GetData(mpDX11Query, &muTimestamp, sizeof(muTimestamp), 0);
-			muTimestamp		= uClockRate ? (muTimestamp*1000*1000/uClockRate) : 0;
-			mbValidResult	= true;
+			zU64 uClockRate = mrQueryDisjoint->GetClockRate();
+			if( uClockRate != 0 )
+			{
+				muTimestamp		= uClockRate ? (muTimestamp*1000*1000/uClockRate) : 0;
+				mbValidResult	= true;
+				mrQueryDisjoint = nullptr;			
+			}
 		}
 	}
 	return muTimestamp;
@@ -104,17 +111,17 @@ zU64 QueryTimestamp_DX11::GetTimestampUSec()
 
 zEngineRef<QueryTimestamp_DX11> QueryTimestamp_DX11::Create()
 {	
-	const zUInt uGrowSize = 128;
+	const zUInt uGrowSize = 256;
 	if( slstQueryCreated.empty() )
 	{
 		for(zUInt idx(0); idx<uGrowSize; ++idx)
-			zenNewPool QueryTimestamp_DX11();
+			zenMem::NewPool<QueryTimestamp_DX11>();
 	}
 
 	QueryTimestamp_DX11* pQuery	= slstQueryCreated.pop_back();
 	pQuery->mrQueryDisjoint		= zcMgr::GfxRender.GetQueryDisjoint();
 	pQuery->mbValidResult		= false;
-	pQuery->muTimestamp			= 0;	
+	pQuery->muTimestamp			= 0;
 	return pQuery;
 }
 
@@ -143,7 +150,7 @@ bool ManagerRender_DX11::Load()
 		createDeviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
 	#endif
 
-	const zArrayStatic<D3D_FEATURE_LEVEL> aFeatureLevels = { D3D_FEATURE_LEVEL_11_0 };
+	const zArrayFixed<D3D_FEATURE_LEVEL,1> aFeatureLevels = { D3D_FEATURE_LEVEL_11_0 };
 	mDX11DriverType	= D3D_DRIVER_TYPE_HARDWARE;	//Only support hardware dx11 support
 
 	hr =  D3D11CreateDevice(
@@ -151,8 +158,8 @@ bool ManagerRender_DX11::Load()
 		mDX11DriverType,	
 		nullptr, 
 		createDeviceFlags, 
-		aFeatureLevels.First(),
-		(UINT)aFeatureLevels.Count(),
+		aFeatureLevels.Data(),
+		(UINT)aFeatureLevels.size(),
 		D3D11_SDK_VERSION, 
 		&mDX11pDevice, 
 		&mDX11FeatureLevel, 
@@ -261,12 +268,12 @@ const zEngineRef<QueryDisjoint_DX11>& ManagerRender_DX11::GetQueryDisjoint()cons
 	return mrQueryDisjoint;
 }
 
-void ManagerRender_DX11::SubmitToGPU(const CommandListRef& _rCommandlist, const zArrayDynamic<CommandRef>& _rCommands)
+void ManagerRender_DX11::SubmitToGPU(const CommandListRef& _rCommandlist, const zArrayDyn<CommandRef>& _rCommands)
 {
-	zenAssert(_rCommands.IsEmpty()==false);
+	zenAssert(_rCommands.empty()==false);
 	// Potential Resolve RT -> Texture should be here...
-	const zEngineRef<zcGfx::Command>* prDrawcall	= _rCommands.First();
-	const zEngineRef<zcGfx::Command>* prDrawcallEnd	= _rCommands.Last();	
+	const zEngineRef<zcGfx::Command>* prDrawcall	= _rCommands.Data(); //SF iterator instead
+	const zEngineRef<zcGfx::Command>* prDrawcallEnd	= &_rCommands.back();	
 	while( prDrawcall <= prDrawcallEnd )
 	{
 		(*prDrawcall)->Invoke(mGpuContext[0]);

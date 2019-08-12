@@ -15,7 +15,7 @@ int main (int argc, char * const argv[])
 namespace sample
 {
 
-const zArrayStatic<zVec3F> aCubeVerticesPos =
+const zArrayFixed<zVec3F, 24> aCubeVerticesPos =
 {
 	zVec3F( -1.0f, 1.0f, -1.0f ),	zVec3F( 1.0f, 1.0f, -1.0f ),	zVec3F( 1.0f, 1.0f, 1.0f ),		zVec3F( -1.0f, 1.0f, 1.0f ),
 	zVec3F( -1.0f, -1.0f, -1.0f ),	zVec3F( 1.0f, -1.0f, -1.0f ),	zVec3F( 1.0f, -1.0f, 1.0f ),	zVec3F( -1.0f, -1.0f, 1.0f ),
@@ -25,7 +25,7 @@ const zArrayStatic<zVec3F> aCubeVerticesPos =
 	zVec3F( -1.0f, -1.0f, 1.0f ),	zVec3F( 1.0f, -1.0f, 1.0f ),	zVec3F( 1.0f, 1.0f, 1.0f ),		zVec3F( -1.0f, 1.0f, 1.0f ),
 };
 
-const zArrayStatic<BufferColorUV> aCubeVerticesColorUV =
+const zArrayFixed<BufferColorUV, 24> aCubeVerticesColorUV =
 {
 	{ zVec4U8( 0xFF, 0xFF, 0xFF, 0xFF ), zVec2F( 0.0f, 1.0f ) }, //Face 0
 	{ zVec4U8( 0xFF, 0xFF, 0xFF, 0xFF ), zVec2F( 1.0f, 1.0f ) },
@@ -54,7 +54,7 @@ const zArrayStatic<BufferColorUV> aCubeVerticesColorUV =
 };
 
 
-const zArrayStatic<zU16> aCubeIndices =
+const zArrayFixed<zU16, 36> aCubeIndices =
 {
 	3,1,0,		2,1,3,
 	6,4,5,		7,4,6,
@@ -81,11 +81,11 @@ bool SampleDebugUIInstance::Init()
 
 	//-----------------------------------------------------------
 	// Prepare some data for asset creation
-	zArrayStatic<zU8>			aTexRGBA;
+	zArrayDyn<zU8>				aTexRGBA;
 	zVec2U16					vTexSize(256,256);
 	zenConst::eTextureFormat	eTexFormat = zenConst::keTexFormat_RGBA8;
-	aTexRGBA.SetCount( vTexSize.x*vTexSize.y*4 );
-	zU8*						pTexCur = aTexRGBA.First();
+	aTexRGBA.resize( vTexSize.x*vTexSize.y*4 );
+	zU8*						pTexCur = aTexRGBA.front();
 	for(zUInt line=0; line<vTexSize.y; ++line)
 	{
 		for(zUInt col=0; col<vTexSize.x; ++col)
@@ -101,8 +101,8 @@ bool SampleDebugUIInstance::Init()
 	// Create rendering resources		
 	//---------------------------------------------------------------------	
 	mrCubeIndex										= zenRes::zGfxIndex::Create( aCubeIndices, zenConst::kePrimType_TriangleList );
-	mrVertexBufferPos								= zenRes::zGfxStructBuffer<zVec3F>::Create(aCubeVerticesPos, (zU32)aCubeVerticesPos.Count() /*, zFlagResUse()*/ ); 
-	mrVertexBufferColorUv							= zenRes::zGfxStructBuffer<BufferColorUV>::Create(aCubeVerticesColorUV, (zU32)aCubeVerticesColorUV.Count() /*, zFlagResUse()*/ );
+	mrVertexBufferPos								= zenRes::zGfxStructBuffer<zVec3F>::Create(aCubeVerticesPos, (zU32)aCubeVerticesPos.size() /*, zFlagResUse()*/ ); 
+	mrVertexBufferColorUv							= zenRes::zGfxStructBuffer<BufferColorUV>::Create(aCubeVerticesColorUV, (zU32)aCubeVerticesColorUV.size() /*, zFlagResUse()*/ );
 
 	mrShaderVS										= zenRes::zGfxShaderVertex::Create( "Shader/Tutorial07.fx", "VS");
 	mrShaderPS										= zenRes::zGfxShaderPixel::Create( "Shader/Tutorial07.fx", "PS" );

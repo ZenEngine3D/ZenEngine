@@ -21,7 +21,7 @@ zxImGUIHelper::zxImGUIHelper()
 	int width, height;
 	ImGuiIO& io = ImGui::GetIO();
 	io.Fonts->GetTexDataAsRGBA32(&pixels, &width, &height);
-	zArrayStatic<zU8> aFontRGBA;
+	zArrayDyn<zU8> aFontRGBA;
 	aFontRGBA.Copy(pixels, width*height * 4);
 	mrFontTextureDefault			= zenRes::zGfxTexture2D::Create(zenConst::keTexFormat_RGBA8, zVec2U16((zU16)width, (zU16)height), aFontRGBA);
 
@@ -55,14 +55,14 @@ zxRenderData::zxRenderData()
 {
 	// Create resources array, for assigning to created mesh strip
 	zxImGUIHelper::Get().mrShaderBinding.CreateShaderParam(marShaderCBuffers);
-	marShaderResources.SetCount(3 + marShaderCBuffers.Count() );	
+	marShaderResources.resize(3 + marShaderCBuffers.size() );	
 	marShaderResources[0].mhResourceName		= zHash32("VInputAll");
 	marShaderResources[0].mResourceID			= zResID(); //Will be assigned on VertexCreation in zxImGuiHelper::Render
 	marShaderResources[1].mhResourceName		= zHash32("txFont.mTexture");
 	marShaderResources[1].mResourceID			= zxImGUIHelper::Get().mrFontTextureDefault.GetResID();
 	marShaderResources[2].mhResourceName		= zHash32("txFont.mSampler");
 	marShaderResources[2].mResourceID			= zxImGUIHelper::Get().mrFontSampler.GetResID();
-	for(zUInt idx(0), count(marShaderCBuffers.Count()); idx<count; ++idx)
+	for(zUInt idx(0), count(marShaderCBuffers.size()); idx<count; ++idx)
 		marShaderResources[3+idx].mResourceID	= marShaderCBuffers[idx].GetResID();
 }
 
@@ -91,7 +91,7 @@ void zxImGUIHelper::Render(const zEngineRef<zxRenderData>& _rImGuiData, WindowIn
 		for (zUInt idx(0), count(zenMath::Min(_pInputData->mbIsKeyDown.size(), zenArrayCount(io.KeysDown))); idx<count; ++idx)
 			io.KeysDown[idx] = _pInputData->mbIsKeyDown[idx];
 
-		for (zUInt idx(0), count(_pInputData->maCharacterPressed.Count()); idx<count; ++idx)
+		for (zUInt idx(0), count(_pInputData->maCharacterPressed.size()); idx<count; ++idx)
 			if (_pInputData->maCharacterPressed[idx] > 0 && _pInputData->maCharacterPressed[idx] < 0x10000)
 				io.AddInputCharacter(_pInputData->maCharacterPressed[idx]);
 	}
@@ -120,7 +120,7 @@ void zxImGUIHelper::Render(const zEngineRef<zxRenderData>& _rImGuiData, WindowIn
 		zenMath::MatrixProjectionOrthoLH(_rImGuiData->matOrthographic, _rImGuiData->mvScreenSize.x, _rImGuiData->mvScreenSize.y, 0, 1);
 
 		// Not sure which CBuffer has this parameter, assign it to all
-		for(zUInt idx(0), count(_rImGuiData->marShaderCBuffers.Count()); idx<count; ++idx)
+		for(zUInt idx(0), count(_rImGuiData->marShaderCBuffers.size()); idx<count; ++idx)
 			_rImGuiData->marShaderCBuffers[idx].SetValue(zHash32("ProjectionMatrix"), _rImGuiData->matOrthographic);
 	}
 	
@@ -157,14 +157,14 @@ void zxImGUIHelper::Render(const zEngineRef<zxRenderData>& _rImGuiData, WindowIn
 			_rImGuiData->muIndexCount = static_cast<zU32>(pImGuiData->TotalIdxCount*1.25f);
 			if (sizeof(ImDrawIdx) == sizeof(zU16))
 			{
-				zArrayStatic<zU16> aIndices;
-				aIndices.SetCount(_rImGuiData->muIndexCount);
+				zArrayDyn<zU16> aIndices;
+				aIndices.resize(_rImGuiData->muIndexCount);
 				_rImGuiData->mrIndexBuffer = zenRes::zGfxIndex::Create(aIndices, zenConst::kePrimType_TriangleList);
 			}
 			else if (sizeof(ImDrawIdx) == sizeof(zU32))
 			{
-				zArrayStatic<zU32> aIndices;
-				aIndices.SetCount(_rImGuiData->muIndexCount);
+				zArrayDyn<zU32> aIndices;
+				aIndices.resize(_rImGuiData->muIndexCount);
 				_rImGuiData->mrIndexBuffer = zenRes::zGfxIndex::Create(aIndices, zenConst::kePrimType_TriangleList);
 			}
 		}	

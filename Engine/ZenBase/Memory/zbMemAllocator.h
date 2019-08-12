@@ -8,7 +8,7 @@ namespace zbMem
 	public:
 						Allocator_Base()=default;	
 	protected:		
-		bool			ShouldAccessCheck(size_t _Size, size_t _SizeMax, const char* _Filename, int _LineNumber, bool _IsArrayNew, bool _IsPoolItem, bool _IsCheckAccess)const;
+		bool			ShouldAccessCheck(size_t inSize, size_t inItemCount, const zenMem::AllocFlags& inAllocFlags)const;
 		DebugTracking	mDebugTracking;
 	};
 }  
@@ -22,9 +22,9 @@ namespace zbMem
 	zenClassDeclare(Allocator, Allocator_HAL);	
 	public:	
 						Allocator()=default;
-		void*			Malloc(size_t _Size, size_t _SizeMax, const char* _Filename, int _LineNumber, bool _IsArrayNew, bool _IsPoolItem, bool _IsCheckAccess);
-		void* 			Resize(void* _pMemory, size_t _NewSize);		
-		void			Free(void* _pMemory, bool _IsArrayDel);
-		size_t			GetRequestedSize(void* _pMemory)const;	
+		void*			Malloc(size_t inSize, size_t inItemCount, zenMem::AllocFlags inAllocFlags);
+		void* 			Resize(void* _pMemory, size_t _NewSize, size_t _ItemCount);		
+		void			Free(void* _pMemory);
+		size_t			GetItemCount(void* _pMemory)const;	
 	};
 }

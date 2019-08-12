@@ -4,7 +4,7 @@ namespace zcExp
 {
 	struct ExportInfoGfxShaderBinding : public ExportInfoBase
 	{
-		zArrayStatic<zResID>	maShaderID;			//!< List of shaders to tie together (vertex, pixel, ...)			
+		zArrayDyn<zResID>		maShaderID;			//!< List of shaders to tie together (vertex, pixel, ...)			
 		static zResID			CallbackGetItemID(ePlatform _ePlatform, zenConst::eResType _eType, zenConst::eResSource _eSource, const zcExp::ExportInfoBase* _pExportInfo, bool& _bExistOut);
 	};
 
@@ -20,13 +20,13 @@ namespace zcExp
 		};
 
 		//virtual bool						Serialize( zcExp::Serializer_Base& _Serializer ){return true;}
-		zArrayStatic<zResID>				maShaderID;					//!< ShaderID of each shader stage
-		zArrayStatic<zResID>				maCBufferParentID;			//!< List of CBufferDef ResID used in any shader stages of thsi binding
-		zArrayStatic<zU8>					maCBufferParentBindIndex;	//!< List of CBufferDef index in this binding list of resources (match CBufferParentID)
-		zArrayStatic<zHash32>				maCBufferParamName;			//!< List of parameter names used in any shaders stages of thsi binding
-		zArrayStatic<zU32>					maCBufferParamMask;			//!< List of CBufferDef this parameter name is used in	(match maCBufferParamName)
-		zArrayStatic<zHash32>				maResourceName;				//!< List of resources names used in this binding
-		zArrayStatic<ShaderBindInfoIndex>	maResourceBind;				//!< List of resources binding info in each shader stage (match maResourceName index)
+		zArrayDyn<zResID>					maShaderID;					//!< ShaderID of each shader stage
+		zArrayDyn<zResID>					maCBufferParentID;			//!< List of CBufferDef ResID used in any shader stages of thsi binding
+		zArrayDyn<zU8>						maCBufferParentBindIndex;	//!< List of CBufferDef index in this binding list of resources (match CBufferParentID)
+		zArrayDyn<zHash32>					maCBufferParamName;			//!< List of parameter names used in any shaders stages of thsi binding
+		zArrayDyn<zU32>						maCBufferParamMask;			//!< List of CBufferDef this parameter name is used in	(match maCBufferParamName)
+		zArrayDyn<zHash32>					maResourceName;				//!< List of resources names used in this binding
+		zArrayDyn<ShaderBindInfoIndex>		maResourceBind;				//!< List of resources binding info in each shader stage (match maResourceName index)
 		
 		//! @todo Clean (should go in common resource class)		
 		zMap<ShaderBindInfoIndex>::Key32	mdResourceBind;				//!< Hashmap of Resources binding info per resource name
@@ -44,5 +44,5 @@ namespace zcExp
 		ExportResultRef							mrExport;
 	};
 
-	zResID CreateGfxShaderBinding(const zArrayBase<zResID>& _aShaderID);	
+	zResID CreateGfxShaderBinding(const zArray<zResID>& _aShaderID);	
 }

@@ -4,16 +4,16 @@ namespace zcExp
 {	
 	struct ExportInfoGfxMesh : public ExportInfoBase
 	{
-		zArrayStatic<zResID>	maMeshStripID;			//!< List of Mesh strips used this Mesh
-		static zResID			CallbackGetItemID(ePlatform _ePlatform, zenConst::eResType _eType, zenConst::eResSource _eSource, const zcExp::ExportInfoBase* _pExportInfo, bool& _bExistOut);
+		zArrayDyn<zResID>	maMeshStripID;			//!< List of Mesh strips used this Mesh
+		static zResID		CallbackGetItemID(ePlatform _ePlatform, zenConst::eResType _eType, zenConst::eResSource _eSource, const zcExp::ExportInfoBase* _pExportInfo, bool& _bExistOut);
 	};
 
 	class ExportGfxMesh : public zenRes::zExportData
 	{
 	zenClassDeclare(ExportGfxMesh, zenRes::zExportData)
 	public:
-		//virtual bool			Serialize( zcExp::Serializer_Base& _Serializer ){return true;}		
-		zArrayStatic<zResID>	maMeshStripID;			//!< List of Mesh strips used this Mesh
+		//virtual bool		Serialize( zcExp::Serializer_Base& _Serializer ){return true;}		
+		zArrayDyn<zResID>	maMeshStripID;			//!< List of Mesh strips used this Mesh
 	};
 
 	class ExporterGfxMesh : public ExporterBase
@@ -27,5 +27,5 @@ namespace zcExp
 		ExportResultRef					mrExport;
 	};
 
-	zResID CreateGfxMesh(const zArrayBase<zResID>& _aMeshStripID);
+	zResID CreateGfxMesh(const zArray<zResID>& _aMeshStripID);
 }

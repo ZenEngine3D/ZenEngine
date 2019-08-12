@@ -6,11 +6,11 @@ void zArrayBits::Resize(zUInt _uBitCount)
 	zUInt uNeededArrayCount = zenMath::RoundUp<zUInt>(_uBitCount/8, sizeof(zUInt));	
 	if( uNeededArrayCount != muDataArrayCount )
 	{
-		zUInt* pNewData		= zenNew zUInt[uNeededArrayCount];
+		zUInt* pNewData		= zenMem::NewArray<zUInt>(uNeededArrayCount);
 		zenMem::CopyRaw(pNewData, mpDataArray, zenMath::Min(muDataArrayCount, uNeededArrayCount)*sizeof(zUInt));
 		if( uNeededArrayCount > muDataArrayCount)
 			zenMem::Zero(&pNewData[muDataArrayCount], (uNeededArrayCount-muDataArrayCount)*sizeof(zUInt) );
-		zenDelArray(mpDataArray);
+		zenMem::Del(mpDataArray);
 		mpDataArray			= pNewData;
 		muDataArrayCount	= uNeededArrayCount;
 	}
@@ -50,13 +50,13 @@ zArrayBits::zArrayBits(std::initializer_list<bool> _Entries)
 zArrayBits::zArrayBits(const zArrayBits& _Copy)
 {
 	muDataArrayCount	= _Copy.muDataArrayCount;
-	mpDataArray			= zenNew zUInt[muDataArrayCount];
+	mpDataArray			= zenMem::NewArray<zUInt>(muDataArrayCount);
 	zenMem::CopyRaw( mpDataArray, _Copy.mpDataArray, muDataArrayCount);
 }
 
 zArrayBits::~zArrayBits()
 {
-	zenDelArray(mpDataArray);
+	zenMem::Del(mpDataArray);
 }
 
 bool zArrayBits::operator[](zUInt _uBitIndex)const
@@ -189,7 +189,7 @@ void zArrayBits::SetRange(zUInt _uBitIndexFirst, zUInt _uBitIndexLast, bool _bVa
 
 void zArrayBits::Reset()
 {
-	zenDelArray(mpDataArray);
+	zenMem::Del(mpDataArray);
 	muDataArrayCount = 0;
 }
 

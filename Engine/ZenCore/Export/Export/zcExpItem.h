@@ -7,7 +7,7 @@ namespace zcExp
 struct ExportInfoBase
 {
 								ExportInfoBase();
-								~ExportInfoBase();
+	virtual 					~ExportInfoBase();
 	zResID						mExportResID;		//!< Export Resource ID (temporarily ID assigned until exported)
 	zU8							mbSuccessStart	: 1;
 	zU8							mbSuccessWork	: 1;

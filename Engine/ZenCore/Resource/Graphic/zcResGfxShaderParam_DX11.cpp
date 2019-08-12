@@ -29,7 +29,7 @@ bool GfxCBuffer_DX11::Initialize()
 	bufferDesc.BindFlags		= D3D11_BIND_CONSTANT_BUFFER;
 	bufferDesc.CPUAccessFlags	= 0;
 	bufferDesc.ByteWidth		= static_cast<UINT>(maParameterValues.SizeMem());
-	initData.pSysMem			= maParameterValues.First();
+	initData.pSysMem			= maParameterValues.Data();
 	initData.SysMemPitch		= 0;
 	initData.SysMemSlicePitch	= 0;
 	HRESULT hr					= zcMgr::GfxRender.GetDevice()->CreateBuffer( &bufferDesc, &initData, &mpBufferBinding );		
@@ -40,7 +40,7 @@ void GfxCBuffer_DX11::Update( ID3D11DeviceContext& DirectXContext )
 {
 	if( mbUpdated )
 	{
-		DirectXContext.UpdateSubresource( mpBufferBinding, 0, nullptr, maParameterValues.First(), 0, 0 );
+		DirectXContext.UpdateSubresource( mpBufferBinding, 0, nullptr, maParameterValues.Data(), 0, 0 );
 		mbUpdated = FALSE;
 	}
 }

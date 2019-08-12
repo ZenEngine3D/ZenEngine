@@ -28,8 +28,19 @@
 //=================================================================================================
 #include "zenBaseConstMacro.inl"
 
+// Forward declare
+namespace zbMem {
+	template<class TType, typename... TConstrParams> TType* 
+	Construct(void*, size_t, const TConstrParams&...); 
+}
+
 #define zenArrayCount(_Array_)						(sizeof(_Array_)/sizeof((_Array_)[0]))
-#define zenClassDeclareNoParent(_Class_)			public: void zenClassDeclareCheck(){ zenStaticAssertMsg( sizeof(*this) == sizeof(_Class_), "Wrong Class name in ClassDeclare macro" );}
+#define zenClassFriendNew							template<class TType, typename... TConstrParams> friend TType* zbMem::Construct(void*, size_t, const TConstrParams&...);
+#define zenClassDeclareNoParent(_Class_)			public: \
+														void zenClassDeclareCheck()	\
+															{ zenStaticAssertMsg( sizeof(*this) == sizeof(_Class_), "Wrong Class name in ClassDeclare macro" );}	\
+														zenClassFriendNew
+
 #define zenClassDeclare(_Class_, _ClassParent_)		zenClassDeclareNoParent(_Class_)			\
 													public: typedef _ClassParent_ Super;
 #include zenHeaderPlatform(zenBaseConstMacro)

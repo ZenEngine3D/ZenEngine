@@ -12,8 +12,8 @@ namespace zen { namespace zenRes
 		zU8*					Lock();
 		void					Unlock(const zenGfx::zCommandList& rContext);
 
-		static zGfxIndex		Create(const zArrayBase<zU16>& _Indices, zenConst::ePrimitiveType _ePrimitiveType);
-		static zGfxIndex		Create(const zArrayBase<zU32>& _Indices, zenConst::ePrimitiveType _ePrimitiveType);
+		static zGfxIndex		Create(const zArray<zU16>& _Indices, zenConst::ePrimitiveType _ePrimitiveType);
+		static zGfxIndex		Create(const zArray<zU32>& _Indices, zenConst::ePrimitiveType _ePrimitiveType);
 	};
 
 	class zGfxTexture2D : public zcRes::GfxTexture2DRef
@@ -25,7 +25,7 @@ namespace zen { namespace zenRes
 		
 		const zVec2U16&			GetDim();
 		static zGfxTexture2D	Create(zenConst::eTextureFormat _eFormat, zVec2U16 _vDim, zFlagResTexUse _CreationFlags=zFlagResTexUse());		
-		static zGfxTexture2D	Create(zenConst::eTextureFormat _eFormat, zVec2U16 _vDim, const zArrayBase<zU8>& _aRawData, zFlagResTexUse _CreationFlags=zFlagResTexUse());
+		static zGfxTexture2D	Create(zenConst::eTextureFormat _eFormat, zVec2U16 _vDim, const zArray<zU8>& _aRawData, zFlagResTexUse _CreationFlags=zFlagResTexUse());
 	};
 
 	class zGfxTarget2D : public zcRes::GfxTarget2DRef
@@ -72,10 +72,10 @@ namespace zen { namespace zenRes
 		{
 			return zGfxBuffer::Create( sizeof(TStructData), _uElemCount);
 		}
-		static zGfxStructBuffer Create(const zArrayBase<TStructData>& _aData, zU32 _uElemCount=0/*, zFlagResTexUse _UseFlags*/)
+		static zGfxStructBuffer Create(const zArray<TStructData>& _aData, zU32 _uElemCount=0/*, zFlagResTexUse _UseFlags*/)
 		{
-			_uElemCount = zenMath::Max(static_cast<zU32>(_aData.Count()), _uElemCount);
-			return zGfxBuffer::Create(reinterpret_cast<const zU8*>(_aData.First()), _aData.SizeMem(), sizeof(TStructData), _uElemCount);
+			_uElemCount = zenMath::Max(static_cast<zU32>(_aData.size()), _uElemCount);
+			return zGfxBuffer::Create(reinterpret_cast<const zU8*>(_aData.Data()), _aData.SizeMem(), sizeof(TStructData), _uElemCount);
 		}
 	};
 }} // namespace zen, zenRes

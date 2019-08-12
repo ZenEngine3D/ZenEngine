@@ -5,7 +5,7 @@
 namespace zen { namespace zenAss 
 {
 	
-class PropertyArray : public TPropertyDefinition<zenConst::keAssProp_Array, PropertyArray, zArrayDynamic<PropertyValueRef> >
+class PropertyArray : public TPropertyDefinition<zenConst::keAssProp_Array, PropertyArray, zArrayDyn<PropertyValueRef> >
 {
 	ZENPropertyDefinitionDeclare( PropertyArray )
 

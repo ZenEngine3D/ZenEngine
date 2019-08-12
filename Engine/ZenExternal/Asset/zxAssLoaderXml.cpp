@@ -196,7 +196,7 @@ void SavePropertyValue(const zenAss::PropertyValueRef& _rValue, pugi::xml_node& 
 	case zenConst::keAssProp_Struct:{	
 		zenAss::PropertyStruct::ValueRef rValueTyped(_rValue);
 		const zenAss::PropertyStruct::ValueStorage& aValues = rValueTyped.GetValue();
-		for(zUInt idx(0), count(aValues.Count()); idx<count; ++idx)
+		for(zUInt idx(0), count(aValues.size()); idx<count; ++idx)
 		{
 			if( !aValues[idx].IsDefault() )
 			{
@@ -210,9 +210,9 @@ void SavePropertyValue(const zenAss::PropertyValueRef& _rValue, pugi::xml_node& 
 	case zenConst::keAssProp_Array:	{	
 		zenAss::PropertyArray::ValueRef rValueTyped(_rValue);
 		const zenAss::PropertyArray::ValueStorage& aValues = rValueTyped.GetValue();
-		_Node.append_attribute("Num").set_value((unsigned int)aValues.Count());
+		_Node.append_attribute("Num").set_value((unsigned int)aValues.size());
 		_Node.append_attribute("ElementType").set_value( rValueTyped.GetDefinition().mrArrayPropertyDef->GetTypeName() );
-		for(zUInt idx(0), count(aValues.Count()); idx<count; ++idx)
+		for(zUInt idx(0), count(aValues.size()); idx<count; ++idx)
 		{
 			if( !aValues[idx].IsDefault() )
 			{
@@ -238,11 +238,11 @@ bool AssetLoaderXml::LoadPackages()
 bool AssetLoaderXml::LoadGroup(const zenAss::zPackageGroupRef& _rParent, const zbFile::Filename& _Filename)
 {
 	bool bResult(true);
-	zArrayDynamic<zbFile::FileInfo> dirList;
-	zArrayDynamic<zbFile::FileInfo> fileList;
+	zArrayDyn<zbFile::FileInfo> dirList;
+	zArrayDyn<zbFile::FileInfo> fileList;
 	
 	zbMgr::File.Search(dirList, zbFile::keFileFlag_Dir, _Filename.GetNameFull(), zenT("*"), false);	
-	for( zUInt idx(0), count(dirList.Count()); idx<count; ++idx)
+	for( zUInt idx(0), count(dirList.size()); idx<count; ++idx)
 	{
 		zenAss::zPackageGroupRef rNewParent	= zeMgr::Asset.GroupCreate(dirList[idx].GetFilename().GetName(), _rParent );		
 		bResult								&= LoadGroup(rNewParent, dirList[idx].GetFilename());
@@ -250,7 +250,7 @@ bool AssetLoaderXml::LoadGroup(const zenAss::zPackageGroupRef& _rParent, const z
 	}
 
 	zbMgr::File.Search(fileList, zbFile::keFileFlag_File, _Filename.GetNameFull(), zenT("*.xml"), false);
-	for (zUInt idx(0), count(fileList.Count()); idx < count; ++idx)
+	for (zUInt idx(0), count(fileList.size()); idx < count; ++idx)
 		bResult &= LoadPackage(_rParent, fileList[idx].GetFilename());
 
 	return bResult;
@@ -266,7 +266,7 @@ bool AssetLoaderXml::LoadPackage(const zenAss::zPackageGroupRef& _rParent, const
 		pugi::xml_node nodePackage	= Doc.child(kzXmlName_Node_Package);
 		if( nodePackage )
 		{
-			zenAss::zPackageRef rNewPackage	= zenNew zeAss::Package;
+			zenAss::zPackageRef rNewPackage	= zenMem::New<zeAss::Package>();
 			zU32 uPkgID						= nodePackage.attribute(kzXmlName_PkgAtr_ID).as_uint();
 			zU32 uEngineVer					= nodePackage.attribute(kzXmlName_PkgAtr_Version).as_uint();
 			if( uEngineVer<=zenConst::keEngineVersion__Current		&& 
@@ -404,7 +404,7 @@ bool AssetLoaderXml::SaveAsset( const zenAss::zAssetItemRef& _rAsset, pugi::xml_
 	nodeAsset.append_attribute(kzXmlName_AssetAtr_ID).set_value( _rAsset->GetID().muIndex );
 	nodeAsset.append_attribute(kzXmlName_AssetAtr_Name).set_value( _rAsset->GetName() );
 	nodeAsset.append_attribute(kzXmlName_AssetAtr_Type).set_value( zenAss::AssetTypeToString(_rAsset->GetType()) );		
-	for(zInt idx(0), count(_rAsset->GetValueCount()); idx<count; ++idx)
+	for(zInt idx(0), count(_rAsset->GetValuesize()); idx<count; ++idx)
 	{
 		zenAss::PropertyValueRef rPropertyValue = _rAsset->GetValue(idx);
 		if( rPropertyValue.IsDefault() == false )

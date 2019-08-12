@@ -1,7 +1,6 @@
 #pragma once
 
-namespace zxImGui	{ class zxRenderData; } //Forward declare
-namespace zxNuklear { class zxRenderData; } //Forward declare
+namespace zxImGui { class zxRenderData; } //Forward declare
 namespace zen { namespace zenWnd { class Window; } }
 //namespace zcPerf { class}
 
@@ -24,7 +23,7 @@ namespace zcRes
 		void									FrameEnd();
 		zenSig::zSignal<>&						GetSignalUIRender();
 		zenInline const zcPerf::EventBaseRef&	GetHistoryEvent(eEventType _eEventType, zU32 _uIndex)const;
-		zenInline zUInt							GetFrameCount()const;		
+		zenInline zUInt							GetFramesize()const;		
 		zenWnd::Window*							mpMainWindowOS = nullptr; //! @todo 1 urgent : temp hack until merged gfx + OS window
 		void									ConnectSignal_UIRender(zenSig::zSignal<>& _Signal);	
 	protected:
@@ -39,7 +38,6 @@ namespace zcRes
 		zUInt									muFrameCount			= 0;
 		GfxTarget2DRef							mrBackbufferCurrent		= nullptr;		//!< BackBuffer where we should render final results for this frame
 		zEngineRef<zxImGui::zxRenderData>		mrImGuiData				= nullptr;
-		zEngineRef<zxNuklear::zxRenderData>		mrNuklearData			= nullptr;
 		bool									mbUIShowFps				= true;
 		bool									mbUIShowDetailFps		= false;
 		bool									mbUIAutoDisplaySpike	= false;
@@ -47,7 +45,9 @@ namespace zcRes
 		bool									mbUIEventShow[keEvtTyp__Count];			//!< True if window for a stats should be open
 		bool									mbUIEventShowCurrent[keEvtTyp__Count];	//!< If we should display a window with latest stats each frame
 		zcPerf::EventBaseRef					mrEventProfiling[keEvtTyp__Count];		//!< Which Event hierarchy to display for profiling
-		zArrayStatic<zcPerf::EventBaseRef>		maEventHistory[keEvtTyp__Count];		//!< Hierarchical history of last X frame of events (with timing)
+
+//! @todo 1 This should be moved outside of window, to track timing outside of rendering and pre/post frame gpu events
+		zArrayDyn<zcPerf::EventBaseRef>			maEventHistory[keEvtTyp__Count];		//!< Hierarchical history of last X frame of events (with timing)
 
 		zUInt									muEventValidIndex = 0;					//!< First valid root event index
 		zU32									muEventValidCount = 0;					//!< Number of valid root events
@@ -65,7 +65,7 @@ namespace zcRes
 		return  (_uIndex < muEventValidCount) ? maEventHistory[_eEventType][(muEventValidIndex+_uIndex)%keEventHistoryCount] : mrInvalidEvent;
 	}
 
-	zUInt GfxWindow::GetFrameCount()const
+	zUInt GfxWindow::GetFramesize()const
 	{
 		return muFrameCount;
 	}

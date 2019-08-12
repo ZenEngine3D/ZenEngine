@@ -9,8 +9,8 @@ namespace zcExp
 		const ExportInfoGfxShaderBinding* pExportInfo = static_cast<const ExportInfoGfxShaderBinding*>(_pExportInfo);
 
 		zUInt uValidCount(0);
-		zUInt uShaderCount = pExportInfo->maShaderID.Count();
-		zArrayStatic<zU64> aSortedResname(uShaderCount);
+		zUInt uShaderCount = pExportInfo->maShaderID.size();
+		zArrayDyn<zU64> aSortedResname(uShaderCount);
 
 		for(zUInt idx=0; idx<uShaderCount; ++idx)
 			if( pExportInfo->maShaderID[idx].IsValid() )
@@ -18,7 +18,7 @@ namespace zcExp
 
 		aSortedResname.Sort();
 
-		zResID::NameHash hName( aSortedResname.First(), aSortedResname.SizeMem() );
+		zResID::NameHash hName(aSortedResname.Data(), aSortedResname.SizeMem() );
 		return zcExp::ValidateItemID(_ePlatform, _eType, _eSource, hName, _bExistOut);
 	}
 
@@ -58,7 +58,7 @@ namespace zcExp
 		
 		//------------------------------------------------------------------------------------------
 		// Find all resources used between all shader stages, and store how to reach them in each
-		for(zUInt shaderIdx(0), shaderCount(pExport->maShaderID.Count()); shaderIdx<shaderCount; ++shaderIdx)
+		for(zUInt shaderIdx(0), shaderCount(pExport->maShaderID.size()); shaderIdx<shaderCount; ++shaderIdx)
 		{
 			zEngineConstRef<zcExp::ExportGfxShader> rShader = zcDepot::ExportData.GetTyped<zcExp::ExportGfxShader>( pExport->maShaderID[shaderIdx] );
 			if( rShader.IsValid() )
@@ -69,8 +69,8 @@ namespace zcExp
 
 				//---------------------------------------------------------------------
 				// Find CBufferDef used by this shader stage					
-				const zArrayStatic<zResID>&	aCBufferDef = rShader->maCBufferParentID;
-				for( zUInt cbuffDefIdx(0), cbuffDefCount(aCBufferDef.Count()); cbuffDefIdx<cbuffDefCount; ++cbuffDefIdx )
+				const auto&	aCBufferDef = rShader->maCBufferParentID;
+				for( zUInt cbuffDefIdx(0), cbuffDefCount(aCBufferDef.size()); cbuffDefIdx<cbuffDefCount; ++cbuffDefIdx )
 				{
 					const zResID CBuffResID = aCBufferDef[cbuffDefIdx];
 					dCBufferParent.GetAdd(CBuffResID.GetHashID()).muShaderResIndex[ShaderStage] = rShader->maCBufferResIndex[cbuffDefIdx];
@@ -78,8 +78,8 @@ namespace zcExp
 
 				//---------------------------------------------------------------------
 				// Find shader resources informations
-				const zArrayStatic<ExportGfxShader::ShaderBindInfo>& aBindInfo = rShader->maResourceBinding;
-				for(zU8 resIdx(0), resCount((zU8)aBindInfo.Count()); resIdx<resCount; ++resIdx)
+				const auto& aBindInfo = rShader->maResourceBinding;
+				for(zU8 resIdx(0), resCount((zU8)aBindInfo.size()); resIdx<resCount; ++resIdx)
 				{
 					const ExportGfxShader::ShaderBindInfo& ResBindInfo = aBindInfo[resIdx];
 					mrExport->mdResourceBind.GetAdd(ResBindInfo.mzName.mhName).muShaderResIndex[ShaderStage] = resIdx;
@@ -90,13 +90,13 @@ namespace zcExp
 		//------------------------------------------------------------------------------------------
 		// Map CBufferDef entries to their ResourceIndex in this Binding
 		zUInt cbufIdx(0);
-		mrExport->maCBufferParentID.SetCount( dCBufferParent.Count() );
-		mrExport->maCBufferParentBindIndex.SetCount(dCBufferParent.Count());		
+		mrExport->maCBufferParentID.resize( dCBufferParent.Count() );
+		mrExport->maCBufferParentBindIndex.resize(dCBufferParent.Count());		
 		mrExport->mdResourceBind.Export( mrExport->maResourceName, mrExport->maResourceBind );
 		for( auto it(dCBufferParent.GetFirst());it.IsValid(); ++it, ++cbufIdx )
 		{
 			mrExport->maCBufferParentID[cbufIdx] = it.GetKey();
-			for(zUInt resIdx(0), resCount(mrExport->maResourceBind.Count()); resIdx<resCount; ++resIdx)
+			for(zUInt resIdx(0), resCount(mrExport->maResourceBind.size()); resIdx<resCount; ++resIdx)
 			{
 				if( mrExport->maResourceBind[resIdx].muResourceCollapsed == it.GetValue().muResourceCollapsed )
 				{
@@ -110,7 +110,7 @@ namespace zcExp
 		// Process shader parameters binding infos (list param name in each bound ParamDef)
 		mrExport->mdCBufferParamMask.Init( 64 );			
 		mrExport->mdCBufferParamMask.SetDefaultValue(0);
-		for(zUInt paramDefIdx(0), paramDefCount(mrExport->maCBufferParentID.Count()); paramDefIdx<paramDefCount; ++paramDefIdx )
+		for(zUInt paramDefIdx(0), paramDefCount(mrExport->maCBufferParentID.size()); paramDefIdx<paramDefCount; ++paramDefIdx )
 		{
 			zenAssert( paramDefIdx < mrExport->maCBufferParamMask.SizeItem() );			
 			zEngineConstRef<ExportGfxCBufferDefinition> rParamDef = zcDepot::ExportData.GetTyped<ExportGfxCBufferDefinition>( mrExport->maCBufferParentID[paramDefIdx] );
@@ -137,11 +137,10 @@ namespace zcExp
 	//! @param _aShaderID		- Array of shader assigned to each shader stage
 	//! @return 				- Created Resource
 	//=================================================================================================
-	zResID CreateGfxShaderBinding(const zArrayBase<zResID>& _aShaderID)
+	zResID CreateGfxShaderBinding(const zArray<zResID>& _aShaderID)
 	{	
-		//static zenMem::zAllocatorPool sMemPool("Pool CreateShaderBinding", sizeof(ExportInfoGfxShaderBinding), 1, 5 );
-		ExportInfoGfxShaderBinding* pExportInfo	= zenNewPool ExportInfoGfxShaderBinding;
-		pExportInfo->maShaderID					= _aShaderID;
+		auto* pExportInfo			= zenMem::NewPool<ExportInfoGfxShaderBinding>();
+		pExportInfo->maShaderID		= _aShaderID;
 		return zcMgr::Export.CreateItem( zResID::kePlatformType_GFX, zenConst::keResType_GfxShaderBinding, pExportInfo );
 	}
 	

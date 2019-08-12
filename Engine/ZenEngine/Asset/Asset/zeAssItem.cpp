@@ -17,9 +17,9 @@ Asset* Asset::CreateItem( zenConst::eAssetType _eAssetType )
 {
 	switch( _eAssetType )
 	{
-	case zenConst::keAssType_TestProperty:	return zenNew TestProperty();
-	case zenConst::keAssType_Texture2D:		return zenNew GfxTexture2D();
-	case zenConst::keAssType_Mesh:			return zenNew GfxMesh();
+	case zenConst::keAssType_TestProperty:	return zenMem::New<TestProperty>();
+	case zenConst::keAssType_Texture2D:		return zenMem::New<GfxTexture2D>();
+	case zenConst::keAssType_Mesh:			return zenMem::New<GfxMesh>();
 	default:								zenAssertMsg(0, "Unsupported Asset Type");
 	}
 	return nullptr;
@@ -42,7 +42,7 @@ void Asset::Init(zenAss::zAssetID _AssetID, const char* _zName, const zenAss::zP
 	mID		= _AssetID.IsValid() ? _AssetID :  zeMgr::Asset.GetAssetNextID( GetType() );
 	mzName	= _zName;
 	InitDefault();
-	maPropertyUpdated.Reserve( maPropertyValue.Count() );
+	maPropertyUpdated.Reserve( maPropertyValue.size() );
 	SetPackage( _rParentPkg );
 	zeMgr::Asset.AssetAdd(this);
 }
@@ -79,7 +79,7 @@ void Asset::slotPropertyUpdate( zenAss::PropertyValueRef _rUpdated )
 //=================================================================================================
 void Asset::RebuiltDescription()
 {	
-	for(zUInt idx(0), count(maPropertyValue.Count()); idx<count; ++idx)
+	for(zUInt idx(0), count(maPropertyValue.size()); idx<count; ++idx)
 	{
 		zenAss::PropertyValueRef rValue = maPropertyValue[idx];
 		if( rValue.IsValid() && rValue.GetDefinition().mbShowInAssetDesc )
@@ -93,10 +93,10 @@ void Asset::RebuiltDescription()
 void Asset::InitDefault()
 {	
 	const zenAss::PropertyDefArray& aProperties = GetProperties();	
-	zenAssertMsg(aProperties.Count() > 0, "An Asset type is missing ::GetProperties() implementation" );
-	maPropertyValue.SetCount( aProperties.Count() );
-	const zenAss::PropertyDefRef*	prDefinitionCur	= aProperties.First();
-	zenAss::PropertyValueRef*		pValueCur		= maPropertyValue.First();
+	zenAssertMsg(aProperties.size() > 0, "An Asset type is missing ::GetProperties() implementation" );
+	maPropertyValue.resize( aProperties.size() );
+	const zenAss::PropertyDefRef*	prDefinitionCur	= aProperties.Data();
+	zenAss::PropertyValueRef*		pValueCur		= maPropertyValue.Data();
 	zenAss::PropertyValueRef*		pValueLast		= maPropertyValue.Last();
 	while( pValueCur <= pValueLast )
 	{

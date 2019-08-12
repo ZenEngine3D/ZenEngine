@@ -3,19 +3,20 @@
 namespace zcExp
 {
 
-bool GenerateTexture( zArrayStatic<MipInfo>& _aOutMips, const ExportInfoGfxTexture2D& _ExportInfo )
+bool GenerateTexture( zArrayDyn<MipInfo>& _aOutMips, const ExportInfoGfxTexture2D& _ExportInfo )
 {
 	if( _ExportInfo.meFormatInput != _ExportInfo.meFormatOutput )
 	{
 		//! @todo Missing: Image conversion
-		zUInt uMipCount = _aOutMips.SetCount( _ExportInfo.maMipData.Count() );
+		const zUInt uMipCount = _aOutMips.resize( _ExportInfo.maMipData.size() );
 		for( zUInt mipIdx=0; mipIdx<uMipCount; ++mipIdx)
 		{
 			//..
 		}					
 	}
 		
-	zUInt uMipCount = _aOutMips.SetCount( _ExportInfo.maMipData.Count() );
+	const zUInt uMipCount = _ExportInfo.maMipData.size();
+	_aOutMips.resize( uMipCount );
 	for(zUInt mipIdx(0); mipIdx<uMipCount; ++mipIdx)
 	{
 		_aOutMips[mipIdx].maData	= _ExportInfo.maMipData[mipIdx].maData;
@@ -26,7 +27,7 @@ bool GenerateTexture( zArrayStatic<MipInfo>& _aOutMips, const ExportInfoGfxTextu
 	if( _ExportInfo.mbGenerateMip )
 	{
 		//! @todo Missing: Mipmap creation
-		zenAssert(	(_aOutMips.Count()==1) && 
+		zenAssert(	(_aOutMips.size()==1) && 
 					zenMath::IsPower2(_aOutMips[0].mvDim.x) && 
 					zenMath::IsPower2(_aOutMips[0].mvDim.y) );
 	}

@@ -40,7 +40,7 @@ namespace zeAss
 		zWString									mzName;				//!< Package name
 		zenAss::zPackageGroupRef					mrGroupParent;		//!< Group of this package
 		zWString									mzStorageInfo;		//!< Where to save this package(filename, database entry id, etc....)
-		zArrayStatic<zenAss::zArrayAsset>			madAssetPerType;	//!< Asset array per Asset type
+		zArrayDyn<zenAss::zArrayAsset>				madAssetPerType;	//!< Asset array per Asset type
 		bool										mbDirty;
 		friend class PackageGroup;
 	};

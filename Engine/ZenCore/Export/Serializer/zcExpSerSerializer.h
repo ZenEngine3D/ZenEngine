@@ -32,14 +32,14 @@ namespace zcExp
 		virtual bool	Serialize(zI16&				_iValue)=0;
 		virtual bool	Serialize(zI32&				_iValue)=0;
 		virtual bool	Serialize(zI64&				_iValue)=0;
-		virtual bool	Serialize(zArrayBase<zU8>&	_Values)=0;
-		virtual bool	Serialize(zArrayBase<zU16>&	_Values)=0;
-		virtual bool	Serialize(zArrayBase<zU32>&	_Values)=0;
-		virtual bool	Serialize(zArrayBase<zU64>&	_Values)=0;
-		virtual bool	Serialize(zArrayBase<zI8>&	_Values)=0;
-		virtual bool	Serialize(zArrayBase<zI16>&	_Values)=0;
-		virtual bool	Serialize(zArrayBase<zI32>&	_Values)=0;
-		virtual bool	Serialize(zArrayBase<zI64>&	_Values)=0;		
+		virtual bool	Serialize(zArray<zU8>&	_Values)=0;
+		virtual bool	Serialize(zArray<zU16>&	_Values)=0;
+		virtual bool	Serialize(zArray<zU32>&	_Values)=0;
+		virtual bool	Serialize(zArray<zU64>&	_Values)=0;
+		virtual bool	Serialize(zArray<zI8>&	_Values)=0;
+		virtual bool	Serialize(zArray<zI16>&	_Values)=0;
+		virtual bool	Serialize(zArray<zI32>&	_Values)=0;
+		virtual bool	Serialize(zArray<zI64>&	_Values)=0;		
 
 				bool	Serialize(zHash32&			_Value);
 				bool	Serialize(zHash64&			_Value);

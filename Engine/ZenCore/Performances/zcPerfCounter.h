@@ -14,13 +14,13 @@ using EventBaseRef = zEngineRef<class EventBase>;
 class EventBase : public zRefCounted, public zListItem<1,1>
 {
 zenClassDeclare(EventBase, zRefCounted)
-public:		using					TypeListChild = zList<EventBase, 0, zListItem<1,1> >;
+public:		using					TypeListChild = zListRef<EventBase, 0, zListItem<1,1> >;
 public:
 									EventBase(const zStringHash32& _zEventName);
 	virtual							~EventBase();
+
 	virtual void 					CPUStart(){};
 	virtual void 					CPUStop(){};
-
 	virtual void 					GPUStart(const zcGfx::CommandListRef& _rDrawlist){};
 	virtual void 					GPUStop(const zcGfx::CommandListRef& _rDrawlist){};
 
@@ -35,7 +35,7 @@ public:
 	zenInline EventBaseRef			GetPrev()const;
 
 protected:	
-	zStringHash32					mzEventName		= zStringHash32("Unassigned");
+	zStringHash32					mzEventName;
 	zU64							muTimeStart		= 0;	// In microseconds (us)
 	zU64							muTimeElapsed	= 0;	// In microseconds (us)
 	bool							mbActive		= false;
@@ -49,7 +49,7 @@ const zStringHash32& EventBase::GetName()const
 
 EventBaseRef EventBase::GetFirstChild()const
 {
-	return &mlstChilds.front();
+	return mlstChilds.empty() ? nullptr : &mlstChilds.front();
 }
 
 EventBaseRef EventBase::GetNext() const

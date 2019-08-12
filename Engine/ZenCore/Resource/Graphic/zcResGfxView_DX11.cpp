@@ -5,13 +5,13 @@ namespace zcRes
 		
 bool GfxView_DX11::Initialize()
 {
-	zenAssert(maRTColorConfig.Count() < D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT);
+	zenAssert(maRTColorConfig.size() < D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT);
 
 	GfxTarget2DRef rRTDepthSurface		= mRTDepthConfig.mrTargetSurface;
 	mpDepthView							= rRTDepthSurface.IsValid() ? rRTDepthSurface.HAL()->mpTargetDepthView : nullptr;
 	muColorCount						= 0;
 	zenMem::Zero(mpColorViews, sizeof(mpColorViews));
-	for(zUInt idx(0), count(maRTColorConfig.Count()); idx<count; ++idx)
+	for(zUInt idx(0), count(maRTColorConfig.size()); idx<count; ++idx)
 	{
 		zcRes::GfxTarget2DRef rRTColorSurface  = maRTColorConfig[idx].mrTargetSurface;
 		if( rRTColorSurface.HAL()->mpTargetColorView )

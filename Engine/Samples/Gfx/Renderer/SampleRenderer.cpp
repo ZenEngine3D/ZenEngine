@@ -15,7 +15,7 @@ int main (int argc, char * const argv[])
 namespace sample
 {
 
-const zArrayStatic<zVec3F> aCubeVtxPos =
+const zArrayFixed<zVec3F, 24> aCubeVtxPos =
 {
 	zVec3F( -1.0f, 1.0f, -1.0f ),	zVec3F( 1.0f, 1.0f, -1.0f ),	zVec3F( 1.0f, 1.0f, 1.0f ),		zVec3F( -1.0f, 1.0f, 1.0f ),
 	zVec3F( -1.0f, -1.0f, -1.0f ),	zVec3F( 1.0f, -1.0f, -1.0f ),	zVec3F( 1.0f, -1.0f, 1.0f ),	zVec3F( -1.0f, -1.0f, 1.0f ),
@@ -25,7 +25,7 @@ const zArrayStatic<zVec3F> aCubeVtxPos =
 	zVec3F( -1.0f, -1.0f, 1.0f ),	zVec3F( 1.0f, -1.0f, 1.0f ),	zVec3F( 1.0f, 1.0f, 1.0f ),		zVec3F( -1.0f, 1.0f, 1.0f ),
 };
 
-const zArrayStatic<BufferColorUV> aCubeVtxColorUV =
+const zArrayFixed<BufferColorUV, 24> aCubeVtxColorUV =
 {
 	{ zVec4U8( 0xFF, 0xFF, 0xFF, 0xFF ), zVec2F( 0.0f, 1.0f ) }, //Face 0
 	{ zVec4U8( 0xFF, 0xFF, 0xFF, 0xFF ), zVec2F( 1.0f, 1.0f ) },
@@ -53,7 +53,7 @@ const zArrayStatic<BufferColorUV> aCubeVtxColorUV =
 	{ zVec4U8( 0xFF, 0xFF, 0xFF, 0xFF ), zVec2F( 0.0f, 0.0f ) },
 };
 
-const zArrayStatic<zU16> aCubeIndices =
+const zArrayFixed<zU16, 36> aCubeIndices =
 {
 	3,1,0,		2,1,3,
 	6,4,5,		7,4,6,
@@ -63,13 +63,13 @@ const zArrayStatic<zU16> aCubeIndices =
 	22,20,21,	23,20,22
 };
 
-const zArrayStatic<zVec3F> aTriangleVtxPos =
+const zArrayFixed<zVec3F, 6> aTriangleVtxPos =
 {
 	zVec3F(  0.0f,  1.0f, -1.0f ),	zVec3F( 1.0f, -1.0f, -1.0f ),	zVec3F( -1.0f, -1.0f, -1.0f ),
 	zVec3F(  0.0f,  1.0f,  1.0f ),	zVec3F( 1.0f, -1.0f,  1.0f ),	zVec3F( -1.0f, -1.0f,  1.0f ),
 };
 
-const zArrayStatic<BufferColorUV> aTriangleVtxColorUV =
+const zArrayFixed<BufferColorUV, 6> aTriangleVtxColorUV =
 {
 	{ zVec4U8( 0xFF, 0xFF, 0xFF, 0xFF ), zVec2F( 0.5f, 1.0f ) },
 	{ zVec4U8( 0xFF, 0xFF, 0xFF, 0xFF ), zVec2F( 1.0f, 0.0f ) },
@@ -79,10 +79,9 @@ const zArrayStatic<BufferColorUV> aTriangleVtxColorUV =
 	{ zVec4U8( 0xFF, 0xFF, 0xFF, 0xFF ), zVec2F( 0.0f, 0.0f ) },
 };
 
-const zArrayStatic<zU16> aTriangleIndices =
+const zArrayFixed<zU16, 24> aTriangleIndices =
 {
-	0,1,2,		
-	5,4,3,
+	0,1,2,		5,4,3,
 	2,5,3,		2,3,0,
 	0,3,4,		0,4,1,
 	2,5,4,		2,4,1,
@@ -105,11 +104,11 @@ bool SampleRendererInstance::Init()
 
 	//-----------------------------------------------------------
 	// Prepare some data for asset creation
-	zArrayStatic<zU8>			aTexRGBA;
+	zArrayDyn<zU8>				aTexRGBA;
 	zVec2U16					vTexSize(256,256);
 	//zenConst::eTextureFormat	eTexFormat = zenConst::keTexFormat_RGBA8;
-	aTexRGBA.SetCount( vTexSize.x*vTexSize.y*4 );
-	zU8*						pTexCur = aTexRGBA.First();
+	aTexRGBA.resize( vTexSize.x*vTexSize.y*4 );
+	zU8*						pTexCur = aTexRGBA.Data();
 	for(zUInt line=0; line<vTexSize.y; ++line)
 	{
 		for(zUInt col=0; col<vTexSize.x; ++col)
@@ -121,10 +120,10 @@ bool SampleRendererInstance::Init()
 		}
 	}
 
-	zArrayStatic<zenRes::zShaderDefine> aShaderDefines		= {	zenRes::zShaderDefine("DEFINETEST", "1"), zenRes::zShaderDefine("DEFINETEST1", "0")};
+	zArrayFixed<zenRes::zShaderDefine,2> aShaderDefines			= {	zenRes::zShaderDefine("DEFINETEST", "1"), zenRes::zShaderDefine("DEFINETEST1", "0")};
 	zenRes::zShaderFloat4 ShadParamMeshColor(zHash32("vMeshColor"),	zVec4F(.7f,.7f,.7f,1));
 	zenRes::zShaderFloat4 ShadParamColor(zHash32("vColor"),			zVec4F(1,1,1,1));
-	zArrayStatic<const zenRes::zShaderParameter*> aParamAll	= {	&ShadParamMeshColor, &ShadParamColor };
+	zArrayFixed<const zenRes::zShaderParameter*,2> aParamAll	= {	&ShadParamMeshColor, &ShadParamColor };
 	//---------------------------------------------------------------------
 	// Create rendering resources		
 	//---------------------------------------------------------------------	
@@ -154,12 +153,11 @@ bool SampleRendererInstance::Init()
  	mrTriangleVtxColorUv								= zenRes::zGfxStructBuffer<BufferColorUV>::Create(aTriangleVtxColorUV /*, zFlagResUse()*/ ); 	
  	mrTriangleMeshStrip									= zenRes::zGfxMeshStrip::Create( mrTriangleIndex, mrShaderBind);
 
-	zArrayStatic<zenRes::zGfxRenderPass::ConfigColorRT>	aRenderToTextureColorRTConfig;
+	zArrayFixed<zenRes::zGfxRenderPass::ConfigColorRT,2>aRenderToTextureColorRTConfig;
 	zenRes::zGfxRenderPass::ConfigDepthRT				RenderToTextureDepthRTConfig;
 	mrRenderToTextureRT1								= zenRes::zGfxTarget2D::Create(zenConst::keTexFormat_RGBA8, zVec2U16(512,512) );
 	mrRenderToTextureRT2								= zenRes::zGfxTarget2D::Create(zenConst::keTexFormat_RGBA8, zVec2U16(512,512) );
 	mrRenderToTextureDepth								= zenRes::zGfxTarget2D::Create(zenConst::keTexFormat_D32, zVec2U16(512,512) );
-	aRenderToTextureColorRTConfig.SetCount(2);	
 	aRenderToTextureColorRTConfig[0].mrTargetSurface	= mrRenderToTextureRT1;
 	aRenderToTextureColorRTConfig[1].mrTargetSurface	= mrRenderToTextureRT2;
 	aRenderToTextureColorRTConfig[1].mWriteMask			= zColorMask(zenConst::keColor_R, zenConst::keColor_G);

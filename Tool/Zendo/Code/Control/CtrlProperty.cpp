@@ -137,10 +137,9 @@ void PropertyMetaData::slotUpdateProperty(zenAss::PropertyValueRef _rPropertyUpd
 //=================================================================================================
 wxZenBoolProperty::wxZenBoolProperty(const zenAss::zAssetItemRef& _rAsset, const zenAss::PropertyValueRef& _rPropertyValue)
 {
-	static zenMem::zAllocatorPool sPoolMetaData("Betl::TypedMetaData Pool", sizeof(TypedMetaData), 100, 100);
 	zenAss::PropertyBool::ValueRef rPropertyVal	= _rPropertyValue;
 	const zenAss::PropertyBool&	PropertyDef		= rPropertyVal.GetDefinition();
-	SetClientData( zenNew(&sPoolMetaData)TypedMetaData(this, _rAsset, _rPropertyValue, rPropertyVal.GetValue()) );
+	SetClientData( zenMem::NewPool<TypedMetaData>(this, _rAsset, _rPropertyValue, rPropertyVal.GetValue()) );
 	SetAttribute(wxPG_BOOL_USE_CHECKBOX, true);
 	SetDefaultValue(wxVariant(PropertyDef.mDefault));
 }
@@ -178,11 +177,10 @@ bool wxZenBoolProperty::TypedMetaData::Save()
 //=================================================================================================
 wxZenFloatProperty::wxZenFloatProperty(const zenAss::zAssetItemRef& _rAsset, const zenAss::PropertyValueRef& _rPropertyValue)
 {
-	static zenMem::zAllocatorPool sPoolMetaData("Betl::TypedMetaData Pool", sizeof(TypedMetaData), 100, 100);
 	zenAssert( _rPropertyValue.IsValid() );
 	zenAss::PropertyFloat::ValueRef	rPropertyVal	= _rPropertyValue;
 	const zenAss::PropertyFloat&	PropertyDef	= rPropertyVal.GetDefinition();
-	SetClientData		( zenNew(&sPoolMetaData)TypedMetaData(this, _rAsset, _rPropertyValue, rPropertyVal.GetValue()) );
+	SetClientData		( zenMem::NewPool<TypedMetaData>(this, _rAsset, _rPropertyValue, rPropertyVal.GetValue()) );
 	SetDefaultValue		( wxVariant(PropertyDef.mDefault) );	
 	ConfigurePropertyScalar(*this, PropertyDef.mValMin, PropertyDef.mValMax, PropertyDef.mValInc);
 }
@@ -218,11 +216,10 @@ bool wxZenFloatProperty::TypedMetaData::Save()
 //=================================================================================================
 wxZenIntProperty::wxZenIntProperty(const zenAss::zAssetItemRef& _rAsset, const zenAss::PropertyValueRef& _rPropertyValue)
 {	
-	static zenMem::zAllocatorPool sPoolMetaData("Betl::TypedMetaData Pool", sizeof(TypedMetaData), 100, 100);
 	zenAssert( _rPropertyValue.IsValid() );
 	zenAss::PropertyInt::ValueRef	rPropertyVal	= _rPropertyValue;
 	const zenAss::PropertyInt&		PropertyDef	= rPropertyVal.GetDefinition();	
-	SetClientData			(zenNew(&sPoolMetaData)TypedMetaData(this, _rAsset, _rPropertyValue, rPropertyVal.GetValue()));
+	SetClientData			(zenMem::NewPool<TypedMetaData>(this, _rAsset, _rPropertyValue, rPropertyVal.GetValue()));
 	SetDefaultValue			(wxVariant(PropertyDef.mDefault));
 	ConfigurePropertyScalar	(*this, PropertyDef.mValMin, PropertyDef.mValMax, PropertyDef.mValInc);
 }
@@ -259,7 +256,6 @@ bool wxZenIntProperty::TypedMetaData::Save()
 template< class TPropertyClass, class TElementCast, class TWxVector, class TWxProperty >
 wxZenVectorProperty<TPropertyClass, TElementCast, TWxVector, TWxProperty>::wxZenVectorProperty(const zenAss::zAssetItemRef& _rAsset, const zenAss::PropertyValueRef& _rPropertyValue, const char* _zTooltip, const char* _zTooltipElement)
 {		
-	static zenMem::zAllocatorPool sPoolMetaData("Betl::TypedMetaData Pool", sizeof(TypedMetaData), 100, 100);
 	zenAssert( _rPropertyValue.IsValid() );
 	TPropertyClass::ValueRef	rPropertyVal	= _rPropertyValue;
 	const TPropertyClass&		PropertyDef	= rPropertyVal.GetDefinition();	
@@ -277,7 +273,7 @@ wxZenVectorProperty<TPropertyClass, TElementCast, TWxVector, TWxProperty>::wxZen
 		const wxString zNames[]={wxT("    X"),wxT("    Y"),wxT("    Z"),wxT("    W")};
 		TWxProperty* pProp		= zenNewDefault TWxProperty( wxString::Format("%s", zNames[idx]),wxPG_LABEL);
 
-		pProp->SetClientData	( zenNew(&sPoolMetaData)PropertyMetaData(this, _rAsset, _rPropertyValue, rPropertyVal.GetValue().values[idx]) );
+		pProp->SetClientData	( zenMem::NewPool<TypedMetaData>(this, _rAsset, _rPropertyValue, rPropertyVal.GetValue().values[idx]) );
 		pProp->SetDefaultValue	( wxVariant(PropertyDef.mDefault.values[idx]) );
 		pProp->SetHelpString	( wxString::Format(_zTooltipElement, (const char*)PropertyDef.mzDescription, PropertyDef.mDefault.values[idx]));
 		ConfigurePropertyScalar(*pProp, PropertyDef.mValMin.values[idx], PropertyDef.mValMax.values[idx], PropertyDef.mValInc.values[idx]);
@@ -285,7 +281,7 @@ wxZenVectorProperty<TPropertyClass, TElementCast, TWxVector, TWxProperty>::wxZen
 	}
 	
 	SetDefaultValue				( WXVARIANT(wxDefault) );
-	SetClientData				( zenNew(&sPoolMetaData)TypedMetaData(this, _rAsset, _rPropertyValue, WXVARIANT(wxValue)) );
+	SetClientData				( zenMem::NewPool<TypedMetaData>(this, _rAsset, _rPropertyValue, WXVARIANT(wxValue)) );
 	switch( zenArrayCount(PropertyDef.mDefault.values) )
 	{
 	case 1: SetHelpString( wxString::Format(_zTooltip, (const char*)PropertyDef.mzDescription, PropertyDef.mDefault.values[0]));	break;
@@ -388,18 +384,17 @@ WX_PG_IMPLEMENT_PROPERTY_CLASS(wxZenInt4fProperty, wxPGProperty, wxVector4s, con
 //=================================================================================================
 wxZenEnumProperty::wxZenEnumProperty(const zenAss::zAssetItemRef& _rAsset, const zenAss::PropertyValueRef& _rPropertyValue)
 {
-	static zenMem::zAllocatorPool sPoolMetaData("Betl::TypedMetaData Pool", sizeof(TypedMetaData), 100, 100);
 	zenAssert( _rPropertyValue.IsValid() );
 	zenAss::PropertyEnum::ValueRef	rPropertyVal	= _rPropertyValue;
 	const zenAss::PropertyEnum&		PropertyDef	= rPropertyVal.GetDefinition();	
 
 	wxPGChoices soc;
-	for(zUInt enumIdx(0), enumCount(PropertyDef.maEnumValues.Count()); enumIdx<enumCount; ++enumIdx)
+	for(zUInt enumIdx(0), enumCount(PropertyDef.maEnumValues.size()); enumIdx<enumCount; ++enumIdx)
 	{
 		soc.Add( (const char*)PropertyDef.maEnumValues[enumIdx].mzDescription, PropertyDef.maEnumValues[enumIdx].mValue );
 	}
 
-	SetClientData		( zenNew(&sPoolMetaData)TypedMetaData(this, _rAsset, _rPropertyValue, long(rPropertyVal.GetValue())) );
+	SetClientData		( zenMem::NewPool<TypedMetaData>(this, _rAsset, _rPropertyValue, long(rPropertyVal.GetValue())) );
 	SetChoices			( soc );	
 	SetDefaultValue		( wxVariant(long(PropertyDef.mDefault)) );	
 }
@@ -435,12 +430,11 @@ bool wxZenEnumProperty::TypedMetaData::Save()
 //=================================================================================================
 wxZenAssetProperty::wxZenAssetProperty(const zenAss::zAssetItemRef& _rAsset, const zenAss::PropertyValueRef& _rPropertyValue)
 {
-	static zenMem::zAllocatorPool sPoolMetaData("Betl::TypedMetaData Pool", sizeof(TypedMetaData), 100, 100);
 	zenAssert( _rPropertyValue.IsValid() );
 	zenAss::PropertyAsset::ValueRef	rPropertyVal	= _rPropertyValue;
 	const zenAss::PropertyAsset&	PropertyDef	= rPropertyVal.GetDefinition();
 		
-	SetClientData( zenNew(&sPoolMetaData)TypedMetaData(this, _rAsset, _rPropertyValue) );
+	SetClientData( zenMem::NewPool<TypedMetaData>(this, _rAsset, _rPropertyValue) );
 	ChangeFlag(wxPG_PROP_READONLY, true);
 
 	wxString zHelp		= wxString::Format("%s\nSupported Asset(s) : ", (const char*)PropertyDef.mzDescription);	
@@ -577,12 +571,11 @@ void wxZenAssetProperty::TypedMetaData::SetOriginalValue()
 //=================================================================================================
 wxZenFileProperty::wxZenFileProperty(const zenAss::zAssetItemRef& _rAsset, const zenAss::PropertyValueRef& _rPropertyValue)
 {
-	static zenMem::zAllocatorPool sPoolMetaData("Betl::TypedMetaData Pool", sizeof(TypedMetaData), 100, 100);
 	zenAss::PropertyFile::ValueRef	rPropertyVal		= _rPropertyValue;
 	const zenAss::PropertyFile&		PropertyDef		= rPropertyVal.GetDefinition();
 	wxFileName						Value			= (/*zenIO::GetRootPackage() + */rPropertyVal.GetValue()).c_str();
 	wxFileName						ValueDefault	= (/*zenIO::GetRootPackage() +*/ PropertyDef.mDefault).c_str();
-	SetClientData		( zenNew(&sPoolMetaData)TypedMetaData(this, _rAsset, _rPropertyValue, Value.GetFullPath()) );
+	SetClientData		( zenMem::NewPool<TypedMetaData>(this, _rAsset, _rPropertyValue, Value.GetFullPath()) );
 	SetDefaultValue		( wxVariant(ValueDefault.GetFullPath()) );
 		
 	SetAttribute		( wxPG_FILE_WILDCARD,		(const zChar*)PropertyDef.mzFileExt);
@@ -627,12 +620,11 @@ bool wxZenFileProperty::TypedMetaData::Save()
 //=================================================================================================
 wxZenArrayProperty::wxZenArrayProperty(const zenAss::zAssetItemRef& _rAsset, const zenAss::PropertyValueRef& _rPropertyValue)
 {
-	static zenMem::zAllocatorPool sPoolMetaData("Betl::TypedMetaData Pool", sizeof(TypedMetaData), 100, 100);
 	zenAssert( _rPropertyValue.IsValid() );
 	zenAss::PropertyArray::ValueRef	rPropertyVal				= _rPropertyValue;
 	const zenAss::PropertyArray&	PropertyDef					= rPropertyVal.GetDefinition();	
-	const zArrayDynamic<zenAss::PropertyValueRef>& valueArray	= rPropertyVal.GetValue();
-	SetClientData	( zenNew(&sPoolMetaData)TypedMetaData(this, _rAsset, _rPropertyValue, (long)valueArray.Count()) );
+	const zArrayDyn<zenAss::PropertyValueRef>& valueArray	= rPropertyVal.GetValue();
+	SetClientData	( zenMem::NewPool<TypedMetaData>(this, _rAsset, _rPropertyValue, (long)valueArray.size()) );
 	SetHelpString	( wxString::Format("%s", (const char*)PropertyDef.mzDescription) );
 	ChangeFlag		( wxPG_PROP_NOEDITOR, true );
 	ChangeFlag		( wxPG_PROP_COLLAPSED, true );	
@@ -648,9 +640,9 @@ void wxZenArrayProperty::TypedMetaData::UpdateControl()
 	//! @todo Asset: Add/remove items as needed, instead of recreating 
 	zenAss::PropertyArray::ValueRef	rPropertyVal				= mrPropertyValue;
 	const zenAss::PropertyArray&	PropertyDef					= rPropertyVal.GetDefinition();
-	const zArrayDynamic<zenAss::PropertyValueRef>& valueArray	= rPropertyVal.GetValue();
+	const zArrayDyn<zenAss::PropertyValueRef>& valueArray	= rPropertyVal.GetValue();
 	mpOwner->DeleteChildren();
-	for (zUInt idx(0), count(valueArray.Count()); idx < count; ++idx)
+	for (zUInt idx(0), count(valueArray.size()); idx < count; ++idx)
 	{
 		wxPGProperty* pProperty = CreateAssetValueControl(mrAsset, valueArray[idx]);
 		pProperty->SetLabel(wxString::Format("%s[%i]", (const char*)PropertyDef.mzDisplayName, idx));
@@ -691,12 +683,11 @@ void wxZenArrayProperty::TypedMetaData::UpdateControlState()
 //=================================================================================================
 wxZenStructProperty::wxZenStructProperty(const zenAss::zAssetItemRef& _rAsset, const zenAss::PropertyValueRef& _rPropertyValue)
 {
-	static zenMem::zAllocatorPool sPoolMetaData("Betl::TypedMetaData Pool", sizeof(TypedMetaData), 100, 100);
 	zenAssert( _rPropertyValue.IsValid() );
-	zenAss::PropertyStruct::ValueRef rPropertyVal				= _rPropertyValue;
-	const zenAss::PropertyStruct& PropertyDef					= rPropertyVal.GetDefinition();	
-	const zArrayStatic<zenAss::PropertyValueRef>& aStructValue	= rPropertyVal.GetValue();
-	SetClientData	( zenNew(&sPoolMetaData)TypedMetaData(this, _rAsset, _rPropertyValue, 0) );
+	zenAss::PropertyStruct::ValueRef rPropertyVal			= _rPropertyValue;
+	const zenAss::PropertyStruct& PropertyDef				= rPropertyVal.GetDefinition();	
+	const zArrayDyn<zenAss::PropertyValueRef>& aStructValue	= rPropertyVal.GetValue();
+	SetClientData	( zenMem::NewPool<TypedMetaData>(this, _rAsset, _rPropertyValue, 0) );
 	SetHelpString	( wxString::Format("%s", (const char*)PropertyDef.mzDescription) );
 	ChangeFlag		( wxPG_PROP_NOEDITOR, true );
 	ChangeFlag		( wxPG_PROP_COLLAPSED, true );		
@@ -711,11 +702,11 @@ wxZenStructProperty::~wxZenStructProperty()
 void wxZenStructProperty::TypedMetaData::UpdateControl()
 {
 	//! @todo Asset: Add/remove items as needed, instead of recreating 
-	zenAss::PropertyStruct::ValueRef rPropertyVal				= mrPropertyValue;
-	const zenAss::PropertyStruct& PropertyDef					= rPropertyVal.GetDefinition();
-	const zArrayStatic<zenAss::PropertyValueRef>& aStructValue	= rPropertyVal.GetValue();
+	zenAss::PropertyStruct::ValueRef rPropertyVal			= mrPropertyValue;
+	const zenAss::PropertyStruct& PropertyDef				= rPropertyVal.GetDefinition();
+	const zArrayDyn<zenAss::PropertyValueRef>& aStructValue	= rPropertyVal.GetValue();
 	mpOwner->DeleteChildren();
-	for (zUInt idx(0), count(aStructValue.Count()); idx < count; ++idx)
+	for (zUInt idx(0), count(aStructValue.size()); idx < count; ++idx)
 	{
 		wxPGProperty* pProperty = CreateAssetValueControl(mrAsset, aStructValue[idx]);
 		mpOwner->AppendChild(pProperty);

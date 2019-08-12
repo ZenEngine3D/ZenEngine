@@ -13,19 +13,19 @@ ExporterGfxIndexDX12_DX12::ExporterGfxIndexDX12_DX12(const ExportDataRef& _rExpo
 bool ExporterGfxIndexDX12_DX12::ExportWork(bool _bIsTHRTask)
 {	
 	ExportInfoGfxIndex* pExportInfo = static_cast<ExportInfoGfxIndex*>(mpExportInfo);
-	if( pExportInfo->maIndice16.Count() > 0 )
+	if( pExportInfo->maIndice16.size() > 0 )
 	{
 		mrExportData->meIndiceFormat	= DXGI_FORMAT_R16_UINT;
 		mrExportData->muIndiceSize		= 2;
-		mrExportData->muIndiceCount		= static_cast<zU32>(pExportInfo->maIndice16.Count());
-		mrExportData->maIndices.Copy( (zU8*)pExportInfo->maIndice16.First(), pExportInfo->maIndice16.SizeMem() );
+		mrExportData->muIndiceCount		= static_cast<zU32>(pExportInfo->maIndice16.size());
+		mrExportData->maIndices.Copy( (zU8*)pExportInfo->maIndice16.Data(), pExportInfo->maIndice16.SizeMem() );
 	}
 	else
 	{
 		mrExportData->meIndiceFormat	= DXGI_FORMAT_R32_UINT;
 		mrExportData->muIndiceSize		= 4;		
-		mrExportData->muIndiceCount		= static_cast<zU32>(pExportInfo->maIndice32.Count());
-		mrExportData->maIndices.Copy( (zU8*)pExportInfo->maIndice32.First(), pExportInfo->maIndice32.SizeMem() );
+		mrExportData->muIndiceCount		= static_cast<zU32>(pExportInfo->maIndice32.size());
+		mrExportData->maIndices.Copy( (zU8*)pExportInfo->maIndice32.Data(), pExportInfo->maIndice32.SizeMem() );
 	}
 	
 	switch( pExportInfo->mePrimitiveType )

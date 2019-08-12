@@ -11,16 +11,16 @@ namespace zcExp
 //! @brief		Process the shader constant buffer infos
 //! @details	
 //=================================================================================================
-void ProcessCBufferDef(		zArrayStatic<zHash32>&					Out_aCBufferParamName,
-							zArrayStatic<GfxCBufferParamInfo>&		Out_aCBufferParamInfo,
-							zArrayStatic<zU8>&						Out_aCBufferDefaultValues,
+void ProcessCBufferDef(		zArrayDyn<zHash32>&						Out_aCBufferParamName,
+							zArrayDyn<GfxCBufferParamInfo>&			Out_aCBufferParamInfo,
+							zArrayDyn<zU8>&							Out_aCBufferDefaultValues,
 							ID3D11ShaderReflection&					_GfxShaderReflection, 
 							ID3D11ShaderReflectionConstantBuffer*	_pBufferReflection,  
 							const D3D11_SHADER_BUFFER_DESC&			_BufferDesc )
 {		
-	Out_aCBufferParamName.SetCount( _BufferDesc.Variables );
-	Out_aCBufferParamInfo.SetCount( _BufferDesc.Variables );
-	Out_aCBufferDefaultValues.SetCount( _BufferDesc.Size );
+	Out_aCBufferParamName.resize( _BufferDesc.Variables );
+	Out_aCBufferParamInfo.resize( _BufferDesc.Variables );
+	Out_aCBufferDefaultValues.resize( _BufferDesc.Size );
 
 	// Find hash of parameters informations
 	zResID::NameHash			hName;
@@ -87,7 +87,7 @@ bool ExporterGfxShaderDX11_DX11::ExportWorkCompile()
 	// Import defines setting for shader compiler preprocessor
 	//-------------------------------------------------------------------------
 	D3D10_SHADER_MACRO pDefines[128];
-	zUInt uUserDefineCount			= pExportInfo->maDefines.Count();
+	zUInt uUserDefineCount			= pExportInfo->maDefines.size();
 	const zUInt uSystemDefineCount	= 3;
 	zenAssertMsg(uUserDefineCount+uSystemDefineCount <= zenArrayCount(pDefines), "Too many defines included, increase capacity");
 	zenStaticAssert(zenArrayCount(pzShaderStage) == keShaderStage__Count);
@@ -97,7 +97,7 @@ bool ExporterGfxShaderDX11_DX11::ExportWorkCompile()
 	uUserDefineCount				= zenMath::Min(uUserDefineCount, zUInt(zenArrayCount(pDefines)-3));	
 	if( uUserDefineCount )
 	{		
-		zenRes::zShaderDefine*	pEntry		= pExportInfo->maDefines.First();
+		zenRes::zShaderDefine*	pEntry		= pExportInfo->maDefines.Data();
 		zenRes::zShaderDefine*	pEntryEnd	= pEntry + uUserDefineCount;
 		while( pEntry < pEntryEnd )
 		{
@@ -124,7 +124,7 @@ bool ExporterGfxShaderDX11_DX11::ExportWorkCompile()
 	dwShaderFlags |= D3DCOMPILE_DEBUG;
 #endif
 	
-	mrExport->maCompiledShader.Clear();
+	mrExport->maCompiledShader.clear();
 	hr = D3DCompileFromFile( 
 		zFilename, 
 		pDefines, 
@@ -150,7 +150,7 @@ bool ExporterGfxShaderDX11_DX11::ExportWorkCompile()
 		pCompiledBlob->Release();
 	}
 
-	return mrExport->maCompiledShader.Count() > 0;
+	return mrExport->maCompiledShader.size() > 0;
 }
 
 //=================================================================================================
@@ -168,12 +168,12 @@ bool ExporterGfxShaderDX11_DX11::ExportWorkExtractResources()
 	zU32 uCBufferIdx(0);
 	mrExport->meShaderStage	= pExportInfo->mExportResID.meType == zenConst::keResType_GfxShaderPixel ? zenConst::keShaderStage_Pixel : zenConst::keShaderStage_Vertex;
 
-	if( SUCCEEDED( D3DReflect( mrExport->maCompiledShader.First(), mrExport->maCompiledShader.SizeMem(), IID_ID3D11ShaderReflection, (void**) &pGfxShaderReflection ) ) )
+	if( SUCCEEDED( D3DReflect( mrExport->maCompiledShader.Data(), mrExport->maCompiledShader.SizeMem(), IID_ID3D11ShaderReflection, (void**) &pGfxShaderReflection ) ) )
 	{
 		D3D11_SHADER_DESC shaderDesc;
 		zUInt uBoundCBufferCount(0);
 		pGfxShaderReflection->GetDesc( &shaderDesc );
-		mrExport->maResourceBinding.SetCount( shaderDesc.BoundResources );
+		mrExport->maResourceBinding.resize( shaderDesc.BoundResources );
 
 		// Can't rely on 'shaderDesc.ConstantBuffers' for CBuffer count, since list even unbound one
 		// So first find out how many there is
@@ -184,11 +184,11 @@ bool ExporterGfxShaderDX11_DX11::ExportWorkExtractResources()
 				++uBoundCBufferCount;
 		}
 
-		mrExport->maCBufferResIndex.SetCount( uBoundCBufferCount );
-		maCBufferName.SetCount( uBoundCBufferCount );
-		maCBufferParamName.SetCount( uBoundCBufferCount );
-		maCBufferParamInfo.SetCount( uBoundCBufferCount );
-		maCBufferDefaultValues.SetCount( uBoundCBufferCount );
+		mrExport->maCBufferResIndex.resize( uBoundCBufferCount );
+		maCBufferName.resize( uBoundCBufferCount );
+		maCBufferParamName.resize( uBoundCBufferCount );
+		maCBufferParamInfo.resize( uBoundCBufferCount );
+		maCBufferDefaultValues.resize( uBoundCBufferCount );
 		
 		for( UINT uResIdx=0; uResIdx<shaderDesc.BoundResources; ++uResIdx )
 		{
@@ -260,8 +260,8 @@ bool ExporterGfxShaderDX11_DX11::ExportEnd()
 {
 	if( mpExportInfo->IsSuccess() && Super::ExportEnd() )	
 	{
-		const zUInt bufferCount(maCBufferParamName.Count());
-		mrExport->maCBufferParentID.SetCount( bufferCount );
+		const zUInt bufferCount(maCBufferParamName.size());
+		mrExport->maCBufferParentID.resize( bufferCount );
 		for(zUInt bufferIdx(0); bufferIdx<bufferCount; ++bufferIdx )
 			mrExport->maCBufferParentID[bufferIdx] = zcExp::CreateGfxCBufferDefinition(maCBufferName[bufferIdx], maCBufferParamName[bufferIdx], maCBufferParamInfo[bufferIdx], maCBufferDefaultValues[bufferIdx] );
 

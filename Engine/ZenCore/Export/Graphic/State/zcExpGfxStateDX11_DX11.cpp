@@ -2,7 +2,7 @@
 
 namespace zcExp
 {
-	static const zArrayStatic<D3D11_COMPARISON_FUNC> gaComparisonTestTranslator = {	
+	static const zArrayFixed<D3D11_COMPARISON_FUNC,8> gaComparisonTestTranslator = {	
 			D3D11_COMPARISON_NEVER,				// keCmpTest_Never
 			D3D11_COMPARISON_LESS, 				// keCmpTest_Less
 			D3D11_COMPARISON_EQUAL, 			// keCmpTest_Equal
@@ -13,7 +13,7 @@ namespace zcExp
 			D3D11_COMPARISON_ALWAYS 			// keCmpTest_Always
 			};
 
-	static const zArrayStatic<D3D11_STENCIL_OP> gaStencilOpTranslator = { 
+	static const zArrayFixed<D3D11_STENCIL_OP,8> gaStencilOpTranslator = { 
 			D3D11_STENCIL_OP_KEEP,				// keStencilOp_Keep,
 			D3D11_STENCIL_OP_ZERO, 				// keStencilOp_Zero,
 			D3D11_STENCIL_OP_REPLACE,			// keStencilOp_Replace,
@@ -24,7 +24,7 @@ namespace zcExp
 			D3D11_STENCIL_OP_DECR				// keStencilOp_Decr
 			};
 
-	static const zArrayStatic<D3D11_BLEND> gaBlendValueTranslator = {
+	static const zArrayFixed<D3D11_BLEND,13> gaBlendValueTranslator = {
 			D3D11_BLEND_ZERO,					// keBlendVal_Zero, 
 			D3D11_BLEND_ONE, 					// keBlendVal_One, 
 			D3D11_BLEND_SRC_COLOR, 				// keBlendVal_SrcColor, 
@@ -40,7 +40,7 @@ namespace zcExp
 			D3D11_BLEND_INV_BLEND_FACTOR		// keBlendVal_InvBlendFactor, 
 			};
 
-	static const zArrayStatic<D3D11_BLEND_OP> gaBlendOpTranslator = {
+	static const zArrayFixed<D3D11_BLEND_OP,5> gaBlendOpTranslator = {
 			D3D11_BLEND_OP_ADD,					// keBlendOp_Add, 
 			D3D11_BLEND_OP_SUBTRACT, 			// keBlendOp_Substract, 
 			D3D11_BLEND_OP_REV_SUBTRACT, 		// keBlendOp_RevSubstract,
@@ -134,14 +134,14 @@ namespace zcExp
 	bool ExporterGfxStateBlendDX11_DX11::ExportWork(bool _bIsTHRTask)
 	{		
 		ExportInfoGfxStateBlend* pExportInfo = static_cast<ExportInfoGfxStateBlend*>(mpExportInfo);		
-		zenAssert(gaBlendValueTranslator.Count() == zenRes::zGfxRenderPass::ConfigColorRT::keBlendVal__Count);
-		zenAssert(gaBlendOpTranslator.Count() == zenRes::zGfxRenderPass::ConfigColorRT::keBlendOp__Count);		
-		zenAssert( pExportInfo->mpaRenderTargetConfig && pExportInfo->mpaRenderTargetConfig->Count() < D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT );
+		zenAssert(gaBlendValueTranslator.size() == zenRes::zGfxRenderPass::ConfigColorRT::keBlendVal__Count);
+		zenAssert(gaBlendOpTranslator.size() == zenRes::zGfxRenderPass::ConfigColorRT::keBlendOp__Count);		
+		zenAssert( pExportInfo->mpaRenderTargetConfig && pExportInfo->mpaRenderTargetConfig->size() < D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT );
 
 		zenMem::Zero(&mrExport->mBlendDesc, sizeof(mrExport->mBlendDesc));
 		mrExport->mBlendDesc.AlphaToCoverageEnable		= false;	//!< Currently not implemented
 		mrExport->mBlendDesc.IndependentBlendEnable	= true;		
-		for(zUInt rtIdx(0), rtCount(pExportInfo->mpaRenderTargetConfig->Count()); rtIdx<rtCount && rtIdx<D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT; ++rtIdx)
+		for(zUInt rtIdx(0), rtCount(pExportInfo->mpaRenderTargetConfig->size()); rtIdx<rtCount && rtIdx<D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT; ++rtIdx)
 		{			
 			const zenRes::zGfxRenderPass::ConfigColorRT& RtConfigIn	= (*pExportInfo->mpaRenderTargetConfig)[rtIdx];
 			D3D11_RENDER_TARGET_BLEND_DESC& RtConfigOut				= mrExport->mBlendDesc.RenderTarget[rtIdx];
@@ -166,8 +166,8 @@ namespace zcExp
 		zenAssert(_ePlatform==zenConst::kePlatform_DX11 && _eType==zenConst::keResType_GfxStateBlend);
 		zenAssert( _pExportInfo );
 		const ExportInfoGfxStateBlend* pExportInfo	= static_cast<const ExportInfoGfxStateBlend*>(_pExportInfo);
-		zenAssert( pExportInfo->mpaRenderTargetConfig->IsEmpty()==false );
-		zResID::NameHash hName((void*)pExportInfo->mpaRenderTargetConfig->First(), pExportInfo->mpaRenderTargetConfig->SizeMem());
+		zenAssert( pExportInfo->mpaRenderTargetConfig->empty()==false );
+		zResID::NameHash hName((void*)&pExportInfo->mpaRenderTargetConfig->front(), pExportInfo->mpaRenderTargetConfig->SizeMem());
 		return zcExp::ValidateItemID(_ePlatform, _eType, _eSource, hName, _bExistOut);
 	}
 
@@ -176,7 +176,7 @@ namespace zcExp
 	//////////////////////////////////////////////////////////////////////////
 	zenInline void SetDepthStencilOpDesc(D3D11_DEPTH_STENCILOP_DESC& _StencilConfigDX11Out, const zenRes::zGfxRenderPass::ConfigDepthRT::ConfigStencil& _StencilConfigIn)
 	{		
-		zenAssert( gaStencilOpTranslator.Count() == zenRes::zGfxRenderPass::ConfigDepthRT::keStencilOp__Count );
+		zenAssert( gaStencilOpTranslator.size() == zenRes::zGfxRenderPass::ConfigDepthRT::keStencilOp__Count );
 		_StencilConfigDX11Out.StencilFunc			= gaComparisonTestTranslator[_StencilConfigIn.meStencilTest];
 		_StencilConfigDX11Out.StencilFailOp			= gaStencilOpTranslator[_StencilConfigIn.meStencilFailOp];		
 		_StencilConfigDX11Out.StencilPassOp			= gaStencilOpTranslator[_StencilConfigIn.meStencilPassOp];
@@ -192,7 +192,7 @@ namespace zcExp
 
 	bool ExporterGfxStateDepthStencilDX11_DX11::ExportWork(bool _bIsTHRTask)
 	{		
-		zenAssert( gaComparisonTestTranslator.Count() == zenRes::zGfxRenderPass::ConfigDepthRT::keCmpTest__Count );
+		zenAssert( gaComparisonTestTranslator.size() == zenRes::zGfxRenderPass::ConfigDepthRT::keCmpTest__Count );
 		ExportInfoGfxStateDepthStencil* pExportInfo				= static_cast<ExportInfoGfxStateDepthStencil*>(mpExportInfo);
 		const zenRes::zGfxRenderPass::ConfigDepthRT* pConfig	= pExportInfo->mpDepthStencilConfig;
 		if( pConfig )

@@ -32,7 +32,7 @@ const zEngineRef<PSO_DX12>& PSO_DX12::GetAdd(const zcRes::GfxRenderPassRef& _rRe
 	//----------------------------------------------------------------------------------------------
 	DXGI_FORMAT aRTFormat[] = {DXGI_FORMAT_UNKNOWN,DXGI_FORMAT_UNKNOWN,DXGI_FORMAT_UNKNOWN,DXGI_FORMAT_UNKNOWN,DXGI_FORMAT_UNKNOWN,DXGI_FORMAT_UNKNOWN,DXGI_FORMAT_UNKNOWN,DXGI_FORMAT_UNKNOWN,DXGI_FORMAT_UNKNOWN};
 	zenStaticAssert( zenArrayCount(aRTFormat) == D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT+1 );
-	const zUInt RTCount									= pViewHAL->maRTColorConfig.Count();
+	const zUInt RTCount									= pViewHAL->maRTColorConfig.size();
 	const zcRes::GfxTarget2DRef& rDepthTarget			= pViewHAL->mRTDepthConfig.mrTargetSurface;
 	aRTFormat[D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT]	= rDepthTarget.IsValid() ? zcMgr::GfxRender.ZenFormatToNative(rDepthTarget.HAL()->meFormat) : DXGI_FORMAT_UNKNOWN;
 	for( zUInt idxRT(0); idxRT<RTCount; ++idxRT)
@@ -59,7 +59,7 @@ const zEngineRef<PSO_DX12>& PSO_DX12::GetAdd(const zcRes::GfxRenderPassRef& _rRe
 	{
 		// Describe and create the graphics pipeline state object (PSO).	
 		D3D12_GRAPHICS_PIPELINE_STATE_DESC PsoDesc = {};
-		PSO_DX12* pNewPSO						= zenNew PSO_DX12();
+		PSO_DX12* pNewPSO						= zenMem::New<PSO_DX12>();
 		PsoDesc.InputLayout						= { nullptr, 0 };
 		PsoDesc.pRootSignature					= zcMgr::GfxRender.mRootSignatureDefault.Get();		
 		PsoDesc.RasterizerState					= pRenderpassHAL->mrStateRaster.HAL()->mRasterizerDesc;

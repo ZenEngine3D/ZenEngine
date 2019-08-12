@@ -51,7 +51,7 @@ bool GfxCBuffer_DX12::Initialize()
 			if( SUCCEEDED(hr) )
 			{
 				// We don't unmap this until the app closes. Keeping things mapped for the lifetime of the resource is okay.
-				zenMem::Copy( mpCBufferMapped, maParameterValues.First(), maParameterValues.SizeMem() );
+				zenMem::Copy( mpCBufferMapped, maParameterValues.Data(), maParameterValues.SizeMem() );
 				return true;
 			}
 		}
@@ -64,7 +64,7 @@ void GfxCBuffer_DX12::Update( const DirectXComRef<ID3D12GraphicsCommandList>& _r
 {
 	if( mbUpdated && mpCBufferMapped )
 	{
-		zenMem::Copy( mpCBufferMapped, maParameterValues.First(), maParameterValues.SizeMem() );
+		zenMem::Copy( mpCBufferMapped, maParameterValues.Data(), maParameterValues.SizeMem() );
 		mbUpdated = FALSE;
 	}
 }

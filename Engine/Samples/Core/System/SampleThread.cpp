@@ -89,9 +89,9 @@ namespace sample
 	void SampleThread()
 	{	
 		const zI32 iEntryCount	= 1024*1024*2;
-		gpSortOriginal			= zenNew zUInt[iEntryCount];
-		gpSortDataSingle		= zenNew zUInt[iEntryCount];
-		gpSortDataTask			= zenNew zUInt[iEntryCount];
+		gpSortOriginal			= zenMem::NewArray<zUInt>(iEntryCount);
+		gpSortDataSingle		= zenMem::NewArray<zUInt>(iEntryCount);
+		gpSortDataTask			= zenMem::NewArray<zUInt>(iEntryCount);
 		for(zUInt idx(0); idx<iEntryCount; ++idx)
 		{
 			gpSortOriginal[idx]		= rand();
@@ -112,10 +112,10 @@ namespace sample
 		TaskSort TaskSorting(gpSortDataTask, gpSortDataTask+iEntryCount-1);
 		TaskSorting.AddToPending();
 		zenSys::StartTaskProcessing();
-		
-		zenDelArray(gpSortOriginal);
-		zenDelArray(gpSortDataSingle);
-		zenDelArray(gpSortDataTask);
+				
+		zenMem::Del(gpSortOriginal);
+		zenMem::Del(gpSortDataSingle);
+		zenMem::Del(gpSortDataTask);
 	}
 
 }

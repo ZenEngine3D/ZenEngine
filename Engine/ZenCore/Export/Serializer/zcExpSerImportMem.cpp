@@ -108,7 +108,7 @@ bool SerializerImportMem::Serialize(zI64& aiValue)
 	return true;
 }
 
-bool SerializerImportMem::Serialize(zArrayBase<zU8>& _aValues)
+bool SerializerImportMem::Serialize(zArrayDyn<zU8>& _aValues)
 {
 	zU32 uSize;
 	if( Serialize(uSize) )
@@ -116,45 +116,45 @@ bool SerializerImportMem::Serialize(zArrayBase<zU8>& _aValues)
 		if( mpMemoryCur + uSize >= mpMemoryEnd )
 			return false;
 
-		_aValues.SetCount(uSize/sizeof(zU8));
-		zenMem::Copy(_aValues.First(), mpMemoryCur, uSize );
-		mpMemoryCur		+= uSize;
+		_aValues.Copy(mpMemoryCur, uSize);
+		mpMemoryCur	+= uSize;
 		return true;
 	}
 	return false;	
 }
 
-bool SerializerImportMem::Serialize(zArrayBase<zU16>& _aValues)
+bool SerializerImportMem::Serialize(zArrayDyn<zU16>& _aValues)
+{
+	//! @todo 2 ?
+	return true;
+}
+
+bool SerializerImportMem::Serialize(zArrayDyn<zU32>& _aValues)
 {
 	return true;
 }
 
-bool SerializerImportMem::Serialize(zArrayBase<zU32>& _aValues)
+bool SerializerImportMem::Serialize(zArrayDyn<zU64>& _aValues)
 {
 	return true;
 }
 
-bool SerializerImportMem::Serialize(zArrayBase<zU64>& _aValues)
+bool SerializerImportMem::Serialize(zArrayDyn<zI8>& _aValues)
 {
 	return true;
 }
 
-bool SerializerImportMem::Serialize(zArrayBase<zI8>& _aValues)
+bool SerializerImportMem::Serialize(zArrayDyn<zI16>& _aValues)
 {
 	return true;
 }
 
-bool SerializerImportMem::Serialize(zArrayBase<zI16>& _aValues)
+bool SerializerImportMem::Serialize(zArrayDyn<zI32>& _aValues)
 {
 	return true;
 }
 
-bool SerializerImportMem::Serialize(zArrayBase<zI32>& _aValues)
-{
-	return true;
-}
-
-bool SerializerImportMem::Serialize(zArrayBase<zI64>& _aValues)
+bool SerializerImportMem::Serialize(zArrayDyn<zI64>& _aValues)
 {
 	return true;
 }

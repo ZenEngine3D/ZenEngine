@@ -18,12 +18,12 @@ const zenAss::zPackageGroupRef& PackageGroup::GetParentGroup()const
 	return mrParent;
 }
 
-const zArrayDynamic<zenAss::zPackageRef>& PackageGroup::GetPackages()const
+const zArrayDyn<zenAss::zPackageRef>& PackageGroup::GetPackages()const
 {
 	return maPackage;
 }
 
-const zArrayDynamic<zenAss::zPackageGroupRef>& PackageGroup::GetChildren()const
+const zArrayDyn<zenAss::zPackageGroupRef>& PackageGroup::GetChildren()const
 {
 	return maChildren;
 }

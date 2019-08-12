@@ -41,7 +41,7 @@ namespace zen { namespace zenWnd
 		volatile eThreadStatus			meMainWindowThreadStatus;	//!< Status of the Main window thread (main thread should only read from it)
 		WindowInputState				mWindowInput;				//!< Belongs to main window thread
 		std::mutex						mWindowMutex;
-		zArrayDynamic<PendingMessage>	mOSMessages;
+		zArrayDyn<PendingMessage>	mOSMessages;
 		zenRes::zGfxWindow				mGfxWindow;
 	};
 }}

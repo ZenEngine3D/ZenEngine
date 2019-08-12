@@ -12,8 +12,8 @@ namespace zeAss
 		
 		zenInline const zWString&									GetName			()const;
 		zenInline const zenAss::zPackageGroupRef&					GetParentGroup	()const;
-		zenInline const zArrayDynamic<zenAss::zPackageRef>&			GetPackages		()const;
-		zenInline const zArrayDynamic<zenAss::zPackageGroupRef>&	GetChildren		()const;
+		zenInline const zArrayDyn<zenAss::zPackageRef>&			GetPackages		()const;
+		zenInline const zArrayDyn<zenAss::zPackageGroupRef>&	GetChildren		()const;
 		zenInline zHash64											GetNameHashID	()const;
 		zenInline const zWString&									GetStorageInfo	()const;
 		zenInline bool												GetDirty		()const;
@@ -42,8 +42,8 @@ namespace zeAss
 		zHash64														mNameHashID;	//!< Unique ID generated from parent ID and this group name
 		bool														mbDirty;
 		bool														mbDirtyChild;
-		zArrayDynamic<zenAss::zPackageRef>							maPackage;		//!< Packages inside of it		
-		zArrayDynamic<zenAss::zPackageGroupRef>						maChildren;		//!< List of children group having this item as parent
+		zArrayDyn<zenAss::zPackageRef>							maPackage;		//!< Packages inside of it		
+		zArrayDyn<zenAss::zPackageGroupRef>						maChildren;		//!< List of children group having this item as parent
 		friend class ManagerAsset;
 		friend class Package;		
 	};

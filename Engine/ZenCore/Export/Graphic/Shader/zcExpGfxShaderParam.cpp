@@ -12,9 +12,8 @@ namespace zcExp
 zResID CreateGfxCBuffer(zResID _ParentParamDefID)
 {
 	zenAssert( _ParentParamDefID.GetType() == zenConst::keResType_GfxCBufferDefinition );	
-	//static zenMem::zAllocatorPool sMemPool("Pool CreateShaderParam", sizeof(ExportInfoGfxShaderParam), 1, 5 );
-	ExportInfoGfxShaderParam* pExportInfo		= zenNewPool ExportInfoGfxShaderParam;
-	pExportInfo->mParentParamDefID				= _ParentParamDefID;
+	auto* pExportInfo					= zenMem::NewPool<ExportInfoGfxShaderParam>();
+	pExportInfo->mParentParamDefID		= _ParentParamDefID;
 	return zcMgr::Export.CreateItem( zResID::kePlatformType_GFX, zenConst::keResType_GfxCBuffer, pExportInfo );
 }
 
@@ -29,7 +28,7 @@ zResID CreateGfxCBuffer(zResID _ParentShaderID, zU8 _uCBufferSlot)
 {
 	zenAssert( zenConst::kFlagResShaders.Any(_ParentShaderID.GetType()) );
 	zEngineConstRef<zcExp::ExportGfxShader> rShaderData = zcDepot::ExportData.GetTyped<zcExp::ExportGfxShader>(_ParentShaderID); 
-	if( rShaderData.IsValid() && _uCBufferSlot < rShaderData->maCBufferParentID.Count() && rShaderData->maCBufferParentID[_uCBufferSlot].IsValid() )
+	if( rShaderData.IsValid() && _uCBufferSlot < rShaderData->maCBufferParentID.size() && rShaderData->maCBufferParentID[_uCBufferSlot].IsValid() )
 		return CreateGfxCBuffer(rShaderData->maCBufferParentID[_uCBufferSlot]);	
 	return zResID();
 }
@@ -47,12 +46,12 @@ zResID CreateGfxCBuffer(zResID _ParentShaderID, zHash32 _hCBufferName)
 	zEngineConstRef<zcExp::ExportGfxShader> rShaderData = zcDepot::ExportData.GetTyped<zcExp::ExportGfxShader>(_ParentShaderID); 	
 	if( rShaderData.IsValid() )
 	{
-		for(zUInt resIdx(0), resCount(rShaderData->maResourceBinding.Count()); resIdx < resCount; ++resIdx)
+		for(zUInt resIdx(0), resCount(rShaderData->maResourceBinding.size()); resIdx < resCount; ++resIdx)
 		{
 			const auto& resBinding = rShaderData->maResourceBinding[resIdx];
 			if( resBinding.meType == keShaderRes_CBuffer && resBinding.mzName.mhName == _hCBufferName )
 			{
-				zenAssert( resBinding.muSlotIndex < rShaderData->maCBufferParentID.Count() );
+				zenAssert( resBinding.muSlotIndex < rShaderData->maCBufferParentID.size() );
 				return CreateGfxCBuffer(rShaderData->maCBufferParentID[resBinding.muSlotIndex]);	
 			}
 		}

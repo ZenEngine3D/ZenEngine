@@ -1,9 +1,7 @@
 namespace zen { namespace zenType {
 
 zString::zString()
-: maChar(1)
 {
-	maChar[0] = 0;
 }
 
 zString::zString(const zString& _zString)	
@@ -12,8 +10,9 @@ zString::zString(const zString& _zString)
 }
 
 zString::zString(const char* _zString)
-: maChar(_zString, zUInt(strlen(_zString)+1))
 {
+	if( _zString != nullptr && _zString[0] != 0)
+		maChar.Copy(_zString, zUInt(strlen(_zString)+1));
 }
 
 zString& zString::operator=(const zString& _zString)
@@ -23,7 +22,7 @@ zString& zString::operator=(const zString& _zString)
 }
 	
 zString& zString::operator=(const char* _zString)
-{
+{	
 	maChar.Copy(_zString, zUInt(strlen(_zString)+1));
 	return *this;
 }
@@ -35,16 +34,19 @@ zString& zString::operator+=(const zString& _zString)
 
 zString& zString::operator+=(const char* _zString)
 {
+	if( maChar.empty() )
+		return operator=(_zString);
+
 	zUInt uLen		= static_cast<zUInt>(strlen(_zString));
-	zUInt uOldCount	= maChar.Count();
-	maChar.SetCount(uOldCount + uLen);
-	zenMem::Copy(&maChar[uOldCount-2], _zString, uLen+1);
+	zUInt uOldCount	= maChar.size();
+	maChar.resize(uOldCount + uLen);
+	zenMem::Copy(&maChar[uOldCount-1], _zString, uLen+1);
 	return *this;
 }
 
 bool zString::operator==(const char* _zCmpString)const
 {
-	const char* pLocalCur = maChar.First();
+	const char* pLocalCur = &maChar.front();
 	const char* pExternCur = _zCmpString;
 	while( *pLocalCur && (*pLocalCur==*pExternCur) )
 	{
@@ -56,13 +58,13 @@ bool zString::operator==(const char* _zCmpString)const
 
 bool zString::operator==(const zString& _zString)const
 {	
-	return	(maChar.Count() == _zString.maChar.Count()) &&
-			(*this == _zString.maChar.First());
+	return	(maChar.size() == _zString.maChar.size()) &&
+			(*this == &_zString.maChar.front());
 }
 
 bool zString::operator!=(const zString& _zString)const
 {
-	return !( *this==_zString);
+	return !(*this==_zString);
 }
 
 bool zString::operator!=(const char* _zString)const
@@ -72,25 +74,26 @@ bool zString::operator!=(const char* _zString)const
 
 zUInt zString::Len()const
 {
-	return maChar.Count()-1;
+	return maChar.empty() ? 0 : maChar.size()-1;
 }
 
 zString::operator const char*() const 
 { 
-	return maChar.First();
+	return maChar.empty() ? "" : &maChar.front();
 }
 
 const char* zString::Last(zUInt index)const
 {
-	return &maChar[maChar.Count() >= index+2 ? maChar.Count()-2-index : 0];
+	return maChar.size() <= 1 ? nullptr : &maChar[ zenMath::Max<zInt>(0, maChar.size()-2-index) ];
 }
 
-void zString::Split(char _Separator, zArrayStatic<zString>& _aStringOut, zUInt _uAdditionalArraySize )const
+void zString::Split(char _Separator, zArrayDyn<zString>& _aStringOut, zUInt _uAdditionalArraySize )const
 {
-	Split(maChar.First(), _Separator, _aStringOut, _uAdditionalArraySize);
+	if( !maChar.empty() )
+		Split(&maChar.front(), _Separator, _aStringOut, _uAdditionalArraySize);
 }
 
-void zString::Merge(const zArrayStatic<zString>& _aStrings, char _Separator, zInt _iMaxEntry)
+void zString::Merge(const zArray<zString>& _aStrings, char _Separator, zInt _iMaxEntry)
 {
 	Merge(_aStrings, _Separator, *this, _iMaxEntry);
 }

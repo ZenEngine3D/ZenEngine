@@ -28,14 +28,14 @@ zenConst::eAssetType Asset::GetType()const
 	return mID.meType;
 }
 
-zUInt Asset::GetValueCount()const 
+zUInt Asset::GetValuesize()const 
 { 
-	return maPropertyValue.Count(); 
+	return maPropertyValue.size(); 
 }
 
 zenAss::PropertyValueRef Asset::GetValue(zUInt _uValIndex)
 { 
-	zenAssert(_uValIndex < maPropertyValue.Count()); 
+	zenAssert(_uValIndex < maPropertyValue.size()); 
 	return maPropertyValue[_uValIndex]; 
 }
 
@@ -78,9 +78,9 @@ zInt AssetTyped<AssetTypedType>::GetValueIndex(zHash32 _hPropertyName)const
 	if( !sbInit )
 	{
 		const zenAss::PropertyDefArray& aPropertyDef = GetProperties();
-		sdPropertyIndex.Init( static_cast<zU32>(aPropertyDef.Count()*2) );
+		sdPropertyIndex.Init( static_cast<zU32>(aPropertyDef.size()*2) );
 		sdPropertyIndex.SetDefaultValue(-1);
-		for(zInt idx(0), count(aPropertyDef.Count()); idx<count; ++idx)
+		for(zInt idx(0), count(aPropertyDef.size()); idx<count; ++idx)
 			sdPropertyIndex.Set( aPropertyDef[idx]->mName.mhName, idx );
 		sbInit = true;
 	}

@@ -26,14 +26,14 @@ bool GfxBuffer_DX11::Initialize()
 	BufferDesc.StructureByteStride		= muElementStride;
 	
 	D3D11_SUBRESOURCE_DATA InitData;
-	zenAssert( maData.Count()==0 || maData.Count() == BufferDesc.ByteWidth);
-	InitData.pSysMem					= maData.Count() ? maData.First() : nullptr;
+	zenAssert( maData.size()==0 || maData.size() == BufferDesc.ByteWidth);
+	InitData.pSysMem					= maData.size() ? maData.Data() : nullptr;
 	InitData.SysMemPitch				= 0;
 	InitData.SysMemSlicePitch			= 0;
 	
 	mpSRV = nullptr;
 	mpUAV = nullptr;
-	HRESULT hr = zcMgr::GfxRender.GetDevice()->CreateBuffer(&BufferDesc, maData.Count() ? &InitData : nullptr, &mpBuffer);	
+	HRESULT hr = zcMgr::GfxRender.GetDevice()->CreateBuffer(&BufferDesc, maData.size() ? &InitData : nullptr, &mpBuffer);	
 	if( SUCCEEDED(hr) )
 		hr = zcMgr::GfxRender.GetDevice()->CreateShaderResourceView(mpBuffer, nullptr, &mpSRV);
 
@@ -47,7 +47,7 @@ bool GfxBuffer_DX11::Initialize()
 void* GfxBuffer_DX11::Lock()
 {
 	zenAssertMsg(mpLockData==nullptr, "Need to unlock buffer before locking it again");
-	mpLockData = zenNew zU8[ muElementCount*muElementStride ]; //!todo 2 perf Use ring buffer instead
+	mpLockData = zenMem::NewArray<zU8>(muElementCount*muElementStride); //!todo 2 perf Use ring buffer instead
 	return mpLockData;
 }
 

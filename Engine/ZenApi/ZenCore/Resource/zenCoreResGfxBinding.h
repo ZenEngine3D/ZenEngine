@@ -41,7 +41,7 @@ namespace zen { namespace zenRes {
 	
 		static zGfxShaderBinding		Create(const zGfxShaderVertex& _VertexShader);
 		static zGfxShaderBinding		Create(const zGfxShaderVertex& _VertexShader, const zGfxShaderPixel& _PixelShader);
-		void							CreateShaderParam(zArrayStatic<zenRes::zGfxCBuffer>& _aShaderParamOut)const;
+		void							CreateShaderParam(zArrayDyn<zenRes::zGfxCBuffer>& _aShaderParamOut)const;
 	};
 
 	class zGfxView : public zcRes::GfxViewRef
@@ -75,7 +75,7 @@ namespace zen { namespace zenRes {
 		using Super::operator=;
 
 		void							SetValue(const zShaderParameter& _Value);			
-		void							SetValue(const zArrayBase<const zShaderParameter*>& _aValues);	
+		void							SetValue(const zArray<const zShaderParameter*>& _aValues);	
 		void							SetValue(zHash32 _hParamName, const float& _fValue);
 		void							SetValue(zHash32 _hParamName, const zVec2F& _vValue);
 		void							SetValue(zHash32 _hParamName, const zVec3F& _vValue);
@@ -85,7 +85,7 @@ namespace zen { namespace zenRes {
 		void							SetResource(zHash32 _hSamplerName, const zGfxStateSampler& _rSampler, zU16 _uIndex=0 );
 		void							SetResource(zHash32 _hBufferName, const zGfxBuffer& _rBuffer, zU16 _uIndex=0 );
 
-		static zGfxMeshStrip			Create(const zGfxIndex& _rIndexBuffer, const zGfxShaderBinding& _rShaderBinding, const zArrayBase<zShaderResource>& _aResources, zU32 _uIndexFirst=0, zU32 _uIndexCount=0xFFFFFFFF, zU32 _uVertexFirst=0);
+		static zGfxMeshStrip			Create(const zGfxIndex& _rIndexBuffer, const zGfxShaderBinding& _rShaderBinding, const zArray<zShaderResource>& _aResources, zU32 _uIndexFirst=0, zU32 _uIndexCount=0xFFFFFFFF, zU32 _uVertexFirst=0);
 		static zGfxMeshStrip			Create(const zGfxIndex& _rIndexBuffer, const zGfxShaderBinding& _rShaderBinding, zU32 _uIndexFirst=0, zU32 _uIndexCount=0xFFFFFFFF, zU32 _uVertexFirst = 0);
 	};
 
@@ -97,7 +97,7 @@ namespace zen { namespace zenRes {
 		using Super::operator=;
 
 		void							SetValue(const zShaderParameter& _Value);			
-		void							SetValue(const zArrayBase<const zShaderParameter*>& _aValues);	
+		void							SetValue(const zArray<const zShaderParameter*>& _aValues);	
 		void							SetValue(zHash32 _hParamName, const float& _fValue);
 		void							SetValue(zHash32 _hParamName, const zVec2F& _vValue);
 		void							SetValue(zHash32 _hParamName, const zVec3F& _vValue);
@@ -107,7 +107,7 @@ namespace zen { namespace zenRes {
 		void							SetResource(zHash32 _hSamplerName, const zGfxStateSampler& _rSampler, zU16 _uIndex=0 );
 		void							SetResource(zHash32 _hBufferName, const zGfxBuffer& _rBuffer, zU16 _uIndex=0 );
 
-		static zGfxMesh					Create(const zArrayBase<zGfxMeshStrip>& _aMeshStrip);
+		static zGfxMesh					Create(const zArray<zGfxMeshStrip>& _aMeshStrip);
 		static zGfxMesh					Create(std::initializer_list<zGfxMeshStrip> _aMeshStrip);
 	};
 	

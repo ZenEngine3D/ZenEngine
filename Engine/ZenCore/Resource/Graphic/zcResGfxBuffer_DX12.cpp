@@ -1,7 +1,5 @@
 #include "zcCore.h"
 
-//SF DX12 
-
 namespace zcRes
 {
 //! @todo 0
@@ -89,7 +87,7 @@ bool GfxBuffer_DX12::Initialize()
 		if( !pUploadData )
 			return false;
 
-		zenMem::Copy( reinterpret_cast<zU8*>(pUploadData), maData.First(), maData.SizeMem() );
+		zenMem::Copy( reinterpret_cast<zU8*>(pUploadData), maData.Data(), maData.SizeMem() );
 		Unlock(zenGfx::zCommandList::GetFrameContext());
 	}
 	return true;

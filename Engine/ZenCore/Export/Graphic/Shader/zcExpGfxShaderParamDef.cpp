@@ -10,10 +10,10 @@ zResID ExportInfoGfxCBufferDefinition::CallbackGetItemID(ePlatform _ePlatform, z
 	zenAssert( _pExportInfo );
 	zResID::NameHash						hResName;
 	const ExportInfoGfxCBufferDefinition*	pExportInfo = static_cast<const ExportInfoGfxCBufferDefinition*>(_pExportInfo);
-	const zArrayBase<zHash32>&				aParamName	= pExportInfo->maParamName;
-	const zArrayBase<GfxCBufferParamInfo>&	aParamInfo	= pExportInfo->maParamInfo;
+	const zArray<zHash32>&				aParamName	= pExportInfo->maParamName;
+	const zArray<GfxCBufferParamInfo>&	aParamInfo	= pExportInfo->maParamInfo;
 
-	for(zUInt itemIdx(0), itemCount(aParamName.Count()); itemIdx<itemCount; ++itemIdx)
+	for(zUInt itemIdx(0), itemCount(aParamName.size()); itemIdx<itemCount; ++itemIdx)
 	{		
 		hResName.Append( (void*)&aParamName[itemIdx], sizeof(aParamName[itemIdx]) );
 		hResName.Append( (void*)&aParamInfo[itemIdx], sizeof(aParamInfo[itemIdx]) );
@@ -38,13 +38,13 @@ bool ExporterGfxShaderParamDef::ExportStart()
 		return false;
 
 	zU32 uMaxSize(0);
-	ExportInfoGfxCBufferDefinition*				pExportInfo = static_cast<ExportInfoGfxCBufferDefinition*>(mpExportInfo);
-	zMap<GfxCBufferParamInfo>::Key32&			dParamInfo	= mrExport->mdParamInfo;
-	const zArrayStatic<zHash32>&				aParamName	= pExportInfo->maParamName;
-	const zArrayStatic<GfxCBufferParamInfo>&	aParamInfo	= pExportInfo->maParamInfo;
-	dParamInfo.Init( static_cast<zU32>(aParamName.Count()) );
+	ExportInfoGfxCBufferDefinition*			pExportInfo = static_cast<ExportInfoGfxCBufferDefinition*>(mpExportInfo);
+	zMap<GfxCBufferParamInfo>::Key32&		dParamInfo	= mrExport->mdParamInfo;
+	const zArrayDyn<zHash32>&				aParamName	= pExportInfo->maParamName;
+	const zArrayDyn<GfxCBufferParamInfo>&	aParamInfo	= pExportInfo->maParamInfo;
+	dParamInfo.Init( static_cast<zU32>(aParamName.size()) );
 	
-	for(zUInt idx(0), count(aParamName.Count()); idx<count; ++idx)
+	for(zUInt idx(0), count(aParamName.size()); idx<count; ++idx)
 	{
 		dParamInfo.GetAdd( aParamName[idx] )	= aParamInfo[idx];
 		uMaxSize								= zenMath::Max<zU32>(uMaxSize, aParamInfo[idx].muOffset+aParamInfo[idx].muSize);
@@ -66,14 +66,13 @@ bool ExporterGfxShaderParamDef::ExportStart()
 //! @param _uDefaultValues	- Memory with default parameters values of this CBuffer Definition
 //! @return 				- Unique zResID of created Resource
 //=================================================================================================
-zResID CreateGfxCBufferDefinition( const zStringHash32& _zBufferName, const zArrayBase<zHash32>& _aParamName, const zArrayBase<GfxCBufferParamInfo>& _aParamInfo, const zArrayBase<zU8>& _uDefaultValues )
+zResID CreateGfxCBufferDefinition( const zStringHash32& _zBufferName, const zArray<zHash32>& _aParamName, const zArray<GfxCBufferParamInfo>& _aParamInfo, const zArray<zU8>& _uDefaultValues )
 {
-	//static zenMem::zAllocatorPool sMemPool("Pool CreateShaderParamDef", sizeof(ExportInfoGfxCBufferDefinition), 1, 5 );
-	ExportInfoGfxCBufferDefinition* pExportInfo	= zenNewPool ExportInfoGfxCBufferDefinition;	
-	pExportInfo->mzBufferName					= _zBufferName;
-	pExportInfo->maParamName					= _aParamName;
-	pExportInfo->maParamInfo					= _aParamInfo;
-	pExportInfo->maDefaultValues				= _uDefaultValues;		
+	auto* pExportInfo				= zenMem::NewPool<ExportInfoGfxCBufferDefinition>();
+	pExportInfo->mzBufferName		= _zBufferName;
+	pExportInfo->maParamName		= _aParamName;
+	pExportInfo->maParamInfo		= _aParamInfo;
+	pExportInfo->maDefaultValues	= _uDefaultValues;		
 	return zcMgr::Export.CreateItem( zResID::kePlatformType_GFX, zenConst::keResType_GfxCBufferDefinition, pExportInfo );
 }
 

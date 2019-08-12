@@ -1,7 +1,5 @@
 #include "zcCore.h"
 
-//SF DX12
-
 namespace zcRes
 {
 

@@ -10,7 +10,7 @@ namespace zen { namespace zenRes {
 		using Super::operator=;
 
 		static zGfxShaderVertex Create(const char* _zFilename, const char* _zEntryname );
-		static zGfxShaderVertex Create(const char* _zFilename, const char* _zEntryname, const zArrayBase<zShaderDefine>& _aDefines);
+		static zGfxShaderVertex Create(const char* _zFilename, const char* _zEntryname, const zArray<zShaderDefine>& _aDefines);
 	};
 
 	class zGfxShaderPixel : public zcRes::GfxShaderPixelRef
@@ -21,7 +21,7 @@ namespace zen { namespace zenRes {
 		using Super::operator=;
 
 		static zGfxShaderPixel Create( const char* _zFilename, const char* _zEntryname );
-		static zGfxShaderPixel Create( const char* _zFilename, const char* _zEntryname, const zArrayBase<zShaderDefine>& _aDefines);
+		static zGfxShaderPixel Create( const char* _zFilename, const char* _zEntryname, const zArray<zShaderDefine>& _aDefines);
 	};
 
 	class zGfxCBuffer : public zcRes::GfxCBufferRef

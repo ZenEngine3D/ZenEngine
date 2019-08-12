@@ -70,6 +70,7 @@ zenClassDeclare(CommandQueryEnd_DX11, Command)
 public:
 	static zEngineRef<Command>		Add(const CommandListRef& _rContext, ID3D11Query* _pQuery, bool _bStartOfCmdList=false);
 	virtual void					Invoke(GPUContext& _Context);
+
 protected:
 	ID3D11Query*					mpQuery;
 };

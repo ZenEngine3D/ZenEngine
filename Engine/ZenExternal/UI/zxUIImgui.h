@@ -24,8 +24,8 @@ public:
 	zenRes::zGfxRenderPass					mrRenderpass;
 	zenRes::zGfxIndex						mrIndexBuffer;
 	zenRes::zGfxStructBuffer<ImDrawVert>	mrVertexBuffer;
-	zArrayStatic<zenRes::zShaderResource>	marShaderResources;
-	zArrayStatic<zenRes::zGfxCBuffer>		marShaderCBuffers;
+	zArrayDyn<zenRes::zShaderResource>		marShaderResources;
+	zArrayDyn<zenRes::zGfxCBuffer>			marShaderCBuffers;
 	zenSig::zSignal<>						msigRenderUI;
 	zVec2U16								mvScreenSize	= zVec2U16(0,0);
 	zU32									muVertexCount	= 0; //! @todo Urgent have buffer accessors available 

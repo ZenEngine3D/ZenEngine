@@ -9,7 +9,7 @@ GfxTexture2D_DX12::~GfxTexture2D_DX12()
 
 bool GfxTexture2D_DX12::Initialize()
 {
-	const bool			bUploadData			= maMipData[0].maData.Count() > 0 && !mCreationFlags.Any(zenConst::keTexCreate_RenderTarget);
+	const bool			bUploadData			= maMipData[0].maData.size() > 0 && !mCreationFlags.Any(zenConst::keTexCreate_RenderTarget);
 	D3D12_RESOURCE_DESC	TextureDesc			= {};	
 	D3D12_CLEAR_VALUE	DefaultClearValue	= {};
 
@@ -25,7 +25,7 @@ bool GfxTexture2D_DX12::Initialize()
 	TextureDesc.Width				= maMipData[0].mvDim.x;
 	TextureDesc.Height				= maMipData[0].mvDim.y;	
 	TextureDesc.DepthOrArraySize	= 1;
-	TextureDesc.MipLevels			= static_cast<UINT16>(maMipData.Count());
+	TextureDesc.MipLevels			= static_cast<UINT16>(maMipData.size());
 	TextureDesc.Format				= zcMgr::GfxRender.ZenFormatToTypeless(meFormat);
 	TextureDesc.SampleDesc.Count	= 1;
 	TextureDesc.SampleDesc.Quality	= 0;
@@ -80,12 +80,12 @@ bool GfxTexture2D_DX12::Initialize()
 		//for(zUInt mipIdx(0); mipIdx<TextureDesc.MipLevels; ++mipIdx)
 		for(zUInt mipIdx(0); mipIdx<1; ++mipIdx)
 		{			
-			if( maMipData[mipIdx].maData.Count() > 0 )
+			if( maMipData[mipIdx].maData.size() > 0 )
 			{
 				zU8* pUploadData = reinterpret_cast<zU8*>(Lock());
 				if( pUploadData )
 				{
-					zenMem::Copy(pUploadData, maMipData[mipIdx].maData.First(), maMipData[mipIdx].maData.SizeMem() );
+					zenMem::Copy(pUploadData, maMipData[mipIdx].maData.Data(), maMipData[mipIdx].maData.SizeMem() );
 					Unlock(zenGfx::zCommandList::GetFrameContext());					
 				}
 			}
@@ -101,7 +101,7 @@ bool GfxTexture2D_DX12::Initialize()
 	SrvDesc.ViewDimension					= D3D12_SRV_DIMENSION_TEXTURE2D;
     SrvDesc.Shader4ComponentMapping			= D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
 	SrvDesc.Texture2D.MostDetailedMip		= 0;
-    SrvDesc.Texture2D.MipLevels				= static_cast<UINT>(maMipData.Count());
+    SrvDesc.Texture2D.MipLevels				= static_cast<UINT>(maMipData.size());
     SrvDesc.Texture2D.PlaneSlice			= 0;
     SrvDesc.Texture2D.ResourceMinLODClamp	= 0;	
 	zcMgr::GfxRender.GetDevice()->CreateShaderResourceView(mResource.mrResource.Get(), &SrvDesc, mResource.mView.GetCpu());
@@ -114,7 +114,7 @@ void* GfxTexture2D_DX12::Lock()
 {
 	zenAssert(mResource.mrUpload.Get() == nullptr);
 
-	UINT16					uMipCount		= 1; //maMipData.Count()
+	UINT16					uMipCount		= 1; //maMipData.size()
 	D3D12_RESOURCE_DESC		TextureDesc		= mResource.mrResource->GetDesc();    
 	D3D12_HEAP_PROPERTIES	UploadHeap		= {D3D12_HEAP_TYPE_UPLOAD, D3D12_CPU_PAGE_PROPERTY_UNKNOWN, D3D12_MEMORY_POOL_UNKNOWN, 1, 1};
 	zcMgr::GfxRender.GetDevice()->GetCopyableFootprints(&TextureDesc, 0, uMipCount, 0, nullptr, nullptr, nullptr, &mResource.muUploadSize);

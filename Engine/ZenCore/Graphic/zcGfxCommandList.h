@@ -31,7 +31,7 @@ public:
 	zenInline bool								IsBeforeChildren()const;
 	zenInline bool								IsEmpty()const;
 	void										Clear();
-	const zArrayDynamic<CommandRef>&			GetCommands(bool _bBeforeChild=true)const { return marDrawcalls[_bBeforeChild]; }
+	const zArrayDyn<CommandRef>&				GetCommands(bool _bBeforeChild=true)const { return marDrawcalls[_bBeforeChild]; }
 protected:
 												CommandList_Base(const zStringHash32& _zScopeName, const CommandListRef& _rParent, const zcRes::GfxRenderPassRef& _rRenderpass);
 	virtual										~CommandList_Base();
@@ -41,7 +41,7 @@ protected:
 	bool										mbRootContext;			//!< True if there's no parent for this context
 	TypeListChild								mlstChilds;				//!< List of childs DrawingContext	
 	zcRes::GfxRenderPassRef						mrRenderpass;			//!< Associated renderpass to draw this context
-	zArrayDynamic<CommandRef>					marDrawcalls[2];		//!< List of command to will be run for this Context ([0]-Before Children, [1]-After children)
+	zArrayDyn<CommandRef>						marDrawcalls[2];		//!< List of command to will be run for this Context ([0]-Before Children, [1]-After children)
 	static zMap<zU16>::Key32					sdDrawcallCount[2];		//!< Command count of previous/current frame, by Context NameHash @todo 1 re-impement this
 	friend ManagerRender_HAL;
 };
@@ -65,7 +65,7 @@ public:
 	
 protected:
 	void										SubmitInternal();
-												CommandList(const zStringHash32& _zContextName, const CommandListRef& _rParent, const zcRes::GfxRenderPassRef& _rRenderpass);
+												CommandList(const zStringHash32& _zContextName, const CommandListRef& _rParent, const zcRes::GfxRenderPassRef& _rRenderpass);	
 };
 
 

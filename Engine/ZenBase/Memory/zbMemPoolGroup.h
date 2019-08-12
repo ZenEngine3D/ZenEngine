@@ -25,20 +25,20 @@ public:
 		zU8		mPolicyType				= 0; 
 	};
 public:
-	void						Initialize(const Config& _Config, zInt _GroupIndex);
-	zenInline bool				IsInitialized()const;
-	zenInline const Config&		GetConfig()const{return mConfig;}
+	void					Initialize(const Config& _Config, zInt _GroupIndex);
+	zenInline bool			IsInitialized()const;
+	zenInline const Config&	GetConfig()const{return mConfig;}
 
-	SAllocInfo					Malloc(size_t _Size);
-	void						Free(void* _pMemory);
+	SAllocInfo				Malloc(size_t _Size);
+	void					Free(void* _pMemory);
 
 protected:
 	enum Constants{kMaxThread=128};
-	void						GrowPool();
-	Config						mConfig;
-	VAddressPool				mVirtualAddressStart;
-	size_t						mVirtualMemorySize		= 0;
-	size_t						mPhysicalAllocatedSize	= 0;
+	void					GrowPool();
+	Config					mConfig;
+	VAddressPool			mVirtualAddressStart;
+	size_t					mVirtualMemorySize		= 0;
+	size_t					mPhysicalAllocatedSize	= 0;
 	zList< zListItem<> >	mlstFree[kThreadCount];
 };
 

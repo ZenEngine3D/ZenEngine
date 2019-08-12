@@ -23,7 +23,7 @@ namespace zcPerf
 	//! @brief GPU events. Used to get timing infos from the GPU
 	class EventGPU : public EventGPU_HAL
 	{
-	zenClassDeclare(EventGPU, EventGPU_HAL)
+	zenClassDeclare(EventGPU, EventGPU_HAL)	
 	public:									
 		static EventBaseRef		Create(const zStringHash32& _EventName);
 		virtual void			GPUStart(const zcGfx::CommandListRef& _rDrawlist);

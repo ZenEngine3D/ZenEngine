@@ -8,10 +8,9 @@ namespace zen { namespace zenAss
 PropertyDefRef PropertyStruct::Create( const char* _zName, const char* _zDisplayName, const char* _zDescription, bool _bShowInAssetDesc, bool _bIsEditable, const PropertyDefRef* _prPropertyDef, zUInt _uPropertyDefCount )
 {	
 	zenAssert(_prPropertyDef && _uPropertyDefCount>0);
-	//static zenMem::zAllocatorPool sAllocPool( "PropertyDefinition::Create", sizeof(PropertyStruct), 256, 256 );
-	PropertyStruct* pNewDefinition = zenNewPool zenAss::PropertyStruct(_zName, _zDisplayName, _zDescription, _bShowInAssetDesc, _bIsEditable);
+	PropertyStruct* pNewDefinition = zenMem::NewPool<zenAss::PropertyStruct>(_zName, _zDisplayName, _zDescription, _bShowInAssetDesc, _bIsEditable);
 	pNewDefinition->maPropertyDef.Copy(_prPropertyDef, _uPropertyDefCount);
-	pNewDefinition->mDefault.SetCount(_uPropertyDefCount);
+	pNewDefinition->mDefault.resize(_uPropertyDefCount);
 	pNewDefinition->mdPropertyDefIndex.Init(16);
 	pNewDefinition->mdPropertyDefIndex.SetDefaultValue(0xFFFFFFFF);
 	for(zUInt idx(0); idx<_uPropertyDefCount; ++idx)
@@ -28,13 +27,12 @@ PropertyDefRef PropertyStruct::Create( const char* _zName, const char* _zDisplay
 //!			differently since the array contains ValueRef.
 PropertyValueRef PropertyStruct::Allocate(const zAssetItemRef& _rOwnerAsset)const
 {	
-	//static zenMem::zAllocatorPool sAllocPool( "PropertyArray::Allocate", sizeof(ValueProperty), 256, 256 );
 	//! @todo Clean : Removing const qualifier, since 'zGameConstRef' doesn't take a const reference at the moment...
 	//					We know that all accessors won't modify the object, except for ReferenceAdd/Rem with mRefCount needing to be mutable.
-	ValueRef rStructVal = zenNewPool ValueProperty(_rOwnerAsset, this);
+	ValueRef rStructVal = zenMem::NewPool<ValueProperty>(_rOwnerAsset, this);
 	ValueStorage aStructVal;
-	aStructVal.SetCount( mDefault.Count() );
-	for(zUInt idx(0), count(mDefault.Count()); idx<count; ++idx)
+	aStructVal.resize( mDefault.size() );
+	for(zUInt idx(0), count(mDefault.size()); idx<count; ++idx)
 		aStructVal[idx] = mDefault[idx].Clone(_rOwnerAsset);
 	
 	rStructVal = aStructVal;
@@ -44,13 +42,12 @@ PropertyValueRef PropertyStruct::Allocate(const zAssetItemRef& _rOwnerAsset)cons
 PropertyValueRef PropertyStruct::Clone(const PropertyValueRef& _rValue)const
 {
 	zenAssert( _rValue.GetType() == kPropertyType );
-	//static zenMem::zAllocatorPool sAllocPool( "PropertyArray::Clone", sizeof(ValueProperty), 256, 256 );	
 	ValueRef rValueToClone				= _rValue;	
-	ValueRef rValueCloned 				= zenNewPool ValueProperty(rValueToClone->mrOwnerAsset, this);	
+	ValueRef rValueCloned 				= zenMem::NewPool<ValueProperty>(rValueToClone->mrOwnerAsset, this);	
 	const ValueStorage& aStructToClone	= rValueToClone.GetValue();	
 	ValueStorage aStructCloned;
-	aStructCloned.SetCount( aStructToClone.Count() );
-	for(zUInt idx(0), count(aStructToClone.Count()); idx<count; ++idx)
+	aStructCloned.resize( aStructToClone.size() );
+	for(zUInt idx(0), count(aStructToClone.size()); idx<count; ++idx)
 		aStructCloned[idx] = aStructToClone[idx].Clone(_rValue->mrOwnerAsset);
 	
 	rValueCloned = aStructCloned;
@@ -61,9 +58,9 @@ bool PropertyStruct::IsDefault(const class PropertyValueRef& _ValueRef)const
 {
 	ValueRef rArrayValue			= _ValueRef;
 	const ValueStorage& aArrayValue = rArrayValue.GetValue();
-	bool bIsDefault = (aArrayValue.Count() == mDefault.Count());
+	bool bIsDefault = (aArrayValue.size() == mDefault.size());
 
-	for(zUInt idx(0), count(aArrayValue.Count()); bIsDefault && idx<count; ++idx)
+	for(zUInt idx(0), count(aArrayValue.size()); bIsDefault && idx<count; ++idx)
 		bIsDefault = (mDefault[idx] == aArrayValue[idx]);
 
 	return bIsDefault;
@@ -77,8 +74,8 @@ bool PropertyStruct::IsEqual(const PropertyValueRef& _rValue1, const PropertyVal
 		ValueRef rArrayValue2				= _rValue2;
 		const ValueStorage& aArrayValue1	= rArrayValue1.GetValue();
 		const ValueStorage& aArrayValue2	= rArrayValue2.GetValue();		
-		bool bEqual							= aArrayValue1.Count() == aArrayValue2.Count();
-		for(zUInt idx(0), count(aArrayValue1.Count()); bEqual && idx<count; ++idx)
+		bool bEqual							= aArrayValue1.size() == aArrayValue2.size();
+		for(zUInt idx(0), count(aArrayValue1.size()); bEqual && idx<count; ++idx)
 			bEqual = aArrayValue1[idx] == aArrayValue2[idx];
 
 		return bEqual;	

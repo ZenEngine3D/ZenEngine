@@ -9,7 +9,7 @@ namespace zcExp
 		const ExportInfoGfxMesh* pExportInfo = static_cast<const ExportInfoGfxMesh*>(_pExportInfo);
 
 		zResID::NameHash hName;
-		for(zUInt meshStripIdx(0), meshStripCount(pExportInfo->maMeshStripID.Count()); meshStripIdx<meshStripCount; ++meshStripIdx)
+		for(zUInt meshStripIdx(0), meshStripCount(pExportInfo->maMeshStripID.size()); meshStripIdx<meshStripCount; ++meshStripIdx)
 			hName.Append( &(pExportInfo->maMeshStripID[meshStripIdx]), sizeof(zResID) );
 
 		return zcExp::ValidateItemID(_ePlatform, _eType, _eSource, hName, _bExistOut);
@@ -31,7 +31,7 @@ namespace zcExp
 		mrExport->maMeshStripID			= pExportInfo->maMeshStripID;
 
 		// Make sure all MeshStrip are valid
-		for(zUInt stripIdx(0), stripCount(mrExport->maMeshStripID.Count()); stripIdx<stripCount; ++stripIdx)
+		for(zUInt stripIdx(0), stripCount(mrExport->maMeshStripID.size()); stripIdx<stripCount; ++stripIdx)
 		{
 			zResID resID = mrExport->maMeshStripID[stripIdx];
 			if( resID.GetType() != zenConst::keResType_GfxMeshStrip || zcDepot::ExportData.GetTyped<ExportGfxMeshStrip>(resID).IsValid()==false )
@@ -50,11 +50,10 @@ namespace zcExp
 	//! @param _aMeshStripID	- List of MeshStrip this Mesh is made of
 	//! @return 				- Created Mesh
 	//=================================================================================================
-	zResID CreateGfxMesh(const zArrayBase<zResID>& _aMeshStripID)
+	zResID CreateGfxMesh(const zArray<zResID>& _aMeshStripID)
 	{
-		//static zenMem::zAllocatorPool sMemPool("Pool CreateMesh", sizeof(ExportInfoGfxMesh), 1, 5 );
-		ExportInfoGfxMesh* pExportInfo	= zenNewPool ExportInfoGfxMesh;
-		pExportInfo->maMeshStripID		= _aMeshStripID;	
+		auto* pExportInfo			= zenMem::NewPool<ExportInfoGfxMesh>();
+		pExportInfo->maMeshStripID	= _aMeshStripID;	
 		return zcMgr::Export.CreateItem( zResID::kePlatformType_GFX, zenConst::keResType_GfxMesh, pExportInfo );
 	}
 

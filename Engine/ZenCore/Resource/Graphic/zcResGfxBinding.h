@@ -15,7 +15,7 @@ namespace zcRes
 		using Super::SetResource;
 		zenInline zU32 GetVertexFirst()const{return muVertexFirst;}
 		zenInline zU32 GetIndexFirst()const{return muIndexFirst;}
-		zenInline zU32 GetIndexCount()const{return muIndexCount;}
+		zenInline zU32 GetIndexsize()const{return muIndexCount;}
 	};
 
 	//=============================================================================================
@@ -25,7 +25,7 @@ namespace zcRes
 	{
 	zenClassDeclare(GfxMesh, GfxMesh_HAL)
 	public:		
-		const zArrayStatic<GfxMeshStripRef>& GetMeshStrips()const;	
+		const zArray<GfxMeshStripRef>& GetMeshStrips()const;	
 		using Super::SetValue;
 		using Super::SetResource;
 	};

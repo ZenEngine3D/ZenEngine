@@ -29,8 +29,8 @@ protected:
 	friend class ExporterBase;
 
 #if 0 //! @todo refactor re-implement this
-	zArrayDynamic<ResDataRef>	maExportSuccess;								//!< List of successfully exported tasks
-	zArrayDynamic<ResDataRef>	maExportFail;									//!< List of failed exported tasks
+	zArrayDyn<ResDataRef>	maExportSuccess;								//!< List of successfully exported tasks
+	zArrayDyn<ResDataRef>	maExportFail;									//!< List of failed exported tasks
 	zU32						muExportPending = 0;							//!< Number of pending export tasks
 public:
 	bool						HasPendingTask() const;

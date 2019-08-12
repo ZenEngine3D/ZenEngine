@@ -22,7 +22,7 @@ protected:
 	DirectXComRef<ID3D12Resource>	mrDXQueryResources;
 	DirectXComRef<ID3D12Fence>		mrDXFence;				//!< Last resolved Query Index
 	D3D12_QUERY_TYPE				meQueryType;
-	zArrayStatic<zU8>				maResultData;
+	zArrayDyn<zU8>					maResultData;
 	UINT64							muDXFrequency	= 0;	//!< For timestamp query, the clock frequency of cmdlist
 	std::atomic<zU64>				muIndexCurrent	= 0;	//!< Next available Query Index
 	std::atomic<zU64>				muIndexStart	= 0;	//!< First un-submitted Query Index
@@ -47,7 +47,7 @@ public:
 	
 	virtual void								FrameBegin(zcRes::GfxWindowRef _FrameWindow);
 	virtual void								FrameEnd();
-	void										SubmitToGPU(const CommandListRef& _rCommandlist, const zArrayDynamic<CommandRef>& _rCommands);
+	void										SubmitToGPU(const CommandListRef& _rCommandlist, const zArrayDyn<CommandRef>& _rCommands);
 
 //---------------------------------------------------------
 // DirectX device infos
@@ -84,7 +84,6 @@ protected:
 	DXGI_FORMAT									meFormatConvStencilSRV[zenConst::keTexFormat__Count];
 	
 	DirectXComRef<IDXGIFactory4>				mrDXFactory;
-	DirectXComRef<IDXGIAdapter3>				mrDXAdapter;
 	DirectXComRef<ID3D12Device>					mrDXDevice;
 	DirectXComRef<ID3D12Debug1>					mrDXDebugController;	
 

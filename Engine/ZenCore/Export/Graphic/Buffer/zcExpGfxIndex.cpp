@@ -13,12 +13,11 @@ namespace zcExp
 //! @param _PrimType		- Type of primitive this list of indices represents (TriangleStrip, ...)
 //! @return 				- Unique zResID of created Resource
 //=================================================================================================
-zResID CreateGfxIndexBuffer( const zArrayBase<zU16>& _Indices, zenConst::ePrimitiveType _ePrimitiveType )
+zResID CreateGfxIndexBuffer( const zArray<zU16>& _Indices, zenConst::ePrimitiveType _ePrimitiveType )
 {
-	//static zenMem::zAllocatorPool sMemPool("Pool CreateIndexBuffer", sizeof(ExportInfoGfxIndex), 1, 5 );
-	ExportInfoGfxIndex* pExportInfo		= zenNewPool ExportInfoGfxIndex;
-	pExportInfo->maIndice16				= _Indices;
-	pExportInfo->mePrimitiveType		= _ePrimitiveType;
+	auto* pExportInfo				= zenMem::NewPool<ExportInfoGfxIndex>();
+	pExportInfo->maIndice16			= _Indices;
+	pExportInfo->mePrimitiveType	= _ePrimitiveType;
 	return zcMgr::Export.CreateItem( zResID::kePlatformType_GFX, zenConst::keResType_GfxIndex, pExportInfo );
 }
 
@@ -32,12 +31,11 @@ zResID CreateGfxIndexBuffer( const zArrayBase<zU16>& _Indices, zenConst::ePrimit
 //! @param _PrimType		- Type of primitive this list of indices represents (TriangleStrip, ...)
 //! @return 				- Unique zResID of created Resource
 //=================================================================================================
-zResID CreateGfxIndexBuffer( const zArrayBase<zU32>& _Indices, zenConst::ePrimitiveType _ePrimitiveType )
+zResID CreateGfxIndexBuffer( const zArray<zU32>& _Indices, zenConst::ePrimitiveType _ePrimitiveType )
 {
-	//static zenMem::zAllocatorPool sMemPool("Pool CreateIndexBuffer", sizeof(ExportInfoGfxIndex), 1, 5 );
-	ExportInfoGfxIndex* pExportInfo	= zenNewPool ExportInfoGfxIndex;
-	pExportInfo->maIndice32				= _Indices;
-	pExportInfo->mePrimitiveType		= _ePrimitiveType;
+	auto* pExportInfo				= zenMem::NewPool<ExportInfoGfxIndex>();
+	pExportInfo->maIndice32			= _Indices;
+	pExportInfo->mePrimitiveType	= _ePrimitiveType;
 	return zcMgr::Export.CreateItem( zResID::kePlatformType_GFX, zenConst::keResType_GfxIndex, pExportInfo );
 }
 

@@ -7,7 +7,8 @@ namespace zen { namespace zenType
 //! @class		zString
 //-------------------------------------------------------------------------------------------------
 //! @brief		Very primitive implementation at the moment, will grow with need
-//! @todo Optim: Support datasharing with same strings, format, etc...
+//! @todo 1 Optim: Support datasharing with same strings, format, etc...
+//! @todo 1 Optim: Support string len 0
 //=================================================================================================
 class zString 
 {
@@ -28,15 +29,15 @@ public:
 	zenInline bool			operator!=(const char* _zString)const;
 
 	zenInline const char*	Last(zUInt index=0)const;
-	zenInline void			Split(char _Separator, zArrayStatic<zString>& _aStringOut, zUInt _uAdditionalArraySize=0 )const;
-	zenInline void			Merge(const zArrayStatic<zString>& _aString, char _Separator, zInt _iMaxEntry=0);
+	zenInline void			Split(char _Separator, zArrayDyn<zString>& _aStringOut, zUInt _uAdditionalArraySize=0 )const;
+	zenInline void			Merge(const zArray<zString>& _aString, char _Separator, zInt _iMaxEntry=0);
 	zenInline zUInt			Len()const;
 	zString&				Copy(const char* _zString, zUInt _uCount=0xFFFFFFFF);
 
-	static void				Split(const char* _zString, char _Separator, zArrayStatic<zString>& _aStringOut, zUInt _uAdditionalArraySize=0 );
-	static void				Merge(const zArrayStatic<zString>& _aStrings, char _Separator, zString& _zStringOut, zInt _iMaxEntry=0);
+	static void				Split(const char* _zString, char _Separator, zArrayDyn<zString>& _aStringOut, zUInt _uAdditionalArraySize=0 );
+	static void				Merge(const zArray<zString>& _aStrings, char _Separator, zString& _zStringOut, zInt _iMaxEntry=0);
 protected:
-	zArrayDynamic<char>		maChar;
+	zArrayDyn<char>			maChar;
 };
 
 //! @todo 1 Improve string hash to prevent repetitive alloc on const char* (llook at zScopedEventCpu name for example)

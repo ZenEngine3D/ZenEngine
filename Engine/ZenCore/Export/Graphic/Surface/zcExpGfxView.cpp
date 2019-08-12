@@ -8,7 +8,7 @@ namespace zcExp
 		zenAssert( _pExportInfo );
 		zResID::NameHash hName;
 		const ExportInfoGfxView* pExportInfo = static_cast<const ExportInfoGfxView*>(_pExportInfo);
-		hName.Append( (void*)pExportInfo->mpaRTColorConfig->First(), pExportInfo->mpaRTColorConfig->SizeMem() );
+		hName.Append( (void*)&pExportInfo->mpaRTColorConfig->front(), pExportInfo->mpaRTColorConfig->SizeMem() );
 		hName.Append( (void*)&pExportInfo->mpRTDepthConfig, sizeof(pExportInfo->mpRTDepthConfig) );
 		hName.Append( (void*)&pExportInfo->mvDim, sizeof(pExportInfo->mvDim) );
 		hName.Append( (void*)&pExportInfo->mvOrigin, sizeof(pExportInfo->mvOrigin) );
@@ -43,7 +43,7 @@ namespace zcExp
 			}
 		}
 
-		for(zUInt rtIdx(0), rtCount(pExportInfo->mpaRTColorConfig->Count()); rtIdx<rtCount; ++rtIdx)
+		for(zUInt rtIdx(0), rtCount(pExportInfo->mpaRTColorConfig->size()); rtIdx<rtCount; ++rtIdx)
 		{
 			const zenRes::zGfxRenderPass::ConfigColorRT& RTConfig	= (*pExportInfo->mpaRTColorConfig)[rtIdx];
 			zcRes::GfxTarget2DRef rColorSurface						= RTConfig.mrTargetSurface;
@@ -73,10 +73,9 @@ namespace zcExp
 	//! @param _vOrigin			- Viewport origin ([0,0] by default)
 	//! @return 				- Unique zResID of created Resource
 	//=================================================================================================
-	zResID CreateGfxView( const zArrayBase<zenRes::zGfxRenderPass::ConfigColorRT>& _aRTColorConfig, const zenRes::zGfxRenderPass::ConfigDepthRT& _RTDepthConfig, const zVec2U16& _vDim, const zVec2S16& _vOrigin )
+	zResID CreateGfxView( const zArray<zenRes::zGfxRenderPass::ConfigColorRT>& _aRTColorConfig, const zenRes::zGfxRenderPass::ConfigDepthRT& _RTDepthConfig, const zVec2U16& _vDim, const zVec2S16& _vOrigin )
 	{
-		//static zenMem::zAllocatorPool sMemPool("Pool Views", sizeof(ExportInfoGfxView), 1, 5 );
-		ExportInfoGfxView* pExportInfo	= zenNewPool ExportInfoGfxView;
+		auto* pExportInfo					= zenMem::NewPool<ExportInfoGfxView>();
 		pExportInfo->mpaRTColorConfig		= &_aRTColorConfig;
 		pExportInfo->mpRTDepthConfig		= &_RTDepthConfig;
 		pExportInfo->mvDim					= _vDim;

@@ -7,15 +7,15 @@ class zFlag
 {
 public:
 	zenInline						zFlag();
-	zenInline						zFlag(bool _bInitAllActive);
-	template<typename... Ts>		zFlag(Ts... r);
+	//zenInline	explicit			zFlag(bool _bInitAllActive);
+	template<typename... Ts>		zFlag(TEnumFlag inFlag, Ts... r);
 	
 	zenInline bool					Any()const;
 	zenInline bool					Any(const zFlag& _Cmp)const;
-	template<typename... Ts> bool	Any(Ts... r)const;
+	template<typename... Ts> bool	Any(TEnumFlag inFlag, Ts... r)const;
 
 	zenInline bool					All(const zFlag& _Cmp)const;
-	template<typename... Ts> bool	All(Ts... r)const;
+	template<typename... Ts> bool	All(TEnumFlag inFlag, Ts... r)const;
 
 	zenInline const zFlag&			operator= (const zFlag& _Cpy);
 	zenInline const zFlag&			operator+=(const zFlag& _Add);
@@ -38,11 +38,10 @@ public:
 	zenInline bool					operator==( const zFlag& _Cmp )const;
 	zenInline bool					operator!=( const zFlag& _Cmp )const;
 	
-	template<typename... Ts>
-	constexpr static TStorage		Mask(TEnumFlag Value, Ts... r);
-	constexpr static TStorage		Mask(TEnumFlag _Value);
+	template<typename... Ts>	
+	constexpr static TStorage Mask(TEnumFlag Value, Ts... r);
+	constexpr static TStorage Mask(){return 0;}
 protected:		
-	zenInline						zFlag(TStorage _Mask);
 	TStorage						muFlags;
 };
 

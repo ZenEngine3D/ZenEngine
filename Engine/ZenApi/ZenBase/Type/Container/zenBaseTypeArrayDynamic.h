@@ -3,49 +3,102 @@
 namespace zen { namespace zenType 
 {
 
-	//! @brief Default array size increase policy (1.5x needed size)
-	//! @todo 1 safety constructor/destructor not called on individual item, just on array resize...
-	typedef zUInt(*GrowthPolicyFunction)(zUInt _uCurrentCount, zUInt _uNeededCount, zUInt _uItemSize); 
-	zUInt GrowthPolicyOneandHalf( zUInt _uCurrentCount, zUInt _uNeededCount, zUInt _uItemSize);
-
-	template<class TType, GrowthPolicyFunction TGrowthPolicy=GrowthPolicyOneandHalf>
-	class zArrayDynamic : public zArrayBase<TType>
+//! @todo 2 Move constructor
+template<class TType>
+class zArrayDyn: public zArray<TType>
+{
+zenClassDeclare(zArrayDyn, zArray<TType>)
+public:
+	zArrayDyn()
 	{
-	zenClassDeclare(zArrayDynamic, zArrayBase<TType>)
-	public:
-									zArrayDynamic();
-									zArrayDynamic(zU32 _uCount);
-									zArrayDynamic(std::initializer_list<TType> _Entries);
-									zArrayDynamic(const TType* _pCopy, zUInt _uCount, zUInt _uExtraCount=0);
-									zArrayDynamic(const zArrayDynamic& _Copy, zUInt _uExtraCount=0);
-		virtual						~zArrayDynamic();
-		virtual zUInt				SetCount(zUInt _uCount);
-		zUInt						IncCount(zUInt _uCountAddtional);
+	}
+	zArrayDyn(zUInt inCount)
+	{
+		resize(inCount);
+	}
 
-		void						operator+=( const zArrayBase<TType>& _ArrayAdd );
-		void						Push(const TType& _Copy);
-		void						Push(const TType* _Copy, zUInt _uCount);
-		TType						Pop();
+	zArrayDyn(const zArray<TType>& inCopy)
+	{ 
+		Copy<TType>(inCopy); 
+	}
 
-		void						RemoveSwap( zUInt _uIndex );
-		void						RemoveSwap( const TType& _Item );
+	//! @note : Have to declare operator= with same class, to prevent wrong default one created by compiler
+	zArrayDyn(const zArrayDyn<TType>& inCopy)
+	{ 
+		Copy<TType>(inCopy); 
+	}
 
-		void						Reset( zUInt _uReserveCount=(zUInt)-1 );
-		void						Reserve(zUInt _uCount);		
-		zUInt						ReservedCount()const;
-		zUInt						ReservedSize()const;
-		
-	protected:
-		zenInline zUInt				AppendInternal(const TType* _pCopy, zUInt _uCount);		
-		void						Shrink( );											//!< @brief	Reduce array size when needed
-		void						Grow( zUInt _auCountNeeded );						//!< @brief Increase array size when needed
-		void						GrowNoConstructor( zUInt _auCountNeeded );			//!< @brief Increase array size without calling TType's constructors
-		virtual zUInt				SetCountNoConstructor(zUInt _uCount);				//!< @brief Resize array without calling constructor (usefull for quick memcopy, use carefully)
-		zUInt						muCountReserved;									//!< Space currently allocated
-		zUInt						muCountReservedMin;									//!< Minimum space we should always have allocated
-	public:
-		using zArrayBase<TType>::operator=;
-	};
+	zArrayDyn(const TType* InpCopy, zUInt inCount)
+	{
+		Copy(InpCopy, inCount);
+	}
+
+	zArrayDyn(std::initializer_list<TType> inEntries)
+	{
+		Copy(inEntries.begin(), inEntries.size());
+	}
+
+	virtual ~zArrayDyn()
+	{
+		zenMem::DelSafe(mpData);
+	}
+	
+	void resize(zUInt inCount, const TType& inDefault)
+	{
+		mCount = inCount;
+		if( inCount == 0 )
+			zenMem::DelSafe(mpData);
+		else
+			mpData = (mpData == nullptr) ? zenMem::NewResizeable<TType>(inCount, inDefault) : zenMem::Resize<TType>(mpData, inCount, inDefault);		
+	}
+
+	//Using STL container naming convention
+	zUInt resize(zUInt inCount)
+	{
+		mCount = inCount;
+		if( inCount == 0 )
+			zenMem::DelSafe(mpData);
+		else
+			mpData = (mpData == nullptr) ? zenMem::NewResizeable<TType>(inCount) : zenMem::Resize<TType>(mpData, inCount);		
+		return mCount;
+	}
+
+	zArrayDyn& push_back(const TType& inItemAdd)
+	{
+		resize(mCount + 1, inItemAdd);
+		return *this;
+	}
+
+	TType pop_back()
+	{
+		zenAssert(empty() == false);
+		TType value = back();
+		resize(mCount - 1);
+		return value;
+	}
+
+	void clear()
+	{
+		resize(0);
+	}
+
+	zenInline zArrayDyn& operator=(const zArray<TType>& inCopy)
+	{ 
+		return Copy<TType>(inCopy); 
+	}
+	//! @note : Have to declare operator= with same class, to prevent wrong default one created by compiler
+	zenInline zArrayDyn& operator=(const zArrayDyn<TType>& inCopy)
+	{ 
+		return Copy<TType>(inCopy); 
+	}
+
+	//Non-STL container naming convention
+	zArrayDyn&								Copy(const TType* zenRestrict inpCopy, zUInt inCount);			//!< @brief Copy the value of a Memory area to this array
+	template<class TTypeImport> zArrayDyn&	Copy(const TTypeImport* zenRestrict inpCopy, zUInt inCount);	//!< @brief Copy the value of another Array	
+	template<class TTypeImport> zArrayDyn&	Copy(const zArray<TTypeImport>& zenRestrict inCopy);			//!< @brief Copy the value of another Array	
+	TType&									Erase_swap(zUInt inIndex);
+	void									Reserve(zUInt inCount){}	//SF Remove me or implement properly
+};
 
 } } //namespace zen, Type
 

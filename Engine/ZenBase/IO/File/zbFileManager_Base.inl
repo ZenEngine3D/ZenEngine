@@ -2,6 +2,6 @@ namespace zbFile
 {
 	bool Filename::IsValid()const
 	{
-		return mzFilename.Count() > 3 && mzFilename[0] != L'.';
+		return mzFilename.size() > 3 && mzFilename[0] != L'.';
 	}
 }  

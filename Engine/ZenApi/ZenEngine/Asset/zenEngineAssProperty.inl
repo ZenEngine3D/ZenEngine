@@ -71,9 +71,8 @@ TPropertyDefinition<TPropertyType, TClassDefinition, TClassValue>::TPropertyDefi
 template<zenConst::eAssetPropertyType TPropertyType, class TClassDefinition, class TClassValue>
 PropertyValueRef TPropertyDefinition<TPropertyType, TClassDefinition, TClassValue>::Allocate(const zAssetItemRef& _rOwnerAsset) const
 {	
-	//static zenMem::zAllocatorPool sAllocPool( "TPropertyDefinition::Allocate", sizeof(ValueProperty), 256, 256 );
-	ValueProperty* pValue	= zenNewPool ValueProperty(_rOwnerAsset, this); 
-	pValue->mValue			= static_cast<const TClassDefinition*>(this)->mDefault;
+	auto* pValue	= zenMem::NewPool<ValueProperty>(_rOwnerAsset, this); 
+	pValue->mValue	= static_cast<const TClassDefinition*>(this)->mDefault;
 	return pValue;
 }
 

@@ -14,9 +14,9 @@ namespace zcExp
 		if( Super::ExportStart() == false )
 			return false;			
 
-		ExportInfoGfxMeshStrip*							pExportInfo	= static_cast<ExportInfoGfxMeshStrip*>(mpExportInfo);
-		const zArrayStatic<zenRes::zShaderResource>&	aResources	= pExportInfo->maResources;
-		zEngineConstRef<ExportGfxShader>				arShader[keShaderStage__Count];
+		ExportInfoGfxMeshStrip*					pExportInfo	= static_cast<ExportInfoGfxMeshStrip*>(mpExportInfo);
+		const zArray<zenRes::zShaderResource>&	aResources	= pExportInfo->maResources;
+		zEngineConstRef<ExportGfxShader>		arShader[keShaderStage__Count];
 
 		mrExport->mIndexBufferID									= pExportInfo->mIndexBufferID;				
 		mrExport->mShaderBindingID									= pExportInfo->mShaderBindingID;
@@ -28,9 +28,9 @@ namespace zcExp
 		zEngineConstRef<ExportGfxShaderBinding>	rShaderBinding		= zcDepot::ExportData.GetTyped<ExportGfxShaderBinding>(pExportInfo->mShaderBindingID);		
 		if( rIndexBuffer.IsValid() && rShaderBinding.IsValid() )
 		{						
-			zUInt cbuffDefCount			= rShaderBinding->maCBufferParentID.Count();
+			zUInt cbuffDefCount			= rShaderBinding->maCBufferParentID.size();
 			mrExport->muIndexCount		= zenMath::Min( mrExport->muIndexCount, rIndexBuffer->muIndiceCount-mrExport->muIndexFirst );
-			mrExport->maConstanBufferID.SetCount( cbuffDefCount );
+			mrExport->maConstanBufferID.resize( cbuffDefCount );
 
 			//-------------------------------------------------------------------------------------
 			// Init Shaders input slots
@@ -40,13 +40,13 @@ namespace zcExp
 				if( arShader[stageIdx].IsValid() )
 				{					
 					for(zUInt resType(0); resType<keShaderRes__Count; ++resType)
-						mrExport->maResourceID[stageIdx][resType].SetCount( arShader[stageIdx]->maResourceBindMax[resType] );
+						mrExport->maResourceID[stageIdx][resType].resize( arShader[stageIdx]->maResourceBindMax[resType] );
 				}
 			}
 
 			//-------------------------------------------------------------------------------------
 			// Assign provided resources to input slots			
-			for(zUInt resIdx(0), resCount(pExportInfo->maResources.Count()); resIdx<resCount; ++resIdx)
+			for(zUInt resIdx(0), resCount(pExportInfo->maResources.size()); resIdx<resCount; ++resIdx)
 			{	
 				const zResID ResID = aResources[resIdx].mResourceID;
 				if( ResID.IsValid() )
@@ -81,10 +81,10 @@ namespace zcExp
 						{
 							//! @todo safe make sure the resource is proper size/type
 							auto resIndex = resInfo.muShaderResIndex[stageIdx];
-							if( arShader[stageIdx].IsValid() && resIndex < arShader[stageIdx]->maResourceBinding.Count() )
+							if( arShader[stageIdx].IsValid() && resIndex < arShader[stageIdx]->maResourceBinding.size() )
 							{
 								const ExportGfxShader::ShaderBindInfo& bindInfo							= arShader[stageIdx]->maResourceBinding[ resIndex ];
-								zenAssert( bindInfo.muSlotIndex < mrExport->maResourceID[stageIdx][bindInfo.meType].Count() );
+								zenAssert( bindInfo.muSlotIndex < mrExport->maResourceID[stageIdx][bindInfo.meType].size() );
 								mrExport->maResourceID[stageIdx][bindInfo.meType][bindInfo.muSlotIndex] = ResID;							
 							}
 						}
@@ -110,7 +110,7 @@ namespace zcExp
 					{
 						zEngineRef<ExportGfxShader> rShader = zcDepot::ExportData.GetTyped<ExportGfxShader>( rShaderBinding->maShaderID[stageIdx] );
 						auto resIndex						= resInfo.muShaderResIndex[stageIdx];
-						if( arShader[stageIdx].IsValid() && resIndex < arShader[stageIdx]->maResourceBinding.Count() )
+						if( arShader[stageIdx].IsValid() && resIndex < arShader[stageIdx]->maResourceBinding.size() )
 						{
 							zcExp::ExportGfxShader::ShaderBindInfo& BindInfo = rShader->maResourceBinding[ resIndex ];
 							mrExport->maResourceID[stageIdx][keShaderRes_CBuffer][BindInfo.muSlotIndex] = mrExport->maConstanBufferID[cbuffDefIdx];
@@ -138,16 +138,15 @@ namespace zcExp
 	//! @param _uIndexCount		- Number of Index to use in IndexBuffer
 	//! @return 				- Created MeshStrip
 	//=================================================================================================
-	zResID CreateGfxMeshStrip(zResID _IndexBufferID, zResID _ShaderBindingID, zU32 _uIndexFirst, zU32 _uIndexCount, zU32 _uVertexFirst, const zArrayBase<zenRes::zShaderResource>& _aResources)
+	zResID CreateGfxMeshStrip(zResID _IndexBufferID, zResID _ShaderBindingID, zU32 _uIndexFirst, zU32 _uIndexCount, zU32 _uVertexFirst, const zArray<zenRes::zShaderResource>& _aResources)
 	{
-		//static zenMem::zAllocatorPool sMemPool("Pool CreateMeshStrip", sizeof(ExportInfoGfxMeshStrip), 1, 5 );
-		ExportInfoGfxMeshStrip* pExportInfo	= zenNewPool ExportInfoGfxMeshStrip;
-		pExportInfo->mIndexBufferID				= _IndexBufferID;
-		pExportInfo->mShaderBindingID			= _ShaderBindingID;
-		pExportInfo->maResources				= _aResources;				
-		pExportInfo->muVertexFirst				= _uVertexFirst;
-		pExportInfo->muIndexFirst				= _uIndexFirst;
-		pExportInfo->muIndexCount				= _uIndexCount;		
+		auto* pExportInfo				= zenMem::NewPool<ExportInfoGfxMeshStrip>();
+		pExportInfo->mIndexBufferID		= _IndexBufferID;
+		pExportInfo->mShaderBindingID	= _ShaderBindingID;
+		pExportInfo->maResources		= _aResources;				
+		pExportInfo->muVertexFirst		= _uVertexFirst;
+		pExportInfo->muIndexFirst		= _uIndexFirst;
+		pExportInfo->muIndexCount		= _uIndexCount;		
 		return zcMgr::Export.CreateItem( zResID::kePlatformType_GFX, zenConst::keResType_GfxMeshStrip, pExportInfo );
 	}
 

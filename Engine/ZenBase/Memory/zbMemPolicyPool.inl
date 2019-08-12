@@ -50,8 +50,9 @@ void PolicyPool<TGroupCountMax, TSizeMax>::AddPoolGroup(const PoolGroup::Config&
 }
 
 template<zInt TGroupCountMax, size_t TSizeMax>
-SAllocInfo PolicyPool<TGroupCountMax, TSizeMax>::Malloc(size_t _Size)
+SAllocInfo PolicyPool<TGroupCountMax, TSizeMax>::Malloc(size_t _Size, size_t inItemCount, zenMem::AllocFlags inAllocFlags)
 {	
+	zenAssert(inItemCount == 1);
 	const auto GroupIndex = GetPoolGroup(_Size).mGroupIndex;
 	return maPoolGroup[GroupIndex].Malloc(_Size);
 }
@@ -66,19 +67,16 @@ void PolicyPool<TGroupCountMax, TSizeMax>::Free(void* _pMemory)
 }
 
 template<zInt TGroupCountMax, size_t TSizeMax>
-SAllocInfo PolicyPool<TGroupCountMax, TSizeMax>::Resize(void* _pMemory, size_t _NewSize)
+SAllocInfo PolicyPool<TGroupCountMax, TSizeMax>::Resize(void* inpMemory, size_t inNewSize, size_t inItemCount)
 {
 	zenAssert(0); //Pool Policy doesn't support resize
 	return SAllocInfo();
 }
 
 template<zInt TGroupCountMax, size_t TSizeMax>
-size_t PolicyPool<TGroupCountMax, TSizeMax>::GetRequestedSize(void* _pMemory)
+size_t PolicyPool<TGroupCountMax, TSizeMax>::GetRequestedCount(void* _pMemory)
 {
-	zenAssert(_pMemory != nullptr);
-	VAddressPool* pPoolInfo = reinterpret_cast<VAddressPool*>(&_pMemory);
-	zenAssert((zInt)pPoolInfo->GroupIndex < mPoolGroupCount && pPoolInfo->PolicyType == kPolicy_Pool);
-	return maPoolGroup[pPoolInfo->GroupIndex].GetConfig().mItemSize;
+	return 1;
 }
 
 }  

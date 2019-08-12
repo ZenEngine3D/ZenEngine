@@ -3,12 +3,12 @@
 namespace zcGfx
 {
 D3D12_FEATURE_DATA_ROOT_SIGNATURE		RootSignature::sFeatureData;
-zArrayStatic<D3D12_STATIC_SAMPLER_DESC>	RootSignature::saSamplerDescTemp;
+zArrayDyn<D3D12_STATIC_SAMPLER_DESC>	RootSignature::saSamplerDescTemp;
 
 bool RootSignature::StaticInitialize( )
 {
 	//! @todo 0 support sampler properly
-	saSamplerDescTemp.SetCount(1);
+	saSamplerDescTemp.resize(1);
 	saSamplerDescTemp[0] = {};
 	saSamplerDescTemp[0].Filter				= D3D12_FILTER_MIN_MAG_MIP_POINT;
 	saSamplerDescTemp[0].AddressU			= D3D12_TEXTURE_ADDRESS_MODE_BORDER;
@@ -47,7 +47,7 @@ RootSignature::RootSignature(const RootSignature& _Copy)
 RootSignature::RootSignature(const std::initializer_list<CD3DX12_ROOT_PARAMETER1>& _Entries, D3D12_ROOT_SIGNATURE_FLAGS _Flags)
 {	
 	CD3DX12_VERSIONED_ROOT_SIGNATURE_DESC RootDesc;
-	RootDesc.Init_1_1((UINT)_Entries.size(), _Entries.begin(), (UINT)saSamplerDescTemp.Count(), saSamplerDescTemp.First(), _Flags); //No static sampler support for now
+	RootDesc.Init_1_1((UINT)_Entries.size(), _Entries.begin(), (UINT)saSamplerDescTemp.size(), saSamplerDescTemp.Data(), _Flags); //No static sampler support for now
 
 	DirectXComRef<ID3DBlob> rSignature, rError;
 	HRESULT hr = D3DX12SerializeVersionedRootSignature(&RootDesc, sFeatureData.HighestVersion, rSignature.GetAddressOf(), rError.GetAddressOf());
@@ -58,10 +58,10 @@ RootSignature::RootSignature(const std::initializer_list<CD3DX12_ROOT_PARAMETER1
 	}
 }
 
-RootSignature::RootSignature(const zArrayBase<CD3DX12_ROOT_PARAMETER1>& _Entries, D3D12_ROOT_SIGNATURE_FLAGS _Flags)
+RootSignature::RootSignature(const zArray<CD3DX12_ROOT_PARAMETER1>& _Entries, D3D12_ROOT_SIGNATURE_FLAGS _Flags)
 {	
 	CD3DX12_VERSIONED_ROOT_SIGNATURE_DESC RootDesc;
-	RootDesc.Init_1_1((UINT)_Entries.Count(), _Entries.First(), (UINT)saSamplerDescTemp.Count(), saSamplerDescTemp.First(), _Flags); //No static sampler support for now
+	RootDesc.Init_1_1((UINT)_Entries.size(), _Entries.Data(), (UINT)saSamplerDescTemp.size(), saSamplerDescTemp.Data(), _Flags); //No static sampler support for now
 
 	DirectXComRef<ID3DBlob> rSignature, rError;
 	HRESULT hr = D3DX12SerializeVersionedRootSignature(&RootDesc, sFeatureData.HighestVersion, rSignature.GetAddressOf(), rError.GetAddressOf());

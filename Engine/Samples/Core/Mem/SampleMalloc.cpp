@@ -55,23 +55,70 @@ namespace sample
 		zU64 mValue = 0;
 	};
 
+	class ClassTestResize
+	{
+	public:
+		__declspec(noinline)  ClassTestResize(int value, int value2)
+		{
+			mVal = 	value + value2;
+			sAlive++;	
+		}
+		__declspec(noinline)  ClassTestResize()
+		{
+			mVal = 	sAlive++;	
+		}
+		__declspec(noinline)  ~ClassTestResize()
+		{
+			--sAlive;
+		}
+		zI32 mVal;
+		static zI32 sAlive;
+	};
+	zI32 ClassTestResize::sAlive = 0;
+
 	//==================================================================================================
 	//! @brief		Test simple new/malloc memory allocation	
 	//==================================================================================================
 	void SampleMalloc()
 	{	
+		zU32* pIntVal[6]; ClassTestResize* pClassVal[6];
+		pIntVal[0]		= zenMem::New<zU32>();
+		pIntVal[1]		= zenMem::New<zU32>(1);
+		pIntVal[2]		= zenMem::NewPool<zU32>(2);
+		pIntVal[3]		= zenMem::NewArray<zU32>(10, 3);
+		pIntVal[4]		= zenMem::NewArray<zU32>(10);
+		pIntVal[5]		= zenMem::NewResizeable<zU32>(10, 1);
+		pClassVal[0]	= zenMem::New<ClassTestResize>();
+		pClassVal[1]	= zenMem::New<ClassTestResize>(1,2);
+		pClassVal[2]	= zenMem::NewPool<ClassTestResize>(3,4);
+		pClassVal[3]	= zenMem::NewArray<ClassTestResize>(10);
+		pClassVal[4]	= zenMem::NewArray<ClassTestResize>(10, 5, 6);
+		pClassVal[5]	= zenMem::NewResizeable<ClassTestResize>(10, 5, 5);
+		
+		pIntVal[5]		= zenMem::Resize(pIntVal[5], 20);
+		pIntVal[5]		= zenMem::Resize(pIntVal[5], 5);
+
+		pClassVal[5]	= zenMem::Resize(pClassVal[5], 20);
+		pClassVal[5]	= zenMem::Resize(pClassVal[5], 5);
+
+		for(int i(0); i<zenArrayCount(pIntVal); ++i)
+			zenMem::Del(pIntVal[i]);
+		for(int i(0); i<zenArrayCount(pClassVal); ++i)
+			zenMem::Del(pClassVal[i]);
+
+
 		zenIO::Log(zenConst::keLog_Game, zenConst::kzLineA40);
 		zenIO::Log(zenConst::keLog_Game, " MALLOC");
 		zenIO::Log(zenConst::keLog_Game, zenConst::kzLineA40);
 
-		TestArrayResize* pTestElement1 = zenNew TestArrayResize[10];
-		delete[] pTestElement1;
+		TestArrayResize* pTestElement1 = zenMem::NewArray<TestArrayResize>(10);
+		zenMem::Del(pTestElement1);
 		
 		size_t count = 6000;
-		TestArrayResize* pTestElement2 = zenNewWithResize(4000) TestArrayResize[10];
+		TestArrayResize* pTestElement2 = zenMem::NewResizeable<TestArrayResize>(10);
 		pTestElement2[0].mValue		= 0;
 		//pTestElement2[6000].mValue	= 0; // Crash
-		zenMem::Resize(pTestElement2, 4000);
+		pTestElement2 = zenMem::Resize(pTestElement2, 4000);
 		pTestElement2[3999].mValue	= 0; // Ok
 
 		//------------------------------------------------------------------------------------------
@@ -79,69 +126,68 @@ namespace sample
 		//------------------------------------------------------------------------------------------
 		std::array<TestPoolA*,4> aPoolAllocA;
 		for(auto& pItem : aPoolAllocA)
-			pItem = zenNewPool TestPoolA();
+			pItem = zenMem::NewPool<TestPoolA>();
 
 		std::array<TestPoolB*,4> aPoolAllocB;
 		for(auto& pItem : aPoolAllocB)
-			pItem = zenNewPool TestPoolB();
+			pItem = zenMem::NewPool<TestPoolB>();
 
 		for(auto& pItem : aPoolAllocA)
-			delete pItem;
+			zenMem::Del(pItem);
 
 		for(auto& pItem : aPoolAllocB)
-			delete pItem;
+			zenMem::Del(pItem);
 
-		int* pvalues = zenNew int;
+		int* pvalues = zenMem::New<int>();
 		*pvalues = 1;
-		delete pvalues;
-		pvalues = zenNew int[10];
+		zenMem::Del(pvalues);
+		pvalues = zenMem::NewArray<int>(10);
 		pvalues[0] = 2;
-		delete[] pvalues;
+		zenMem::Del(pvalues);
 
 		//------------------------------------------------------------------------------------------
 		// Testing OutOfBound access
 		//------------------------------------------------------------------------------------------
-		zU8* pProtectTest = zenNewCheck zU8[5];
+		zU8* pProtectTest = zenMem::NewProtected<zU8>(5);
 		pProtectTest[0] = 0;
 		pProtectTest[1] = 0;
 		pProtectTest[2] = 0;
 		pProtectTest[3] = 0;
 		pProtectTest[4] = 0;
 		//pProtectTest[5] = 0;					// Should generate Protection Fault
-		delete[] pProtectTest;
+		zenMem::Del(pProtectTest);
 		//volatile zU8 value = pProtectTest[0];	// Should generate Protection Fault
 	
-		TestAlloc* pTest1		= zenNew TestAlloc(1);
-		TestAlloc* pTest2		= zenNew TestAlloc(2);
-		TestAlloc* pTest3		= zenNew TestAlloc(3);
-		TestAlloc* pArrayTest	= zenNew TestAlloc[5];
+		TestAlloc* pTest1		= zenMem::New<TestAlloc>(1);
+		TestAlloc* pTest2		= zenMem::New<TestAlloc>(2);
+		TestAlloc* pTest3		= zenMem::New<TestAlloc>(3);
+		TestAlloc* pArrayTest	= zenMem::NewArray<TestAlloc>(5);
 
 		//Test buffer overrun detection
 		//pTest1[1].mValue = 5;
-		delete pTest3;
-		delete pTest2;
-		delete pTest1;
-		delete[] pArrayTest;
+		zenMem::Del(pTest3);
+		zenMem::Del(pTest2);
+		zenMem::Del(pTest1);
+		zenMem::Del(pArrayTest);
 
-		//zenMem::zAllocatorPool PoolAlloc( "TestPool", sizeof(TestAlloc), 2, 1); 
-		pTest1 = zenNewPool TestAlloc(0x01);
-		pTest2 = zenNewPool TestAlloc(0x02);
-		pTest3 = zenNewPool TestAlloc(0x03);
-		delete pTest3;
-		delete pTest2;
-		delete pTest1;
+		pTest1 = zenMem::NewPool<TestAlloc>(0x01);
+		pTest2 = zenMem::NewPool<TestAlloc>(0x02);
+		pTest3 = zenMem::NewPool<TestAlloc>(0x03);
+		zenMem::Del(pTest3);
+		zenMem::Del(pTest2);
+		zenMem::Del(pTest1);
 
-		pTest1 = zenNewPool TestAlloc(0x11);
-		pTest2 = zenNewPool TestAlloc(0x12);
-		pTest3 = zenNewPool TestAlloc(0x13);
-		delete pTest3;
-		delete pTest2;
-		delete pTest1;
+		pTest1 = zenMem::NewPool<TestAlloc>(0x11);
+		pTest2 = zenMem::NewPool<TestAlloc>(0x12);
+		pTest3 = zenMem::NewPool<TestAlloc>(0x13);
+		zenMem::Del(pTest3);
+		zenMem::Del(pTest2);
+		zenMem::Del(pTest1);
 
 	//	TestAlloc* pTestMismatch1 = new TestAlloc(1);
-//		delete[] pTestMismatch1;
+//		zenMem::Del(pTestMismatch1);
 	//	TestAlloc* pTestMismatch2 = new TestAlloc[5];
-//		delete pTestMismatch2;
+//		zenMem::Del(pTestMismatch2);
 	}
 
 }

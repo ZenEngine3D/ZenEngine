@@ -2,6 +2,6 @@
 
 namespace zcExp
 {
-	bool GenerateTexture( zArrayStatic<MipInfo>& _aOutMips, const ExportInfoGfxTexture2D& _ExportInfo );
+	bool GenerateTexture( zArrayDyn<MipInfo>& _aOutMips, const ExportInfoGfxTexture2D& _ExportInfo );
 }
 

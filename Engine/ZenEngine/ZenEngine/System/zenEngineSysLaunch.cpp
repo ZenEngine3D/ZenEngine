@@ -33,7 +33,7 @@ bool zEngineInstance::Init()
 void zEngineInstance::Destroy()
 {
 	//mrMainWindowGfx = nullptr;
-	zenDelNullptr(mpMainWindowOS);		
+	zenMem::DelSafe(mpMainWindowOS);		
 	zbSys::EngineStop();
 	gpActiveEngine = nullptr;
 }
@@ -84,7 +84,7 @@ void zEngineInstance::CreateGfxWindow(const zVec2U16& _vDim, const zVec2U16& _vP
 	zenAssert(mpMainWindowOS == nullptr);
 	//! @todo Clean improve windows creation to be more os agnostic, and more parameters (fullscreen, etc...)
 	//! @todo clean make os window a resource too
-	mpMainWindowOS					= zenNew zenWnd::Window(L"MainWindow", _vDim);
+	mpMainWindowOS					= zenMem::New<zenWnd::Window>(L"MainWindow", _vDim);
 	mpMainWindowOS->Initialize();
 	mrMainWindowGfx					= mpMainWindowOS->GetGfxWindow();
 	mrMainWindowGfx->mpMainWindowOS	= mpMainWindowOS;

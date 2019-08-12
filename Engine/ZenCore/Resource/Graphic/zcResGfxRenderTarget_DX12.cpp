@@ -1,6 +1,5 @@
 #include "zcCore.h"
 
-//SF DX12
 namespace zcRes
 {
 
@@ -21,8 +20,7 @@ GfxTarget2DRef GfxTarget2D_DX12::RuntimeCreate(const DirectXComRef<IDXGISwapChai
 		D3D12_RESOURCE_DESC RenderTargetDesc = rDXRendertarget->GetDesc();
 		if( RenderTargetDesc.Dimension == D3D12_RESOURCE_DIMENSION_TEXTURE2D && RenderTargetDesc.Flags & D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET )
 		{
-			//static zenMem::zAllocatorPool sMemPool("Pool GfxTarget2D", sizeof(GfxTarget2D), 128, 128);		
-			rRendertarget						= zenNewPool GfxTarget2D();		
+			rRendertarget						= zenMem::New<GfxTarget2D>();
 			rRendertarget.HAL()->meFormat		= _eTexFormat;
 			rRendertarget.HAL()->mvDim			= zVec2U16((zU16)RenderTargetDesc.Width, (zU16)RenderTargetDesc.Height);
 			rRendertarget.HAL()->mrResource		= rDXRendertarget;
@@ -40,20 +38,10 @@ GfxTarget2DRef GfxTarget2D_DX12::RuntimeCreate(const DirectXComRef<IDXGISwapChai
 //==================================================================================================
 bool GfxTarget2D_DX12::Initialize()
 {
-#if ZEN_RENDERER_DX12
 	const DirectXComRef<ID3D12Resource> rSurface;
 	GfxTarget2DRef	rRenderTarget	= (GfxTarget2D*)this;
 	GfxTexture2DRef	rTexture		= rRenderTarget->GetTexture2D();
 	return InitializeCommon(rTexture.HAL()->mResource.mrResource);
-
-#else
-	HRESULT hr(S_FALSE);
-	ID3D11Texture2D*	pTexture(nullptr);	
-	GfxTarget2DRef		rRenderTarget		= (GfxTarget2D*)this;
-	GfxTexture2DRef		rTexture			= rRenderTarget->GetTexture2D();
-	return InitializeCommon(*rTexture.HAL()->mpTextureBuffer);
-#endif
-	
 }
 
 //==================================================================================================

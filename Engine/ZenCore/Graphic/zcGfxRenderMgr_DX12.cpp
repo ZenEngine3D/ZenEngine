@@ -27,7 +27,7 @@ void QueryHeapRingbuffer_DX12::Initialize(D3D12_QUERY_HEAP_TYPE _eQueryType, zU6
 	case D3D12_QUERY_HEAP_TYPE_SO_STATISTICS:		meQueryType = D3D12_QUERY_TYPE_SO_STATISTICS_STREAM0;	muQueryDataSize = sizeof(D3D12_QUERY_DATA_SO_STATISTICS);break;
 	};
 
-	maResultData.SetCount( _uCount*muQueryDataSize );
+	maResultData.resize( _uCount*muQueryDataSize );
 	HRESULT hResult				= zcMgr::GfxRender.GetDevice()->CreateQueryHeap(&QueryHeapDesc, IID_PPV_ARGS(&mrDXQueryHeap));	
 	zcMgr::GfxRender.GetDevice()->CreateFence(0, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&mrDXFence));
 
@@ -78,32 +78,40 @@ zUInt QueryHeapRingbuffer_DX12::GetNewQuery()
 
 // Helper function for acquiring the first available hardware adapter that supports Direct3D 12.
 // If no such adapter can be found, *ppAdapter will be set to nullptr.
-void GetHardwareAdapter(IDXGIFactory2* pFactory, IDXGIAdapter1** ppAdapter)
+void GetHardwareAdapter(IDXGIFactory2* pFactory, IDXGIAdapter1*& outpAdapter, bool inbUseWarp)
 {
-	Microsoft::WRL::ComPtr<IDXGIAdapter1> adapter;
-	*ppAdapter = nullptr;
-
-	for (UINT adapterIndex = 0; DXGI_ERROR_NOT_FOUND != pFactory->EnumAdapters1(adapterIndex, &adapter); ++adapterIndex)
+	IDXGIAdapter1* pAdapter;		
+	zInt IntelIdx(-1), AmdIdx(-1), NVidiaIdx(-1), WarpIdx(-1);
+	for (UINT AdapterIndex = 0; DXGI_ERROR_NOT_FOUND != pFactory->EnumAdapters1(AdapterIndex, &pAdapter); ++AdapterIndex)
 	{
 		DXGI_ADAPTER_DESC1 desc;
-		adapter->GetDesc1(&desc);
+		pAdapter->GetDesc1(&desc);
 
-		if (desc.Flags & DXGI_ADAPTER_FLAG_SOFTWARE)
+		// Check to see if the adapter supports Direct3D 12, but don't create the actual device yet.
+		if (SUCCEEDED(D3D12CreateDevice(pAdapter, D3D_FEATURE_LEVEL_12_0, _uuidof(ID3D12Device), nullptr)))
 		{
-			// Don't select the Basic Render Driver adapter.
-			// If you want a software adapter, pass in "/warp" on the command line.
-			continue;
-		}
-
-		// Check to see if the adapter supports Direct3D 12, but don't create the
-		// actual device yet.
-		if (SUCCEEDED(D3D12CreateDevice(adapter.Get(), D3D_FEATURE_LEVEL_11_0, _uuidof(ID3D12Device), nullptr)))
-		{
-			break;
+			if( desc.VendorId == 0x1002 && (desc.Flags & DXGI_ADAPTER_FLAG_SOFTWARE) == 0)
+				AmdIdx		= AdapterIndex; 
+			if( desc.VendorId == 0x10DE && (desc.Flags & DXGI_ADAPTER_FLAG_SOFTWARE) == 0)
+				NVidiaIdx		= AdapterIndex; 
+			if( desc.VendorId == 0x8086 && (desc.Flags & DXGI_ADAPTER_FLAG_SOFTWARE) == 0)
+				IntelIdx		= AdapterIndex; 
+			if( desc.VendorId == 0x1414 && (desc.Flags & DXGI_ADAPTER_FLAG_SOFTWARE) != 0)
+				WarpIdx		= AdapterIndex; 
+			pAdapter->Release();
 		}
 	}
 
-	*ppAdapter = adapter.Detach();
+	zInt UseAdapterIndex(WarpIdx);
+	if( !inbUseWarp )
+		UseAdapterIndex = AmdIdx != -1 ? AmdIdx : NVidiaIdx != -1 ? NVidiaIdx :  IntelIdx;
+
+	outpAdapter = nullptr;
+	if( UseAdapterIndex != -1 )
+	{
+		pFactory->EnumAdapters1((UINT)UseAdapterIndex, &pAdapter);
+		outpAdapter = pAdapter;
+	}
 }
 
 bool ManagerRender_DX12::Load()
@@ -175,31 +183,16 @@ bool ManagerRender_DX12::Load()
 	hr = CreateDXGIFactory2(uDxgiFactoryFlags, IID_PPV_ARGS(&mrDXFactory) );
 	if( FAILED(hr) )
 		return false;
-	
-	//SF Temp Find first valid GPU
-	{
-		Microsoft::WRL::ComPtr<IDXGIAdapter1> DrawAdapter;
-	#if 1
-		GetHardwareAdapter(mrDXFactory.Get(), &DrawAdapter);
-	#else
-		hr = mrDXFactory->EnumWarpAdapter(IID_PPV_ARGS(&DrawAdapter));
-		if( FAILED(hr) )
-			return false;
-		hr = DrawAdapter.As(&mrDXAdapter);
-		if( FAILED(hr) )
-			return false;
-	//	if(FAILED(mrDXFactory->EnumAdapters1(0, &hardwareAdapter)))
-	//		throw "Failed to retrieve default adapter";
-
-	#endif
-	}
-	
-	hr =  D3D12CreateDevice(mrDXAdapter.Get(), D3D_FEATURE_LEVEL_11_0, IID_PPV_ARGS(&mrDXDevice) );
+		
+	bool bUseWarp(false);
+	IDXGIAdapter1* DrawAdapter;	
+	GetHardwareAdapter(mrDXFactory.Get(), DrawAdapter, bUseWarp);
+	hr =  D3D12CreateDevice(DrawAdapter, D3D_FEATURE_LEVEL_12_0, IID_PPV_ARGS(&mrDXDevice));
 	if( FAILED( hr ) )
 		return FALSE;
-
+				
 #if !ZEN_BUILD_FINAL	
-	mrDXDevice->SetStablePowerState(TRUE); // Prevent the GPU from overclocking or underclocking to get consistent timings //@todo remove this, apparentl not recommanded
+	//SF enable developper mode first   mrDXDevice->SetStablePowerState(TRUE); // Prevent the GPU from overclocking or underclocking to get consistent timings //@todo 2 remove this, apparently not recommanded
 #endif
 	//----------------------------------------------------------------------------------------------
 	// Create and initialize Descriptors heap support
@@ -319,8 +312,7 @@ bool ManagerRender_DX12::Load()
 		return false;
 
 	ID3D12CommandList* ppCommandLists[] = { marCommandList[0][0].Get() };
-	mrCommandQueue->ExecuteCommandLists(_countof(ppCommandLists), ppCommandLists);
-	
+	mrCommandQueue->ExecuteCommandLists(_countof(ppCommandLists), ppCommandLists);	
 	
 	//----------------------------------------------------------------------------------------------
 	// Create synchronization objects and wait until assets have been uploaded to the GPU.
@@ -458,43 +450,43 @@ void ManagerRender_DX12::FrameEnd()
 
 void ManagerRender_DX12::DispatchBarrier(const CommandListRef& _rCommandlist, bool _bPreDataUpdate)
 {
-	static zArrayDynamic<D3D12_RESOURCE_BARRIER> aBarriers;
+	static zArrayDyn<D3D12_RESOURCE_BARRIER> aBarriers;
 	aBarriers.Reserve(128);
 	
 	auto aWantedState = _rCommandlist->GetBarrierCheck(_bPreDataUpdate);
-	if( aWantedState.Count() > 0 )
+	if( aWantedState.size() > 0 )
 	{					
-		auto pWantedStateCur	= aWantedState.First();
+		auto pWantedStateCur	= aWantedState.Data();
 		auto pWantedStateLast	= aWantedState.Last();
 		while( pWantedStateCur <= pWantedStateLast )
 		{
 			if( pWantedStateCur->mpResource->meState != pWantedStateCur->meWantedState )
-			{	
-				aBarriers.IncCount( 1 );
-				D3D12_RESOURCE_BARRIER& BarrierDesc = *aBarriers.Last();
+			{					
+				D3D12_RESOURCE_BARRIER BarrierDesc;
 				BarrierDesc.Type					= D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
 				BarrierDesc.Flags					= D3D12_RESOURCE_BARRIER_FLAG_NONE;
 				BarrierDesc.Transition.pResource	= pWantedStateCur->mpResource->mrResource.Get();
 				BarrierDesc.Transition.StateBefore	= pWantedStateCur->mpResource->meState;
 				BarrierDesc.Transition.StateAfter	= pWantedStateCur->meWantedState;
-				BarrierDesc.Transition.Subresource	= D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
-				pWantedStateCur->mpResource->meState= pWantedStateCur->meWantedState;						
+				BarrierDesc.Transition.Subresource	= D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;				
+				pWantedStateCur->mpResource->meState= pWantedStateCur->meWantedState;
+				aBarriers.push_back(BarrierDesc);			
 			}
 			++pWantedStateCur;
 		}
 	}
 				
-	if( aBarriers.Count() )
+	if( aBarriers.size() )
 	{
-		mGpuContext[0].GetCommandList()->ResourceBarrier((UINT)aBarriers.Count(), aBarriers.First());
-		aBarriers.SetCount(0);
+		mGpuContext[0].GetCommandList()->ResourceBarrier((UINT)aBarriers.size(), aBarriers.Data());
+		aBarriers.resize(0);
 		aBarriers.Reserve(128);
 	}
 }
 
-void ManagerRender_DX12::SubmitToGPU(const CommandListRef& _rCommandlist, const zArrayDynamic<CommandRef>& _rCommands)
+void ManagerRender_DX12::SubmitToGPU(const CommandListRef& _rCommandlist, const zArrayDyn<CommandRef>& _rCommands)
 {
-	zenAssert(_rCommands.IsEmpty()==false);
+	zenAssert(_rCommands.empty()==false);
 
 	//------------------------------------------------------------------------------------------
 	// Add Barriers for Render Targets
@@ -503,7 +495,7 @@ void ManagerRender_DX12::SubmitToGPU(const CommandListRef& _rCommandlist, const 
 	if( pView )
 	{		
 		zcRes::GfxTexture2DRef rRTTexture;		
-		for( zUInt idx(0), count(pView->maRTColorConfig.Count()); idx<count; ++idx)
+		for( zUInt idx(0), count(pView->maRTColorConfig.size()); idx<count; ++idx)
 		{
 			rRTTexture = pView->maRTColorConfig[idx].mrTargetSurface.IsValid() && pView->maRTColorConfig[idx].mrTargetSurface->GetTexture2D().IsValid() ? pView->maRTColorConfig[idx].mrTargetSurface->GetTexture2D() : nullptr;
 			if( rRTTexture.IsValid() )
@@ -518,7 +510,7 @@ void ManagerRender_DX12::SubmitToGPU(const CommandListRef& _rCommandlist, const 
 
 	//------------------------------------------------------------------------------------------
 	// Invoke all draw commands
-	const zEngineRef<zcGfx::Command>* prDrawcall	= _rCommands.First();
+	const zEngineRef<zcGfx::Command>* prDrawcall	= _rCommands.Data();
 	const zEngineRef<zcGfx::Command>* prDrawcallEnd	= _rCommands.Last();	
 	while( prDrawcall <= prDrawcallEnd )
 	{

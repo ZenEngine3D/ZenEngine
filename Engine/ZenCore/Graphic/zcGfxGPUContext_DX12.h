@@ -22,8 +22,8 @@ protected:
 	
 	DirectXComRef<ID3D12Device>					mrDevice;
 	DirectXComRef<ID3D12GraphicsCommandList>	mrCommandList;
-	zArrayDynamic<D3D12_RESOURCE_BARRIER>		maPendingBarriers;
-	zArrayDynamic<PendingFence>					maPendingFences;	//!< List of fences to submit alongside the CommandList
+	zArrayDyn<D3D12_RESOURCE_BARRIER>		maPendingBarriers;
+	zArrayDyn<PendingFence>					maPendingFences;	//!< List of fences to submit alongside the CommandList
 	zcGfx::RootSignature						mRootSignature;
 	zEngineRef<PSO_DX12>						mrPSO;
 	zVec4U16									mvScreenScissor		= zVec4U16(0, 0, 0, 0);

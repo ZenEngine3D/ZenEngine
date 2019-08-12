@@ -31,9 +31,9 @@ void DebugTracking::CheckValidity(const void* _pMemory)
 		const zU8* pMemory		= reinterpret_cast<const zU8*>(_pMemory);
 		const Header* pHeader	= reinterpret_cast<const Header*>(pMemory-sizeof(Header));
 		zenAssert(Header::List::IsInList(*pHeader));
-		if( !pHeader->mIsCheckAccess )
+		if( pHeader->mAllocFlags.Any(zenMem::keFlag_Protected) == false ) // No footer when Integrity check is active
 		{
-			static Footer sReferenceFooter;
+			static const Footer sReferenceFooter;
 			const Footer* pFooter = reinterpret_cast<const Footer*>(pMemory+pHeader->mSizeWanted);
 			(void)pFooter;
 			zenAssert(pFooter->maFooter == sReferenceFooter.maFooter);		
@@ -41,27 +41,25 @@ void DebugTracking::CheckValidity(const void* _pMemory)
 	}
 }
 
-void* DebugTracking::Malloc(const SAllocInfo& _Allocation, size_t _SizeWanted, size_t _SizeMax, const char* _Filename, int _LineNumber, bool _IsArrayNew, bool _IsCheckAccess)
+void* DebugTracking::Malloc(const SAllocInfo& _Allocation, size_t _SizeWanted, zenMem::AllocFlags inAllocFlags)
 {	
+	const bool bEndOfPage		= inAllocFlags.Any(zenMem::keFlag_Protected);
 	zU8* pMemory(_Allocation.pMemory); 
 	if( pMemory )
 	{		
-		pMemory					+= _IsCheckAccess ? _Allocation.Size - (_SizeWanted + sizeof(Header)) : 0; // Move to end of allocation, to detect memory overflow faster	
+		pMemory					+= bEndOfPage ? _Allocation.Size - (_SizeWanted + sizeof(Header)) : 0; // Move to end of allocation, to detect memory overflow faster	
 		Header* pHeader			= new(pMemory)Header();
 		pMemory					+= sizeof(Header);
-		pHeader->mFileName		= _Filename;
-		pHeader->mFileLine		= _LineNumber;
 		pHeader->mpCallstack	= nullptr;		
 		pHeader->mSizeWanted	= static_cast<zU32>(_SizeWanted);
 		pHeader->mSizeUsed		= static_cast<zU32>(_Allocation.Size);
-		pHeader->mIsArrayNew	= _IsArrayNew ? 1 : 0;	
-		pHeader->mIsCheckAccess	= _IsCheckAccess ? 1 : 0;
+		pHeader->mAllocFlags	= inAllocFlags;
 	#if ZEN_MEMORY_TRACKING_DETAILED
 		pHeader->mpCallstack	= zbSys::Callstack::GetAddCallstack(2);
 	#endif		
 		
 		// Memory overflow cause page fault when CheckAccess is active, making Footer unnecessary
-		if( !_IsCheckAccess )
+		if( !bEndOfPage )
 		{
 			Footer* pFooter		= new(pMemory+_SizeWanted)Footer();
 			(void)pFooter;
@@ -76,14 +74,10 @@ void* DebugTracking::Malloc(const SAllocInfo& _Allocation, size_t _SizeWanted, s
 	return pMemory;
 }
 
-void* DebugTracking::Free(void* _pMemory, bool _IsArrayDel)
+void* DebugTracking::Free(void* _pMemory)
 {		
-	zU8* pMemory				= reinterpret_cast<zU8*>(_pMemory);
-	Header* pHeader				= reinterpret_cast<Header*>(pMemory-sizeof(Header));
-	
+	Header* pHeader				= reinterpret_cast<Header*>(_pMemory)-1;	
 	CheckValidity(_pMemory);
-	zenAssert((pHeader->mIsArrayNew != 0) == _IsArrayDel);
-
 	mStats.mAllocationCount		-= 1;
 	mStats.mSizeWanted			-= pHeader->mSizeWanted;
 	mStats.mSizeUsed			-= pHeader->mSizeUsed;
@@ -94,23 +88,30 @@ void* DebugTracking::Free(void* _pMemory, bool _IsArrayDel)
 void* DebugTracking::PreResize(void* _pMemory, size_t _NewSize)
 {
 	CheckValidity(_pMemory);
-	zU8* pMemory				= reinterpret_cast<zU8*>(_pMemory);
-	Header* pHeader				= reinterpret_cast<Header*>(pMemory-sizeof(Header));
-
+	Header* pHeader				= reinterpret_cast<Header*>(_pMemory)-1;
 	mStats.mSizeWanted			-= pHeader->mSizeWanted;
 	mStats.mSizeUsed			-= pHeader->mSizeUsed;	
 	return pHeader;
 }
 
-void* DebugTracking::PostResize(const SAllocInfo& Alloc, size_t _NewSize)
+void* DebugTracking::PostResize(void* _pPreResizeAlloc, const SAllocInfo& _Alloc, size_t _SizeWanted)
 {
-	zU8* pMemory				= Alloc.pMemory+sizeof(Header);
-	Header* pHeader				= reinterpret_cast<Header*>(Alloc.pMemory);
-	Footer* pFooter				= new(pMemory+_NewSize)Footer();
-	(void)pFooter;
-	
-	pHeader->mSizeWanted		= static_cast<zU32>(_NewSize);
-	pHeader->mSizeUsed			= static_cast<zU32>(GetSizeNeeded(_NewSize));	
+	Header* pHeader				= reinterpret_cast<Header*>(_Alloc.pMemory);
+	zU8* pMemory				= _Alloc.pMemory+sizeof(Header);
+	if( _pPreResizeAlloc != pMemory )
+	{
+		Header* pHeaderPrev		= reinterpret_cast<Header*>(_pPreResizeAlloc)-1;
+		*pHeader				= *pHeaderPrev;
+	}
+	pHeader->mSizeWanted		= static_cast<zU32>(_SizeWanted);
+	pHeader->mSizeUsed			= static_cast<zU32>(_Alloc.Size);
+
+	if( pHeader->mAllocFlags.Any(zenMem::keFlag_Protected) == false ) // No footer when Integrity check is active
+	{
+		Footer* pFooter			= new(pMemory+_SizeWanted)Footer();
+		(void)pFooter;
+	}	
+
 	mStats.mSizeWanted			+= pHeader->mSizeWanted;
 	mStats.mSizeUsed			+= pHeader->mSizeUsed;
 	return pMemory;
@@ -118,12 +119,12 @@ void* DebugTracking::PostResize(const SAllocInfo& Alloc, size_t _NewSize)
 
 #else
 
-void* DebugTracking::Malloc(SAllocInfo& _Allocation, size_t _SizeWanted, size_t _SizeMax, const char* _Filename, int _LineNumber, bool _IsArrayNew, bool _IsTrackingBadAccess)
+void* DebugTracking::Malloc(SAllocInfo& _Allocation, size_t _SizeWanted, zenMem::AllocFlags inAllocFlags)
 {
 	return _Allocation.pMemory;
 }
 
-void* DebugTracking::Free(void* _pMemory, bool _IsArrayDel)
+void* DebugTracking::Free(void* _pMemory)
 {	
 	return _pMemory;
 }
@@ -133,7 +134,7 @@ void* DebugTracking::PreResize(void* _pMemory, size_t _NewSize)
 	return _pMemory;
 }
 
-void DebugTracking::PostResize(void* _pMemory, size_t _NewSize)
+void DebugTracking::PostResize(void* _pPreResizeAlloc, const SAllocInfo& _Alloc, size_t _SizeWanted)
 {
 }
 

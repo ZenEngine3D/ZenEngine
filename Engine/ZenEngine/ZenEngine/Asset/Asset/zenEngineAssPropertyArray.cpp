@@ -7,14 +7,13 @@ namespace zen { namespace zenAss
 
 PropertyDefRef PropertyArray::Create( const char* _zName, const char* _zDisplayName, const char* _zDescription, bool _bShowInAssetDesc, bool _bIsEditable, const PropertyDefRef& _rPropertyDef, zUInt _uEntryCountMin, zUInt _uEntryCountMax )
 {		
-	//static zenMem::zAllocatorPool sAllocPool( "PropertyDefinition::Create", sizeof(PropertyArray), 256, 256 );
 	zenAssert( _rPropertyDef.IsValid() );
 	zenAssert( _uEntryCountMin <= _uEntryCountMax);
-	PropertyArray* pNewDefinition		= zenNewPool zenAss::PropertyArray(_zName, _zDisplayName, _zDescription, _bShowInAssetDesc, _bIsEditable);
+	PropertyArray* pNewDefinition		= zenMem::NewPool<zenAss::PropertyArray>(_zName, _zDisplayName, _zDescription, _bShowInAssetDesc, _bIsEditable);
 	pNewDefinition->mrArrayPropertyDef	= _rPropertyDef;	
 	pNewDefinition->muEntryCountMin		= _uEntryCountMin;
 	pNewDefinition->muEntryCountMax		= _uEntryCountMax;
-	pNewDefinition->mDefault.SetCount(_uEntryCountMin);
+	pNewDefinition->mDefault.resize(_uEntryCountMin);
 	for(zUInt idx(0); idx<_uEntryCountMin; ++idx)
 		pNewDefinition->mDefault[idx] = _rPropertyDef->Allocate(nullptr);
 	return pNewDefinition;
@@ -24,12 +23,11 @@ PropertyDefRef PropertyArray::Create( const char* _zName, const char* _zDisplayN
 //!			differently since the array contains ValueRef.
 PropertyValueRef PropertyArray::Allocate(const zAssetItemRef& _rOwnerAsset)const
 {	
-	//static zenMem::zAllocatorPool sAllocPool( "PropertyArray::Allocate", sizeof(ValueProperty), 256, 256 );
 	//! @todo Clean : Removing const qualifier, since 'zGameConstRef' doesn't take a const reference at the moment...
 	//					We know that all accessors won't modify the object, except for ReferenceAdd/Rem with mRerCount needing to be mutable.
-	ValueRef rArrayVal = zenNewPool ValueProperty(_rOwnerAsset, this);
-	ValueStorage aArrayVal( (zU32)mDefault.Count() );
-	for(zUInt idx(0), count(mDefault.Count()); idx<count; ++idx)
+	ValueRef rArrayVal = zenMem::NewPool<ValueProperty>(_rOwnerAsset, this);
+	ValueStorage aArrayVal( (zU32)mDefault.size() );
+	for(zUInt idx(0), count(mDefault.size()); idx<count; ++idx)
 		aArrayVal[idx] = mDefault[idx].Clone(_rOwnerAsset);
 
 	rArrayVal = aArrayVal;
@@ -39,12 +37,11 @@ PropertyValueRef PropertyArray::Allocate(const zAssetItemRef& _rOwnerAsset)const
 PropertyValueRef PropertyArray::Clone(const zAssetItemRef& _rOwnerAsset, const PropertyValueRef& _rValue)const
 {
 	zenAssert( _rValue.GetType() == kPropertyType );
-	//static zenMem::zAllocatorPool sAllocPool( "PropertyArray::Clone", sizeof(ValueProperty), 256, 256 );	
 	ValueRef rValueToClone				= _rValue;	
-	ValueRef rValueCloned 				= zenNewPool ValueProperty(rValueToClone->mrOwnerAsset, this);	
+	ValueRef rValueCloned 				= zenMem::NewPool<ValueProperty>(rValueToClone->mrOwnerAsset, this);	
 	const ValueStorage& aArrayToClone	= rValueToClone.GetValue();	
-	ValueStorage aArrayCloned((zU32)aArrayToClone.Count());	
-	for(zUInt idx(0), count(aArrayToClone.Count()); idx<count; ++idx)
+	ValueStorage aArrayCloned((zU32)aArrayToClone.size());	
+	for(zUInt idx(0), count(aArrayToClone.size()); idx<count; ++idx)
 		aArrayCloned[idx] = aArrayToClone[idx].Clone(_rValue->mrOwnerAsset);
 	
 	rValueCloned = aArrayCloned;
@@ -55,9 +52,9 @@ bool PropertyArray::IsDefault(const class PropertyValueRef& _ValueRef)const
 {
 	ValueRef rArrayValue			= _ValueRef;
 	const ValueStorage& aArrayValue = rArrayValue.GetValue();
-	bool bIsDefault = (aArrayValue.Count() == mDefault.Count());
+	bool bIsDefault = (aArrayValue.size() == mDefault.size());
 	
-	for(zUInt idx(0), count(aArrayValue.Count()); bIsDefault && idx<count; ++idx)
+	for(zUInt idx(0), count(aArrayValue.size()); bIsDefault && idx<count; ++idx)
 		bIsDefault = (mDefault[idx] == aArrayValue[idx]);
 	
 	return bIsDefault;
@@ -71,8 +68,8 @@ bool PropertyArray::IsEqual(const PropertyValueRef& _rValue1, const PropertyValu
 		ValueRef rArrayValue2				= _rValue2;
 		const ValueStorage& aArrayValue1	= rArrayValue1.GetValue();
 		const ValueStorage& aArrayValue2	= rArrayValue2.GetValue();		
-		bool bEqual							= aArrayValue1.Count() == aArrayValue2.Count();
-		for(zUInt idx(0), count(aArrayValue1.Count()); bEqual && idx<count; ++idx)
+		bool bEqual							= aArrayValue1.size() == aArrayValue2.size();
+		for(zUInt idx(0), count(aArrayValue1.size()); bEqual && idx<count; ++idx)
 			bEqual = aArrayValue1[idx] == aArrayValue2[idx];
 
 		return bEqual;	
@@ -94,7 +91,7 @@ void PropertyArray::ValueRef::RemEntry(const PropertyValueRef& _ToRemove)
 {
 	zenAssert( IsValid() );
 	ValueStorage& arrayValue = static_cast<Value*>(GetSafe())->mValue;
-	for( zUInt idx(0), count(arrayValue.Count()); idx<count; ++idx)
+	for( zUInt idx(0), count(arrayValue.size()); idx<count; ++idx)
 	{
 		if( arrayValue[idx] == _ToRemove )
 		{

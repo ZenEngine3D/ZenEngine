@@ -23,7 +23,7 @@ protected:
 	void					UpdateAssetList();
 	void					UpdateChildPackageChecked(wxTreeListItem _ParentTreeID);
 	void					UpdatePackageSelected();
-	void					UpdateAssetCount();
+	void					UpdateAsresize();
 	void					ClearAssetList();
 
 	void					OnAssetViewChange(wxCommandEvent& event);
@@ -69,9 +69,9 @@ protected:
 	wxSizer*							mpSizerAsset;	
 	wxImageList*						mpIconAsset;			//!< Icon array for each resource preview
 	wxImageList*						mpIconPackage;			//!< Icon array for packages
-	zArrayStatic<zenAss::zPackageRef>	maPackageSelected;		//!< List of selected package to display content for
+	zArrayDyn<zenAss::zPackageRef>		maPackageSelected;		//!< List of selected package to display content for
 	zMap<zUInt>::Key64					mdCountPerPackage;		//!< Updated on 'UpdateAssetList()' to reflect number of asset items per package
-	zArrayStatic<zUInt>					maCountPerType;			//!< Updated on 'UpdateAssetList()' to reflect number of asset items per type
+	zArrayDyn<zUInt>					maCountPerType;			//!< Updated on 'UpdateAssetList()' to reflect number of asset items per type
 	zFlagAssetType						mAssetTypeMask;			//!< Mask of selected Asset Type	
 	bool								mbPackageViewFlat;
 	enumAssetView						meAssetView;

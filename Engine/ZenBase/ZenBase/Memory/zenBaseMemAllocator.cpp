@@ -1,99 +1,50 @@
 #include "zbBase.h"
 
-namespace zen { namespace zenMem
+namespace zbMem
 {
 
-zbMem::Allocator& GetMemoryAllocator()
+void UpdateAllocationFlags(size_t inSize, size_t inItemCount, zenMem::AllocFlags& inAllocFlags)
+{
+#if ZEN_MEMORY_SUPPORT_CHECKACCESS
+	// Can implement additional logic based on allocation size, etc...
+	// ...	
+#else
+	inAllocFlags -= zenMem::keFlag_Protected;
+#endif 
+
+#if ZEN_MEMORY_FORCE_NATIVE_MALLOC
+	inAllocFlags += zenMem::keFlag_NativeMalloc;	
+#endif
+
+	if( inAllocFlags.Any(zenMem::keFlag_NativeMalloc) )
+		inAllocFlags -= zenMem::keFlag_Protected;
+}
+
+Allocator& GetMemoryAllocator()
 {
 	static zbMem::Allocator MemoryAllocator;
 	return MemoryAllocator;
 }
 
-// Note:	Classes with virtual table add some data at the beginning of memory(with most compilers) and object receive an offsetted address from new.
-//			We ignore any part of the address that's not aligned to find the original memory address. 
-//			Delete operator doesn't needs this since compiler remove the offset in generated code.
-zenInline void* GetOriginalAddress(void* _pMemory)
-{	
-	_pMemory = reinterpret_cast<void*>(reinterpret_cast<zUInt>(_pMemory) & ~zUInt(zbMem::kAlign-1));
-	return _pMemory;
-}
-
-size_t GetRequestedSize(void* _pMemory)
+void* Allocate(size_t inSize, size_t inItemCount, zenMem::AllocFlags inAllocFlags)
 {
-	return _pMemory ? GetMemoryAllocator().GetRequestedSize(GetOriginalAddress(_pMemory)) : 0;
+	UpdateAllocationFlags(inSize, inItemCount, inAllocFlags);
+	return GetMemoryAllocator().Malloc(inSize, inItemCount, inAllocFlags);
 }
-
-void* ResizeMemory(void* _pMemory, size_t _NewSize)
+	
+void* ResizeMemory(void* _pMemory, size_t _NewSize, size_t inItemCount)
 {
-#if ZEN_MEMORY_DEACTIVATE == 0
-	zenAssert(_pMemory);
-	return GetMemoryAllocator().Resize(GetOriginalAddress(_pMemory), _NewSize);
-#else
-	return realloc(_pMemory, _NewSize);
-#endif
+	return GetMemoryAllocator().Resize(_pMemory, _NewSize, inItemCount);
 }
 
-}}
-
-void* operator new(size_t _Size, const char* _Filename, int _LineNumber, size_t _MaxSize, bool _IsPoolItem, bool _IsCheckAccess)
+void Deallocate(void* _pMemory)
 {
-#if ZEN_MEMORY_DEACTIVATE == 0
-	zenAssertMsg(_MaxSize == 0, "Resize not supported on single allocation, needs to be on array of objects");
-	void* pMemory = zenMem::GetMemoryAllocator().Malloc(_Size, _Size, _Filename, _LineNumber, false, _IsPoolItem, _IsCheckAccess);
-	return pMemory;
-#else
-	return malloc(_Size);
-#endif
+	GetMemoryAllocator().Free(_pMemory);
 }
 
-void* operator new[](size_t _Size, const char* _Filename, int _LineNumber, size_t _MaxSize, bool _IsPoolItem, bool _IsCheckAccess)
+size_t GetItemCount(void* _pMemory)
 {
-#if ZEN_MEMORY_DEACTIVATE == 0
-	zenAssertMsg(_MaxSize == 0 || !_IsPoolItem, "Cannot have pool allocation with resize support");
-	_MaxSize = zenMath::Max(_Size, _MaxSize);
-	void* pMemory = zenMem::GetMemoryAllocator().Malloc(_Size, _MaxSize, _Filename, _LineNumber, true, _IsPoolItem, _IsCheckAccess);
-	return pMemory;
-#else
-	return malloc(_Size);
-#endif
+	return GetMemoryAllocator().GetItemCount(_pMemory);
 }
 
-void operator delete(void* _pMemory)
-{
-#if ZEN_MEMORY_DEACTIVATE == 0
-	if( _pMemory )
-		zenMem::GetMemoryAllocator().Free(_pMemory, false);
-#else
-	free(_pMemory);
-#endif
-}
-
-void operator delete[](void* _pMemory)
-{ 
-#if ZEN_MEMORY_DEACTIVATE == 0
-	if( _pMemory )
-		zenMem::GetMemoryAllocator().Free(_pMemory, true);
-#else
-	free(_pMemory);
-#endif
-}
-
-void* operator new(size_t _Size)
-{
-#if ZEN_MEMORY_DEACTIVATE == 0
-	void* pMemory = zenMem::GetMemoryAllocator().Malloc(_Size, _Size, "", 0, false, false, false);
-	return pMemory;
-#else
-	return malloc(_Size);
-#endif
-}
-
-void* operator new[](size_t _Size)
-{
-#if ZEN_MEMORY_DEACTIVATE == 0
-	void* pMemory = zenMem::GetMemoryAllocator().Malloc(_Size, _Size, "", 0, true, false, false);
-	return pMemory;
-#else
-	return malloc(_Size);
-#endif
 }

@@ -7,12 +7,12 @@ namespace zcExp
 		zenAssert( zenConst::kFlagResShaders.Any(_eType) );
 		zenAssert( _pExportInfo );
 		const ExportInfoGfxShader* pExportInfo	= static_cast<const ExportInfoGfxShader*>(_pExportInfo);
-		const zenRes::zShaderDefine* pEntry			= pExportInfo->maDefines.First();
+		const zenRes::zShaderDefine* pEntry		= pExportInfo->maDefines.Data();
 
 		zResID::NameHash hName;
 		hName.Append((const char*)pExportInfo->mzFilename );
 		hName.Append((const char*)pExportInfo->mzEntryname );
-		for(zUInt idx(0), count(pExportInfo->maDefines.Count()); idx<count; ++idx, ++pEntry)
+		for(zUInt idx(0), count(pExportInfo->maDefines.size()); idx<count; ++idx, ++pEntry)
 		{
 			hName.Append((const char*)pEntry->mzName);
 			hName.Append((const char*)pEntry->mzValue);
@@ -21,7 +21,7 @@ namespace zcExp
 		return zcExp::ValidateItemID(_ePlatform, _eType, _eSource, hName, _bExistOut);
 	}
 
-	static zArrayStatic<zenRes::zShaderDefine> saEmptyDefines(zUInt(0));
+	static zArrayZero<zenRes::zShaderDefine> saEmptyDefines;
 	zResID CreateGfxShaderVertex( const char* _zFilename, const char* _zEntryname  )
 	{
 		return CreateGfxShaderVertex( _zFilename, _zEntryname, saEmptyDefines );		
@@ -39,14 +39,13 @@ namespace zcExp
 	//! @param _zEntryname	- Name of entry function
 	//! @return 			- Resource created
 	//=================================================================================================
-	zResID CreateGfxShaderVertex( const char* _zFilename, const char* _zEntryname, const zArrayBase<zenRes::zShaderDefine>& _aDefines  )
+	zResID CreateGfxShaderVertex( const char* _zFilename, const char* _zEntryname, const zArray<zenRes::zShaderDefine>& _aDefines  )
 	{
-		//static zenMem::zAllocatorPool sMemPool("Pool CreateShaderVertex", sizeof(ExportInfoGfxShader), 1, 5 );
-		ExportInfoGfxShader* pExportInfo	= zenNewPool ExportInfoGfxShader;
-		pExportInfo->mzFilename				= _zFilename;
-		pExportInfo->mzEntryname			= _zEntryname;
-		pExportInfo->maDefines				= _aDefines;
-		pExportInfo->meShaderStage			= zenConst::keShaderStage_Vertex;
+		auto* pExportInfo			= zenMem::NewPool<ExportInfoGfxShader>();
+		pExportInfo->mzFilename		= _zFilename;
+		pExportInfo->mzEntryname	= _zEntryname;
+		pExportInfo->maDefines		= _aDefines;
+		pExportInfo->meShaderStage	= zenConst::keShaderStage_Vertex;
 		return zcMgr::Export.CreateItem( zResID::kePlatformType_GFX, zenConst::keResType_GfxShaderVertex, pExportInfo );
 	}
 
@@ -58,14 +57,13 @@ namespace zcExp
 	//! @param _zEntryname	- Name of entry function
 	//! @return 			- Resource created
 	//=================================================================================================
-	zResID CreateGfxShaderPixel( const char* _zFilename, const char* _zEntryname, const zArrayBase<zenRes::zShaderDefine>& _aDefines )
+	zResID CreateGfxShaderPixel( const char* _zFilename, const char* _zEntryname, const zArray<zenRes::zShaderDefine>& _aDefines )
 	{
-		//static zenMem::zAllocatorPool sMemPool("Pool CreateShaderPixel", sizeof(ExportInfoGfxShader), 1, 5 );
-		ExportInfoGfxShader* pExportInfo	= zenNewPool ExportInfoGfxShader;
-		pExportInfo->mzFilename				= _zFilename;
-		pExportInfo->mzEntryname			= _zEntryname;
-		pExportInfo->maDefines				= _aDefines;
-		pExportInfo->meShaderStage			= zenConst::keShaderStage_Pixel;
+		auto* pExportInfo			= zenMem::NewPool<ExportInfoGfxShader>();
+		pExportInfo->mzFilename		= _zFilename;
+		pExportInfo->mzEntryname	= _zEntryname;
+		pExportInfo->maDefines		= _aDefines;
+		pExportInfo->meShaderStage	= zenConst::keShaderStage_Pixel;
 		return zcMgr::Export.CreateItem( zResID::kePlatformType_GFX, zenConst::keResType_GfxShaderPixel, pExportInfo );
 	}
 

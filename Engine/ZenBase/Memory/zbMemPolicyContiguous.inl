@@ -31,9 +31,9 @@ PolicyContiguous<TVirtualAdrInfo,TAllocMax,TAllocatorType>::PolicyContiguous()
 }
 
 template<class TVirtualAdrInfo, zU32 TAllocMax, zUInt TAllocatorType>
-SAllocInfo PolicyContiguous<TVirtualAdrInfo,TAllocMax,TAllocatorType>::Malloc(size_t _Size)
+SAllocInfo PolicyContiguous<TVirtualAdrInfo,TAllocMax,TAllocatorType>::Malloc(size_t inSize, size_t inItemCount, zenMem::AllocFlags inAllocFlags)
 {
-	zenAssert(_Size <= mVirtualMemorySize);
+	zenAssert(inSize <= mVirtualMemorySize);
 	zenAssertMsg( mAvailableTail+1 < mAvailableHead, "Ran out of allocation ranges" ); //Make sure there's more than 1 item left to allocate, else could run into multihreading issue
 	TVirtualAdrInfo VirtualAdress;
 	VirtualAdress.Invalid			= 0;
@@ -42,9 +42,11 @@ SAllocInfo PolicyContiguous<TVirtualAdrInfo,TAllocMax,TAllocatorType>::Malloc(si
 	zU32 FreeIndex					= mAvailableTail++ % TAllocMax;
 	VirtualAdress.AllocationIndex	= maAvailableIndices[FreeIndex];
 
-	auto& AllocatedInfo				= maAllocatedInfo[VirtualAdress.AllocationIndex];	
-	AllocatedInfo.mSizeWanted		= _Size;
-	AllocatedInfo.mSizeUsed	= zenMath::RoundUp(_Size, mPhysicalPageSize);
+	AllocInfo& AllocatedInfo		= maAllocatedInfo[VirtualAdress.AllocationIndex];	
+	AllocatedInfo.mSizeWanted		= static_cast<zU32>(inSize);
+	AllocatedInfo.mSizeUsed			= static_cast<zU32>(zenMath::RoundUp(inSize, mPhysicalPageSize));
+	AllocatedInfo.mItemCount		= static_cast<zU32>(inItemCount);
+	AllocatedInfo.mFlags			= inAllocFlags;
 
 	void* MemoryStartResult			= VirtualAlloc(VirtualAdress, AllocatedInfo.mSizeUsed, MEM_COMMIT, PAGE_READWRITE);
 	zenAssert( MemoryStartResult == VirtualAdress );
@@ -52,58 +54,65 @@ SAllocInfo PolicyContiguous<TVirtualAdrInfo,TAllocMax,TAllocatorType>::Malloc(si
 }
 
 template<class TVirtualAdrInfo, zU32 TAllocMax, zUInt TAllocatorType>
-SAllocInfo PolicyContiguous<TVirtualAdrInfo,TAllocMax,TAllocatorType>::Resize(void* _pMemory, size_t _NewSize)
+SAllocInfo PolicyContiguous<TVirtualAdrInfo,TAllocMax,TAllocatorType>::Resize(void* inpMemory, size_t inNewSize, size_t inItemCount)
 {
-	zenAssert(_pMemory != nullptr);
-	TVirtualAdrInfo* pVirtualAdress = reinterpret_cast<TVirtualAdrInfo*>(&_pMemory);
-	auto& AllocatedInfo				= maAllocatedInfo[pVirtualAdress->AllocationIndex];
-	AllocatedInfo.mSizeWanted		= _NewSize;
-	size_t NeededAvailable			= zenMath::RoundUp(_NewSize, mPhysicalPageSize);
+	zenAssert(inpMemory != nullptr);	
+	TVirtualAdrInfo* pVirtualAdress = reinterpret_cast<TVirtualAdrInfo*>(&inpMemory);
+	AllocInfo& AllocatedInfo		= maAllocatedInfo[pVirtualAdress->AllocationIndex];
+
+	if( AllocatedInfo.mFlags.Any(zenMem::keFlag_Protected) )
+		return Malloc(inNewSize, inItemCount, AllocatedInfo.mFlags); // When 'protect' active, memory at end of page (even if slower memcopy needed)
+
+	AllocatedInfo.mSizeWanted		= static_cast<zU32>(inNewSize);
+	AllocatedInfo.mItemCount		= static_cast<zU32>(inItemCount);
+	size_t NeededAvailable			= static_cast<zU32>(zenMath::RoundUp(inNewSize, mPhysicalPageSize));
 
 	if( NeededAvailable > AllocatedInfo.mSizeUsed )
 	{
 		TVirtualAdrInfo ResizeAddress	= *pVirtualAdress;
 		ResizeAddress.SubAddress		= AllocatedInfo.mSizeUsed;
 		void* MemoryStartResult			= VirtualAlloc(ResizeAddress, NeededAvailable-AllocatedInfo.mSizeUsed, MEM_COMMIT, PAGE_READWRITE);
-		AllocatedInfo.mSizeUsed			= NeededAvailable;
+		AllocatedInfo.mSizeUsed			= static_cast<zU32>(NeededAvailable);
 		zenAssert( MemoryStartResult == ResizeAddress );
 	}
-	//! @todo 1 : Heuristic to avoid freeing memory rigth away?
+	//! @todo 1 : Heuristic to avoid freeing memory right away?
 	else if( NeededAvailable < AllocatedInfo.mSizeUsed )
 	{
 		TVirtualAdrInfo ResizeAddress	= *pVirtualAdress;
 		ResizeAddress.SubAddress		= NeededAvailable;
 		BOOL IsSuccess					= VirtualFree(ResizeAddress, AllocatedInfo.mSizeUsed-NeededAvailable, MEM_DECOMMIT);
-		AllocatedInfo.mSizeUsed			= NeededAvailable;
+		AllocatedInfo.mSizeUsed			= static_cast<zU32>(NeededAvailable);
 		zenAssert( IsSuccess );
 	}
-	return SAllocInfo(_pMemory, AllocatedInfo.mSizeUsed);
+	
+	return SAllocInfo(inpMemory, AllocatedInfo.mSizeUsed);
 }
 
 template<class TVirtualAdrInfo, zU32 TAllocMax, zUInt TAllocatorType>
-void PolicyContiguous<TVirtualAdrInfo,TAllocMax,TAllocatorType>::Free(void* _pMemory)
+void PolicyContiguous<TVirtualAdrInfo,TAllocMax,TAllocatorType>::Free(void* inpMemory)
 {
-	zenAssert(_pMemory != nullptr);	
-	VirtualFree(_pMemory, 0, MEM_DECOMMIT);	
-	TVirtualAdrInfo* pVirtualAdress = reinterpret_cast<TVirtualAdrInfo*>(&_pMemory);	
-	auto& AllocatedInfo				= maAllocatedInfo[pVirtualAdress->AllocationIndex];
+	zenAssert(inpMemory != nullptr);	
+	VirtualFree(inpMemory, 0, MEM_DECOMMIT);	
+	TVirtualAdrInfo* pVirtualAdress = reinterpret_cast<TVirtualAdrInfo*>(&inpMemory);	
+	AllocInfo& AllocatedInfo		= maAllocatedInfo[pVirtualAdress->AllocationIndex];
 	AllocatedInfo.mSizeUsed			= 0;
-	AllocatedInfo.mSizeWanted		= 0;	
+	AllocatedInfo.mSizeWanted		= 0;
+	AllocatedInfo.mItemCount		= 0;
 	zU32 FreeIndex					= mAvailableHead++ % TAllocMax;
 	maAvailableIndices[FreeIndex]	= pVirtualAdress->AllocationIndex;	
 }
 
 template<class TVirtualAdrInfo, zU32 TAllocMax, zUInt TAllocatorType>
-size_t PolicyContiguous<TVirtualAdrInfo,TAllocMax,TAllocatorType>::GetRequestedSize(void* _pMemory)
+size_t PolicyContiguous<TVirtualAdrInfo,TAllocMax,TAllocatorType>::GetRequestedCount(void* inpMemory)
 {
-	TVirtualAdrInfo* pVirtualAdress = reinterpret_cast<TVirtualAdrInfo*>(&_pMemory);
-	return maAllocatedInfo[pVirtualAdress->AllocationIndex].mSizeWanted;
+	TVirtualAdrInfo* pVirtualAdress = reinterpret_cast<TVirtualAdrInfo*>(&inpMemory);
+	return maAllocatedInfo[pVirtualAdress->AllocationIndex].mItemCount;
 }
 
 template<class TVirtualAdrInfo, zU32 TAllocMax, zUInt TAllocatorType>
-const typename PolicyContiguous<TVirtualAdrInfo,TAllocMax,TAllocatorType>::AllocInfo& PolicyContiguous<TVirtualAdrInfo,TAllocMax,TAllocatorType>::GetAllocInfo(void* _pMemory)const
+const typename PolicyContiguous<TVirtualAdrInfo,TAllocMax,TAllocatorType>::AllocInfo& PolicyContiguous<TVirtualAdrInfo,TAllocMax,TAllocatorType>::GetAllocInfo(void* inpMemory)const
 {
-	TVirtualAdrInfo* pVirtualAdress = reinterpret_cast<TVirtualAdrInfo*>(&_pMemory);
+	TVirtualAdrInfo* pVirtualAdress = reinterpret_cast<TVirtualAdrInfo*>(&inpMemory);
 	return maAllocatedInfo[pVirtualAdress->AllocationIndex];
 }
 

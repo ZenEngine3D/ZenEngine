@@ -5,7 +5,7 @@
 namespace zen { namespace zenAss 
 {
 
-class PropertyStruct : public TPropertyDefinition<zenConst::keAssProp_Struct, PropertyStruct, zArrayStatic<PropertyValueRef>>
+class PropertyStruct : public TPropertyDefinition<zenConst::keAssProp_Struct, PropertyStruct, zArrayDyn<PropertyValueRef>>
 {
 	ZENPropertyDefinitionDeclare( PropertyStruct )
 
@@ -21,7 +21,7 @@ class PropertyStruct : public TPropertyDefinition<zenConst::keAssProp_Struct, Pr
 
 	virtual PropertyValueRef		Allocate(const zAssetItemRef& _rOwnerAsset)const;
 	static PropertyDefRef			Create( const char* _zName, const char* _zDisplayName, const char* _zDescription, bool _bShowInAssetDesc, bool _bIsEditable, const PropertyDefRef* _prPropertyDef, zUInt _uPropertyDefCount );
-	zArrayStatic<PropertyDefRef>	maPropertyDef;
+	zArrayDyn<PropertyDefRef>		maPropertyDef;
 	zMap<zUInt>::Key32				mdPropertyDefIndex;
 
 protected:

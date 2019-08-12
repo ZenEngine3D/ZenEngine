@@ -2,6 +2,9 @@
 
 namespace zen { namespace zenType 
 {
+
+//! @todo 1 Replace most list with dynamic array with pointer.
+
 //=================================================================================================
 //! @brief	Macro used to add a ListLink to a class.
 //! @note	Unless wanting to preserve POD of a class, does not need to be used directly creating

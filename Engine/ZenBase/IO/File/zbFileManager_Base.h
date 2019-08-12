@@ -35,11 +35,11 @@ namespace zbFile
 		const wchar_t*					GetPathParent()const;
 		const wchar_t*					GetPathFull()const;
 		const wchar_t*					GetExt()const;
-		void							SplitFolder(zArrayDynamic<zArrayStatic<wchar_t>>& _aFolder)const;
+		void							SplitFolder(zArrayDyn<zArrayDyn<wchar_t>>& _aFolder)const;
 		
 	protected:	
 		zenInline void					FindOffsets();
-		mutable zArrayDynamic<wchar_t>	mzFilename;			//!< Contains filename string, +2 chars to handle no offset for some filename component (ext, parentdir, ...)
+		mutable zArrayDyn<wchar_t>		mzFilename;			//!< Contains filename string, +2 chars to handle no offset for some filename component (ext, parentdir, ...)
 		zI16							muOffsetName;		//!< Offset to filename,extension
 		zI16							muOffsetParentPath;	//!< Offset to parent folder, filename, extension
 		zI16							muOffsetExt;		//!< Offset to extension
@@ -130,9 +130,9 @@ namespace zbFile
 
 		bool GetFileInfo( const Filename& _filename, FileInfo& _outFileInfo )
 		{
-			zArrayDynamic<FileInfo> fileList;
+			zArrayDyn<FileInfo> fileList;
 			Search( fileList, keFileFlag__Any, L"", _filename.GetNameFull(), false);
-			if( fileList.Count() > 0 )
+			if( fileList.size() > 0 )
 			{
 				_outFileInfo = fileList[0];
 				return true;

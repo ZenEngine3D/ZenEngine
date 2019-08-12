@@ -10,9 +10,6 @@ EventBase::EventBase(const zStringHash32& _zEventName)
 
 EventBase::~EventBase()
 {
-	EventBase* pCounter = mlstChilds.pop_front();
-	while( pCounter )
-		pCounter = mlstChilds.pop_back();
 }
 
 bool EventBase::IsActive() const

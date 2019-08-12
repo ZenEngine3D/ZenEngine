@@ -29,12 +29,13 @@ namespace zcPerf
 	{
 		if( muTimeElapsed == 0 && mrQueryTimestampStart.IsValid() && mrQueryTimestampStop.IsValid() && mrQueryTimestampStart->GetTimestampUSec() > 0 && mrQueryTimestampStop->GetTimestampUSec() > 0)
 		{
-			zU64 uTimeStart	= mrQueryTimestampStart->GetTimestampUSec();
-			zU64 uTimeStop	= mrQueryTimestampStop->GetTimestampUSec();
-			muTimeStart		= uTimeStart;
-			muTimeElapsed	= uTimeStop - uTimeStart;
+			zU64 uTimeStart			= mrQueryTimestampStart->GetTimestampUSec();
+			zU64 uTimeStop			= mrQueryTimestampStop->GetTimestampUSec();
+			muTimeStart				= uTimeStart;
+			muTimeElapsed			= uTimeStop - uTimeStart;
+			mrQueryTimestampStart	= nullptr;
+			mrQueryTimestampStop	= nullptr;
 		}
-
 		return Super::GetElapsedMs();
 	}
 }

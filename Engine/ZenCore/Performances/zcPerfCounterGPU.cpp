@@ -3,7 +3,7 @@
 namespace zcPerf
 {
 
-zArrayDynamic< EventBaseRef > garStackEventGPU;
+zArrayDyn< EventBaseRef > garStackEventGPU;
 static const zStringHash32 gaGPUCounterName[] = {
 	zStringHash32("Cmd Draw Indexed"),		//keType_DrawIndexed
 	zStringHash32("Cmd Compute"),			//keType_Compute
@@ -31,19 +31,18 @@ void EventGPU_Base::GPUStart(const zcGfx::CommandListRef& _rDrawlist)
 	muTimeStart		= zenSys::GetTimeUSec();
 	mbActive		= true;
 
-	if (garStackEventGPU.IsEmpty() == false)
-		(*garStackEventGPU.Last())->AddChild(*this);
+	if (garStackEventGPU.empty() == false)
+		garStackEventGPU.back()->AddChild(*this);
 
-	garStackEventGPU.Push(this);
+	garStackEventGPU.push_back(this);
 }
 
 void EventGPU_Base::GPUStop(const zcGfx::CommandListRef& _rDrawlist)
 {
 	zenAssertMsg( IsActive(), "Start Event before ending it");
-	zenAssertMsg((*garStackEventGPU.Last()).GetSafe() == this, "Stop events in the reverse order they were started");
+	zenAssertMsg(garStackEventGPU.back().GetSafe() == this, "Stop events in the reverse order they were started");
 	mbActive = false;
-	*garStackEventGPU.Last() = nullptr;
-	garStackEventGPU.Pop();	
+	garStackEventGPU.pop_back();	
 }
 
 //=================================================================================================
@@ -51,8 +50,7 @@ void EventGPU_Base::GPUStop(const zcGfx::CommandListRef& _rDrawlist)
 //=================================================================================================
 EventBaseRef EventGPU::Create(const zStringHash32& _EventName)
 {
-	//static zenMem::zAllocatorPool sMemPool("Pool Event GPU", sizeof(EventGPU), 256, 256);
-	EventGPU* pEventGpu = zenNewPool EventGPU(_EventName);
+	EventGPU* pEventGpu = zenMem::NewPool<EventGPU>(_EventName);
 	return pEventGpu;
 }
 
@@ -77,8 +75,7 @@ void EventGPU::GPUStop(const zcGfx::CommandListRef& _rDrawlist)
 EventBaseRef EventGPUCounter::Create(eType _eCounterType)
 {
 	zenStaticAssert( zenArrayCount(gaGPUCounterName)==EventGPUCounter::keType__Count+1 ); //Make sure Counter description array match enum
-	//static zenMem::zAllocatorPool sMemPool("Pool Event GPU Counter", sizeof(EventGPUCounter), 256, 256);
-	EventGPUCounter* pEventGpuCounter = zenNewPool EventGPUCounter(_eCounterType);
+	auto* pEventGpuCounter = zenMem::NewPool<EventGPUCounter>(_eCounterType);
 	pEventGpuCounter->CPUStart();
 	return pEventGpuCounter;
 }

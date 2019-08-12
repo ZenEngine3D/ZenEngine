@@ -2,16 +2,15 @@
 
 namespace zen { namespace zenType {
 
-
 zString& zString::Copy(const char* _zString, zUInt _uCount)
 {
 	zUInt len = zenMath::Min(_uCount, zUInt(strlen(_zString) )) + 1;
 	maChar.Copy(_zString, len);
-	*maChar.Last() = 0;
+	maChar.back() = 0;
 	return *this;
 }
 
-void zString::Split(const char* _zString, char _Separator, zArrayStatic<zString>& _aStringOut, zUInt _uAdditionalArraySize )
+void zString::Split(const char* _zString, char _Separator, zArrayDyn<zString>& _aStringOut, zUInt _uAdditionalArraySize )
 {
 	zenAssert(_zString);	
 	zUInt uGroupEnd[128];
@@ -32,7 +31,7 @@ void zString::Split(const char* _zString, char _Separator, zArrayStatic<zString>
 
 	// Copy each item to destination array
 	uStrPos	= 0;
-	_aStringOut.SetCount(uGroupCount+_uAdditionalArraySize);
+	_aStringOut.resize(uGroupCount+_uAdditionalArraySize);
 	for(zUInt idx(0); idx<uGroupCount; ++idx)
 	{
 		zUInt len = uGroupEnd[idx]-uStrPos;
@@ -41,11 +40,11 @@ void zString::Split(const char* _zString, char _Separator, zArrayStatic<zString>
 	}
 }
 
-void zString::Merge(const zArrayStatic<zString>& _aStrings, char _Separator, zString& _zStringOut, zInt _iMaxEntry)
+void zString::Merge(const zArray<zString>& _aStrings, char _Separator, zString& _zStringOut, zInt _iMaxEntry)
 {
 	// Count string size needed
 	zUInt len(0), pos(0), sepSize(_Separator != 0 ? 1 : 0);	
-	_iMaxEntry = (_iMaxEntry <= 0) ? zenMath::Max<zInt>(0, _aStrings.Count() + _iMaxEntry) : zenMath::Min<zInt>(_iMaxEntry, _aStrings.Count());	
+	_iMaxEntry = (_iMaxEntry <= 0) ? zenMath::Max<zInt>(0, _aStrings.size() + _iMaxEntry) : zenMath::Min<zInt>(_iMaxEntry, _aStrings.size());	
 	for(zInt idx(0); idx<_iMaxEntry; ++idx)
 	{
 		len += _aStrings[idx].Len()+sepSize;
@@ -54,7 +53,7 @@ void zString::Merge(const zArrayStatic<zString>& _aStrings, char _Separator, zSt
 	// Copy each array element in the string
 	if( len > 0 )
 	{
-		_zStringOut.maChar.SetCount(len+1);
+		_zStringOut.maChar.resize(len+1);
 		len = 0;
 		for(zInt idx(0); idx<_iMaxEntry; ++idx)
 		{

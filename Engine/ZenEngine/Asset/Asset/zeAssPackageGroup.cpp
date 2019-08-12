@@ -71,11 +71,11 @@ void PackageGroup::SetDirtyChild()
 	}
 }
 
-zUInt PackageGroup::GetPackageCount() const
+zUInt PackageGroup::GetPackagesize() const
 {
-	zUInt uCount(maPackage.Count());
-	for(zUInt idx(0),count(maChildren.Count()); idx<count; ++idx)
-		uCount += maChildren[idx]->GetPackageCount();
+	zUInt uCount(maPackage.size());
+	for(zUInt idx(0),count(maChildren.size()); idx<count; ++idx)
+		uCount += maChildren[idx]->GetPackagesize();
 	return uCount;
 }
 
@@ -84,10 +84,10 @@ bool PackageGroup::Save(AssetSerializer &_Serializer, bool _bDirtyParent )
 	bool bSuccess(true);	
 	if( mbDirty || mbDirtyChild || _bDirtyParent )
 	{
-		for (zUInt idx(0), count(maChildren.Count()); idx < count; ++idx)
+		for (zUInt idx(0), count(maChildren.size()); idx < count; ++idx)
 			bSuccess &= maChildren[idx]->Save(_Serializer, mbDirty || _bDirtyParent);
 
-		for (zUInt idx(0), count(maPackage.Count()); idx < count; ++idx)
+		for (zUInt idx(0), count(maPackage.size()); idx < count; ++idx)
 			bSuccess &= maPackage[idx]->Save(_Serializer, mbDirty || _bDirtyParent);
 
 		if( mbDirty || _bDirtyParent )
@@ -103,10 +103,10 @@ bool PackageGroup::Save(AssetSerializer &_Serializer, bool _bDirtyParent )
 void PackageGroup::Delete()
 {
 	//! @todo Asset move entire function to Asset Manager?
-	for (zUInt idx(0), count(maChildren.Count()); idx < count; ++idx)
+	for (zUInt idx(0), count(maChildren.size()); idx < count; ++idx)
 		maChildren[idx]->Delete();
 
-	for (zUInt idx(0), count(maPackage.Count()); idx < count; ++idx)
+	for (zUInt idx(0), count(maPackage.size()); idx < count; ++idx)
 		maPackage[idx]->Delete();
 
 	zenAss::zPackageGroupRef rThis(this);

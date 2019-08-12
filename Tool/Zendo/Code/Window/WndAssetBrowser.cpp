@@ -163,7 +163,7 @@ WndAssetBrowser::WndAssetBrowser(wxWindow *parent, const wxString& title)
 	mAssetTypeMask.Reset();	
 	mdCountPerPackage.Init(128);
 	mdCountPerPackage.SetDefaultValue(0);
-	maCountPerType.SetCount(zenConst::keAssType__Count);
+	maCountPerType.resize(zenConst::keAssType__Count);
 
 	CreateSectionAsset();
 	CreateSectionPackage();
@@ -401,8 +401,6 @@ void WndAssetBrowser::ClearAssetList()
 
 void WndAssetBrowser::UpdateAssetList()
 {
-	static zenMem::zAllocatorPool sPoolAsset("Asset Pool", sizeof(zenAss::zAssetItemRef), 256, 256 );
-	
 	// Free memory allocated, and clear list of asset
 	mpLstAsset->Freeze();
 	ClearAssetList();
@@ -435,7 +433,7 @@ void WndAssetBrowser::UpdateAssetList()
 	maCountPerType.SetAll(0);
 	mdCountPerPackage.SetAll(0);
 	// Add all Asset item in selected type/packages to the list
-	for(zUInt idxPack(0), countPack(maPackageSelected.Count()); idxPack<countPack; ++idxPack)
+	for(zUInt idxPack(0), countPack(maPackageSelected.size()); idxPack<countPack; ++idxPack)
 	{
 		zenAss::zPackageRef rPackage				= maPackageSelected[idxPack];
 		zenAss::zPackageGroupRef rGroup				= rPackage.GetParentGroup();
@@ -452,8 +450,8 @@ void WndAssetBrowser::UpdateAssetList()
 					zenAss::zArrayAsset::Iterator it( rPackage.GetAssets(eTypeIdx) );
 					while( it.IsValid() )
 					{
-						zenAss::zAssetItemRef* prItem	= zenNew(&sPoolAsset) zenAss::zAssetItemRef(it.GetValue());
-						zUInt uIconIndex			= prItem->GetType();
+						auto* prItem		= zenMem::NewPool<zenAss::zAssetItemRef>(it.GetValue());
+						zUInt uIconIndex	= prItem->GetType();
 						if( IsViewIcon() )
 						{
 							const wxIcon* pIcon	= wxGetApp().GetIcon(*prItem);
@@ -486,7 +484,7 @@ void WndAssetBrowser::UpdateAssetList()
 			}	
 		}
 	}
-	UpdateAssetCount();
+	UpdateAsresize();
 	mpLstAsset->Thaw();
 	mpLstAsset->Refresh();
 }
@@ -531,10 +529,10 @@ void WndAssetBrowser::UpdatePackageList(wxTreeListItem _treeParentID, const zenA
 		mpTreePackage->CheckItem(treeIDGroup, _dSelectedItems.Exist(pClientData->mHashID) ? wxCHK_CHECKED : wxCHK_UNCHECKED);
 	}
 	
-	for (zUInt idx(0), count(_rGroupToAdd.GetChildren().Count()); idx < count; ++idx)
+	for (zUInt idx(0), count(_rGroupToAdd.GetChildren().size()); idx < count; ++idx)
 		UpdatePackageList(treeIDGroup, _rGroupToAdd.GetChildren()[idx], _dSelectedItems);
 
-	for (zUInt idx(0), count(_rGroupToAdd.GetPackages().Count()); idx < count; ++idx)
+	for (zUInt idx(0), count(_rGroupToAdd.GetPackages().size()); idx < count; ++idx)
 	{
 		const zenAss::zPackageRef& rPackage			= _rGroupToAdd.GetPackages()[idx];
 		wxPackageClientData* pClientData			= zenNewDefault wxPackageClientData(nullptr, rPackage);		
@@ -573,7 +571,7 @@ void WndAssetBrowser::UpdateChildPackageChecked(wxTreeListItem _ParentTreeID)
 //-------------------------------------------------------------------------------------------------
 //! @return		- 
 //=================================================================================================
-void WndAssetBrowser::UpdateAssetCount()
+void WndAssetBrowser::UpdateAsresize()
 {
 	// Update per Packages asset count --------------------------------------------------------
 	wxTreeListItem itemCurrent	= mpTreePackage ? mpTreePackage->GetFirstItem() : nullptr;
@@ -675,7 +673,7 @@ void WndAssetBrowser::OnPackageItemChecked(wxTreeListEvent& event)
 void WndAssetBrowser::UpdatePackageSelected()
 {
 	// Update the list of selected packages
-	zArrayStatic<zenAss::zPackageRef> aPackageSelected(zenAss::zPackageRef::sGetPackages().Count());
+	zArrayDyn<zenAss::zPackageRef> aPackageSelected(zenAss::zPackageRef::sGetPackages().size());
 	wxTreeListItem itemCurrent = mpTreePackage->GetFirstItem();
 	zUInt uSelectedCount(0);
 	while (itemCurrent.IsOk())
@@ -686,7 +684,7 @@ void WndAssetBrowser::UpdatePackageSelected()
 		itemCurrent = mpTreePackage->GetNextItem(itemCurrent);
 	}
 
-	maPackageSelected.Copy(aPackageSelected.First(), uSelectedCount);
+	maPackageSelected.Copy(aPackageSelected.Data(), uSelectedCount);
 }
 
 //=================================================================================================
@@ -711,7 +709,7 @@ void WndAssetBrowser::OnPackageItemActivated(wxTreeListEvent& event)
 //=================================================================================================
 void WndAssetBrowser::OnAssetViewActivated(wxListEvent& event)
 {
-	zenAss::zAssetItemRef* prItem = reinterpret_cast<zenAss::zAssetItemRef*>(event.GetItem().GetData());
+	zenAss::zAssetItemRef* prItem = reinterpret_cast<zenAss::zAssetItemRef*>(event.GetItem().Data());
 	if( prItem )
 		wxGetApp().mpFrame->GetWndAssetProperty()->AddAssetTab( *prItem );
 }
@@ -829,11 +827,11 @@ void WndAssetBrowser::OnPackageItemContextMenu_PackageDel(const wxTreeListItem& 
 	wxPackageClientData* pClientData = static_cast<wxPackageClientData*>(mpTreePackage->GetItemData(_PackageItem));
 	if (pClientData && pClientData->mrPackage.IsValid())
 	{
-		zUInt uAssetCount(0);
+		zUInt uAsresize(0);
 		for (zUInt uType(0); uType < zenConst::keAssType__Count; ++uType)
-			uAssetCount += pClientData->mrPackage.GetAssets(static_cast<zenConst::eAssetType>(uType)).Count();
+			uAsresize += pClientData->mrPackage.GetAssets(static_cast<zenConst::eAssetType>(uType)).size();
 		wxString zTitle = wxString::Format("Deleting Package [%s]", pClientData->mrPackage.GetName().c_str());
-		wxString zMessage = wxString::Format("Package [%s] contains %i asset(s).\nAre you certain you want to delete it?", pClientData->mrPackage.GetName().c_str(), uAssetCount);		
+		wxString zMessage = wxString::Format("Package [%s] contains %i asset(s).\nAre you certain you want to delete it?", pClientData->mrPackage.GetName().c_str(), uAsresize);		
 		wxMessageDialog dialog(this, zMessage, zTitle, wxOK | wxCANCEL | wxCANCEL_DEFAULT | wxCENTRE | wxICON_EXCLAMATION);
 		if (dialog.ShowModal() == wxID_OK)
 		{
@@ -864,7 +862,7 @@ void WndAssetBrowser::OnPackageItemContextMenu_PackageMove(const wxTreeListItem&
 	/*
 	const zenAss::zArrayPackage&	dAllPackages = zenAss::GetPackages();
 	zenAss::zArrayPackage::Iterator it(dAllPackages);
-	zArrayStatic<zenAss::zPackageRef>	aPackageSelected(zenAss::GetPackages().Count());
+	zArrayStatic<zenAss::zPackageRef>	aPackageSelected(zenAss::GetPackages().size());
 	zUInt							uSelectedCount(0);
 	mpTreePackage->DeleteAllItems();
 	while (it.IsValid())
@@ -875,7 +873,7 @@ void WndAssetBrowser::OnPackageItemContextMenu_PackageMove(const wxTreeListItem&
 
 		// Look for folder under which package should be added (and create it if needed)
 		wxTreeListItem treeParentID = mpTreePackage->GetRootItem();
-		for (zUInt idx(0), count(aGroupName.Count() - 1); idx < count && !mbPackageViewFlat; ++idx)
+		for (zUInt idx(0), count(aGroupName.size() - 1); idx < count && !mbPackageViewFlat; ++idx)
 		{
 			const zString& zGroupName = aGroupName[idx];
 			wxTreeListItem treeID = mpTreePackage->GetFirstChild(treeParentID);
@@ -903,7 +901,7 @@ void WndAssetBrowser::OnPackageItemContextMenu_PackageMove(const wxTreeListItem&
 		mpTreePackage->SetItemData(newItemID, zenNewDefault wxPackageClientData(rPackage, zGroups));
 
 		// Reselect package if previously selected
-		for (zUInt idxPack(0), countPack(maPackageSelected.Count()); idxPack < countPack; ++idxPack)
+		for (zUInt idxPack(0), countPack(maPackageSelected.size()); idxPack < countPack; ++idxPack)
 		{
 			if (rPackage == maPackageSelected[idxPack])
 			{
@@ -915,7 +913,7 @@ void WndAssetBrowser::OnPackageItemContextMenu_PackageMove(const wxTreeListItem&
 		++it;
 	}
 
-	maPackageSelected.Copy(aPackageSelected.First(), uSelectedCount);
+	maPackageSelected.Copy(aPackageSelected.Data(), uSelectedCount);
 	UpdateAssetList();
 	*/
 }

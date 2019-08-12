@@ -19,9 +19,9 @@ namespace zcExp
 	struct ExportInfoGfxCBufferDefinition : public ExportInfoBase
 	{
 		zStringHash32						mzBufferName;
-		zArrayStatic<zHash32>				maParamName;
-		zArrayStatic<GfxCBufferParamInfo>	maParamInfo;
-		zArrayStatic<zU8>					maDefaultValues;
+		zArrayDyn<zHash32>					maParamName;
+		zArrayDyn<GfxCBufferParamInfo>		maParamInfo;
+		zArrayDyn<zU8>						maDefaultValues;
 		static zResID 						CallbackGetItemID(ePlatform _ePlatform, zenConst::eResType _eType, zenConst::eResSource _eSource, const zcExp::ExportInfoBase* _pExportInfo, bool& _bExistOut);
 	};
 	
@@ -31,7 +31,7 @@ namespace zcExp
 	public:
 		zStringHash32						mzBufferName;
 		zMap<GfxCBufferParamInfo>::Key32	mdParamInfo;		//!< Dictionary of Constant Buffer's parameter informations, by name hash
-		zArrayStatic<zU8>					muDefaultValues;	//!< CBuffer default value when crated from this definition (extracted from shader code)
+		zArrayDyn<zU8>						muDefaultValues;	//!< CBuffer default value when crated from this definition (extracted from shader code)
 	};
 
 	class ExporterGfxShaderParamDef : public ExporterBase
@@ -45,5 +45,5 @@ namespace zcExp
 		ExportResultRef								mrExport;
 	};
 
-	zResID CreateGfxCBufferDefinition( const zStringHash32& _zBufferName, const zArrayBase<zHash32>& _aParamName, const zArrayBase<GfxCBufferParamInfo>& _aParamInfo, const zArrayBase<zU8>& _uDefaultValues );
+	zResID CreateGfxCBufferDefinition( const zStringHash32& _zBufferName, const zArray<zHash32>& _aParamName, const zArray<GfxCBufferParamInfo>& _aParamInfo, const zArray<zU8>& _uDefaultValues );
 }

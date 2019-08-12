@@ -30,7 +30,7 @@ namespace GLTL
 
 	struct Mesh
 	{
-		zArrayStatic<zenRes::zGfxMeshStrip>	marStrip;
+		zArrayDyn<zenRes::zGfxMeshStrip>	marStrip;
 		zenRes::zGfxMesh					mrMesh;
 		zString								mName;
 	};
@@ -59,11 +59,11 @@ protected:
 	zenRes::zGfxShaderPixel						mrShaderPS;		
 	zenRes::zGfxShaderBinding					mrShaderBind;
 
-	zArrayStatic<GLTL::Texture>					maSceneTexture;
-	zArrayStatic<GLTL::Buffer>					maSceneBuffer;
+	zArrayDyn<GLTL::Texture>					maSceneTexture;
+	zArrayDyn<GLTL::Buffer>						maSceneBuffer;
 	//zArrayStatic<GLTL::Material>				maSceneMaterial;
 	eastl::hash_map<zU64, zenRes::zGfxIndex>	mdSceneBufferIndex;
-	zArrayStatic<GLTL::Mesh>					maSceneMesh;
+	zArrayDyn<GLTL::Mesh>						maSceneMesh;
 	
 };
 

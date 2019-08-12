@@ -2,7 +2,7 @@
 
 namespace zcRes
 {
-	const zArrayStatic<GfxMeshStripRef>& GfxMesh::GetMeshStrips() const
+	const zArray<GfxMeshStripRef>& GfxMesh::GetMeshStrips() const
 	{
 		return marGfxMeshStrip;
 	}

@@ -1,7 +1,5 @@
 #include "zcCore.h"
 
-//SF DX12 
-
 namespace zcPerf
 {
 	EventGPU_DX12::EventGPU_DX12(const zStringHash32& _EventName) 

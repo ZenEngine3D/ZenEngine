@@ -44,8 +44,7 @@ void CommandClearDepthStencil_DX11::Invoke(zcGfx::GPUContext& _Context)
 //=================================================================================================
 zEngineRef<zcGfx::Command> CommandUpdateIndex_DX11::Create(const zcRes::GfxIndexRef& _rIndex, zU8* _pData, zUInt _uOffset, zUInt _uSize)
 {
-	//static zenMem::zAllocatorPool sMemPool("Pool CommandUpdateIndex", sizeof(CommandUpdateIndex_DX11), 128, 128);
-	auto* pCmdUpdateIndex		= zenNewPool CommandUpdateIndex_DX11;
+	auto* pCmdUpdateIndex		= zenMem::NewPool<CommandUpdateIndex_DX11>();
 	
 	_uOffset					= 0;//zenMath::Min(_uOffset, (zUInt)muIndiceCount); //! @todo Urgent support partial updates
 	_uSize						= zenMath::Min(_uSize, (zUInt)_rIndex.HAL()->maIndices.SizeMem() - _uOffset);
@@ -72,7 +71,7 @@ void CommandUpdateIndex_DX11::Invoke(zcGfx::GPUContext& _Context)
 		memcpy((zU8*)mapRes.pData, mpData, muSize); 
 		_Context.GetDeviceContext()->Unmap(pIndexDX11->mpIndiceBuffer, 0);
 	}
-	zenDelArrayNullptr( mpData );
+	zenMem::DelSafe( mpData );
 }
 
 //=================================================================================================
@@ -80,8 +79,7 @@ void CommandUpdateIndex_DX11::Invoke(zcGfx::GPUContext& _Context)
 //=================================================================================================
 zEngineRef<zcGfx::Command> CommandUpdateBuffer_DX11::Create(const zcRes::GfxBufferRef& _rBuffer, zU8* _pUpdateData, zUInt _uOffset, zUInt _uSize)
 {
-	//static zenMem::zAllocatorPool sMemPool("Pool CommandUpdateBuffer", sizeof(CommandUpdateBuffer_DX11), 128, 128);
-	auto pCmdUpdateIndex			= zenNewPool CommandUpdateBuffer_DX11;
+	auto pCmdUpdateIndex			= zenMem::NewPool<CommandUpdateBuffer_DX11>();
 	_uOffset						= 0; //! @todo 2 support partial updates
 	_uSize							= zenMath::Min(_uSize, (zUInt)_rBuffer.HAL()->muElementCount*_rBuffer.HAL()->muElementStride - _uOffset);
 
@@ -104,8 +102,7 @@ void CommandUpdateBuffer_DX11::Invoke(zcGfx::GPUContext& _Context)
 		memcpy((zU8*)mapRes.pData, mpUpdateData, muSize); 
 		_Context.GetDeviceContext()->Unmap(mrBuffer.HAL()->mpBuffer, 0);
 	}
-	zenDelArrayNullptr(mpUpdateData);
-	
+	zenMem::DelSafe(mpUpdateData);	
 }
 
 //=================================================================================================
@@ -140,8 +137,7 @@ void CommandGPUScopedEvent_DX11::Invoke(GPUContext& _Context)
 //=================================================================================================
 zEngineRef<Command> CommandQueryEnd_DX11::Add(const CommandListRef& _rContext, ID3D11Query* _pQuery, bool _bStartOfCmdList)
 {
-	//static zenMem::zAllocatorPool sMemPool("Pool CommandQueryEnd", sizeof(CommandQueryEnd_DX11), 128, 128);
-	auto pCommand			= zenNewPool CommandQueryEnd_DX11;	
+	auto pCommand			= zenMem::NewPool<CommandQueryEnd_DX11>();
 	pCommand->mpQuery		= _pQuery;
 	pCommand->SetSortKeyGeneric(_bStartOfCmdList ? keGpuPipe_First : keGpuPipe_Last, (zU64)_pQuery);
 	_rContext->AddCommand(pCommand);

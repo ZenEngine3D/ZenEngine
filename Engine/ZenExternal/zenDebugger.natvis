@@ -45,66 +45,47 @@
       <ExpandedItem Condition="mpResource != nullptr">($T1*)mpResource</ExpandedItem>      
     </Expand>
   </Type>
-  
-<!--################################################################################################
+
+	<!--################################################################################################
       Arrays
     ################################################################################################-->
-  <Type Name="Arrays" >
-    <AlternativeType Name="zen::zenType::zArrayStatic&lt;*,*&gt;"/>
-    <AlternativeType Name="zen::zenType::zArrayDynamic&lt;*,*,*&gt;"/>
-    
-    <DisplayString> Array {{ Count={muCount}, Mem={sizeof(*mpData)*muCount} }}</DisplayString>
-    <Expand>
-<!--  ==============================================================================================
-        Array infos 
-      ==============================================================================================-->
-      <Synthetic Name="[Reserved]" Optional="true">
-        <DisplayString>{{ Count={muCountReserved}, Mem={sizeof(*mpData)*muCountReserved} }}</DisplayString>
-        <Expand>
-          <Item Name="[Count]">muCountReserved</Item>
-          <Item Name="[Memory]">sizeof(*mpData)*muCountReserved</Item>
-        </Expand>
-      </Synthetic>
+	<Type Name="Arrays" >
+		<AlternativeType Name="zen::zenType::zArray&lt;*&gt;"/>
+		<DisplayString Condition="mCount>5">{sizeof($T1)*mCount} Bytes, Num={mCount} [{mpData[0]},{mpData[1]},{mpData[2]},{mpData[3]},{mpData[4]}, ...]</DisplayString>
+		<DisplayString Condition="mCount==5">{sizeof($T1)*mCount} Bytes, Num={mCount} [{mpData[0]},{mpData[1]},{mpData[2]},{mpData[3]},{mpData[4]}]</DisplayString>
+		<DisplayString Condition="mCount==4">{sizeof($T1)*mCount} Bytes, Num={mCount} [{mpData[0]},{mpData[1]},{mpData[2]},{mpData[3]}]</DisplayString>
+		<DisplayString Condition="mCount==3">{sizeof($T1)*mCount} Bytes, Num={mCount} [{mpData[0]},{mpData[1]},{mpData[2]}]</DisplayString>
+		<DisplayString Condition="mCount==2">{sizeof($T1)*mCount} Bytes, Num={mCount} [{mpData[0]},{mpData[1]},]</DisplayString>
+		<DisplayString Condition="mCount==1">{sizeof($T1)*mCount} Bytes, Num={mCount} [{mpData[0]}]</DisplayString>
+		<DisplayString Condition="mCount==0">Empty</DisplayString>
+		<Expand>
+			<Item Name="[DataPtr]">mpData</Item>
+			<!-- List Items 0-100 -->
+			<ArrayItems>
+				<Size Condition="mCount &lt; 100">mCount</Size>
+				<Size>100</Size>
+				<ValuePointer>mpData</ValuePointer>
+			</ArrayItems>
+			<!-- List Items 100-... -->
+			<Synthetic Name="[100+]" Condition="mCount &gt;= 100">
+				<DisplayString>[100-{mCount}]</DisplayString>
+				<Expand>
+					<ArrayItems>
+						<Size>mCount-100</Size>
+						<LowerBound>100</LowerBound>
+						<ValuePointer>mpData+100</ValuePointer>
+					</ArrayItems>
+				</Expand>
+			</Synthetic>
+		</Expand>
+	</Type>
 
-<!--  ==============================================================================================
-        List Items 0-9
-      ==============================================================================================-->
-      <ArrayItems>
-        <Size Condition="muCount &lt; 10">muCount</Size>
-        <Size>10</Size>
-        <ValuePointer>mpData</ValuePointer>
-      </ArrayItems>
-<!--  ==============================================================================================
-        List Items 10-99
-      ==============================================================================================-->
-      <Synthetic Name="[...]" Condition="muCount &gt;= 10">
-        <DisplayString Condition="muCount &lt;= 100">[10-{muCount}]</DisplayString>
-        <DisplayString>[10-99]</DisplayString>
-        <Expand>
-          <ArrayItems>
-            <Size Condition="muCount &lt; 100">muCount-10</Size>
-            <Size>90</Size>
-            <LowerBound>10</LowerBound>
-            <ValuePointer>mpData+10</ValuePointer>
-          </ArrayItems>
-        </Expand>       
-      </Synthetic>
-<!--  ==============================================================================================
-        List Items 100-xxx
-      ==============================================================================================-->      
-      <Synthetic Name="[...]" Condition="muCount &gt;= 100">
-        <DisplayString>[10-{muCount}]</DisplayString>
-        <Expand>
-          <ArrayItems>
-            <Size>muCount-10</Size>
-            <LowerBound>10</LowerBound>
-            <ValuePointer>mpData+10</ValuePointer>
-          </ArrayItems>
-        </Expand>
-      </Synthetic>
-      
-    </Expand >
-  </Type>
+	<!-- Array Iterators -->
+	<Type Name="zen::zenType::zArray&lt;*&gt;::Iterator">
+		<AlternativeType Name="zen::zenType::zArray&lt;*&gt;::IteratorConst"/>
+		<DisplayString Condition="mIndex >= mArray.mCount">{{Invalid}}</DisplayString>
+		<DisplayString>{mArray.mpData[mIndex]}</DisplayString>
+	</Type>
 
 <!--################################################################################################
       Intrusive Lists

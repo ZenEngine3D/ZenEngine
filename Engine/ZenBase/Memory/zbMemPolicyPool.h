@@ -15,10 +15,10 @@ public:
 	zenInline const PoolGroup::Config&		GetPoolGroup(size_t _Size)const;
 	zenInline bool							ShouldAddGroup(size_t _AlignedSize)const;
 
-	virtual SAllocInfo						Malloc(size_t _Size) override;
-	virtual SAllocInfo						Resize(void* _pMemory, size_t _NewSize) override;
-	virtual void							Free(void* _pMemory) override;	
-	virtual size_t							GetRequestedSize(void* _pMemory)override;
+	virtual SAllocInfo						Malloc(size_t inSize, size_t inItemCount, zenMem::AllocFlags inAllocFlags) override;
+	virtual SAllocInfo						Resize(void* inpMemory, size_t inNewSize, size_t inItemCount) override;
+	virtual void							Free(void* inpMemory) override;	
+	virtual size_t							GetRequestedCount(void* inpMemory)override;
 
 protected:	
 	zenInline bool							IsBetterFit(zInt _GroupIndex, size_t _NewGroupAlignedSize)const;

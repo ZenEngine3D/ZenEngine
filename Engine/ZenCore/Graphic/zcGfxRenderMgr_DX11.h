@@ -25,9 +25,6 @@ protected:
 	zenDbgCode(ID3D11DeviceContext*			mpDeviceContext	= nullptr);	//!< @brief Used for validation that Start/Stop used same context
 	zU64									muFrameStop		= 0;		//!< @brief When query was ended (to make sure 1 frame elapsed)
 	bool									mbValidResult	= false;	//!< @brief True if we got the result back from GPU
-public:
-	
-protected:
 	static List								slstQueryCreated;
 };
 
@@ -39,9 +36,11 @@ class QueryTimestamp_DX11 : public zRefCounted, public zListItem<1,1>
 {
 zenClassDeclare(QueryTimestamp_DX11, zRefCounted)
 public:
+	using List = zList<QueryTimestamp_DX11,0,zListItem<1,1>>;
 	static zEngineRef<QueryTimestamp_DX11>	Create();				//!< @brief Get a new disjoint query and start the timestamp request
 	zU64									GetTimestampUSec();		//!< @brief Retrieve the timestamp result (0 if invalid)
 	zenInline ID3D11Query*					GetQuery()const{return mpDX11Query;}
+
 protected:
 											QueryTimestamp_DX11();
 	virtual void							ReferenceDeleteCB();	//!< @brief Return object to free list instead of deleting it
@@ -49,10 +48,9 @@ protected:
 	zEngineRef<QueryDisjoint_DX11>			mrQueryDisjoint;		//!< @brief Reference to Disjoint query to use for getting gpu frequency
 	bool									mbValidResult;			//!< @brief True if we got the result back from GPU
 	zU64									muTimestamp;			//!< @brief Time on the GPU when query was processed (in microseconds)
-public:
-	using List = zList<QueryTimestamp_DX11,0,zListItem<1,1>>;
-protected:
 	static List								slstQueryCreated;
+
+
 };
 
 //=================================================================================================
@@ -69,7 +67,7 @@ zenClassDeclare(ManagerRender_DX11, ManagerRender_Base)
 public:
 	virtual void							FrameBegin(zcRes::GfxWindowRef _FrameWindow);
 	virtual void							FrameEnd();
-	void									SubmitToGPU(const CommandListRef& _rCommandlist, const zArrayDynamic<CommandRef>& _rCommands);
+	void									SubmitToGPU(const CommandListRef& _rCommandlist, const zArrayDyn<CommandRef>& _rCommands);
 	void									NamedEventBegin(const char* _zName);
 	void									NamedEventEnd();
 	const zEngineRef<QueryDisjoint_DX11>&	GetQueryDisjoint()const;

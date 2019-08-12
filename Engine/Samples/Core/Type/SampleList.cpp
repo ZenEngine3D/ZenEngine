@@ -133,7 +133,7 @@ void SampleListIntrusive_Ref()
 {
 	ListItemRefCounted::List ListItems;
 	for(int i(0); i<3; ++i)
-		ListItems.push_back( *(zenNew ListItemRefCounted(i)) );
+		ListItems.push_back( *(zenMem::New<ListItemRefCounted>(i)) );
 
 	while( ListItems.empty() == false )
 		ListItems.pop_back();
@@ -206,12 +206,50 @@ void SampleListSort()
 		ListObjs.push_sort(Item);	
 }
 
+template<class TType, typename... TConstrParams>
+TType* Construct(void* inpMemory, size_t inCount, TConstrParams... inConstrParams)
+{
+	TType* pNewObj = reinterpret_cast<TType*>(inpMemory);
+	
+	// If there's no constructors parameters and object has empty constructor, skip loop to init individual items
+	constexpr bool bCanSkipInit = sizeof...(inConstrParams) == 0 && std::is_trivially_constructible<TType>::value;
+	if( bCanSkipInit == false )
+	{
+		for(size_t i=0; i<inCount; ++i)
+		{
+			new(&pNewObj[i]) TType(inConstrParams...);
+		}
+	}	
+	return pNewObj;	
+}
+
+
+template<class TType, typename... TConstrParams>
+TType* New(size_t inCount, TConstrParams... inConstrParams)
+{
+	static char Test[256] = {"TEST ETST TEST"};
+	return Construct<TType, TConstrParams...>(&Test, inCount, inConstrParams...);
+}
+
+struct Test
+{
+	Test() = default;
+	Test(int a, int b) : mA(a), mB(b){}
+	int mA;
+	int mB;
+};
+
 //==================================================================================================
 //! @brief		Test the zListIntrusive container
 //!	@details	Test sorted add, removal of items, etc...
 //==================================================================================================
 void SampleListIntrusive()
 {
+	int* pVal1 = New<int>(2 );
+	int* pVal2 = New<int>(3, 3);
+	Test* pVal3 = New<Test>(3);
+	Test* pVal4 = New<Test>(3, 5, 6);
+
 	zenIO::Log(zenConst::keLog_Game, zenConst::kzLineA40);
 	zenIO::Log(zenConst::keLog_Game, " zListIntrusive");
 	zenIO::Log(zenConst::keLog_Game, zenConst::kzLineA40);
@@ -257,7 +295,7 @@ void SampleListIntrusive()
 
 #if 0
 	const zUInt						kuTestCount = 1024 * 512;
-	IntrusiveListItem*				aItemNode = zenNew IntrusiveListItem[kuTestCount];
+	IntrusiveListItem*				aItemNode = zenMem::NewArray<IntrusiveListItem>(kuTestCount);
 	IntrusiveListItem::TypeList1	lstIntrusive;
 
 	for (int i = 0; i<kuTestCount; ++i)

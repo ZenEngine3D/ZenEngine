@@ -28,7 +28,7 @@ bool GfxIndex_DX11::Initialize()
 	IndexDesc.StructureByteStride	= 0;
 
 	D3D11_SUBRESOURCE_DATA InitData;
-	InitData.pSysMem				= maIndices.First();
+	InitData.pSysMem				= maIndices.Data();
 	InitData.SysMemPitch			= 0;
 	InitData.SysMemSlicePitch		= 0;
 	HRESULT hr						= zcMgr::GfxRender.GetDevice()->CreateBuffer(&IndexDesc, &InitData, &mpIndiceBuffer);
@@ -45,7 +45,7 @@ zU8* GfxIndex_DX11::Lock()
 	//! @todo 3 Clean Design MemBuffer class to handle data copy between cpu/gpu
 	//! @todo 3 Optim return directx11 map pointer directly
 	//					Ref: https://developer.nvidia.com/sites/default/files/akamai/gamedev/files/gdc12/Efficient_Buffer_Management_McDonald.pdf
-	mpLockData = zenNew zU8[ maIndices.SizeMem() ];		
+	mpLockData = zenMem::NewArray<zU8>(maIndices.SizeMem());
 	return mpLockData;
 }
 

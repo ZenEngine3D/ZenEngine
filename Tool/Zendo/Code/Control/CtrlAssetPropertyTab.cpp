@@ -154,7 +154,7 @@ void TabAssetProperty::OnToolbarDefault( wxCommandEvent& event )
 {
 	TabAssetPropertyGridPage*	pPage		= static_cast<TabAssetPropertyGridPage*>(mpPropertyGrid->GetCurrentPage());
 	const wxArrayPGProperty&	aSelected 	= pPage->GetSelectedProperties();
-	for(zUInt propIdx(0), propCount(aSelected.Count()); propIdx<propCount; ++propIdx)
+	for(zUInt propIdx(0), propCount(aSelected.size()); propIdx<propCount; ++propIdx)
 	{
 		wxPGProperty* pProp			= aSelected[propIdx];
 		PropertyMetaData* pMetaData = (PropertyMetaData*)pProp->GetClientData();
@@ -168,7 +168,7 @@ void TabAssetProperty::OnToolbarOriginal( wxCommandEvent& event )
 {
 	TabAssetPropertyGridPage*	pPage		= static_cast<TabAssetPropertyGridPage*>(mpPropertyGrid->GetCurrentPage());
 	const wxArrayPGProperty&	aSelected 	= pPage->GetSelectedProperties();
-	for(zUInt propIdx(0), propCount(aSelected.Count()); propIdx<propCount; ++propIdx)
+	for(zUInt propIdx(0), propCount(aSelected.size()); propIdx<propCount; ++propIdx)
 	{
 		wxPGProperty* pProp			= aSelected[propIdx];
 		PropertyMetaData* pMetaData = (PropertyMetaData*)pProp->GetClientData();

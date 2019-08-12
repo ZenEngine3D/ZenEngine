@@ -44,7 +44,7 @@ void GPUContext_DX12::Reset(const DirectXComRef<ID3D12Device>& _rDevice, const D
 
 void GPUContext_DX12::FlushPendingFences(const DirectXComRef<ID3D12CommandQueue>& _rCmdQueue)
 {
-	zUInt uCount(maPendingFences.Count());
+	zUInt uCount(maPendingFences.size());
 	for(zUInt idx(0); idx<uCount; ++idx)
 	{
 		_rCmdQueue->Signal( maPendingFences[idx].mrFence.Get(), maPendingFences[idx].mValue );
@@ -61,10 +61,10 @@ void GPUContext_DX12::UpdateShaderState_Samplers( const zcGfx::CommandDraw_HAL& 
 #if !ZEN_RENDERER_DX12
 	ID3D11SamplerState*	aResourceView[zcExp::kuDX11_SamplerPerStageMax];
 	const eShaderResource kShaderRes							= keShaderRes_Sampler;	
-	const zArrayStatic<zcRes::GfxShaderResourceRef>& arResource	= _Drawcall.mrMeshStrip.HAL()->marShaderResources[_eShaderStage][kShaderRes];
+	const zArrayDyn<zcRes::GfxShaderResourceRef>& arResource	= _Drawcall.mrMeshStrip.HAL()->marShaderResources[_eShaderStage][kShaderRes];
 	
 	// Retrieve samplers new slots assignment
-	zU16 uChangedFirst(0xFFFF), uChangedLast(0), uValidCount(0), uResCount(static_cast<zU16>(arResource.Count()));
+	zU16 uChangedFirst(0xFFFF), uChangedLast(0), uValidCount(0), uResCount(static_cast<zU16>(arResource.size()));
 	zU16 uAssignCount = zenMath::Max(uResCount, maShaderInputSlotCount[_eShaderStage][kShaderRes]);
 	for( zU16 slotIdx(0); slotIdx<uAssignCount; ++slotIdx )
 	{
@@ -99,10 +99,10 @@ void GPUContext_DX12::UpdateShaderState_ConstantBuffers( const zcGfx::CommandDra
 #if !ZEN_RENDERER_DX12
 	ID3D11Buffer* aResourceView[zcExp::kuDX11_CBufferPerStageMax];
 	const eShaderResource kShaderRes							= keShaderRes_CBuffer;	
-	const zArrayStatic<zcRes::GfxShaderResourceRef>& arResource	= _Drawcall.mrMeshStrip.HAL()->marShaderResources[_eShaderStage][kShaderRes];
+	const zArrayDyn<zcRes::GfxShaderResourceRef>& arResource	= _Drawcall.mrMeshStrip.HAL()->marShaderResources[_eShaderStage][kShaderRes];
 	
 	// Retrieve samplers new slots assignment
-	zU16 uChangedFirst(0xFFFF), uChangedLast(0), uValidCount(0), uSlotCount(static_cast<zU16>(arResource.Count()));
+	zU16 uChangedFirst(0xFFFF), uChangedLast(0), uValidCount(0), uSlotCount(static_cast<zU16>(arResource.size()));
 	zU16 uAssignCount = zenMath::Max(uSlotCount, maShaderInputSlotCount[_eShaderStage][kShaderRes]);
 	for( zU16 slotIdx(0); slotIdx<uAssignCount; ++slotIdx )
 	{
@@ -140,9 +140,9 @@ void GPUContext_DX12::UpdateShaderState_Textures( zU16& Out_ChangedFirst, zU16& 
 {	
 #if !ZEN_RENDERER_DX12
 	const eShaderResource kShaderRes							= keShaderRes_Texture;
-	const zArrayStatic<zcRes::GfxShaderResourceRef>& arResource = _Drawcall.mrMeshStrip.HAL()->marShaderResources[_eShaderStage][kShaderRes];
+	const zArrayDyn<zcRes::GfxShaderResourceRef>& arResource	= _Drawcall.mrMeshStrip.HAL()->marShaderResources[_eShaderStage][kShaderRes];
 	zU16 uValidCount											= 0;
-	const zU16 uSlotCount										= static_cast<zU16>(arResource.Count());
+	const zU16 uSlotCount										= static_cast<zU16>(arResource.size());
 	const zU16 uAssignCount										= zenMath::Max(uSlotCount, maShaderInputSlotCount[_eShaderStage][kShaderRes]);	
 	for( zU16 slotIdx(0); slotIdx<uAssignCount; ++slotIdx )
 	{
@@ -167,11 +167,11 @@ void GPUContext_DX12::UpdateShaderState_Textures( zU16& Out_ChangedFirst, zU16& 
 //==================================================================================================
 void GPUContext_DX12::UpdateShaderState_StructBuffers( zU16& Out_ChangedFirst, zU16& Out_ChangedLast, const zcGfx::CommandDraw_HAL& _Drawcall, eShaderStage _eShaderStage)
 {	
-#if !ZEN_RENDERER_DX12
+#if !ZEN_RENDERER_DX12 //! @todo 2 look into these defines
 	const eShaderResource kShaderRes							= keShaderRes_Buffer;
-	const zArrayStatic<zcRes::GfxShaderResourceRef>& arResource = _Drawcall.mrMeshStrip.HAL()->marShaderResources[_eShaderStage][kShaderRes];
+	const zArrayDyn<zcRes::GfxShaderResourceRef>& arResource	= _Drawcall.mrMeshStrip.HAL()->marShaderResources[_eShaderStage][kShaderRes];
 	zU16 uValidCount											= 0;
-	const zU16 uSlotCount										= static_cast<zU16>(arResource.Count());
+	const zU16 uSlotCount										= static_cast<zU16>(arResource.size());
 	const zU16 uAssignCount										= zenMath::Max(uSlotCount, maShaderInputSlotCount[_eShaderStage][kShaderRes]);
 	
 	for( zU16 slotIdx(0); slotIdx<uAssignCount; ++slotIdx )
@@ -206,7 +206,7 @@ void GPUContext_DX12::UpdateStateRenderpass(const zcGfx::CommandDraw_HAL& _Drawc
 		{				
 			mrStateView								= mrRenderpass.HAL()->mrStateView;
 			const zcRes::GfxView_HAL* const ViewHAL	= mrStateView.HAL();
-			zUInt uTargetCount(ViewHAL->maRTColorConfig.Count());
+			zUInt uTargetCount(ViewHAL->maRTColorConfig.size());
 			D3D12_CPU_DESCRIPTOR_HANDLE aCpuHandles[D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT];
 			for(zUInt idxTarget(0); idxTarget<uTargetCount; ++idxTarget )
 			{
@@ -295,7 +295,7 @@ void GPUContext_DX12::UpdateState(const CommandDraw_HAL& _Drawcall)
 	for( zUInt idxShader(0); idxShader < keShaderStage__Count; ++idxShader )
 	{
 		// Assign Textures/Buffer
-		zUInt uDescCount(pMeshStripHAL->marDescriptorResources[idxShader].Count());
+		zUInt uDescCount(pMeshStripHAL->marDescriptorResources[idxShader].size());
 		if( uDescCount )
 		{
 			DescriptorRangeSRV SRVDesc	= zcMgr::GfxRender.GetFrameDescriptorSRV( uDescCount );
@@ -322,8 +322,8 @@ void GPUContext_DX12::UpdateState(const CommandDraw_HAL& _Drawcall)
 
 		// Assign Constant Buffers
 		DescriptorRangeSRV CBVDesc	= zcMgr::GfxRender.GetFrameDescriptorSRV( 10 ); //! @todo 0 use constants
-		const zArrayStatic<zcRes::GfxShaderResourceDescRef>& arCBufferRes	= pMeshStripHAL->marShaderResources[idxShader][keShaderRes_CBuffer];
-		const zUInt countCBuffer											= arCBufferRes.Count();
+		const zArrayDyn<zcRes::GfxShaderResourceDescRef>& arCBufferRes		= pMeshStripHAL->marShaderResources[idxShader][keShaderRes_CBuffer];
+		const zUInt countCBuffer											= arCBufferRes.size();
  		for( zUInt idxCBuffer(0); idxCBuffer < 10; ++idxCBuffer )
 		{
 			zcGfx::DescriptorRangeSRV* pCBufferDesc(nullptr);			

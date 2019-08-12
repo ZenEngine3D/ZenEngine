@@ -19,8 +19,8 @@ namespace sample
 		virtual void Update()
 		{
 			SampleFlags();			
-			SampleHash();
-			SampleHamt();
+			// SampleHash();
+			SampleHamt(); 
 			SampleArray();
 			SampleTypeMisc();
 			SampleListIntrusive();			

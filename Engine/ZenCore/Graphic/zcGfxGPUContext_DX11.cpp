@@ -36,10 +36,10 @@ void GPUContext_DX11::UpdateShaderState_Samplers( const zcGfx::CommandDraw& _Dra
 {	
 	ID3D11SamplerState*	aResourceView[zcExp::kuDX11_SamplerPerStageMax];
 	const eShaderResource kShaderRes							= keShaderRes_Sampler;	
-	const zArrayStatic<zcRes::GfxShaderResourceRef>& arResource	= _Drawcall.mrMeshStrip.HAL()->marShaderResources[_eShaderStage][kShaderRes];
+	const zArrayDyn<zcRes::GfxShaderResourceRef>& arResource	= _Drawcall.mrMeshStrip.HAL()->marShaderResources[_eShaderStage][kShaderRes];
 	
 	// Retrieve samplers new slots assignment
-	zU16 uChangedFirst(0xFFFF), uChangedLast(0), uValidCount(0), uResCount(static_cast<zU16>(arResource.Count()));
+	zU16 uChangedFirst(0xFFFF), uChangedLast(0), uValidCount(0), uResCount(static_cast<zU16>(arResource.size()));
 	zU16 uAssignCount = zenMath::Max(uResCount, maShaderInputSlotCount[_eShaderStage][kShaderRes]);
 	for( zU16 slotIdx(0); slotIdx<uAssignCount; ++slotIdx )
 	{
@@ -72,10 +72,10 @@ void GPUContext_DX11::UpdateShaderState_ConstantBuffers( const zcGfx::CommandDra
 {	
 	ID3D11Buffer* aResourceView[zcExp::kuDX11_CBufferPerStageMax];
 	const eShaderResource kShaderRes							= keShaderRes_CBuffer;	
-	const zArrayStatic<zcRes::GfxShaderResourceRef>& arResource	= _Drawcall.mrMeshStrip.HAL()->marShaderResources[_eShaderStage][kShaderRes];
+	const zArrayDyn<zcRes::GfxShaderResourceRef>& arResource	= _Drawcall.mrMeshStrip.HAL()->marShaderResources[_eShaderStage][kShaderRes];
 	
 	// Retrieve samplers new slots assignment
-	zU16 uChangedFirst(0xFFFF), uChangedLast(0), uValidCount(0), uSlotCount(static_cast<zU16>(arResource.Count()));
+	zU16 uChangedFirst(0xFFFF), uChangedLast(0), uValidCount(0), uSlotCount(static_cast<zU16>(arResource.size()));
 	zU16 uAssignCount = zenMath::Max(uSlotCount, maShaderInputSlotCount[_eShaderStage][kShaderRes]);
 	for( zU16 slotIdx(0); slotIdx<uAssignCount; ++slotIdx )
 	{
@@ -111,9 +111,9 @@ void GPUContext_DX11::UpdateShaderState_ConstantBuffers( const zcGfx::CommandDra
 void GPUContext_DX11::UpdateShaderState_Textures( zU16& Out_ChangedFirst, zU16& Out_ChangedLast, const zcGfx::CommandDraw& _Drawcall, eShaderStage _eShaderStage)
 {				
 	const eShaderResource kShaderRes							= keShaderRes_Texture;
-	const zArrayStatic<zcRes::GfxShaderResourceRef>& arResource = _Drawcall.mrMeshStrip.HAL()->marShaderResources[_eShaderStage][kShaderRes];
+	const zArrayDyn<zcRes::GfxShaderResourceRef>& arResource	= _Drawcall.mrMeshStrip.HAL()->marShaderResources[_eShaderStage][kShaderRes];
 	zU16 uValidCount											= 0;
-	const zU16 uSlotCount										= static_cast<zU16>(arResource.Count());
+	const zU16 uSlotCount										= static_cast<zU16>(arResource.size());
 	const zU16 uAssignCount										= zenMath::Max(uSlotCount, maShaderInputSlotCount[_eShaderStage][kShaderRes]);	
 	for( zU16 slotIdx(0); slotIdx<uAssignCount; ++slotIdx )
 	{
@@ -138,9 +138,9 @@ void GPUContext_DX11::UpdateShaderState_Textures( zU16& Out_ChangedFirst, zU16& 
 void GPUContext_DX11::UpdateShaderState_StructBuffers( zU16& Out_ChangedFirst, zU16& Out_ChangedLast, const zcGfx::CommandDraw& _Drawcall, eShaderStage _eShaderStage)
 {	
 	const eShaderResource kShaderRes							= keShaderRes_Buffer;
-	const zArrayStatic<zcRes::GfxShaderResourceRef>& arResource = _Drawcall.mrMeshStrip.HAL()->marShaderResources[_eShaderStage][kShaderRes];
+	const zArrayDyn<zcRes::GfxShaderResourceRef>& arResource	= _Drawcall.mrMeshStrip.HAL()->marShaderResources[_eShaderStage][kShaderRes];
 	zU16 uValidCount											= 0;
-	const zU16 uSlotCount										= static_cast<zU16>(arResource.Count());
+	const zU16 uSlotCount										= static_cast<zU16>(arResource.size());
 	const zU16 uAssignCount										= zenMath::Max(uSlotCount, maShaderInputSlotCount[_eShaderStage][kShaderRes]);
 	
 	for( zU16 slotIdx(0); slotIdx<uAssignCount; ++slotIdx )
@@ -255,12 +255,12 @@ void GPUContext_DX11::UpdateState(const zcGfx::CommandDraw& _Drawcall)
 		bool bUpdated[keShaderRes__Count];		
 		for(zUInt resTypeIdx(0);resTypeIdx<keShaderRes__Count; ++resTypeIdx)
 		{
-			const zArrayStatic<zcRes::GfxShaderResourceRef>& arResources	= rMeshStrip.HAL()->marShaderResources[stageIdx][resTypeIdx];
-			zHash32 zMeshStripResStamp										= rMeshStrip.HAL()->mhShaderResourceStamp[stageIdx][resTypeIdx];
+			const zArrayDyn<zcRes::GfxShaderResourceRef>& arResources	= rMeshStrip.HAL()->marShaderResources[stageIdx][resTypeIdx];
+			zHash32 zMeshStripResStamp									= rMeshStrip.HAL()->mhShaderResourceStamp[stageIdx][resTypeIdx];
 			if( (zU32)zMeshStripResStamp == 0 )
 			{
 				zMeshStripResStamp = zHash32();
-				for(zUInt resIdx(0), resCount(arResources.Count()); resIdx<resCount; ++resIdx)
+				for(zUInt resIdx(0), resCount(arResources.size()); resIdx<resCount; ++resIdx)
 				{					
 					void* ResIdPtr = arResources[resIdx].IsValid() ? (void*)&(arResources[resIdx]->mResID) : (void*)&NoResID;
 					zMeshStripResStamp.Append(ResIdPtr, sizeof(zResID));

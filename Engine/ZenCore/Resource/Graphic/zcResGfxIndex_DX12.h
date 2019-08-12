@@ -1,6 +1,5 @@
 #pragma once
 
-//SF DX12
 namespace zcRes
 {
 

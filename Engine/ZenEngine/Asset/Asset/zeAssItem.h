@@ -24,7 +24,7 @@ public:
 	void												SetPackage(const zenAss::zPackageRef& _rParentPkg);
 	zenForceInline const zenAss::zPackageRef&			GetPackage(){ return mrPackage; }
 
-	zenForceInline zUInt								GetValueCount()const;
+	zenForceInline zUInt								GetValuesize()const;
 	zenForceInline zenAss::PropertyValueRef				GetValue(zUInt _uValIndex);
 	zenForceInline zenAss::PropertyValueRef				GetValue(zHash32 _hPropertyName);
 
@@ -34,7 +34,7 @@ public:
 	void												SetName(const char* _zName);	
 	
 	typedef zenSig::zSignal1<zenAss::PropertyValueRef>							SignalUpdatedProperty;
-	typedef zenSig::zSignal1<const zArrayDynamic<zenAss::PropertyValueRef>& >	SignalUpdatedProperties;
+	typedef zenSig::zSignal1<const zArrayDyn<zenAss::PropertyValueRef>& >	SignalUpdatedProperties;
 	zenInline SignalUpdatedProperty&					GetSignalUpdatedProperty();
 	zenInline SignalUpdatedProperties&					GetSignalUpdatedProperties();
 protected:										
@@ -46,10 +46,10 @@ protected:
 	zenAss::zAssetID									mID;						//!< Unique ID for this Asset instance
 	zString												mzName;						//!< Asset name
 	zString												mzDescription;				//!< Asset description, built from propertydef/values
-	zArrayStatic<zenAss::PropertyValueRef>				maPropertyValue;			//!< List of values reference of this asset
-	zArrayDynamic<zenAss::PropertyValueRef>				maPropertyUpdated;			//!< List of values updated during the frame
+	zArrayDyn<zenAss::PropertyValueRef>					maPropertyValue;			//!< List of values reference of this asset
+	zArrayDyn<zenAss::PropertyValueRef>					maPropertyUpdated;			//!< List of values updated during the frame
 	zenSig::zSignalEmitter1<zenAss::PropertyValueRef>	msigUpdatedProperty;		//!< When a property has been updated.
-	zenSig::zSignalEmitter1<const zArrayDynamic<zenAss::PropertyValueRef>& >	msigUpdatedProperties;		//!< When a property has been updated.
+	zenSig::zSignalEmitter1<const zArrayDyn<zenAss::PropertyValueRef>& >	msigUpdatedProperties;		//!< When a property has been updated.
 	
 	friend class zenAss::PropertyValueRef;											//!< Needed to emit property update signals
 //-----------------------------------------------------------------------------

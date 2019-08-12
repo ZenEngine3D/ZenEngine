@@ -30,10 +30,10 @@ namespace zbMem
 	
 	enum PolicyType
 	{	
-		kPolicy__Unused	= 0,	// VMem range left available for OS			
-		kPolicy_Pool	= 1,
-		kPolicy_Regular	= 2,
-		kPolicy_Large	= 3,
+		kPolicy_NativeMalloc	= 0,
+		kPolicy_Pool			= 1,
+		kPolicy_Regular			= 2,
+		kPolicy_Large			= 3,
 		kPolicy__Count,		
 		kPolicy__Invalid,
 	};
@@ -51,13 +51,14 @@ namespace zbMem
 	protected:
 		//------------------------------------------------------------------------------------------
 		// Avoids virtual interface, but each platform must implement these methods
-		SAllocInfo				MallocInternal	(size_t _Size, size_t _MaxSize, bool _PoolItem, bool _IsCheckAccess);
-		SAllocInfo				ResizeInternal	(void* _pMemory, size_t _NewSize);
+		SAllocInfo				MallocInternal	(size_t inSize, size_t inItemCount, zenMem::AllocFlags inAllocFlags);
+		SAllocInfo				ResizeInternal	(void* _pMemory, size_t _NewSize, size_t inItemCount);
 		void					FreeInternal	(void* _pMemory);		
-		size_t					GetRequestedSizeInternal(void* _pMemory)const;
+		size_t					GetItemCountInternal(void* _pMemory)const;
 		//------------------------------------------------------------------------------------------
 
 		std::array<IMemoryPolicy*, kPolicy__Count>						maPolicyAll;
+		PolicyNativeMalloc												mPolicyNative;
 		PolicyPool<kPoolGroupMax,kPoolItemSizeMax>						mPolicyPool;
 		PolicyContiguous<VAddressRegularPC, (1<<19), kPolicy_Regular>	mPolicyRegular;		
 		PolicyContiguous<VAddressLargePC, (1<<13), kPolicy_Large>		mPolicyLarge;

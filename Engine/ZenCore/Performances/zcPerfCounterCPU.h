@@ -21,7 +21,7 @@ namespace zcPerf
 {
 	class EventCPU : public EventCPU_HAL
 	{
-	zenClassDeclare(EventCPU, EventCPU_HAL)
+	zenClassDeclare(EventCPU, EventCPU_HAL)	
 	public:						
 		static EventBaseRef	Create(const zStringHash32& _EventName);
 

@@ -9,7 +9,7 @@ namespace zbFile
 	//-------------------------------------------------------------------------
 	// Common Interface to all ManagerFile
 	//-------------------------------------------------------------------------
-		bool						Search			( zArrayDynamic<FileInfo>& _ResultOut, zUInt _uFileSearchFlag, const wchar_t* _zDirName, const wchar_t* _zFilePatern, bool bRecursive);
+		bool						Search			( zArrayDyn<FileInfo>& _ResultOut, zUInt _uFileSearchFlag, const wchar_t* _zDirName, const wchar_t* _zFilePatern, bool bRecursive);
 
 		bool						OpenFile		( const Filename& _Filename, FileInfo* _pOutFile );
 		bool						OpenFileForWrite( const Filename& _Filename, FileInfo* _pOutFile );
@@ -19,7 +19,7 @@ namespace zbFile
 		bool						CreateDir		( const Filename& _Filename, bool _bLastItemIsFile=false );
 
 	protected:
-		void						LoadDirectory	( zArrayDynamic<FileInfo>& _ResultOut, zUInt _uWantedFlag, zArrayDynamic<wchar_t>& _zDirName, const wchar_t* _zFilePatern, const zUInt _uFilePaternLen, bool bRecursive);
+		void						LoadDirectory	( zArrayDyn<FileInfo>& _ResultOut, zUInt _uWantedFlag, zArrayDyn<wchar_t>& _zDirName, const wchar_t* _zFilePatern, const zUInt _uFilePaternLen, bool bRecursive);
 		virtual bool				Load();
 		virtual bool				Unload();
 	};

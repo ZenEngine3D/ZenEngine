@@ -44,8 +44,8 @@ protected:
 CallstackDepot::CallstackDepot()
 {
 	SymInitialize(GetCurrentProcess(), nullptr, true); 
-	mpStringMemory		= zenNewWithResize(4*1024*1204) char[zenVariableSize];
-	mpCallstackMemory	= zenNewWithResize(100000*CallstackInit::GetNeededSize(128)) zU8[zenVariableSize];
+	mpStringMemory		= zenMem::NewResizeable<char>(zenVariableSize);
+	mpCallstackMemory	= zenMem::NewResizeable<zU8>(zenVariableSize);
 	mdCallstack.Init(1024);
 	mdStrings.Init(1024);		
 }
@@ -58,9 +58,9 @@ const char* CallstackDepot::GetAddStringCopy(const char* _String)
 	{
 		size_t len			= strlen(_String) + 1;
 		char* pStringCopy	= &mpStringMemory[mStringMemorySize];
-		pString				= pStringCopy;
+		pString				= pStringCopy;		
 		mStringMemorySize	+= len;
-		zenMem::ResizeMemory(mpStringMemory, mStringMemorySize);
+		mpStringMemory		= zenMem::Resize(mpStringMemory, mStringMemorySize);
 		strncpy_s(pStringCopy, len, _String, _TRUNCATE);		
 	}
 	return pString;
@@ -114,8 +114,8 @@ const Callstack* CallstackDepot::GetAddCallstack(zUInt _IgnoreTopCount)
 		pSymbol->SizeOfStruct			= sizeof(SymbolMemory);
 
 		zU8* pStackMemoryCur			= &mpCallstackMemory[muCallstackMemorySize];
-		muCallstackMemorySize			+= CallstackInit::GetNeededSize(StackDepth);
-		zenMem::ResizeMemory(mpCallstackMemory, muCallstackMemorySize);
+		muCallstackMemorySize			= muCallstackMemorySize+CallstackInit::GetNeededSize(StackDepth);
+		mpCallstackMemory				= zenMem::Resize(mpCallstackMemory, muCallstackMemorySize);
 		CallstackInit* pCallstackInit	= new(pStackMemoryCur) CallstackInit(StackDepth);
 		pCallstack						= pCallstackInit;
 		for(zU32 idxEntry(0); idxEntry<StackDepth; ++idxEntry)

@@ -10,7 +10,7 @@ Package::Package()
 , mzStorageInfo(zenT(""))
 , mbDirty(false)
 {
-	for(zUInt typIdx(0), typCount(madAssetPerType.Count()); typIdx<typCount; ++typIdx)
+	for(zUInt typIdx(0), typCount(madAssetPerType.size()); typIdx<typCount; ++typIdx)
 	{
 		madAssetPerType[typIdx].Init(50);
 		madAssetPerType[typIdx].SetDefaultValue(nullptr);
@@ -25,11 +25,11 @@ Package::~Package()
 
 void Package::Unload()
 {	
-	for(zUInt typIdx(0), typCount(madAssetPerType.Count()); typIdx<typCount; ++typIdx)
+	for(zUInt typIdx(0), typCount(madAssetPerType.size()); typIdx<typCount; ++typIdx)
 	{
-		while( madAssetPerType[typIdx].Count() )
+		while( madAssetPerType[typIdx].size() )
 		{
-			zUInt debug = madAssetPerType[typIdx].Count();
+			zUInt debug = madAssetPerType[typIdx].size();
 			zenAss::zArrayAsset::Iterator it;
 			madAssetPerType[typIdx].GetFirst(it);
 			zeMgr::Asset.AssetDelete(it.GetValue());

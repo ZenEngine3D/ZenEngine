@@ -28,7 +28,7 @@ enum eMouseButton
 	std::bitset<255>				mbIsKeyDown;
 	std::bitset<255>				mbIsKeyPressed;
 	std::bitset<255>				mbIsKeyReleased;
-	zArrayDynamic<zU16>				maCharacterPressed;
+	zArrayDyn<zU16>				maCharacterPressed;
 };
 
 #include zenHeaderPlatform( zeWndViewport )

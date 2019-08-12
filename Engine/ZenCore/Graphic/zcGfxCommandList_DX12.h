@@ -17,11 +17,11 @@ public:
 		D3D12_RESOURCE_STATES			meWantedState	= D3D12_RESOURCE_STATE_COMMON;
 	};
 	void								AddBarrierCheck(bool _bPreDataUpdate, const BarrierCheck& _WantedState);
-	const zArrayDynamic<BarrierCheck>&	GetBarrierCheck(bool _bPreDataUpdate) const{ return maBarrierCheck[_bPreDataUpdate]; }
+	const zArrayDyn<BarrierCheck>&	GetBarrierCheck(bool _bPreDataUpdate) const{ return maBarrierCheck[_bPreDataUpdate]; }
 
 protected:
 										CommandList_DX12(const zStringHash32& _zContextName, const CommandListRef& _rParent, const zcRes::GfxRenderPassRef& _rRenderpass);
-	zArrayDynamic<BarrierCheck>			maBarrierCheck[2];	//!< List of Barriers check needed 0:PreUpdate 1:PostUpdate
+	zArrayDyn<BarrierCheck>			maBarrierCheck[2];	//!< List of Barriers check needed 0:PreUpdate 1:PostUpdate
 };
 
 }

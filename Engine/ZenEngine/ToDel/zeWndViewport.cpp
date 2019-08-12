@@ -9,17 +9,17 @@ void WindowInputState::Reset(zU8 _uMaxKeyProcessed)
 	mfMouseWheelDelta = 0;
 
 	// Copy any keypress not processed this frame, to be processed next one
-	if(maCharacterPressed.Count() > _uMaxKeyProcessed)
+	if(maCharacterPressed.size() > _uMaxKeyProcessed)
 	{
-		zArrayDynamic<zU16>	maCharacterCopy = maCharacterPressed;
-		maCharacterPressed.Clear();
+		zArrayDyn<zU16>	maCharacterCopy = maCharacterPressed;
+		maCharacterPressed.clear();
 		maCharacterPressed.Reserve(16);
-		for (zInt idx(_uMaxKeyProcessed), count(maCharacterPressed.Count()); idx<count; idx)
-			maCharacterPressed.Push(maCharacterCopy[idx]);
+		for (zInt idx(_uMaxKeyProcessed), count(maCharacterPressed.size()); idx<count; idx)
+			maCharacterPressed.push_back(maCharacterCopy[idx]);
 	}
 	else
 	{
-		maCharacterPressed.Clear();
+		maCharacterPressed.clear();
 		maCharacterPressed.Reserve(16);
 	}		
 }

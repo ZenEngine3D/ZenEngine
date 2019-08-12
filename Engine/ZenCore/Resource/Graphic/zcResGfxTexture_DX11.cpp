@@ -23,7 +23,7 @@ bool GfxTexture2D_DX11::Initialize()
 	bool bIsDepth							= zcMgr::GfxRender.IsDepth(meFormat);
 	bufferDesc.Width						= maMipData[0].mvDim.x;
 	bufferDesc.Height						= maMipData[0].mvDim.y;
-	bufferDesc.MipLevels					= static_cast<UINT>(maMipData.Count());
+	bufferDesc.MipLevels					= static_cast<UINT>(maMipData.size());
 	bufferDesc.ArraySize					= 1;
 	bufferDesc.Format						= zcMgr::GfxRender.ZenFormatToNative(meFormat);
 	bufferDesc.SampleDesc.Count				= 1;
@@ -47,10 +47,10 @@ bool GfxTexture2D_DX11::Initialize()
 	for(zUInt mipIdx(0); mipIdx<bufferDesc.MipLevels; ++mipIdx)
 	{
 		zenAssert(mipIdx < zenArrayCount(aInitData));			
-		if( maMipData[mipIdx].maData.Count() > 0 )
+		if( maMipData[mipIdx].maData.size() > 0 )
 		{
 			bValidInitData					= true;
-			aInitData[mipIdx].pSysMem		= maMipData[mipIdx].maData.First();
+			aInitData[mipIdx].pSysMem		= maMipData[mipIdx].maData.Data();
 			aInitData[mipIdx].SysMemPitch	= zcExp::GetTextureBlockInfo(meFormat).muSize*maMipData[mipIdx].mvDim.x;
 		}			
 	}

@@ -7,11 +7,11 @@ namespace zen { namespace zenRes {
 //=================================================================================================
 zGfxTexture2D zGfxTexture2D::Create(zenConst::eTextureFormat _eFormat, zVec2U16 _vDim, zFlagResTexUse _CreationFlags)
 {
-	static zArrayStatic<zU8> aEmpty(zUInt(0));
+	static zArrayZero<zU8> aEmpty;
 	return zcExp::CreateGfxTexture2D(_eFormat, _CreationFlags, _vDim, aEmpty);
 }
 
-zGfxTexture2D zGfxTexture2D::Create(zenConst::eTextureFormat _eFormat, zVec2U16 _vDim, const zArrayBase<zU8>& _aRawData, zFlagResTexUse _CreationFlags)
+zGfxTexture2D zGfxTexture2D::Create(zenConst::eTextureFormat _eFormat, zVec2U16 _vDim, const zArray<zU8>& _aRawData, zFlagResTexUse _CreationFlags)
 {
 	return zcExp::CreateGfxTexture2D(_eFormat, _CreationFlags, _vDim, _aRawData);
 }
@@ -21,12 +21,12 @@ zGfxTarget2D zGfxTarget2D::Create(zenConst::eTextureFormat _eFormat, zVec2U16 _v
 	return zcExp::CreateGfxRenderTarget(_eFormat, _vDim, _bSrgb);
 }
 
-zGfxIndex zGfxIndex::Create(const zArrayBase<zU16>& _Indices, zenConst::ePrimitiveType _ePrimitiveType)
+zGfxIndex zGfxIndex::Create(const zArray<zU16>& _Indices, zenConst::ePrimitiveType _ePrimitiveType)
 {
 	return zcExp::CreateGfxIndexBuffer(_Indices, _ePrimitiveType);
 }
 
-zGfxIndex zGfxIndex::Create(const zArrayBase<zU32>& _Indices, zenConst::ePrimitiveType _ePrimitiveType)
+zGfxIndex zGfxIndex::Create(const zArray<zU32>& _Indices, zenConst::ePrimitiveType _ePrimitiveType)
 {
 	return zcExp::CreateGfxIndexBuffer(_Indices, _ePrimitiveType);
 }

@@ -77,7 +77,7 @@ Filename::Filename()
 , muOffsetParentPath(2)
 , muOffsetExt(2)
 {
-	mzFilename.SetCount(4);
+	mzFilename.resize(4);
 	mzFilename[0]	= L'.';
 	mzFilename[1]	= 0;
 	mzFilename[2]	= 0;
@@ -121,7 +121,7 @@ void Filename::Clear()
 	muOffsetName		= 0;
 	muOffsetParentPath	= 2;
 	muOffsetExt			= 2;
-	mzFilename.SetCount(4);
+	mzFilename.resize(4);
 	mzFilename[0]		= L'.';
 	mzFilename[1]		= 0;
 	mzFilename[2]		= 0;
@@ -136,7 +136,7 @@ void Filename::Clear()
 //=================================================================================================
 void Filename::FindOffsets()
 {
-	zI16 end			= static_cast<zI16>(mzFilename.Count())-1;
+	zI16 end			= static_cast<zI16>(mzFilename.size())-1;
 	zI16 pos			= end;
 	muOffsetName		= end;
 	muOffsetParentPath	= end;
@@ -171,11 +171,11 @@ void Filename::FindOffsets()
 void Filename::Set(const wchar_t* _zFilename)
 {
 	zUInt len(static_cast<zUInt>(wcslen(_zFilename)));
-	mzFilename.SetCount(len+3);	//add some padding handling of nullptr name offsets
+	mzFilename.resize(len+3);	//add some padding handling of nullptr name offsets
 	mzFilename[len+0] = 0;
 	mzFilename[len+1] = 0;
 	mzFilename[len+2] = 0;
-	wcsncpy_s( mzFilename.First(), len+1, _zFilename, _TRUNCATE );
+	wcsncpy_s(mzFilename.Data(), len+1, _zFilename, _TRUNCATE );
 	FindOffsets();
 }
 
@@ -193,7 +193,7 @@ void Filename::Set(const wchar_t* _zPath, const wchar_t* _zFilename)
 							(_zFilename[0] != L'\\')	&& (_zFilename[0] != L'/' );
 	len1				+= bNoSeparator ? 1 : 0;
 
-	mzFilename.SetCount(len1+len2+3); //add some padding for possible '/' added and handling of nullptr name offsets
+	mzFilename.resize(len1+len2+3); //add some padding for possible '/' added and handling of nullptr name offsets
 	mzFilename[len1+len2+0] = 0;
 	mzFilename[len1+len2+1] = 0;
 	mzFilename[len1+len2+2] = 0;
@@ -213,12 +213,12 @@ void Filename::Set(const wchar_t* _zPath, const wchar_t* _zFilename)
 //=================================================================================================
 void Filename::operator+=(const wchar_t* _zFilename)
 {
-	zUInt len1(mzFilename.Count()-3);
+	zUInt len1(mzFilename.size()-3);
 	zUInt len2(static_cast<zUInt>(wcslen(_zFilename)));
 	bool bNoSeparator	=	(mzFilename[len1-1] != L'\\')	&& (mzFilename[len1-1] != L'/') && 
 							(_zFilename[0] != L'\\')		&& (_zFilename[0] != L'/' );
 	len1				+= bNoSeparator ? 1 : 0;
-	mzFilename.SetCount(len1+len2+3); //add some padding for possible '/' added and handling of nullptr name offsets
+	mzFilename.resize(len1+len2+3); //add some padding for possible '/' added and handling of nullptr name offsets
 	mzFilename[len1+len2+0] = 0;
 	mzFilename[len1+len2+1] = 0;
 	mzFilename[len1+len2+2] = 0;
@@ -319,11 +319,11 @@ const wchar_t* Filename::GetExt()const
 //-------------------------------------------------------------------------------------------------
 //! @Param		_aFolderOut -	Array each folder string will be stored in
 //=================================================================================================
-void Filename::SplitFolder(zArrayDynamic<zArrayStatic<wchar_t>>& _aFolderOut)const
+void Filename::SplitFolder(zArrayDyn<zArrayDyn<wchar_t>>& _aFolderOut)const
 {
 	zUInt aOffset[64];
 	zUInt uOffetCount(1);
-	zUInt uPos(0), uCount(mzFilename.Count()-3);
+	zUInt uPos(0), uCount(mzFilename.size()-3);
 	
 	//Make sure filename is intact (no \0 inserted)
 	GetNameFull(); 
@@ -340,7 +340,7 @@ void Filename::SplitFolder(zArrayDynamic<zArrayStatic<wchar_t>>& _aFolderOut)con
 
 	// Copy each path string to array
 	uPos = 0;
-	_aFolderOut.SetCount( uOffetCount );
+	_aFolderOut.resize( uOffetCount );
 	while( uPos < uOffetCount )
 	{
 		uCount = aOffset[uPos+1] - aOffset[uPos];

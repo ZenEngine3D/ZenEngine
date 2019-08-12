@@ -18,7 +18,7 @@ class ExportGfxCBuffer : public zenRes::zExportData
 zenClassDeclare(ExportGfxCBuffer, zenRes::zExportData)
 public:
 	zResID				mParentParamDefID;	//!< Parent ShaderParam definition
-	zArrayStatic<zU8>	maParameterValues;	//!< Bytes data for all buffer values (see ShaderParamDef for each parameter start offset in array)
+	zArrayDyn<zU8>		maParameterValues;	//!< Bytes data for all buffer values (see ShaderParamDef for each parameter start offset in array)
 };
 
 //==================================================================================================

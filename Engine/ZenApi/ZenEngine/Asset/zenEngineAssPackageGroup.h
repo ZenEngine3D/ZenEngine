@@ -16,8 +16,8 @@ namespace zen { namespace zenAss
 
 		const zWString&								GetName()const;		
 		const zPackageGroupRef&						GetParentGroup()const;
-		const zArrayDynamic<zenAss::zPackageRef>&	GetPackages()const;
-		const zArrayDynamic<zPackageGroupRef>&		GetChildren()const;
+		const zArrayDyn<zenAss::zPackageRef>&	GetPackages()const;
+		const zArrayDyn<zPackageGroupRef>&		GetChildren()const;
 		zHash64										GetNameHashID()const;
 		zUInt										GetPackageCount()const;
 		bool										GetDirty()const;

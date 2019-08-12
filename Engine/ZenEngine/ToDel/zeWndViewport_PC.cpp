@@ -33,8 +33,8 @@ namespace zen { namespace zenWnd
 		mWindowInput.Reset(_uMaxKeyProcessed);
 		mWindowMutex.unlock();
 
-		if (_WindowInputOut.maCharacterPressed.Count() > _uMaxKeyProcessed)
-			_WindowInputOut.maCharacterPressed.SetCount(_uMaxKeyProcessed);
+		if (_WindowInputOut.maCharacterPressed.size() > _uMaxKeyProcessed)
+			_WindowInputOut.maCharacterPressed.resize(_uMaxKeyProcessed);
 	}
 
 	//==================================================================================================
@@ -130,7 +130,7 @@ namespace zen { namespace zenWnd
 			case WM_CHAR:
 				// You can also use ToAscii()+GetKeyboardState() to retrieve characters.
 				pParentWindow->mWindowMutex.lock();
-				pParentWindow->mWindowInput.maCharacterPressed.Push((zU16)wParam);
+				pParentWindow->mWindowInput.maCharacterPressed.push_back((zU16)wParam);
 				pParentWindow->mWindowMutex.unlock();				
 				break;
 

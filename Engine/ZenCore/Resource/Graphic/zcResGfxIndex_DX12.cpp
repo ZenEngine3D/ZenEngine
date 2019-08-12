@@ -1,7 +1,5 @@
 #include "zcCore.h"
 
-//SF DX12
-
 namespace zcRes
 {
 
@@ -39,7 +37,7 @@ bool GfxIndex_DX12::Initialize()
 		void* pUploadData = Lock();
 		if( pUploadData )
 		{
-			zenMem::Copy( reinterpret_cast<zU8*>(pUploadData), maIndices.First(), maIndices.SizeMem() );
+			zenMem::Copy( reinterpret_cast<zU8*>(pUploadData), maIndices.Data(), maIndices.SizeMem() );
 			Unlock(zenGfx::zCommandList::GetFrameContext());
 			return true;
 		}

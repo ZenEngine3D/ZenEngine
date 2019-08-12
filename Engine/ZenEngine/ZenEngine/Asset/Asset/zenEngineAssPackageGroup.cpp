@@ -54,19 +54,19 @@ const zPackageGroupRef& zPackageGroupRef::GetParentGroup()const
 	return GetSafe()->GetParentGroup();
 }
 
-const zArrayDynamic<zenAss::zPackageRef>& zPackageGroupRef::GetPackages()const
+const zArrayDyn<zenAss::zPackageRef>& zPackageGroupRef::GetPackages()const
 {
 	return GetSafe()->GetPackages();
 }
 
-const zArrayDynamic<zPackageGroupRef>& zPackageGroupRef::GetChildren()const
+const zArrayDyn<zPackageGroupRef>& zPackageGroupRef::GetChildren()const
 {
 	return GetSafe()->GetChildren();
 }
 
-zUInt zPackageGroupRef::GetPackageCount()const
+zUInt zPackageGroupRef::GetPackagesize()const
 {
-	return GetSafe()->GetPackageCount();
+	return GetSafe()->GetPackagesize();
 }
 
 bool zPackageGroupRef::GetDirty()const

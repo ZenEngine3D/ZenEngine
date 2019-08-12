@@ -36,11 +36,10 @@ bool ExporterGfxTarget2D::ExportStart()
 //=================================================================================================
 zResID CreateGfxRenderTarget(zenConst::eTextureFormat _eFormat, zVec2U16 _vDim, bool _bSrgb)
 {		
-	//static zenMem::zAllocatorPool sMemPool("Pool RenderTarget", sizeof(ExportInfoGfxRendertarget), 32, 32 );
-	ExportInfoGfxRendertarget* pExportInfo	= zenNewPool ExportInfoGfxRendertarget;		
-	pExportInfo->meFormat					= _eFormat;
-	pExportInfo->mvDim						= _vDim;
-	pExportInfo->mbSRGB						= _bSrgb;
+	auto* pExportInfo		= zenMem::NewPool<ExportInfoGfxRendertarget>();
+	pExportInfo->meFormat	= _eFormat;
+	pExportInfo->mvDim		= _vDim;
+	pExportInfo->mbSRGB		= _bSrgb;
 	return zcMgr::Export.CreateItem( zResID::kePlatformType_GFX, zenConst::keResType_GfxTarget2D, pExportInfo );
 }
 

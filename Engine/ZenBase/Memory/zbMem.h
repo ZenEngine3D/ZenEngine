@@ -20,6 +20,7 @@ namespace zbMem
 } 
 
 #include "zbMemPolicy.h"
+#include "zbMemPolicyNativeMalloc.h"
 #include "zbMemPolicyContiguous.h"
 #include "zbMemPolicyPool.h"
 

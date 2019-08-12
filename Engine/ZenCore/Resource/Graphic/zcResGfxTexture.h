@@ -12,7 +12,7 @@ public:
 	
 	zenInline const zVec2U16& GetDim()
 	{ 
-		return maMipData.Count() ? maMipData[0].mvDim : zVec2U16::Zero; 
+		return maMipData.size() ? maMipData[0].mvDim : zVec2U16::Zero; 
 	}
 };
 

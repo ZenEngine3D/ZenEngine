@@ -1,6 +1,5 @@
 #include "zcCore.h"
 #include "ZenExternal/UI/zxUIImgui.h"
-#include "ZenExternal/UI/zxUINuklear.h"
 #include "ZenEngine/ToDel/zeWndViewport.h"
 
 namespace zcRes
@@ -14,13 +13,11 @@ GfxWindow::GfxWindow()
 {
 	for(zUInt idx(0); idx<keEvtTyp__Count; ++idx)
 	{
-		maEventHistory[idx].SetCount(keEventHistoryCount);
+		maEventHistory[idx].resize(keEventHistoryCount);
 		mbUIEventShowCurrent[idx] = false;
 	}
 
-	mrImGuiData		= zenNew zxImGui::zxRenderData;
-	mrNuklearData	= zenNew zxNuklear::zxRenderData;
-	//mrNuklearData->msigRenderUI.Connect(*this, &GfxWindow::UIRenderCB);
+	mrImGuiData	= zenMem::New<zxImGui::zxRenderData>();
 	ConnectSignal_UIRender(mrImGuiData->msigRenderUI);
 }
 
@@ -38,8 +35,10 @@ zenSig::zSignal<>& GfxWindow::GetSignalUIRender()
 void GfxWindow::FrameBegin()
 {
 	Super::FrameBegin();
+
+	++muFrameCount;
 	char zFrameNameTemp[256];
-	sprintf(zFrameNameTemp, "Frame %i", static_cast<int>(++muFrameCount));
+	snprintf(zFrameNameTemp, sizeof(zFrameNameTemp), "Frame %i", static_cast<int>(muFrameCount));
 	zStringHash32 zFrameName(zFrameNameTemp);
 	zcMgr::GfxRender.FrameBegin(this);
 	
@@ -65,9 +64,6 @@ void GfxWindow::FrameEnd()
 		mpMainWindowOS->GetInput(InputData, 8); 
 		mrImGuiData->mrRendertarget = GetBackbuffer();
 		zxImGui::zxImGUIHelper::Get().Render(mrImGuiData, &InputData);
-		//! @todo cleanup Decide on imGui or nuklear
-		mrNuklearData->mrRendertarget = GetBackbuffer();
-		zxNuklear::zxNuklearHelper::Get().Render(mrNuklearData, &InputData);
 	}
 
 	const zUInt uHistoryIndex = muFrameCount%keEventHistoryCount;
@@ -81,17 +77,17 @@ void GfxWindow::FrameEnd()
 	Super::FrameEnd();
 
 	// Find first valid root event from history (values returned by GPU)
-	muEventValidIndex	= muFrameCount + keEventHistoryCount;
-	muEventValidCount	= keEventHistoryCount;
-	bool bFoundValid	= false;
-	while( muEventValidIndex >= 1 && !bFoundValid )
-	{
-		--muEventValidIndex;
-		--muEventValidCount;
-		const zcPerf::EventBaseRef& rEventGPU	= maEventHistory[keEvtTyp_GPU][ muEventValidIndex%keEventHistoryCount ];
+	muEventValidIndex	= (muFrameCount+2) % keEventHistoryCount; // Starts with oldest stats
+	muEventValidCount	= 0;
+	bool bFoundValid	= true;
+	while( muEventValidCount < keEventHistoryCount && bFoundValid == true )
+	{	
+		zUInt EventIdx							= (muEventValidIndex+muEventValidCount)%keEventHistoryCount;
+		const zcPerf::EventBaseRef& rEventGPU	= maEventHistory[keEvtTyp_GPU][EventIdx];
 		bFoundValid								= rEventGPU.IsValid() && rEventGPU->GetElapsedMs() > 0.f; 
+		muEventValidCount						+= bFoundValid ? 1 : 0;
 	}
-	muEventValidIndex = muEventValidIndex % keEventHistoryCount;
+	muEventValidIndex = muEventValidIndex;
 	
 	// Auto display event profiling when there's a spike
 	if( mbUIAutoDisplaySpike )
@@ -115,7 +111,6 @@ void GfxWindow::FrameEnd()
 			}
 		}
 	}
-	
 }
 
 void GfxWindow::ConnectSignal_UIRender(zenSig::zSignal<>& _Signal)
@@ -200,13 +195,13 @@ void GfxWindow::UIRenderFpsDetail( )
 void GfxWindow::UIRenderStatsHistogram(eEventType _eEventType, const char* _zHistoID, const char* _zTitle, const zVec3F& _vColor, float _fWidthRatio)
 {
 	zenAssert( _eEventType < keEvtTyp__Count );
-	zArrayStatic<float>	aFrameMs;
-	zcRes::GfxWindowRef rWindow							= this;
-	const zUInt uFrameIndex								= rWindow->GetFrameCount();
-	int uStatCount										= 0;
-	float fMinFrameMs									= 9999.f;
-	const zArrayStatic<zcPerf::EventBaseRef>& aEvents	= maEventHistory[_eEventType];
-	aFrameMs.SetCount(muEventValidCount);
+	zArrayDyn<float>	aFrameMs;
+	zcRes::GfxWindowRef rWindow						= this;
+	const zUInt uFrameIndex							= rWindow->GetFramesize();
+	int uStatCount									= 0;
+	float fMinFrameMs								= 9999.f;
+	const zArrayDyn<zcPerf::EventBaseRef>& aEvents	= maEventHistory[_eEventType];
+	aFrameMs.resize(muEventValidCount);
 	for (zUInt idx(0); idx < muEventValidCount; ++idx)
 	{
 		const zUInt uHistoryIndex	= (muEventValidIndex + idx) % keEventHistoryCount;
@@ -221,12 +216,12 @@ void GfxWindow::UIRenderStatsHistogram(eEventType _eEventType, const char* _zHis
 	if (uStatCount)
 	{
 		char zFpsTitle[64];
-		sprintf(zFpsTitle, _zTitle, fMinFrameMs, 1000.f / fMinFrameMs);
+		snprintf(zFpsTitle, sizeof(zFpsTitle), _zTitle, fMinFrameMs, 1000.f / fMinFrameMs);
 		ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(0.0f, 0.0f, 0.00f, 0.0f));
 		ImGui::PushStyleColor(ImGuiCol_PlotHistogram, ImVec4(_vColor.r, _vColor.g, _vColor.b, 0.2f));
 		ImGui::PushStyleColor(ImGuiCol_PlotHistogramHovered, ImVec4(_vColor.r, _vColor.g, _vColor.b, 0.9f));
 		ImGui::SameLine();
-		ImGui::PlotHistogram(_zHistoID, aFrameMs.First(), uStatCount, 0, zFpsTitle, 0.0f, (fMinFrameMs < 16.f ? fMinFrameMs*2.f : 100.f), ImVec2(ImGui::GetWindowContentRegionWidth() * _fWidthRatio, 50));
+		ImGui::PlotHistogram(_zHistoID, aFrameMs.Data(), uStatCount, 0, zFpsTitle, 0.0f, (fMinFrameMs < 16.f ? fMinFrameMs*2.f : 100.f), ImVec2(ImGui::GetWindowContentRegionWidth() * _fWidthRatio, 50));
 		ImGui::PopStyleColor(3);
 
 		if (ImGui::IsItemHovered() && ImGui::IsMouseClicked(WindowInputState::keMouseBtn_Left))
@@ -244,8 +239,6 @@ void GfxWindow::UIRenderStatsHistogram(eEventType _eEventType, const char* _zHis
 				mrEventProfiling[_eEventType]	= aEvents[uHistoryIndex];
 			}
 		}
-		//static bool value;
-		//ImGui::Checkbox("test", &value);
 	}
 }
 

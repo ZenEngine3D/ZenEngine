@@ -27,14 +27,14 @@ public:
 	virtual bool	Serialize(zI16&						aiValue);
 	virtual bool	Serialize(zI32&						aiValue);
 	virtual bool	Serialize(zI64&						aiValue);
-	virtual bool	Serialize(zArrayBase<zU8>&	aValues);
-	virtual bool	Serialize(zArrayBase<zU16>&	aValues);
-	virtual bool	Serialize(zArrayBase<zU32>&	aValues);
-	virtual bool	Serialize(zArrayBase<zU64>&	aValues);
-	virtual bool	Serialize(zArrayBase<zI8>&	aValues);
-	virtual bool	Serialize(zArrayBase<zI16>&	aValues);
-	virtual bool	Serialize(zArrayBase<zI32>&	aValues);
-	virtual bool	Serialize(zArrayBase<zI64>&	aValues);	
+	virtual bool	Serialize(zArrayDyn<zU8>&	aValues);
+	virtual bool	Serialize(zArrayDyn<zU16>&	aValues);
+	virtual bool	Serialize(zArrayDyn<zU32>&	aValues);
+	virtual bool	Serialize(zArrayDyn<zU64>&	aValues);
+	virtual bool	Serialize(zArrayDyn<zI8>&	aValues);
+	virtual bool	Serialize(zArrayDyn<zI16>&	aValues);
+	virtual bool	Serialize(zArrayDyn<zI32>&	aValues);
+	virtual bool	Serialize(zArrayDyn<zI64>&	aValues);	
 
 protected:				
 	virtual bool	ItemStarted(zcExp::ResourceData&		aItem);

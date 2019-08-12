@@ -25,7 +25,7 @@ void zRefCounted::ReleasePendingAtProgramEnd()
 
 void zRefCounted::ReferenceDeleteCB()
 {
-	delete this;
+	zenMem::Del(this);
 }
 
 zReference::zReference()

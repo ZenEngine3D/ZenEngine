@@ -12,7 +12,7 @@ GfxShaderVertex_DX11::~GfxShaderVertex_DX11()
 
 bool GfxShaderVertex_DX11::Initialize()
 {		
-	HRESULT hr			= zcMgr::GfxRender.GetDevice()->CreateVertexShader( maCompiledShader.First(), maCompiledShader.SizeMem(), nullptr, &mpVertexShader );
+	HRESULT hr			= zcMgr::GfxRender.GetDevice()->CreateVertexShader( maCompiledShader.Data(), maCompiledShader.SizeMem(), nullptr, &mpVertexShader );
 	return SUCCEEDED(hr);
 }
 
@@ -26,7 +26,7 @@ GfxShaderPixel_DX11::~GfxShaderPixel_DX11()
 
 bool GfxShaderPixel_DX11::Initialize()
 {		
-	HRESULT hr = zcMgr::GfxRender.GetDevice()->CreatePixelShader( maCompiledShader.First(), maCompiledShader.SizeMem(), nullptr, &mpPixelShader );
+	HRESULT hr = zcMgr::GfxRender.GetDevice()->CreatePixelShader( maCompiledShader.Data(), maCompiledShader.SizeMem(), nullptr, &mpPixelShader );
 	return SUCCEEDED(hr);
 }
 
