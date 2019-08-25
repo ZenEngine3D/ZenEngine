@@ -74,9 +74,15 @@ SAllocInfo PolicyPool<TGroupCountMax, TSizeMax>::Resize(void* inpMemory, size_t 
 }
 
 template<zInt TGroupCountMax, size_t TSizeMax>
-size_t PolicyPool<TGroupCountMax, TSizeMax>::GetRequestedCount(void* _pMemory)
+size_t PolicyPool<TGroupCountMax, TSizeMax>::GetRequestedCount(void* _pMemory)const
 {
 	return 1;
 }
 
-}  
+template<zInt TGroupCountMax, size_t TSizeMax>
+size_t PolicyPool<TGroupCountMax, TSizeMax>::GetSupportedSizeMax()const
+{
+	return TSizeMax;
+}
+
+} 

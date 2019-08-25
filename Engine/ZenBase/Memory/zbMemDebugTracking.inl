@@ -48,6 +48,7 @@ void* DebugTracking::Malloc(const SAllocInfo& _Allocation, size_t _SizeWanted, z
 	if( pMemory )
 	{		
 		pMemory					+= bEndOfPage ? _Allocation.Size - (_SizeWanted + sizeof(Header)) : 0; // Move to end of allocation, to detect memory overflow faster	
+		pMemory					= (zU8*)zenMath::RoundDownPow2((size_t)pMemory, zbMem::kAlign);
 		Header* pHeader			= new(pMemory)Header();
 		pMemory					+= sizeof(Header);
 		pHeader->mpCallstack	= nullptr;		
@@ -102,6 +103,8 @@ void* DebugTracking::PostResize(void* _pPreResizeAlloc, const SAllocInfo& _Alloc
 	{
 		Header* pHeaderPrev		= reinterpret_cast<Header*>(_pPreResizeAlloc)-1;
 		*pHeader				= *pHeaderPrev;
+		pHeader->mLinks->Reset();
+		mAllocatedItems.push_front(*pHeader);
 	}
 	pHeader->mSizeWanted		= static_cast<zU32>(_SizeWanted);
 	pHeader->mSizeUsed			= static_cast<zU32>(_Alloc.Size);

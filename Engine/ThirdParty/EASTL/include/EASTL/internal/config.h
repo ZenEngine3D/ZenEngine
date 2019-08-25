@@ -42,7 +42,7 @@
 	#include EASTL_USER_CONFIG_HEADER
 #endif
 
-
+#define EASTL_USER_DEFINED_ALLOCATOR 1
 
 ///////////////////////////////////////////////////////////////////////////////
 // EASTL_EABASE_DISABLED

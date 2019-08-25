@@ -7,18 +7,25 @@ template<class TVirtualAdrInfo, zU32 TAllocMax, zUInt TAllocatorType>
 PolicyContiguous<TVirtualAdrInfo,TAllocMax,TAllocatorType>::PolicyContiguous()
 {	
 	TVirtualAdrInfo VirtualAdress;
-	// It's tricky to get size of bitfield without capacity warning. This achieves it.
-	VirtualAdress.SubAddress	= 0;	
-	VirtualAdress.SubAddress	= ~VirtualAdress.SubAddress;
-	mVirtualMemorySize			= VirtualAdress.SubAddress + 1;
-	mPhysicalPageSize			= 4*1024; //SF @todo 0 fetch value
 	
-	VirtualAdress.SubAddress	= 0;
-	VirtualAdress.Invalid		= 0;	
-	VirtualAdress.AllocatorType	= TAllocatorType;	
+	// It's tricky to get size of bitfield without capacity warning. This achieves it.
+	VirtualAdress.SubAddress		= 0;	
+	VirtualAdress.SubAddress		= ~VirtualAdress.SubAddress;
+	VirtualAdress.AllocationIndex	= 0;
+	VirtualAdress.AllocationIndex	= ~VirtualAdress.AllocationIndex;
+	zenAssert(TAllocMax == VirtualAdress.AllocationIndex + 1); //Make sure the template Mx nb. allocations supported matches what is defined in the adress info structure
+	mVirtualMemorySize				= VirtualAdress.SubAddress + 1;
+	mPhysicalPageSize				= 4*1024; //SF @todo 0 fetch value
+	
+	
 
-	mAvailableHead				= 0;
-	mAvailableTail				= 0;
+	VirtualAdress.SubAddress		= 0;
+	VirtualAdress.AllocationIndex	= 0;
+	VirtualAdress.Invalid			= 0;	
+	VirtualAdress.AllocatorType		= TAllocatorType;	
+
+	mAvailableHead					= 0;
+	mAvailableTail					= 0;
 	for(auto i(0); i<TAllocMax; ++i)
 	{
 		VirtualAdress.AllocationIndex	= i;
@@ -60,6 +67,9 @@ SAllocInfo PolicyContiguous<TVirtualAdrInfo,TAllocMax,TAllocatorType>::Resize(vo
 	TVirtualAdrInfo* pVirtualAdress = reinterpret_cast<TVirtualAdrInfo*>(&inpMemory);
 	AllocInfo& AllocatedInfo		= maAllocatedInfo[pVirtualAdress->AllocationIndex];
 
+	if( inNewSize > mVirtualMemorySize ) 
+		zenAssert(0); //! @todo 3 Support moving to a new policy if size is too much for this one
+	
 	if( AllocatedInfo.mFlags.Any(zenMem::keFlag_Protected) )
 		return Malloc(inNewSize, inItemCount, AllocatedInfo.mFlags); // When 'protect' active, memory at end of page (even if slower memcopy needed)
 
@@ -103,7 +113,7 @@ void PolicyContiguous<TVirtualAdrInfo,TAllocMax,TAllocatorType>::Free(void* inpM
 }
 
 template<class TVirtualAdrInfo, zU32 TAllocMax, zUInt TAllocatorType>
-size_t PolicyContiguous<TVirtualAdrInfo,TAllocMax,TAllocatorType>::GetRequestedCount(void* inpMemory)
+size_t PolicyContiguous<TVirtualAdrInfo,TAllocMax,TAllocatorType>::GetRequestedCount(void* inpMemory)const
 {
 	TVirtualAdrInfo* pVirtualAdress = reinterpret_cast<TVirtualAdrInfo*>(&inpMemory);
 	return maAllocatedInfo[pVirtualAdress->AllocationIndex].mItemCount;

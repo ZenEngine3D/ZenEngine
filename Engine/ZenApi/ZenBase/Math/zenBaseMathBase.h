@@ -51,16 +51,28 @@ namespace zen { namespace zenMath
 	zenInline bool IsPower2(zI32 x){ return ( (x > 0) && ((x & (x - 1)) == 0) ); }
 	zenInline bool IsPower2(zI64 x){ return ( (x > 0) && ((x & (x - 1)) == 0) ); }
 
-	zenInline zUInt RoundPow2( zUInt _Value, zUInt _Pow2Multiple )
+	zenInline zUInt RoundUpPow2( zUInt _Value, zUInt _Pow2Multiple )
 	{
 		zenAssert(IsPower2(_Pow2Multiple));
 		return (_Value + (_Pow2Multiple-1)) & ~(_Pow2Multiple-1);
+	}
+
+	zenInline zUInt RoundDownPow2( zUInt _Value, zUInt _Pow2Multiple )
+	{
+		zenAssert(IsPower2(_Pow2Multiple));
+		return _Value & ~(_Pow2Multiple-1);
 	}
 
 	template<class TType>
 	zenInline TType RoundUp( TType _uSize, TType _uMultiple )
 	{
 		return ((_uSize+_uMultiple-1) / _uMultiple) * _uMultiple;
+	}
+
+	template<class TType>
+	zenInline TType RoundDown( TType _uSize, TType _uMultiple )
+	{
+		return (_uSize / _uMultiple) * _uMultiple;
 	}
 
 	const float kfPI		= 3.141592653589793f;

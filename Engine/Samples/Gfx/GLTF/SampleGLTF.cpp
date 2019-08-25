@@ -33,7 +33,7 @@ bool SampleGLTLInstance::Init()
 	std::string			Errors, Warnings;
 	
 	//bool Result = TLContext.LoadBinaryFromFile(&TLModels, &Errors, &Warnings, "E:\\Git/ZenEngine/Build/Content/Scenes/Sponza/glTF/Sponza.gltb");
-	bool Result = TLContext.LoadASCIIFromFile(&TLModels, &Errors, &Warnings, "E:\\Git/ZenEngine/Build/Content/Scenes/Sponza/glTF/Sponza.gltf");
+	bool Result = TLContext.LoadASCIIFromFile(&TLModels, &Errors, &Warnings, "C:\\Git/ZenEngine3D/Build/Content/Scenes/Sponza/glTF/Sponza.gltf");
 		
 	if (!Warnings.empty())
 	{

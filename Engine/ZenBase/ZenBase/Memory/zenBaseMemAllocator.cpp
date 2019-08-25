@@ -8,6 +8,7 @@ void UpdateAllocationFlags(size_t inSize, size_t inItemCount, zenMem::AllocFlags
 #if ZEN_MEMORY_SUPPORT_CHECKACCESS
 	// Can implement additional logic based on allocation size, etc...
 	// ...	
+//inAllocFlags += zenMem::keFlag_Protected;;//SF
 #else
 	inAllocFlags -= zenMem::keFlag_Protected;
 #endif 

@@ -41,8 +41,8 @@ public:
 		const TType&		operator*()const { return *Get(); }
 		const TType*		operator->()const { return Get(); }
 		const_iterator&		operator=(const const_iterator& _Copy);
-		const_iterator&		operator++(){ mIndex += (zUInt)mIndex < mArray.mCount ? 1 : 0; }
-		const_iterator&		operator--(){ mIndex -= mIndex > 0 ? 1 : 0; }
+		const_iterator&		operator++(){ mIndex += (zUInt)mIndex < mArray.mCount ? 1 : 0; return *this;}
+		const_iterator&		operator--(){ mIndex -= mIndex > 0 ? 1 : 0; return *this; }
 	protected:
 		const zArray&		mArray;
 		zInt				mIndex;

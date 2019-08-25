@@ -249,7 +249,6 @@ namespace sample
 		//---------------------------------------------------------------------------
 		// eastl:map test
 		//---------------------------------------------------------------------------		
-#if 0 //! @todo 1 Find issue with EASTL assert on map deallocation
 		{
 		typedef eastl::map< zU32, zU32, std::less<zU32>/*, tracking_allocator::allocator<zU32>*/ > eahashmap; 
 		eahashmap hashmaptest;		
@@ -279,7 +278,6 @@ namespace sample
 		//dArraySpeed.Clear();
 		//zenIO::Log(zenConst::keLog_Game, ".... Cleared", uTemp);		
 		}
-#endif
 	}
 
 }

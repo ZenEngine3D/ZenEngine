@@ -58,7 +58,7 @@ SAllocInfo Allocator_PC::ResizeInternal(void* _pMemory, size_t _NewSize, size_t 
 	zenAssert(_pMemory != nullptr);
 	VAddressCommonPC* pVAddressInfo = reinterpret_cast<VAddressCommonPC*>(&_pMemory);
 	zenAssertMsg(maPolicyAll[pVAddressInfo->AllocatorType], "Unsupported MemoryPolicy, is the memory pointer valid?");
-	return maPolicyAll[pVAddressInfo->AllocatorType]->Resize(_pMemory, _NewSize, inItemCount);
+	return maPolicyAll[pVAddressInfo->AllocatorType]->Resize(_pMemory, _NewSize, inItemCount);	
 }
 
 void Allocator_PC::FreeInternal(void* _pMemory)

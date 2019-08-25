@@ -54,14 +54,14 @@ namespace zbMem
 		SAllocInfo				MallocInternal	(size_t inSize, size_t inItemCount, zenMem::AllocFlags inAllocFlags);
 		SAllocInfo				ResizeInternal	(void* _pMemory, size_t _NewSize, size_t inItemCount);
 		void					FreeInternal	(void* _pMemory);		
-		size_t					GetItemCountInternal(void* _pMemory)const;
+		size_t					GetItemCountInternal(void* _pMemory)const;		
 		//------------------------------------------------------------------------------------------
 
 		std::array<IMemoryPolicy*, kPolicy__Count>						maPolicyAll;
 		PolicyNativeMalloc												mPolicyNative;
 		PolicyPool<kPoolGroupMax,kPoolItemSizeMax>						mPolicyPool;
-		PolicyContiguous<VAddressRegularPC, (1<<19), kPolicy_Regular>	mPolicyRegular;		
-		PolicyContiguous<VAddressLargePC, (1<<13), kPolicy_Large>		mPolicyLarge;
+		PolicyContiguous<VAddressRegularPC, (1<<20), kPolicy_Regular>	mPolicyRegular;		
+		PolicyContiguous<VAddressLargePC, (1<<15), kPolicy_Large>		mPolicyLarge;
 	};
 	using Allocator_HAL = Allocator_PC;
 }  

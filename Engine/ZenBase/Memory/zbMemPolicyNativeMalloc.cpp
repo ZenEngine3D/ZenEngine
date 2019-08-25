@@ -62,11 +62,16 @@ SAllocInfo PolicyNativeMalloc::Resize(void* inpMemory, size_t inNewSize, size_t 
 	return Malloc(inNewSize, inItemCount, pHeader->mFlags);
 }
 
-size_t PolicyNativeMalloc::GetRequestedCount(void* _pMemory)
+size_t PolicyNativeMalloc::GetRequestedCount(void* _pMemory)const
 {
 	const MallocHeader* pHeader = &reinterpret_cast<MallocHeader*>(_pMemory)[-1];
 	zenAssert(pHeader->IsValid());
 	return pHeader->mItemCount;
+}
+
+size_t PolicyNativeMalloc::GetSupportedSizeMax()const
+{
+	return 1024*1024*1024;
 }
 
 }  
