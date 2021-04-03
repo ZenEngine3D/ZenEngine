@@ -12,7 +12,7 @@ CommandList_DX12::CommandList_DX12(const zStringHash32& _zContextName, const Com
 
 void CommandList_DX12::AddBarrierCheck(bool _bPreDataUpdate, const BarrierCheck& _WantedState)
 {
-	maBarrierCheck[_bPreDataUpdate].Push(_WantedState);
+	maBarrierCheck[_bPreDataUpdate].push_back(_WantedState);
 }
 
 }

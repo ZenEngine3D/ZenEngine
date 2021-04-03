@@ -34,7 +34,7 @@ void zTask::Cleanup()
 		mpGateParent->fetch_sub(1);
 }
 
-zUInt zTask::GetCPUCoresize()
+zUInt zTask::GetCPUCoreCount()
 {
 	return zenMath::Min<zUInt>(zbSys::zbFiber::keThreadMax, std::thread::hardware_concurrency());
 }

@@ -8,9 +8,10 @@ solution "glview"
       kind "ConsoleApp"
       language "C++"
 	  cppdialect "C++11"
-      files { "glview.cc", "trackball.cc" }
+      files { "glview.cc", "../common/trackball.cc" }
       includedirs { "./" }
       includedirs { "../../" }
+      includedirs { "../common/" }
 
       configuration { "linux" }
          linkoptions { "`pkg-config --libs glfw3`" }

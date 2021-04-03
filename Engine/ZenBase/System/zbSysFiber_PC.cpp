@@ -31,7 +31,7 @@ void StartTaskProcessing()
 			
 	gaThreadHandle[0]	= GetCurrentThread();
 	gaThreadID[0]		= GetCurrentThreadId();
-	for(zUInt i(1), ThreadCount(zenSys::zTask::GetCPUCoresize()); i<ThreadCount; ++i)
+	for(zUInt i(1), ThreadCount(zenSys::zTask::GetCPUCoreCount()); i<ThreadCount; ++i)
 		gaThreadHandle[i] = CreateThread(nullptr, maxStackSize, StartThread, (LPVOID)i, 0 , gaThreadID+i);
 		
 	StartThread(0);

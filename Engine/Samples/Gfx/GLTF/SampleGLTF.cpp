@@ -72,7 +72,7 @@ bool SampleGLTLInstance::Init()
 		auto& Buffer		= maSceneBuffer[idxBuffer];
 		const zU8* pRawData	= &TLModels.buffers[TFBuffer.buffer].data[TFBuffer.byteOffset+TFView.byteOffset];		
 		size_t ElemSize		= tinygltf::GetComponentSizeInBytes(TFView.componentType);
-		size_t ElemCount	= tinygltf::GetTypeSizeInBytes(TFView.type);
+		size_t ElemCount	= tinygltf::GetNumComponentsInType(TFView.type);
 		size_t Stride		= ElemSize*ElemCount;
 		if( TFBuffer.byteStride != 0 )
 		{ assert(0); } //Copy Data contiguous

@@ -44,7 +44,7 @@ namespace zen { namespace zenMath
 									: _MidValue*(1.0f-fRatio)	+ _EndValue*fRatio; 
 	}
 
-	zenInline float Fract(float _fValue){ float fIntPart; return modf(_fValue, &fIntPart); }
+	zenInline float Fract(float _fValue){ double fIntPart; return static_cast<float>(modf(static_cast<double>(_fValue), &fIntPart)); }
 
 	zenInline bool IsPower2(zU32 x){ return ( (x > 0) && ((x & (x - 1)) == 0) ); }
 	zenInline bool IsPower2(zU64 x){ return ( (x > 0) && ((x & (x - 1)) == 0) ); }

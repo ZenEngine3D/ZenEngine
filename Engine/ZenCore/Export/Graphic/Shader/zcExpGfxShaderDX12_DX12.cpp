@@ -124,7 +124,7 @@ bool ExporterGfxShaderDX12_DX12::ExportWorkCompile()
 	dwShaderFlags |= D3DCOMPILE_DEBUG;
 #endif
 
-	mrExport->maCompiledShader.Clear();
+	mrExport->maCompiledShader.clear();
 	hr = D3DCompileFromFile( 
 		zFilename, 
 		pDefines, 

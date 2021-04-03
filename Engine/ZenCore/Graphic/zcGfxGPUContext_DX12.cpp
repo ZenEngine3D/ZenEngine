@@ -49,7 +49,7 @@ void GPUContext_DX12::FlushPendingFences(const DirectXComRef<ID3D12CommandQueue>
 	{
 		_rCmdQueue->Signal( maPendingFences[idx].mrFence.Get(), maPendingFences[idx].mValue );
 	}
-	maPendingFences.Clear();
+	maPendingFences.clear();
 	maPendingFences.Reserve(uCount);
 }
 

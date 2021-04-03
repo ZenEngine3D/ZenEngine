@@ -54,7 +54,7 @@ void GfxMeshStrip_DX12::TrackedResourceAdd(const GfxShaderResourceDescRef& _rRes
 	{
 		GfxTexture2DRef rTexture = _rResource;
 		if( rTexture.HAL()->mCreationFlags.Any( keTexCreate_RenderTarget) )
-			maTrackedResources.Push( _rResource );
+			maTrackedResources.push_back( _rResource );
 	}
 }
 
@@ -67,7 +67,7 @@ void GfxMeshStrip_DX12::TrackedResourceRem(const GfxShaderResourceDescRef& _rRes
 		{
 			if( maTrackedResources[idx] == _rResource )
 			{
-				maTrackedResources.erase_swap(idx);
+				maTrackedResources.Erase_swap(idx);
 				return;
 			}
 		}

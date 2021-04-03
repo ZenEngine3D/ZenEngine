@@ -121,8 +121,7 @@ void* DebugTracking::PostResize(void* _pPreResizeAlloc, const SAllocInfo& _Alloc
 }
 
 #else
-
-void* DebugTracking::Malloc(SAllocInfo& _Allocation, size_t _SizeWanted, zenMem::AllocFlags inAllocFlags)
+void* DebugTracking::Malloc(const SAllocInfo& _Allocation, size_t _SizeWanted, zenMem::AllocFlags inAllocFlags)
 {
 	return _Allocation.pMemory;
 }
@@ -137,8 +136,9 @@ void* DebugTracking::PreResize(void* _pMemory, size_t _NewSize)
 	return _pMemory;
 }
 
-void DebugTracking::PostResize(void* _pPreResizeAlloc, const SAllocInfo& _Alloc, size_t _SizeWanted)
+void* DebugTracking::PostResize(void* _pPreResizeAlloc, const SAllocInfo& _Alloc, size_t _SizeWanted)
 {
+	return _Alloc.pMemory;
 }
 
 void* DebugTracking::GetMemory(void* _pMemory)

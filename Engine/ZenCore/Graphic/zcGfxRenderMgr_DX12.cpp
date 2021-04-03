@@ -457,7 +457,7 @@ void ManagerRender_DX12::DispatchBarrier(const CommandListRef& _rCommandlist, bo
 	if( aWantedState.size() > 0 )
 	{					
 		auto pWantedStateCur	= aWantedState.Data();
-		auto pWantedStateLast	= aWantedState.Last();
+		auto pWantedStateLast	= &aWantedState.back();
 		while( pWantedStateCur <= pWantedStateLast )
 		{
 			if( pWantedStateCur->mpResource->meState != pWantedStateCur->meWantedState )
@@ -511,7 +511,7 @@ void ManagerRender_DX12::SubmitToGPU(const CommandListRef& _rCommandlist, const 
 	//------------------------------------------------------------------------------------------
 	// Invoke all draw commands
 	const zEngineRef<zcGfx::Command>* prDrawcall	= _rCommands.Data();
-	const zEngineRef<zcGfx::Command>* prDrawcallEnd	= _rCommands.Last();	
+	const zEngineRef<zcGfx::Command>* prDrawcallEnd	= &_rCommands.back();	
 	while( prDrawcall <= prDrawcallEnd )
 	{
 		//! @todo 2 optim Find better way of barrier before/after DataUpdate

@@ -175,7 +175,10 @@ static std::string PrintIntArray(const std::vector<int> &arr) {
   std::stringstream ss;
   ss << "[ ";
   for (size_t i = 0; i < arr.size(); i++) {
-    ss << arr[i] << ((i != arr.size() - 1) ? ", " : "");
+    ss << arr[i];
+    if (i != arr.size() - 1) {
+      ss << ", ";
+    }
   }
   ss << " ]";
 
@@ -190,7 +193,10 @@ static std::string PrintFloatArray(const std::vector<double> &arr) {
   std::stringstream ss;
   ss << "[ ";
   for (size_t i = 0; i < arr.size(); i++) {
-    ss << arr[i] << ((i != arr.size() - 1) ? ", " : "");
+    ss << arr[i];
+    if (i != arr.size() - 1) {
+      ss << ", ";
+    }
   }
   ss << " ]";
 
@@ -228,7 +234,8 @@ static std::string PrintParameterMap(const tinygltf::ParameterMap &pmap) {
 #endif
 
 static std::string PrintValue(const std::string &name,
-                              const tinygltf::Value &value, const int indent, const bool tag = true) {
+                              const tinygltf::Value &value, const int indent,
+                              const bool tag = true) {
   std::stringstream ss;
 
   if (value.IsObject()) {
@@ -242,36 +249,36 @@ static std::string PrintValue(const std::string &name,
     if (tag) {
       ss << Indent(indent) << name << " : " << value.Get<std::string>();
     } else {
-      ss << " " << value.Get<std::string>() << " ";
+      ss << Indent(indent) << value.Get<std::string>() << " ";
     }
   } else if (value.IsBool()) {
     if (tag) {
       ss << Indent(indent) << name << " : " << value.Get<bool>();
     } else {
-      ss << " " << value.Get<bool>() << " ";
+      ss << Indent(indent) << value.Get<bool>() << " ";
     }
   } else if (value.IsNumber()) {
     if (tag) {
       ss << Indent(indent) << name << " : " << value.Get<double>();
     } else {
-      ss << " " << value.Get<double>() << " ";
+      ss << Indent(indent) << value.Get<double>() << " ";
     }
   } else if (value.IsInt()) {
     if (tag) {
       ss << Indent(indent) << name << " : " << value.Get<int>();
     } else {
-      ss << " " << value.Get<int>() << " ";
+      ss << Indent(indent) << value.Get<int>() << " ";
     }
   } else if (value.IsArray()) {
-    ss << Indent(indent) << name << " [ ";
+    // TODO(syoyo): Better pretty printing of array item
+    ss << Indent(indent) << name << " [ \n";
     for (size_t i = 0; i < value.Size(); i++) {
-      ss << PrintValue("", value.Get(int(i)), indent + 1, /* tag */false);
-      if (i != (value.ArrayLen()-1)) {
-        ss << ", ";
+      ss << PrintValue("", value.Get(int(i)), indent + 1, /* tag */ false);
+      if (i != (value.ArrayLen() - 1)) {
+        ss << ", \n";
       }
-
     }
-    ss << Indent(indent) << "] ";
+    ss << "\n" << Indent(indent) << "] ";
   }
 
   // @todo { binary }
@@ -315,6 +322,15 @@ static void DumpStringIntMap(const std::map<std::string, int> &m, int indent) {
   }
 }
 
+static void DumpExtensions(const tinygltf::ExtensionMap &extension,
+                           const int indent) {
+  // TODO(syoyo): pritty print Value
+  for (auto &e : extension) {
+    std::cout << Indent(indent) << e.first << std::endl;
+    std::cout << PrintValue("extensions", e.second, indent + 1) << std::endl;
+  }
+}
+
 static void DumpPrimitive(const tinygltf::Primitive &primitive, int indent) {
   std::cout << Indent(indent) << "material : " << primitive.material
             << std::endl;
@@ -326,17 +342,80 @@ static void DumpPrimitive(const tinygltf::Primitive &primitive, int indent) {
             << std::endl;
   DumpStringIntMap(primitive.attributes, indent + 1);
 
+  DumpExtensions(primitive.extensions, indent);
   std::cout << Indent(indent) << "extras :" << std::endl
             << PrintValue("extras", primitive.extras, indent + 1) << std::endl;
+
+  if (!primitive.extensions_json_string.empty()) {
+    std::cout << Indent(indent + 1) << "extensions(JSON string) = "
+              << primitive.extensions_json_string << "\n";
+  }
+
+  if (!primitive.extras_json_string.empty()) {
+    std::cout << Indent(indent + 1)
+              << "extras(JSON string) = " << primitive.extras_json_string
+              << "\n";
+  }
 }
 
-static void DumpExtensions(const tinygltf::ExtensionMap &extension, const int indent)
-{
-  // TODO(syoyo): pritty print Value
-  for (auto &e : extension) {
-    std::cout << Indent(indent) << e.first << std::endl;
-    std::cout << PrintValue("extensions", e.second, indent+1) << std::endl;
-  }  
+
+static void DumpTextureInfo(const tinygltf::TextureInfo &texinfo,
+                            const int indent) {
+  std::cout << Indent(indent) << "index     : " << texinfo.index << "\n";
+  std::cout << Indent(indent) << "texCoord  : TEXCOORD_" << texinfo.texCoord
+            << "\n";
+  DumpExtensions(texinfo.extensions, indent + 1);
+  std::cout << PrintValue("extras", texinfo.extras, indent + 1) << "\n";
+
+  if (!texinfo.extensions_json_string.empty()) {
+    std::cout << Indent(indent)
+              << "extensions(JSON string) = " << texinfo.extensions_json_string
+              << "\n";
+  }
+
+  if (!texinfo.extras_json_string.empty()) {
+    std::cout << Indent(indent)
+              << "extras(JSON string) = " << texinfo.extras_json_string << "\n";
+  }
+}
+
+static void DumpNormalTextureInfo(const tinygltf::NormalTextureInfo &texinfo,
+                                  const int indent) {
+  std::cout << Indent(indent) << "index     : " << texinfo.index << "\n";
+  std::cout << Indent(indent) << "texCoord  : TEXCOORD_" << texinfo.texCoord
+            << "\n";
+  std::cout << Indent(indent) << "scale     : " << texinfo.scale << "\n";
+  DumpExtensions(texinfo.extensions, indent + 1);
+  std::cout << PrintValue("extras", texinfo.extras, indent + 1) << "\n";
+}
+
+static void DumpOcclusionTextureInfo(
+    const tinygltf::OcclusionTextureInfo &texinfo, const int indent) {
+  std::cout << Indent(indent) << "index     : " << texinfo.index << "\n";
+  std::cout << Indent(indent) << "texCoord  : TEXCOORD_" << texinfo.texCoord
+            << "\n";
+  std::cout << Indent(indent) << "strength  : " << texinfo.strength << "\n";
+  DumpExtensions(texinfo.extensions, indent + 1);
+  std::cout << PrintValue("extras", texinfo.extras, indent + 1) << "\n";
+}
+
+static void DumpPbrMetallicRoughness(const tinygltf::PbrMetallicRoughness &pbr,
+                                     const int indent) {
+  std::cout << Indent(indent)
+            << "baseColorFactor   : " << PrintFloatArray(pbr.baseColorFactor)
+            << "\n";
+  std::cout << Indent(indent) << "baseColorTexture  :\n";
+  DumpTextureInfo(pbr.baseColorTexture, indent + 1);
+
+  std::cout << Indent(indent) << "metallicFactor    : " << pbr.metallicFactor
+            << "\n";
+  std::cout << Indent(indent) << "roughnessFactor   : " << pbr.roughnessFactor
+            << "\n";
+
+  std::cout << Indent(indent) << "metallicRoughnessTexture  :\n";
+  DumpTextureInfo(pbr.metallicRoughnessTexture, indent + 1);
+  DumpExtensions(pbr.extensions, indent + 1);
+  std::cout << PrintValue("extras", pbr.extras, indent + 1) << "\n";
 }
 
 static void Dump(const tinygltf::Model &model) {
@@ -409,6 +488,30 @@ static void Dump(const tinygltf::Model &model) {
         }
         std::cout << "]" << std::endl;
       }
+
+      if (accessor.sparse.isSparse) {
+        std::cout << Indent(2) << "sparse:" << std::endl;
+        std::cout << Indent(3) << "count  : " << accessor.sparse.count
+                  << std::endl;
+        std::cout << Indent(3) << "indices: " << std::endl;
+        std::cout << Indent(4)
+                  << "bufferView   : " << accessor.sparse.indices.bufferView
+                  << std::endl;
+        std::cout << Indent(4)
+                  << "byteOffset   : " << accessor.sparse.indices.byteOffset
+                  << std::endl;
+        std::cout << Indent(4) << "componentType: "
+                  << PrintComponentType(accessor.sparse.indices.componentType)
+                  << "(" << accessor.sparse.indices.componentType << ")"
+                  << std::endl;
+        std::cout << Indent(3) << "values : " << std::endl;
+        std::cout << Indent(4)
+                  << "bufferView   : " << accessor.sparse.values.bufferView
+                  << std::endl;
+        std::cout << Indent(4)
+                  << "byteOffset   : " << accessor.sparse.values.byteOffset
+                  << std::endl;
+      }
     }
   }
 
@@ -467,6 +570,21 @@ static void Dump(const tinygltf::Model &model) {
       std::cout << Indent(2)
                 << "target       : " << PrintTarget(bufferView.target)
                 << std::endl;
+      std::cout << Indent(1) << "-------------------------------------\n";
+
+      DumpExtensions(bufferView.extensions, 1);
+      std::cout << PrintValue("extras", bufferView.extras, 2) << std::endl;
+
+      if (!bufferView.extensions_json_string.empty()) {
+        std::cout << Indent(2) << "extensions(JSON string) = "
+                  << bufferView.extensions_json_string << "\n";
+      }
+
+      if (!bufferView.extras_json_string.empty()) {
+        std::cout << Indent(2)
+                  << "extras(JSON string) = " << bufferView.extras_json_string
+                  << "\n";
+      }
     }
   }
 
@@ -477,6 +595,21 @@ static void Dump(const tinygltf::Model &model) {
       std::cout << Indent(1) << "name         : " << buffer.name << std::endl;
       std::cout << Indent(2) << "byteLength   : " << buffer.data.size()
                 << std::endl;
+      std::cout << Indent(1) << "-------------------------------------\n";
+
+      DumpExtensions(buffer.extensions, 1);
+      std::cout << PrintValue("extras", buffer.extras, 2) << std::endl;
+
+      if (!buffer.extensions_json_string.empty()) {
+        std::cout << Indent(2) << "extensions(JSON string) = "
+                  << buffer.extensions_json_string << "\n";
+      }
+
+      if (!buffer.extras_json_string.empty()) {
+        std::cout << Indent(2)
+                  << "extras(JSON string) = " << buffer.extras_json_string
+                  << "\n";
+      }
     }
   }
 
@@ -485,15 +618,54 @@ static void Dump(const tinygltf::Model &model) {
               << std::endl;
     for (size_t i = 0; i < model.materials.size(); i++) {
       const tinygltf::Material &material = model.materials[i];
-      std::cout << Indent(1) << "name         : " << material.name << std::endl;
-      std::cout << Indent(1) << "values(items=" << material.values.size() << ")"
+      std::cout << Indent(1) << "name                 : " << material.name
                 << std::endl;
 
+      std::cout << Indent(1) << "alphaMode            : " << material.alphaMode
+                << std::endl;
+      std::cout << Indent(1)
+                << "alphaCutoff          : " << material.alphaCutoff
+                << std::endl;
+      std::cout << Indent(1) << "doubleSided          : "
+                << (material.doubleSided ? "true" : "false") << std::endl;
+      std::cout << Indent(1) << "emissiveFactor       : "
+                << PrintFloatArray(material.emissiveFactor) << std::endl;
+
+      std::cout << Indent(1) << "pbrMetallicRoughness :\n";
+      DumpPbrMetallicRoughness(material.pbrMetallicRoughness, 2);
+
+      std::cout << Indent(1) << "normalTexture        :\n";
+      DumpNormalTextureInfo(material.normalTexture, 2);
+
+      std::cout << Indent(1) << "occlusionTexture     :\n";
+      DumpOcclusionTextureInfo(material.occlusionTexture, 2);
+
+      std::cout << Indent(1) << "emissiveTexture      :\n";
+      DumpTextureInfo(material.emissiveTexture, 2);
+
+      std::cout << Indent(1) << "----  legacy material parameter  ----\n";
+      std::cout << Indent(1) << "values(items=" << material.values.size() << ")"
+                << std::endl;
       tinygltf::ParameterMap::const_iterator p(material.values.begin());
       tinygltf::ParameterMap::const_iterator pEnd(material.values.end());
       for (; p != pEnd; p++) {
         std::cout << Indent(2) << p->first << ": "
                   << PrintParameterValue(p->second) << std::endl;
+      }
+      std::cout << Indent(1) << "-------------------------------------\n";
+
+      DumpExtensions(material.extensions, 1);
+      std::cout << PrintValue("extras", material.extras, 2) << std::endl;
+
+      if (!material.extensions_json_string.empty()) {
+        std::cout << Indent(2) << "extensions(JSON string) = "
+                  << material.extensions_json_string << "\n";
+      }
+
+      if (!material.extras_json_string.empty()) {
+        std::cout << Indent(2)
+                  << "extras(JSON string) = " << material.extras_json_string
+                  << "\n";
       }
     }
   }
@@ -518,6 +690,18 @@ static void Dump(const tinygltf::Model &model) {
       std::cout << Indent(2) << "height    : " << image.height << std::endl;
       std::cout << Indent(2) << "component : " << image.component << std::endl;
       DumpExtensions(image.extensions, 1);
+      std::cout << PrintValue("extras", image.extras, 2) << std::endl;
+
+      if (!image.extensions_json_string.empty()) {
+        std::cout << Indent(2) << "extensions(JSON string) = "
+                  << image.extensions_json_string << "\n";
+      }
+
+      if (!image.extras_json_string.empty()) {
+        std::cout << Indent(2)
+                  << "extras(JSON string) = " << image.extras_json_string
+                  << "\n";
+      }
     }
   }
 
@@ -530,6 +714,18 @@ static void Dump(const tinygltf::Model &model) {
       std::cout << Indent(1) << "source         : " << texture.source
                 << std::endl;
       DumpExtensions(texture.extensions, 1);
+      std::cout << PrintValue("extras", texture.extras, 2) << std::endl;
+
+      if (!texture.extensions_json_string.empty()) {
+        std::cout << Indent(2) << "extensions(JSON string) = "
+                  << texture.extensions_json_string << "\n";
+      }
+
+      if (!texture.extras_json_string.empty()) {
+        std::cout << Indent(2)
+                  << "extras(JSON string) = " << texture.extras_json_string
+                  << "\n";
+      }
     }
   }
 
@@ -551,6 +747,20 @@ static void Dump(const tinygltf::Model &model) {
       std::cout << Indent(2)
                 << "wrapT        : " << PrintWrapMode(sampler.wrapT)
                 << std::endl;
+
+      DumpExtensions(sampler.extensions, 1);
+      std::cout << PrintValue("extras", sampler.extras, 2) << std::endl;
+
+      if (!sampler.extensions_json_string.empty()) {
+        std::cout << Indent(2) << "extensions(JSON string) = "
+                  << sampler.extensions_json_string << "\n";
+      }
+
+      if (!sampler.extras_json_string.empty()) {
+        std::cout << Indent(2)
+                  << "extras(JSON string) = " << sampler.extras_json_string
+                  << "\n";
+      }
     }
   }
 
@@ -583,12 +793,61 @@ static void Dump(const tinygltf::Model &model) {
                   << "znear         : " << camera.orthographic.znear
                   << std::endl;
       }
+
+      std::cout << Indent(1) << "-------------------------------------\n";
+
+      DumpExtensions(camera.extensions, 1);
+      std::cout << PrintValue("extras", camera.extras, 2) << std::endl;
+
+      if (!camera.extensions_json_string.empty()) {
+        std::cout << Indent(2) << "extensions(JSON string) = "
+                  << camera.extensions_json_string << "\n";
+      }
+
+      if (!camera.extras_json_string.empty()) {
+        std::cout << Indent(2)
+                  << "extras(JSON string) = " << camera.extras_json_string
+                  << "\n";
+      }
     }
   }
-  
+
+  {
+    std::cout << "skins(items=" << model.skins.size() << ")" << std::endl;
+    for (size_t i = 0; i < model.skins.size(); i++) {
+      const tinygltf::Skin &skin = model.skins[i];
+      std::cout << Indent(1) << "name         : " << skin.name << std::endl;
+      std::cout << Indent(2)
+                << "inverseBindMatrices   : " << skin.inverseBindMatrices
+                << std::endl;
+      std::cout << Indent(2) << "skeleton              : " << skin.skeleton
+                << std::endl;
+      std::cout << Indent(2)
+                << "joints                : " << PrintIntArray(skin.joints)
+                << std::endl;
+      std::cout << Indent(1) << "-------------------------------------\n";
+
+      DumpExtensions(skin.extensions, 1);
+      std::cout << PrintValue("extras", skin.extras, 2) << std::endl;
+
+      if (!skin.extensions_json_string.empty()) {
+        std::cout << Indent(2)
+                  << "extensions(JSON string) = " << skin.extensions_json_string
+                  << "\n";
+      }
+
+      if (!skin.extras_json_string.empty()) {
+        std::cout << Indent(2)
+                  << "extras(JSON string) = " << skin.extras_json_string
+                  << "\n";
+      }
+    }
+  }
+
   // toplevel extensions
   {
-    std::cout << "extensions(items=" << model.extensions.size() << ")" << std::endl;
+    std::cout << "extensions(items=" << model.extensions.size() << ")"
+              << std::endl;
     DumpExtensions(model.extensions, 1);
   }
 }
@@ -599,28 +858,38 @@ int main(int argc, char **argv) {
     exit(1);
   }
 
+  // Store original JSON string for `extras` and `extensions`
+  bool store_original_json_for_extras_and_extensions = false;
+  if (argc > 2) {
+    store_original_json_for_extras_and_extensions = true;
+  }
+
   tinygltf::Model model;
   tinygltf::TinyGLTF gltf_ctx;
   std::string err;
-  std::string warn; 
+  std::string warn;
   std::string input_filename(argv[1]);
   std::string ext = GetFilePathExtension(input_filename);
+
+  gltf_ctx.SetStoreOriginalJSONForExtrasAndExtensions(
+      store_original_json_for_extras_and_extensions);
 
   bool ret = false;
   if (ext.compare("glb") == 0) {
     std::cout << "Reading binary glTF" << std::endl;
     // assume binary glTF.
-    ret = gltf_ctx.LoadBinaryFromFile(&model, &err, &warn, input_filename.c_str());
+    ret = gltf_ctx.LoadBinaryFromFile(&model, &err, &warn,
+                                      input_filename.c_str());
   } else {
     std::cout << "Reading ASCII glTF" << std::endl;
     // assume ascii glTF.
-    ret = gltf_ctx.LoadASCIIFromFile(&model, &err, &warn, input_filename.c_str());
+    ret =
+        gltf_ctx.LoadASCIIFromFile(&model, &err, &warn, input_filename.c_str());
   }
 
   if (!warn.empty()) {
     printf("Warn: %s\n", warn.c_str());
   }
-
 
   if (!err.empty()) {
     printf("Err: %s\n", err.c_str());

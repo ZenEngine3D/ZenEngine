@@ -34,7 +34,7 @@ namespace ZenSharpmake
 		// Default build settings that's the same for all target
 		//------------------------------------------------------------------------------------------
 		public Optimization Optimization = Optimization.Debug | Optimization.Release | Optimization.Retail;
-		public DevEnv DevEnv = DevEnv.vs2017;
+		public DevEnv DevEnv = DevEnv.vs2019;
 		public OutputType OutputType = OutputType.Lib;
 		public DotNetFramework Framework = DotNetFramework.v3_5;
 		public Blob Blob = Blob.NoBlob;
@@ -144,7 +144,7 @@ namespace ZenSharpmake
 		
 		protected ZenTarget CreateTargetAll()
 		{
-			return new ZenTarget(Platform.win32 | Platform.win64, GraphicsAPI.DirectX11 | GraphicsAPI.DirectX12, EngineMode.Game | EngineMode.Tool);
+			return new ZenTarget(Platform.win64, GraphicsAPI.DirectX11 | GraphicsAPI.DirectX12, EngineMode.Game | EngineMode.Tool);
 		}
 		
 		[Configure()]
@@ -272,7 +272,7 @@ namespace ZenSharpmake
 			conf.Options.Add(Sharpmake.Options.Vc.Compiler.MinimalRebuild.Disable); //Incompatible with /MP (multi process build)
 			conf.Options.Add(Sharpmake.Options.Vc.Compiler.RTTI.Enable); //Temp, until fix issue with RTTI
 			conf.Options.Add(Options.Vc.General.CharacterSet.Unicode);
-			conf.Options.Add(Options.Vc.General.WindowsTargetPlatformVersion.v10_0_16299_0);
+			conf.Options.Add(Options.Vc.General.WindowsTargetPlatformVersion.Latest);
 		}
 	}
 

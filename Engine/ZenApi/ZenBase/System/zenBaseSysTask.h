@@ -20,7 +20,7 @@ public:
 	zenInline bool				IsRunning();
 	zenInline bool				CanResume();
 	zenInline zUInt				GetElapsedUSec();
-	static zUInt				GetCPUCoresize();
+	static zUInt				GetCPUCoreCount();
 
 	void						ProcessingStart();
 	void						ProcessingStop();

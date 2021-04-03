@@ -85,7 +85,7 @@ bool SampleDebugUIInstance::Init()
 	zVec2U16					vTexSize(256,256);
 	zenConst::eTextureFormat	eTexFormat = zenConst::keTexFormat_RGBA8;
 	aTexRGBA.resize( vTexSize.x*vTexSize.y*4 );
-	zU8*						pTexCur = aTexRGBA.front();
+	zU8*						pTexCur = &aTexRGBA.front();
 	for(zUInt line=0; line<vTexSize.y; ++line)
 	{
 		for(zUInt col=0; col<vTexSize.x; ++col)
